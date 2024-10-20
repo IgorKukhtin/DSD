@@ -1327,8 +1327,35 @@ object MainForm: TMainForm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object AmountPartner_in: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+          DataBinding.FieldName = 'AmountPartner_in'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          Options.Editing = False
+          Width = 55
+        end
+        object PricePartner_in: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+          DataBinding.FieldName = 'PricePartner_in'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
           Options.Editing = False
           Width = 55
         end

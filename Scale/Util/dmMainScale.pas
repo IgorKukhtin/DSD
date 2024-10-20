@@ -63,6 +63,7 @@ type
     function gpUpdate_Scale_Movement_Transport(execParamsMovement:TParams): Boolean;
     function gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
     function gpUpdate_Scale_Movement_PersonalLoss(execParams:TParams): Boolean;
+    function gpUpdate_Scale_Movement_Income_PricePartner(execParams:TParams): Boolean;
 
     // Scale + ScaleCeh
     function gpUpdate_Scale_Movement_Status(MovementId_parent:Integer): Boolean;
@@ -296,6 +297,30 @@ begin
        end;}
     end;
     Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_Movement_Income_PricePartner(execParams:TParams): Boolean;
+begin
+    Result:=false;
+    //
+    if execParamsMovement.ParamByName('MovementId').AsInteger<>0 then
+    with spSelect do begin
+       StoredProcName:='gpGet_Scale_Movement_findOldPeriod';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       //try
+         Execute;
+         Result:=DataSet.FieldByName('isFind').asBoolean;
+         execParamsMovement.ParamByName('OperDate_inf').AsDateTime:=DataSet.FieldByName('OperDate').AsDateTime;
+         execParamsMovement.ParamByName('InvNumber_inf').AsString:=DataSet.FieldByName('InvNumber').AsString;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
+       end;}
+    end;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Movement_findOldPeriod(var execParamsMovement:TParams): Boolean;

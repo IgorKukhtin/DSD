@@ -279,6 +279,8 @@ type
     PanelPartionDate: TPanel;
     LabelPartionDate: TLabel;
     PartionDateEdit: TcxDateEdit;
+    PricePartner_in: TcxGridDBColumn;
+    AmountPartner_in: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -424,6 +426,20 @@ begin
          ShowMessage('Ошибка.Проведение документа не предусмотрено.');
          exit;
      end;
+     //
+     // Проверка - нужен ли Акт
+     if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+     then begin
+          if DMMainScaleForm.gpUpdate_Scale_Movement_Income_PricePartner(ParamsMovement) = FALSE
+          then
+              if MessageDlg('Найдено отклонение цены от спецификации.'
+                   +#10+#13+'Для <'++'> с ценой поставщика  = <'++'>.'
+                   +#10+#13+'Будет сформирован Акт разногласий.'
+                   +#10+#13+'Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
+              then exit;
+
+     end;
+     //
      //Проверка
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
      then if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Inventory
