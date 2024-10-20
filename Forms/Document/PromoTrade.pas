@@ -221,6 +221,15 @@ type
     cxLabel8: TcxLabel;
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
+    InsertRecordTM: TInsertRecord;
+    InsertRecordGGPP: TInsertRecord;
+    InsertRecordGGP: TInsertRecord;
+    InsertRecordGD: TInsertRecord;
+    bbInsertRecordTM: TdxBarButton;
+    bbInsertRecordGGP: TdxBarButton;
+    bbInsertRecordGGPP: TdxBarButton;
+    bbInsertRecordGD: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
   private
     { Private declarations }
   public

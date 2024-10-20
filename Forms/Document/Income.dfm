@@ -26,8 +26,6 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = -5
-    ExplicitWidth = 1177
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -365,14 +363,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1105
     ClientRectBottom = 325
     ClientRectRight = 1062
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1105
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -380,7 +376,6 @@ object IncomeForm: TIncomeForm
         Height = 301
         Align = alClient
         TabOrder = 0
-        ExplicitTop = -3
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -845,7 +840,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitWidth = 1105
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -853,7 +847,6 @@ object IncomeForm: TIncomeForm
         Height = 301
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1105
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CostDS
@@ -1366,6 +1359,7 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbsPrint'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -1529,7 +1523,26 @@ object IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbPrintStickerTermo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDiff'
         end>
+    end
+    object bbPrintDiff: TdxBarButton
+      Action = actPrintDiff
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1677,6 +1690,7 @@ object IncomeForm: TIncomeForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actUpdateClientDataCost: TdsdUpdateDataSet
@@ -1708,6 +1722,60 @@ object IncomeForm: TIncomeForm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
+    end
+    object actPrintDiff: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1040#1082#1090' '#1085#1077#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1081
+      Hint = #1040#1082#1090' '#1085#1077#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1081
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'From'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42160d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Income_ActDiff'
+      ReportNameParam.Value = 'PrintMovement_Income_ActDiff'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'

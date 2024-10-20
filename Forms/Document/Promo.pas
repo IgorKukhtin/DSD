@@ -549,7 +549,7 @@ type
     cxLabel26: TcxLabel;
     edServiceDate: TcxDateEdit;
     actChoiceTradeMark: TOpenChoiceForm;
-    actChoiceGoodsGroupProperty: TOpenChoiceForm;
+    actChoiceGoodsGroupPropertyP: TOpenChoiceForm;
     actChoiceGoodsGroupDirection: TOpenChoiceForm;
     cxLabel27: TcxLabel;
     edPaidKind: TcxButtonEdit;
@@ -584,6 +584,16 @@ type
     bbInfoMoneyProtocolOpen: TdxBarButton;
     ddsUpdate: TdxBarSubItem;
     Separator: TdxBarSeparator;
+    InsertRecordTM: TInsertRecord;
+    InsertRecordGGP: TInsertRecord;
+    InsertRecordGD: TInsertRecord;
+    InsertRecordGGPP: TInsertRecord;
+    actChoiceGoodsGroupPropertyParent: TOpenChoiceForm;
+    bbInsertRecordTM: TdxBarButton;
+    bbInsertRecordGGPP: TdxBarButton;
+    bbInsertRecordGGP: TdxBarButton;
+    bbInsertRecordGD: TdxBarButton;
+    actChoiceGoodsGroupProperty: TOpenChoiceForm;
   private
     { Private declarations }
   public
