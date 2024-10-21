@@ -359,6 +359,7 @@ BEGIN
            , Object_Measure.ValueData        AS MeasureName
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner
+           , tmpMI.AmountPartnerSecond       AS AmountPartnerSecond
            , tmpMI.AmountPacker              AS AmountPacker
           
            , tmpMI.Price                     AS Price
@@ -471,9 +472,10 @@ BEGIN
                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                               ELSE MovementItem.Amount
                          END) AS AmountPartner
-                  , SUM (COALESCE (MIFloat_AmountPacker.VAlueData, 0)) AS AmountPacker
-                  , COALESCE (MIFloat_Price.ValueData, 0) AS PriceOriginal
-                  , COALESCE (MIFloat_PricePartner.ValueData,0)        AS PricePartner
+                  , SUM (COALESCE (MIFloat_AmountPartnerSecond.VAlueData, 0)) AS AmountPartnerSecond
+                  , SUM (COALESCE (MIFloat_AmountPacker.VAlueData, 0))        AS AmountPacker
+                  , COALESCE (MIFloat_Price.ValueData, 0)                     AS PriceOriginal
+                  , COALESCE (MIFloat_PricePartner.ValueData,0)               AS PricePartner
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -482,9 +484,13 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_PricePartner
                                               ON MIFloat_PricePartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_PricePartner.DescId = zc_MIFloat_PricePartner() 
-                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
+                                              ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
                                               ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
