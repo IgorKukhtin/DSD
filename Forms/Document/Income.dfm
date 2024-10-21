@@ -430,6 +430,11 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_parent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartnerSecond
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -485,6 +490,11 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_parent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartnerSecond
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -618,6 +628,18 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object AmountPartnerSecond: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'. ('#1087#1086' '#1076#1086#1082'.)'
+            DataBinding.FieldName = 'AmountPartnerSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091') '#9
+            Options.Editing = False
+            Width = 85
           end
           object AmountPacker: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1079#1072#1075#1086#1090#1086#1074'.'
@@ -840,6 +862,9 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -2672,11 +2697,11 @@ object IncomeForm: TIncomeForm
     object actUpdate_PricePartnerEdit: TdsdInsertUpdateAction
       Category = 'Price'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' / '#1050#1086#1083'. '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086' '#1076#1086#1082'.)>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' / '#1050#1086#1083'. '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086' '#1076#1086#1082'.)>'
       ImageIndex = 77
-      FormName = 'TMIFloatEditForm'
-      FormNameParam.Value = 'TMIFloatEditForm'
+      FormName = 'TIncomeEdit_PartnerParamForm'
+      FormNameParam.Value = 'TIncomeEdit_PartnerParamForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2686,24 +2711,6 @@ object IncomeForm: TIncomeForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DescCode'
-          Value = 'zc_MIFloat_PricePartner'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DescProcess'
-          Value = 'zc_Enum_Process_Update_MI_Income_PricePartner'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

@@ -5407,6 +5407,10 @@
 				<Form>Report_HistoryCost_CompareForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\IncomeEdit_PartnerParam.pas">
+				<Form>IncomeEdit_PartnerParamForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

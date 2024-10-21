@@ -1076,6 +1076,9 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeEdit_PartnerParamForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeEdit_PartnerParamForm');
   {TdsdFormStorageFactory.GetStorage.Save(GetForm('TChange—urrencyUserDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChange—urrencyUserDialogForm');
 
