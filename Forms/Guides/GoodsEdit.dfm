@@ -394,6 +394,17 @@
     TabOrder = 47
     Width = 273
   end
+  object cxLabel23: TcxLabel
+    Left = 40
+    Top = 315
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object ceComment: TcxTextEdit
+    Left = 40
+    Top = 333
+    TabOrder = 49
+    Width = 272
+  end
   object ActionList: TActionList
     Left = 304
     Top = 120
@@ -463,6 +474,14 @@
         Name = 'inShortName'
         Value = Null
         Component = edShortName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -897,6 +916,13 @@
         Value = Null
         Component = GuidesGoodsGroupDirection
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
       end>
