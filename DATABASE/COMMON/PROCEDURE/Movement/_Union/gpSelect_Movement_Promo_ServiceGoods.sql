@@ -286,6 +286,7 @@ BEGIN
                                                           AND MovementFloat_CostPromo.DescId = zc_MovementFloat_CostPromo()
                                    LEFT JOIN tmpInfoMoney ON tmpInfoMoney.ParentId = tmpMovement.Id
                               WHERE tmpMovement.DescId = zc_Movement_Promo() 
+                                AND (MovementFloat_CostPromo.ValueData <> 0 OR tmpInfoMoney.InfoMoneyId_CostPromo > 0)
                            UNION ALL
                               SELECT tmpMovement.Id AS ParentId
                               , NULL AS AdvertisingId
@@ -298,7 +299,7 @@ BEGIN
                                    LEFT JOIN tmpMI_promo ON tmpMI_promo.MovementId = tmpMovement.Id 
                                    LEFT JOIN tmpInfoMoney ON tmpInfoMoney.ParentId =  tmpMovement.Id 
                               WHERE tmpMovement.DescId = zc_Movement_Promo()
-                                AND (COALESCE (tmpMI_promo.SummMarket,0) <> 0 OR COALESCE (tmpInfoMoney.InfoMoneyId_Market,0) <> 0)
+                                AND (COALESCE (tmpMI_promo.SummMarket,0) <> 0 OR tmpInfoMoney.InfoMoneyId_Market > 0)
                              )
 
 

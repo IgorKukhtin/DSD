@@ -539,6 +539,9 @@ begin
     DataSet := TClientDataSet.Create(nil);
     Stream := nil;
     try
+      ASecond_pause := 0;
+      AMessage_pause := 'пауза 0 сек.';
+      //
       Stream := GetStringStream(String(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession, AProcName]))));
       DataSet.LoadFromStream(Stream);
       if not DataSet.IsEmpty then

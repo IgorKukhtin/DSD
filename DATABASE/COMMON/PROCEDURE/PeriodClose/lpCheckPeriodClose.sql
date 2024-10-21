@@ -175,13 +175,15 @@ BEGIN
          -- 1.3. Проверка
          IF inOperDate < vbCloseDate
          THEN 
-             RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> до <%> закрыт период <%>.'
+             RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> до <%> закрыт период <%>.(%)(%)'
                            , (SELECT ItemName FROM MovementDesc WHERE Id = inMovementDescId)
                            , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
                            , DATE (inOperDate)
                            , lfGet_Object_ValueData (inUserId)
                            , DATE (vbCloseDate)
                            , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
+                           , 1
+                           , inMovementId
                             ;
          END IF;
 
@@ -273,13 +275,15 @@ BEGIN
          -- 2.3. Проверка
          IF inOperDate < vbCloseDate
          THEN 
-             RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> до <%> закрыт период <%>.'
+             RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> до <%> закрыт период <%>.(%)(%)'
                            , (SELECT ItemName FROM MovementDesc WHERE Id = inMovementDescId)
                            , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
                            , DATE (inOperDate)
                            , lfGet_Object_ValueData (inUserId)
                            , DATE (vbCloseDate)
                            , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
+                           , 2
+                           , inMovementId
                             ;
          END IF;
 
@@ -354,13 +358,15 @@ BEGIN
          -- 3.3. Проверка
          IF inOperDate < vbCloseDate
          THEN 
-             RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> до <%> закрыт период <%>.'
+             RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> до <%> закрыт период <%>.(%)(%)'
                            , (SELECT ItemName FROM MovementDesc WHERE Id = inMovementDescId)
                            , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
                            , DATE (inOperDate)
                            , lfGet_Object_ValueData (inUserId)
                            , DATE (vbCloseDate)
                            , (SELECT '(' || Code :: TVarChar || ')' || Name FROM PeriodClose WHERE Id = vbPeriodCloseId)
+                           , 3
+                           , inMovementId
                             ;
          END IF;
 

@@ -157,6 +157,8 @@ type
     Price_Income_from: TcxGridDBColumn;
     Price_Income_to: TcxGridDBColumn;
     GoodsName_new: TcxGridDBColumn;
+    gbAmountPartner: TGroupBox;
+    EditAmountPartner: TcxCurrencyEdit;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -225,6 +227,8 @@ type
     procedure EditTare0KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure bbGoodsRemainsClick(Sender: TObject);
+    procedure EditAmountPartnerKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     oldParam1, oldParam2:Integer;
     oldParam3:TDateTime;
@@ -293,7 +297,9 @@ begin
      if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310) then EditWeightValue.Properties.DecimalPlaces:= 4;
      //
      gbPriceIncome.Visible:= false; //gbPrice.Visible;
+     gbAmountPartner.Visible:= (gbPrice.Visible) and (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 210);
      EditPriceIncome.Text:='0';
+     EditAmountPartner.Text:='0';
 
      CancelCxFilter;
      fStartWrite:=true;
@@ -606,6 +612,9 @@ begin
            then if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
                 then ActiveControl:=EditPrice
                 else
+                if (gbAmountPartner.Visible = TRUE)and (ActiveControl<>EditAmountPartner)
+                then ActiveControl:=EditAmountPartner
+                else
                 if rgGoodsKind.Items.Count > 1
                 then ActiveControl:=EditGoodsKindCode
                 else
@@ -619,7 +628,11 @@ begin
                 then ActiveControl:=EditWeightValue
                 else if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
                      then ActiveControl:=EditPrice
-                     else if rgGoodsKind.Items.Count > 1
+                     else
+                          if (gbAmountPartner.Visible = TRUE)and (ActiveControl<>EditAmountPartner)
+                          then ActiveControl:=EditAmountPartner
+                          else
+                          if rgGoodsKind.Items.Count > 1
                           then ActiveControl:=EditGoodsKindCode
                           else
                               if infoPanelTareFix.Visible
@@ -629,7 +642,11 @@ begin
       if (ActiveControl=EditWeightValue)or(ActiveControl=EditPrice)
       then if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
            then ActiveControl:=EditPrice
-           else if rgGoodsKind.Items.Count > 1
+           else
+                if (gbAmountPartner.Visible = TRUE)and (ActiveControl<>EditAmountPartner)
+                then ActiveControl:=EditAmountPartner
+                else
+                if rgGoodsKind.Items.Count > 1
                 then ActiveControl:=EditGoodsKindCode
                 else
                      if infoPanelTareFix.Visible
@@ -644,6 +661,9 @@ begin
                      then if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
                           then ActiveControl:=EditPrice
                           else
+                          if (gbAmountPartner.Visible = TRUE)and (ActiveControl<>EditAmountPartner)
+                          then ActiveControl:=EditAmountPartner
+                          else
                           if rgGoodsKind.Items.Count > 1
                           then ActiveControl:=EditGoodsKindCode
                           else
@@ -656,6 +676,9 @@ begin
                           then ActiveControl:=EditWeightValue
                           else if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
                                then ActiveControl:=EditPrice
+                               else
+                               if (gbAmountPartner.Visible = TRUE)and (ActiveControl<>EditAmountPartner)
+                               then ActiveControl:=EditAmountPartner
                                else
                                if rgGoodsKind.Items.Count > 1
                                then ActiveControl:=EditGoodsKindCode
@@ -919,6 +942,20 @@ begin
                      ShowMessage('Ошибка.ЦЕНА не может быть <= 0.');
                      exit;
             end;
+
+            //!!!Криво - передаем Количество у контрагента через этот параметр!!!
+            if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+               and(SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202)
+            then begin
+                  //!!!Криво - передаем Количество у контрагента через этот параметр!!!
+                  try ParamsMI.ParamByName('CountForPrice_Return').AsFloat:= StrToFloat(EditAmountPartner.Text);
+                  except
+                        ParamsMI.ParamByName('CountForPrice_Return').AsFloat:= 0;
+                  end;
+                  //!!!Криво - передаем цену по спецификации через этот параметр!!!
+                  ParamsMI.ParamByName('Price_Return').AsFloat:= CDS.FieldByName('Price_Income').AsFloat;
+            end;
+
             //
             if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
               or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
@@ -928,21 +965,57 @@ begin
                 or (CDS.FieldByName('Price_Income_to').AsFloat   < ParamsMI.ParamByName('BoxCount').AsFloat)
                   )
             then begin
+                  if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
+                  begin
+                     Result:= false;
+                     //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
+                     if MessageDlg('Ошибка.ЦЕНА не соответствует цене в спецификации.'
+                               + #10 + #13
+                               + 'Продолжить?'
+                                ,mtConfirmation,mbYesNoCancel,0) <> 6 // mbYes
+                     then begin
+                         Result:= false;
+                         exit;
+                     end
+                     else
+                         Result:= true;
+                  end
+                  else
+                  begin
                      Result:= false;
                      //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
                      ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
                      exit;
-            end
+                  end
+           end
             else
             if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
               or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
               and (CDS.FieldByName('Price_Income').AsFloat > 0)
               and (CDS.FieldByName('Price_Income').AsFloat <> ParamsMI.ParamByName('BoxCount').AsFloat)
             then begin
+                  if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
+                  begin
+                     Result:= false;
+                     //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
+                     if MessageDlg('Ошибка.ЦЕНА не соответствует цене в спецификации.'
+                               + #10 + #13
+                               + 'Продолжить?'
+                                ,mtConfirmation,mbYesNoCancel,0) <> 6
+                     then begin
+                       Result:= false;
+                       exit;
+                     end
+                     else
+                         Result:= true;
+                  end
+                  else
+                  begin
                      Result:= false;
                      //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
                      ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
                      exit;
+                  end;
             end;
        end;
      end;
@@ -1227,11 +1300,25 @@ end;
 procedure TGuideGoodsForm.EditPriceKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
     if Key=13
+    then if (gbAmountPartner.Visible = TRUE)
+         then ActiveControl:=EditAmountPartner
+         else
+         if rgGoodsKind.Items.Count>1
+         then ActiveControl:=EditGoodsKindCode
+         else if infoPanelTareFix.Visible
+              then ActiveControl:=EditTare1
+              else ActiveControl:=EditTareCount;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditAmountPartnerKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+    if Key=13
     then if rgGoodsKind.Items.Count>1
-    then ActiveControl:=EditGoodsKindCode
-    else if infoPanelTareFix.Visible
-         then ActiveControl:=EditTare1
-         else ActiveControl:=EditTareCount;
+         then ActiveControl:=EditGoodsKindCode
+         else if infoPanelTareFix.Visible
+              then ActiveControl:=EditTare1
+              else ActiveControl:=EditTareCount;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTare1KeyDown(Sender: TObject; var Key: Word;

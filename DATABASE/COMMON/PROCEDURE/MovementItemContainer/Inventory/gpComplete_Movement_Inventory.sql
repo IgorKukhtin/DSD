@@ -2710,6 +2710,44 @@ RAISE EXCEPTION 'Œ¯Ë·Í‡.<%>  %    % '
 end if;
 
 
+
+IF vbUserId = zc_Enum_Process_Auto_PrimeCost()
+      AND 0 < (select COUNT(*) -- Container_2.Id as ContainerId
+                from Container
+                     left join ContainerLinkObject as CLO_0 on CLO_0.ContainerId = Container.Id and CLO_0.DescId = zc_ContainerLinkObject_Account()
+                     inner join ContainerLinkObject as CLO_1 on CLO_1.ContainerId = Container.Id and CLO_1.DescId = zc_ContainerLinkObject_Unit() and CLO_1.ObjectId = zc_Unit_rk()
+                     left join ContainerLinkObject as CLO_2 on CLO_2.ContainerId = Container.Id and CLO_2.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                     join Container as Container_2 on Container_2.ParentId = Container.Id
+                                                  and Container_2.DescId = 2
+                     left join ContainerLinkObject as CLO_22 on CLO_22.ContainerId = Container_2.Id and CLO_22.DescId = zc_ContainerLinkObject_PartionGoods()
+                     -- left join Container_err_2024_08 on Container_err_2024_08.ContainerId = Container_2.Id
+                where Container.DescId = 1
+                  and coalesce (CLO_22.ObjectId, 0) <> coalesce (CLO_2.ObjectId, 0)
+                  -- and Container_err_2024_08.ContainerId is null
+                  and CLO_0.ObjectId is null
+               )
+THEN
+    RAISE EXCEPTION 'Œ¯Ë·Í‡.<%> and 0'
+    --RAISE INFO 'Œ¯Ë·Í‡.<%> and 0'
+, (select COUNT(*) -- Container_2.Id as ContainerId
+from Container
+left join ContainerLinkObject as CLO_0 on CLO_0.ContainerId = Container.Id and CLO_0.DescId = zc_ContainerLinkObject_Account()
+
+join ContainerLinkObject as CLO_1 on CLO_1.ContainerId = Container.Id and CLO_1.DescId = zc_ContainerLinkObject_Unit() and CLO_1.ObjectId = zc_Unit_rk()
+left join ContainerLinkObject as CLO_2 on CLO_2.ContainerId = Container.Id and CLO_2.DescId = zc_ContainerLinkObject_PartionGoods()
+join Container as Container_2 on Container_2.ParentId = Container.Id
+                             and Container_2.DescId = 2
+left join ContainerLinkObject as CLO_22 on CLO_22.ContainerId = Container_2.Id and CLO_22.DescId = zc_ContainerLinkObject_PartionGoods()
+-- left join Container_err_2024_08 on Container_err_2024_08.ContainerId = Container_2.Id
+where Container.DescId = 1
+and coalesce (CLO_22.ObjectId, 0) <> coalesce (CLO_2.ObjectId, 0)
+-- and Container_err_2024_08.ContainerId is null
+and CLO_0.ObjectId is null
+ );
+
+END IF;
+
      -- !!!‚ÂÏÂÌÌÓ - œ–Œ“Œ ŒÀ - «¿’¿–ƒ Œƒ»À!!!
      INSERT INTO ResourseProtocol (UserId
                                  , OperDate
