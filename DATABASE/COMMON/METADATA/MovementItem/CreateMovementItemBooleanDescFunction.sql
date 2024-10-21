@@ -302,10 +302,26 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_Etiketka() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_Etiketka', 'Признак Переклейка(да/нет)' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_Etiketka'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_PriceWithVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PriceWithVAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_PriceWithVAT', 'Цена с НДС (да/нет)' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PriceWithVAT'); 
+
+CREATE OR REPLACE FUNCTION zc_MIBoolean_AmountPartnerSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPartnerSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_AmountPartnerSecond', 'Признак "без оплаты"' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPartnerSecond'); 
+
+
+   
  
+
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 21.10.24         * zc_MIBoolean_AmountPartnerSecond
+                    zc_MIBoolean_PriceWithVAT
  29.05.24         * zc_MIBoolean_PartionCell_Close_6...12
  04.07.23         * zc_MIBoolean_PriceNalog
  03.01.23                                                                       * zc_MIBoolean_FixedPercent

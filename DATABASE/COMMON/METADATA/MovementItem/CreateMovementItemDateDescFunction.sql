@@ -182,10 +182,19 @@ CREATE OR REPLACE FUNCTION zc_MIDate_OrderDateSP() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_OrderDateSP', 'Дата наказу, в якому внесено ЛЗ (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_OrderDateSP');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_PriceRetOut() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PriceRetOut'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PriceRetOut', 'Дата для цены возврат поставщику' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PriceRetOut');
+
+
+
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В. 
+ 21.10.24         * zc_MIDate_PriceRetOut 
  24.08.24         * zc_MIDate_PartionGoods_next
  14.05.22                                                                         * zc_MIDate_ReestrDateSP
  05.05.22         * zc_MIDate_Double
