@@ -89,6 +89,7 @@ BEGIN
            AND MovementItem.isErased   = FALSE
            AND MovementItem.Amount     = 0
            AND NOT EXISTS (SELECT 1 FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_Summ() AND MIF.ValueData <> 0)
+           AND NOT EXISTS (SELECT 1 FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = MovementItem.Id AND MIB.DescId = zc_MIBoolean_Calculated() AND MIB.ValueData = TRUE)
            AND MIF_ContainerId.MovementItemId = MovementItem.Id
            AND MIF_ContainerId.DescId         = zc_MIFloat_ContainerId()
            AND MIF_ContainerId.ValueData      > 0

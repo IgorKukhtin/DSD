@@ -2880,6 +2880,11 @@ begin
                   // BuyerUnitOfMeasure
                   LineItem.BuyerUnitOfMeasure := ItemsDataSet.FieldByName('MeasureName').asString;
 
+                  // Ставка податку (ПДВ,%):
+                  LineItem.TaxRate := ItemsDataSet.FieldByName('VATPercent').AsInteger;
+                  // Ставка податку (ПДВ,%):
+                  LineItem.TaxCategoryCode := 'S';
+
                 end;
                 inc(i);
                 Next;
@@ -2993,6 +2998,9 @@ begin
                   // Ставка податку (ПДВ,%):
                   LineItem.TaxRate := ItemsDataSet.FieldByName('VATPercent').AsInteger;
 
+                  // Ставка податку (ПДВ,%):
+                  LineItem.TaxCategoryCode := 'S';
+
                   // Сума з ПДВ
                   LineItem.GrossAmount := ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat;
                   // Сума податку
@@ -3018,8 +3026,9 @@ begin
             DESADV_fozz_Price.InvoiceSummary.TotalGrossAmount := Round(100 * AmountSummNoVAT_fozz * (1 + VATPercent_fozz/100)) / 100;
 
 
-  end
-  else begin
+  end;
+  //else
+      begin
             // Создать XML
             DESADV := DesadvXML.NewDESADV;
             //
@@ -3094,7 +3103,7 @@ begin
 
   end;
   //
-  //
+  // 1. Send
   Stream := TMemoryStream.Create;
   try
     if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
@@ -3120,7 +3129,7 @@ begin
        except
          if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
          then DESADV_fozz_Amount.OwnerDocument.SaveToFile(FileName)
-         else DESADV     .OwnerDocument.SaveToFile(FileName);
+         else DESADV            .OwnerDocument.SaveToFile(FileName);
        end;
     // здесь сохранили на ftp
     PutStreamToFTP(Stream, FileName, '/outbox');
@@ -3150,7 +3159,44 @@ begin
   end;
   //
   //
-  // Send XML - fozzy - Price
+  // 2.Send XML - fozzy - DESADV
+  if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+  then
+  Stream := TMemoryStream.Create;
+  try
+    DESADV.OwnerDocument.SaveToStream(Stream);
+    lNumber:= DESADV.NUMBER;
+    //
+    FileName := 'desadv_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
+
+    // !временно!
+       try
+         DESADV     .OwnerDocument.SaveToFile(FDirectoryError + FileName);
+       except
+         DESADV     .OwnerDocument.SaveToFile(FileName);
+       end;
+    // здесь сохранили на ftp
+    PutStreamToFTP(Stream, FileName, '/outbox');
+    //
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+    begin
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
+      FUpdateEDIErrorState.Execute;
+
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+        FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+          'Документ DESADV отправлен на FTP';
+      FInsertEDIEvents.Execute;
+    end;
+  finally
+    Stream.Free;
+    //
+    DeleteFile(FileName);
+  end;
+
+  // 3.Send XML - fozzy - Price
   if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
   then
   try
@@ -5168,6 +5214,9 @@ begin
         LineItem.InvoiceUnitNetPrice := ItemsDataSet.FieldByName('PriceNoVAT').AsFloat;
         // Ставка податку (ПДВ,%):
         LineItem.TaxRate := ItemsDataSet.FieldByName('VATPercent').AsInteger;
+        // Ставка податку (ПДВ,%):
+        //LineItem.TaxCategoryCode := 'S';
+
         // Сума податку
         LineItem.TaxAmount := ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat - ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat;
         // Сума без ПДВ

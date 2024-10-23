@@ -511,6 +511,7 @@ BEGIN
                                                       ON ObjectLink_Goods_InfoMoney.ObjectId      = MIContainer.ObjectId_Analyzer
                                                      AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
                                                      AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                    , zc_Enum_InfoMoney_30101() -- Продукция
                                                                                                      )
                            WHERE MIContainer.OperDate       = vbOperDate
                              AND MIContainer.DescId         = zc_MIContainer_Count()
@@ -559,6 +560,7 @@ BEGIN
                                                       ON ObjectLink_Goods_InfoMoney.ObjectId      = MIContainer.ObjectId_Analyzer
                                                      AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
                                                      AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                    , zc_Enum_InfoMoney_30101() -- Продукция
                                                                                                      )
                            WHERE MIContainer.OperDate       = vbOperDate
                              AND MIContainer.DescId         = zc_MIContainer_Count()

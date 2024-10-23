@@ -206,6 +206,9 @@ BEGIN
      -- сохранили свойство <ContainerId>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), ioId, 0);
 
+     -- сохранили свойство <ContainerId>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), ioId, TRUE);
+
      -- сохранили связь с <партия товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
 

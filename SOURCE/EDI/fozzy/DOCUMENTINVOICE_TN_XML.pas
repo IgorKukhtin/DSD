@@ -236,6 +236,7 @@ type
     function Get_BuyerUnitOfMeasure: UnicodeString;
     function Get_InvoiceUnitNetPrice: Double;
     function Get_TaxRate: Integer;
+    function Get_TaxCategoryCode: UnicodeString;
     function Get_GrossAmount: Double;
     function Get_TaxAmount: Double;
     function Get_NetAmount: Double;
@@ -248,6 +249,7 @@ type
     procedure Set_BuyerUnitOfMeasure(Value: UnicodeString);
     procedure Set_InvoiceUnitNetPrice(Value: Double);
     procedure Set_TaxRate(Value: Integer);
+    procedure Set_TaxCategoryCode(Value: UnicodeString);
     procedure Set_GrossAmount(Value: Double);
     procedure Set_TaxAmount(Value: Double);
     procedure Set_NetAmount(Value: Double);
@@ -261,6 +263,7 @@ type
     property BuyerUnitOfMeasure: UnicodeString read Get_BuyerUnitOfMeasure write Set_BuyerUnitOfMeasure;
     property InvoiceUnitNetPrice: Double read Get_InvoiceUnitNetPrice write Set_InvoiceUnitNetPrice;
     property TaxRate: Integer read Get_TaxRate write Set_TaxRate;
+    property TaxCategoryCode: UnicodeString read Get_TaxCategoryCode write Set_TaxCategoryCode;
     property GrossAmount: Double read Get_GrossAmount write Set_GrossAmount;
     property TaxAmount: Double read Get_TaxAmount write Set_TaxAmount;
     property NetAmount: Double read Get_NetAmount write Set_NetAmount;
@@ -467,6 +470,7 @@ type
     function Get_BuyerUnitOfMeasure: UnicodeString;
     function Get_InvoiceUnitNetPrice: Double;
     function Get_TaxRate: Integer;
+    function Get_TaxCategoryCode: UnicodeString;
     function Get_GrossAmount: Double;
     function Get_TaxAmount: Double;
     function Get_NetAmount: Double;
@@ -479,6 +483,7 @@ type
     procedure Set_BuyerUnitOfMeasure(Value: UnicodeString);
     procedure Set_InvoiceUnitNetPrice(Value: Double);
     procedure Set_TaxRate(Value: Integer);
+    procedure Set_TaxCategoryCode(Value: UnicodeString);
     procedure Set_GrossAmount(Value: Double);
     procedure Set_TaxAmount(Value: Double);
     procedure Set_NetAmount(Value: Double);
@@ -998,6 +1003,16 @@ end;
 procedure TXMLLineItemType.Set_TaxRate(Value: Integer);
 begin
   ChildNodes['TaxRate'].NodeValue := Value;
+end;
+
+function TXMLLineItemType.Get_TaxCategoryCode: UnicodeString;
+begin
+  Result := ChildNodes['TaxCategoryCode'].Text;
+end;
+
+procedure TXMLLineItemType.Set_TaxCategoryCode(Value: UnicodeString);
+begin
+  ChildNodes['TaxCategoryCode'].NodeValue := Value;
 end;
 
 function TXMLLineItemType.Get_GrossAmount: Double;

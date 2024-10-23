@@ -166,7 +166,7 @@ BEGIN
      , tmpMI_Float AS (SELECT MovementItemFloat.*
                        FROM MovementItemFloat
                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MI_Id FROM tmpMI)
-                         AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPartner(), zc_MIFloat_BoxCount(), zc_MIFloat_LevelNumber(), zc_MIFloat_BoxNumber())
+                         AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPartner(), zc_MIFloat_BoxCount(), zc_MIFloat_LevelNumber(), zc_MIFloat_BoxNumber(), zc_MIFloat_CountTare(), zc_MIFloat_WeightTare())
                         )
      , tmp_GoodsKind AS (SELECT MovementItemLinkObject.*
                          FROM MovementItemLinkObject
@@ -190,6 +190,10 @@ BEGIN
                                 , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
                                 , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) AS AmountPartnerWeight
                                 , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPartnerSh
+
+                                  -- так считаем Кол-во Упаковок (пакетов)
+                                , SUM (CASE WHEN MIFloat_WeightTare.ValueData < 0.1 THEN COALESCE (MIFloat_CountTare.ValueData, 0) ELSE 0 END) AS CountPackage_calc
+
                            FROM tmpMI
                                 LEFT JOIN tmpMI_Boolean AS MIBoolean_BarCode
                                                         ON MIBoolean_BarCode.MovementItemId = tmpMI.MI_Id
@@ -206,6 +210,14 @@ BEGIN
                                 LEFT JOIN tmpMI_Float AS MIFloat_LevelNumber
                                                       ON MIFloat_LevelNumber.MovementItemId = tmpMI.MI_Id
                                                      AND MIFloat_LevelNumber.DescId = zc_MIFloat_LevelNumber()
+
+                                LEFT JOIN tmpMI_Float AS MIFloat_CountTare
+                                                      ON MIFloat_CountTare.MovementItemId = tmpMI.MI_Id
+                                                     AND MIFloat_CountTare.DescId = zc_MIFloat_CountTare()
+                                LEFT JOIN tmpMI_Float AS MIFloat_WeightTare
+                                                      ON MIFloat_WeightTare.MovementItemId = tmpMI.MI_Id
+                                                     AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
+
                                 LEFT JOIN tmp_GoodsKind AS MILinkObject_GoodsKind
                                                         ON MILinkObject_GoodsKind.MovementItemId = tmpMI.MI_Id
 
@@ -453,7 +465,10 @@ BEGIN
             + -- плюс Вес "гофроящиков"
               COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)
             + -- плюс Вес Упаковок (пакетов)
-              CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
+              CASE WHEN tmpMovementItem.CountPackage_calc > 0
+                       THEN tmpMovementItem.CountPackage_calc
+
+                  WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
                         THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
                              CAST (tmpMovementItem.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/) AS NUMERIC (16, 0))
                            * -- вес 1-ого пакета
@@ -464,13 +479,19 @@ BEGIN
 
 
              -- Кол-во Упаковок (пакетов)
-           , CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
+           , CASE WHEN tmpMovementItem.CountPackage_calc > 0
+                       THEN tmpMovementItem.CountPackage_calc
+
+                  WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
                        THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
                             CAST (tmpMovementItem.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/) AS NUMERIC (16, 0))
                   ELSE 0
              END :: TFloat AS CountPackage_calc
              -- Вес Упаковок (пакетов)
-           , CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
+           , CASE WHEN tmpMovementItem.CountPackage_calc > 0
+                       THEN tmpMovementItem.CountPackage_calc
+
+                  WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
                        THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
                             CAST (tmpMovementItem.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/) AS NUMERIC (16, 0))
                           * -- вес 1-ого пакета

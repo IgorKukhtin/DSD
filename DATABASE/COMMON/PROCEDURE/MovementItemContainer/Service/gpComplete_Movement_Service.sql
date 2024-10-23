@@ -116,6 +116,7 @@ BEGIN
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
                 )
+            AND vbUserId <> 5
              THEN
                  RAISE EXCEPTION 'Ошибка.Не соответствует сумма %в документе Акция <%,грн> = <%> %и в документе Начислений = <%>.'
                                , CHR (13)
@@ -171,6 +172,7 @@ BEGIN
 
          -- 2. Трейд-маркетинг - Сумма, грн
          IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_Doc AND Movement.DescId = zc_Movement_PromoTrade())
+            AND vbUserId <> 5
          THEN
              IF (SELECT 1 * SUM (COALESCE (MIFloat_Summ.ValueData, 0))
                  FROM MovementItem
