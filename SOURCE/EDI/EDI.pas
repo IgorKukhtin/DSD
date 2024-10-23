@@ -3162,8 +3162,9 @@ begin
   // 2.Send XML - fozzy - DESADV
   if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
   then
-  Stream := TMemoryStream.Create;
   try
+    Stream := TMemoryStream.Create;
+
     DESADV.OwnerDocument.SaveToStream(Stream);
     lNumber:= DESADV.NUMBER;
     //
