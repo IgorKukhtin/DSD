@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar, Name
              , isIrna Boolean
              , isAsset Boolean
              , isErased Boolean
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -130,6 +131,8 @@ BEGIN
             , COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE)  :: Boolean AS isAsset
 
             , Object_Goods.isErased       AS isErased
+            
+            , ObjectString_Goods_Comment.ValueData ::TVarChar AS Comment
 
        FROM (/*SELECT Object_Goods.*
              FROM (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey
@@ -189,6 +192,10 @@ BEGIN
                                     ON ObjectString_Goods_ShortName.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_ShortName.DescId = zc_ObjectString_Goods_ShortName()
 
+             LEFT JOIN ObjectString AS ObjectString_Goods_Comment
+                                    ON ObjectString_Goods_Comment.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_Comment.DescId = zc_ObjectString_Goods_Comment()
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -238,10 +245,9 @@ BEGIN
                                      ON ObjectBoolean_Guide_Irna.ObjectId = Object_Goods.Id
                                     AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
 
-           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
-                                   ON ObjectBoolean_Goods_Asset.ObjectId = Object_Goods.Id 
-                                  AND ObjectBoolean_Goods_Asset.DescId = zc_ObjectBoolean_Goods_Asset()
-
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
+                                     ON ObjectBoolean_Goods_Asset.ObjectId = Object_Goods.Id 
+                                    AND ObjectBoolean_Goods_Asset.DescId = zc_ObjectBoolean_Goods_Asset()
 
              LEFT JOIN ObjectDate AS ObjectDate_BUH
                                   ON ObjectDate_BUH.ObjectId = Object_Goods.Id
@@ -369,6 +375,7 @@ BEGIN
             , FALSE                           AS isIrna
             , FALSE                           AS isAsset
             , FALSE                           AS isErased
+            , NULL                ::TVarChar AS Comment
       ;
 
 END;
@@ -380,6 +387,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 18.10.24         * Comment
  22.08.24         *
  17.01.24         *
  19.12.23         *

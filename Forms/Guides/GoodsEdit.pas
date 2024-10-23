@@ -96,6 +96,8 @@ type
     cxLabel22: TcxLabel;
     edGoodsGroupDirection: TcxButtonEdit;
     GuidesGoodsGroupDirection: TdsdGuides;
+    cxLabel23: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

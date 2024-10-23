@@ -184,6 +184,7 @@ type
     actImportSettingId_Direct: TdsdExecStoredProc;
     macStartLoad_Direct: TMultiAction;
     bbStartLoad_Direct: TdxBarButton;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

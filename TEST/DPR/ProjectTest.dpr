@@ -1543,7 +1543,8 @@ uses
   PriceDialog in '..\..\Forms\System\PriceDialog.pas' {PriceDialogForm: TParentForm},
   MIFloatEdit in '..\..\Forms\System\MIFloatEdit.pas' {MIFloatEditForm: TParentForm},
   Report_HistoryCost_CompareDialog in '..\..\Forms\Report\Report_HistoryCost_CompareDialog.pas' {Report_HistoryCost_CompareDialogForm: TParentForm},
-  Report_HistoryCost_Compare in '..\..\Forms\Report\Report_HistoryCost_Compare.pas' {Report_HistoryCost_CompareForm: TParentForm};
+  Report_HistoryCost_Compare in '..\..\Forms\Report\Report_HistoryCost_Compare.pas' {Report_HistoryCost_CompareForm: TParentForm},
+  IncomeEdit_PartnerParam in '..\..\Forms\Document\IncomeEdit_PartnerParam.pas' {IncomeEdit_PartnerParamForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

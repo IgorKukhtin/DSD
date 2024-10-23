@@ -178,6 +178,14 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 144
       end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 106
+      end
       object Name_RUS: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' ('#1088#1091#1089#1089'.)'
         DataBinding.FieldName = 'Name_RUS'

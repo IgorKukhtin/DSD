@@ -612,6 +612,33 @@ object WeighingPartnerForm: TWeighingPartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
+          object isAmountPartnerSecond: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' "'#1073#1077#1079' '#1086#1087#1083#1072#1090#1099'"'
+            DataBinding.FieldName = 'isAmountPartnerSecond'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1079#1085#1072#1082' "'#1073#1077#1079' '#1086#1087#1083#1072#1090#1099'" ('#1076#1072' / '#1085#1077#1090')'
+            Options.Editing = False
+            Width = 66
+          end
+          object isPriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPriceWithVAT'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 63
+          end
+          object PriceRetOutDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1094#1077#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090'.)'
+            DataBinding.FieldName = 'PriceRetOutDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1083#1103' '#1094#1077#1085#1099' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+            Options.Editing = False
+            Width = 75
+          end
           object RealWeight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080' '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'RealWeight'
@@ -1244,7 +1271,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 11
     Width = 118
   end
   object cxLabel25: TcxLabel

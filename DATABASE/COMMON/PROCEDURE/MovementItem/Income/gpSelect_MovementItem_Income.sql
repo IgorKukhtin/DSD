@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_old TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
-             , Amount TFloat, AmountPartner TFloat, AmountPacker TFloat, Amount_unit TFloat, Amount_diff TFloat
+             , Amount TFloat, AmountPartner TFloat, AmountPartnerSecond TFloat, AmountPacker TFloat, Amount_unit TFloat, Amount_diff TFloat
              , Price TFloat, PricePartner TFloat, CountForPrice TFloat, LiveWeight TFloat, HeadCount TFloat
              , PartionGoods TVarChar, PartNumber TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, AssetId  Integer, AssetName  TVarChar
@@ -240,6 +240,7 @@ BEGIN
 
            , CAST (NULL AS TFloat) AS Amount
            , CAST (NULL AS TFloat) AS AmountPartner
+           , CAST (NULL AS TFloat) AS AmountPartnerSecond
            , CAST (NULL AS TFloat) AS AmountPacker
            , CAST (NULL AS TFloat) AS Amount_unit
            , CAST (NULL AS TFloat) AS Amount_diff
@@ -343,8 +344,9 @@ BEGIN
            , Object_Measure.ValueData                    AS MeasureName
 
            , MovementItem.Amount
-           , MIFloat_AmountPartner.ValueData   AS AmountPartner
-           , MIFloat_AmountPacker.ValueData    AS AmountPacker
+           , MIFloat_AmountPartner.ValueData       AS AmountPartner
+           , MIFloat_AmountPartnerSecond.ValueData AS AmountPartnerSecond 
+           , MIFloat_AmountPacker.ValueData        AS AmountPacker
            , CAST (MovementItem.Amount + COALESCE (MIFloat_AmountPacker.ValueData, 0) AS TFloat) AS Amount_unit
            , CAST (MovementItem.Amount - COALESCE (MIFloat_AmountPartner.ValueData, 0) AS TFloat) AS Amount_diff
 
@@ -395,6 +397,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
+                                        ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
+
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
                                         ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
@@ -496,10 +502,10 @@ BEGIN
           , tmpMI AS (SELECT MovementItem.Id
                            , MovementItem.ObjectId AS GoodsId
                            , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
                            , MovementItem.Amount
                            , COALESCE (MIFloat_Price.ValueData, 0)           AS Price
-                           , COALESCE (MIFloat_AmountPartner.ValueData,0)    AS PricePartner
+                           , COALESCE (MIFloat_PricePartner.ValueData,0)     AS PricePartner
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                            , MIFloat_Invoice.ValueData :: Integer            AS MIId_Invoice
                            , MIString_PartNumber.ValueData :: TVarChar       AS PartNumber
@@ -510,9 +516,6 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                    ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                   AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -627,6 +630,7 @@ BEGIN
 
            , CAST (NULL AS TFloat) AS Amount
            , CAST (NULL AS TFloat) AS AmountPartner
+           , CAST (NULL AS TFloat) AS AmountPartnerSecond
            , CAST (NULL AS TFloat) AS AmountPacker
            , CAST (NULL AS TFloat) AS Amount_unit
            , CAST (NULL AS TFloat) AS Amount_diff
@@ -730,6 +734,7 @@ BEGIN
 
            , MovementItem.Amount
            , MIFloat_AmountPartner.ValueData   AS AmountPartner
+           , MIFloat_AmountPartner.ValueData   AS AmountPartnerSecond
            , MIFloat_AmountPacker.ValueData    AS AmountPacker
            , CAST (MovementItem.Amount + COALESCE (MIFloat_AmountPacker.ValueData, 0) AS TFloat) AS Amount_unit
            , CAST (MovementItem.Amount - COALESCE (MIFloat_AmountPartner.ValueData, 0) AS TFloat) AS Amount_diff
@@ -777,6 +782,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
+                                        ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
                                         ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
@@ -856,6 +864,7 @@ BEGIN
                                  , COALESCE (MILinkObject_Asset.ObjectId, 0)     AS AssetId
                                  , COALESCE (MILinkObject_Storage.ObjectId,0)    AS StorageId
                                  , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
+                                 , COALESCE (MIFloat_AmountPartnerSecond.ValueData,0)   AS AmountPartnerSecond
                                  , COALESCE (MIFloat_AmountPacker.ValueData, 0)  AS AmountPacker
                                  , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                                  , COALESCE (MIFloat_PricePartner.ValueData,0)   AS PricePartner
@@ -875,6 +884,9 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
+                                                             ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
                                                              ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
                                                             AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
@@ -953,6 +965,7 @@ BEGIN
 
            , tmpMI_Goods.Amount         :: TFloat
            , tmpMI_Goods.AmountPartner  :: TFloat
+           , tmpMI_Goods.AmountPartnerSecond :: TFloat
            , tmpMI_Goods.AmountPacker   :: TFloat
            , CAST (tmpMI_Goods.Amount + tmpMI_Goods.AmountPacker AS TFloat) AS Amount_unit
            , CAST (tmpMI_Goods.Amount - tmpMI_Goods.AmountPartner AS TFloat) AS Amount_diff

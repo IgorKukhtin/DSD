@@ -142,6 +142,9 @@ type
     actUpdate_PriceDiff: TdsdUpdateDataSet;
     bbUpdate_PriceDiff: TdxBarButton;
     bbsPrint: TdxBarSubItem;
+    actPrintDiff: TdsdPrintAction;
+    bbPrintDiff: TdxBarButton;
+    Separator: TdxBarSeparator;
   private
   public
   end;

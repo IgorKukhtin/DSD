@@ -632,11 +632,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupProperty_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupProperty_ObjectForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyParentEditForm'));
@@ -1076,6 +1076,9 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeEdit_PartnerParamForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeEdit_PartnerParamForm');
   {TdsdFormStorageFactory.GetStorage.Save(GetForm('TChange—urrencyUserDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChange—urrencyUserDialogForm');
 

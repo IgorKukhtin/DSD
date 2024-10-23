@@ -876,7 +876,26 @@ object IncomeJournalForm: TIncomeJournalForm
         item
           Visible = True
           ItemName = 'bbPrintStickerTermo'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDiff'
         end>
+    end
+    object bbPrintDiff: TdxBarButton
+      Action = actPrintDiff
+      Category = 0
+    end
+    object Separator: TdxBarSeparator
+      Caption = 'bbSeparator'
+      Category = 0
+      Hint = 'bbSeparator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object ActionList: TActionList
@@ -905,6 +924,54 @@ object IncomeJournalForm: TIncomeJournalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actPrintDiff: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1040#1082#1090' '#1085#1077#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1081
+      Hint = #1040#1082#1090' '#1085#1077#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1081
+      ImageIndex = 17
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Income_ActDiff'
+      ReportNameParam.Value = 'PrintMovement_Income_ActDiff'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
