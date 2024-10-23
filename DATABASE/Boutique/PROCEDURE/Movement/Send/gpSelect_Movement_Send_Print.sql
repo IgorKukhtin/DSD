@@ -226,9 +226,10 @@ BEGIN
                                                 AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
                     )
 
-        , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
-                               , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
-                               , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+        , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId          AS UnitId
+                               , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId         AS GoodsId
+                               , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData     AS DiscountTax
+                               , ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ValueData AS DiscountTaxNext
                           FROM tmpDiscountList
                                INNER JOIN tmpOL1 AS ObjectLink_DiscountPeriodItem_Goods
                                                      ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
@@ -243,6 +244,9 @@ BEGIN
                                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
                                                             ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                            AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+                               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_ValueNext
+                                                            ON ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                           AND ObjectHistoryFloat_DiscountPeriodItem_ValueNext.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_ValueNext()
                          )
 
         -- Определили курс на Дату документа (Кому)
@@ -285,23 +289,20 @@ BEGIN
                         , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceListTo)                                     AS TotalSummPriceListTo
 
                           -- цены с учетом сезонной скидки
-                        , CAST (tmpMI.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceList_disc
-                        , CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceListTo_disc
-                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (tmpMI.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0)))  AS TotalSummPriceList_disc
-                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100) AS NUMERIC (16, 0)))  AS TotalSummPriceListTo_disc
+                        , CAST (zfCalc_SummChangePercentNext (1, tmpMI.OperPriceList, tmpDiscount_From.DiscountTax, tmpDiscount_From.DiscountTaxNext) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_disc
+                        , CAST (zfCalc_SummChangePercentNext (1, tmpMI.OperPriceListTo, tmpDiscount_To.DiscountTax, tmpDiscount_To.DiscountTaxNext) AS NUMERIC (16, 0))     :: TFloat AS OperPriceListTo_disc
+                        , zfCalc_SummChangePercentNext (tmpMI.Amount, tmpMI.OperPriceList, tmpDiscount_From.DiscountTax, tmpDiscount_From.DiscountTaxNext)  AS TotalSummPriceList_disc
+                        , zfCalc_SummChangePercentNext (tmpMI.Amount, tmpMI.OperPriceListTo, tmpDiscount_To.DiscountTax, tmpDiscount_To.DiscountTaxNext)  AS TotalSummPriceListTo_disc
                         
                         -- Суммы в грн от кого и кому со скидкой
-                        , zfCalc_SummPriceList (tmpMI.Amount, CAST ( tmpMI.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) 
+                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (zfCalc_SummChangePercentNext (1, tmpMI.OperPriceList, tmpDiscount_From.DiscountTax, tmpDiscount_From.DiscountTaxNext)
                                                                     * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_GRN()
                                                                            THEN 1
                                                                            ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
                                                                       END
                                                                    AS NUMERIC (16, 0)) )  AS TotalSummPriceList_grn
                         
-                        
-                        
-                        
-                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100)
+                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (zfCalc_SummChangePercentNext (1, tmpMI.OperPriceListTo, tmpDiscount_To.DiscountTax, tmpDiscount_To.DiscountTaxNext)
                                                                     * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_GRN()
                                                                            THEN 1
                                                                            ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
@@ -309,7 +310,7 @@ BEGIN
                                                                     AS NUMERIC (16, 0)))  AS TotalSummPriceListTo_grn
                         
                         -- Суммы в Валюте от кого и кому со скидкой
-                        , zfCalc_SummPriceList (tmpMI.Amount, CAST ( tmpMI.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) 
+                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (zfCalc_SummChangePercentNext (1, tmpMI.OperPriceList, tmpDiscount_From.DiscountTax, tmpDiscount_From.DiscountTaxNext)
                                                                     / CASE WHEN tmpPriceList_from.CurrencyId <> zc_Currency_GRN()
                                                                            THEN 1
                                                                            ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
@@ -319,7 +320,7 @@ BEGIN
                         
                         
                         
-                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100)
+                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (zfCalc_SummChangePercentNext (1, tmpMI.OperPriceListTo, tmpDiscount_To.DiscountTax, tmpDiscount_To.DiscountTaxNext)
                                                                     / CASE WHEN tmpPriceList_to.CurrencyId <> zc_Currency_GRN()
                                                                            THEN 1
                                                                            ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
