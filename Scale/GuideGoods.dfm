@@ -21,14 +21,14 @@ object GuideGoodsForm: TGuideGoodsForm
   TextHeight = 14
   object GridPanel: TPanel
     Left = 0
-    Top = 338
+    Top = 378
     Width = 982
-    Height = 507
+    Height = 467
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 256
-    ExplicitHeight = 390
+    ExplicitTop = 338
+    ExplicitHeight = 507
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -141,10 +141,10 @@ object GuideGoodsForm: TGuideGoodsForm
       Left = 0
       Top = 33
       Width = 982
-      Height = 474
+      Height = 434
       Align = alClient
       TabOrder = 1
-      ExplicitHeight = 357
+      ExplicitHeight = 474
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -467,7 +467,7 @@ object GuideGoodsForm: TGuideGoodsForm
     Left = 0
     Top = 0
     Width = 982
-    Height = 338
+    Height = 378
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
@@ -475,11 +475,11 @@ object GuideGoodsForm: TGuideGoodsForm
       Left = 502
       Top = 0
       Width = 230
-      Height = 338
+      Height = 378
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitHeight = 256
+      ExplicitHeight = 338
       object rgTareWeight: TRadioGroup
         Left = 0
         Top = 504
@@ -551,13 +551,13 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object infoPanelChangePercentAmount: TPanel
         Left = 0
-        Top = 263
+        Top = 303
         Width = 230
         Height = 75
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 3
-        ExplicitTop = 181
+        ExplicitTop = 263
         object rgChangePercentAmount: TRadioGroup
           Left = 0
           Top = 38
@@ -1243,16 +1243,16 @@ object GuideGoodsForm: TGuideGoodsForm
       Left = 732
       Top = 0
       Width = 250
-      Height = 338
+      Height = 378
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 3
-      ExplicitHeight = 256
+      ExplicitHeight = 338
       object rgPriceList: TRadioGroup
         Left = 0
         Top = 41
         Width = 250
-        Height = 297
+        Height = 337
         Align = alClient
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
         Color = clBtnFace
@@ -1260,7 +1260,7 @@ object GuideGoodsForm: TGuideGoodsForm
         TabOrder = 1
         OnClick = rgPriceListClick
         OnEnter = rgPriceListClick
-        ExplicitHeight = 215
+        ExplicitHeight = 297
       end
       object gbPriceListCode: TGroupBox
         Left = 0
@@ -1288,14 +1288,14 @@ object GuideGoodsForm: TGuideGoodsForm
       Left = 0
       Top = 0
       Width = 135
-      Height = 338
+      Height = 378
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 256
+      ExplicitHeight = 338
       object bbGoodsRemains: TSpeedButton
-        Left = 10
-        Top = 297
+        Left = 16
+        Top = 309
         Width = 113
         Height = 31
         Caption = #1055#1086#1076#1073#1086#1088' '#1086#1089#1090#1072#1090#1082#1072
@@ -1347,13 +1347,14 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object gbGoodsWieghtValue: TGroupBox
         Left = 0
-        Top = 209
+        Top = 251
         Width = 135
         Height = 41
         Align = alTop
         Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
         TabOrder = 2
-        ExplicitTop = 164
+        ExplicitLeft = -3
+        ExplicitTop = 246
         object PanelGoodsWieghtValue: TPanel
           Left = 2
           Top = 16
@@ -1379,9 +1380,11 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1074#1086#1076' '#1050#1054#1051#1048#1063#1045#1057#1058#1042#1054
         TabOrder = 3
+        ExplicitLeft = -6
+        ExplicitTop = 86
         object EditWeightValue: TcxCurrencyEdit
           Left = 4
-          Top = 16
+          Top = 14
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
@@ -1397,14 +1400,14 @@ object GuideGoodsForm: TGuideGoodsForm
         Left = 0
         Top = 123
         Width = 135
-        Height = 41
+        Height = 64
         Align = alTop
         Caption = #1042#1074#1086#1076' '#1062#1045#1053#1040
         TabOrder = 4
-        ExplicitTop = 125
+        ExplicitTop = 126
         object EditPrice: TcxCurrencyEdit
           Left = 4
-          Top = 16
+          Top = 14
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
@@ -1415,16 +1418,26 @@ object GuideGoodsForm: TGuideGoodsForm
           OnKeyDown = EditPriceKeyDown
           Width = 125
         end
+        object cbPriceWithVAT: TCheckBox
+          Left = 16
+          Top = 41
+          Width = 82
+          Height = 17
+          Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
+          TabOrder = 1
+          OnClick = cbPriceWithVATClick
+        end
       end
       object gbPartionGoods_20103: TGroupBox
         Left = 0
-        Top = 250
+        Top = 292
         Width = 135
         Height = 41
         Align = alTop
         Caption = #1055#1072#1088#1090#1080#1103
         TabOrder = 5
         ExplicitLeft = -3
+        ExplicitTop = 291
         object EditPartionGoods_20103: TcxCurrencyEdit
           Left = 4
           Top = 16
@@ -1439,18 +1452,16 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object gbAmountPartner: TGroupBox
         Left = 0
-        Top = 164
+        Top = 187
         Width = 135
-        Height = 45
+        Height = 64
         Align = alTop
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
         TabOrder = 6
         Visible = False
-        ExplicitLeft = -6
-        ExplicitTop = 147
         object EditAmountPartner: TcxCurrencyEdit
           Left = 4
-          Top = 17
+          Top = 14
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
@@ -1461,22 +1472,59 @@ object GuideGoodsForm: TGuideGoodsForm
           OnKeyDown = EditAmountPartnerKeyDown
           Width = 125
         end
+        object cbOperCountPartnerSecond: TCheckBox
+          Left = 16
+          Top = 42
+          Width = 82
+          Height = 17
+          Caption = #1073#1077#1079' '#1086#1087#1083#1072#1090#1099
+          TabOrder = 1
+          OnClick = cbOperCountPartnerSecondClick
+        end
+      end
+      object gbOperDate: TGroupBox
+        Left = 0
+        Top = 337
+        Width = 135
+        Height = 41
+        Align = alBottom
+        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076
+        TabOrder = 7
+        ExplicitLeft = -3
+        ExplicitTop = 339
+        object OperDateEdit: TcxDateEdit
+          Left = 3
+          Top = 15
+          EditValue = 41640d
+          ParentFont = False
+          Properties.DateButtons = [btnToday]
+          Properties.SaveTime = False
+          Properties.ShowTime = False
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clBlack
+          Style.Font.Height = -12
+          Style.Font.Name = 'Arial'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+          TabOrder = 0
+          Width = 120
+        end
       end
     end
     object infoPanelGoodsKind: TPanel
       Left = 135
       Top = 0
       Width = 367
-      Height = 338
+      Height = 378
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitHeight = 256
+      ExplicitHeight = 338
       object rgGoodsKind: TRadioGroup
         Left = 0
         Top = 41
         Width = 367
-        Height = 225
+        Height = 265
         Align = alClient
         Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
         Color = clBtnFace
@@ -1490,7 +1538,8 @@ object GuideGoodsForm: TGuideGoodsForm
         ParentFont = False
         TabOrder = 1
         OnClick = rgGoodsKindClick
-        ExplicitHeight = 54
+        ExplicitTop = 45
+        ExplicitHeight = 225
       end
       object gbGoodsKindCode: TGroupBox
         Left = 0
@@ -1515,13 +1564,14 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object gbPriceIncome: TGroupBox
         Left = 0
-        Top = 266
+        Top = 306
         Width = 367
         Height = 72
         Align = alBottom
         Caption = #1062#1045#1053#1040' '#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
         TabOrder = 2
         Visible = False
+        ExplicitTop = 266
         object EditPriceIncome: TcxCurrencyEdit
           Left = 3
           Top = 16

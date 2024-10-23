@@ -130,6 +130,10 @@ begin
            ParamsMovement.ParamByName('isReReturnIn').asBoolean            := CDS.FieldByName('isReReturnIn').asBoolean;
            ParamsMovement.ParamByName('isCalc_Sh').asBoolean               := CDS.FieldByName('isCalc_Sh').asBoolean;
 
+           ParamsMovement.ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
+           ParamsMovement.ParamByName('isReturnOut_Date').asBoolean        := CDS.FieldByName('isReturnOut_Date').asBoolean;
+           ParamsMovement.ParamByName('isCalc_PriceVat').asBoolean         := CDS.FieldByName('isCalc_PriceVat').asBoolean;
+
            ParamsMovement.ParamByName('FromId').AsInteger           := CDS.FieldByName('FromId').asInteger;
            ParamsMovement.ParamByName('FromCode').asString          := CDS.FieldByName('FromCode').asString;
            ParamsMovement.ParamByName('FromName').asString          := CDS.FieldByName('FromName').asString;
@@ -421,6 +425,10 @@ begin
           ParamByName('isPartionCell').asBoolean           := CDS.FieldByName('isPartionCell').asBoolean;
           ParamByName('isReReturnIn').asBoolean            := CDS.FieldByName('isReReturnIn').asBoolean;
           ParamByName('isCalc_Sh').asBoolean               := CDS.FieldByName('isCalc_Sh').asBoolean;
+
+          ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
+          ParamByName('isReturnOut_Date').asBoolean        := CDS.FieldByName('isReturnOut_Date').asBoolean;
+          ParamByName('isCalc_PriceVat').asBoolean         := CDS.FieldByName('isCalc_PriceVat').asBoolean;
 
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Income)

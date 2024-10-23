@@ -384,6 +384,12 @@ begin
      cbDocInsert.Checked:= true;
      cbDocInsert.Checked:= false;
      //
+     if Assigned(GuideGoodsForm) then
+     begin
+       GuideGoodsForm.OperDateEdit.Text:= DateToStr(Date);
+       GuideGoodsForm.cbPriceWithVAT.Checked:= false;
+     end;
+     //
      {EditBarCodeTransport.Text:='';
      PanelInvNumberTransport.Caption:='';
      PanelPersonalDriver.Caption:='';
@@ -428,15 +434,21 @@ begin
      end;
      //
      // Проверка - нужен ли Акт
+     ParamsMovement.ParamByName('isFind_inf').AsBoolean:=FALSE;
      if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
      then begin
-          if DMMainScaleForm.gpUpdate_Scale_Movement_Income_PricePartner(ParamsMovement) = FALSE
+          if DMMainScaleForm.gpUpdate_Scale_Movement_Income_PricePartner(ParamsMovement, TRUE) = TRUE
           then
-              if MessageDlg('Найдено отклонение цены от спецификации.'
-                   +#10+#13+'Для <'++'> с ценой поставщика  = <'++'>.'
-                   +#10+#13+'Будет сформирован Акт разногласий.'
-                   +#10+#13+'Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
-              then exit;
+              ParamsMovement.ParamByName('isFind_inf').AsBoolean:=TRUE;
+              //
+              if ParamsMovement.ParamByName('isPrice_diff_inf').AsBoolean = true
+              then
+                if MessageDlg('Найдено отклонение цены от спецификации.'
+                     +#10+#13+'Для <('+ParamsMovement.ParamByName('GoodsCode_inf').AsString+') '+ParamsMovement.ParamByName('GoodsName_inf').AsString+'>'
+                             +' с ценой поставщика  = <'+FloatToStr(ParamsMovement.ParamByName('PricePartner_inf').AsFloat)+'>.'
+                     +#10+#13+'Будет сформирован Акт разногласий.'
+                     +#10+#13+'Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
+                then exit;
 
      end;
      //

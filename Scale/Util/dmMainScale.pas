@@ -63,7 +63,7 @@ type
     function gpUpdate_Scale_Movement_Transport(execParamsMovement:TParams): Boolean;
     function gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
     function gpUpdate_Scale_Movement_PersonalLoss(execParams:TParams): Boolean;
-    function gpUpdate_Scale_Movement_Income_PricePartner(execParams:TParams): Boolean;
+    function gpUpdate_Scale_Movement_Income_PricePartner (execParams : TParams; inIsUpdate : Boolean): Boolean;
 
     // Scale + ScaleCeh
     function gpUpdate_Scale_Movement_Status(MovementId_parent:Integer): Boolean;
@@ -299,23 +299,26 @@ begin
     Result:=true;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpUpdate_Scale_Movement_Income_PricePartner(execParams:TParams): Boolean;
+function TDMMainScaleForm.gpUpdate_Scale_Movement_Income_PricePartner(execParams:TParams; inIsUpdate : Boolean): Boolean;
 begin
     Result:=false;
     //
-    if execParamsMovement.ParamByName('MovementId').AsInteger<>0 then
+    if execParams.ParamByName('MovementId').AsInteger<>0 then
     with spSelect do begin
-       StoredProcName:='gpGet_Scale_Movement_findOldPeriod';
+       StoredProcName:='gpUpdate_Scale_Movement_Income_PricePartner';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
-       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParams.ParamByName('MovementId').AsInteger);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       Params.AddParam('inIsUpdate', ftBoolean, ptInput, inIsUpdate);
        //try
          Execute;
-         Result:=DataSet.FieldByName('isFind').asBoolean;
-         execParamsMovement.ParamByName('OperDate_inf').AsDateTime:=DataSet.FieldByName('OperDate').AsDateTime;
-         execParamsMovement.ParamByName('InvNumber_inf').AsString:=DataSet.FieldByName('InvNumber').AsString;
+         Result:=DataSet.RecordCount > 0;
+         //
+         execParams.ParamByName('isPrice_diff_inf').AsBoolean:=DataSet.FieldByName('isPrice_diff').AsBoolean;
+         execParams.ParamByName('GoodsCode_inf').AsInteger:=DataSet.FieldByName('GoodsCode').AsInteger;
+         execParams.ParamByName('GoodsName_inf').AsString:=DataSet.FieldByName('GoodsName').AsString;
+         execParams.ParamByName('PricePartner_inf').AsFloat:=DataSet.FieldByName('PricePartner').AsFloat;
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
@@ -727,6 +730,15 @@ begin
        Params.AddParam('inIsReason', ftBoolean, ptInput, SettingMain.isReason);
        Params.AddParam('inIsAsset', ftBoolean, ptInput, execParamsMovement.ParamByName('isAsset').AsBoolean);
        Params.AddParam('inIsBarCode', ftBoolean, ptInput, execParamsMI.ParamByName('isBarCode').AsBoolean);
+
+       Params.AddParam('inIsOperCountPartner', ftBoolean, ptInput, execParamsMI.ParamByName('isOperCountPartner').AsBoolean);
+       Params.AddParam('inIsPriceWithVAT', ftBoolean, ptInput, execParamsMI.ParamByName('isPriceWithVAT').AsBoolean);
+       Params.AddParam('inOperDate_ReturnOut', ftDateTime, ptInput, execParamsMI.ParamByName('OperDate_ReturnOut').AsDateTime);
+       Params.AddParam('inPricePartner', ftFloat, ptInput, execParamsMI.ParamByName('PricePartner').AsFloat);
+       Params.AddParam('inPriceIncome', ftFloat, ptInput, execParamsMI.ParamByName('PriceIncome').AsFloat);
+       Params.AddParam('inAmountPartnerSecond', ftFloat, ptInput, execParamsMI.ParamByName('AmountPartnerSecond').AsFloat);
+
+
        //try
          Execute;
          execParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
@@ -1770,6 +1782,11 @@ begin
                         execParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         execParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;
                         execParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
+
+                        execParamsMovement.ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
+                        execParamsMovement.ParamByName('isReturnOut_Date').asBoolean        := CDS.FieldByName('isReturnOut_Date').asBoolean;
+                        execParamsMovement.ParamByName('isCalc_PriceVat').asBoolean         := CDS.FieldByName('isCalc_PriceVat').asBoolean;
+
                         //
                         if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE
                         then execParamsMovement.ParamByName('ChangePercentAmount').asFloat := 0;
@@ -1810,6 +1827,10 @@ begin
                         ParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         ParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;
                         ParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
+
+                        ParamsMovement.ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
+                        ParamsMovement.ParamByName('isReturnOut_Date').asBoolean        := CDS.FieldByName('isReturnOut_Date').asBoolean;
+                        ParamsMovement.ParamByName('isCalc_PriceVat').asBoolean         := CDS.FieldByName('isCalc_PriceVat').asBoolean;
                         //
                         if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE
                         then ParamsMovement.ParamByName('ChangePercentAmount').asFloat := 0;

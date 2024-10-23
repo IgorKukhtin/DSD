@@ -259,8 +259,15 @@ begin
      ParamAdd(Params,'InvNumber',ftString);
      ParamAdd(Params,'OperDate_Movement',ftDateTime);
 
+     // информативное для сообщения
      ParamAdd(Params,'InvNumber_inf',ftString);
      ParamAdd(Params,'OperDate_inf',ftDateTime);
+     // информативное для сообщения
+     ParamAdd(Params,'GoodsCode_inf',ftInteger);
+     ParamAdd(Params,'GoodsName_inf',ftString);
+     ParamAdd(Params,'PricePartner_inf',ftFloat);
+     ParamAdd(Params,'isPrice_diff_inf',ftBoolean);
+     ParamAdd(Params,'isFind_inf',ftBoolean);
 
      ParamAdd(Params,'MovementDescNumber',ftInteger);
 
@@ -349,6 +356,10 @@ begin
      ParamAdd(Params,'isLockStartWeighing',ftBoolean);
      ParamAdd(Params,'isListInventory',ftBoolean);
      ParamAdd(Params,'isCalc_Sh',ftBoolean);
+
+     ParamAdd(Params,'isOperCountPartner',ftBoolean); // Кол-во поставщика
+     ParamAdd(Params,'isReturnOut_Date',ftBoolean);   // Дата для цены возврат поставщику
+     ParamAdd(Params,'isCalc_PriceVat',ftBoolean);    // Расчет цены с НДС или без
 
      ParamAdd(Params,'isPartionCell',ftBoolean);
      ParamAdd(Params,'PartionCellId',ftInteger);
@@ -570,6 +581,14 @@ begin
      ParamAdd(Params,'CountTare5',ftFloat);          // Количество тары вида5
      ParamAdd(Params,'CountTare6',ftFloat);          // Количество тары вида6
      ParamAdd(Params,'Amount_Goods',ftFloat);        //
+
+     ParamAdd(Params,'isOperCountPartner',ftBoolean); // без оплаты да/нет - Кол-во поставщика
+     ParamAdd(Params,'isPriceWithVAT',ftBoolean);     // Цена с НДС да/нет - для цена поставщика
+     ParamAdd(Params,'OperDate_ReturnOut',ftDateTime);// Дата для цены возврат поставщику
+     ParamAdd(Params,'PricePartner',ftFloat);         // цена поставщика - ввод в контроле
+     ParamAdd(Params,'PriceIncome',ftFloat);          // цена по спецификации
+     ParamAdd(Params,'AmountPartnerSecond',ftFloat);  // Кол-во поставщика
+
      end
      else
      begin

@@ -21,7 +21,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdCommon;
+  dxSkinXmas2008Blue, dsdCommon, Vcl.ComCtrls, dxCore, cxDateUtils, cxMaskEdit,
+  cxDropDownEdit, cxCalendar;
 
 type
   TGuideGoodsForm = class(TForm)
@@ -159,6 +160,10 @@ type
     GoodsName_new: TcxGridDBColumn;
     gbAmountPartner: TGroupBox;
     EditAmountPartner: TcxCurrencyEdit;
+    cbPriceWithVAT: TCheckBox;
+    cbOperCountPartnerSecond: TCheckBox;
+    gbOperDate: TGroupBox;
+    OperDateEdit: TcxDateEdit;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -229,6 +234,8 @@ type
     procedure bbGoodsRemainsClick(Sender: TObject);
     procedure EditAmountPartnerKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure cbPriceWithVATClick(Sender: TObject);
+    procedure cbOperCountPartnerSecondClick(Sender: TObject);
   private
     oldParam1, oldParam2:Integer;
     oldParam3:TDateTime;
@@ -265,6 +272,22 @@ begin
      then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.cbOperCountPartnerSecondClick(Sender: TObject);
+begin
+   if gbAmountPartner.Visible
+   then
+      ActiveControl:= EditAmountPartner;
+
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.cbPriceWithVATClick(Sender: TObject);
+begin
+   if gbPrice.Visible
+   then
+      ActiveControl:= EditPrice;
+end;
+{------------------------------------------------------------------------------}
+
 function TGuideGoodsForm.Execute (execParamsMovement : TParams; isModeSave, isDialog : Boolean) : Boolean;
 var OperDate_params:TDateTime;
 begin
@@ -297,9 +320,19 @@ begin
      if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310) then EditWeightValue.Properties.DecimalPlaces:= 4;
      //
      gbPriceIncome.Visible:= false; //gbPrice.Visible;
-     gbAmountPartner.Visible:= (gbPrice.Visible) and (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 210);
+     gbAmountPartner.Visible:= execParamsMovement.ParamByName('isOperCountPartner').AsBoolean = TRUE;
      EditPriceIncome.Text:='0';
      EditAmountPartner.Text:='0';
+
+     cbPriceWithVAT.Visible:= execParamsMovement.ParamByName('isCalc_PriceVat').AsBoolean = TRUE;
+     if not cbPriceWithVAT.Visible then gbPrice.Height:= gbWeightValue.Height;
+
+     if (gbWeightValue.Visible) and (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202)
+     then
+         gbWeightValue.Visible:= false;
+
+
+     gbOperDate.Visible:= execParamsMovement.ParamByName('isReturnOut_Date').AsBoolean = TRUE;
 
      CancelCxFilter;
      fStartWrite:=true;
@@ -511,6 +544,7 @@ begin
                        or (SettingMain.isCalc_sht = FALSE)
                        or (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)
                          )
+                      and(gbWeightValue.Visible = TRUE)
                       then ActiveControl:=EditWeightValue
                       else if infoPanelTareFix.Visible
                            then ActiveControl:=EditTare1
@@ -625,6 +659,7 @@ begin
                 if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
                 or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
                  and(SettingMain.isCalc_sht = FALSE))
+                 and(gbWeightValue.Visible = TRUE)
                 then ActiveControl:=EditWeightValue
                 else if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
                      then ActiveControl:=EditPrice
@@ -671,8 +706,10 @@ begin
                                then ActiveControl:=EditTare1
                                else ActiveControl:=EditTareCount
                      else
-                          if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
-                          or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+                          if ((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
+                           or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+                             )
+                          and(gbWeightValue.Visible = TRUE)
                           then ActiveControl:=EditWeightValue
                           else if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
                                then ActiveControl:=EditPrice
@@ -699,9 +736,11 @@ begin
                                then ActiveControl:=EditTare1
                                else ActiveControl:=EditTareCount
                      else
-                          if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
-                          or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
-                           and(SettingMain.isCalc_sht = FALSE))
+                          if ((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
+                           or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+                            and(SettingMain.isCalc_sht = FALSE))
+                             )
+                          and(gbWeightValue.Visible = TRUE)
                           then ActiveControl:=EditWeightValue
                           else if rgGoodsKind.Items.Count > 1
                                then ActiveControl:=EditGoodsKindCode
@@ -922,6 +961,26 @@ begin
             exit;
        end;
 
+       // передаем без оплаты да/нет - Кол-во поставщика
+       ParamsMI.ParamByName('isOperCountPartner').AsBoolean:= cbOperCountPartnerSecond.Checked;
+       // передаем Цена с НДС да/нет - для цена поставщика
+       ParamsMI.ParamByName('isPriceWithVAT').AsBoolean:= cbPriceWithVAT.Checked;
+       // передаем Дата для цены возврат поставщику
+       try
+          ParamsMI.ParamByName('OperDate_ReturnOut').AsDateTime:= StrToDate(OperDateEdit.Text);
+       except
+          ParamsMI.ParamByName('OperDate_ReturnOut').AsDateTime:= Date;
+       end;
+
+       //передаем цену по спецификации через этот параметр
+       ParamsMI.ParamByName('PriceIncome').AsFloat:= CDS.FieldByName('Price_Income').AsFloat;
+
+       //Количество у контрагента
+       try ParamsMI.ParamByName('AmountPartnerSecond').AsFloat:= StrToFloat(EditAmountPartner.Text);
+       except
+             ParamsMI.ParamByName('AmountPartnerSecond').AsFloat:= 0;
+       end;
+
        //ПРОВЕРКА - Ввод ЦЕНА
        if gbPrice.Visible then
        begin
@@ -930,39 +989,28 @@ begin
               or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
               and (CDS.FieldByName('Price_Income').AsFloat > 0)
             then begin
+                  //перенесли цену по спецификации в контрол
                   //EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
             end;
-            //!!!Криво - передаем цену через этот параметр!!!
-            try ParamsMI.ParamByName('BoxCount').AsFloat:= StrToFloat(EditPrice.Text);
+
+            //цена поставщика - ввод в контроле
+            try ParamsMI.ParamByName('PricePartner').AsFloat:= StrToFloat(EditPrice.Text);
             except
-                  ParamsMI.ParamByName('BoxCount').AsFloat:= 0;
+                  ParamsMI.ParamByName('PricePartner').AsFloat:= 0;
             end;
-            if (ParamsMI.ParamByName('BoxCount').AsFloat <=0) and (CDS.FieldByName('isNotPriceIncome').AsBoolean = FALSE)
+            if (ParamsMI.ParamByName('PricePartner').AsFloat <=0) and (CDS.FieldByName('isNotPriceIncome').AsBoolean = FALSE)
             then begin
+                     Result:= false;
                      ShowMessage('Ошибка.ЦЕНА не может быть <= 0.');
                      exit;
             end;
-
-            //!!!Криво - передаем Количество у контрагента через этот параметр!!!
-            if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
-               and(SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202)
-            then begin
-                  //!!!Криво - передаем Количество у контрагента через этот параметр!!!
-                  try ParamsMI.ParamByName('CountForPrice_Return').AsFloat:= StrToFloat(EditAmountPartner.Text);
-                  except
-                        ParamsMI.ParamByName('CountForPrice_Return').AsFloat:= 0;
-                  end;
-                  //!!!Криво - передаем цену по спецификации через этот параметр!!!
-                  ParamsMI.ParamByName('Price_Return').AsFloat:= CDS.FieldByName('Price_Income').AsFloat;
-            end;
-
             //
             if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
               or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
               and (CDS.FieldByName('Price_Income_from').AsFloat > 0)
               and (CDS.FieldByName('Price_Income_from').AsFloat < CDS.FieldByName('Price_Income_to').AsFloat)
-              and ((CDS.FieldByName('Price_Income_from').AsFloat > ParamsMI.ParamByName('BoxCount').AsFloat)
-                or (CDS.FieldByName('Price_Income_to').AsFloat   < ParamsMI.ParamByName('BoxCount').AsFloat)
+              and ((CDS.FieldByName('Price_Income_from').AsFloat > ParamsMI.ParamByName('PricePartner').AsFloat)
+                or (CDS.FieldByName('Price_Income_to').AsFloat   < ParamsMI.ParamByName('PricePartner').AsFloat)
                   )
             then begin
                   if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
@@ -992,7 +1040,7 @@ begin
             if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
               or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
               and (CDS.FieldByName('Price_Income').AsFloat > 0)
-              and (CDS.FieldByName('Price_Income').AsFloat <> ParamsMI.ParamByName('BoxCount').AsFloat)
+              and (CDS.FieldByName('Price_Income').AsFloat <> ParamsMI.ParamByName('PricePartner').AsFloat)
             then begin
                   if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
                   begin
@@ -1263,11 +1311,13 @@ begin
      then begin ActiveControl:=EditGoodsCode; exit;end;
      //
      try StrToFloat(EditWeightValue.Text)
-     except ActiveControl:=EditWeightValue;
+     except if gbWeightValue.Visible = TRUE
+            then ActiveControl:=EditWeightValue;
             exit;
      end;
      if StrToFloat(EditWeightValue.Text)<=0
-     then ActiveControl:=EditWeightValue
+     then if gbWeightValue.Visible = TRUE
+            then ActiveControl:=EditWeightValue
      else if CDS.RecordCount=1
           then try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text);
           except ParamsMI.ParamByName('RealWeight').AsFloat:=0;end;
@@ -1434,7 +1484,7 @@ begin
                   else
                        if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
                          or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
-                       then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');ActiveControl:=EditWeightValue;end
+                       then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');if gbWeightValue.Visible = TRUE then ActiveControl:=EditWeightValue;end
                        else begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end;
 
       //
@@ -1948,7 +1998,9 @@ begin
                then ActiveControl:=EditTare1
                else ActiveControl:=EditTareCount
      else
-          if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+          if ((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+             )
+         and (gbWeightValue.Visible = TRUE)
           then ActiveControl:=EditWeightValue
           else if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)and(rgGoodsKind.Items.Count>1)
                then ActiveControl:=EditGoodsKindCode
@@ -2036,6 +2088,8 @@ procedure TGuideGoodsForm.FormCreate(Sender: TObject);
 var i:Integer;
 begin
   fStartWrite:=true;
+  //
+  OperDateEdit.Text:= DateToStr(Date);
   //
   oldParam1:=-1;
   oldParam2:=-1;
