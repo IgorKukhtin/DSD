@@ -27,6 +27,12 @@ BEGIN
    END IF;
 
    -- Проверка
+   IF COALESCE (inMovementItemId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Элемент перемещения не сформирован.';
+   END IF;
+
+   -- Проверка
    IF inOperDate < DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH'
    THEN
        RAISE EXCEPTION 'Ошибка.Значение <Изменение цены с> не может быть раньше чем <%>.', DATE (DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH');
