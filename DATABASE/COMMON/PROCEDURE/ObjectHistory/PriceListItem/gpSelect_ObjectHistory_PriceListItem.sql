@@ -421,9 +421,9 @@ BEGIN
                                                       AND ObjectHistoryFloat_PriceListItem_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
   
                      WHERE ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
-                       AND (ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId OR inPriceListId = 0)
-                       AND COALESCE (ObjectHistory_PriceListItem.EndDate, zc_DateStart()) >= vbStartDate
-                       AND COALESCE (ObjectHistory_PriceListItem.StartDate, zc_DateEnd()) <= vbEndDate
+                       AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                       AND ObjectHistory_PriceListItem.EndDate   >= vbStartDate
+                       AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
                     )
    , tmpMinMax AS (SELECT tmp.PriceListId
                         , tmp.GoodsId
@@ -433,6 +433,7 @@ BEGIN
                    FROM (SELECT tmpItem_all.PriceListId, tmpItem_all.GoodsId, tmpItem_all.GoodsKindId, tmpItem_all.ValuePrice
                          FROM tmpItem_all
                          WHERE tmpItem_all.StartDate >= vbStartDate
+                           AND inPriceListId > 0
                         UNION ALL
                          SELECT tmpItem_all.PriceListId, tmpItem_all.GoodsId, tmpItem_all.GoodsKindId, tmpItem_all.ValuePrice
                          FROM tmpItem_all
@@ -442,6 +443,7 @@ BEGIN
                                                                         AND tmpItem_all_check.StartDate   = vbStartDate
                          WHERE tmpItem_all.StartDate < vbStartDate
                            AND tmpItem_all_check.GoodsId IS NULL
+                           AND inPriceListId > 0
                         ) AS tmp
                    GROUP BY tmp.PriceListId
                           , tmp.GoodsId
@@ -530,7 +532,8 @@ BEGIN
 
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
 
-            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_PriceListItem_PriceList.ChildObjectId
+            INNER JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_PriceListItem_PriceList.ChildObjectId
+                                                 AND (Object_PriceList.isErased = FALSE OR inPriceListId > 0)
        
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
                                     ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
@@ -624,6 +627,7 @@ BEGIN
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND (ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId OR inPriceListId = 0)
+         AND (ObjectHistoryFloat_PriceListItem_Value.ValueData > 0 OR inPriceListId > 0)
          -- AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
        ;
 
