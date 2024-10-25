@@ -582,7 +582,7 @@ begin
      ParamAdd(Params,'CountTare6',ftFloat);          // Количество тары вида6
      ParamAdd(Params,'Amount_Goods',ftFloat);        //
 
-     ParamAdd(Params,'isOperCountPartner',ftBoolean); // без оплаты да/нет - Кол-во поставщика
+     ParamAdd(Params,'isAmountPartnerSecond',ftBoolean); // без оплаты да/нет - Кол-во поставщика
      ParamAdd(Params,'isPriceWithVAT',ftBoolean);     // Цена с НДС да/нет - для цена поставщика
      ParamAdd(Params,'OperDate_ReturnOut',ftDateTime);// Дата для цены возврат поставщику
      ParamAdd(Params,'PricePartner',ftFloat);         // цена поставщика - ввод в контроле
