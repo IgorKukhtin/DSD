@@ -161,9 +161,15 @@ type
     gbAmountPartner: TGroupBox;
     EditAmountPartner: TcxCurrencyEdit;
     cbPriceWithVAT: TCheckBox;
-    cbOperCountPartnerSecond: TCheckBox;
+    cbAmountPartnerSecond: TCheckBox;
     gbOperDate: TGroupBox;
     OperDateEdit: TcxDateEdit;
+    Price_Income_notVat: TcxGridDBColumn;
+    Price_Income_from_notVat: TcxGridDBColumn;
+    Price_Income_to_notVat: TcxGridDBColumn;
+    Price_Income_addVat: TcxGridDBColumn;
+    Price_Income_from_addVat: TcxGridDBColumn;
+    Price_Income_to_addVat: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -235,7 +241,7 @@ type
     procedure EditAmountPartnerKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure cbPriceWithVATClick(Sender: TObject);
-    procedure cbOperCountPartnerSecondClick(Sender: TObject);
+    procedure cbAmountPartnerSecondClick(Sender: TObject);
   private
     oldParam1, oldParam2:Integer;
     oldParam3:TDateTime;
@@ -264,7 +270,7 @@ var
 
 implementation
 {$R *.dfm}
-uses dmMainScale, Main, DialogWeight, DialogStringValue, GuideGoodsRemains;
+uses dmMainScale, Main, DialogWeight, DialogStringValue, GuideGoodsRemains, CommonData, DialogMsg;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.CancelCxFilter;
 begin
@@ -272,7 +278,7 @@ begin
      then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.cbOperCountPartnerSecondClick(Sender: TObject);
+procedure TGuideGoodsForm.cbAmountPartnerSecondClick(Sender: TObject);
 begin
    if gbAmountPartner.Visible
    then
@@ -325,7 +331,7 @@ begin
      EditAmountPartner.Text:='0';
 
      cbPriceWithVAT.Visible:= execParamsMovement.ParamByName('isCalc_PriceVat').AsBoolean = TRUE;
-     if not cbPriceWithVAT.Visible then gbPrice.Height:= gbWeightValue.Height;
+     if cbPriceWithVAT.Visible then gbPrice.Height:= gbAmountPartner.Height else gbPrice.Height:= gbWeightValue.Height;
 
      if (gbWeightValue.Visible) and (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202)
      then
@@ -436,12 +442,12 @@ begin
   InitializePriceList(execParamsMovement);
   //
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible:= rgGoodsKind.Items.Count > 1; // (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)or(execParamsMovement.ParamByName('OrderExternalId').AsInteger<>0);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName_max').Index].VisibleForCustomization:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindId_list').Index].VisibleForCustomization:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName_max').Index].Visible:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindId_list').Index].Visible:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
   //
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Weight').Index].Visible                        := ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].VisibleForCustomization    := ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountForWeight').Index].VisibleForCustomization:= ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Weight').Index].Visible        := ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].Visible    := ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountForWeight').Index].Visible:= ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
   //
   if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310) then
   begin
@@ -962,7 +968,7 @@ begin
        end;
 
        // передаем без оплаты да/нет - Кол-во поставщика
-       ParamsMI.ParamByName('isOperCountPartner').AsBoolean:= cbOperCountPartnerSecond.Checked;
+       ParamsMI.ParamByName('isAmountPartnerSecond').AsBoolean:= cbAmountPartnerSecond.Checked;
        // передаем Цена с НДС да/нет - для цена поставщика
        ParamsMI.ParamByName('isPriceWithVAT').AsBoolean:= cbPriceWithVAT.Checked;
        // передаем Дата для цены возврат поставщику
@@ -1005,65 +1011,193 @@ begin
                      exit;
             end;
             //
-            if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
-              or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
-              and (CDS.FieldByName('Price_Income_from').AsFloat > 0)
-              and (CDS.FieldByName('Price_Income_from').AsFloat < CDS.FieldByName('Price_Income_to').AsFloat)
-              and ((CDS.FieldByName('Price_Income_from').AsFloat > ParamsMI.ParamByName('PricePartner').AsFloat)
-                or (CDS.FieldByName('Price_Income_to').AsFloat   < ParamsMI.ParamByName('PricePartner').AsFloat)
-                  )
-            then begin
-                  if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
-                  begin
-                     Result:= false;
-                     //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
-                     if MessageDlg('Ошибка.ЦЕНА не соответствует цене в спецификации.'
-                               + #10 + #13
-                               + 'Продолжить?'
-                                ,mtConfirmation,mbYesNoCancel,0) <> 6 // mbYes
-                     then begin
+            if cbPriceWithVAT.Visible then
+            begin
+              // с НДС
+              if cbPriceWithVAT.Checked = TRUE then
+              begin
+                if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+                  or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
+                  and (CDS.FieldByName('Price_Income_from_addVat').AsFloat > 0)
+                  and (CDS.FieldByName('Price_Income_from_addVat').AsFloat < CDS.FieldByName('Price_Income_to_addVat').AsFloat)
+                  and ((CDS.FieldByName('Price_Income_from_addVat').AsFloat > ParamsMI.ParamByName('PricePartner').AsFloat)
+                    or (CDS.FieldByName('Price_Income_to_addVat').AsFloat   < ParamsMI.ParamByName('PricePartner').AsFloat)
+                      )
+                then begin
+                      if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
+                      begin
                          Result:= false;
+                         if not DialogMsgForm.Execute
+                                    ('Ошибка', 'ЦЕНА не соответствует цене в спецификации.'
+                                   , 'Продолжить?')
+                                    //,mtConfirmation,mbYesNoCancel,0) <> 6 // mbYes
+                         then begin
+                             Result:= false;
+                             exit;
+                         end
+                         else
+                             Result:= true;
+                      end
+                      else
+                      begin
+                         Result:= false;
+                         ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
                          exit;
-                     end
-                     else
-                         Result:= true;
-                  end
-                  else
-                  begin
-                     Result:= false;
-                     //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
-                     ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
-                     exit;
-                  end
-           end
+                      end
+                end
+                else
+                    if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+                      or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
+                      and (CDS.FieldByName('Price_Income_addVat').AsFloat > 0)
+                      and (CDS.FieldByName('Price_Income_addVat').AsFloat <> ParamsMI.ParamByName('PricePartner').AsFloat)
+                    then begin
+                          if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
+                          begin
+                             Result:= false;
+                             if not DialogMsgForm.Execute
+                                        ('Ошибка.', 'ЦЕНА не соответствует цене в спецификации.'
+                                       , 'Продолжить?')
+                                       // ,mtConfirmation,mbYesNoCancel,0) <> 6
+                             then begin
+                               Result:= false;
+                               exit;
+                             end
+                             else
+                                 Result:= true;
+                          end
+                          else
+                          begin
+                             Result:= false;
+                             ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                             exit;
+                          end;
+                    end;
+
+              end
+              else
+              // без НДС
+              begin
+                if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+                  or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
+                  and (CDS.FieldByName('Price_Income_from_notVat').AsFloat > 0)
+                  and (CDS.FieldByName('Price_Income_from_notVat').AsFloat < CDS.FieldByName('Price_Income_to_addVat').AsFloat)
+                  and ((CDS.FieldByName('Price_Income_from_notVat').AsFloat > ParamsMI.ParamByName('PricePartner').AsFloat)
+                    or (CDS.FieldByName('Price_Income_to_notVat').AsFloat   < ParamsMI.ParamByName('PricePartner').AsFloat)
+                      )
+                then begin
+                      if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
+                      begin
+                         Result:= false;
+                         if not DialogMsgForm.Execute
+                                    ('Ошибка.', 'ЦЕНА не соответствует цене в спецификации.'
+                                   , 'Продолжить?')
+                                    //,mtConfirmation,mbYesNoCancel,0) <> 6 // mbYes
+                         then begin
+                             Result:= false;
+                             exit;
+                         end
+                         else
+                             Result:= true;
+                      end
+                      else
+                      begin
+                         Result:= false;
+                         ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                         exit;
+                      end
+                end
+                else
+                    if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+                      or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
+                      and (CDS.FieldByName('Price_Income_notVat').AsFloat > 0)
+                      and (CDS.FieldByName('Price_Income_notVat').AsFloat <> ParamsMI.ParamByName('PricePartner').AsFloat)
+                    then begin
+                          if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
+                          begin
+                             Result:= false;
+                             if not DialogMsgForm.Execute
+                                        ('Ошибка.', 'ЦЕНА не соответствует цене в спецификации.'
+                                       , 'Продолжить?')
+                                        //,mtConfirmation,mbYesNoCancel,0) <> 6
+                             then begin
+                               Result:= false;
+                               exit;
+                             end
+                             else
+                                 Result:= true;
+                          end
+                          else
+                          begin
+                             Result:= false;
+                             ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                             exit;
+                          end;
+                    end;
+              end;
+
+            end
             else
-            if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
-              or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
-              and (CDS.FieldByName('Price_Income').AsFloat > 0)
-              and (CDS.FieldByName('Price_Income').AsFloat <> ParamsMI.ParamByName('PricePartner').AsFloat)
-            then begin
-                  if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
-                  begin
-                     Result:= false;
-                     //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
-                     if MessageDlg('Ошибка.ЦЕНА не соответствует цене в спецификации.'
-                               + #10 + #13
-                               + 'Продолжить?'
-                                ,mtConfirmation,mbYesNoCancel,0) <> 6
-                     then begin
-                       Result:= false;
-                       exit;
-                     end
-                     else
-                         Result:= true;
-                  end
-                  else
-                  begin
-                     Result:= false;
-                     //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
-                     ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
-                     exit;
-                  end;
+            begin
+                if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+                  or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
+                  and (CDS.FieldByName('Price_Income_from').AsFloat > 0)
+                  and (CDS.FieldByName('Price_Income_from').AsFloat < CDS.FieldByName('Price_Income_to').AsFloat)
+                  and ((CDS.FieldByName('Price_Income_from').AsFloat > ParamsMI.ParamByName('PricePartner').AsFloat)
+                    or (CDS.FieldByName('Price_Income_to').AsFloat   < ParamsMI.ParamByName('PricePartner').AsFloat)
+                      )
+                then begin
+                      if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
+                      begin
+                         Result:= false;
+                         //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
+                         if not DialogMsgForm.Execute
+                                    ('Ошибка.', 'ЦЕНА не соответствует цене в спецификации.'
+                                   , 'Продолжить?')
+                                    //,mtConfirmation,mbYesNoCancel,0) <> 6 // mbYes
+                         then begin
+                             Result:= false;
+                             exit;
+                         end
+                         else
+                             Result:= true;
+                      end
+                      else
+                      begin
+                         Result:= false;
+                         //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
+                         ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                         exit;
+                      end
+                end
+                else
+                    if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+                      or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
+                      and (CDS.FieldByName('Price_Income').AsFloat > 0)
+                      and (CDS.FieldByName('Price_Income').AsFloat <> ParamsMI.ParamByName('PricePartner').AsFloat)
+                    then begin
+                          if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) then
+                          begin
+                             Result:= false;
+                             //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
+                             if not DialogMsgForm.Execute
+                                        ('Ошибка.', 'ЦЕНА не соответствует цене в спецификации.'
+                                       , 'Продолжить?')
+                                        //,mtConfirmation,mbYesNoCancel,0) <> 6
+                             then begin
+                               Result:= false;
+                               exit;
+                             end
+                             else
+                                 Result:= true;
+                          end
+                          else
+                          begin
+                             Result:= false;
+                             //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
+                             ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                             exit;
+                          end;
+                    end;
             end;
        end;
      end;
@@ -2143,6 +2277,16 @@ begin
     rgPriceList.Items.Add('('+IntToStr(PriceList_Array[i].Code)+') '+ PriceList_Array[i].Name);}
 
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_Remains').Index].Visible:=(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310);
+
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income').Index].VisibleForCustomization:=Length(gc_User.Session) > 20;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_from').Index].VisibleForCustomization:=Length(gc_User.Session) > 20;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_to').Index].VisibleForCustomization:=Length(gc_User.Session) > 20;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_notVat').Index].VisibleForCustomization:=Length(gc_User.Session) > 20;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_from_notVat').Index].VisibleForCustomization:=Length(gc_User.Session) > 20;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_to_notVat').Index].VisibleForCustomization:=Length(gc_User.Session) > 20;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_addVat').Index].VisibleForCustomization:=Length(gc_User.Session) > 20;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_from_addVat').Index].VisibleForCustomization:=Length(gc_User.Session) > 20;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_to_addVat').Index].VisibleForCustomization:=Length(gc_User.Session) > 20;
 
   with spSelect do
   begin

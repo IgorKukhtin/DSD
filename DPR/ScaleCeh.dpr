@@ -75,7 +75,7 @@ uses
   GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm},
   DialogMessage in '..\ScaleCeh\DialogMessage.pas' {DialogMessageForm},
   DialogStickerTare in '..\Scale\DialogStickerTare.pas' {DialogStickerTareForm},
-  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
+  DialogMsg in '..\Scale\DialogMsg.pas' {DialogMsgForm},
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   GuideWorkProgress in '..\ScaleCeh\GuideWorkProgress.pas' {GuideWorkProgressForm},
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
@@ -126,7 +126,8 @@ uses
   PdfiumCtrl in '..\SOURCE\Pdfium\PdfiumCtrl.pas',
   PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
   DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
-  dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas';
+  dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas',
+  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm};
 
 {$R *.res}
 

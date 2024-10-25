@@ -1359,6 +1359,35 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 55
         end
+        object isPriceWithVAT_in: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+          DataBinding.FieldName = 'isPriceWithVAT_in'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+          Options.Editing = False
+          Width = 55
+        end
+        object isAmountPartnerSecond_in: TcxGridDBColumn
+          Caption = #1041#1077#1079' '#1086#1087#1083#1072#1090#1099
+          DataBinding.FieldName = 'isAmountPartnerSecond_in'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object OperDate_ReturnOut: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076
+          DataBinding.FieldName = 'OperDate_ReturnOut'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          Options.Editing = False
+          Width = 70
+        end
         object Count: TcxGridDBColumn
           Caption = #1050#1086#1083'. '#1087#1072#1082#1077#1090#1086#1074
           DataBinding.FieldName = 'Count'

@@ -202,8 +202,8 @@
 			<DCCReference Include="..\Scale\DialogStickerTare.pas">
 				<Form>DialogStickerTareForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\Scale\DialogStringValue.pas">
-				<Form>DialogStringValueForm</Form>
+			<DCCReference Include="..\Scale\DialogMsg.pas">
+				<Form>DialogMsgForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
 			<DCCReference Include="..\ScaleCeh\GuideWorkProgress.pas">
@@ -294,6 +294,9 @@
 			<DCCReference Include="..\SOURCE\Pdfium\PdfiumLib.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdCommon.pas"/>
+			<DCCReference Include="..\Scale\DialogStringValue.pas">
+				<Form>DialogStringValueForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

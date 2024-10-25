@@ -86,7 +86,7 @@ uses
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm},
-  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
+  DialogMsg in '..\Scale\DialogMsg.pas' {DialogMsgForm},
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
@@ -130,7 +130,8 @@ uses
   PdfiumCtrl in '..\SOURCE\Pdfium\PdfiumCtrl.pas',
   PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
   DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
-  dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas';
+  dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas',
+  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm};
 
 {$R *.res}
 
@@ -155,7 +156,7 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  //
+         //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
          //
@@ -177,6 +178,7 @@ begin
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
+         Application.CreateForm(TDialogMsgForm, DialogMsgForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
@@ -226,6 +228,7 @@ begin
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
+         Application.CreateForm(TDialogMsgForm, DialogMsgForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);

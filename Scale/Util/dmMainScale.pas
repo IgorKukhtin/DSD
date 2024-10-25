@@ -731,7 +731,7 @@ begin
        Params.AddParam('inIsAsset', ftBoolean, ptInput, execParamsMovement.ParamByName('isAsset').AsBoolean);
        Params.AddParam('inIsBarCode', ftBoolean, ptInput, execParamsMI.ParamByName('isBarCode').AsBoolean);
 
-       Params.AddParam('inIsOperCountPartner', ftBoolean, ptInput, execParamsMI.ParamByName('isOperCountPartner').AsBoolean);
+       Params.AddParam('inIsAmountPartnerSecond', ftBoolean, ptInput, execParamsMI.ParamByName('isAmountPartnerSecond').AsBoolean);
        Params.AddParam('inIsPriceWithVAT', ftBoolean, ptInput, execParamsMI.ParamByName('isPriceWithVAT').AsBoolean);
        Params.AddParam('inOperDate_ReturnOut', ftDateTime, ptInput, execParamsMI.ParamByName('OperDate_ReturnOut').AsDateTime);
        Params.AddParam('inPricePartner', ftFloat, ptInput, execParamsMI.ParamByName('PricePartner').AsFloat);

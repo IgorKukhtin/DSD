@@ -281,6 +281,9 @@ type
     PartionDateEdit: TcxDateEdit;
     PricePartner_in: TcxGridDBColumn;
     AmountPartner_in: TcxGridDBColumn;
+    isPriceWithVAT_in: TcxGridDBColumn;
+    isAmountPartnerSecond_in: TcxGridDBColumn;
+    OperDate_ReturnOut: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -372,7 +375,7 @@ uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc
     ,GuideGoods,GuideGoodsPartner,GuideGoodsSticker
     ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuideMovementReturnIn, GuidePartner
     ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, GuideReason, GuideAsset, GuideRetail, DialogDateValue
-    ,IdIPWatch, LookAndFillSettings;
+    ,IdIPWatch, LookAndFillSettings, DialogMsg;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -443,11 +446,12 @@ begin
               //
               if ParamsMovement.ParamByName('isPrice_diff_inf').AsBoolean = true
               then
-                if MessageDlg('Найдено отклонение цены от спецификации.'
-                     +#10+#13+'Для <('+ParamsMovement.ParamByName('GoodsCode_inf').AsString+') '+ParamsMovement.ParamByName('GoodsName_inf').AsString+'>'
+                if not DialogMsgForm.Execute
+                             ('Найдено отклонение цены от спецификации.'
+                              ,'Для <('+ParamsMovement.ParamByName('GoodsCode_inf').AsString+') '+ParamsMovement.ParamByName('GoodsName_inf').AsString+'>'
                              +' с ценой поставщика  = <'+FloatToStr(ParamsMovement.ParamByName('PricePartner_inf').AsFloat)+'>.'
-                     +#10+#13+'Будет сформирован Акт разногласий.'
-                     +#10+#13+'Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
+                     ,'Будет сформирован Акт разногласий.'
+                      + 'Продолжить?')//,mtConfirmation,mbYesNoCancel,0) <> 6
                 then exit;
 
      end;
