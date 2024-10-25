@@ -1,6 +1,7 @@
 -- Function: gpReport_OrderExternal_Sale()
 
-DROP FUNCTION IF EXISTS gpReport_OrderExternal_Sale (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_OrderExternal_Sale (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal_Sale (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderExternal_Sale(
     IN inStartDate          TDateTime , --
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal_Sale(
     IN inRouteSortingId     Integer   , -- Сортировки маршрутов
     IN inGoodsGroupId       Integer   ,
     IN inIsByDoc            Boolean   ,
+    IN inIsByPromo          Boolean   ,
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime
@@ -90,6 +92,8 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime
              , AmountBox          TFloat  
              , BoxCount           TFloat
              , GoodsBoxName_short TVarChar
+             , MovementPromo_order  TVarChar
+             , MovementPromo_sale   TVarChar
               )
 
 AS
@@ -1059,6 +1063,32 @@ BEGIN
                            AS isPrint_M
                     FROM tmpData_All_1 AS tmpData_All
                     )
+   , tmpMLM_Promo_sale AS (SELECT MovementLinkMovement.*
+                           FROM MovementLinkMovement
+                           WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpData_All.MovementId_Sale FROM tmpData_All)
+                             AND MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Promo())
+                             AND inIsByPromo = TRUE
+                          )
+   , tmpMLM_Promo_order AS (SELECT MovementLinkMovement.*
+                            FROM MovementLinkMovement
+                            WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpData_All.MovementId_Order FROM tmpData_All)
+                              AND MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Promo())
+                              AND inIsByPromo = TRUE
+                            )
+   , tmpMovementDate_Promo_sale AS (SELECT MovementDate.*
+                                    FROM MovementDate
+                                    WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMLM_Promo_sale.MovementChildId FROM tmpMLM_Promo_sale)
+                                       AND MovementDate.DescId IN (zc_MovementDate_StartSale()
+                                                                 , zc_MovementDate_EndSale())
+                                    )
+   , tmpMovementDate_Promo_order AS (SELECT MovementDate.*
+                                     FROM MovementDate
+                                     WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMLM_Promo_order.MovementChildId FROM tmpMLM_Promo_order)
+                                        AND MovementDate.DescId IN (zc_MovementDate_StartSale()
+                                                                  , zc_MovementDate_EndSale())
+                                     )
+
+
        -- запрос
        SELECT
              COALESCE (tmpMovement.MovementId_Order,-1) ::Integer AS MovementId
@@ -1201,7 +1231,8 @@ BEGIN
            -- название ящика
            , COALESCE (tmpGoodsArticle.GoodsBoxName_short, tmpGroup_GoodsBoxName_short.GoodsBoxName_short) ::TVarChar AS GoodsBoxName_short
           
-           
+           , zfCalc_PromoMovementName (NULL, Movement_Promo_order.InvNumber :: TVarChar, Movement_Promo_order.OperDate, MD_StartSale_order.ValueData, MD_EndSale_order.ValueData) ::TVarChar AS MovementPromo_order
+           , zfCalc_PromoMovementName (NULL, Movement_Promo_sale.InvNumber :: TVarChar, Movement_Promo_sale.OperDate, MD_StartSale_sale.ValueData, MD_EndSale_sale.ValueData)     ::TVarChar AS MovementPromo_sale
        FROM tmpData_All AS tmpMovement
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
           LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId
@@ -1253,6 +1284,30 @@ BEGIN
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner_Order) AS tmpWeekDay_Partner ON 1=1
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo) AS tmpWeekDay_CarInfo ON 1=1
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_CarInfo_date) AS tmpWeekDay_CarInfo_date ON 1=1
+          --
+          LEFT JOIN tmpMLM_Promo_order AS MLM_Promo_order
+                                       ON MLM_Promo_order.MovementId = tmpMovement.MovementId_Order
+          LEFT JOIN Movement AS Movement_Promo_order ON Movement_Promo_order.Id = MLM_Promo_order.MovementChildId
+
+          LEFT JOIN tmpMovementDate_Promo_order AS MD_StartSale_order
+                                          ON MD_StartSale_order.MovementId = Movement_Promo_order.Id
+                                         AND MD_StartSale_order.DescId = zc_MovementDate_StartSale()
+          LEFT JOIN tmpMovementDate_Promo_order AS MD_EndSale_order
+                                          ON MD_EndSale_order.MovementId = Movement_Promo_order.Id
+                                         AND MD_EndSale_order.DescId = zc_MovementDate_EndSale()
+ 
+          LEFT JOIN tmpMLM_Promo_sale AS MLM_Promo_sale
+                                      ON MLM_Promo_sale.MovementId = tmpMovement.MovementId_Sale
+          LEFT JOIN Movement AS Movement_Promo_sale ON Movement_Promo_sale.Id = MLM_Promo_sale.MovementChildId
+
+          LEFT JOIN tmpMovementDate_Promo_sale AS MD_StartSale_sale
+                                          ON MD_StartSale_sale.MovementId = Movement_Promo_sale.Id
+                                         AND MD_StartSale_sale.DescId = zc_MovementDate_StartSale()
+          LEFT JOIN tmpMovementDate_Promo_sale AS MD_EndSale_sale
+                                          ON MD_EndSale_sale.MovementId = Movement_Promo_sale.Id
+                                         AND MD_EndSale_sale.DescId = zc_MovementDate_EndSale()
+
+
          ;
 
 END;
@@ -1270,4 +1325,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '06.08.2023', inEndDate:= '06.08.2023', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := True, inSession:= '2')
+-- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '06.08.2023', inEndDate:= '06.08.2023', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := false, inIsByPromo:= false, inSession:= '2')

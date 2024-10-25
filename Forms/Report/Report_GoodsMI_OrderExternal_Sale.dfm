@@ -1,28 +1,28 @@
 inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_SaleForm
   Caption = #1054#1090#1095#1077#1090' <'#1047#1072#1103#1074#1082#1072' / '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
   ClientHeight = 377
-  ClientWidth = 1092
+  ClientWidth = 1142
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1108
+  ExplicitWidth = 1158
   ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
-    Width = 1092
+    Width = 1142
     Height = 286
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1092
     ExplicitHeight = 286
     ClientRectBottom = 286
-    ClientRectRight = 1092
+    ClientRectRight = 1142
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1092
       ExplicitHeight = 286
       inherited cxGrid: TcxGrid
-        Width = 1092
+        Width = 1142
         Height = 286
         ExplicitWidth = 1092
         ExplicitHeight = 286
@@ -1278,12 +1278,28 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             Options.Editing = False
             Width = 70
           end
+          object MovementPromo_order: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082' '#1072#1082#1094#1080#1103' ('#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'MovementPromo_order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object MovementPromo_sale: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082' '#1072#1082#1094#1080#1103' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'MovementPromo_sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1092
+    Width = 1142
     Height = 65
     ExplicitWidth = 1092
     ExplicitHeight = 65
@@ -1377,10 +1393,17 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     end
     object cbByDoc: TcxCheckBox
       Left = 713
-      Top = 30
+      Top = 32
       Action = actRefreshDoc
       TabOrder = 12
-      Width = 231
+      Width = 211
+    end
+    object cbbyPromo: TcxCheckBox
+      Left = 930
+      Top = 32
+      Action = actRefreshPromo
+      TabOrder = 13
+      Width = 204
     end
   end
   object edTo: TcxButtonEdit [2]
@@ -1445,7 +1468,22 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   inherited ActionList: TActionList
     Left = 407
     Top = 239
-    object actOpenFormOrder: TdsdOpenForm [0]
+    object actRefreshPromo: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082'. '#1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082'. '#1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actOpenFormOrder: TdsdOpenForm [1]
       Category = 'OpenForm'
       MoveParams = <>
       Caption = 'actOpenForm'
@@ -1472,7 +1510,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         end>
       isShowModal = False
     end
-    object actRefreshDoc: TdsdDataSetRefresh [1]
+    object actRefreshDoc: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1487,7 +1525,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actOpenFormSale: TdsdOpenForm [2]
+    object actOpenFormSale: TdsdOpenForm [3]
       Category = 'OpenForm'
       MoveParams = <>
       Caption = 'actOpenFormSale'
@@ -1530,7 +1568,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     inherited actRefresh: TdsdDataSetRefresh
       TabSheet = tsMain
     end
-    object macOpenDocumentOrder: TMultiAction [4]
+    object macOpenDocumentOrder: TMultiAction [5]
       Category = 'OpenForm'
       MoveParams = <>
       ActionList = <
@@ -1911,6 +1949,14 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsByPromo'
+          Value = Null
+          Component = cbbyPromo
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2127,6 +2173,14 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsByPromo'
+        Value = Null
+        Component = cbbyPromo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 200
@@ -2316,7 +2370,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 944
+    Left = 800
     Top = 8
   end
   object FormParams: TdsdFormParams
