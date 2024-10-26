@@ -20,6 +20,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, isPri
              , ValuePrice_from TFloat
                -- макс расчетная цена в грн - с учетом курса и округления
              , ValuePrice_to TFloat
+
                -- цена Спецификации в CurrencyId
              , ValuePrice_orig TFloat
                -- Коэфф перевода из кол-ва поставщика
@@ -28,6 +29,21 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, isPri
              , DiffPrice TFloat
                -- Кол-во знаков для округления
              , RoundPrice TFloat
+
+               -- цена
+             , ValuePrice_notVat TFloat
+               -- миним расчетная цена
+             , ValuePrice_from_notVat TFloat
+               -- макс расчетная цена
+             , ValuePrice_to_notVat TFloat
+             
+               -- цена
+             , ValuePrice_addVat TFloat
+               -- миним расчетная цена
+             , ValuePrice_from_addVat TFloat
+               -- макс расчетная цена
+             , ValuePrice_to_addVat TFloat
+
                --
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
@@ -103,7 +119,7 @@ BEGIN
                                , CASE WHEN MIF_CountForAmount.ValueData > 0 THEN MIF_CountForAmount.ValueData ELSE 1 END AS CountForAmount
                                  -- Разрешенный % отклонение для цены
                                , COALESCE (MFloat_DiffPrice.ValueData, 0)       AS DiffPrice
-                               -- Кол-во знаков для округления
+                                 -- Кол-во знаков для округления
                                , COALESCE (MFloat_RoundPrice.ValueData, 0)      AS RoundPrice
                                  --
                                , tmpCurrencyList.CurrencyValue
@@ -167,64 +183,170 @@ BEGIN
               , tmpData.MovementItemId
               , tmpData.GoodsId
               , tmpData.GoodsKindId
-              , (CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
-                           THEN tmpData.ValuePrice
-                      WHEN tmpData.RoundPrice = 1
-                           THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
-                      WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
-                           THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
-                      WHEN tmpData.RoundPrice = 3
-                           THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
-                      ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
-                 END) :: TFloat AS ValuePrice
+              , tmpData.ValuePrice
                  
-              , ((1 - tmpData.DiffPrice :: TFloat / 100)
-               * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
-                           THEN tmpData.ValuePrice
-                      WHEN tmpData.RoundPrice = 1
-                           THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
-                      WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
-                           THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
-                      WHEN tmpData.RoundPrice = 3
-                           THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
-                      ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
-                 END) :: TFloat AS ValuePrice_from
-              , ((1 + tmpData.DiffPrice :: TFloat / 100)
-               * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
-                           THEN tmpData.ValuePrice
-                      WHEN tmpData.RoundPrice = 1
-                           THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
-                      WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
-                           THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
-                      WHEN tmpData.RoundPrice = 3
-                           THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
-                      ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
-                 END) :: TFloat AS ValuePrice_to
+              , tmpData.ValuePrice_from
+              , tmpData.ValuePrice_to
 
-              , tmpData.ValuePrice_orig :: TFloat AS ValuePrice_orig
+              , tmpData.ValuePrice_orig
 
-              , tmpData.CountForAmount  :: TFloat AS CountForAmount
-              , tmpData.DiffPrice       :: TFloat AS DiffPrice
-              , tmpData.RoundPrice      :: TFloat AS RoundPrice
+              , tmpData.CountForAmount
+              , tmpData.DiffPrice
+              , tmpData.RoundPrice
+
+                -- цена / 1.2
+              , CASE WHEN tmpData.isPriceWithVAT = FALSE
+                          THEN tmpData.ValuePrice
+                     WHEN tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 1))
+                     WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                          THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 2))
+                     WHEN tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 3))
+                     ELSE CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 4))
+
+                END :: TFloat AS ValuePrice_notVat 
+                -- миним расчетная цена
+              , CASE WHEN tmpData.isPriceWithVAT = FALSE
+                          THEN tmpData.ValuePrice_from
+                     WHEN tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice_from / 1.2 AS NUMERIC (16, 1))
+                     WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                          THEN CAST (tmpData.ValuePrice_from / 1.2 AS NUMERIC (16, 2))
+                     WHEN tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 3))
+                     ELSE CAST (tmpData.ValuePrice_from / 1.2 AS NUMERIC (16, 4))
+
+                END :: TFloat AS ValuePrice_from_notVat
+                -- макс расчетная цена
+              , CASE WHEN tmpData.isPriceWithVAT = FALSE
+                          THEN tmpData.ValuePrice_to
+                     WHEN tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 1))
+                     WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                          THEN CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 2))
+                     WHEN tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 3))
+                     ELSE CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 4))
+
+                END :: TFloat AS ValuePrice_to_notVat
+              
+                -- цена * 1.2
+              , CASE WHEN tmpData.isPriceWithVAT = TRUE
+                          THEN tmpData.ValuePrice
+                     WHEN tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 1))
+                     WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                          THEN CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 2))
+                     WHEN tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 3))
+                     ELSE CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 4))
+
+                END :: TFloat AS ValuePrice_addVat 
+                -- миним расчетная цена
+              , CASE WHEN tmpData.isPriceWithVAT = TRUE
+                          THEN tmpData.ValuePrice_from
+                     WHEN tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 1))
+                     WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                          THEN CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 2))
+                     WHEN tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 3))
+                     ELSE CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 4))
+
+                END :: TFloat AS ValuePrice_from_addVat
+                -- макс расчетная цена
+              , CASE WHEN tmpData.isPriceWithVAT = TRUE
+                          THEN tmpData.ValuePrice_to
+                     WHEN tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 1))
+                     WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                          THEN CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 2))
+                     WHEN tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 3))
+                     ELSE CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 4))
+
+                END :: TFloat AS ValuePrice_to_addVat
 
               , tmpData.JuridicalId
-              , Object_Juridical.ValueData AS JuridicalName
-              , Object_Contract_InvNumber_View.ContractId   AS ContractId
-              , Object_Contract_InvNumber_View.ContractCode AS ContractCode
-              , Object_Contract_InvNumber_View.InvNumber    AS ContractName
-              , tmpData.PaidKindId :: Integer AS PaidKindId
-              , Object_PaidKind.ValueData     AS PaidKindName
-              , tmpData.CurrencyId :: Integer AS CurrencyId
-              , Object_Currency.ValueData     AS CurrencyName
-              , tmpData.CurrencyValue :: TFloat
-              , tmpData.ParValue      :: TFloat
-         FROM tmpData
-              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
-              LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = tmpData.ContractId
-              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpData.PaidKindId
-              LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = tmpData.CurrencyId
-         WHERE tmpData.Ord = 1
-        ;
+              , tmpData.JuridicalName
+              , tmpData.ContractId
+              , tmpData.ContractCode
+              , tmpData.ContractName
+              , tmpData.PaidKindId
+              , tmpData.PaidKindName
+              , tmpData.CurrencyId
+              , tmpData.CurrencyName
+              , tmpData.CurrencyValue
+              , tmpData.ParValue
+
+         FROM  (SELECT tmpData.MovementId
+                     , tmpData.InvNumber
+                     , tmpData.OperDate
+                     , tmpData.isPriceWithVAT
+                     , tmpData.MovementItemId
+                     , tmpData.GoodsId
+                     , tmpData.GoodsKindId
+                     , (CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
+                                  THEN tmpData.ValuePrice
+                             WHEN tmpData.RoundPrice = 1
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
+                             WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                             WHEN tmpData.RoundPrice = 3
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
+                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+                        END) :: TFloat AS ValuePrice
+                        
+                     , ((1 - tmpData.DiffPrice :: TFloat / 100)
+                      * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
+                                  THEN tmpData.ValuePrice
+                             WHEN tmpData.RoundPrice = 1
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
+                             WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                             WHEN tmpData.RoundPrice = 3
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
+                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+                        END) :: TFloat AS ValuePrice_from
+                     , ((1 + tmpData.DiffPrice :: TFloat / 100)
+                      * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
+                                  THEN tmpData.ValuePrice
+                             WHEN tmpData.RoundPrice = 1
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
+                             WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                             WHEN tmpData.RoundPrice = 3
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
+                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+                        END) :: TFloat AS ValuePrice_to
+       
+                     , tmpData.ValuePrice_orig :: TFloat AS ValuePrice_orig
+       
+                     , tmpData.CountForAmount  :: TFloat AS CountForAmount
+                     , tmpData.DiffPrice       :: TFloat AS DiffPrice
+                     , tmpData.RoundPrice      :: TFloat AS RoundPrice
+       
+                     , tmpData.JuridicalId
+                     , Object_Juridical.ValueData AS JuridicalName
+                     , Object_Contract_InvNumber_View.ContractId   AS ContractId
+                     , Object_Contract_InvNumber_View.ContractCode AS ContractCode
+                     , Object_Contract_InvNumber_View.InvNumber    AS ContractName
+                     , tmpData.PaidKindId :: Integer AS PaidKindId
+                     , Object_PaidKind.ValueData     AS PaidKindName
+                     , tmpData.CurrencyId :: Integer AS CurrencyId
+                     , Object_Currency.ValueData     AS CurrencyName
+                     , tmpData.CurrencyValue :: TFloat AS CurrencyValue
+                     , tmpData.ParValue      :: TFloat AS ParValue
+                FROM tmpData
+       
+                     LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
+                     LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = tmpData.ContractId
+                     LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpData.PaidKindId
+                     LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = tmpData.CurrencyId
+                WHERE tmpData.Ord = 1
+               ) AS tmpData
+               ;
 
 
 END;
