@@ -1183,7 +1183,7 @@ END IF;
                                           JOIN ObjectString AS OS_Article
                                                             ON OS_Article.ObjectId  = Object.Id
                                                            AND OS_Article.DescId    = zc_ObjectString_Article()
-                                                           AND OS_Article.ValueData ILIKE ('AGL' || REPEAT ('0', 6 - LENGTH (vbArticle :: TVarChar)) || vbArticle :: TVarChar)
+                                                           AND OS_Article.ValueData ILIKE ('AGL' || REPEAT ('0', 7 - LENGTH (vbArticle :: TVarChar)) || vbArticle :: TVarChar)
                                      WHERE Object.DescId = zc_Object_Goods()
                                     )
                           THEN
