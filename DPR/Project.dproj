@@ -457,16 +457,6 @@
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
-					<DeployClass Name="UWP_DelphiLogo150">
-						<Platform Name="Win64">
-							<RemoteDir>Assets</RemoteDir>
-							<Operation>1</Operation>
-						</Platform>
-						<Platform Name="Win32">
-							<RemoteDir>Assets</RemoteDir>
-							<Operation>1</Operation>
-						</Platform>
-					</DeployClass>
 					<DeployClass Name="Android_LauncherIcon96">
 						<Platform Name="Android64">
 							<RemoteDir>res\drawable-xhdpi</RemoteDir>
@@ -494,6 +484,26 @@
 						</Platform>
 						<Platform Name="Android">
 							<RemoteDir>res\drawable-xhdpi</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="UWP_DelphiLogo150">
+						<Platform Name="Win64">
+							<RemoteDir>Assets</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<RemoteDir>Assets</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="UWP_DelphiLogo44">
+						<Platform Name="Win64">
+							<RemoteDir>Assets</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<RemoteDir>Assets</RemoteDir>
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
@@ -988,15 +998,6 @@
 					</DeployClass>
 					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSSimulator"/>
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Android"/>
-<<<<<<< HEAD
-					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win64"/>
-					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win32"/>
-					<ProjectRoot Name="$(PROJECTNAME).app" Platform="OSX64"/>
-					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSDevice64"/>
-					<ProjectRoot Name="$(PROJECTNAME)" Platform="Android64"/>
-					<ProjectRoot Name="$(PROJECTNAME).app" Platform="OSX32"/>
-					<ProjectRoot Name="$(PROJECTNAME)" Platform="Linux64"/>
-=======
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Android64"/>
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win32"/>
 					<ProjectRoot Name="$(PROJECTNAME).app" Platform="OSX64"/>
@@ -1004,7 +1005,6 @@
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Linux64"/>
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win64"/>
 					<ProjectRoot Name="$(PROJECTNAME).app" Platform="OSX32"/>
->>>>>>> origin/master
 					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSDevice32"/>
 				</Deployment>
 				<Platforms>
