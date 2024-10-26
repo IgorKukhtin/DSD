@@ -1,4 +1,4 @@
--- Function: gpInsert_ScaleCeh_Movement_all()
+ -- Function: gpInsert_ScaleCeh_Movement_all()
 
 DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_Movement_all (Integer, Integer, TDateTime, TVarChar);
 
@@ -570,7 +570,10 @@ BEGIN
                                                THEN lpInsertUpdate_Movement_Loss_scale
                                                    (ioId                    := 0
                                                   , inInvNumber             := CAST (NEXTVAL ('movement_Loss_seq') AS TVarChar)
-                                                  , inOperDate              := inOperDate
+                                                  , inOperDate              := CASE WHEN inBranchCode = 102 AND FromId IN (8448) -- ЦЕХ деликатесов
+                                                                                         THEN inOperDate - INTERVAL '1 DAY'
+                                                                                    ELSE inOperDate
+                                                                               END
                                                   , inPriceWithVAT          := FALSE
                                                   , inVATPercent            := 20
                                                   , inFromId                := FromId

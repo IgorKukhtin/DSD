@@ -128,6 +128,8 @@ BEGIN
                         WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
                           AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                        )
+        -- !!!
+        AND vbMovementDescId <> zc_Movement_Loss()
 
      THEN
          -- вес для перевода из веса в метры или что-то еще
