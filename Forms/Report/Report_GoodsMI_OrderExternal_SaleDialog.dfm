@@ -128,8 +128,8 @@ object Report_GoodsMI_OrderExternal_SaleDialogForm: TReport_GoodsMI_OrderExterna
     Width = 180
   end
   object edByDoc: TcxCheckBox
-    Left = 253
-    Top = 27
+    Left = 252
+    Top = 11
     Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'  ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 14
     Width = 218
@@ -150,6 +150,13 @@ object Report_GoodsMI_OrderExternal_SaleDialogForm: TReport_GoodsMI_OrderExterna
     TabOrder = 16
     Width = 180
   end
+  object cbbyPromo: TcxCheckBox
+    Left = 253
+    Top = 37
+    Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1040#1082#1094#1080#1103
+    TabOrder = 17
+    Width = 199
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -157,8 +164,8 @@ object Report_GoodsMI_OrderExternal_SaleDialogForm: TReport_GoodsMI_OrderExterna
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 336
-    Top = 16
+    Left = 432
+    Top = 72
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -282,6 +289,14 @@ object Report_GoodsMI_OrderExternal_SaleDialogForm: TReport_GoodsMI_OrderExterna
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsByPromo'
+        Value = Null
+        Component = cbbyPromo
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

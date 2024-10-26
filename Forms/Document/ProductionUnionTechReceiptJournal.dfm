@@ -3142,7 +3142,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         end
         item
           Name = 'PageNum'
-          Value = '2'
+          Value = '1'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -5659,7 +5659,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       end
       item
         Name = 'inisPartion'
-        Value = Null
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
