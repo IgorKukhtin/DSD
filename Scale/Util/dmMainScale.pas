@@ -63,7 +63,9 @@ type
     function gpUpdate_Scale_Movement_Transport(execParamsMovement:TParams): Boolean;
     function gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
     function gpUpdate_Scale_Movement_PersonalLoss(execParams:TParams): Boolean;
+    //
     function gpUpdate_Scale_Movement_Income_PricePartner (execParams : TParams; inIsUpdate : Boolean): Boolean;
+    function gpUpdate_Scale_MI_Income_PricePartner(MovementDescId, BranchCode, MovementItemId  : Integer; PricePartner, AmountPartnerSecond : Double; isAmountPartnerSecond, isPriceWithVAT : Boolean; inOperDate_ReturnOut : TDateTime): Boolean;
 
     // Scale + ScaleCeh
     function gpUpdate_Scale_Movement_Status(MovementId_parent:Integer): Boolean;
@@ -319,6 +321,36 @@ begin
          execParams.ParamByName('GoodsCode_inf').AsInteger:=DataSet.FieldByName('GoodsCode').AsInteger;
          execParams.ParamByName('GoodsName_inf').AsString:=DataSet.FieldByName('GoodsName').AsString;
          execParams.ParamByName('PricePartner_inf').AsFloat:=DataSet.FieldByName('PricePartner').AsFloat;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_MI_Income_PricePartner(MovementDescId, BranchCode, MovementItemId  : Integer;
+                                                                PricePartner, AmountPartnerSecond : Double;
+                                                                isAmountPartnerSecond, isPriceWithVAT : Boolean;
+                                                                inOperDate_ReturnOut : TDateTime
+                                                               ): Boolean;
+begin
+    Result:=false;
+    //
+    with spSelect do begin
+       StoredProcName:='gpUpdate_Scale_MI_Income_PricePartner';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementDescId', ftInteger, ptInput, MovementDescId);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       Params.AddParam('inMovementItemId', ftInteger, ptInput, MovementItemId);
+       Params.AddParam('inPricePartner', ftFloat, ptInput, PricePartner);
+       Params.AddParam('inAmountPartnerSecond', ftFloat, ptInput, AmountPartnerSecond);
+       Params.AddParam('inIsAmountPartnerSecond', ftBoolean, ptInput, isAmountPartnerSecond);
+       Params.AddParam('inIsPriceWithVAT', ftBoolean, ptInput, isPriceWithVAT);
+       //try
+         Execute;
+         Result:=true;
+         //
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');

@@ -131,7 +131,8 @@ uses
   PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
   DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
   dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas',
-  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm};
+  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
+  DialogIncome_PricePartner in '..\Scale\DialogIncome_PricePartner.pas' {DialogIncome_PricePartnerForm};
 
 {$R *.res}
 
@@ -179,6 +180,7 @@ begin
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
          Application.CreateForm(TDialogMsgForm, DialogMsgForm);
+         Application.CreateForm(TDialogIncome_PricePartnerForm, DialogIncome_PricePartnerForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
@@ -229,6 +231,7 @@ begin
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
          Application.CreateForm(TDialogMsgForm, DialogMsgForm);
+         Application.CreateForm(TDialogIncome_PricePartnerForm, DialogIncome_PricePartnerForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);

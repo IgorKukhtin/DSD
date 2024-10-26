@@ -33,14 +33,24 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , Amount_diffWeight TFloat
              , isTax_diff Boolean
 
-             , Price                 TFloat
-             , Price_Return          TFloat
-             , CountForPrice         TFloat
-             , CountForPrice_Return  TFloat
-             , Price_Income          TFloat
-             , Price_Income_from     TFloat
-             , Price_Income_to       TFloat
-             , CountForPrice_Income  TFloat
+             , Price                     TFloat
+             , Price_Return              TFloat
+             , CountForPrice             TFloat
+             , CountForPrice_Return      TFloat
+               -- цена
+             , Price_Income              TFloat
+             , Price_Income_from         TFloat
+             , Price_Income_to           TFloat
+               -- цена
+             , Price_Income_notVat       TFloat
+             , Price_Income_from_notVat  TFloat
+             , Price_Income_to_notVat    TFloat
+               -- цена
+             , Price_Income_addVat       TFloat
+             , Price_Income_from_addVat  TFloat
+             , Price_Income_to_addVat    TFloat
+               --
+             , CountForPrice_Income      TFloat
 
              , Color_calc            Integer
              , MovementId_Promo      Integer
@@ -531,10 +541,19 @@ BEGIN
                  , 0 :: TFloat                     AS Price_Return
                  , tmpMI.CountForPrice :: TFloat   AS CountForPrice
                  , 0 :: TFloat                     AS CountForPrice_Return
-
+                   -- цена
                  , 0 :: TFloat                     AS Price_Income
                  , 0 :: TFloat                     AS Price_Income_from
                  , 0 :: TFloat                     AS Price_Income_to
+                   -- цена
+                 , 0 :: TFloat                     AS Price_Income_notVat
+                 , 0 :: TFloat                     AS Price_Income_from_notVat
+                 , 0 :: TFloat                     AS Price_Income_to_notVat
+                   -- цена
+                 , 0 :: TFloat                     AS Price_Income_addVat
+                 , 0 :: TFloat                     AS Price_Income_from_addVat
+                 , 0 :: TFloat                     AS Price_Income_to_addVat
+                 
                  , 1 :: TFloat                     AS CountForPrice_Income
 
                  , CASE WHEN (tmpMI.Amount_Order - tmpMI.Amount_Weighing) > 0
@@ -642,7 +661,11 @@ BEGIN
         -- Результат - товары zc_Movement_ContractGoods
         RETURN QUERY
            WITH tmpContractGoods
-                     AS (SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.ValuePrice, tmp.ValuePrice_from, tmp.ValuePrice_to
+                     AS (SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.ValuePrice, tmp.ValuePrice_from, tmp.ValuePrice_to, tmp.isPriceWithVAT
+                                -- цена
+                              , tmp.ValuePrice_notVat, tmp.ValuePrice_from_notVat, tmp.ValuePrice_to_notVat
+                                -- цена
+                              , tmp.ValuePrice_addVat, tmp.ValuePrice_from_addVat, tmp.ValuePrice_to_addVat
                          FROM lpGet_MovementItem_ContractGoods (inOperDate:= inOperDate, inJuridicalId:=0, inPartnerId:= 0, inContractId:= -1 * inOrderExternalId, inGoodsId:= 0, inUserId:= vbUserId) AS tmp
                         )
 
@@ -656,9 +679,13 @@ BEGIN
                               , View_InfoMoney.InfoMoneyGroupName
                               , View_InfoMoney.InfoMoneyDestinationName
                               , View_InfoMoney.InfoMoneyName
-                              , tmpContractGoods.ValuePrice
-                              , tmpContractGoods.ValuePrice_from
-                              , tmpContractGoods.ValuePrice_to
+                                -- цена
+                              , tmpContractGoods.ValuePrice, tmpContractGoods.ValuePrice_from, tmpContractGoods.ValuePrice_to
+                                -- цена
+                              , tmpContractGoods.ValuePrice_notVat, tmpContractGoods.ValuePrice_from_notVat, tmpContractGoods.ValuePrice_to_notVat
+                                -- цена
+                              , tmpContractGoods.ValuePrice_addVat, tmpContractGoods.ValuePrice_from_addVat, tmpContractGoods.ValuePrice_to_addVat
+                              
                               , tmpContractGoods.GoodsKindId
                          FROM tmpContractGoods
                               LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpContractGoods.GoodsId
@@ -719,14 +746,27 @@ BEGIN
                 , 0 :: TFloat AS Amount_diff
                 , 0 :: TFloat AS Amount_diffWeight
                 , FALSE :: Boolean AS isTax_diff
-                , tmpGoods.ValuePrice :: TFloat AS Price
-                , 0                   :: TFloat AS Price_Return
-                , 1 :: TFloat                 AS CountForPrice
-                , 1 :: TFloat                 AS CountForPrice_Return
 
+                , CASE WHEN tmpGoods.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна 
+                                                              , zc_Enum_InfoMoneyDestination_30100() -- Продукция
+                                                               )
+                            THEN tmpGoods.ValuePrice
+                       ELSE tmpGoods.ValuePrice -- 0
+                  END :: TFloat AS Price
+
+                , 0 :: TFloat AS Price_Return
+                , 1 :: TFloat AS CountForPrice
+                , 1 :: TFloat AS CountForPrice_Return
+
+                  -- цена
                 , tmpGoods.ValuePrice      :: TFloat AS Price_Income
                 , tmpGoods.ValuePrice_from :: TFloat AS Price_Income_from
                 , tmpGoods.ValuePrice_to   :: TFloat AS Price_Income_to
+                  -- цена
+                , tmpGoods.ValuePrice_notVat AS Price_Income_notVat, tmpGoods.ValuePrice_from_notVat AS Price_Income_from_notVat, tmpGoods.ValuePrice_to_notVat AS Price_Income_to_notVat
+                  -- цена
+                , tmpGoods.ValuePrice_addVat AS Price_Income_addVat, tmpGoods.ValuePrice_from_addVat AS Price_Income_from_addVat, tmpGoods.ValuePrice_to_addVat AS Price_Income_to_addVat
+                  --
                 , 1 :: TFloat                        AS CountForPrice_Income
 
                 , 0                           AS Color_calc -- clBlack
@@ -1385,10 +1425,19 @@ BEGIN
                 , COALESCE (lfObjectHistory_PriceListItem_Return.Price, lfObjectHistory_PriceListItem_Return_2.Price, lfObjectHistory_PriceListItem_Return_3.Price) :: TFloat AS Price_Return
                 , 1 :: TFloat                 AS CountForPrice
                 , 1 :: TFloat                 AS CountForPrice_Return
-
+                  -- цена
                 , 0 :: TFloat                 AS Price_Income
                 , 0 :: TFloat                 AS Price_Income_from
                 , 0 :: TFloat                 AS Price_Income_to
+                  -- цена
+                , 0 :: TFloat                 AS Price_Income_notVat
+                , 0 :: TFloat                 AS Price_Income_from_notVat
+                , 0 :: TFloat                 AS Price_Income_to_notVat
+                  -- цена
+                , 0 :: TFloat                 AS Price_Income_addVat
+                , 0 :: TFloat                 AS Price_Income_from_addVat
+                , 0 :: TFloat                 AS Price_Income_to_addVat
+                  -- 
                 , 1 :: TFloat                 AS CountForPrice_Income
 
                 , 0                           AS Color_calc -- clBlack

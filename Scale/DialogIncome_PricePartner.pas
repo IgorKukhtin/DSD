@@ -1,4 +1,4 @@
-unit DialogStickerTare;
+unit DialogIncome_PricePartner;
 
 interface
 
@@ -22,60 +22,70 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TDialogStickerTareForm = class(TAncestorDialogScaleForm)
+  TDialogIncome_PricePartnerForm = class(TAncestorDialogScaleForm)
     PanelValue: TPanel;
-    cxLabel3: TcxLabel;
-    deDateTare: TcxDateEdit;
-    cbTare: TcxCheckBox;
-    cbGoodsName: TcxCheckBox;
-    cbPartion: TcxCheckBox;
-    cxLabel2: TcxLabel;
-    cxLabel4: TcxLabel;
-    deDateProduction: TcxDateEdit;
-    deDatePack: TcxDateEdit;
-    edPartion: TcxLabel;
-    cxLabel5: TcxLabel;
-    ceNumTech: TcxCurrencyEdit;
-    ceNumPack: TcxCurrencyEdit;
+    gbGoodsCode: TGroupBox;
+    EditGoodsCode: TEdit;
+    gbGoodsName: TGroupBox;
+    EditGoodsName: TEdit;
+    gbAmountPartner: TGroupBox;
+    EditAmountPartner: TcxCurrencyEdit;
+    cbAmountPartnerSecond: TCheckBox;
+    gbPrice: TGroupBox;
+    EditPrice: TcxCurrencyEdit;
+    cbPriceWithVAT: TCheckBox;
+    gbOperDate: TGroupBox;
+    OperDateEdit: TcxDateEdit;
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
-   NumberValue:Integer;
   end;
 
 var
-   DialogStickerTareForm: TDialogStickerTareForm;
+   DialogIncome_PricePartnerForm: TDialogIncome_PricePartnerForm;
 
 implementation
 {$R *.dfm}
 {------------------------------------------------------------------------------}
-function TDialogStickerTareForm.Checked: boolean; //Проверка корректного ввода в Edit
-var NumberValue : Integer;
+function TDialogIncome_PricePartnerForm.Checked: boolean; //Проверка корректного ввода в Edit
+var AmountPartner, PricePartner : Double;
 begin
      Result:= true;
-     //
-     if (cbTare.Checked = TRUE) and (cbPartion.Checked = FALSE) then
+
+     //Количество у контрагента
+     if gbAmountPartner.Visible = TRUE then
      begin
-       try StrToDate (deDateTare.Text); except Result:= false; end;
+         try AmountPartner:= StrToFloat(EditAmountPartner.Text);
+         except
+               AmountPartner:= 0;
+         end;
+         if AmountPartner <=0
+         then begin
+              ShowMessage('Ошибка.Количество не может быть 0.');
+              Result:=false;
+              exit;
+         end;
+     end;
+     //Цена у контрагента
+     if gbPrice.Visible = TRUE then
+     begin
+         try PricePartner:= StrToFloat(EditPrice.Text);
+         except
+               PricePartner:= 0;
+         end;
+         if PricePartner <=0
+         then begin
+              ShowMessage('Ошибка.Цена не может быть 0.');
+              Result:=false;
+              exit;
+         end;
      end;
      //
-     if (cbTare.Checked = TRUE) and (cbPartion.Checked = TRUE) then
-     begin
-       try StrToDate (deDatePack.Text);      except Result:= false; end;
-       try StrToDate (deDateProduction.Text);except Result:= false; end;
-       //
-       if Result then
-       begin
-         try NumberValue:= StrToInt (ceNumPack.Text);except NumberValue:=0;end;
-         Result:= NumberValue > 0;
-       end;
-       //
-       if Result then
-       begin
-         try NumberValue:=StrToInt(ceNumTech.Text);except NumberValue:=0;end;
-         Result:=NumberValue>0;
-       end;
+     try StrToDate (OperDateEdit.Text);
+     except
+           OperDateEdit.Text:= DateToStr(Date);
      end;
+
 
 end;
 {------------------------------------------------------------------------------}

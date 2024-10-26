@@ -5,14 +5,14 @@ inherited DialogStickerTareForm: TDialogStickerTareForm
   OldCreateOrder = True
   Position = poScreenCenter
   ExplicitWidth = 272
-  ExplicitHeight = 299
+  ExplicitHeight = 303
   PixelsPerInch = 96
   TextHeight = 14
   inherited bbPanel: TPanel
     Top = 223
     Width = 256
-    ExplicitTop = 49
-    ExplicitWidth = 237
+    ExplicitTop = 223
+    ExplicitWidth = 256
     inherited bbOk: TBitBtn
       Left = 51
       Top = 9
@@ -34,8 +34,6 @@ inherited DialogStickerTareForm: TDialogStickerTareForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 237
-    ExplicitHeight = 49
     object cxLabel3: TcxLabel
       Left = 145
       Top = 11

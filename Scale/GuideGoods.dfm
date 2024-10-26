@@ -1401,6 +1401,8 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1050#1086#1076
         TabOrder = 0
+        ExplicitLeft = -1
+        ExplicitTop = -6
         object EditGoodsCode: TEdit
           Left = 4
           Top = 17

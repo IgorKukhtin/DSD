@@ -284,6 +284,7 @@ type
     isPriceWithVAT_in: TcxGridDBColumn;
     isAmountPartnerSecond_in: TcxGridDBColumn;
     OperDate_ReturnOut: TcxGridDBColumn;
+    bbUpdatePricePartner: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -330,6 +331,7 @@ type
     procedure EditReReturnInPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure cbDocInsertClick(Sender: TObject);
+    procedure bbUpdatePricePartnerClick(Sender: TObject);
   private
     //aTest: Boolean;
     Scale_AP: IAPScale;
@@ -375,7 +377,7 @@ uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc
     ,GuideGoods,GuideGoodsPartner,GuideGoodsSticker
     ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuideMovementReturnIn, GuidePartner
     ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, GuideReason, GuideAsset, GuideRetail, DialogDateValue
-    ,IdIPWatch, LookAndFillSettings, DialogMsg;
+    ,IdIPWatch, LookAndFillSettings, DialogMsg, DialogIncome_PricePartner;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -775,7 +777,47 @@ begin
             ParamsMovement_local.Free;
     end;
 end;
-
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.bbUpdatePricePartnerClick(Sender: TObject);
+begin
+     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+        and (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202)
+     then
+          with DialogIncome_PricePartnerForm do
+          begin
+            EditGoodsCode.Text:= CDS.FieldByName('GoodsCode').AsString;
+            EditGoodsName.Text:= CDS.FieldByName('GoodsName').AsString;
+            //
+            EditAmountPartner.Text:= FloatToStr(CDS.FieldByName('AmountPartner_in').AsFloat);
+            EditPrice.Text:= FloatToStr(CDS.FieldByName('PricePartner_in').AsFloat);
+            cbPriceWithVAT.Checked:= CDS.FieldByName('isPriceWithVAT_in').AsBoolean;
+            cbAmountPartnerSecond.Checked:= CDS.FieldByName('isAmountPartnerSecond_in').AsBoolean;
+            //
+            OperDateEdit.Visible:= ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut;
+            OperDateEdit.Text:= DateToStr(CDS.FieldByName('OperDate_ReturnOut').AsDateTime);
+            //
+            gbAmountPartner.Visible:= ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income;
+            gbPrice.Visible:= ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income;
+            gbOperDate.Visible:= ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut;
+            //
+            if gbAmountPartner.Visible then ActiveControl:= EditAmountPartner;
+            if gbOperDate.Visible then ActiveControl:= OperDateEdit;
+            //
+            if Execute
+            then
+                if DMMainScaleForm.gpUpdate_Scale_MI_Income_PricePartner(ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                                                       , SettingMain.BranchCode
+                                                                       , CDS.FieldByName('GoodsName').AsInteger
+                                                                       , StrToFloat(EditPrice.Text)
+                                                                       , StrToFloat(EditAmountPartner.Text)
+                                                                       , cbAmountPartnerSecond.Checked
+                                                                       , cbPriceWithVAT.Checked
+                                                                       , StrToDate (OperDateEdit.Text)
+                                                                       ) = TRUE
+                then RefreshDataSet;
+          end;
+end;
+//------------------------------------------------------------------------------------------------
 procedure TMainForm.bbUpdateUnitClick(Sender: TObject);
 var ParamsMovement_local: TParams;
 begin
