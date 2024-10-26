@@ -1,4 +1,4 @@
- -- Function: gpInsert_ScaleCeh_Movement_all()
+-- Function: gpInsert_ScaleCeh_Movement_all()
 
 DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_Movement_all (Integer, Integer, TDateTime, TVarChar);
 
