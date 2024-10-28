@@ -846,7 +846,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
             Width = 50
           end
           object AmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -857,7 +857,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
             Width = 70
           end
           object AmountPartnerSecond: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'AmountPartnerSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -3305,6 +3305,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
         MultiSelectSeparator = ','
       end>
     Left = 270
-    Top = 104
+    Top = 72
   end
 end
