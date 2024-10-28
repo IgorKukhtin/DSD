@@ -333,9 +333,9 @@ begin
      cbPriceWithVAT.Visible:= execParamsMovement.ParamByName('isCalc_PriceVat').AsBoolean = TRUE;
      if cbPriceWithVAT.Visible then gbPrice.Height:= gbAmountPartner.Height else gbPrice.Height:= gbWeightValue.Height;
 
-     if (gbWeightValue.Visible) and (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202)
-     then
-         gbWeightValue.Visible:= false;
+     //if (gbWeightValue.Visible) and (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202)
+     //then
+     //    gbWeightValue.Visible:= false;
 
 
      gbOperDate.Visible:= execParamsMovement.ParamByName('isReturnOut_Date').AsBoolean = TRUE;
@@ -1452,6 +1452,7 @@ begin
      if StrToFloat(EditWeightValue.Text)<=0
      then if gbWeightValue.Visible = TRUE
             then ActiveControl:=EditWeightValue
+            else
      else if CDS.RecordCount=1
           then try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text);
           except ParamsMI.ParamByName('RealWeight').AsFloat:=0;end;
