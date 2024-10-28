@@ -61,6 +61,15 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 52
       end
+      object Code1C: TcxGridDBColumn
+        Caption = #1050#1086#1076' 1'#1057
+        DataBinding.FieldName = 'Code1C'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object Name: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'

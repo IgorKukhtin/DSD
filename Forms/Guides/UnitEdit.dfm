@@ -18,7 +18,7 @@
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 280
-    Top = 25
+    Top = 21
     TabOrder = 0
     Width = 209
   end
@@ -53,7 +53,7 @@
   end
   object ceCode: TcxCurrencyEdit
     Left = 40
-    Top = 25
+    Top = 21
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
@@ -61,17 +61,17 @@
   end
   object cxLabel3: TcxLabel
     Left = 40
-    Top = 50
+    Top = 46
     Caption = #1043#1088#1091#1087#1087#1072
   end
   object cxLabel4: TcxLabel
     Left = 280
-    Top = 50
+    Top = 46
     Caption = #1060#1080#1083#1080#1072#1083
   end
   object ceParent: TcxButtonEdit
     Left = 40
-    Top = 71
+    Top = 64
     Properties.Buttons = <
       item
         Default = True
@@ -82,12 +82,12 @@
   end
   object cxLabel2: TcxLabel
     Left = 40
-    Top = 100
+    Top = 89
     Caption = #1041#1080#1079#1085#1077#1089
   end
   object ceBranch: TcxButtonEdit
     Left = 280
-    Top = 71
+    Top = 64
     Properties.Buttons = <
       item
         Default = True
@@ -97,8 +97,8 @@
     Width = 209
   end
   object ceBusiness: TcxButtonEdit
-    Left = 40
-    Top = 121
+    Left = 41
+    Top = 105
     Properties.Buttons = <
       item
         Default = True
@@ -109,12 +109,12 @@
   end
   object cxLabel5: TcxLabel
     Left = 280
-    Top = 100
+    Top = 89
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
     Left = 280
-    Top = 121
+    Top = 107
     Properties.Buttons = <
       item
         Default = True
@@ -125,12 +125,12 @@
   end
   object cxLabel6: TcxLabel
     Left = 40
-    Top = 150
+    Top = 132
     Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
   end
   object ceAccountDirection: TcxButtonEdit
     Left = 40
-    Top = 171
+    Top = 150
     Properties.Buttons = <
       item
         Default = True
@@ -141,12 +141,12 @@
   end
   object cxLabel7: TcxLabel
     Left = 280
-    Top = 150
+    Top = 132
     Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
   end
   object ceProfitLossDirection: TcxButtonEdit
     Left = 280
-    Top = 171
+    Top = 150
     Properties.Buttons = <
       item
         Default = True
@@ -157,19 +157,19 @@
   end
   object cbPartionDate: TcxCheckBox
     Left = 40
-    Top = 197
+    Top = 177
     Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
     TabOrder = 18
     Width = 157
   end
   object cxLabel8: TcxLabel
     Left = 40
-    Top = 241
+    Top = 218
     Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090')'
   end
   object ceContract: TcxButtonEdit
     Left = 40
-    Top = 262
+    Top = 236
     Properties.Buttons = <
       item
         Default = True
@@ -181,7 +181,7 @@
   end
   object ceContract_Juridical: TcxButtonEdit
     Left = 280
-    Top = 262
+    Top = 236
     Properties.Buttons = <
       item
         Default = True
@@ -194,17 +194,17 @@
   end
   object cxLabel9: TcxLabel
     Left = 280
-    Top = 241
+    Top = 218
     Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1076#1086#1075#1086#1074#1086#1088')'
   end
   object cxLabel10: TcxLabel
     Left = 40
-    Top = 291
+    Top = 261
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
   end
   object ceContract_Infomoney: TcxButtonEdit
     Left = 40
-    Top = 312
+    Top = 279
     Properties.Buttons = <
       item
         Default = True
@@ -217,17 +217,17 @@
   end
   object cxLabel11: TcxLabel
     Left = 40
-    Top = 342
+    Top = 304
     Caption = #1052#1072#1088#1096#1088#1091#1090
   end
   object cxLabel12: TcxLabel
     Left = 280
-    Top = 341
+    Top = 304
     Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
   end
   object ceRoute: TcxButtonEdit
     Left = 40
-    Top = 362
+    Top = 322
     Properties.Buttons = <
       item
         Default = True
@@ -239,7 +239,7 @@
   end
   object ceRouteSorting: TcxButtonEdit
     Left = 280
-    Top = 362
+    Top = 322
     Properties.Buttons = <
       item
         Default = True
@@ -251,12 +251,12 @@
   end
   object cxLabel13: TcxLabel
     Left = 280
-    Top = 198
+    Top = 175
     Caption = #1056#1077#1075#1080#1086#1085
   end
   object ceArea: TcxButtonEdit
     Left = 280
-    Top = 214
+    Top = 193
     Properties.Buttons = <
       item
         Default = True
@@ -268,12 +268,12 @@
   end
   object cxLabel14: TcxLabel
     Left = 280
-    Top = 291
+    Top = 261
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088'.)'
   end
   object cePersonalHead: TcxButtonEdit
     Left = 280
-    Top = 312
+    Top = 279
     Properties.Buttons = <
       item
         Default = True
@@ -290,23 +290,23 @@
   end
   object cxLabel16: TcxLabel
     Left = 40
-    Top = 389
+    Top = 347
     Caption = #1040#1076#1088#1077#1089
   end
   object edAddress: TcxTextEdit
     Left = 40
-    Top = 407
+    Top = 365
     TabOrder = 35
     Width = 209
   end
   object cxLabel17: TcxLabel
     Left = 40
-    Top = 524
+    Top = 476
     Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
   end
   object ceSheetWorkTime: TcxButtonEdit
     Left = 40
-    Top = 544
+    Top = 494
     Properties.Buttons = <
       item
         Default = True
@@ -318,73 +318,73 @@
   end
   object cbPartionGoodsKind: TcxCheckBox
     Left = 40
-    Top = 219
+    Top = 197
     Caption = #1055#1072#1088#1090#1080#1080' '#1087#1086' '#1074#1080#1076#1091' '#1091#1087#1072#1082'. '#1076#1083#1103' '#1089#1099#1088#1100#1103
     TabOrder = 38
     Width = 209
   end
   object cxLabel18: TcxLabel
-    Left = 280
-    Top = 526
+    Left = 41
+    Top = 519
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
-    Left = 280
-    Top = 544
+    Left = 40
+    Top = 537
     TabOrder = 40
-    Width = 209
+    Width = 449
   end
   object cbCountCount: TcxCheckBox
     Left = 272
-    Top = 482
+    Top = 433
     Caption = #1059#1095#1077#1090' '#1073#1072#1090#1086#1085#1086#1074
     TabOrder = 41
     Width = 93
   end
   object cbPartionGP: TcxCheckBox
     Left = 272
-    Top = 506
+    Top = 453
     Caption = #1055#1072#1088#1090#1080#1080' '#1076#1083#1103' '#1043#1055' '#1080' '#1058#1091#1096#1077#1085#1082#1080
     TabOrder = 42
     Width = 162
   end
   object cbAvance: TcxCheckBox
     Left = 371
-    Top = 483
+    Top = 433
     Caption = #1053#1072#1095'. '#1072#1074#1072#1085#1089#1072' '#1072#1074#1090#1086#1084#1072#1090'.'
     TabOrder = 43
     Width = 133
   end
   object edGLN: TcxTextEdit
     Left = 280
-    Top = 407
+    Top = 365
     TabOrder = 44
     Width = 100
   end
   object cxLabel19: TcxLabel
     Left = 280
-    Top = 389
+    Top = 347
     Caption = 'GLN'
   end
   object edKATOTTG: TcxTextEdit
     Left = 389
-    Top = 407
+    Top = 365
     TabOrder = 46
     Width = 100
   end
   object cxLabel20: TcxLabel
     Left = 389
-    Top = 389
+    Top = 347
     Caption = #1050#1040#1058#1054#1058#1058#1043
   end
   object cxLabel21: TcxLabel
     Left = 40
-    Top = 434
+    Top = 390
     Caption = #1043#1086#1088#1086#1076
   end
   object edCity: TcxButtonEdit
     Left = 40
-    Top = 452
+    Top = 408
     Properties.Buttons = <
       item
         Default = True
@@ -396,18 +396,18 @@
   end
   object cxLabel23: TcxLabel
     Left = 40
-    Top = 478
+    Top = 433
     Caption = #1040#1076#1088#1077#1089' '#1076#1083#1103' EDIN'
   end
   object edAddressEDIN: TcxTextEdit
     Left = 40
-    Top = 497
+    Top = 451
     TabOrder = 51
     Width = 209
   end
   object ceFounder: TcxButtonEdit
     Left = 280
-    Top = 455
+    Top = 408
     Properties.Buttons = <
       item
         Default = True
@@ -419,12 +419,28 @@
   end
   object cxLabel22: TcxLabel
     Left = 280
-    Top = 436
+    Top = 390
     Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1100
   end
+  object cxLabel24: TcxLabel
+    Left = 280
+    Top = 476
+    Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090
+  end
+  object deDepartment: TcxButtonEdit
+    Left = 280
+    Top = 494
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 55
+    Width = 209
+  end
   object ActionList: TActionList
-    Left = 16
-    Top = 24
+    Top = 16
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -627,6 +643,14 @@
         Name = 'inFounderId'
         Value = Null
         Component = FounderGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDepartmentId'
+        Value = Null
+        Component = GuidesDepartment
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1011,6 +1035,21 @@
         Name = 'FounderName'
         Value = Null
         Component = FounderGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DepartmentId'
+        Value = Null
+        Component = GuidesDepartment
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DepartmentName'
+        Value = Null
+        Component = GuidesDepartment
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1467,7 +1506,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 127
-    Top = 526
+    Top = 486
   end
   object GuidesCity: TdsdGuides
     KeyField = 'Id'
@@ -1525,5 +1564,34 @@
       end>
     Left = 402
     Top = 438
+  end
+  object GuidesDepartment: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = deDepartment
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesDepartment
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesDepartment
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 368
+    Top = 488
   end
 end

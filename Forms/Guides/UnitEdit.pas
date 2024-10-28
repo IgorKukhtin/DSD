@@ -102,6 +102,9 @@ type
     ceFounder: TcxButtonEdit;
     cxLabel22: TcxLabel;
     FounderGuides: TdsdGuides;
+    cxLabel24: TcxLabel;
+    deDepartment: TcxButtonEdit;
+    GuidesDepartment: TdsdGuides;
   private
     { Private declarations }
   public

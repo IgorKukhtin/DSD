@@ -417,11 +417,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBankSecondDiff() RETURNS I
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Member_CardBankSecondDiff', zc_object_Member(), '№ банковской карточки ЗП (Ф2 - личный)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondDiff');
 
-
-
 CREATE OR REPLACE FUNCTION zc_ObjectString_Member_Phone() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_Phone'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Member_Phone', zc_object_Member(), 'Телефон' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_Phone');
+
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_Code1C() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_Code1C'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_Code1C', zc_object_Member(), 'Код 1С' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_Code1C');
 
 
 ---
@@ -1690,6 +1693,7 @@ INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 28.10.24         * zc_ObjectString_Member_Code1C
  22.06.24         * zc_ObjectString_ViewPriceList_Comment
  15.03.24         * zc_ObjectString_Member_Phone
  26.02.24         * zc_ObjectString_Member_CardBankSecondTwo

@@ -195,6 +195,7 @@ type
     macStartLoadPhone: TMultiAction;
     bbStartLoadPhone: TdxBarButton;
     RouteNumName: TcxGridDBColumn;
+    Code1C: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -166,6 +166,8 @@ type
     cxLabel57: TcxLabel;
     edRouteNum: TcxButtonEdit;
     GuidesRouteNum: TdsdGuides;
+    cxLabel58: TcxLabel;
+    ceCode1C: TcxTextEdit;
   private
     { Private declarations }
   public

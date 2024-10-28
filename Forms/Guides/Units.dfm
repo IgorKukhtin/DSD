@@ -98,6 +98,14 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 76
       end
+      object DepartmentName: TcxGridDBColumn
+        Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090
+        DataBinding.FieldName = 'DepartmentName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 88
+      end
       object JuridicalName: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'

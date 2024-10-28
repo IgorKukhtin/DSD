@@ -37,4 +37,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Unit ()                            
+-- SELECT * FROM gpUpdate_Object_Unit_HistoryCost ()                            
