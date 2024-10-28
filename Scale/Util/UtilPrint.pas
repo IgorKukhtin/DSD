@@ -1,4 +1,3 @@
-
 unit UtilPrint;
 
 interface
@@ -159,6 +158,7 @@ type
     actPrintStikerKVK: TdsdPrintAction;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    actPrint_Income_diff: TdsdPrintAction;
   private
   end;
 
@@ -179,6 +179,7 @@ type
   function Print_Sticker_Ceh (MovementDescId,MovementId,MovementItemId:Integer; isKVK, isPreview:Boolean):Boolean;
   function Print_QualityDoc_list(MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
   function Print_ReportGoodsBalance (StartDate,EndDate:TDateTime; UnitId : Integer; UnitName : String; isGoodsKind, isPartionGoods:Boolean):Boolean;
+  function Print_Income_diff (MovementId: Integer):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
   procedure SendEDI_OrdSpr (MovementId: Integer);
@@ -267,6 +268,16 @@ procedure Print_Income (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.actPrint_Income.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Income_diff (MovementId: Integer):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+     UtilPrintForm.actPrint_Income_diff.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_ReturnOut (MovementId: Integer);

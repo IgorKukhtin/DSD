@@ -267,7 +267,7 @@ begin
      ParamAdd(Params,'GoodsName_inf',ftString);
      ParamAdd(Params,'PricePartner_inf',ftFloat);
      ParamAdd(Params,'isPrice_diff_inf',ftBoolean);
-     ParamAdd(Params,'isFind_inf',ftBoolean);
+     ParamAdd(Params,'isFind_diff_inf',ftBoolean);
 
      ParamAdd(Params,'MovementDescNumber',ftInteger);
 
@@ -413,6 +413,7 @@ begin
      ParamAdd(Params,'isMovementId_check',ftBoolean);//локальный параметр, Insert или Update в TDialogMovementDescForm
 
      ParamAdd(Params,'TotalSumm',ftFloat);
+     ParamAdd(Params,'TotalSummPartner',ftFloat);
 
      ParamAddValue(Params,'isDocInsert',ftBoolean,FALSE);
 

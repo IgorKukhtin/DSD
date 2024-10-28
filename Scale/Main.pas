@@ -285,6 +285,8 @@ type
     isAmountPartnerSecond_in: TcxGridDBColumn;
     OperDate_ReturnOut: TcxGridDBColumn;
     bbUpdatePricePartner: TSpeedButton;
+    gbTotalSummPartner: TGroupBox;
+    PanelTotalSummPartner: TPanel;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -439,13 +441,14 @@ begin
      end;
      //
      // ѕроверка - нужен ли јкт
-     ParamsMovement.ParamByName('isFind_inf').AsBoolean:=FALSE;
+     ParamsMovement.ParamByName('isFind_diff_inf').AsBoolean:=FALSE;
      if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
      then begin
           if DMMainScaleForm.gpUpdate_Scale_Movement_Income_PricePartner(ParamsMovement, TRUE) = TRUE
           then
-              ParamsMovement.ParamByName('isFind_inf').AsBoolean:=TRUE;
-              //
+              // надо печатать јкт т.к. есть отклонение или цены или кол-ва
+              ParamsMovement.ParamByName('isFind_diff_inf').AsBoolean:=TRUE;
+              //если откл по цене, надо переспросить
               if ParamsMovement.ParamByName('isPrice_diff_inf').AsBoolean = true
               then
                 if not DialogMsgForm.Execute
@@ -576,6 +579,10 @@ begin
           //
           //Print and Create Quality + Transport + Tax
           Print_Movement_afterSave;
+          //
+          // если надо печатать јкт т.к. есть отклонение или цены или кол-ва
+          if ParamsMovement.ParamByName('isFind_diff_inf').AsBoolean=TRUE
+          then Print_Income_diff (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           //
           //EDI
           if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then SendEDI_Invoice (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
@@ -807,7 +814,7 @@ begin
             then
                 if DMMainScaleForm.gpUpdate_Scale_MI_Income_PricePartner(ParamsMovement.ParamByName('MovementDescId').AsInteger
                                                                        , SettingMain.BranchCode
-                                                                       , CDS.FieldByName('GoodsName').AsInteger
+                                                                       , CDS.FieldByName('MovementItemId').AsInteger
                                                                        , StrToFloat(EditPrice.Text)
                                                                        , StrToFloat(EditAmountPartner.Text)
                                                                        , cbAmountPartnerSecond.Checked
@@ -2102,6 +2109,10 @@ begin
 
 
     PanelTotalSumm.Caption:=FormatFloat(',0.00##',ParamByName('TotalSumm').asFloat);
+    PanelTotalSummPartner.Caption:=FormatFloat(',0.00##',ParamByName('TotalSummPartner').asFloat);
+
+    gbTotalSummPartner.Visible:= (SettingMain.BranchCode>=201) and (SettingMain.BranchCode<=202)
+                             and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income);
 
     if ParamByName('OrderExternalId').AsInteger<>0
     then if (ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_OrderExternal)

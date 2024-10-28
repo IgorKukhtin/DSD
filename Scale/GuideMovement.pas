@@ -22,7 +22,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TGuideMovementForm = class(TForm)
@@ -149,6 +149,7 @@ type
     TotalCountSh: TcxGridDBColumn;
     bbUpdateStatus: TSpeedButton;
     actUpdateStatus: TAction;
+    cbIncome_diff: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -185,6 +186,7 @@ type
     procedure actChangeOperDatePartnerExecute(Sender: TObject);
     procedure actChangeTransportExecute(Sender: TObject);
     procedure actUpdateStatusExecute(Sender: TObject);
+    procedure cbIncome_diffClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -198,6 +200,7 @@ type
     procedure myCheckPrintAccount;
     procedure myCheckPrintPack;
     procedure myCheckPrintSpec;
+    procedure myCheckIncome_diff;
 
     procedure CancelCxFilter;
     function Checked: boolean;
@@ -365,6 +368,20 @@ begin myCheckPrintQuality;end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.cbPrintTaxClick(Sender: TObject);
 begin myCheckPrintTax;end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.cbIncome_diffClick(Sender: TObject);
+begin
+     myCheckIncome_diff;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.myCheckIncome_diff;
+begin
+     if cbIncome_diff.Checked
+     then
+         if  (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Income)
+          or (SettingMain.BranchCode < 201) or (SettingMain.BranchCode > 202)
+         then cbIncome_diff.Checked:=true;
+end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.cbPrintAccountClick(Sender: TObject);
 begin myCheckPrintAccount;end;
@@ -653,7 +670,7 @@ begin
      myCheckPrintTax;
      myCheckPrintAccount;
      myCheckPrintPack;
-     myCheckPrintSpec;
+     myCheckIncome_diff;
      //
      if    not(cbPrintMovement.Checked)
        and not(cbPrintTax.Checked)
@@ -663,6 +680,7 @@ begin
        and not(cbPrintSpec.Checked)
        and not(cbPrintTransport.Checked)
        and not(cbPrintQuality.Checked)
+       and not(cbIncome_diff.Checked)
      then begin
                ShowMessage('Ошибка.Не выбран вариант печати.');
                exit;
@@ -731,6 +749,11 @@ begin
                        , 1    // myPrintCount
                        , TRUE // isPreview
                         );
+
+     if cbIncome_diff.Checked
+     then Print_Income_diff (CDS.FieldByName('MovementId_parent').AsInteger
+                            );
+
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbPrint_diffClick(Sender: TObject);
