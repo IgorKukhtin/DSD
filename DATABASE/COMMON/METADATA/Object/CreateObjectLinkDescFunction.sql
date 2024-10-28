@@ -1790,6 +1790,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Position_SheetWorkTime() RETURNS Intege
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Position_SheetWorkTime', 'Связь Должности с Режим работы (Шаблон табеля р.вр.)', zc_Object_Personal(), zc_Object_SheetWorkTime() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Position_SheetWorkTime');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Position_PositionProperty() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Position_PositionProperty'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Position_PositionProperty', 'Связь Должности с Классификатор должности', zc_Object_Personal(), zc_Object_PositionProperty() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Position_PositionProperty');
+
+
+
 ---
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportCollation_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)

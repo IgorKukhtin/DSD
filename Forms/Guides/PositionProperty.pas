@@ -1,4 +1,4 @@
-unit Position;
+unit PositionProperty;
 
 interface
 
@@ -21,10 +21,10 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, dsdCommon;
+  dsdCommon;
 
 type
-  TPositionForm = class(TParentForm)
+  TPositionPropertyForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
@@ -58,7 +58,6 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    PositionPropertyName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -66,10 +65,9 @@ type
   end;
 
 
-
 implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TPositionForm);
+  RegisterClass(TPositionPropertyForm);
 end.

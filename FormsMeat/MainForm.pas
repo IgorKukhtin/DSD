@@ -1521,6 +1521,8 @@ type
     miSale_Pay: TMenuItem;
     actReport_HistoryCost_Compare: TdsdOpenForm;
     miReport_HistoryCost_Compare: TMenuItem;
+    actPositionProperty: TdsdOpenForm;
+    miPositionProperty: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

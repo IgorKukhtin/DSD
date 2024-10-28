@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Position(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
+               PositionPropertyId Integer, PositionPropertyName TVarChar,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -22,7 +23,8 @@ BEGIN
 
          , Object_SheetWorkTime.Id        AS SheetWorkTimeId 
          , Object_SheetWorkTime.ValueData AS SheetWorkTimeName
-
+         , Object_PositionProperty.Id        AS PositionPropertyId 
+         , Object_PositionProperty.ValueData AS PositionPropertyName
          , Object_Position.isErased       AS isErased
 
      FROM Object AS Object_Position
@@ -31,6 +33,10 @@ BEGIN
                               AND ObjectLink_Position_SheetWorkTime.DescId = zc_ObjectLink_Position_SheetWorkTime()
           LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Position_SheetWorkTime.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Position_PositionProperty
+                               ON ObjectLink_Position_PositionProperty.ObjectId = Object_Position.Id
+                              AND ObjectLink_Position_PositionProperty.DescId = zc_ObjectLink_Position_PositionProperty()
+          LEFT JOIN Object AS Object_PositionProperty ON Object_PositionProperty.Id = ObjectLink_Position_PositionProperty.ChildObjectId
      WHERE Object_Position.DescId = zc_Object_Position();
   
 END;
@@ -42,6 +48,7 @@ ALTER FUNCTION gpSelect_Object_Position(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.10.24         *
  16.11.16         * add SheetWorkTime
  01.07.13         *              
 */

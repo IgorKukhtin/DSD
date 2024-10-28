@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position (Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position (Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Position(
  INOUT ioId	             Integer   ,    -- ключ объекта <Должности>
     IN inCode                Integer   ,    -- код объекта
     IN inName                TVarChar  ,    -- Название объекта
     IN inSheetWorkTimeId     Integer   ,    -- Режим работы (Шаблон табеля р.вр.)
+    IN inPositionPropertyId  Integer   ,    --
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -41,6 +43,8 @@ BEGIN
 
    -- сохранили связь с <Режим работы (Шаблон табеля р.вр.)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Position_SheetWorkTime(), ioId, inSheetWorkTimeId);
+   -- сохранили связь с <Классификатор должности>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Position_PositionProperty(), ioId, inPositionPropertyId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -53,6 +57,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.10.24         * 
  16.11.16         * add inSheetWorkTimeId
  09.10.13                                        * пытаемся найти код
  01.07.13         *
