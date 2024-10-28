@@ -1,31 +1,31 @@
 inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
   Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1094#1077#1085' '#1089'/'#1089' '#1079#1072' 2 '#1087#1077#1088#1080#1086#1076#1072'>'
   ClientHeight = 353
-  ClientWidth = 684
+  ClientWidth = 894
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 700
+  ExplicitWidth = 910
   ExplicitHeight = 392
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 684
+    Width = 894
     Height = 270
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 684
+    ExplicitWidth = 894
     ExplicitHeight = 270
     ClientRectBottom = 270
-    ClientRectRight = 684
+    ClientRectRight = 894
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 684
+      ExplicitWidth = 894
       ExplicitHeight = 270
       inherited cxGrid: TcxGrid
-        Width = 684
+        Width = 894
         Height = 270
-        ExplicitWidth = 684
+        ExplicitWidth = 894
         ExplicitHeight = 270
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -37,18 +37,54 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object ContainerId: TcxGridDBColumn
+            DataBinding.FieldName = 'ContainerId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PartionGoodsId: TcxGridDBColumn
+            DataBinding.FieldName = 'PartionGoodsId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object AccountName: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090
+            DataBinding.FieldName = 'AccountName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object GoodsGroupName: TcxGridDBColumn
@@ -56,6 +92,7 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object GoodsGroupNameFull: TcxGridDBColumn
@@ -72,6 +109,7 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
           object GoodsName: TcxGridDBColumn
@@ -79,6 +117,7 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 141
           end
           object GoodsKindName: TcxGridDBColumn
@@ -86,6 +125,23 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PartionGoodsDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
+            DataBinding.FieldName = 'PartionGoodsDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object PartionGoods: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object MeasureName: TcxGridDBColumn
@@ -100,51 +156,62 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
             Caption = #1062#1077#1085#1072' '#1089'/'#1089' ('#1084#1077#1089#1103#1094' 1)'
             DataBinding.FieldName = 'Price_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Price_2: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089'/'#1089' ('#1084#1077#1089#1103#1094' 2)'
             DataBinding.FieldName = 'Price_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
+          end
+          object Price_Tax: TcxGridDBColumn
+            Caption = '% '#1086#1082#1083
+            DataBinding.FieldName = 'Price_Tax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object Price_diff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1094#1077#1085
             DataBinding.FieldName = 'Price_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object InfoMoneyDetailName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
+            Caption = #1059#1055' '#1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
             DataBinding.FieldName = 'InfoMoneyDetailName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 134
-          end
-          object PartionDate: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 684
+    Width = 894
     Height = 57
-    ExplicitWidth = 684
+    ExplicitWidth = 894
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 592
@@ -212,10 +279,9 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
       TabOrder = 7
       Width = 223
     end
-    object cbisGoods: TcxCheckBox
-      Left = 486
-      Top = 31
-      Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+    object cbIsGoods: TcxCheckBox
+      Left = 483
+      Top = 30
       Caption = #1087#1086' '#1090#1086#1074#1072#1088#1091' '#1076#1072'/'#1085#1077#1090
       Properties.ReadOnly = False
       TabOrder = 8
@@ -225,7 +291,7 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
   object edMonth2: TcxDateEdit [2]
     Left = 64
     Top = 29
-    EditValue = 42005d
+    EditValue = 45292d
     Properties.AssignedValues.EditFormat = True
     Properties.DisplayFormat = 'MMMM YYYY'
     Properties.SaveTime = False
@@ -236,7 +302,7 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
   object edMonth1: TcxDateEdit [3]
     Left = 64
     Top = 4
-    EditValue = 42005d
+    EditValue = 45292d
     Properties.AssignedValues.EditFormat = True
     Properties.DisplayFormat = 'MMMM YYYY'
     Properties.SaveTime = False
@@ -255,6 +321,18 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
         Component = edMonth2
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = GuidesGoods
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -322,7 +400,7 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
         item
           Name = 'isGoods'
           Value = Null
-          Component = cbisGoods
+          Component = cbIsGoods
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -473,7 +551,7 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
       item
         Name = 'inisGoods'
         Value = ''
-        Component = cbisGoods
+        Component = cbIsGoods
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -544,18 +622,13 @@ inherited Report_HistoryCost_CompareForm: TReport_HistoryCost_CompareForm
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
+        Component = cbIsGoods
       end
       item
         Component = GuidesGoods
       end
       item
         Component = GuidesUnit
-      end
-      item
-        Component = edMonth1
-      end
-      item
-        Component = edMonth2
       end>
     Left = 224
     Top = 160

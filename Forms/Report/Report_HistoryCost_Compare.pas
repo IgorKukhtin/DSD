@@ -43,10 +43,15 @@ type
     bb: TdxBarButton;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
-    cbisGoods: TcxCheckBox;
-    PartionDate: TcxGridDBColumn;
+    cbIsGoods: TcxCheckBox;
+    PartionGoods: TcxGridDBColumn;
     edMonth2: TcxDateEdit;
     edMonth1: TcxDateEdit;
+    ContainerId: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
+    PartionGoodsId: TcxGridDBColumn;
+    AccountName: TcxGridDBColumn;
+    Price_Tax: TcxGridDBColumn;
   private
     { Private declarations }
   public
