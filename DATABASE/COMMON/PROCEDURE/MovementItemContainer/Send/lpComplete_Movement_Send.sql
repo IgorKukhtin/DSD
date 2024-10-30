@@ -1040,6 +1040,7 @@ BEGIN
 
             , _tmp.StorageId_mi
 -- , (select count(*) from _tmpItem where _tmpItem.GoodsId = 7981) as StorageId_mi
+
               -- !!!или подбор партий!!!
             , COALESCE (tmpContainer_find.PartionGoodsId, tmpContainer.PartionGoodsId, 0) AS PartionGoodsId_mi
 
