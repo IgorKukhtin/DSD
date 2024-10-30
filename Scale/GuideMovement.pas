@@ -380,7 +380,7 @@ begin
      then
          if  (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Income)
           or (SettingMain.BranchCode < 201) or (SettingMain.BranchCode > 202)
-         then cbIncome_diff.Checked:=true;
+         then cbIncome_diff.Checked:=false;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.cbPrintAccountClick(Sender: TObject);

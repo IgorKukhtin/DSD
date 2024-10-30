@@ -395,6 +395,8 @@ begin
      begin
        GuideGoodsForm.OperDateEdit.Text:= DateToStr(Date);
        GuideGoodsForm.cbPriceWithVAT.Checked:= false;
+       //
+       GuideGoodsForm.cbAmountPartnerSecond.Checked:= false;
      end;
      //
      {EditBarCodeTransport.Text:='';
