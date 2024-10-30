@@ -45,6 +45,9 @@ $BODY$
    DECLARE vbMovementDescId        Integer;
    DECLARE vbIsTax                 Boolean;
 
+   DECLARE vbVATPercent_begin     TFloat;
+   DECLARE vbIsPriceWithVAT_begin Boolean;
+
    DECLARE vbGoodsId_err     Integer;
    DECLARE vbGoodsKindId_err Integer;
    DECLARE vbAmount_err      TFloat;
@@ -825,7 +828,7 @@ BEGIN
      vbMovementId_begin:= vbMovementId_find;
 
 
-     IF vbUserId = 5
+     IF vbUserId = 5 AND 1=0
      THEN
          vbMovementId_begin:= 0;
          vbMovementId_find := 0;
@@ -1044,6 +1047,11 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
          END IF;
 
+         -- Определили
+         vbVATPercent_begin     := (SELECT MF.ValueData FROM MovementFloat   AS MF WHERE MF.MovementId = vbMovementId_begin AND MF.DescId = zc_MovementFloat_VATPercent());
+         vbIsPriceWithVAT_begin := (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = vbMovementId_begin AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
+
+
         -- сохранили связь с документом <Заявки сторонние>
         IF vbMovementDescId = zc_Movement_Send() AND EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order() AND MLM.MovementChildId > 0)
         THEN
@@ -1214,6 +1222,7 @@ BEGIN
                                , MovementItem.Amount                                 AS Amount
                                , COALESCE (MIFloat_AmountChangePercent.ValueData, 0) AS AmountChangePercent
                                , COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountPartner
+
                                , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
                                , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
                                , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
@@ -1280,6 +1289,7 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
                                 LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                                             ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                                                            AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
@@ -1337,15 +1347,17 @@ BEGIN
            -- InsertUpdate
            SELECT CASE WHEN vbMovementDescId = zc_Movement_Income()
                                  -- <Приход от поставщика>
-                            THEN lpInsertUpdate_MovementItem_Income
+                            THEN lpInsertUpdate_MovementItem_Income_Value
                                                          (ioId                  := tmp.MovementItemId_find
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
                                                         , inAmountPartner       := tmp.AmountPartner
+                                                        , inAmountPartnerSecond := tmp.AmountPartnerSecond
                                                         , inAmountPacker        := tmp.AmountPacker
                                                         , inPrice               := tmp.Price
                                                         , inCountForPrice       := tmp.CountForPrice
+                                                        , inPricePartner        := tmp.PricePartner
                                                         , inLiveWeight          := tmp.LiveWeight
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inPartionGoods        := tmp.PartionGoods
@@ -1524,6 +1536,11 @@ BEGIN
                      , SUM (tmp.Amount)              AS Amount
                      , SUM (tmp.AmountChangePercent) AS AmountChangePercent
                      , SUM (tmp.AmountPartner)       AS AmountPartner
+                       -- Количество у поставщика для Сырья
+                     , SUM (tmp.AmountPartnerSecond) AS AmountPartnerSecond
+                       -- цена поставщика для Сырья
+                     , MAX (tmp.PricePartner)        AS PricePartner
+
                      , tmp.ChangePercentAmount
                      , tmp.Price
                      , tmp.CountForPrice
@@ -1576,7 +1593,11 @@ BEGIN
                            * CASE WHEN tmpContractGoods.CountForAmount > 0 THEN tmpContractGoods.CountForAmount ELSE 1 END
                              AS AmountChangePercent
 
-                           , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
+                           , CASE WHEN vbMovementDescId = zc_Movement_Income() AND COALESCE (MIB_AmountPartnerSecond.ValueData, FALSE) = TRUE
+                                       -- если Признак "без оплаты"
+                                       THEN COALESCE (MIF_AmountPartnerSecond.ValueData, 0)
+                                  
+                                  WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
                                        THEN 0 -- не заполняется, т.к. сейчас расход
 
                                   WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = TRUE
@@ -1591,6 +1612,23 @@ BEGIN
                              -- Коэфф перевода из кол-ва поставщика
                            * CASE WHEN tmpContractGoods.CountForAmount > 0 THEN tmpContractGoods.CountForAmount ELSE 1 END
                              AS AmountPartner
+
+                             -- Количество у поставщика - из накладной
+                           , COALESCE (MIF_AmountPartnerSecond.ValueData, 0) AS AmountPartnerSecond
+
+                             -- цена поставщика для Сырья - из накладной
+                           , CASE WHEN vbIsPriceWithVAT_begin = COALESCE (MIB_PriceWithVAT.ValueData, FALSE)
+                                       -- ничего не меняем
+                                       THEN COALESCE (MIF_PricePartner.ValueData, 0)
+                                  -- делаем с НДС
+                                  WHEN vbIsPriceWithVAT_begin = TRUE  AND COALESCE (MIB_PriceWithVAT.ValueData, FALSE) = FALSE
+                                       THEN COALESCE (MIF_PricePartner.ValueData, 0) * (1 + vbVATPercent_begin / 100)
+                                  -- делаем без НДС
+                                  WHEN vbIsPriceWithVAT_begin = FALSE AND COALESCE (MIB_PriceWithVAT.ValueData, FALSE) = TRUE
+                                       THEN COALESCE (MIF_PricePartner.ValueData, 0) / (1 + vbVATPercent_begin / 100)
+
+                             END AS PricePartner
+
 
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
                                        THEN NULL
@@ -1652,6 +1690,26 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                                        ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                                       AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+
+                           -- цена поставщика для Сырья - из накладной
+                           LEFT JOIN MovementItemFloat AS MIF_PricePartner
+                                                       ON MIF_PricePartner.MovementItemId = MovementItem.Id
+                                                      AND MIF_PricePartner.DescId         = zc_MIFloat_PricePartner()
+                           -- Количество у поставщика - из накладной
+                           LEFT JOIN MovementItemFloat AS MIF_AmountPartnerSecond
+                                                       ON MIF_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                                      AND MIF_AmountPartnerSecond.DescId         = zc_MIFloat_AmountPartnerSecond()
+
+                           -- Цена с НДС да/нет - для цена поставщика
+                           LEFT JOIN MovementItemBoolean AS MIB_PriceWithVAT
+                                                         ON MIB_PriceWithVAT.MovementItemId = MovementItem.Id
+                                                        AND MIB_PriceWithVAT.DescId         = zc_MIBoolean_PriceWithVAT()
+
+                           -- Признак "без оплаты"
+                           LEFT JOIN MovementItemBoolean AS MIB_AmountPartnerSecond
+                                                         ON MIB_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                                        AND MIB_AmountPartnerSecond.DescId         = zc_MIBoolean_AmountPartnerSecond()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                                        ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                                                       AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
@@ -1777,6 +1835,12 @@ BEGIN
                                        THEN 0 -- не заполняется, т.к. сейчас расход
                                   ELSE tmpMI.AmountPartner
                              END AS AmountPartner
+
+                             -- Количество у поставщика для Сырья
+                           , 0 AS AmountPartnerSecond
+                             -- цена поставщика для Сырья
+                           , 0 AS PricePartner
+
                            , tmpMI.ChangePercentAmount
 
                            , tmpMI.Price
@@ -2146,7 +2210,7 @@ BEGIN
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
- IF vbUserId = 5 AND 1=1 THEN
+ IF vbUserId = 5 AND 1=0 THEN
 -- IF inSession = '1162887' AND 1=1 THEN
     RAISE EXCEPTION 'Admin - Test = OK  %vbIsDocMany = % %MovementId_begin = %  %OperDate = % %OperDatePartner = % %InvNumber = % %TotalCount = % %TotalCountPartner = % %Amount = % %AmountPartner = % %OperDate_scale = % %ContractGoods = %'
   , CHR (13)

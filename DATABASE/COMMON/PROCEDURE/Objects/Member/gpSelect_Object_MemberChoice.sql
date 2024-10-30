@@ -29,12 +29,21 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId)
-                 OR vbUserId = 80373
+                 --  Справочник физ лица - показать все ФИО
+                 OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11481474)
+                 -- Трейд-маркетинг (согласование)
+                 OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11317677)
+                 OR vbUserId = 80373 -- "Прохорова С.А."
                ;
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
-   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0
+                --  Справочник физ лица - показать все ФИО
+                AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11481474)
+                -- Трейд-маркетинг (согласование)
+                AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11317677)
+                   ;
 
    -- Результат
    RETURN QUERY

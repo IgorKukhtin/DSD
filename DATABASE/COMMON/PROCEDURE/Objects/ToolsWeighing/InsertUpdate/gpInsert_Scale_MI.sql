@@ -5,7 +5,9 @@
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -31,13 +33,13 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inCountTare6            TFloat    , -- Количество ящ. вида6
     IN inWeightTare6           TFloat    , -- Вес ящ. вида6
     IN inPrice                 TFloat    , -- Цена
-    IN inPrice_Return          TFloat    , -- Цена
-    IN inCountForPrice         TFloat    , -- Цена за количество
+    IN inPrice_Return          TFloat    , -- Цена или !!!Цена по спецификации!!!
+    IN inCountForPrice         TFloat    , -- Цена за количество или !!!Количество у поставщика!!!
     IN inCountForPrice_Return  TFloat    , -- Цена за количество
     IN inDayPrior_PriceReturn  Integer,
     IN inCount                 TFloat    , -- Количество пакетов или Количество батонов или Кол-во втулок (склад Специй) или Кол-во для Печати ЭТИКЕТОК
     IN inHeadCount             TFloat    , --
-    IN inBoxCount              TFloat    , --
+    IN inBoxCount              TFloat    , -- !!!или Цена поставщика
     IN inBoxCode               Integer   , --
     IN inPartionGoods          TVarChar  , -- Партия
     IN inPriceListId           Integer   , --
@@ -45,13 +47,22 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inMovementId_Promo      Integer   , --
     IN inReasonId              Integer   , --
     IN inAssetId               Integer   , --
-    IN inIsReason              Boolean   , --
-    IN inIsAsset               Boolean   , --
+    IN inIsReason              Boolean   , -- Причина возврата / перемещения или !!!без оплаты - Кол-во контрагента!!!
+    IN inIsAsset               Boolean   , -- Выработка на оборудовании или !!!Расчет цены с НДС или без!!!
     IN inIsBarCode             Boolean   , --
+
+    IN inIsAmountPartnerSecond Boolean   , -- без оплаты да/нет - Кол-во поставщика
+    IN inIsPriceWithVAT        Boolean   , -- Цена с НДС да/нет - для цена поставщика
+    IN inOperDate_ReturnOut    TDateTime   , -- Дата для цены возврат поставщику
+    IN inPricePartner          TFloat    , -- цена поставщика - из накладной - ввод в контроле
+    IN inPriceIncome           TFloat    , -- цена по спецификации
+    IN inAmountPartnerSecond   TFloat    , -- Кол-во поставщика - из накладной
+
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id          Integer
              , TotalSumm   TFloat
+             , TotalSummPartner TFloat
              , MessageText Text
               )
 AS
@@ -64,6 +75,7 @@ $BODY$
    DECLARE vbMovementId_order Integer;
    DECLARE vbBoxId     Integer;
    DECLARE vbTotalSumm TFloat;
+   DECLARE vbTotalSummPartner TFloat;
    DECLARE vbRetailId  Integer;
    DECLARE vbToId      Integer;
    DECLARE vbUnitId    Integer;
@@ -82,7 +94,7 @@ $BODY$
 
    DECLARE vbRemainsCount_check TFloat;
 
-   DECLARE vbPrice_301 TFloat; -- !!!цена для Специй!!!
+   DECLARE vbPrice_301         TFloat; -- !!!цена для Специй или для Сырья - цена ввод в контроле или по спецификации!!!
 
    DECLARE vbWeight_goods              TFloat;
    DECLARE vbWeightTare_goods          TFloat;
@@ -302,21 +314,36 @@ BEGIN
      IF vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
         AND (inBranchCode BETWEEN 301 AND 310 -- Dnepr-SPEC-Zapch
             )
-        AND inBoxCount > 0
+        AND inPricePartner > 0
      THEN
-         -- !!!т.к. Криво - передаем цену через этот параметр!!!
-         vbPrice_301:= inBoxCount;
-         inBoxCount:= 0;
+         -- цена поставщика - из накладной - ввод в контроле
+         vbPrice_301:= inPricePartner;
      ELSE
-     -- определили !!!только для SPEC!!!
+
+     -- определили !!!только для OBV!!!
      IF vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
         AND (inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
             )
-        AND inBoxCount > 0 AND inBoxCount <> 1
      THEN
-         -- !!!т.к. Криво - передаем цену через этот параметр!!!
-         vbPrice_301:= inBoxCount;
-         inBoxCount:= 0;
+         -- цена по спецификации
+         vbPrice_301:= inPriceIncome;
+
+         -- Проверка
+         IF COALESCE (inPriceIncome, 0) <= 0 AND vbMovementDescId = zc_Movement_Income()
+            AND NOT EXISTS (SELECT 1
+                            FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                            ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                           AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                                                                                                       , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                                                                                        )
+                            WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                           )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Цена по спецификации = 0.';
+         END IF;
+
      ELSE
      -- определили !!!только для Днепра!!!
      IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
@@ -393,8 +420,8 @@ BEGIN
                 WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = vbGoodsPropertyId
                   AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId        = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                );
-                              
-     
+
+
      -- определили Вес 1 ед. продукции + упаковка AND Вес упаковки для 1-ой ед. продукции
      SELECT ObjectFloat_WeightPackage.ValueData, ObjectFloat_WeightTotal.ValueData
           , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0 AND ObjectFloat_WeightPackage.ValueData <> 0 AND ObjectFloat_WeightTotal.ValueData > ObjectFloat_WeightPackage.ValueData
@@ -492,13 +519,13 @@ BEGIN
                           END
                          ;
      END IF;
-     
+
 
      -- старт
      vbMessageText:= '';
 
      -- проверка
-     IF (vbMovementDescId = zc_Movement_Sale() 
+     IF (vbMovementDescId = zc_Movement_Sale()
          OR (vbMovementDescId = zc_Movement_SendOnPrice()
              AND EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId IN (8457, 8460) AND OL.DescId = zc_ObjectLink_Unit_Parent() AND OL.ChildObjectId = vbUnitId)
             )
@@ -519,7 +546,7 @@ BEGIN
                                    AND Container.WhereObjectId              = vbUnitId
                                    AND COALESCE (CLO_GoodsKind.ObjectId, 0) = inGoodsKindId
                                 );
-     
+
          IF vbRemainsCount_check < (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                               THEN vbAmount_byWeightTare_goods
                                          WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
@@ -527,8 +554,8 @@ BEGIN
                                               THEN vbAmount_byPack
                                          ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6
                                     END)
-        
-         THEN 
+
+         THEN
              -- Результат
              vbMessageText:=       'Ошибка.Нельзя провести кол-во = '
                            ||'<' || zfConvert_FloatToString (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
@@ -595,7 +622,7 @@ BEGIN
                                                                                            WHEN 3 = COALESCE ((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = vbRetailId AND OFl.DescId = zc_ObjectFloat_Retail_RoundWeight()), 0)
                                                                                                 THEN CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
                                                                                                          * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
-                                                                                           ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+	                                                                                           ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
                                                                                                     * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
                                                                                       END
                                                            , inRealWeight          := inRealWeight
@@ -629,7 +656,7 @@ BEGIN
                                                                                            WHEN inBranchCode > 1000
                                                                                                 -- !!!здесь № печати!!!
                                                                                                 THEN inPrice
-    
+
                                                                                            -- цена для Специй
                                                                                            WHEN (inBranchCode BETWEEN 301 AND 310
                                                                                               OR inBranchCode BETWEEN 201 AND 210
@@ -683,7 +710,7 @@ BEGIN
                                                            , inGoodsKindId         := CASE WHEN inBranchCode > 1000
                                                                                                 -- !!!здесь StickerPack!!!
                                                                                                 THEN inGoodsKindId
-    
+
                                                                                            WHEN (SELECT View_InfoMoney.InfoMoneyDestinationId
                                                                                                  FROM ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                                                       LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
@@ -698,12 +725,12 @@ BEGIN
                                                            , inPriceListId         := CASE WHEN inBranchCode > 1000
                                                                                                 -- !!!здесь GoodsKindId - из StickerProperty!!!
                                                                                                 THEN inPriceListId
-    
+
                                                                                            WHEN vbPriceListId_Dnepr <> 0
                                                                                                 THEN vbPriceListId_Dnepr
                                                                                            ELSE inPriceListId
                                                                                       END
-    
+
                                                            , inBoxId               := CASE WHEN inIsBarCode = TRUE AND vbBoxId > 0 THEN vbBoxId
                                                                                            WHEN inIsBarCode = TRUE THEN CASE WHEN inBoxCode > 0 THEN (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBoxCode AND Object.DescId = zc_Object_Box()) ELSE 0 END
                                                                                            ELSE 0
@@ -712,11 +739,96 @@ BEGIN
                                                            , inIsBarCode           := CASE WHEN vbUserId = 5 THEN TRUE ELSE inIsBarCode END
                                                            , inSession             := inSession
                                                             );
-    
+
+         -- дописали св-во для OBV
+         IF vbMovementDescId IN (zc_Movement_Income())
+            AND (inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
+                )
+         THEN
+             -- цена поставщика для Сырья - из накладной
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), vbId, inPricePartner);
+             -- Количество у поставщика - из накладной
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), vbId, inAmountPartnerSecond);
+
+             -- без оплаты да/нет - Кол-во поставщика
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPartnerSecond(), vbId, inIsAmountPartnerSecond);
+
+             -- Цена с НДС да/нет - для цена поставщика
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PriceWithVAT(), vbId, inIsPriceWithVAT);
+
+         END IF;
+
+         IF vbMovementDescId IN (zc_Movement_ReturnOut())
+            AND (inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
+                )
+         THEN
+             -- Дата для цены возврат поставщику
+             PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PriceRetOut(), vbId, inOperDate_ReturnOut);
+         END IF;
+
+
          --
          vbTotalSumm:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_TotalSumm());
-    
-    
+
+         -- Итого Сумма с ндс - поставщика - Dnepr-OBV
+         IF vbMovementDescId IN (zc_Movement_Income()) AND (inBranchCode BETWEEN 201 AND 210)
+         THEN
+             vbTotalSummPartner:= (WITH tmpMI AS (SELECT SUM (COALESCE (MIF_AmountPartnerSecond.ValueData, 0))AS AmountPartner
+                                                       , COALESCE (MIF_PricePartner.ValueData, 0)             AS PricePartner
+                                                       , COALESCE (MIB_PriceWithVAT.ValueData, FALSE)         AS isPriceWithVAT
+                                                       , MovementItem.ObjectId                                AS GoodsId
+                                                       , COALESCE (MILO_GoodsKind.ObjectId, 0)                AS GoodsKindId
+                                                  FROM MovementItem
+                                                       LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                                                        ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                                                                       AND MILO_GoodsKind.DescId         = zc_MovementLinkObject_To()
+                                                       -- цена поставщика для Сырья - из накладной
+                                                       LEFT JOIN MovementItemFloat AS MIF_PricePartner
+                                                                                   ON MIF_PricePartner.MovementItemId = MovementItem.Id
+                                                                                  AND MIF_PricePartner.DescId         = zc_MIFloat_PricePartner()
+                                                       -- Количество у поставщика - из накладной
+                                                       LEFT JOIN MovementItemFloat AS MIF_AmountPartnerSecond
+                                                                                   ON MIF_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                                                                  AND MIF_AmountPartnerSecond.DescId         = zc_MIFloat_AmountPartnerSecond()
+
+                                                       -- Цена с НДС да/нет - для цена поставщика
+                                                       LEFT JOIN MovementItemBoolean AS MIB_PriceWithVAT
+                                                                                     ON MIB_PriceWithVAT.MovementItemId = MovementItem.Id
+                                                                                    AND MIB_PriceWithVAT.DescId         = zc_MIBoolean_PriceWithVAT()
+
+                                                  WHERE MovementItem.MovementId = inMovementId
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.isErased   = FALSE
+                                                  GROUP BY COALESCE (MIF_PricePartner.ValueData, 0)
+                                                         , COALESCE (MIB_PriceWithVAT.ValueData, FALSE)
+                                                         , MovementItem.ObjectId
+                                                         , COALESCE (MILO_GoodsKind.ObjectId, 0)
+                                                 )
+                                 , tmpMI_summ AS (SELECT CAST (tmpMI.AmountPartner * tmpMI.PricePartner AS NUMERIC (16, 2)) AS Summ_notVat
+                                                       , 0 AS Summ_addVat
+                                                  FROM tmpMI
+                                                  WHERE NOT EXISTS (SELECT 1 FROM tmpMI WHERE tmpMI.isPriceWithVAT = TRUE)
+
+                                                 UNION
+                                                  SELECT 0 AS Summ_notVat
+                                                       , CAST (CAST (tmpMI.AmountPartner * tmpMI.PricePartner AS NUMERIC (16, 2))
+                                                             * CASE WHEN tmpMI.isPriceWithVAT = FALSE THEN 1.2 ELSE 1 END
+                                                               AS NUMERIC (16, 2)
+                                                              ) AS Summ_addVat
+                                                  FROM tmpMI
+                                                  WHERE EXISTS (SELECT 1 FROM tmpMI WHERE tmpMI.isPriceWithVAT = TRUE)
+                                                 )
+                                   --
+                                   SELECT -- если все без НДС, здесь добавим
+                                          CAST (SUM (tmpMI_summ.Summ_notVat) * 1.2 AS NUMERIC (16, 2))
+                                          -- если все с НДС
+                                        + SUM (tmpMI_summ.Summ_addVat)
+                                   FROM tmpMI_summ
+                                  );
+         END IF;
+
+
+
          -- дописали св-во <Причина возврата >
          IF inIsReason = TRUE AND (vbMovementDescId = zc_Movement_ReturnIn()
                                    -- Склады База + Реализации + Возвраты общие
@@ -725,7 +837,7 @@ BEGIN
          THEN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Reason(), vbId, inReasonId);
          END IF;
-    
+
          -- дописали св-во <Asset >
          IF inIsAsset = TRUE
          THEN
@@ -753,7 +865,8 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       SELECT vbId, vbTotalSumm, vbMessageText :: Text MessageText;
+       SELECT vbId, vbTotalSumm, COALESCE (vbTotalSummPartner, 0) :: TFloat, vbMessageText :: Text MessageText;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
