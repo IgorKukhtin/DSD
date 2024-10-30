@@ -403,6 +403,17 @@
         TabOrder = 55
         Width = 320
       end
+      object cxLabel58: TcxLabel
+        Left = 318
+        Top = 44
+        Caption = #1050#1086#1076' 1'#1057
+      end
+      object ceCode1C: TcxTextEdit
+        Left = 319
+        Top = 58
+        TabOrder = 57
+        Width = 161
+      end
     end
     object tsContact: TcxTabSheet
       Caption = #1050#1086#1085#1090#1072#1082#1090#1099
@@ -927,6 +938,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCode1C'
+        Value = Null
+        Component = ceCode1C
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inINN'
         Value = ''
         Component = ceINN
@@ -1142,7 +1161,6 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 312
     Top = 40
   end
   inherited spGet: TdsdStoredProc
@@ -1687,6 +1705,13 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code1C'
+        Value = Null
+        Component = ceCode1C
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 136
@@ -1721,7 +1746,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 40
+    Left = 80
     Top = 448
   end
   object spGetMemberContact: TdsdStoredProc

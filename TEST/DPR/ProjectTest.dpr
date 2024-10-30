@@ -1544,7 +1544,10 @@ uses
   MIFloatEdit in '..\..\Forms\System\MIFloatEdit.pas' {MIFloatEditForm: TParentForm},
   Report_HistoryCost_CompareDialog in '..\..\Forms\Report\Report_HistoryCost_CompareDialog.pas' {Report_HistoryCost_CompareDialogForm: TParentForm},
   Report_HistoryCost_Compare in '..\..\Forms\Report\Report_HistoryCost_Compare.pas' {Report_HistoryCost_CompareForm: TParentForm},
-  IncomeEdit_PartnerParam in '..\..\Forms\Document\IncomeEdit_PartnerParam.pas' {IncomeEdit_PartnerParamForm: TParentForm};
+  IncomeEdit_PartnerParam in '..\..\Forms\Document\IncomeEdit_PartnerParam.pas' {IncomeEdit_PartnerParamForm: TParentForm},
+  PositionPropertyEdit in '..\..\Forms\Guides\PositionPropertyEdit.pas' {PositionPropertyEditForm: TParentForm},
+  PositionProperty in '..\..\Forms\Guides\PositionProperty.pas' {PositionPropertyForm: TParentForm},
+  BankAccountMovement_Split in '..\..\Forms\Document\BankAccountMovement_Split.pas' {BankAccountMovement_SplitForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

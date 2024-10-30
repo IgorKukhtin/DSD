@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1083#1078#1085#1086#1089#1090#1100'>'
-  ClientHeight = 206
+  ClientHeight = 257
   ClientWidth = 347
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 64
-    Top = 165
+    Left = 71
+    Top = 217
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 208
-    Top = 165
+    Left = 215
+    Top = 217
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -76,6 +76,23 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 7
+    Width = 273
+  end
+  object cxLabel2: TcxLabel
+    Left = 32
+    Top = 158
+    Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+  end
+  object cePositionProperty: TcxButtonEdit
+    Left = 32
+    Top = 176
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
     Width = 273
   end
   object ActionList: TActionList
@@ -146,6 +163,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionPropertyId'
+        Value = Null
+        Component = GuidesPositionProperty
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -159,8 +184,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 24
-    Top = 149
+    Left = 31
+    Top = 201
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Position'
@@ -199,6 +224,21 @@
         Name = 'SheetWorkTimeName'
         Value = Null
         Component = SheetWorkTimeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionPropertyId'
+        Value = Null
+        Component = GuidesPositionProperty
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionPropertyName'
+        Value = Null
+        Component = GuidesPositionProperty
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -252,7 +292,37 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 151
-    Top = 142
+    Left = 159
+    Top = 110
+  end
+  object GuidesPositionProperty: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePositionProperty
+    FormNameParam.Value = 'TPositionPropertyForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionPropertyForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPositionProperty
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPositionProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 191
+    Top = 171
   end
 end

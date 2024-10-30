@@ -96,6 +96,7 @@ type
     spErasedUnErased: TdsdStoredProc;
     CityName: TcxGridDBColumn;
     FounderName: TcxGridDBColumn;
+    DepartmentName: TcxGridDBColumn;
   private
     { Private declarations }
   public

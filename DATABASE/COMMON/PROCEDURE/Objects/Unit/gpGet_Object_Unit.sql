@@ -24,7 +24,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RegionId Integer, RegionName TVarChar,
                ProvinceId Integer, ProvinceName TVarChar,
                PersonalHeadId Integer, PersonalHeadName TVarChar,
-               FounderId Integer, FounderName TVarChar,
+               FounderId Integer, FounderName TVarChar, 
+               DepartmentId Integer, DepartmentName TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isErased boolean, isLeaf boolean,
                isPartionDate boolean, isPartionGoodsKind boolean,
@@ -99,7 +100,10 @@ BEGIN
            , CAST ('' as TVarChar)  AS PersonalHeadName
 
            , CAST (0 as Integer)    AS FounderId
-           , CAST ('' as TVarChar)  AS FounderName
+           , CAST ('' as TVarChar)  AS FounderName   
+
+           , CAST (0 as Integer)    AS DepartmentId
+           , CAST ('' as TVarChar)  AS DepartmentName
 
            , CAST (0 as Integer)    AS SheetWorkTimeId
            , CAST ('' as TVarChar)  AS SheetWorkTimeName
@@ -176,8 +180,11 @@ BEGIN
            , Object_PersonalHead.Id         AS PersonalHeadId
            , Object_PersonalHead.ValueData  AS PersonalHeadName
 
-           , Object_Founder.Id            AS FounderId
-           , Object_Founder.ValueData     AS FounderName
+           , Object_Founder.Id              AS FounderId
+           , Object_Founder.ValueData       AS FounderName
+
+           , Object_Department.Id           AS DepartmentId
+           , Object_Department.ValueData    AS DepartmentName
 
            , Object_SheetWorkTime.Id        AS SheetWorkTimeId
            , Object_SheetWorkTime.ValueData AS SheetWorkTimeName
@@ -294,6 +301,11 @@ BEGIN
                                 AND ObjectLink_Unit_Founder.DescId = zc_ObjectLink_Unit_Founder()
             LEFT JOIN Object AS Object_Founder ON Object_Founder.Id = ObjectLink_Unit_Founder.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Department
+                                 ON ObjectLink_Unit_Department.ObjectId = Object_Unit_View.Id
+                                AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
+            LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_Unit_Department.ChildObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_Unit_SheetWorkTime
                                  ON ObjectLink_Unit_SheetWorkTime.ObjectId = Object_Unit_View.Id
                                 AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
@@ -309,6 +321,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.10.24         * Department
  11.07.23         *
  28.06.23         *
  14.03.23         * Avance

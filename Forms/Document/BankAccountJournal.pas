@@ -90,7 +90,7 @@ type
     spUpdateContract: TdsdStoredProc;
     macUpdateContract: TMultiAction;
     actUpdateContract: TdsdDataSetRefresh;
-    bb: TdxBarButton;
+    bbUpdateContract: TdxBarButton;
     actChoiceContract: TOpenChoiceForm;
     spUpdateJuridical: TdsdStoredProc;
     actChoiceMoneyPlace: TOpenChoiceForm;
@@ -99,6 +99,11 @@ type
     bbUpdateMoneyPlace: TdxBarButton;
     spGet_UseJuridicalBankAccount: TdsdStoredProc;
     PartnerName: TcxGridDBColumn;
+    actInsertUpdate_Split: TdsdInsertUpdateAction;
+    bbInsertUpdate_Split: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    bbsUpdate: TdxBarSubItem;
+    dxBarSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public

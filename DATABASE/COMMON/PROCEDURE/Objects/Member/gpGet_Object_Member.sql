@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Member(
     IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , Code1C TVarChar
              , INN TVarChar, DriverCertificate TVarChar
              , Card TVarChar, CardSecond TVarChar, CardChild TVarChar
              , CardIBAN TVarChar, CardIBANSecond TVarChar
@@ -81,6 +82,7 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Member()) AS Code
            , CAST ('' AS TVarChar)  AS NAME
            
+           , CAST ('' AS TVarChar)  AS Code1C
            , CAST ('' AS TVarChar)  AS INN
            , CAST ('' AS TVarChar)  AS DriverCertificate
            , CAST ('' AS TVarChar)  AS Card
@@ -213,6 +215,7 @@ BEGIN
             , Object_Member.ObjectCode AS Code
             , Object_Member.ValueData  AS Name
             
+            , ObjectString_Code1C.ValueData ::TVarChar AS Code1C
             , ObjectString_INN.ValueData               AS INN
             , ObjectString_DriverCertificate.ValueData AS DriverCertificate
             , ObjectString_Card.ValueData              AS Card
@@ -367,7 +370,11 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_CardSecondDiff
                                     ON ObjectString_CardSecondDiff.ObjectId = Object_Member.Id 
                                    AND ObjectString_CardSecondDiff.DescId = zc_ObjectString_Member_CardSecondDiff()
-      
+
+             LEFT JOIN ObjectString AS ObjectString_Code1C
+                                    ON ObjectString_Code1C.ObjectId = Object_Member.Id
+                                   AND ObjectString_Code1C.DescId = zc_ObjectString_Member_Code1C()
+
              LEFT JOIN ObjectString AS ObjectString_Comment 
                                     ON ObjectString_Comment.ObjectId = Object_Member.Id 
                                    AND ObjectString_Comment.DescId = zc_ObjectString_Member_Comment()
@@ -532,6 +539,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.10.24         * Code1C
  15.03.24         * 
  27.09.21         * UnitMobile
  09.09.21         *

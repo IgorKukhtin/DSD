@@ -1,26 +1,27 @@
 inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
-  ClientHeight = 420
+  ClientHeight = 398
   ClientWidth = 702
   ExplicitWidth = 718
-  ExplicitHeight = 459
+  ExplicitHeight = 437
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 702
-    Height = 394
+    Height = 372
     ExplicitWidth = 702
     ExplicitHeight = 394
-    ClientRectBottom = 394
+    ClientRectBottom = 372
     ClientRectRight = 702
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 702
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
         Width = 702
-        Height = 394
+        Height = 372
+        ExplicitLeft = 3
         ExplicitWidth = 702
-        ExplicitHeight = 394
+        ExplicitHeight = 372
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -77,6 +78,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           object Address: TcxGridDBColumn
             Caption = #1040#1076#1088#1077#1089
             DataBinding.FieldName = 'Address'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object CityName: TcxGridDBColumn
@@ -128,6 +131,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object DepartmentName: TcxGridDBColumn
+            Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090
+            DataBinding.FieldName = 'DepartmentName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
           end
           object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090

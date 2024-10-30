@@ -268,9 +268,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalForm');
   //exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovementForm');
   exit;
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovement_SplitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovement_SplitForm');
+  exit;
+
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_PersonalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccount_PersonalJournalForm');
@@ -4650,20 +4656,27 @@ end;
 
 procedure TLoadFormTest.LoadPositionFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionMember_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionMember_ObjectForm');
-  {
+  }
   // должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
-  }
+  {
   // Разряд должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelEditForm');
+  }
+  // Классификатор должности
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionPropertyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionPropertyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionPropertyEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionPropertyEditForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;
