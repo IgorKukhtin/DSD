@@ -1546,7 +1546,8 @@ uses
   Report_HistoryCost_Compare in '..\..\Forms\Report\Report_HistoryCost_Compare.pas' {Report_HistoryCost_CompareForm: TParentForm},
   IncomeEdit_PartnerParam in '..\..\Forms\Document\IncomeEdit_PartnerParam.pas' {IncomeEdit_PartnerParamForm: TParentForm},
   PositionPropertyEdit in '..\..\Forms\Guides\PositionPropertyEdit.pas' {PositionPropertyEditForm: TParentForm},
-  PositionProperty in '..\..\Forms\Guides\PositionProperty.pas' {PositionPropertyForm: TParentForm};
+  PositionProperty in '..\..\Forms\Guides\PositionProperty.pas' {PositionPropertyForm: TParentForm},
+  BankAccountMovement_Split in '..\..\Forms\Document\BankAccountMovement_Split.pas' {BankAccountMovement_SplitForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

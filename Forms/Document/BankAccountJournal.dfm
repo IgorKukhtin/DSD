@@ -1082,6 +1082,43 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
       ImageIndex = 43
     end
+    object actInsertUpdate_Split: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1056#1072#1079#1073#1080#1090#1100' '#1089#1091#1084#1084#1091
+      Hint = #1056#1072#1079#1073#1080#1090#1100' '#1089#1091#1084#1084#1091
+      ImageIndex = 38
+      FormName = 'TBankAccountMovement_SplitForm'
+      FormNameParam.Value = 'TBankAccountMovement_SplitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 115
@@ -1189,7 +1226,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbAddBonus'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsUpdate'
         end
         item
           Visible = True
@@ -1197,23 +1238,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbisCopy'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bb'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateMoneyPlace'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -1222,22 +1247,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Visible = True
           ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint1'
         end
         item
           Visible = True
@@ -1277,13 +1286,74 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Action = mactIsCopy
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdateContract: TdxBarButton
       Action = macUpdateContract
       Category = 0
     end
     object bbUpdateMoneyPlace: TdxBarButton
       Action = macUpdateMoneyPlace
       Category = 0
+    end
+    object bbInsertUpdate_Split: TdxBarButton
+      Action = actInsertUpdate_Split
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint1'
+        end>
+    end
+    object bbsUpdate: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 43
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbAddBonus'
+        end
+        item
+          Visible = True
+          ItemName = 'bbisCopy'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMoneyPlace'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_Split'
+        end>
+    end
+    object dxBarSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   inherited RefreshDispatcher: TRefreshDispatcher
