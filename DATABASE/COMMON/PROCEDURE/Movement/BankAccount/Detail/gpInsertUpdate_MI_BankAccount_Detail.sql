@@ -23,15 +23,34 @@ BEGIN
      -- определ€етс€ признак —оздание/ орректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     -- распроводим ƒокумент
+     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_BankAccount())
+     THEN
+         PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                      , inUserId     := vbUserId);
+     END IF;
+
      -- сохранили <Ёлемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Detail(), inInfoMoneyId, inMovementId, inAmount, NULL);
 
 
-     -- пересчитали »тоговые суммы по накладной
-     --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
+     PERFORM lpComplete_Movement_Finance_CreateTemp();
+     -- 5.3. проводим ƒокументы
+     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_BankAccount())
+     THEN
+         PERFORM lpComplete_Movement_BankAccount (inMovementId := inMovementId
+                                                , inUserId     := vbUserId);
+     END IF;
+
 
      -- сохранили протокол !!!после изменений!!!
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+
+     if vbUserId = 9457 --AND 1=1 -- OR  inMovementId = 15504781
+     then
+         RAISE EXCEPTION 'Test. Ok';
+     end if;
 
 END;
 $BODY$

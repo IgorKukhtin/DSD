@@ -53,7 +53,9 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId 
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
+                                            ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+                                           AND COALESCE ((SELECT COUNT (*) FROM tmpMI),0) = 0
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId = zc_MI_Master()
        ORDER BY 2

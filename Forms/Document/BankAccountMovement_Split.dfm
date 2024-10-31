@@ -8,10 +8,10 @@
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 147
-    Top = 499
+    Top = 500
     OptionsImage.ImageIndex = 80
     ExplicitLeft = 147
-    ExplicitTop = 499
+    ExplicitTop = 500
   end
   inherited bbCancel: TcxButton
     Left = 307
@@ -28,8 +28,6 @@
     Align = alTop
     Caption = 'Panel1'
     TabOrder = 2
-    ExplicitTop = 304
-    ExplicitWidth = 581
     object cxGridDetail: TcxGrid
       Left = 1
       Top = 1
@@ -37,9 +35,6 @@
       Height = 191
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 34
-      ExplicitTop = 34
-      ExplicitWidth = 579
       object cxGridDBTableViewDetail: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DetailDS
@@ -208,8 +203,6 @@
     Height = 274
     Align = alTop
     TabOrder = 3
-    ExplicitLeft = 1
-    ExplicitWidth = 581
     object Код: TcxLabel
       Left = 8
       Top = 5
@@ -390,7 +383,7 @@
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.'
       Properties.ReadOnly = True
-      TabOrder = 24
+      TabOrder = 23
       Width = 47
     end
     object ceBank: TcxButtonEdit
@@ -422,7 +415,7 @@
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
-      TabOrder = 28
+      TabOrder = 27
       Width = 92
     end
     object ceUnit: TcxButtonEdit
@@ -513,7 +506,7 @@
       Left = 188
       Top = 185
       Properties.ReadOnly = False
-      TabOrder = 38
+      TabOrder = 37
       Width = 79
     end
   end
@@ -527,8 +520,8 @@
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 535
-    Top = 291
+    Left = 551
+    Top = 323
     object actRefreshMIDetail: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       MoveParams = <>
@@ -540,6 +533,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -552,8 +546,11 @@
         end>
     end
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides
-      StoredProc = nil
-      StoredProcList = <>
+      StoredProc = spInsertUpdate_Split
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Split
+        end>
     end
     object SetUnErasedDetail: TdsdUpdateErased
       Category = 'DSDLib'
@@ -640,17 +637,6 @@
         end>
       isShowModal = False
     end
-    object actInsertRecord: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      View = cxGridDBTableViewDetail
-      Action = actChoiceFormInfoMoney
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
-      ImageIndex = 0
-    end
     object actUpdateDataSetDetail: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -665,6 +651,36 @@
         end>
       Caption = 'actUpdateDataSetDetail'
       DataSource = DetailDS
+    end
+    object MovementItemProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited FormParams: TdsdFormParams
@@ -1612,10 +1628,6 @@
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecord'
-        end
-        item
-          Visible = True
           ItemName = 'bbSetErasedDetail'
         end
         item
@@ -1641,6 +1653,10 @@
         item
           Visible = True
           ItemName = 'bbb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocolOpenForm'
         end>
       OneOnRow = True
       Row = 0
@@ -1671,7 +1687,14 @@
       Category = 0
     end
     object bbInsertRecord: TdxBarButton
-      Action = actInsertRecord
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
+      Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
+      Visible = ivAlways
+      ImageIndex = 0
+    end
+    object bbMovementItemProtocolOpenForm: TdxBarButton
+      Action = MovementItemProtocolOpenForm
       Category = 0
     end
   end
@@ -1734,8 +1757,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 320
+    Left = 304
+    Top = 328
   end
   object spErasedMIDetail: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -1819,13 +1842,39 @@
       item
         Name = 'inAmount'
         Value = Null
+        Component = DetailCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 412
-    Top = 360
+    Left = 460
+    Top = 312
+  end
+  object spInsertUpdate_Split: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_BankAccount_SplitByDetail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberInvoice'
+        Value = '0'
+        Component = ceInvNumberInvoice
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 460
+    Top = 376
   end
 end
