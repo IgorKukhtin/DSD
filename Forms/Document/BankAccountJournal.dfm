@@ -23,6 +23,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 299
+        ExplicitTop = 3
         ExplicitWidth = 1028
         ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1370,9 +1371,13 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_BankAccount'
+    Left = 448
+    Top = 160
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankAccount'
+    Left = 376
+    Top = 224
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1425,6 +1430,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 288
+    Top = 224
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_BankAccount'

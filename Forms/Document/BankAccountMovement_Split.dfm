@@ -7,10 +7,10 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 147
+    Left = 148
     Top = 500
     OptionsImage.ImageIndex = 80
-    ExplicitLeft = 147
+    ExplicitLeft = 148
     ExplicitTop = 500
   end
   inherited bbCancel: TcxButton
@@ -543,6 +543,8 @@
         end
         item
           StoredProc = spSelectMI_Detail
+        end
+        item
         end>
     end
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides
@@ -559,6 +561,9 @@
       StoredProcList = <
         item
           StoredProc = spUnErasedMIDetail
+        end
+        item
+          StoredProc = spSelectMI_Detail
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -566,6 +571,7 @@
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
+      DataSource = DetailDS
     end
     object SetErasedDetail: TdsdUpdateErased
       Category = 'DSDLib'
@@ -574,12 +580,16 @@
       StoredProcList = <
         item
           StoredProc = spErasedMIDetail
+        end
+        item
+          StoredProc = spSelectMI_Detail
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
+      DataSource = DetailDS
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -1772,14 +1782,6 @@
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = Null
-        Component = DetailCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 198
@@ -1796,14 +1798,6 @@
         Component = DetailCDS
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = Null
-        Component = DetailCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

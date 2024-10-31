@@ -38,10 +38,10 @@ BEGIN
      END IF;
 
      --проверка по разделению
-     IF COALESCE (vbAmount_BA,0) <> (SELECT SUM (COALESCE (MI.Amount,0))
-                                     FROM MovementItem AS MI
-                                     WHERE MI.MovementId = inMovementId
-                                       AND MI.DescId = zc_MI_Detail())
+     IF ABS(COALESCE (vbAmount_BA,0)) <> (SELECT SUM (COALESCE (MI.Amount,0))
+                                          FROM MovementItem AS MI
+                                          WHERE MI.MovementId = inMovementId
+                                            AND MI.DescId = zc_MI_Detail())
      THEN
          RAISE EXCEPTION 'Ошибка.Сумма распределения не соответствует сумме документа.';
      END IF;     
@@ -103,12 +103,13 @@ BEGIN
                                   )
 
              -- Результат
-             SELECT tmpBankAccount.Id AS MovementId
+             SELECT tmpBankAccount.Id
                   , tmpBankAccount.InvNumber
                   , tmpBankAccount.OperDate
                   , tmpBankAccount.ServiceDate
                   , tmpBankAccount.ParentId
-                  , CASE WHEN  tmpBankAccount.CurrencyId <> zc_Enum_Currency_Basis() THEN CAST (tmp1.Amount * tmpBankAccount.CurrencyValue / tmpBankAccount.ParValue AS NUMERIC (16, 2)) ELSE tmp1.Amount END AS Amount
+                  , ( (CASE WHEN COALESCE (tmpBankAccount.AmountIn,0) > 0 THEN 1 ELSE -1 END)
+                    * (CASE WHEN tmpBankAccount.CurrencyId <> zc_Enum_Currency_Basis() THEN CAST (tmp1.Amount * tmpBankAccount.CurrencyValue / tmpBankAccount.ParValue AS NUMERIC (16, 2)) ELSE tmp1.Amount END)) AS Amount
                   , tmpBankAccount.AmountSumm
                   , CASE WHEN tmpBankAccount.CurrencyId <> zc_Enum_Currency_Basis() THEN tmp1.Amount ELSE 0  END AS AmountCurrency
                   , tmpBankAccount.BankAccountId
@@ -128,12 +129,13 @@ BEGIN
              FROM tmpBankAccount
                   INNER JOIN tmpMI_Detail AS tmp1 ON tmp1.InfoMoneyId = tmpBankAccount.InfoMoneyId
             UNION ALL
-             SELECT 0 AS MovementId
+             SELECT 0 AS Id
                   , CAST (NEXTVAL ('movement_bankaccount_seq') AS TVarChar) AS InvNumber
                   , tmpBankAccount.OperDate
                   , tmpBankAccount.ServiceDate
                   , tmpBankAccount.ParentId
-                  , CASE WHEN  tmpBankAccount.CurrencyId <> zc_Enum_Currency_Basis() THEN CAST (tmp2.Amount * tmpBankAccount.CurrencyValue / tmpBankAccount.ParValue AS NUMERIC (16, 2)) ELSE tmp2.Amount END AS Amount
+                  , ( (CASE WHEN COALESCE (tmpBankAccount.AmountIn,0) > 0 THEN 1 ELSE -1 END)
+                    * (CASE WHEN  tmpBankAccount.CurrencyId <> zc_Enum_Currency_Basis() THEN CAST (tmp2.Amount * tmpBankAccount.CurrencyValue / tmpBankAccount.ParValue AS NUMERIC (16, 2)) ELSE tmp2.Amount END)) AS Amount
                   , tmpBankAccount.AmountSumm
                   , CASE WHEN tmpBankAccount.CurrencyId <> zc_Enum_Currency_Basis() THEN tmp2.Amount ELSE 0  END AS AmountCurrency
                   , tmpBankAccount.BankAccountId
@@ -171,7 +173,7 @@ BEGIN
 
      if vbUserId = 9457
      then
-        RAISE EXCEPTION 'Test. Ok <%>', vbUserId;
+        RAISE EXCEPTION 'Test. Ok';
      end if;
 
 

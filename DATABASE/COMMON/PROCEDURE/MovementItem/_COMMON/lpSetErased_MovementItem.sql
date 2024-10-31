@@ -36,8 +36,8 @@
       AND vbDescId         <> zc_MI_Sign()
       AND vbMovementDescId <> zc_Movement_PromoPartner()
       AND (vbMovementDescId <> zc_Movement_PromoTrade()
-        OR vbDescId         <> zc_MI_Message()
-          )
+        OR vbDescId         <> zc_MI_Message())   
+      AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_BankAccount() OR vbDescId <> zc_MI_Detail())
       -- AND inUserId <> 5 -- !!!временно для загрузки из Sybase!!!
    THEN
        /*IF AND vbStatusId = zc_Enum_Status_Erased() 
