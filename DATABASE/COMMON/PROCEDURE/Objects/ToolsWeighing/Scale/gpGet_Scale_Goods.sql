@@ -165,8 +165,8 @@ BEGIN
             , Object_GoodsKind.ObjectCode AS GoodsKindCode
             , Object_GoodsKind.ValueData  AS GoodsKindName
 
-            , CASE WHEN tmpGoods_ScaleCeh.GoodsKindId_list   <> '' THEN tmpGoods_ScaleCeh.GoodsKindId_list   WHEN inBranchCode BETWEEN 201 AND 210 THEN '' ELSE '0'              END :: TVarChar AS GoodsKindId_list
-            , CASE WHEN tmpGoods_ScaleCeh.GoodsKindName_List <> '' THEN tmpGoods_ScaleCeh.GoodsKindName_List WHEN inBranchCode BETWEEN 201 AND 210 THEN '' ELSE 'без вида упак.' END :: TVarChar AS GoodsKindName_List
+            , CASE WHEN tmpGoods_ScaleCeh.GoodsKindId_list   <> '' THEN tmpGoods_ScaleCeh.GoodsKindId_list   WHEN inBranchCode BETWEEN 101 AND 101 THEN '0'              ELSE '' END :: TVarChar AS GoodsKindId_list
+            , CASE WHEN tmpGoods_ScaleCeh.GoodsKindName_List <> '' THEN tmpGoods_ScaleCeh.GoodsKindName_List WHEN inBranchCode BETWEEN 101 AND 101 THEN 'без вида упак.' ELSE '' END :: TVarChar AS GoodsKindName_List
             , Object_GoodsKind_max.Id                          AS GoodsKindId_max
             , Object_GoodsKind_max.ObjectCode                  AS GoodsKindCode_max
             , Object_GoodsKind_max.ValueData                   AS GoodsKindName_max
