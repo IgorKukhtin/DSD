@@ -465,7 +465,7 @@ BEGIN
                         AND MovementItem.DescId = zc_MI_Child()
                         AND MovementItem.isErased = FALSE
                         --
-                        AND 1=0
+                        -- AND 1=0
                      )
       , tmpMI_Float_Child AS (SELECT MovementItemFloat.*
                               FROM MovementItemFloat
@@ -505,7 +505,7 @@ BEGIN
                               AND MovementItem.DescId = zc_MI_Child()
                               AND MovementItem.isErased = FALSE
                               --
-                              AND 1=0
+                              --AND 1=0
                           )
       , tmpMIChild AS (SELECT tmpMIChild_all.ParentId
                             , MAX (tmpMIChild_all.DayCount) AS DayCount
@@ -1241,7 +1241,7 @@ BEGIN
  
             LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
             LEFT JOIN tmpMIChild_Hours ON tmpMIChild_Hours.ParentId = tmpAll.MovementItemId 
-                                      AND tmpMovement.PersonalServiceListId = 8265914 -- Ведомость ЦЕХ упаковки
+                                      -- AND tmpMovement.PersonalServiceListId = 8265914 -- Ведомость ЦЕХ упаковки
          
             LEFT JOIN tmpMI_SummCardSecondRecalc ON tmpMI_SummCardSecondRecalc.PersonalId = tmpAll.PersonalId
                                                 AND tmpMI_SummCardSecondRecalc.PositionId = tmpAll.PositionId

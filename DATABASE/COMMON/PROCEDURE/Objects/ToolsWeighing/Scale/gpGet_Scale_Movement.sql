@@ -70,6 +70,7 @@ RETURNS TABLE (MovementId       Integer
              , ReturnKindName TVarChar
 
              , TotalSumm TFloat
+             , TotalSummPartner TFloat
 
              , Comment TVarChar
               )
@@ -395,6 +396,7 @@ BEGIN
             , Object_ReturnKind.ValueData     AS ReturnKindName
 
             , MovementFloat_TotalSumm.ValueData AS TotalSumm
+            , 0                       :: TFloat AS TotalSummPartner
 
             , MovementString_Comment.ValueData AS Comment
 

@@ -39,6 +39,7 @@ RETURNS TABLE (Id        Integer
              , InvNumber TVarChar
              , OperDate  TDateTime
              , TotalSumm TFloat
+             , TotalSummPartner TFloat
               )
 AS
 $BODY$
@@ -206,6 +207,7 @@ end if;
             , Movement.InvNumber
             , Movement.OperDate
             , MovementFloat_TotalSumm.ValueData AS TotalSumm
+            , 0                       :: TFloat AS TotalSummPartner
        FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id

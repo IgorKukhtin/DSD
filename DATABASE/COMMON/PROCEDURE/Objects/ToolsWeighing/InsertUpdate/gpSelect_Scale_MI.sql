@@ -8,6 +8,19 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_MI(
 )
 RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
              , Amount TFloat, AmountWeight TFloat, AmountPartner TFloat, AmountPartnerWeight TFloat
+               -- цена поставщика для Сырья (из накладной)
+             , PricePartner_in TFloat
+               -- Количество у поставщика для Сырья (из накладной)
+             , AmountPartner_in TFloat
+
+             -- Признак "без оплаты" - Кол-во поставщика
+             , isAmountPartnerSecond_in  Boolean
+              -- Цена с НДС (да/нет) - для цена поставщика
+             , isPriceWithVAT_in  Boolean
+             --  Дата для цены возврат поставщику 
+             , OperDate_ReturnOut  TDateTime
+
+               --
              , RealWeight TFloat, RealWeightWeight TFloat, CountTare TFloat, WeightTare TFloat
              , CountTareTotal TFloat, WeightTareTotal TFloat
              , CountTare1 TFloat, CountTare2 TFloat, CountTare3 TFloat, CountTare4 TFloat, CountTare5 TFloat, CountTare6 TFloat
@@ -52,6 +65,17 @@ BEGIN
                            , MovementItem.ObjectId AS GoodsId
                            , MovementItem.Amount
                            , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
+                            -- цена поставщика для Сырья (из накладной)
+                           , COALESCE (MIFloat_PricePartner.ValueData, 0) AS PricePartner_in
+                             -- Количество у поставщика для Сырья (из накладной)
+                           , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) AS AmountPartner_in
+
+                             -- Признак "без оплаты" - Кол-во поставщика
+                           , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) AS isAmountPartnerSecond_in
+                             -- Цена с НДС (да/нет) - для цена поставщика
+                           , COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE) AS isPriceWithVAT_in
+                             --  Дата для цены возврат поставщику 
+                           , MIDate_PriceRetOut.ValueData AS OperDate_ReturnOut
 
                            , COALESCE (MIFloat_RealWeight.ValueData, 0)          AS RealWeight
                            , COALESCE (MIFloat_CountTare.ValueData, 0)           AS CountTare
@@ -125,6 +149,28 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                           -- цена Поставщика для Сырья (из накладной)
+                           LEFT JOIN MovementItemFloat AS MIFloat_PricePartner
+                                                       ON MIFloat_PricePartner.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_PricePartner.DescId = zc_MIFloat_PricePartner()
+                           -- Количество у Поставщика для Сырья (из накладной)
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
+                                                       ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
+                           -- Признак "без оплаты"
+                           LEFT JOIN MovementItemBoolean AS MIBoolean_AmountPartnerSecond
+                                                         ON MIBoolean_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                                        AND MIBoolean_AmountPartnerSecond.DescId         = zc_MIBoolean_AmountPartnerSecond()
+                           -- Цена с НДС (да/нет)
+                           LEFT JOIN MovementItemBoolean AS MIBoolean_PriceWithVAT
+                                                         ON MIBoolean_PriceWithVAT.MovementItemId = MovementItem.Id
+                                                        AND MIBoolean_PriceWithVAT.DescId         = zc_MIBoolean_PriceWithVAT()
+                           --  Дата для цены возврат поставщику 
+                           LEFT JOIN MovementItemDate AS MIDate_PriceRetOut
+                                                      ON MIDate_PriceRetOut.MovementItemId = MovementItem.Id
+                                                     AND MIDate_PriceRetOut.DescId         = zc_MIDate_PriceRetOut()
+                           
+
                            LEFT JOIN MovementItemFloat AS MIFloat_CountTare
                                                        ON MIFloat_CountTare.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountTare.DescId = zc_MIFloat_CountTare()
@@ -184,6 +230,7 @@ BEGIN
                                                        ON MIFloat_LevelNumber.MovementItemId = MovementItem.Id
                                                       AND MIFloat_LevelNumber.DescId = zc_MIFloat_LevelNumber()
 
+                           -- цена
                            LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -258,6 +305,19 @@ BEGIN
 
            , tmpMI.AmountPartner :: TFloat    AS AmountPartner
            , (tmpMI.AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS AmountPartnerWeight
+
+             -- цена поставщика для Сырья (из накладной)
+           , tmpMI.PricePartner_in :: TFloat
+             -- Количество у поставщика для Сырья (из накладной)
+           , tmpMI.AmountPartner_in :: TFloat
+
+             -- Признак "без оплаты" - Кол-во поставщика
+           , tmpMI.isAmountPartnerSecond_in :: Boolean
+             -- Цена с НДС (да/нет) - для цена поставщика
+           , tmpMI.isPriceWithVAT_in :: Boolean
+             --  Дата для цены возврат поставщику 
+           , tmpMI.OperDate_ReturnOut :: TDateTime
+
 
            , tmpMI.RealWeight  :: TFloat      AS RealWeight
            , (tmpMI.RealWeight * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS RealWeightWeight

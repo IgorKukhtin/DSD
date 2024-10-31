@@ -217,6 +217,7 @@ begin
          ParamByName('isAsset').asBoolean:= DataSet.FieldByName('isAsset').asBoolean;
 
          ParamByName('TotalSumm').asFloat:= DataSet.FieldByName('TotalSumm').asFloat;
+         ParamByName('TotalSummPartner').asFloat:= DataSet.FieldByName('TotalSummPartner').asFloat;
 
          ParamsReason.ParamByName('ReasonId').AsInteger:= DataSet.FieldByName('ReasonId').AsInteger;
          ParamsReason.ParamByName('ReasonCode').AsInteger:= DataSet.FieldByName('ReasonCode').AsInteger;
@@ -347,6 +348,7 @@ begin
        Params.AddParam('inAmountPartnerSecond', ftFloat, ptInput, AmountPartnerSecond);
        Params.AddParam('inIsAmountPartnerSecond', ftBoolean, ptInput, isAmountPartnerSecond);
        Params.AddParam('inIsPriceWithVAT', ftBoolean, ptInput, isPriceWithVAT);
+       Params.AddParam('inOperDate_ReturnOut', ftDateTime, ptInput, inOperDate_ReturnOut);
        //try
          Execute;
          Result:=true;
@@ -698,6 +700,7 @@ begin
          execParamsMovement.ParamByName('InvNumber').AsString:=DataSet.FieldByName('InvNumber').AsString;
          execParamsMovement.ParamByName('OperDate_Movement').AsString:=DataSet.FieldByName('OperDate').AsString;
          execParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
+         execParamsMovement.ParamByName('TotalSummPartner').AsFloat:=DataSet.FieldByName('TotalSummPartner').AsFloat;
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpInsertUpdate_Scale_Movement');
@@ -774,6 +777,7 @@ begin
        //try
          Execute;
          execParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
+         execParamsMovement.ParamByName('TotalSummPartner').AsFloat:=DataSet.FieldByName('TotalSummPartner').AsFloat;
          execParamsMovement.ParamByName('MessageText').AsString:=DataSet.FieldByName('MessageText').AsString;
        {except
          Result := '';
@@ -797,6 +801,7 @@ begin
        //try
          Execute;
          ParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
+         ParamsMovement.ParamByName('TotalSummPartner').AsFloat:=DataSet.FieldByName('TotalSummPartner').AsFloat;
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpUpdate_Scale_MI_Erased');

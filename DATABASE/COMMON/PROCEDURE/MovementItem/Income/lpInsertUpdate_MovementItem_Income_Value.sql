@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Income_Value()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income_Value (
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income_Value (
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountPartner       TFloat    , -- Количество у контрагента
+    IN inAmountPartnerSecond TFloat    , -- Количество у контрагента
     IN inAmountPacker        TFloat    , -- Количество у заготовителя
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
@@ -44,6 +46,9 @@ BEGIN
                                               , inStorageId           := inStorageId
                                               , inUserId              := inUserId
                                                );
+
+     -- сохранили свойство <Цена поставщика для Сырья>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), ioId, inAmountPartnerSecond);
 
      -- сохранили свойство <Цена поставщика для Сырья>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), ioId, inPricePartner);

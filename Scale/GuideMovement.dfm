@@ -107,8 +107,8 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbPrint: TSpeedButton
-        Left = 432
-        Top = 3
+        Left = 431
+        Top = 5
         Width = 31
         Height = 29
         Hint = #1055#1077#1095#1072#1090#1100
@@ -1416,6 +1416,21 @@ object GuideMovementForm: TGuideMovementForm
       TabOrder = 11
       OnClick = cbPrintPackClick
     end
+    object cbIncome_diff: TCheckBox
+      Left = 889
+      Top = 3
+      Width = 115
+      Height = 17
+      Caption = #1040#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 12
+      OnClick = cbIncome_diffClick
+    end
   end
   object DS: TDataSource
     DataSet = CDS
@@ -1456,6 +1471,7 @@ object GuideMovementForm: TGuideMovementForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 352
     Top = 240

@@ -816,8 +816,8 @@ object MainForm: TMainForm
         OnClick = bbUpdateAssetClick
       end
       object bbUpdatePricePartner: TSpeedButton
-        Left = 76
-        Top = 2
+        Left = 82
+        Top = 3
         Width = 31
         Height = 29
         Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -937,7 +937,7 @@ object MainForm: TMainForm
         end
       end
       object gbTotalSumm: TGroupBox
-        Left = 746
+        Left = 591
         Top = 0
         Width = 108
         Height = 41
@@ -965,7 +965,6 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 3
         end
       end
       object gbAmountWeight: TGroupBox
@@ -990,6 +989,37 @@ object MainForm: TMainForm
           Align = alClient
           BevelOuter = bvNone
           Caption = 'PanelAmountWeight'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
+      end
+      object gbTotalSummPartner: TGroupBox
+        Left = 699
+        Top = 0
+        Width = 155
+        Height = 41
+        Align = alRight
+        Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072', '#1089' '#1053#1044#1057' '
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 5
+        object PanelTotalSummPartner: TPanel
+          Left = 2
+          Top = 16
+          Width = 151
+          Height = 23
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelTotalSummPartner'
           Font.Charset = RUSSIAN_CHARSET
           Font.Color = clBlack
           Font.Height = -12

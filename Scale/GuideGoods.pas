@@ -1451,8 +1451,8 @@ begin
      end;
      if StrToFloat(EditWeightValue.Text)<=0
      then if gbWeightValue.Visible = TRUE
-            then ActiveControl:=EditWeightValue
-            else
+          then ActiveControl:=EditWeightValue
+          else
      else if CDS.RecordCount=1
           then try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text);
           except ParamsMI.ParamByName('RealWeight').AsFloat:=0;end;

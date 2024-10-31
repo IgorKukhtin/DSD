@@ -397,6 +397,7 @@ BEGIN
                                 , Container.Amount                                      AS Amount
                                 , COALESCE (CLO_PartionGoods.ObjectId, 0)               AS PartionGoodsId
                                 , COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
+                                , COALESCE (Object_PartionGoods.ValueData, '')          AS PartionGoods
                            FROM tmpMI_summ AS tmpMI
                                 INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
                                                     AND Container.DescId   IN (zc_Container_Count(), zc_Container_CountAsset())
@@ -413,6 +414,8 @@ BEGIN
                                                               AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                 LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                         AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                                LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+                                                                       AND Object_PartionGoods.ValueData <> '0'
                            WHERE vbIsPartionCell_from = FALSE
                              AND ((CLO_Unit.ObjectId   = vbUnitId   AND vbUnitId    > 0)
                                OR (CLO_Member.ObjectId = vbMemberId AND vbMemberId  > 0)
@@ -515,6 +518,7 @@ BEGIN
                                 , tmp_01.GoodsKindId
                                 , tmp_01.PartionGoodsId
                                 , tmp_01.PartionGoodsDate
+                                , tmp_01.PartionGoods
                                 , tmp_01.Amount
                            FROM tmp_01
 
@@ -525,6 +529,7 @@ BEGIN
                                , tmp_02.GoodsKindId
                                , tmp_02.PartionGoodsId
                                , tmp_02.PartionGoodsDate
+                               , '' AS PartionGoods
                                , tmp_02.Amount
                           FROM tmp_02
 
@@ -535,6 +540,7 @@ BEGIN
                                , tmp_03.GoodsKindId
                                , tmp_03.PartionGoodsId
                                , tmp_03.PartionGoodsDate
+                               , '' AS PartionGoods
                                  -- подставили как будто есть остаток
                                , 0.01 AS Amount
                           FROM tmp_03
@@ -542,6 +548,23 @@ BEGIN
                           WHERE tmp_03.Ord = 1
                           )
 
+     -- если партия указана, найдем сразу нужную
+   , tmpContainer_find AS (SELECT tmpMI.MovementItemId
+                                , tmpMI.GoodsId
+                                , tmpMI.GoodsKindId
+                                , tmpMI.OperCount  AS Amount
+                                , tmpContainer_list.ContainerId
+                              --, tmpContainer_list.Amount AS Amount_container
+                                , tmpContainer_list.PartionGoodsId
+                                  -- !!!на всякий случай!!!
+                                , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementItemId ORDER BY tmpContainer_list.ContainerId ASC) AS Ord
+                           FROM tmpMI
+                                LEFT JOIN tmpContainer_list ON tmpContainer_list.GoodsId      = tmpMI.GoodsId
+                                                           AND tmpContainer_list.PartionGoods = tmpMI.PartionGoods
+                                                           AND tmpContainer_list.Amount       > 0
+                           -- партия установлена
+                           WHERE tmpMI.PartionGoods <> ''
+                          )
      -- остаток с учетом движения, временно кроме РК
    , tmpContainer_rem AS (SELECT tmpMIContainer.ContainerId
                                , tmpMIContainer.GoodsId
@@ -553,15 +576,34 @@ BEGIN
                                      , tmpContainer_list.GoodsKindId
                                      , tmpContainer_list.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_rem
                                 FROM tmpContainer_list
+                                     LEFT JOIN tmpContainer_find ON tmpContainer_find.ContainerId = tmpContainer_list.ContainerId
                                      LEFT JOIN MovementItemContainer AS MIContainer
                                                                      ON MIContainer.ContainerId = tmpContainer_list.ContainerId
                                                                     -- !!!на конец дня
                                                                     AND MIContainer.OperDate    > vbOperDate
-                                -- для скорости - для РК + ГП не надо - будет ошибка для МНМА и т.п.
-                                WHERE vbIsPartionCell_from = FALSE
+                                -- только если партию НЕ нашли
+                                WHERE tmpContainer_find.ContainerId IS NULL
+                                  -- для скорости - для РК + ГП не надо - будет ошибка для МНМА и т.п.
+                                  AND vbIsPartionCell_from = FALSE
 
                                 GROUP BY tmpContainer_list.ContainerId, tmpContainer_list.GoodsId, tmpContainer_list.GoodsKindId, tmpContainer_list.Amount
                                 HAVING tmpContainer_list.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) > 0
+    
+                               UNION ALL
+                                -- МИНУС если партию уже подставили
+                                SELECT tmpContainer_find.ContainerId
+                                     , tmpContainer_find.GoodsId
+                                     , tmpContainer_find.GoodsKindId
+                                     , -1 * SUM (tmpContainer_find.Amount) AS Amount_rem
+                                FROM tmpContainer_find
+                                -- !!!на всякий случай!!!
+                                WHERE tmpContainer_find.Ord = 1
+                                  AND tmpContainer_find.ContainerId > 0
+                                  -- для скорости - для РК + ГП не надо - будет ошибка для МНМА и т.п.
+                                  AND vbIsPartionCell_from = FALSE
+
+                                GROUP BY tmpContainer_find.ContainerId, tmpContainer_find.GoodsId, tmpContainer_find.GoodsKindId
+
                                ) AS tmpMIContainer
                           GROUP BY tmpMIContainer.ContainerId, tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId
                           HAVING SUM (tmpMIContainer.Amount_rem) > 0
@@ -629,6 +671,8 @@ BEGIN
                                                             ON Container.GoodsId     = tmpMI.GoodsId
                                                            AND Container.GoodsKindId = tmpMI.GoodsKindId
 
+                            LEFT JOIN tmpContainer_find ON tmpContainer_find.ContainerId = Container.ContainerId
+
                             LEFT JOIN tmpContainer_rem ON tmpContainer_rem.ContainerId = Container.ContainerId
                             LEFT JOIN tmpContainer_rem_RK ON tmpContainer_rem_RK.ContainerId = Container.ContainerId
                                                          AND tmpContainer_rem.ContainerId IS NULL
@@ -637,6 +681,8 @@ BEGIN
                            -- для РК + ГП -любой
                            OR tmpMI.is_30100 = TRUE
                              )
+                         -- только если партию НЕ нашли
+                         AND tmpContainer_find.ContainerId IS NULL
                       )
       -- итого кол-во разбили по партиям
     , tmpContainer_partion AS (SELECT DD.ContainerId
@@ -697,6 +743,9 @@ BEGIN
                              -- сортировка по MovementItemId
                            , SUM (tmpMI.OperCount) OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId ORDER BY tmpMI.MovementItemId ASC) AS AmountSUM
                       FROM tmpMI
+                           LEFT JOIN tmpContainer_find ON tmpContainer_find.MovementItemId = tmpMI.MovementItemId
+                      -- только если партию НЕ нашли
+                      WHERE tmpContainer_find.ContainerId IS NULL
                      )
 
       -- партии прикрутили к MI -  ???"пропорционально"???
@@ -776,7 +825,7 @@ BEGIN
         SELECT
               tmpMI.MovementItemId
               -- !!!ИЛИ факт партия ОС или подбор партий!!!
-            , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() THEN tmpMI.ContainerId_asset ELSE COALESCE (tmpContainer.ContainerId, 0) END AS ContainerId_Goods
+            , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() THEN tmpMI.ContainerId_asset ELSE COALESCE (tmpContainer_find.ContainerId, tmpContainer.ContainerId, 0) END AS ContainerId_Goods
             , 0 AS ContainerId_Count
               -- ПЕРЕВОД в забаланс, определим позже
             , 0 AS ContainerId_asset
@@ -788,12 +837,15 @@ BEGIN
             , 0 AS AssetId -- tmpMI.AssetId -- !!!временно отключил, т.к. не должно участвовать в партии!!!
             , tmpMI.PartionGoods
             , tmpMI.PartionGoodsDate
+
             , CASE WHEN vbMovementDescId = zc_Movement_LossAsset()
                         THEN tmpMI.PartionGoodsId_asset
-                   ELSE COALESCE (tmpContainer.PartionGoodsId, tmpMI.PartionGoodsId_mi, 0)
+                   ELSE COALESCE (tmpContainer_find.PartionGoodsId, tmpContainer.PartionGoodsId, tmpMI.PartionGoodsId_mi, 0)
               END AS PartionGoodsId_Item
 
-            , COALESCE (tmpContainer.Amount, tmpMI.OperCount)  AS OperCount
+              -- !!!или подбор партий!!!
+            , COALESCE (tmpContainer_find.Amount, tmpContainer.Amount, tmpMI.OperCount)  AS OperCount
+
             , CASE WHEN COALESCE (tmpContainer.Ord, 1) = 1 THEN tmpMI.OperCountCount ELSE 0 END AS OperCountCount
             , COALESCE (tmpMI.Summ_service, 0)                 AS Summ_service
 
@@ -808,7 +860,12 @@ BEGIN
             , tmpMI.isPartionSumm
 
               -- Партии товара, сформируем позже
-            , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() THEN tmpMI.PartionGoodsId_asset ELSE 0 END AS PartionGoodsId
+            , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() THEN tmpMI.PartionGoodsId_asset
+                   -- новая схема - ОС
+                   WHEN tmpMI.isAsset = TRUE AND COALESCE (tmpContainer_find.PartionGoodsId, tmpContainer.PartionGoodsId) > 0
+                        THEN COALESCE (tmpContainer_find.PartionGoodsId, tmpContainer.PartionGoodsId)
+                   ELSE 0
+              END AS PartionGoodsId
             
             , tmpMI.isAsset
 
@@ -816,7 +873,18 @@ BEGIN
 
         FROM tmpMI
              LEFT JOIN Object ON Object.Id = tmpMI.GoodsId
-             LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpMI.MovementItemId
+
+             -- нашли - если партия указана
+             LEFT JOIN tmpContainer_find  ON tmpContainer_find.MovementItemId     = tmpMI.MovementItemId
+                                         -- !!!на всякий случай!!!
+                                         AND tmpContainer_find.Ord                = 1
+
+             -- подбор оставшихися партий
+             LEFT JOIN tmpContainer       ON tmpContainer.MovementItemId = tmpMI.MovementItemId
+                                         -- нет в установленных
+                                         AND tmpContainer_find.MovementItemId      IS NULL
+
+             -- партия указана для asset
              LEFT JOIN tmpContainer_asset ON tmpContainer_asset.ContainerId_asset = tmpMI.ContainerId_asset
                                          AND tmpContainer_asset.Ord               = 1
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
