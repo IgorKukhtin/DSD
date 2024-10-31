@@ -2028,6 +2028,8 @@ begin
              LabelPartionGoods.Caption:= 'ÏÀÐÒÈß';
        end;
 
+  bbUpdatePricePartner.Visible:= (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202);
+
   HeadCountPanel.Visible:=((SettingMain.isGoodsComplete = FALSE))
                       and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310));
   PanelCountPack.Visible:=(not PanelPartionGoods.Visible) and (SettingMain.isSticker = FALSE);
