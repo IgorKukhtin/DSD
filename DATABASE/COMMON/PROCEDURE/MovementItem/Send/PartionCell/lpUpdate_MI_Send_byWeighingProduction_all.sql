@@ -15,7 +15,7 @@ $BODY$
    DECLARE vbId_tmp Integer;
 BEGIN
        -- табл - результат
-       CREATE TEMP TABLE _tmpRes_PartionCell (MovementItemId_to Integer, MovementItemId_from Integer, MovementItemId_ChoiceCell Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpRes_PartionCell (MovementItemId_to Integer, MovementItemId_from Integer, MovementItemId_ChoiceCell Integer, PartionGoodsDate TDateTime) ON COMMIT DROP;
 
        -- сохранили протокол
        WITH --
@@ -27,10 +27,15 @@ BEGIN
                                 , MILO_PartionCell.ObjectId                    AS PartionCellId
                                 , COALESCE (MIF_PartionCell_real.ValueData, 0) AS PartionCellId_real
 
+                                , COALESCE (MID_PartionGoods.ValueData, inOperDate) AS PartionGoodsDate
+
                            FROM MovementItem
                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                                  ON MILO_GoodsKind.MovementItemId  = MovementItem.Id
                                                                 AND MILO_GoodsKind.DescId          = zc_MILinkObject_GoodsKind()
+                                LEFT JOIN MovementItemDate AS MID_PartionGoods
+                                                           ON MID_PartionGoods.MovementItemId = MovementItem.Id
+                                                          AND MID_PartionGoods.DescId         = zc_MIDate_PartionGoods()
 
                                 INNER JOIN MovementItemLinkObject AS MILO_PartionCell
                                                                   ON MILO_PartionCell.MovementItemId = MovementItem.Id
@@ -113,10 +118,16 @@ BEGIN
             , tmpMI_to AS (SELECT MovementItem.Id                        AS MovementItemId
                                 , MovementItem.ObjectId                  AS GoodsId
                                 , COALESCE (MILO_GoodsKind.ObjectId, 0)  AS GoodsKindId
+                                , COALESCE (MID_PartionGoods.ValueData, inOperDate) AS PartionGoodsDate
+                                  -- є п/п - если несколько партий, 
+                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILO_GoodsKind.ObjectId ORDER BY COALESCE (MID_PartionGoods.ValueData, inOperDate) ASC) AS Ord
                            FROM MovementItem
                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                                  ON MILO_GoodsKind.MovementItemId  = MovementItem.Id
                                                                 AND MILO_GoodsKind.DescId          = zc_MILinkObject_GoodsKind()
+                                LEFT JOIN MovementItemDate AS MID_PartionGoods
+                                                           ON MID_PartionGoods.MovementItemId = MovementItem.Id
+                                                          AND MID_PartionGoods.DescId         = zc_MIDate_PartionGoods()
 
                            WHERE MovementItem.MovementId = inMovementId_to
                              AND MovementItem.DescId     = zc_MI_Master()
@@ -133,6 +144,7 @@ BEGIN
                                     , tmpMI_to.MovementItemId
                                     , tmpMI_to.GoodsId
                                     , tmpMI_to.GoodsKindId
+                                    , tmpMI_to.PartionGoodsDate
                                       --
                                     , lpInsertUpdate_MovementItemLinkObject (tmpMI_from.DescId_MILO, tmpMI_to.MovementItemId, tmpMI_from.PartionCellId)
                                       --
@@ -243,15 +255,18 @@ BEGIN
                                           , tmpMI_from.GoodsKindId
                                           , tmpMI_from.DescId_MILO
                                           , tmpMI_from.PartionCellId
+                                          , tmpMI_from.PartionGoodsDate
                                           , MAX (tmpMI_from.PartionCellId_real) AS PartionCellId_real
                                      FROM tmpMI_from
                                      GROUP BY tmpMI_from.GoodsId
                                             , tmpMI_from.GoodsKindId
                                             , tmpMI_from.DescId_MILO
                                             , tmpMI_from.PartionCellId
+                                            , tmpMI_from.PartionGoodsDate
                                     ) AS tmpMI_from
-                                    JOIN tmpMI_to ON tmpMI_to.GoodsId     = tmpMI_from.GoodsId
-                                                 AND tmpMI_to.GoodsKindId = tmpMI_from.GoodsKindId
+                                    JOIN tmpMI_to ON tmpMI_to.GoodsId          = tmpMI_from.GoodsId
+                                                 AND tmpMI_to.GoodsKindId      = tmpMI_from.GoodsKindId
+                                                 AND tmpMI_to.PartionGoodsDate = tmpMI_from.PartionGoodsDate
 
                               UNION ALL
                                -- 2. —разу сквозн€ком - в место отбора
@@ -259,6 +274,7 @@ BEGIN
                                     , tmpMI_to.MovementItemId
                                     , tmpMI_to.GoodsId
                                     , tmpMI_to.GoodsKindId
+                                    , tmpMI_to.PartionGoodsDate
                                       -- сразу в место отбора
                                     , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), tmpMI_to.MovementItemId, zc_PartionCell_RK())
                                       --
@@ -271,15 +287,18 @@ BEGIN
                                                     , tmpMI_from.GoodsKindId
                                                     , tmpMI_from.DescId_MILO
                                                     , tmpMI_from.PartionCellId
+                                                    , tmpMI_from.PartionGoodsDate
                                                     , MAX (tmpMI_from.PartionCellId_real) AS PartionCellId_real
                                                FROM tmpMI_from
                                                GROUP BY tmpMI_from.GoodsId
                                                       , tmpMI_from.GoodsKindId
                                                       , tmpMI_from.DescId_MILO
                                                       , tmpMI_from.PartionCellId
+                                                      , tmpMI_from.PartionGoodsDate
                                               ) AS tmpMI_from
-                                                ON tmpMI_from.GoodsId     = tmpMI_to.GoodsId
-                                               AND tmpMI_from.GoodsKindId = tmpMI_to.GoodsKindId
+                                                ON tmpMI_from.GoodsId          = tmpMI_to.GoodsId
+                                               AND tmpMI_from.GoodsKindId      = tmpMI_to.GoodsKindId
+                                               AND tmpMI_from.PartionGoodsDate = tmpMI_to.PartionGoodsDate
 
                                     -- нашли дл€ какой партии место отбора обнул€лось
                                     INNER JOIN tmpMI_ChoiceCell_mi ON tmpMI_ChoiceCell_mi.GoodsId     = tmpMI_to.GoodsId
@@ -289,17 +308,31 @@ BEGIN
                                                                   -- последн€€ парти€
                                                                   AND tmpMI_ChoiceCell_mi.Ord         = 1
 
+                                    -- только с этой датой отправл€ем в отбор
+                                    INNER JOIN (SELECT DISTINCT
+                                                       tmpMI_to.GoodsId
+                                                     , tmpMI_to.GoodsKindId
+                                                     , tmpMI_to.PartionGoodsDate
+                                                FROM tmpMI_to
+                                                WHERE tmpMI_to.Ord = 1
+                                              ) AS tmpMI_to_ord
+                                                ON tmpMI_to_ord.GoodsId          = tmpMI_to.GoodsId
+                                               AND tmpMI_to_ord.GoodsKindId      = tmpMI_to.GoodsKindId
+                                               AND tmpMI_to_ord.PartionGoodsDate = tmpMI_to.PartionGoodsDate
+
                                -- если партию не отправили в место хранени€
                                WHERE tmpMI_from.GoodsId IS NULL
                                     
                           )
-       INSERT INTO _tmpRes_PartionCell (MovementItemId_to, MovementItemId_from, MovementItemId_ChoiceCell)
+       INSERT INTO _tmpRes_PartionCell (MovementItemId_to, MovementItemId_from, MovementItemId_ChoiceCell, PartionGoodsDate)
           SELECT tmpMI_to_res.MovementItemId
                , tmpMI_from.MovementItemId
                , tmpMI_to_res.MovementItemId_ChoiceCell
+               , tmpMI_to_res.PartionGoodsDate
           FROM tmpMI_to_res
-               LEFT  JOIN tmpMI_from ON tmpMI_from.GoodsId     = tmpMI_to_res.GoodsId
-                                    AND tmpMI_from.GoodsKindId = tmpMI_to_res.GoodsKindId
+               LEFT JOIN tmpMI_from ON tmpMI_from.GoodsId          = tmpMI_to_res.GoodsId
+                                   AND tmpMI_from.GoodsKindId      = tmpMI_to_res.GoodsKindId
+                                   AND tmpMI_from.PartionGoodsDate = tmpMI_to_res.PartionGoodsDate
          ;
 
        -- перенесли протокол по €чейкам ’ранени€ из ¬звешиваний
@@ -316,9 +349,9 @@ BEGIN
           WHERE _tmpRes_PartionCell.MovementItemId_ChoiceCell = 0
          ;
 
-       -- отметили место отбора - теперь заполнено
+        -- отметили место отбора - теперь заполнено
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Checked(), _tmpRes_PartionCell.MovementItemId_ChoiceCell, FALSE)
-              , lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), _tmpRes_PartionCell.MovementItemId_ChoiceCell, inOperDate)
+              , lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), _tmpRes_PartionCell.MovementItemId_ChoiceCell, _tmpRes_PartionCell.PartionGoodsDate)
                  -- сохранили св€зь с <>
               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), _tmpRes_PartionCell.MovementItemId_ChoiceCell, inUserId)
                 -- сохранили свойство <>

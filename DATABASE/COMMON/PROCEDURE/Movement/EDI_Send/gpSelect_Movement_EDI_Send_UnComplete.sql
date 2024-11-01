@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_EDI_Send_UnComplete(
 )
 RETURNS TABLE (Id Integer, MovementId Integer
              , isEdiOrdspr Boolean, isEdiInvoice Boolean, isEdiDesadv Boolean
-             , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime, OperDatePartner TDateTime
+             , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime, OperDatePartner TDateTime, InsertDate_WeighingPartner TDateTime
              , InvNumber_Parent TVarChar, OperDate_Parent TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, RetailName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -21,6 +21,27 @@ BEGIN
 
          -- Результат
          RETURN QUERY
+           WITH tmpMovement_WeighingPartner AS (SELECT Movement_Order.Id             AS MovementId_order
+                                                     , MAX (MIDate_Insert.ValueData) AS InsertDate
+                                                FROM Movement 
+                                                     INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                                     ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                                                                    AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
+                                                     INNER JOIN Movement AS Movement_Order ON Movement_Order.Id     = MovementLinkMovement_Order.MovementChildId
+                                                                                          AND Movement_Order.DescId = zc_Movement_OrderExternal()
+                                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                                            AND MovementItem.isErased   = FALSE
+                                                     INNER JOIN MovementItemDate AS MIDate_Insert
+                                                                                 ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                                                AND MIDate_Insert.DescId         = zc_MIDate_Insert()
+                                                                            
+                                                WHERE Movement.DescId   = zc_Movement_WeighingPartner()
+                                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                                  AND Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
+                                                GROUP BY Movement_Order.Id
+                                               )
+
            SELECT
                  Movement.ParentId                              AS Id
                , Movement.Id                                    AS MovementId
@@ -31,6 +52,7 @@ BEGIN
                , Movement.OperDate                              AS OperDate
                , MovementDate_Update.ValueData                  AS UpdateDate
                , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
+               , tmpMovement_WeighingPartner.InsertDate :: TDateTime AS InsertDate_WeighingPartner
 
                , Movement_Parent.InvNumber                      AS InvNumber_Parent
                , Movement_Parent.OperDate                       AS OperDate_Parent
@@ -73,10 +95,18 @@ BEGIN
 
                 LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
+                LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                               ON MovementLinkMovement_Order.MovementId = Movement.ParentId
+                                              AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
+                LEFT JOIN tmpMovement_WeighingPartner ON tmpMovement_WeighingPartner.MovementId_order = MovementLinkMovement_Order.MovementChildId
+
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Movement_Parent.Id
                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                 LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                     ON ObjectLink_Unit_Branch.ObjectId = Object_From.Id
+                                    AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement_Parent.Id
@@ -102,7 +132,7 @@ BEGIN
              AND Movement.StatusId = zc_Enum_Status_UnComplete()
              AND Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
              AND ((Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
-              AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
+              AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
                   )
                -- Этих Отправляем Сразу
                OR (Object_Retail.Id IN (310855 -- !!!Варус!!!
@@ -111,17 +141,10 @@ BEGIN
                AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
                AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
                   )
-                  /*OR Movement_Parent.Id IN (
-29033328
-,29033497
-,29033800
-,29033868
-,29033933
-)*/
-               -- test
-               /*OR ((Movement_Parent.Id = 26526133 
-                AND Movement.Id        = 26526140
-                   ))*/
+               /*OR (COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) NOT IN (0, zc_Branch_Basis())
+               AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '5 MIN'
+               AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '5 MIN'
+                  )*/
                 )
            ORDER BY COALESCE (MovementDate_Update.ValueData, Movement.OperDate)
           ;

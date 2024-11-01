@@ -74,6 +74,9 @@ BEGIN
                                WHERE EXISTS (SELECT 1 FROM tmpRoleAccessKey_user WHERE tmpRoleAccessKey_user.AccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr())
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId
                                WHERE EXISTS (SELECT 1 FROM tmpRoleAccessKey_user WHERE tmpRoleAccessKey_user.AccessKeyId = zc_Enum_Process_AccessKey_DocumentKrRog())
+                         -- Zaporozhye
+                         UNION SELECT zc_Enum_Process_AccessKey_DocumentZaporozhye() AS AccessKeyId
+                               WHERE EXISTS (SELECT 1 FROM tmpRoleAccessKey_user WHERE tmpRoleAccessKey_user.AccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr())
                               )
          , tmpUnit AS (SELECT ObjectLink.ObjectId AS UnitId FROM ObjectLink WHERE ObjectLink.ChildObjectId = vbObjectId_Branch_Constraint AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch())
 

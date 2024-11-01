@@ -14,7 +14,7 @@ $BODY$
   DECLARE vbUserId   Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PromoTrade());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PromoTradeStateKind());
      
      
      IF inPromoTradeStateKindId = -1
@@ -107,6 +107,12 @@ BEGIN
 
 
      -- RAISE EXCEPTION 'Ошибка.OK';
+
+     IF inComment ILIKE 'тест'
+     THEN 
+         RAISE EXCEPTION 'Ошибка.тест.';
+     END IF;
+
 
 END;
 $BODY$

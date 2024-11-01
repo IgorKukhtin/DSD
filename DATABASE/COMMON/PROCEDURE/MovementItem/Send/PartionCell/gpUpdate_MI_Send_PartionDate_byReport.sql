@@ -67,6 +67,7 @@ BEGIN
 
      -- сохранили протокол
      --PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

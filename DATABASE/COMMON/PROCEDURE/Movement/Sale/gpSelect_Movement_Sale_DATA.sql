@@ -118,7 +118,14 @@ end if;
                                                            AND ObjectLink_Branch.DescId = zc_ObjectLink_BranchJuridical_Branch()
                                  WHERE ObjectLink_Juridical.ChildObjectId > 0
                                    AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
-                                   AND ObjectLink_Branch.ChildObjectId IN (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
+                                   AND ObjectLink_Branch.ChildObjectId IN (SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
+
+                                UNION
+                                 SELECT DISTINCT OL_JuridicalGroup.ObjectId AS JuridicalId
+                                 FROM ObjectLink AS OL_JuridicalGroup
+                                 WHERE OL_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+                                   AND OL_JuridicalGroup.ChildObjectId IN (SELECT DISTINCT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId)
+                                   AND vbIsZp = TRUE
 
                                 UNION
                                  SELECT Object_Juridical.Id AS JuridicalId
