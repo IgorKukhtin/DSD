@@ -112,7 +112,9 @@ BEGIN
                                                , inCurrencyPartnerValue := inCurrencyPartnerValue
                                                , inParPartnerValue      := inParPartnerValue
                                                , inParentId             := inParentId -- (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = ioId)
-                                               , inBankAccountPartnerId := (SELECT MovementItemLinkObject.ObjectId FROM MovementItem INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id  AND MovementItemLinkObject.DescId = zc_MILinkObject_BankAccount() WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master())
+                                               , inBankAccountPartnerId := (SELECT MovementItemLinkObject.ObjectId FROM MovementItem 
+                                                                             INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id  AND MovementItemLinkObject.DescId = zc_MILinkObject_BankAccount()
+                                                                            WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master())
                                                , inUserId               := vbUserId
                                                 );
 

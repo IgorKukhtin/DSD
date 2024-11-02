@@ -23,16 +23,17 @@ BEGIN
      -- определ€етс€ признак —оздание/ орректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     -- сохранили <Ёлемент документа>
+       -- сохранили <Ёлемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Detail(), inInfoMoneyId, inMovementId, inAmount, NULL);
 
-
-     -- пересчитали »тоговые суммы по накладной
-     --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-     -- сохранили протокол !!!после изменений!!!
+        -- сохранили протокол !!!после изменений!!!
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
+    /* if vbUserId = 9457 --AND 1=1 -- OR  inMovementId = 15504781
+     then
+         RAISE EXCEPTION 'Test. Ok';
+     end if;
+    */
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

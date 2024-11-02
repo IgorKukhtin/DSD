@@ -12,6 +12,8 @@ AS
 $BODY$
    DECLARE vbMovementId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbDescId     Integer;
+   DECLARE vbMovementDescId Integer;
 BEGIN
   -- !!!Только просмотр Аудитор!!!
   PERFORM lpCheckPeriodClose_auditor (NULL, NULL, NULL, inMovementItemId, NULL, inUserId);
@@ -22,15 +24,20 @@ BEGIN
 
   -- Обязательно меняем 
   UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
-         RETURNING MovementId INTO vbMovementId;
+         RETURNING MovementId, DescId INTO vbMovementId, vbDescId;
 
   -- проверка - связанные документы Изменять нельзя
   -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
 
-  -- определяем <Статус>
-  vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
+
+  -- определяем <Статус> и тип документа
+   SELECT StatusId ,DescId
+ INTO vbStatusId, vbMovementDescId
+   FROM Movement WHERE Id = vbMovementId;
+
   -- проверка - проведенные/удаленные документы Изменять нельзя
   IF vbStatusId <> zc_Enum_Status_UnComplete()
+  AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_BankAccount() OR vbDescId <> zc_MI_Detail())
   THEN
       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;

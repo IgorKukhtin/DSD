@@ -227,7 +227,7 @@ BEGIN
            , MovementFloat_ParPartnerValue.ValueData           AS ParPartnerValue
            , Partner_BankAccount_View.BankName
            , Partner_BankAccount_View.MFO
-           , Partner_BankAccount_View.Name      AS BankAccountName
+           , Partner_BankAccount_View.Name                     AS PartnerBankAccountName
            , COALESCE(MovementBoolean_isCopy.ValueData, FALSE) AS isCopy
 
            , Movement_Invoice.Id                 AS MovementId_Invoice

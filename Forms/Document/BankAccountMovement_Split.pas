@@ -102,11 +102,13 @@ type
     bbSetErasedDetail: TdxBarButton;
     bbSetUnErasedDetail: TdxBarButton;
     actChoiceFormInfoMoney: TOpenChoiceForm;
-    actInsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
     LineNum: TcxGridDBColumn;
     spInsertUpdateMIDetail: TdsdStoredProc;
     actUpdateDataSetDetail: TdsdUpdateDataSet;
+    spInsertUpdate_Split: TdsdStoredProc;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    bbMovementItemProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

@@ -47,15 +47,18 @@ BEGIN
             , View_InfoMoney.InfoMoneyId
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName_all  AS InfoMoneyName
-            , (COALESCE (MovementItem.Amount,0) - COALESCE ( (SELECT SUM (tmpMI.Amount) FROM tmpMI),0 )) ::TFloat AS Amount
+            , (ABS(COALESCE (MovementItem.Amount,0)) - COALESCE ( (SELECT SUM (tmpMI.Amount) FROM tmpMI),0 )) ::TFloat AS Amount
             , FALSE         AS isErased
        FROM MovementItem
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId 
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
+                                            ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+                                           AND COALESCE ((SELECT COUNT (*) FROM tmpMI),0) = 0
        WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.DescId = zc_MI_Master()
+         AND MovementItem.DescId = zc_MI_Master() 
+         AND  (ABS(COALESCE (MovementItem.Amount,0)) - COALESCE ( (SELECT SUM (tmpMI.Amount) FROM tmpMI),0 )) <> 0 
        ORDER BY 2
        ;
 

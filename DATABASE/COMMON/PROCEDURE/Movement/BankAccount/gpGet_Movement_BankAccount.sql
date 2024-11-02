@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, ParentId Integer, InvNumber TVarChar, OperDate TDateT
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InvNumberInvoice TVarChar
+             , BankAccountPartnerId Integer
              )
 AS
 $BODY$
@@ -80,7 +81,7 @@ BEGIN
            , CAST ('' as TVarChar)                             AS Comment_Invoice
              -- —чет(клиента)
            , CAST ('' AS TVarChar)                             AS InvNumberInvoice
-
+           , CAST (0 AS Integer)                               AS BankAccountPartnerId
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
       ;
 
@@ -147,6 +148,7 @@ BEGIN
              -- —чет(клиента)
            , MovementString_InvNumberInvoice.ValueData ::TVarChar AS InvNumberInvoice
 
+           , MILinkObject_BankAccount.ObjectId   AS BankAccountPartnerId
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
@@ -227,6 +229,10 @@ BEGIN
                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_BankAccount
+                                             ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
 
        WHERE Movement.Id =  inMovementId_Value;
 
