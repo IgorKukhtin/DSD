@@ -83,6 +83,10 @@ BEGIN
 
                  WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
                       THEN zc_Branch_Basis()
+
+                 WHEN ObjectLink_Unit_Branch.ChildObjectId = 301310 -- филиал Запорожье
+                      THEN zc_Branch_Basis()
+
                  ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
             END AS BranchId
             INTO vbMemberId, vbPersonalId, vbUnitId, vbBranchId
