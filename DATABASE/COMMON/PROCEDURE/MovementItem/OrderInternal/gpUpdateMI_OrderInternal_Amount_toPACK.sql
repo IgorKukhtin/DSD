@@ -33,59 +33,15 @@ $BODY$
    DECLARE vbNumber   TFloat;
    DECLARE vbdaycount_GoodsKind_8333 Integer;
    DECLARE vbdaycount_GoodsKind_8333_3 Integer;
+
+   DECLARE vbOperDate_Begin1 TDateTime;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_OrderInternal_toPACK());
     vbUserId:= lpGetUserBySession (inSession);
-
-     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-   /*INSERT INTO ResourseProtocol (UserId
-                                 , OperDate
-                                 , Value1
-                                 , Value2
-                                 , Value3
-                                 , Value4
-                                 , Value5
-                                 , Time1
-                                 , Time2
-                                 , Time3
-                                 , Time4
-                                 , Time5
-                                 , ProcName
-                                 , ProtocolData
-                                  )
-        SELECT vbUserId
-               -- во сколько началась
-             , CURRENT_TIMESTAMP
-             , 0 AS Value1
-             , 0 AS Value2
-             , NULL AS Value3
-             , NULL AS Value4
-             , NULL AS Value5
-               -- сколько всего выполнялась проц
-             , (CLOCK_TIMESTAMP() - CLOCK_TIMESTAMP()) :: INTERVAL AS Time1
-               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
-             , NULL AS Time2
-               -- сколько всего выполнялась проц lpSelectMinPrice_List
-             , NULL AS Time3
-               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
-             , NULL AS Time4
-               -- во сколько закончилась
-             , CLOCK_TIMESTAMP() AS Time5
-               -- ProcName
-             , 'gpUpdateMI_OrderInternal_Amount_toPACK - ' || (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId)
-               -- ProtocolData
-     , 'inMovementId:= '         || inMovementId :: TVarChar
-    || ', inId: = '              || inId         :: TVarChar
-    || ', inNumber: = '          || inNumber     :: TVarChar
-    || ', inIsClear:= '          || CASE WHEN inIsClear          = TRUE THEN 'TRUE' ELSE 'FALSE' END
-    || ', inIsPack:= '           || CASE WHEN inIsPack           = TRUE THEN 'TRUE' ELSE 'FALSE' END
-    || ', inIsPackSecond:= '     || CASE WHEN inIsPackSecond     = TRUE THEN 'TRUE' ELSE 'FALSE' END
-    || ', inIsPackNext:= '       || CASE WHEN inIsPackNext       = TRUE THEN 'TRUE' ELSE 'FALSE' END
-    || ', inIsPackNextSecond:= ' || CASE WHEN inIsPackNextSecond = TRUE THEN 'TRUE' ELSE 'FALSE' END
-    || ', inIsByDay:= '          || CASE WHEN inIsByDay          = TRUE THEN 'TRUE' ELSE 'FALSE' END
-    || ', '                      || inSession
-              ;*/
 
 
 /*
@@ -1929,6 +1885,56 @@ end if;
     END IF;-- ELSE IF inIsClear = TRUE
 
 
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+        SELECT vbUserId
+               -- во сколько началась
+             , vbOperDate_Begin1
+             , (SELECT COUNT (*) FROM tmp_pg)                                                    AS Value1
+             , (SELECT COUNT (*) FROM tmp_pg WHERE position( 'autovacuum: VACUUM' in query) = 1) AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - vbOperDate_Begin1) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , NULL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpUpdateMI_OrderInternal_Amount_toPACK'
+               -- ProtocolData
+             , inMovementId :: TVarChar
+    || ', ' || COALESCE (inId, 0) :: TVarChar
+    || ', ' || inNumber :: TVarChar
+    || ', ' || CASE WHEN inIsClear          = TRUE THEN 'TRUE' ELSE 'FALSE' END
+    || ', ' || CASE WHEN inIsPack           = TRUE THEN 'TRUE' ELSE 'FALSE' END
+    || ', ' || CASE WHEN inIsPackSecond     = TRUE THEN 'TRUE' ELSE 'FALSE' END
+    || ', ' || CASE WHEN inIsPackNext       = TRUE THEN 'TRUE' ELSE 'FALSE' END
+    || ', ' || CASE WHEN inIsPackNextSecond = TRUE THEN 'TRUE' ELSE 'FALSE' END
+    || ', ' || CASE WHEN inIsByDay          = TRUE THEN 'TRUE' ELSE 'FALSE' END
+    || ', ' || inSession
+              ;
+
 IF vbUserId = 5 AND inIsByDay = TRUE
    AND 1=0
 THEN
@@ -1953,7 +1959,7 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.11.17                                        *
 */
-
+-- select * from ResourseProtocol where ProcName ilike 'gpUpdateMI_OrderInternal_Amount_toPACK' order by id desc limit 4
 -- тест
 -- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7463900, inId:= 0, inNumber:= 100, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inIsByDay:= TRUE, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7463854, inId:= 0, inNumber:= 100, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inIsByDay:= TRUE, inSession:= zfCalc_UserAdmin());
