@@ -43,7 +43,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsKindPackId Integer, GoodsKindPackName TVarChar
              , GoodsRealId Integer, GoodsRealCode Integer, GoodsRealName TVarChar, MeasureRealName TVarChar
              , GoodsKindRealId Integer, GoodsKindRealName TVarChar 
-             , GoodsKindNewId Integer, GoodsKindNewName TVarChar            
+             , GoodsKindNewId Integer, GoodsKindNewName TVarChar
+             , GoodsIncomeId Integer, GoodsIncomeCode Integer, GoodsIncomeName TVarChar, MeasureIncomeName TVarChar
+             , GoodsKindIncomeId Integer, GoodsKindIncomeName TVarChar             
              , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
              , ReceiptGPId Integer, ReceiptGPCode TVarChar, ReceiptGPName TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
@@ -255,6 +257,13 @@ BEGIN
 
            , Object_GoodsKindNew.Id           AS GoodsKindNewId
            , Object_GoodsKindNew.ValueData    AS GoodsKindNewName
+
+           , Object_GoodsIncome.Id               AS GoodsIncomeId
+           , Object_GoodsIncome.ObjectCode       AS GoodsIncomeCode
+           , Object_GoodsIncome.ValueData        AS GoodsIncomeName
+           , Object_MeasureIncome.ValueData      AS MeasureIncomeName
+           , Object_GoodsKindIncome.Id           AS GoodsKindIncomeId
+           , Object_GoodsKindIncome.ValueData    AS GoodsKindIncomeName
 
            , Object_Receipt.Id                AS ReceiptId
            , ObjectString_Code.ValueData      AS ReceiptCode
@@ -542,6 +551,23 @@ BEGIN
                                 AND ObjectLink_GoodsByGoodsKind_GoodsKindReal.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindReal()
             LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = ObjectLink_GoodsByGoodsKind_GoodsKindReal.ChildObjectId
 
+            --
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsIncome
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsIncome.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsIncome.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsIncome()
+            LEFT JOIN Object AS Object_GoodsIncome ON Object_GoodsIncome.Id = ObjectLink_GoodsByGoodsKind_GoodsIncome.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsIncome_Measure
+                                 ON ObjectLink_GoodsIncome_Measure.ObjectId = Object_GoodsIncome.Id
+                                AND ObjectLink_GoodsIncome_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_MeasureIncome ON Object_MeasureIncome.Id = ObjectLink_GoodsIncome_Measure.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindIncome
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsKindIncome.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsKindIncome.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindIncome()
+            LEFT JOIN Object AS Object_GoodsKindIncome ON Object_GoodsKindIncome.Id = ObjectLink_GoodsByGoodsKind_GoodsKindIncome.ChildObjectId
+            --
+
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindNew
                                  ON ObjectLink_GoodsByGoodsKind_GoodsKindNew.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectLink_GoodsByGoodsKind_GoodsKindNew.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindNew()
@@ -593,6 +619,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.11.24        * GoodsIncomeId, GoodsKindIncomeId
  16.02.24        * PackLimit, isPackLimit
  22.01.24        * isPackOrder
  20.12.22        * GoodsKindNew

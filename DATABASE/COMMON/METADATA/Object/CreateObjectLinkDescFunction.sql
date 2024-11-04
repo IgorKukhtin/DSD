@@ -901,6 +901,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsByGoodsKind_GoodsKindNew() RETURNS
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_GoodsByGoodsKind_GoodsKindNew', 'Виды товаров (Новые)', zc_Object_GoodsByGoodsKind(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsByGoodsKind_GoodsKindNew');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsByGoodsKind_GoodsIncome() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsByGoodsKind_GoodsIncome'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_GoodsByGoodsKind_GoodsIncome', 'Товары (факт приход)', zc_Object_GoodsByGoodsKind(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsByGoodsKind_GoodsIncome');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsByGoodsKind_GoodsKindIncome() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsByGoodsKind_GoodsKindIncome'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_GoodsByGoodsKind_GoodsKindIncome', 'Виды товаров (факт приход)', zc_Object_GoodsByGoodsKind(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsByGoodsKind_GoodsKindIncome');
+
+
 --
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptChild_Parent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptChild_Parent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

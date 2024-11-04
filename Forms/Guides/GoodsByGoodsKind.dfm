@@ -721,6 +721,56 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 62
           end
+          object GoodsIncomeCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'.  ('#1092#1072#1082#1090' '#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsIncomeCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
+          object GoodsIncomeName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1092#1072#1082#1090' '#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsIncomeName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = GoodsIncomeOpenChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 155
+          end
+          object GoodsKindIncomeName: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1092#1072#1082#1090' '#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsKindIncomeName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = GoodsKindIncomeChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1092#1072#1082#1090' '#1087#1088#1080#1093#1086#1076')'
+            Width = 70
+          end
+          object MeasureIncomeName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'. ('#1092#1072#1082#1090' '#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'MeasureIncomeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1083#1103' '#1090#1086#1074#1072#1088#1072' ('#1092#1072#1082#1090' '#1087#1088#1080#1093#1086#1076')'
+            Options.Editing = False
+            Width = 62
+          end
           object isOrder: TcxGridDBColumn
             Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
             DataBinding.FieldName = 'isOrder'
@@ -1429,6 +1479,76 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         end>
       isShowModal = True
     end
+    object GoodsIncomeOpenChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Goods_ObjectForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsIncomeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsIncomeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsIncomeCode'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureIncomeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object GoodsKindIncomeChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Goods_ObjectForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = 'TGoodsKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindIncomeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindIncomeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object ReceiptGPChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1674,7 +1794,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsByGoodsKind'
-    Left = 120
+    Left = 104
     Top = 40
   end
   inherited BarManager: TdxBarManager
@@ -1911,6 +2031,22 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindNewId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsIncomeId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsIncomeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindIncomeId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindIncomeId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
