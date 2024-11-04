@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxContainer,
-  cxTextEdit, cxLabel;
+  cxTextEdit, cxLabel, dsdCommon;
 
 type
   TClientForm = class(TParentForm)
