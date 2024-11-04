@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime, 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime,  Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
-    IN inStartDate          TDateTime ,  
+    IN inStartDate          TDateTime ,
     IN inEndDate            TDateTime ,
     IN inIsMovement         Boolean   ,
     IN inIsPartion          Boolean   ,
@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
     IN inGoodsId            Integer   ,
     IN inChildGoodsGroupId  Integer   ,
     IN inChildGoodsId       Integer   ,
-    IN inFromId             Integer   ,    -- от кого 
+    IN inFromId             Integer   ,    -- от кого
     IN inToId               Integer   ,    -- кому
     IN inSession            TVarChar       -- сессия пользователя
 )
@@ -32,9 +32,11 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, DescName TVarChar
              , MeasureName TVarChar
              , MeasureName_child TVarChar
              , Amount_weight TFloat
-             , ChildAmount_weight TFloat  
+             , ChildAmount_weight TFloat
              , Comment TVarChar, ChildComment TVarChar
-             )   
+             , UnitName_from TVarChar
+             , UnitName_to TVarChar
+             )
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -50,7 +52,7 @@ BEGIN
     CREATE TEMP TABLE _tmpChildGoods (ChildGoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpFromGroup (FromId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpToGroup (ToId  Integer) ON COMMIT DROP;
-  
+
     IF inGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpGoods (GoodsId)
@@ -100,7 +102,7 @@ BEGIN
           SELECT Id FROM Object_Unit_View ;   --SELECT Id FROM Object WHERE DescId = zc_Object_Unit();
     END IF;
 
-  
+
     -- Результат
     RETURN QUERY
       WITH tmpMI_ContainerIn AS
@@ -111,10 +113,13 @@ BEGIN
                              , Object_SubjectDoc.ValueData                          AS SubjectDocName
                              , MIContainer.DescId                 AS MIContainerDescId
                              , MIContainer.ContainerId            AS ContainerId
+                             , MIContainer.MovementItemId         AS MovementItemId
                              , MIContainer.ObjectId_Analyzer      AS GoodsId
                              , CASE WHEN inIsPartion = FALSE THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END AS GoodsKindId
-                             , SUM (MIContainer.Amount)           AS Amount 
+                             , SUM (MIContainer.Amount)           AS Amount
                              , STRING_AGG (DISTINCT MIString_Comment.ValueData, ';') ::TVarChar AS Comment
+                             , MIContainer.ObjectExtId_Analyzer   AS FromId
+                             , MIContainer.WhereObjectId_Analyzer AS ToId
                         FROM MovementItemContainer AS MIContainer
                              INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.ObjectExtId_Analyzer
                              INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.WhereObjectId_Analyzer
@@ -142,18 +147,23 @@ BEGIN
                         WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                           AND MIContainer.isActive = TRUE
                           AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                          AND (COALESCE (MovementBoolean_Peresort.ValueData, FALSE) = inIsPeresort OR inIsPeresort = FALSE)
+                          AND (MovementBoolean_Peresort.ValueData = inIsPeresort OR inIsPeresort = FALSE)
                         GROUP BY CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END
                                , MovementBoolean_Peresort.ValueData
                                , CASE WHEN inIsMovement = TRUE THEN COALESCE (MovementBoolean_Closed.ValueData, FALSE) ELSE FALSE END
                                , MLO_DocumentKind.ObjectId
                                , MIContainer.DescId
                                , MIContainer.ContainerId
+                               , MIContainer.MovementItemId
                                , MIContainer.ObjectId_Analyzer
                                , CASE WHEN inIsPartion = FALSE THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END
                                , Object_SubjectDoc.ValueData
+                               , MIContainer.ObjectExtId_Analyzer
+                               , MIContainer.WhereObjectId_Analyzer
                        )
-         , tmpContainer_in AS (SELECT DISTINCT tmpMI_ContainerIn.ContainerId
+         , tmpContainer_in AS (SELECT DISTINCT 
+                                      tmpMI_ContainerIn.ContainerId
+                                    , tmpMI_ContainerIn.MovementItemId
                                     , tmpMI_ContainerIn.GoodsId
                                     , tmpMI_ContainerIn.GoodsKindId
                                     , CASE WHEN inIsPartion = FALSE THEN 0 ELSE COALESCE (ContainerLO_PartionGoods.ObjectId, 0) END AS PartionGoodsId
@@ -172,16 +182,22 @@ BEGIN
                              , tmpContainer_in.GoodsKindId       AS GoodsKindId_in
                              , tmpContainer_in.PartionGoodsId    AS PartionGoodsId_in
                              , MIContainer.ContainerId           AS ContainerId
-                             , MIContainer.ObjectId_Analyzer     AS GoodsId       
+                             , MIContainer.ObjectId_Analyzer     AS GoodsId
                              , CASE WHEN inIsPartion = FALSE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END AS GoodsKindId
                              , -1 * SUM (MIContainer.Amount)     AS Amount
                              , STRING_AGG (DISTINCT MIString_Comment.ValueData, ';') ::TVarChar AS Comment
+                             , MIContainer.WhereObjectId_Analyzer AS FromId
+                             , MIContainer.ObjectExtId_Analyzer   AS ToId
                         FROM tmpContainer_in
                              INNER JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.ContainerId_Analyzer = tmpContainer_in.ContainerId
                                                              AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                              AND MIContainer.isActive = FALSE
                                                              AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+
+                             INNER JOIN MovementItem ON MovementItem.Id       = MIContainer.MovementItemId
+                                                    AND MovementItem.ParentId = tmpContainer_in.MovementItemId
+
                              INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.WhereObjectId_Analyzer
                              INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.ObjectExtId_Analyzer
                              INNER JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = MIContainer.ObjectId_Analyzer
@@ -198,7 +214,7 @@ BEGIN
                              LEFT JOIN MovementItemString AS MIString_Comment
                                                           ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
                                                          AND MIString_Comment.DescId = zc_MIString_Comment()
-                        WHERE (COALESCE (MovementBoolean_Peresort.ValueData, FALSE) = inIsPeresort OR inIsPeresort = FALSE)
+                        WHERE (MovementBoolean_Peresort.ValueData = inIsPeresort OR inIsPeresort = FALSE)
                         GROUP BY CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END
                                , MIContainer.DescId
                                , MovementBoolean_Peresort.ValueData
@@ -210,14 +226,16 @@ BEGIN
                                , MIContainer.ContainerId
                                , MIContainer.ObjectId_Analyzer
                                , CASE WHEN inIsPartion = FALSE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END
+                               , MIContainer.WhereObjectId_Analyzer
+                               , MIContainer.ObjectExtId_Analyzer
                        )
 
 
-      -- Результат 
+      -- Результат
       SELECT Movement.InvNumber
            , Movement.OperDate
            , CAST (MovementDesc.ItemName AS TVarChar) AS DescName
-           
+
            , tmpOperationGroup.isPeresort :: Boolean AS isPeresort
            , tmpOperationGroup.isClosed   :: Boolean AS isClosed
            , Object_DocumentKind.ValueData  AS DocumentKindName
@@ -225,35 +243,35 @@ BEGIN
            , tmpOperationGroup.SubjectDocName :: TVarChar
 
            , Object_PartionGoods.ValueData AS PartionGoods
-           
+
            , Object_GoodsGroup.Id        AS GoodsGroupId
            , Object_GoodsGroup.ValueData AS GoodsGroupName
            , Object_Goods.Id             AS GoodsId
            , Object_Goods.ObjectCode     AS GoodsCode
            , Object_Goods.ValueData      AS GoodsName
-           , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale  
+           , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
            , Object_GoodsKind.ValueData  AS GoodsKindName
-           
+
            , tmpOperationGroup.OperCount :: TFloat AS Amount
            , 0                           :: TFloat AS HeadCount
            , tmpOperationGroup.OperSumm  :: TFloat AS Summ
 
            , Object_PartionGoodsChild.ValueData AS ChildPartionGoods
-           
-           , Object_GoodsGroupChild.ValueData AS ChildGoodsGroupName 
+
+           , Object_GoodsGroupChild.ValueData AS ChildGoodsGroupName
            , Object_GoodsChild.ObjectCode     AS ChildGoodsCode
-           , Object_GoodsChild.ValueData      AS ChildGoodsName 
+           , Object_GoodsChild.ValueData      AS ChildGoodsName
            , COALESCE (zfCalc_Text_replace (ObjectString_Goods_ScaleChild.ValueData, CHR (39), '`' ), '') :: TVarChar AS ChildName_Scale
            , Object_GoodsKindChild.ValueData  AS ChildGoodsKindName
-           
+
            , tmpOperationGroup.OperCount_out  :: TFloat AS ChildAmount
            , tmpOperationGroup.OperSumm_out   :: TFloat AS ChildSumm
 
-           , CASE WHEN COALESCE (tmpOperationGroup.OperCount,0) <> 0  
+           , CASE WHEN COALESCE (tmpOperationGroup.OperCount,0) <> 0
                   THEN COALESCE (tmpOperationGroup.OperCount_out,0) / (COALESCE (tmpOperationGroup.OperCount,0))
                   ELSE 0
              END                              :: TFloat AS AmountDel
-           
+
            , CASE WHEN tmpOperationGroup.OperCount     <> 0 THEN tmpOperationGroup.OperSumm     / tmpOperationGroup.OperCount     ELSE 0 END :: TFloat AS MainPrice
            , CASE WHEN tmpOperationGroup.OperCount_out <> 0 THEN tmpOperationGroup.OperSumm_out / tmpOperationGroup.OperCount_out ELSE 0 END :: TFloat AS ChildPrice
 
@@ -269,28 +287,33 @@ BEGIN
             * CASE WHEN ObjectLink_Goods_Measure_child.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight_child.ValueData
                    WHEN ObjectLink_Goods_Measure_child.ChildObjectId = zc_Measure_kg() THEN 1
                    ELSE 0
-              END) ::TFloat AS ChildAmount_weight 
-           
+              END) ::TFloat AS ChildAmount_weight
+
            , tmpOperationGroup.Comment     ::TVarChar
            , tmpOperationGroup.Comment_out ::TVarChar AS ChildComment
+
+           , Object_Unit_from.ValueData AS UnitName_from
+           , Object_Unit_to.ValueData   AS UnitName_to
 
       FROM (SELECT tmpMI_in.MovementId
                  , tmpMI_in.isPeresort
                  , tmpMI_in.isClosed
                  , tmpMI_in.DocumentKindId
                  , tmpMI_in.PartionGoodsId
-                 , tmpMI_in.GoodsId       
-                 , tmpMI_in.GoodsKindId 
+                 , tmpMI_in.GoodsId
+                 , tmpMI_in.GoodsKindId
                  , tmpMI_in.OperCount
                  , tmpMI_in.OperSumm
-                 , tmpMI_in.SubjectDocName 
+                 , tmpMI_in.SubjectDocName
                  , tmpMI_in.Comment
+                 , tmpMI_in.FromId
+                 , tmpMI_in.ToId
 
                  , tmpMI_out.PartionGoodsId AS PartionGoodsId_out
                  , tmpMI_out.GoodsId        AS GoodsId_out
                  , tmpMI_out.GoodsKindId    AS GoodsKindId_out
                  , tmpMI_out.OperCount      AS OperCount_out
-                 , tmpMI_out.OperSumm       AS OperSumm_out 
+                 , tmpMI_out.OperSumm       AS OperSumm_out
                  , tmpMI_out.Comment        AS Comment_out
 
             FROM (SELECT tmpMI_ContainerIn.MovementId
@@ -298,21 +321,27 @@ BEGIN
                        , tmpMI_ContainerIn.isClosed
                        , tmpMI_ContainerIn.DocumentKindId
                        , COALESCE (tmpContainer_in.PartionGoodsId, 0) AS PartionGoodsId
-                       , tmpMI_ContainerIn.GoodsId       
-                       , tmpMI_ContainerIn.GoodsKindId 
+                       , tmpMI_ContainerIn.GoodsId
+                       , tmpMI_ContainerIn.GoodsKindId
                        , STRING_AGG (DISTINCT tmpMI_ContainerIn.Comment, ';') AS Comment
                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperCount
                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperSumm
                        , STRING_AGG (DISTINCT tmpMI_ContainerIn.SubjectDocName, '; ') AS SubjectDocName
+                       , tmpMI_ContainerIn.FromId
+                       , tmpMI_ContainerIn.ToId
                   FROM tmpMI_ContainerIn
-                       LEFT JOIN tmpContainer_in ON tmpContainer_in.ContainerId = tmpMI_ContainerIn.ContainerId
+                       LEFT JOIN tmpContainer_in ON tmpContainer_in.ContainerId    = tmpMI_ContainerIn.ContainerId
+                                                AND tmpContainer_in.MovementItemId = tmpMI_ContainerIn.MovementItemId
+                                                AND tmpContainer_in.GoodsKindId    = tmpMI_ContainerIn.GoodsKindId
                   GROUP BY tmpMI_ContainerIn.MovementId
                          , tmpMI_ContainerIn.isPeresort
                          , tmpMI_ContainerIn.isClosed
                          , tmpMI_ContainerIn.DocumentKindId
                          , COALESCE (tmpContainer_in.PartionGoodsId, 0)
-                         , tmpMI_ContainerIn.GoodsId       
-                         , tmpMI_ContainerIn.GoodsKindId 
+                         , tmpMI_ContainerIn.GoodsId
+                         , tmpMI_ContainerIn.GoodsKindId
+                         , tmpMI_ContainerIn.FromId
+                         , tmpMI_ContainerIn.ToId
                  ) AS tmpMI_in
                  LEFT JOIN (SELECT tmpMI_ContainerOut.MovementId
                                  , tmpMI_ContainerOut.isPeresort
@@ -321,12 +350,14 @@ BEGIN
                                  , tmpMI_ContainerOut.GoodsId_in
                                  , tmpMI_ContainerOut.GoodsKindId_in
                                  , tmpMI_ContainerOut.PartionGoodsId_in
-                                 , tmpMI_ContainerOut.GoodsId       
-                                 , tmpMI_ContainerOut.GoodsKindId 
+                                 , tmpMI_ContainerOut.GoodsId
+                                 , tmpMI_ContainerOut.GoodsKindId
                                  , CASE WHEN inIsPartion = FALSE THEN 0 ELSE COALESCE (ContainerLO_PartionGoods.ObjectId, 0) END AS PartionGoodsId
                                  , STRING_AGG (DISTINCT tmpMI_ContainerOut.Comment, ';') AS Comment
                                  , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerOut.Amount ELSE 0 END) AS OperCount
                                  , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerOut.Amount ELSE 0 END) AS OperSumm
+                                 , tmpMI_ContainerOut.FromId
+                                 , tmpMI_ContainerOut.ToId
                             FROM tmpMI_ContainerOut
                                  LEFT JOIN ContainerLinkObject AS ContainerLO_PartionGoods
                                                                ON ContainerLO_PartionGoods.ContainerId = tmpMI_ContainerOut.ContainerId
@@ -338,15 +369,19 @@ BEGIN
                                    , tmpMI_ContainerOut.GoodsId_in
                                    , tmpMI_ContainerOut.GoodsKindId_in
                                    , tmpMI_ContainerOut.PartionGoodsId_in
-                                   , tmpMI_ContainerOut.GoodsId       
-                                   , tmpMI_ContainerOut.GoodsKindId 
+                                   , tmpMI_ContainerOut.GoodsId
+                                   , tmpMI_ContainerOut.GoodsKindId
                                    , CASE WHEN inIsPartion = FALSE THEN 0 ELSE COALESCE (ContainerLO_PartionGoods.ObjectId, 0) END
+                                   , tmpMI_ContainerOut.FromId
+                                   , tmpMI_ContainerOut.ToId
                            ) AS tmpMI_out ON tmpMI_out.MovementId        = tmpMI_in.MovementId
                                          AND tmpMI_out.isPeresort        = tmpMI_in.isPeresort
                                          AND tmpMI_out.DocumentKindId    = tmpMI_in.DocumentKindId
                                          AND tmpMI_out.GoodsId_in        = tmpMI_in.GoodsId
                                          AND tmpMI_out.GoodsKindId_in    = tmpMI_in.GoodsKindId
                                          AND tmpMI_out.PartionGoodsId_in = tmpMI_in.PartionGoodsId
+                                         AND tmpMI_out.FromId            = tmpMI_in.FromId
+                                         AND tmpMI_out.ToId              = tmpMI_in.ToId
             ) AS tmpOperationGroup
 
              LEFT JOIN Movement ON Movement.Id = tmpOperationGroup.MovementId
@@ -357,7 +392,10 @@ BEGIN
 
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
              LEFT JOIN Object AS Object_GoodsKindChild ON Object_GoodsKindChild.Id = tmpOperationGroup.GoodsKindId_out
-                    
+
+             LEFT JOIN Object AS Object_Unit_from ON Object_Unit_from.Id = tmpOperationGroup.FromId
+             LEFT JOIN Object AS Object_Unit_to   ON Object_Unit_to.Id   = tmpOperationGroup.ToId
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -403,13 +441,13 @@ BEGIN
               , Movement.OperDate
               , Object_PartionGoods.ValueData
               , Object_PartionGoodsChild.ValueData
-              , Object_GoodsGroup.ValueData 
-              , Object_Goods.ObjectCode     
-              , Object_Goods.ValueData      
-              , Object_GoodsKind.ValueData 
+              , Object_GoodsGroup.ValueData
+              , Object_Goods.ObjectCode
+              , Object_Goods.ValueData
+              , Object_GoodsKind.ValueData
               , Object_GoodsKindChild.ValueData */
   ;
-         
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -428,6 +466,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_ProductionUnion (inStartDate:= '03.06.2016', inEndDate:= '03.06.2016', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());
-
 -- SELECT * FROM gpReport_GoodsMI_ProductionUnion(inStartDate:= '01.09.2024', inEndDate:= '30.09.2024', inIsMovement:= FALSE, inIsPartion:= FALSE, inIsPeresort:=TRUE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());

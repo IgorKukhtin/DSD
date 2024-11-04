@@ -95,6 +95,22 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object UnitName_from: TcxGridDBColumn
+            Caption = #1054#1090' '#1050#1086#1075#1086
+            DataBinding.FieldName = 'UnitName_from'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object UnitName_to: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091
+            DataBinding.FieldName = 'UnitName_to'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
@@ -383,17 +399,18 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
   inherited Panel: TPanel
     Width = 1298
     Height = 73
-    ExplicitTop = 2
     ExplicitWidth = 1298
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 108
+      EditValue = 45292d
       Properties.SaveTime = False
       ExplicitLeft = 108
     end
     inherited deEnd: TcxDateEdit
       Left = 108
       Top = 29
+      EditValue = 45292d
       Properties.SaveTime = False
       ExplicitLeft = 108
       ExplicitTop = 29
