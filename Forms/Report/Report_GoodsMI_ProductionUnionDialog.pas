@@ -54,6 +54,7 @@ type
     GoodsGuides: TdsdGuides;
     ChildGoodsGuides: TdsdGuides;
     cbPeresort: TcxCheckBox;
+    cbisUnit: TcxCheckBox;
   private
     { Private declarations }
   public

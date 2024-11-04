@@ -488,15 +488,15 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
       Width = 169
     end
     object cbIsMovement: TcxCheckBox
-      Left = 964
-      Top = 2
+      Left = 966
+      Top = 5
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       TabOrder = 11
       Width = 172
     end
     object cbIsPartion: TcxCheckBox
       Left = 964
-      Top = 24
+      Top = 29
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1087#1072#1088#1090#1080#1080' '#1080#1083#1080' '#1074#1080#1076' '#1090#1086#1074'.'
       TabOrder = 12
       Width = 194
@@ -535,11 +535,18 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
       Width = 147
     end
     object cbPeresort: TcxCheckBox
-      Left = 964
-      Top = 47
+      Left = 1164
+      Top = 5
       Caption = #1055#1077#1088#1077#1089#1086#1088#1090
       TabOrder = 17
       Width = 77
+    end
+    object cbisUnit: TcxCheckBox
+      Left = 1164
+      Top = 32
+      Caption = #1055#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      TabOrder = 18
+      Width = 129
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -844,6 +851,14 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isUnit'
+          Value = Null
+          Component = cbisUnit
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -997,6 +1012,14 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
         Name = 'inIsPeresort'
         Value = Null
         Component = cbPeresort
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUnit'
+        Value = Null
+        Component = cbisUnit
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
