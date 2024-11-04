@@ -383,6 +383,7 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
   inherited Panel: TPanel
     Width = 1298
     Height = 73
+    ExplicitTop = 2
     ExplicitWidth = 1298
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
@@ -470,15 +471,15 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
       Width = 169
     end
     object cbIsMovement: TcxCheckBox
-      Left = 959
-      Top = 5
+      Left = 964
+      Top = 2
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       TabOrder = 11
       Width = 172
     end
     object cbIsPartion: TcxCheckBox
-      Left = 959
-      Top = 29
+      Left = 964
+      Top = 24
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1087#1072#1088#1090#1080#1080' '#1080#1083#1080' '#1074#1080#1076' '#1090#1086#1074'.'
       TabOrder = 12
       Width = 194
@@ -515,6 +516,13 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
         end>
       TabOrder = 16
       Width = 147
+    end
+    object cbPeresort: TcxCheckBox
+      Left = 964
+      Top = 47
+      Caption = #1055#1077#1088#1077#1089#1086#1088#1090
+      TabOrder = 17
+      Width = 77
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -673,8 +681,8 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_GoodsMI_ProductionSeparateUnionDialogForm'
-      FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateUnionDialogForm'
+      FormName = 'TReport_GoodsMI_ProductionUnionDialogForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionUnionDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -810,6 +818,14 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
           Component = cbIsPartion
           DataType = ftBoolean
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPeresort'
+          Value = Null
+          Component = cbPeresort
+          DataType = ftBoolean
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -956,6 +972,14 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
         Name = 'inIsPartion'
         Value = Null
         Component = cbIsPartion
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPeresort'
+        Value = Null
+        Component = cbPeresort
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

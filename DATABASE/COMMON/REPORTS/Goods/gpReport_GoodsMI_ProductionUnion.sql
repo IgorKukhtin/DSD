@@ -1,12 +1,14 @@
 -- Function: gpReport_GoodsMI_ProductionUnion ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime,  Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime,  Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
     IN inStartDate          TDateTime ,  
     IN inEndDate            TDateTime ,
     IN inIsMovement         Boolean   ,
     IN inIsPartion          Boolean   ,
+    IN inIsPeresort         Boolean   ,
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
     IN inChildGoodsGroupId  Integer   ,
@@ -140,6 +142,7 @@ BEGIN
                         WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                           AND MIContainer.isActive = TRUE
                           AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                          AND (COALESCE (MovementBoolean_Peresort.ValueData, FALSE) = inIsPeresort OR inIsPeresort = FALSE)
                         GROUP BY CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END
                                , MovementBoolean_Peresort.ValueData
                                , CASE WHEN inIsMovement = TRUE THEN COALESCE (MovementBoolean_Closed.ValueData, FALSE) ELSE FALSE END
@@ -195,6 +198,7 @@ BEGIN
                              LEFT JOIN MovementItemString AS MIString_Comment
                                                           ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
                                                          AND MIString_Comment.DescId = zc_MIString_Comment()
+                        WHERE (COALESCE (MovementBoolean_Peresort.ValueData, FALSE) = inIsPeresort OR inIsPeresort = FALSE)
                         GROUP BY CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END
                                , MIContainer.DescId
                                , MovementBoolean_Peresort.ValueData
@@ -413,6 +417,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.11.24         * inIsPeresort
  22.01.24         *
  21.01.23         *
  29.03.22         * isClosed
@@ -425,4 +430,4 @@ $BODY$
 -- ÚÂÒÚ
 -- SELECT * FROM gpReport_GoodsMI_ProductionUnion (inStartDate:= '03.06.2016', inEndDate:= '03.06.2016', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());
 
---   SELECT * FROM gpReport_GoodsMI_ProductionUnion(inStartDate:= '03.05.2024', inEndDate:= '03.05.2024', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_ProductionUnion(inStartDate:= '01.09.2024', inEndDate:= '30.09.2024', inIsMovement:= FALSE, inIsPartion:= FALSE, inIsPeresort:=TRUE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());

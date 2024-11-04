@@ -1547,7 +1547,8 @@ uses
   IncomeEdit_PartnerParam in '..\..\Forms\Document\IncomeEdit_PartnerParam.pas' {IncomeEdit_PartnerParamForm: TParentForm},
   PositionPropertyEdit in '..\..\Forms\Guides\PositionPropertyEdit.pas' {PositionPropertyEditForm: TParentForm},
   PositionProperty in '..\..\Forms\Guides\PositionProperty.pas' {PositionPropertyForm: TParentForm},
-  BankAccountMovement_Split in '..\..\Forms\Document\BankAccountMovement_Split.pas' {BankAccountMovement_SplitForm: TParentForm};
+  BankAccountMovement_Split in '..\..\Forms\Document\BankAccountMovement_Split.pas' {BankAccountMovement_SplitForm: TParentForm},
+  Report_GoodsMI_ProductionUnionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionUnionDialog.pas' {Report_GoodsMI_ProductionUnionDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
