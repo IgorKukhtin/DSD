@@ -1050,10 +1050,25 @@ BEGIN
            , MI_Invoice.Amount                           ::TFloat AS Amount_parent
            , COALESCE(MIFloat_Price_Invoice.ValueData,0) ::TFloat AS Price_parent
 
+           , Object_GoodsReal.Id            AS GoodsRealId
+           , Object_GoodsReal.ObjectCode    AS GoodsRealCode
+           , Object_GoodsReal.ValueData     AS GoodsRealName
+           , Object_GoodsKindReal.Id        AS GoodsKindRealId
+           , Object_GoodsKindReal.ValueData AS GoodsKindRealName
        FROM tmpMI_Goods
             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
                                 AND COALESCE (tmpRemains.PartionGoodsName,'') = COALESCE (tmpMI_Goods.PartionGoods,'')
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                             ON MILinkObject_GoodsReal.MovementItemId = tmpMI_Goods.MovementItemId
+                                            AND MILinkObject_GoodsReal.DescId = zc_MILinkObject_GoodsReal()
+            LEFT JOIN Object AS Object_GoodsReal ON Object_GoodsReal.Id = MILinkObject_GoodsReal.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                             ON MILinkObject_GoodsKindReal.MovementItemId = tmpMI_Goods.MovementItemId
+                                            AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
+            LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = MILinkObject_GoodsKindReal.ObjectId
+ 
             -- это док. "—чет"
             LEFT JOIN MovementItemFloat AS MIFloat_Invoice
                                         ON MIFloat_Invoice.MovementItemId = tmpMI_Goods.MovementItemId
