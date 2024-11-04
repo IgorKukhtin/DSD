@@ -565,6 +565,30 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
+          object GoodsRealCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'GoodsRealCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object GoodsRealName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'GoodsRealName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 200
+          end
+          object GoodsKindRealName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
           object PartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
