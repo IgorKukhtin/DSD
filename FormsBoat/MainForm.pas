@@ -19,7 +19,7 @@ uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons;
+  Vcl.StdCtrls, cxButtons, dsdCommon;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -107,14 +107,14 @@ type
     miReport_Loss: TMenuItem;
     actReport_Balance: TdsdOpenForm;
     actReport_ProfitLoss: TdsdOpenForm;
-    actReport_Cash: TdsdOpenForm;
+    actReport_BankAccount: TdsdOpenForm;
     miFinance: TMenuItem;
     miLine13: TMenuItem;
     miLine51_: TMenuItem;
     miReport_Basis: TMenuItem;
     miReport_Balance: TMenuItem;
     miReport_Finance: TMenuItem;
-    miReport_Cash: TMenuItem;
+    miReport_BankAccount: TMenuItem;
     miReport_ProfitLoss: TMenuItem;
     miLine10_1: TMenuItem;
     miLine10_2: TMenuItem;
@@ -124,34 +124,24 @@ type
     miLine71: TMenuItem;
     miReport_Remains_curr_: TMenuItem;
     miReport_GoodsCode: TMenuItem;
-    actReport_Account: TdsdOpenForm;
     miReport_ProductionOLAP: TMenuItem;
     miLine81_: TMenuItem;
-    actReport_MotionByClient: TdsdOpenForm;
-    miReport_MotionByPartner: TMenuItem;
     miProduction: TMenuItem;
     actReport_CollationByPartner: TdsdOpenForm;
     miReport_CollationByPartner: TMenuItem;
-    miReport_SaleOLAP: TMenuItem;
-    actReport_SaleOLAP: TdsdOpenForm;
     miReport_Unit: TMenuItem;
     miLine12: TMenuItem;
     miLine61: TMenuItem;
-    miLine92_: TMenuItem;
     actReport_Sale: TdsdOpenForm;
     miReport_Sale: TMenuItem;
     miLine803: TMenuItem;
     miLine804: TMenuItem;
     actReport_GoodsCode: TdsdOpenForm;
-    miReport_SaleOLAP_Analysis: TMenuItem;
     actCashJournal: TdsdOpenForm;
     miCashJournal: TMenuItem;
     miLine42_: TMenuItem;
-    miReport_Sale_Analysis: TMenuItem;
-    miLine93_: TMenuItem;
     actReport_ProfitLossPeriod: TdsdOpenForm;
     miReport_ProfitLossPeriod: TMenuItem;
-    miLine91_: TMenuItem;
     miImportType: TMenuItem;
     miImportSettings: TMenuItem;
     miLine805: TMenuItem;
