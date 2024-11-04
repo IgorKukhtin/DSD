@@ -79,6 +79,8 @@ type
     Comment: TcxGridDBColumn;
     ChildComment: TcxGridDBColumn;
     cbPeresort: TcxCheckBox;
+    UnitName_from: TcxGridDBColumn;
+    UnitName_to: TcxGridDBColumn;
   private
     { Private declarations }
   public
