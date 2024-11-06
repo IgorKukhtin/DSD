@@ -1972,7 +1972,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbsPrint'
+          ItemName = 'bbPrintReturnIn'
         end
         item
           Visible = True
@@ -1980,7 +1980,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbsPrintPack'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -2063,10 +2063,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbPrintReturnIn'
-        end
-        item
-          Visible = True
           ItemName = 'bbSeparator'
         end
         item
@@ -2108,6 +2104,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         item
           Visible = True
           ItemName = 'bbPrint_TTN'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmacPrint_Grid'
         end>
     end
     object bbSeparator: TdxBarSeparator
@@ -2122,11 +2126,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Category = 0
       Visible = ivAlways
       ImageIndex = 44
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbmacPrint_Grid'
-        end>
+      ItemLinks = <>
     end
     object bbmacPrint_Grid: TdxBarButton
       Action = macPrint_Grid

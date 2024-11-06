@@ -1761,19 +1761,15 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintReturnIn'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbsPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbsPrintPack'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1856,10 +1852,6 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbPrintReturnIn'
-        end
-        item
-          Visible = True
           ItemName = 'bbSeparator'
         end
         item
@@ -1893,6 +1885,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         item
           Visible = True
           ItemName = 'bbPrintAkt'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmactPrintPack'
         end>
     end
     object bbSeparator: TdxBarSeparator
@@ -1907,11 +1907,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       Category = 0
       Visible = ivAlways
       ImageIndex = 44
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbmactPrintPack'
-        end>
+      ItemLinks = <>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
