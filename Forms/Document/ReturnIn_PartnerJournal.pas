@@ -140,6 +140,14 @@ type
     actPrintAkt: TdsdPrintAction;
     mactPrintAkt: TMultiAction;
     bbPrintAkt: TdxBarButton;
+    actPrintPack: TdsdPrintAction;
+    mactPrintPack: TMultiAction;
+    bbmactPrintPack: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    bbSeparator: TdxBarSeparator;
+    bbsPrintPack: TdxBarSubItem;
+    macPrint_Pack_list: TMultiAction;
+    macPrint_Grid: TMultiAction;
   private
     { Private declarations }
   public

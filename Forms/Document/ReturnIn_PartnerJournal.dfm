@@ -867,9 +867,62 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     end
     inherited actMovementItemContainer: TdsdOpenForm [10]
     end
-    inherited actShowErased: TBooleanStoredProcAction [11]
+    object actPrintPack: TdsdPrintAction [11]
+      Category = 'PrintPack'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 44
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint: TdsdPrintAction [12]
+    inherited actShowErased: TBooleanStoredProcAction [12]
+    end
+    object actPrint: TdsdPrintAction [13]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -922,27 +975,27 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited mactReCompleteList: TMultiAction [13]
+    inherited mactReCompleteList: TMultiAction [14]
     end
-    inherited actGridToExcel: TdsdGridToExcel [14]
+    inherited actGridToExcel: TdsdGridToExcel [15]
     end
-    inherited mactCompleteList: TMultiAction [15]
+    inherited mactCompleteList: TMultiAction [16]
     end
-    inherited actInsertMask: TdsdInsertUpdateAction [16]
+    inherited actInsertMask: TdsdInsertUpdateAction [17]
     end
-    inherited mactUnCompleteList: TMultiAction [17]
+    inherited mactUnCompleteList: TMultiAction [18]
     end
-    inherited spReCompete: TdsdExecStoredProc [18]
+    inherited spReCompete: TdsdExecStoredProc [19]
     end
-    inherited MovementProtocolOpenForm: TdsdOpenForm [20]
+    inherited MovementProtocolOpenForm: TdsdOpenForm [21]
     end
-    inherited mactSimpleReCompleteList: TMultiAction [21]
+    inherited mactSimpleReCompleteList: TMultiAction [22]
     end
-    inherited mactSimpleCompleteList: TMultiAction [22]
+    inherited mactSimpleCompleteList: TMultiAction [23]
     end
-    inherited mactSimpleUncompleteList: TMultiAction [23]
+    inherited mactSimpleUncompleteList: TMultiAction [24]
     end
-    inherited mactSimpleErasedList: TMultiAction [24]
+    inherited mactSimpleErasedList: TMultiAction [25]
     end
     object actSPPrintProcNamePriceCorr: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -965,6 +1018,35 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           StoredProc = spGetReportName
         end>
       Caption = 'actSPPrintProcName'
+    end
+    object mactPrintPack: TMultiAction
+      Category = 'PrintPack'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintProcName
+        end
+        item
+          Action = actPrintPack
+        end
+        item
+          Action = actSPSavePrintState
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      ImageIndex = 44
     end
     object mactPrintPriceCorr: TMultiAction
       Category = 'DSDLib'
@@ -1486,6 +1568,58 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object macPrint_Pack_list: TMultiAction
+      Category = 'PrintPack'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = mactPrintPack
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      ImageIndex = 44
+    end
+    object macPrint_Grid: TMultiAction
+      Category = 'PrintPack'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = macPrint_Pack_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100'? '
+      InfoAfterExecute = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      ImageIndex = 44
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1627,7 +1761,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintReturnIn'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -1635,35 +1769,11 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintCorr'
+          ItemName = 'bbsPrintPack'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Return_By_TaxCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTaxCorrective_Client'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTaxCorrective_Us'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintAkt'
         end
         item
           Visible = True
@@ -1733,6 +1843,75 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     object bbPrintAkt: TdxBarButton
       Action = actPrintAkt
       Category = 0
+    end
+    object bbmactPrintPack: TdxBarButton
+      Action = macPrint_Grid
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrintReturnIn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintCorr'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Return_By_TaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTaxCorrective_Client'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTaxCorrective_Us'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintAkt'
+        end>
+    end
+    object bbSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbsPrintPack: TdxBarSubItem
+      Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 44
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbmactPrintPack'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
