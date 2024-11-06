@@ -3,8 +3,8 @@ object Report_GoodsMI_ProductionUnionDialogForm: TReport_GoodsMI_ProductionUnion
   Top = 0
   BorderStyle = bsDialog
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077')>'
-  ClientHeight = 277
-  ClientWidth = 460
+  ClientHeight = 274
+  ClientWidth = 462
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -182,7 +182,14 @@ object Report_GoodsMI_ProductionUnionDialogForm: TReport_GoodsMI_ProductionUnion
     Top = 53
     Caption = #1055#1077#1088#1077#1089#1086#1088#1090
     TabOrder = 20
-    Width = 156
+    Width = 74
+  end
+  object cbisUnit: TcxCheckBox
+    Left = 323
+    Top = 54
+    Caption = #1055#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+    TabOrder = 21
+    Width = 127
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -347,6 +354,14 @@ object Report_GoodsMI_ProductionUnionDialogForm: TReport_GoodsMI_ProductionUnion
         Name = 'isPeresort'
         Value = Null
         Component = cbPeresort
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isUnit'
+        Value = Null
+        Component = cbisUnit
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

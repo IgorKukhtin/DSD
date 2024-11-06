@@ -81,6 +81,7 @@ type
     cbPeresort: TcxCheckBox;
     UnitName_from: TcxGridDBColumn;
     UnitName_to: TcxGridDBColumn;
+    cbisUnit: TcxCheckBox;
   private
     { Private declarations }
   public

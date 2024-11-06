@@ -24,6 +24,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , isErased Boolean
              , MIId_Invoice Integer, InvNumber_Invoice TVarChar
              , Amount_parent TFloat, Price_parent TFloat
+             , GoodsRealId Integer, GoodsRealCode Integer, GoodsRealName TVarChar
+             , GoodsKindRealId Integer, GoodsKindRealName TVarChar
               )
 AS
 $BODY$
@@ -279,6 +281,12 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Amount_parent
            , CAST (NULL AS TFloat)      AS Price_parent
 
+           , CAST (0 AS Integer)        AS GoodsRealId
+           , CAST (0 AS Integer)        AS GoodsRealCode
+           , CAST (NULL AS TVarChar)    AS GoodsRealName
+           , CAST (0 AS Integer)        AS GoodsKindRealId
+           , CAST (NULL AS TVarChar)    AS GoodsKindRealName
+
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
@@ -391,6 +399,11 @@ BEGIN
            , tmpMI.Amount_parent   ::TFloat
            , tmpMI.Price_parent    ::TFloat
 
+           , Object_GoodsReal.Id            AS GoodsRealId
+           , Object_GoodsReal.ObjectCode    AS GoodsRealCode
+           , Object_GoodsReal.ValueData     AS GoodsRealName
+           , Object_GoodsKindReal.Id        AS GoodsKindRealId
+           , Object_GoodsKindReal.ValueData AS GoodsKindRealName
        FROM tmpResult AS tmpMI
             LEFT JOIN MovementItem ON MovementItem.Id = tmpMI.Id
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -435,6 +448,17 @@ BEGIN
             LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
 
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                             ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsReal.DescId = zc_MILinkObject_GoodsReal()
+            LEFT JOIN Object AS Object_GoodsReal ON Object_GoodsReal.Id = MILinkObject_GoodsReal.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                             ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
+            LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = MILinkObject_GoodsKindReal.ObjectId
+
 
             -- это док. "—чет"
             LEFT JOIN MovementItem AS MI_Invoice ON MI_Invoice.Id = tmpMI.MIId_Invoice
@@ -669,6 +693,11 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Amount_parent
            , CAST (NULL AS TFloat)      AS Price_parent
 
+           , CAST (0 AS Integer)        AS GoodsRealId
+           , CAST (0 AS Integer)        AS GoodsRealCode
+           , CAST (NULL AS TVarChar)    AS GoodsRealName
+           , CAST (0 AS Integer)        AS GoodsKindRealId
+           , CAST (NULL AS TVarChar)    AS GoodsKindRealName
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
@@ -776,6 +805,12 @@ BEGIN
            , tmpMI.Amount_parent   ::TFloat
            , tmpMI.Price_parent    ::TFloat
 
+           , Object_GoodsReal.Id            AS GoodsRealId
+           , Object_GoodsReal.ObjectCode    AS GoodsRealCode
+           , Object_GoodsReal.ValueData     AS GoodsRealName
+           , Object_GoodsKindReal.Id        AS GoodsKindRealId
+           , Object_GoodsKindReal.ValueData AS GoodsKindRealName
+
        FROM tmpResult AS tmpMI
             LEFT JOIN MovementItem ON MovementItem.Id = tmpMI.Id
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -816,6 +851,16 @@ BEGIN
                                              ON MILinkObject_Storage.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
             LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                             ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsReal.DescId = zc_MILinkObject_GoodsReal()
+            LEFT JOIN Object AS Object_GoodsReal ON Object_GoodsReal.Id = MILinkObject_GoodsReal.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                             ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
+            LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = MILinkObject_GoodsKindReal.ObjectId
 
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
 
@@ -1005,10 +1050,25 @@ BEGIN
            , MI_Invoice.Amount                           ::TFloat AS Amount_parent
            , COALESCE(MIFloat_Price_Invoice.ValueData,0) ::TFloat AS Price_parent
 
+           , Object_GoodsReal.Id            AS GoodsRealId
+           , Object_GoodsReal.ObjectCode    AS GoodsRealCode
+           , Object_GoodsReal.ValueData     AS GoodsRealName
+           , Object_GoodsKindReal.Id        AS GoodsKindRealId
+           , Object_GoodsKindReal.ValueData AS GoodsKindRealName
        FROM tmpMI_Goods
             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
                                 AND COALESCE (tmpRemains.PartionGoodsName,'') = COALESCE (tmpMI_Goods.PartionGoods,'')
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                             ON MILinkObject_GoodsReal.MovementItemId = tmpMI_Goods.MovementItemId
+                                            AND MILinkObject_GoodsReal.DescId = zc_MILinkObject_GoodsReal()
+            LEFT JOIN Object AS Object_GoodsReal ON Object_GoodsReal.Id = MILinkObject_GoodsReal.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                             ON MILinkObject_GoodsKindReal.MovementItemId = tmpMI_Goods.MovementItemId
+                                            AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
+            LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = MILinkObject_GoodsKindReal.ObjectId
+ 
             -- это док. "—чет"
             LEFT JOIN MovementItemFloat AS MIFloat_Invoice
                                         ON MIFloat_Invoice.MovementItemId = tmpMI_Goods.MovementItemId

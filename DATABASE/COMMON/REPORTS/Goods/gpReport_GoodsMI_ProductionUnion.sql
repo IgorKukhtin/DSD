@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime,  Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime,  Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime,  Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
     IN inStartDate          TDateTime ,
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
     IN inIsMovement         Boolean   ,
     IN inIsPartion          Boolean   ,
     IN inIsPeresort         Boolean   ,
+    IN inIsUnit             Boolean   ,
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
     IN inChildGoodsGroupId  Integer   ,
@@ -118,8 +120,8 @@ BEGIN
                              , CASE WHEN inIsPartion = FALSE THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END AS GoodsKindId
                              , SUM (MIContainer.Amount)           AS Amount
                              , STRING_AGG (DISTINCT MIString_Comment.ValueData, ';') ::TVarChar AS Comment
-                             , MIContainer.ObjectExtId_Analyzer   AS FromId
-                             , MIContainer.WhereObjectId_Analyzer AS ToId
+                             , CASE WHEN inIsUnit = TRUE THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END   AS FromId
+                             , CASE WHEN inIsUnit = TRUE THEN MIContainer.WhereObjectId_Analyzer ELSE 0 END AS ToId
                         FROM MovementItemContainer AS MIContainer
                              INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.ObjectExtId_Analyzer
                              INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.WhereObjectId_Analyzer
@@ -158,8 +160,8 @@ BEGIN
                                , MIContainer.ObjectId_Analyzer
                                , CASE WHEN inIsPartion = FALSE THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END
                                , Object_SubjectDoc.ValueData
-                               , MIContainer.ObjectExtId_Analyzer
-                               , MIContainer.WhereObjectId_Analyzer
+                               , CASE WHEN inIsUnit = TRUE THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
+                               , CASE WHEN inIsUnit = TRUE THEN MIContainer.WhereObjectId_Analyzer ELSE 0 END
                        )
          , tmpContainer_in AS (SELECT DISTINCT 
                                       tmpMI_ContainerIn.ContainerId
@@ -186,8 +188,8 @@ BEGIN
                              , CASE WHEN inIsPartion = FALSE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END AS GoodsKindId
                              , -1 * SUM (MIContainer.Amount)     AS Amount
                              , STRING_AGG (DISTINCT MIString_Comment.ValueData, ';') ::TVarChar AS Comment
-                             , MIContainer.WhereObjectId_Analyzer AS FromId
-                             , MIContainer.ObjectExtId_Analyzer   AS ToId
+                             , CASE WHEN inIsUnit = TRUE THEN MIContainer.WhereObjectId_Analyzer ELSE 0 END AS FromId
+                             , CASE WHEN inIsUnit = TRUE THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END   AS ToId
                         FROM tmpContainer_in
                              INNER JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.ContainerId_Analyzer = tmpContainer_in.ContainerId
@@ -226,8 +228,8 @@ BEGIN
                                , MIContainer.ContainerId
                                , MIContainer.ObjectId_Analyzer
                                , CASE WHEN inIsPartion = FALSE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END
-                               , MIContainer.WhereObjectId_Analyzer
-                               , MIContainer.ObjectExtId_Analyzer
+                               , CASE WHEN inIsUnit = TRUE THEN MIContainer.WhereObjectId_Analyzer ELSE 0 END
+                               , CASE WHEN inIsUnit = TRUE THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
                        )
 
 
@@ -466,4 +468,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_ProductionUnion(inStartDate:= '01.09.2024', inEndDate:= '30.09.2024', inIsMovement:= FALSE, inIsPartion:= FALSE, inIsPeresort:=TRUE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_ProductionUnion(inStartDate:= '01.09.2024', inEndDate:= '30.09.2024', inIsMovement:= FALSE, inIsPartion:= FALSE, inIsPeresort:=TRUE, inIsUnit:= TRUE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());
