@@ -141,7 +141,7 @@ BEGIN
     FROM tmpText
          LEFT JOIN MovementFloat AS MovementFloat_Report
                                  ON MovementFloat_Report.MovementId = vbMovementId_PromoTradeCondition
-                                AND MovementFloat_Report.DescId = zc_MovementFloat_Market()
+                                AND MovementFloat_Report.DescId = zc_MovementFloat_MarketSumm()
     WHERE tmpText.Ord = 9
         
 ORDER by 1  
