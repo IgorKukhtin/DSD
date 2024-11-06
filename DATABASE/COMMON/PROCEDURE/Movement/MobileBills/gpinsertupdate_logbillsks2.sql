@@ -245,7 +245,8 @@ BEGIN
                , tmpMobileBills_prev.MobileTariffId                 AS MobileTariffId_prev
           FROM _tmpItem
                INNER JOIN Object AS Object_MobileEmployee
-                                 ON Object_MobileEmployee.DescId = zc_Object_MobileEmployee()
+                                 ON Object_MobileEmployee.DescId                = zc_Object_MobileEmployee()
+                                AND Object_MobileEmployee.isErased              = FALSE
                                 AND RIGHT (Object_MobileEmployee.ValueData, 10) = _tmpItem.PhoneNum -- ???только по правым 10 цифрам???
                LEFT JOIN _tmpMobileEmployee ON _tmpMobileEmployee.Id = Object_MobileEmployee.Id
                LEFT JOIN tmpMobileBills_prev ON tmpMobileBills_prev.MobileEmployeeId = Object_MobileEmployee.Id
