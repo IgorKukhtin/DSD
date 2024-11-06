@@ -84,7 +84,7 @@ BEGIN
         --замена
         inValue:= REPLACE (TRIM (inValue), ',', '.');
         --Logist
-        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Market(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MarketSumm(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
     END IF;
 
 END;
