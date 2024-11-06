@@ -81,6 +81,15 @@ BEGIN
         ;
 
      ELSE
+         -- 
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.ObjectCode = inGoodsCode AND Object.DescId = zc_Object_Goods())
+         THEN
+             RAISE EXCEPTION 'Ошибка.Код товара <%> не уникальный.', inGoodsCode;
+         END IF
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.ValueData = TRIM (inGoodsKindName) AND Object.DescId = zc_Object_GoodsKind());
+         THEN
+             RAISE EXCEPTION 'Ошибка.Вид товара <%> не уникальный.', inGoodsKindName;
+         END IF
          -- Находим товары
          vbGoodsId        := (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inGoodsCode AND Object.DescId = zc_Object_Goods());
          -- находим вид товара
@@ -132,7 +141,7 @@ BEGIN
                             );
          END IF;
 
-         IF COALESCE (vbPartnerId,0) = 0
+         IF COALESCE (vbPartnerId,0) = 0 AND vbUserId <> 5
          THEN
              RAISE EXCEPTION 'Ошибка.Контрагент <%> не найден.',inPartnerName;
          END IF;
@@ -204,6 +213,12 @@ BEGIN
                                                               , inComment               := ''
                                                               , inSession               := inSession
                                                                );
+     END IF;
+
+
+     IF vbUserId = 5
+     THEN
+         RAISE EXCEPTION 'Ошибка.ok.';
      END IF;
 
 
