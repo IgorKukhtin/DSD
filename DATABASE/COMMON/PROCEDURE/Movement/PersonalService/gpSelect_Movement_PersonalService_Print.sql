@@ -536,10 +536,10 @@ BEGIN
                             , tmpMI_all.MemberId
                             , tmpMI_all.PersonalServiceListId
                        FROM tmpMI_all  
-                            INNER JOIN (SELECT OP.ReportKindId AS MovementItemId
+                            INNER JOIN (SELECT OP.ObjectId AS MovementItemId
                                         FROM Object_Print AS OP
                                         WHERE OP.UserId = vbUserId
-                                          AND OP.ObjectId = inMovementId) AS tmpOP ON tmpOP.MovementItemId = tmpMI_all.MovementItemId
+                                          AND OP.ReportKindId = inMovementId) AS tmpOP ON tmpOP.MovementItemId = tmpMI_all.MovementItemId
                        WHERE inIsList = TRUE
                        )  
           , tmpMI AS (SELECT tmpMI_all_find.PersonalId

@@ -153,6 +153,24 @@ type
     actPrint_TTN: TdsdPrintAction;
     mactPrint_TTN: TMultiAction;
     bbPrint_TTN: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    bbSeparator: TdxBarSeparator;
+    bbsPrintPack: TdxBarSubItem;
+    mactPrintPack: TMultiAction;
+    actPrintPack: TdsdPrintAction;
+    macPrint_Pack_list: TMultiAction;
+    macPrint_Grid: TMultiAction;
+    bbmacPrint_Grid: TdxBarButton;
+    actPrintPack_copy2: TdsdPrintAction;
+    actPrintPack_copy3: TdsdPrintAction;
+    mactPrintPack_copy3: TMultiAction;
+    mactPrintPack_copy2: TMultiAction;
+    macPrint_Pack_list3: TMultiAction;
+    macPrint_Pack_list2: TMultiAction;
+    macPrint_Grid3: TMultiAction;
+    macPrint_Grid2: TMultiAction;
+    bbmacPrint_Grid2: TdxBarButton;
+    bbmacPrint_Grid3: TdxBarButton;
   private
     { Private declarations }
   public
