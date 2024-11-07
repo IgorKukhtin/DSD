@@ -362,8 +362,13 @@ BEGIN
        , ObjectString_Address.ValueData  AS Address
        , COALESCE (Partner_GPSN.ValueData,0) ::Tfloat  AS GPSN
        , COALESCE (Partner_GPSE.ValueData,0) ::Tfloat  AS GPSE
+
        , NULL :: Integer AS PaidKindId
        , NULL :: TVarChar AS PaidKindName
+
+       , NULL :: Integer AS PaidKindId_contract
+       , NULL :: TVarChar AS PaidKindName_contract
+
        , NULL :: Integer ContractStateKindCode
        , NULL :: TVarChar AS ContractComment
        , FALSE:: Boolean  AS isNotTareReturning
