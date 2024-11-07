@@ -230,6 +230,8 @@ type
     bbInsertRecordGGPP: TdxBarButton;
     bbInsertRecordGD: TdxBarButton;
     dxBarSeparator1: TdxBarSeparator;
+    spErasedMIMaster_all: TdsdStoredProc;
+    actSetErasedMIMaster_all: TdsdExecStoredProc;
   private
     { Private declarations }
   public
