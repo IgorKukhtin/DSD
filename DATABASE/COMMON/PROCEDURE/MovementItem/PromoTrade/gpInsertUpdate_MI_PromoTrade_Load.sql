@@ -32,6 +32,12 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PromoTrade());
 
 
+     IF TRIM (inArticle) = '' AND inGoodsCode = 0 AND TRIM (inGoodsName) = '' AND TRIM (inPartnerName) = ''
+     THEN
+         RETURN;
+     END IF;
+
+
      IF TRIM (inArticle) <> ''
      THEN
          -- Находим
@@ -70,7 +76,7 @@ BEGIN
                                       ON ObjectString_Article.ObjectId  = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                      AND ObjectString_Article.DescId    = zc_ObjectString_GoodsPropertyValue_Article()
                                      -- По Артикулу
-                                     AND ObjectString_Article.ValueData = inArticle
+                                     AND ObjectString_Article.ValueData = TRIM (inArticle)
 
               LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                    ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -85,11 +91,11 @@ BEGIN
          IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.ObjectCode = inGoodsCode AND Object.DescId = zc_Object_Goods())
          THEN
              RAISE EXCEPTION 'Ошибка.Код товара <%> не уникальный.', inGoodsCode;
-         END IF
-         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.ValueData = TRIM (inGoodsKindName) AND Object.DescId = zc_Object_GoodsKind());
+         END IF;
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.ValueData = TRIM (inGoodsKindName) AND Object.DescId = zc_Object_GoodsKind())
          THEN
              RAISE EXCEPTION 'Ошибка.Вид товара <%> не уникальный.', inGoodsKindName;
-         END IF
+         END IF;
          -- Находим товары
          vbGoodsId        := (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inGoodsCode AND Object.DescId = zc_Object_Goods());
          -- находим вид товара
@@ -101,8 +107,27 @@ BEGIN
      -- находим Контрагента (если есть)
      IF COALESCE (inPartnerName,'') <> ''
      THEN
+
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.ValueData = TRIM (inPartnerName) AND Object.DescId = zc_Object_Partner() AND Object.isErased = FALSE)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Контрагент <%> не уникальный.', inPartnerName;
+         END IF;
+
          -- поиск
-         vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inPartnerName) AND Object.DescId = zc_Object_Partner());
+         vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inPartnerName) AND Object.DescId = zc_Object_Partner() AND Object.isErased = FALSE);
+
+         -- если не нашли
+         IF COALESCE (vbPartnerId,0) = 0
+         THEN
+             IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.ValueData = TRIM (inPartnerName) AND Object.DescId = zc_Object_Partner())
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Контрагент <%> не уникальный.', inPartnerName;
+             END IF;
+    
+             -- поиск
+             vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inPartnerName) AND Object.DescId = zc_Object_Partner());
+         END IF;
+
 
          -- если не нашли
          IF COALESCE (vbPartnerId,0) = 0
@@ -216,7 +241,7 @@ BEGIN
      END IF;
 
 
-     IF vbUserId = 5
+     IF vbUserId = 5 AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.ok.';
      END IF;
