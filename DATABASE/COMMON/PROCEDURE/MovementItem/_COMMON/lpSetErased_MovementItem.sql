@@ -55,7 +55,7 @@
    IF vbDescId <> zc_MI_Sign()
    THEN
        -- !!!не всегда!!!
-       IF vbDescId <> zc_MI_Child() OR vbMovementDescId NOT IN (zc_Movement_PersonalService(), zc_Movement_OrderGoodsDetail())
+       IF vbDescId <> zc_MI_Child() OR vbMovementDescId NOT IN (zc_Movement_PersonalService(), zc_Movement_OrderGoodsDetail(), zc_Movement_PromoTrade())
        THEN
            -- пересчитали Итоговые суммы по накладной
            PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
