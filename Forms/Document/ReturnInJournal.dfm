@@ -317,6 +317,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             Options.Editing = False
             Width = 82
           end
+          object RouteName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1096#1088#1091#1090
+            DataBinding.FieldName = 'RouteName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
