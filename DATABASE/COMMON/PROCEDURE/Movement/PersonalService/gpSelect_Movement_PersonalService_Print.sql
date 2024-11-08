@@ -702,10 +702,67 @@ BEGIN
                               WHERE CLO_PersonalServiceList.ObjectId = vbPersonalServiceListId
                                 AND CLO_PersonalServiceList.DescId   = zc_ContainerLinkObject_PersonalServiceList()
                              )
-     , tmpMIContainer_pay AS (SELECT -- SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
-                                     SUM (CASE WHEN (/*MIContainer.Amount = 2000 OR*/ MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()/*, zc_Enum_AnalyzerId_Cash_PersonalCardSecond()*/)) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
-                                   , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()/*, zc_Enum_AnalyzerId_Cash_PersonalCardSecond()*/) AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_ret
-                                   , SUM (CASE WHEN /*MIContainer.Amount <> 2000 AND*/ MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+/*     , tmpMIContainer_pay_all AS (SELECT tmpContainer_pay.MemberId
+                                       , tmpContainer_pay.PositionId
+                                       , tmpContainer_pay.UnitId
+                                       , MIContainer.*
+
+                                  FROM tmpContainer_pay
+                                       INNER JOIN MovementItemContainer AS MIContainer
+                                                                        ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
+                                                                       AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                       AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                 )
+     , tmpAvance_ps AS (SELECT MovementItem.MovementId                               AS MovementId
+                             , Object.ValueData                                      AS PersonalServiceListName
+                             , ObjectLink_PersonalServiceList_PaidKind.ChildObjectId AS PaidKindId
+                        FROM MovementItem
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                              ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                             LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
+                             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                                  ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MILinkObject_MoneyPlace.ObjectId
+                                                 AND ObjectLink_PersonalServiceList_PaidKind.DescId   = zc_ObjectLink_PersonalServiceList_PaidKind()
+                        WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMIContainer_pay_all.MovementId FROM tmpMIContainer_pay_all)
+                          AND MovementItem.DescId     = zc_MI_Master()
+                          AND MovementItem.isErased   = FALSE
+                        --AND vbUserId = 5
+                       )*/
+
+     , tmpMIContainer_pay AS (SELECT -- Amount_avance
+                                     -- SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                     SUM (CASE WHEN (/*MIContainer.Amount = 2000 OR*/ MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()/*, zc_Enum_AnalyzerId_Cash_PersonalCardSecond()*/)) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END
+                                          -- аванс по ведомости
+                                          /*+ CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                                                 AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                                 AND Object.ValueData ILIKE '%АВАНС%'
+                                                 AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Cash_PersonalAvance()
+                                               --AND vbUserId = 5
+
+                                                     THEN MIContainer.Amount
+                                                ELSE 0
+                                           END*/
+                                         ) AS Amount_avance
+
+                                     -- Amount_avance_ret
+                                   , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()/*, zc_Enum_AnalyzerId_Cash_PersonalCardSecond()*/) AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END
+                                         ) AS Amount_avance_ret
+
+                                     -- Amount_service
+                                   , SUM (CASE WHEN /*MIContainer.Amount <> 2000 AND*/ MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END
+                                          -- аванс по ведомости
+                                          /*- CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                                                 AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                                 AND Object.ValueData ILIKE '%АВАНС%'
+                                                 AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Cash_PersonalAvance()
+                                               --AND vbUserId = 5
+
+                                                     THEN MIContainer.Amount
+                                                ELSE 0
+                                           END*/
+                                         ) AS Amount_service
+
                                    , tmpContainer_pay.MemberId
                                    , CASE WHEN inIsShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END AS PositionId
                                    , CASE WHEN inIsShowAll = TRUE THEN tmpContainer_pay.UnitId     ELSE 0 END AS UnitId
@@ -714,6 +771,19 @@ BEGIN
                                                                     ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
                                                                    AND MIContainer.DescId         = zc_MIContainer_Summ()
                                                                    AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                   /*LEFT JOIN MovementItem ON MovementItem.MovementId = MIContainer.MovementId
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.isErased   = FALSE
+                                                       --AND vbUserId = 5
+
+                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                                   LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
+                                   LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                                        ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MILinkObject_MoneyPlace.ObjectId
+                                                       AND ObjectLink_PersonalServiceList_PaidKind.DescId   = zc_ObjectLink_PersonalServiceList_PaidKind()*/
+
                               GROUP BY tmpContainer_pay.MemberId
                                      , CASE WHEN inIsShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END
                                      , CASE WHEN inIsShowAll = TRUE THEN tmpContainer_pay.UnitId     ELSE 0 END

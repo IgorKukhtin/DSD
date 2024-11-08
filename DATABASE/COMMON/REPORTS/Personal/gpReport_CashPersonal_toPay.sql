@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_CashPersonal_toPay(
     IN inPersonalId                Integer,   --
     IN inSession                   TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer, ParentId Integer, OperDate TDateTime, InvNumber TVarChar
+RETURNS TABLE (MovementId Integer, ContainerId Integer, ParentId Integer, OperDate TDateTime, InvNumber TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -109,8 +109,9 @@ BEGIN
                         , tmpContainer.PositionId
                         , tmpContainer.PersonalServiceListId
                         , tmpContainer.BranchId
+                        , tmpContainer.ContainerId
                         , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash()            THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount
-                        , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalService() THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Service
+                        , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalService(), zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Service
                         , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_BankAccount()     THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount_Bank
                    FROM tmpContainer
                         INNER JOIN MovementItemContainer AS MIContainer
@@ -137,6 +138,7 @@ BEGIN
                           , tmpContainer.PositionId
                           , tmpContainer.PersonalServiceListId
                           , tmpContainer.BranchId
+                          , tmpContainer.ContainerId
                   )
    
  , tmpMI_begin AS (SELECT MI_Master.*
@@ -148,6 +150,7 @@ BEGIN
 
     --
     SELECT tmpMovement.MovementId
+         , tmpMovement.ContainerId
          , Movement.ParentId
          , Movement.OperDate
          , Movement.InvNumber
@@ -242,7 +245,6 @@ BEGIN
          LEFT JOIN Object AS Object_Analyzer ON Object_Analyzer.Id = tmpMovement.AnalyzerId
          LEFT JOIN ObjectString AS OS_Analyzer ON OS_Analyzer.ObjectId = tmpMovement.AnalyzerId
                                               AND OS_Analyzer.DescId   = zc_ObjectString_Enum()
-
     WHERE tmpMovement.Amount         <> 0
        OR tmpMovement.Amount_Service <> 0
        OR tmpMovement.Amount_Bank    <> 0
