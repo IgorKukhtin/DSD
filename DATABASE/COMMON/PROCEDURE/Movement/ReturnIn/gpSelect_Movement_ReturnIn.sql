@@ -73,6 +73,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PersonalName_Collation TVarChar
              , UnitName_Collation TVarChar
              , BranchName_Collation TVarChar
+             , RouteName TVarChar
               )
 AS
 $BODY$
@@ -407,6 +408,8 @@ BEGIN
            , tmpContract_param.PersonalName_Collation  ::TVarChar
            , tmpContract_param.UnitName_Collation      ::TVarChar
            , tmpContract_param.BranchName_Collation    ::TVarChar
+           --
+           , Object_Route.ValueData                    ::TVarChar  AS RouteName
        FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -648,6 +651,11 @@ BEGIN
                                    ON ObjectString_PersonalBookkeeper.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
                                   AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
+                                 ON ObjectLink_Partner_Route.ObjectId = MovementLinkObject_From.ObjectId
+                                AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
+         
      /*WHERE vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE)*/
     ;
