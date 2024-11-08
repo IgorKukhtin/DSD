@@ -48,10 +48,11 @@ AS
 $BODY$
   DECLARE vbUserId     Integer;
 
-  DECLARE vbMemberId   Integer;
-  DECLARE vbPersonalId Integer;
-  DECLARE vbUnitId     Integer;
-  DECLARE vbBranchId   Integer;
+  DECLARE vbMemberId      Integer;
+  DECLARE vbPersonalId    Integer;
+  DECLARE vbUnitId        Integer;
+  DECLARE vbBranchId      Integer;
+  DECLARE vbBranchId_cash Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -89,7 +90,22 @@ BEGIN
 
                  ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
             END AS BranchId
-            INTO vbMemberId, vbPersonalId, vbUnitId, vbBranchId
+
+          , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
+                      THEN 8379 -- филиал Киев
+
+                 WHEN vbUserId = 10105228  -- Трубін О.С.
+                      THEN 8381 -- филиал Харьков
+
+                 WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
+                      THEN zc_Branch_Basis()
+
+                 ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+            END AS BranchId_cash
+
+
+            INTO vbMemberId, vbPersonalId, vbUnitId, vbBranchId, vbBranchId_cash
+
      FROM ObjectLink AS ObjectLink_User_Member
           LEFT JOIN lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                                                                     ON lfSelect.MemberId = ObjectLink_User_Member.ChildObjectId
@@ -242,10 +258,10 @@ BEGIN
             LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpPersonal.UnitId -- Склад Реализации
             LEFT JOIN Object AS Object_Unit_ret ON Object_Unit_ret.Id = tmpPersonal.UnitId_ret
             LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
-                                 ON ObjectLink_Cash_Branch.ChildObjectId = vbBranchId
+                                 ON ObjectLink_Cash_Branch.ChildObjectId = vbBranchId_cash
                                 AND ObjectLink_Cash_Branch.DescId        = zc_ObjectLink_Cash_Branch()
-                                AND vbBranchId                           <> zc_Branch_Basis()
-            LEFT JOIN Object AS Object_Cash     ON Object_Cash.Id     = CASE WHEN vbBranchId = zc_Branch_Basis() THEN 14462 /*Касса Днепр*/ ELSE ObjectLink_Cash_Branch.ObjectId END
+                                AND vbBranchId_cash                      <> zc_Branch_Basis()
+            LEFT JOIN Object AS Object_Cash     ON Object_Cash.Id     = CASE WHEN vbBranchId_cash = zc_Branch_Basis() THEN 14462 /*Касса Днепр*/ ELSE ObjectLink_Cash_Branch.ObjectId END
 
             LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId
             LEFT JOIN ObjectString AS ObjectString_User_
