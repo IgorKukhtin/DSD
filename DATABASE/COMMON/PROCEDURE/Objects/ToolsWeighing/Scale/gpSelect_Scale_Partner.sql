@@ -545,6 +545,56 @@ BEGIN
        WHERE Object_ArticleLoss.DescId   = zc_Object_ArticleLoss()
          AND Object_ArticleLoss.isErased = FALSE
 
+
+      UNION ALL
+       SELECT Object_Unit.Id          AS PartnerId
+            , Object_Unit.ObjectCode  AS PartnerCode
+            , Object_Unit.ValueData   AS PartnerName
+            , '' :: TVarChar  AS JuridicalName
+            , NULL :: Integer AS PaidKindId
+            , '' :: TVarChar  AS PaidKindName
+
+            , View_Contract.ContractId      AS ContractId
+            , View_Contract.ContractCode    AS ContractCode
+            , View_Contract.InvNumber       AS ContractNumber
+            , View_Contract.ContractTagName AS ContractTagName
+
+            , NULL :: Integer AS InfoMoneyId
+            , NULL :: Integer AS InfoMoneyCode
+            , '' :: TVarChar  AS InfoMoneyName
+
+            , NULL :: TFloat AS ChangePercent
+            , NULL :: TFloat AS ChangePercentAmount
+
+            , FALSE       :: Boolean AS isEdiOrdspr
+            , FALSE       :: Boolean AS isEdiInvoice
+            , FALSE       :: Boolean AS isEdiDesadv
+
+            , TRUE        :: Boolean AS isMovement,  2 :: TFloat AS CountMovement
+            , FALSE       :: Boolean AS isAccount,   0 :: TFloat AS CountAccount
+            , FALSE       :: Boolean AS isTransport, 0 :: TFloat AS CountTransport
+            , FALSE       :: Boolean AS isQuality,   0 :: TFloat AS CountQuality
+            , FALSE       :: Boolean AS isPack   ,   0 :: TFloat AS CountPack
+            , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
+            , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
+
+            , ObjectDesc.Id AS ObjectDescId
+            , zc_Movement_Loss() AS MovementDescId
+            , ObjectDesc.ItemName
+
+       FROM Object AS Object_Unit
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit.DescId
+
+            INNER JOIN ObjectLink AS ObjectLink_Unit_Contract
+                                  ON ObjectLink_Unit_Contract.ObjectId = Object_Unit.Id
+                                 AND ObjectLink_Unit_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+
+            INNER JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = ObjectLink_Unit_Contract.ChildObjectId
+
+       WHERE Object_Unit.DescId   = zc_Object_Unit()
+         AND Object_Unit.isErased = FALSE
+
+
       UNION ALL
        SELECT tmpMember.MemberId     AS PartnerId
             , tmpMember.MemberCode   AS PartnerCode

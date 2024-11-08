@@ -31,6 +31,8 @@ $BODY$
 
    DECLARE vbBankId_const_1  Integer;
    DECLARE vbBankId_const_2  Integer;
+   
+   DECLARE vbKoeff_ro TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpGetUserBySession (inSession);
@@ -39,6 +41,9 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка. Документ не сохранен';
      END IF;
+     
+     -- !!!
+     vbKoeff_ro:= 20;
 
 -- !!!тест
 IF vbUserId = 5 AND 1=0
@@ -1329,28 +1334,36 @@ END IF;
                                                    )
              -- здесь всегда Восток
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ_BankSecond_num(), _tmpMI.MovementItemId
-                                             , CASE WHEN _tmpMI.Num_1 = 1 THEN _tmpMI.SummCard_1
-                                                    WHEN _tmpMI.Num_2 = 1 THEN _tmpMI.SummCard_2
-                                                    WHEN _tmpMI.Num_3 = 1 THEN _tmpMI.SummCard_3
+                                             , CASE WHEN _tmpMI.Num_1 = 1 THEN ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                    WHEN _tmpMI.Num_2 = 1 THEN ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                    WHEN _tmpMI.Num_3 = 1 THEN ROUND (_tmpMI.SummCard_3 / vbKoeff_ro, 0) * vbKoeff_ro
                                                     ELSE 0
                                                END
                                               )
              -- здесь всегда ОТП
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ_BankSecondTwo_num(), _tmpMI.MovementItemId
-                                             , CASE WHEN _tmpMI.Num_1 = 2 THEN _tmpMI.SummCard_1
-                                                    WHEN _tmpMI.Num_2 = 2 THEN _tmpMI.SummCard_2
-                                                    WHEN _tmpMI.Num_3 = 2 THEN _tmpMI.SummCard_3
+                                             , CASE WHEN _tmpMI.Num_1 = 2 THEN ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                    WHEN _tmpMI.Num_2 = 2 THEN ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                    WHEN _tmpMI.Num_3 = 2 THEN ROUND (_tmpMI.SummCard_3 / vbKoeff_ro, 0) * vbKoeff_ro
                                                     ELSE 0
                                                END
                                               )
              -- здесь всегда Личный
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ_BankSecondDiff_num(), _tmpMI.MovementItemId
-                                             , CASE WHEN _tmpMI.Num_1 = 3 THEN _tmpMI.SummCard_1
-                                                    WHEN _tmpMI.Num_2 = 3 THEN _tmpMI.SummCard_2
-                                                    WHEN _tmpMI.Num_3 = 3 THEN _tmpMI.SummCard_3
+                                             , CASE WHEN _tmpMI.Num_1 = 3 THEN ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                    WHEN _tmpMI.Num_2 = 3 THEN ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                    WHEN _tmpMI.Num_3 = 3 THEN ROUND (_tmpMI.SummCard_3 / vbKoeff_ro, 0) * vbKoeff_ro
                                                     ELSE 0
                                                END
                                               )
+
+             -- сохранили свойство <Карта БН (округление) - 2ф>
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondDiff(), _tmpMI.MovementItemId
+                                             , ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro - _tmpMI.SummCard_1
+                                             + ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro - _tmpMI.SummCard_2
+                                             + ROUND (_tmpMI.SummCard_3 / vbKoeff_ro, 0) * vbKoeff_ro - _tmpMI.SummCard_3
+                                              )
+
      FROM
     (SELECT lpInsertUpdate_MovementItem_PersonalService_item (ioId                 := _tmpMI.MovementItemId
                                                             , inMovementId         := inMovementId
@@ -1358,9 +1371,20 @@ END IF;
                                                             , inIsMain             := COALESCE (ObjectBoolean_Main.ValueData, FALSE)
                                                             , inSummService        := 0
                                                             , inSummCardRecalc     := 0
-                                                            , inSummCardSecondRecalc:= CASE WHEN vbPersonalServiceListId_avance > 0 THEN 0 ELSE _tmpMI.SummCardSecondRecalc END
+                                                            , inSummCardSecondRecalc:= CASE WHEN vbPersonalServiceListId_avance > 0 THEN 0
+                                                                                            ELSE -- _tmpMI.SummCardSecondRecalc
+                                                                                                 ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                                                               + ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                                                               + ROUND (_tmpMI.SummCard_3 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                                                       END
                                                             , inSummCardSecondCash := 0
-                                                            , inSummAvCardSecondRecalc:= CASE WHEN vbPersonalServiceListId_avance > 0 THEN _tmpMI.SummCardSecondRecalc ELSE 0 END
+                                                            , inSummAvCardSecondRecalc:= CASE WHEN vbPersonalServiceListId_avance > 0
+                                                                                              THEN -- _tmpMI.SummCardSecondRecalc
+                                                                                                   ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                                                                 + ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                                                                 + ROUND (_tmpMI.SummCard_3 / vbKoeff_ro, 0) * vbKoeff_ro
+                                                                                              ELSE 0
+                                                                                         END
                                                             , inSummNalogRecalc    := 0
                                                             , inSummNalogRetRecalc := 0
                                                             , inSummMinus          := 0
