@@ -957,6 +957,7 @@ object PartnerForm: TPartnerForm
     Left = 936
     Top = 191
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+    Visible = False
   end
   object cePersonal_update: TcxButtonEdit
     Left = 936
