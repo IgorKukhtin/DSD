@@ -120,12 +120,12 @@
   end
   object cxLabel8: TcxLabel [16]
     Left = 735
-    Top = 101
+    Top = 131
     Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
   end
   object ceMemberTake: TcxButtonEdit [17]
     Left = 878
-    Top = 100
+    Top = 130
     Properties.Buttons = <
       item
         Default = True
@@ -825,12 +825,12 @@
   end
   object cxLabel46: TcxLabel [111]
     Left = 735
-    Top = 131
+    Top = 161
     Caption = #1060#1080#1079' '#1083#1080#1094#1086' ('#1055#1088#1086#1076#1072#1074#1077#1094'-1)'
   end
   object edMemberSaler1: TcxButtonEdit [112]
     Left = 878
-    Top = 130
+    Top = 160
     Properties.Buttons = <
       item
         Default = True
@@ -842,12 +842,12 @@
   end
   object cxLabel48: TcxLabel [113]
     Left = 735
-    Top = 161
+    Top = 191
     Caption = #1060#1080#1079' '#1083#1080#1094#1086' ('#1055#1088#1086#1076#1072#1074#1077#1094'-2)'
   end
   object edMemberSaler2: TcxButtonEdit [114]
     Left = 878
-    Top = 160
+    Top = 190
     Properties.Buttons = <
       item
         Default = True
@@ -889,6 +889,23 @@
     Top = 419
     TabOrder = 120
     Width = 81
+  end
+  object cxLabel52: TcxLabel [121]
+    Left = 735
+    Top = 101
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1076#1087#1080#1089#1072#1085#1090')'
+  end
+  object edPersonalSigning: TcxButtonEdit [122]
+    Left = 878
+    Top = 100
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 122
+    Width = 195
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 355
@@ -1229,6 +1246,14 @@
         Name = 'inPersonalMerchId'
         Value = Null
         Component = GuidesPersonalMerch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalSigningId'
+        Value = Null
+        Component = GuidesPersonalSigning
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2097,6 +2122,21 @@
         Component = edTerminal
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalSigningId'
+        Value = Null
+        Component = GuidesPersonalSigning
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalSigningName'
+        Value = Null
+        Component = GuidesPersonalSigning
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 536
     Top = 452
@@ -2159,7 +2199,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 936
-    Top = 90
+    Top = 120
   end
   object dsdRouteSortingGuides: TdsdGuides
     KeyField = 'Id'
@@ -2782,7 +2822,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 976
-    Top = 130
+    Top = 160
   end
   object GuidesMemberSaler2: TdsdGuides
     KeyField = 'Id'
@@ -2812,6 +2852,36 @@
         MultiSelectSeparator = ','
       end>
     Left = 904
-    Top = 154
+    Top = 184
+  end
+  object GuidesPersonalSigning: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalSigning
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalSigning
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalSigning
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 976
+    Top = 91
   end
 end

@@ -165,6 +165,9 @@ type
     cxLabel50: TcxLabel;
     cxLabel51: TcxLabel;
     edTerminal: TcxTextEdit;
+    cxLabel52: TcxLabel;
+    edPersonalSigning: TcxButtonEdit;
+    GuidesPersonalSigning: TdsdGuides;
 
   private
     { Private declarations }

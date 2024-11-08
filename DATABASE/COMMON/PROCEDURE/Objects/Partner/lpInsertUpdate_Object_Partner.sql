@@ -38,12 +38,19 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer,
                                                        TDateTime, TDateTime, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                        TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
                                                        Boolean, Boolean, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer,
+                                                       TDateTime, TDateTime, Integer); */
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
+                                                       Boolean, Boolean, Boolean,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       Integer, Integer,
                                                        TDateTime, TDateTime, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -83,6 +90,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inPersonalId          Integer   ,    -- Сотрудник (супервайзер)
     IN inPersonalTradeId     Integer   ,    -- Сотрудник (торговый)
     IN inPersonalMerchId     Integer   ,    -- Сотрудник (мерчандайзер)
+    IN inPersonalSigningId   Integer   ,    -- Сотрудник (подписант)
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки
 
@@ -182,6 +190,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
    -- сохранили связь с <Сотрудник (мерчандайзер)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalMerch(), ioId, inPersonalMerchId);
+   -- сохранили связь с <Сотрудник (подписант)>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalSigning(), ioId, inPersonalSigningId);
+
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), ioId, inAreaId);
    -- сохранили связь с <Признак торговой точки>
@@ -221,6 +232,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 07.11.24         * inPersonalSigningId
  04.07.24         *
  24.10.23         *
  27.09.21         *

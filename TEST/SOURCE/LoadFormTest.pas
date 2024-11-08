@@ -1603,6 +1603,7 @@ end;
 
 procedure TLoadFormTest.LoadSaleFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PayForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PayJournalForm'));
@@ -1612,26 +1613,26 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_TransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_TransportJournalForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
   //exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
   //exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
-  exit;
-
+  //exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderForm');
   //  exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderJournalForm');
    exit;
@@ -1743,16 +1744,16 @@ end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
 
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
    exit;
@@ -2409,12 +2410,12 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
-  exit;
-
+  //exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartner_ObjectForm');
   //exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerEditForm');
 

@@ -67,6 +67,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitName TVarChar
              , PositionName TVarChar
              , AccessKeyId Integer
+             
+             , PersonalSigningName TVarChar
+             , PersonalCode_Collation Integer
+             , PersonalName_Collation TVarChar
+             , UnitName_Collation TVarChar
+             , BranchName_Collation TVarChar
               )
 AS
 $BODY$
@@ -259,6 +265,39 @@ BEGIN
                                                  ON Object_Personal.Id = MovementLinkObject_Personal_4.ObjectId
                           )
 
+       , tmpMLO_Contract AS (SELECT MovementLinkObject.*
+                             FROM MovementLinkObject
+                             WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                               AND MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
+                             )
+
+        , tmpMovementLinkObject_Branch AS (SELECT MovementLinkObject.*
+                                             FROM MovementLinkObject
+                                             WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                               AND MovementLinkObject.DescId = zc_MovementLinkObject_Branch()
+                                             )
+
+        -- данные из Договора
+        , tmpContract_param AS (SELECT tmpContract.ContractId
+                                     , Object_PersonalSigning.ValueData AS PersonalSigningName
+                                     , Object_PersonalCollation.PersonalCode AS PersonalCode_Collation
+                                     , Object_PersonalCollation.PersonalName AS PersonalName_Collation
+                                     , Object_PersonalCollation.UnitName     AS UnitName_Collation
+                                     , Object_PersonalCollation.BranchName   AS BranchName_Collation
+
+                                FROM (SELECT DISTINCT tmpMLO_Contract.ObjectId AS ContractId
+                                      FROM tmpMLO_Contract
+                                      ) AS tmpContract
+                                 LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
+                                                      ON ObjectLink_Contract_PersonalSigning.ObjectId = tmpContract.ContractId
+                                                     AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
+                                 LEFT JOIN Object AS Object_PersonalSigning ON Object_PersonalSigning.Id = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
+                                                      ON ObjectLink_Contract_PersonalCollation.ObjectId = tmpContract.ContractId
+                                                     AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
+                                 LEFT JOIN Object_Personal_View AS Object_PersonalCollation ON Object_PersonalCollation.PersonalId = ObjectLink_Contract_PersonalCollation.ChildObjectId
+                                )
        -- Результат
        SELECT
              Movement.Id                                AS Id
@@ -361,6 +400,13 @@ BEGIN
            
            , Movement.AccessKeyId
 
+           -- подписант
+           , COALESCE (tmpContract_param.PersonalSigningName, COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper.ValueData, ''))  ::TVarChar AS PersonalSigningName
+           -- сверка
+           , tmpContract_param.PersonalCode_Collation  ::Integer
+           , tmpContract_param.PersonalName_Collation  ::TVarChar
+           , tmpContract_param.UnitName_Collation      ::TVarChar
+           , tmpContract_param.BranchName_Collation    ::TVarChar
        FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -482,9 +528,9 @@ BEGIN
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN tmpMLO_Contract AS MovementLinkObject_Contract
+                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
@@ -588,7 +634,19 @@ BEGIN
             
             LEFT JOIN tmpMI_Detail ON tmpMI_Detail.MovementId = Movement.Id
 
+            LEFT JOIN tmpContract_param ON tmpContract_param.ContractId = MovementLinkObject_Contract.ObjectId
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
+                                 ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
+                                AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
+            LEFT JOIN Object AS Object_PersonalBookkeeper ON Object_PersonalBookkeeper.Id = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+            LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
+                                   ON ObjectString_PersonalBookkeeper.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
+                                  AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()
 
      /*WHERE vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE)*/
@@ -602,6 +660,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.11.24         *
  16.02.23         * TransportGoods
  28.04.22         * add  OrderReturnTare
  14.03.22         * PriceListIn

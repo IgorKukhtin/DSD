@@ -59,7 +59,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ReestrKindId Integer, ReestrKindName TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , MovementId_ReturnIn Integer, InvNumber_ReturnInFull TVarChar
-              )
+            
+             , PersonalSigningName TVarChar
+             , PersonalCode_Collation Integer
+             , PersonalName_Collation TVarChar
+             , UnitName_Collation TVarChar
+             , BranchName_Collation TVarChar
+             )
 AS
 $BODY$
    DECLARE vbIsIrna Boolean;
@@ -718,6 +724,34 @@ end if;
                           WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpCar.Id FROM tmpCar)
                             AND ObjectLink.DescId = zc_ObjectLink_Car_CarModel()
                          )
+ 
+        , tmpMovementLinkObject_Branch AS (SELECT MovementLinkObject.*
+                                             FROM MovementLinkObject
+                                             WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                               AND MovementLinkObject.DescId = zc_MovementLinkObject_Branch()
+                                             )
+
+        -- данные из Договора
+        , tmpContract_param AS (SELECT tmpContract.ContractId
+                                     , Object_PersonalSigning.ValueData AS PersonalSigningName
+                                     , Object_PersonalCollation.PersonalCode AS PersonalCode_Collation
+                                     , Object_PersonalCollation.PersonalName AS PersonalName_Collation
+                                     , Object_PersonalCollation.UnitName     AS UnitName_Collation
+                                     , Object_PersonalCollation.BranchName   AS BranchName_Collation
+
+                                FROM (SELECT DISTINCT tmpMovementLinkObject_Contract.ObjectId AS ContractId
+                                      FROM tmpMovementLinkObject_Contract
+                                      ) AS tmpContract
+                                 LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
+                                                      ON ObjectLink_Contract_PersonalSigning.ObjectId = tmpContract.ContractId
+                                                     AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
+                                 LEFT JOIN Object AS Object_PersonalSigning ON Object_PersonalSigning.Id = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
+                                                      ON ObjectLink_Contract_PersonalCollation.ObjectId = tmpContract.ContractId
+                                                     AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
+                                 LEFT JOIN Object_Personal_View AS Object_PersonalCollation ON Object_PersonalCollation.PersonalId = ObjectLink_Contract_PersonalCollation.ChildObjectId
+                                )
 
      -- Результат
      SELECT
@@ -865,6 +899,14 @@ end if;
 
            , Movement_ReturnIn.Id                                                                                                AS MovementId_ReturnIn
            , zfCalc_InvNumber_isErased ('', Movement_ReturnIn.InvNumber, Movement_ReturnIn.OperDate, Movement_ReturnIn.StatusId) AS InvNumber_ReturnInFull
+
+           -- подписант
+           , COALESCE (tmpContract_param.PersonalSigningName, COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper.ValueData, ''))  ::TVarChar AS PersonalSigningName
+           -- сверка
+           , tmpContract_param.PersonalCode_Collation  ::Integer
+           , tmpContract_param.PersonalName_Collation  ::TVarChar
+           , tmpContract_param.UnitName_Collation      ::TVarChar
+           , tmpContract_param.BranchName_Collation    ::TVarChar
        FROM tmpMovement AS Movement
 
             LEFT JOIN tmpStatus AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -1134,6 +1176,20 @@ end if;
 
             LEFT JOIN tmpRetail_JuridicalTo ON tmpRetail_JuridicalTo.JuridicalId_To = Object_JuridicalTo.Id
 
+            LEFT JOIN tmpContract_param ON tmpContract_param.ContractId = MovementLinkObject_Contract.ObjectId
+            
+            LEFT JOIN tmpMovementLinkObject_Branch AS MovementLinkObject_Branch
+                                                   ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                                  AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
+                                 ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = MovementLinkObject_Branch.ObjectId
+                                AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
+            LEFT JOIN Object AS Object_PersonalBookkeeper ON Object_PersonalBookkeeper.Id = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+            LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
+                                   ON ObjectString_PersonalBookkeeper.ObjectId = MovementLinkObject_Branch.ObjectId
+                                  AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()
+                                                              
 --     WHERE /*(vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
 --                                AND vbIsXleb = TRUE))
 --        AND */(tmpBranchJuridical.JuridicalId > 0 OR Movement.AccessKeyId > 0)
@@ -1146,6 +1202,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.11.24         *
  16.08.24         *
  21.03.22         *
  26.01.22         * 
@@ -1185,3 +1242,4 @@ $BODY$
 -- SELECT * FROM gpSelect_Movement_Sale_DATA (inStartDate:= '10.01.2022', inEndDate:= '10.01.2022', inIsPartnerDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
 --Было 1 месяц - 3 мин 21 сек
 --сейчас 1 месяц - 28 сек
+--select * from gpSelect_Movement_Sale_DATA(instartdate := ('23.10.2024')::TDateTime , inenddate := ('23.10.2024')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId:= zfCalc_UserAdmin() :: Integer);

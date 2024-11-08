@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                PersonalId Integer, PersonalName TVarChar,
                PersonalTradeId Integer, PersonalTradeName TVarChar,
                PersonalMerchId Integer, PersonalMerchName TVarChar,
+               PersonalSigningId Integer, PersonalSigningName TVarChar,
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
 
@@ -130,6 +131,9 @@ BEGIN
 
            , CAST (0 as Integer)    AS PersonalMerchId
            , CAST ('' as TVarChar)  AS PersonalMerchName
+
+           , CAST (0 as Integer)    AS PersonalSigningId
+           , CAST ('' as TVarChar)  AS PersonalSigningName
          
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
@@ -254,6 +258,9 @@ BEGIN
 
            , Object_PersonalMerch.Id            AS PersonalMerchId
            , Object_PersonalMerch.ValueData     AS PersonalMerchName
+
+           , Object_PersonalSigning.Id          AS PersonalSigningId
+           , Object_PersonalSigning.ValueData   AS PersonalSigningName
          
            , Object_Area.Id                  AS AreaId
            , Object_Area.ValueData           AS AreaName
@@ -476,6 +483,11 @@ BEGIN
                                AND ObjectLink_Partner_PersonalMerch.DescId = zc_ObjectLink_Partner_PersonalMerch()
            LEFT JOIN Object AS Object_PersonalMerch ON Object_PersonalMerch.Id = ObjectLink_Partner_PersonalMerch.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalSigning
+                                ON ObjectLink_Partner_PersonalSigning.ObjectId = Object_Partner.Id 
+                               AND ObjectLink_Partner_PersonalSigning.DescId = zc_ObjectLink_Partner_PersonalSigning()
+           LEFT JOIN Object AS Object_PersonalSigning ON Object_PersonalSigning.Id = ObjectLink_Partner_PersonalSigning.ChildObjectId
+
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
                                 ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
                                AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
@@ -539,6 +551,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.11.24         * PersonalSigning
  04.07.24         * 
  24.10.23         *
  27.01.23         * MovementComment
