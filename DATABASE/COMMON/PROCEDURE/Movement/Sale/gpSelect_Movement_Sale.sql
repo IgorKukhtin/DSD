@@ -60,6 +60,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ReestrKindId Integer, ReestrKindName TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , MovementId_ReturnIn Integer, InvNumber_ReturnInFull TVarChar
+             , PersonalSigningName TVarChar
+             , PersonalCode_Collation Integer
+             , PersonalName_Collation TVarChar
+             , UnitName_Collation TVarChar
+             , BranchName_Collation TVarChar
               )
 AS
 $BODY$

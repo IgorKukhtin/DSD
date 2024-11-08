@@ -51,13 +51,21 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                      , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                      , Boolean, Boolean, Boolean
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -103,7 +111,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     
     IN inPersonalId          Integer   ,    -- Физ лицо (ответственное лицо)
     IN inPersonalTradeId     Integer   ,    -- Физ лицо(торговый)
-    IN inPersonalMerchId     Integer   ,    -- Физ лицо (мерчандайзер)
+    IN inPersonalMerchId     Integer   ,    -- Физ лицо (мерчандайзер) 
+    IN inPersonalSigningId   Integer   ,    -- Сотрудник (подписант)
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
 
@@ -232,6 +241,7 @@ BEGIN
                                         , inPersonalId      := inPersonalId
                                         , inPersonalTradeId := inPersonalTradeId
                                         , inPersonalMerchId := inPersonalMerchId
+                                        , inPersonalSigningId:= inPersonalSigningId
                                         , inAreaId          := inAreaId
                                         , inPartnerTagId    := inPartnerTagId
                                         , inGoodsPropertyId := inGoodsPropertyId           
@@ -277,6 +287,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.11.24         *
  04.07.24         *
  24.10.23         *
  27.01.23         *
