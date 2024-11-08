@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  Vcl.Menus, cxButtonEdit;
+  Vcl.Menus, cxButtonEdit, dsdCommon;
 
 type
   TBranchJuridicalForm = class(TParentForm)
@@ -63,6 +63,7 @@ type
     N4: TMenuItem;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public
