@@ -113,7 +113,7 @@ BEGIN
                                 )
                             -- AND (vbUserId <> 5 OR COALESCE (Movement.AccessKeyId, 0) = 0)
                          ) 
-         --
+          --
         , tmpMLO_Contract AS (SELECT MovementLinkObject_Contract.*
                               FROM MovementLinkObject AS MovementLinkObject_Contract
                               WHERE MovementLinkObject_Contract.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -121,7 +121,7 @@ BEGIN
                                 AND COALESCE (MovementLinkObject_Contract.ObjectId,0) > 0
                               )   
 
-        --договора  zc_MI_Detail
+          -- договора  zc_MI_Detail
         , tmpMIDetail AS (SELECT tmp.MovementId
                                , STRING_AGG (DISTINCT Object_Contract.ValueData, ';')    AS ContractName_detail
                                , STRING_AGG (DISTINCT Object_ContractTag.ValueData, ';') AS ContractTagName_detail 
@@ -145,8 +145,25 @@ BEGIN
                              LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
                           GROUP BY tmp.MovementId
                           )
-
-
+         -- Сотрудник (бухгалтер) подписант
+       , tmpBranch_PersonalBookkeeper AS (SELECT Object_PersonalBookkeeper_View.MemberId
+                                               , MAX (ObjectString_PersonalBookkeeper.ValueData) AS PersonalBookkeeperName
+                                          FROM Object AS Object_Branch
+                                               -- Сотрудник (бухгалтер)
+                                               LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
+                                                                    ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
+                                                                   AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
+                                               LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+                                               -- Сотрудник (бухгалтер) подписант
+                                               INNER JOIN ObjectString AS ObjectString_PersonalBookkeeper
+                                                                       ON ObjectString_PersonalBookkeeper.ObjectId  = Object_Branch.Id
+                                                                      AND ObjectString_PersonalBookkeeper.DescId    = zc_objectString_Branch_PersonalBookkeeper()
+                                                                      AND ObjectString_PersonalBookkeeper.ValueData <> ''
+                                          WHERE Object_Branch.DescId   = zc_Object_Branch()
+                                            AND Object_Branch.isErased = FALSE
+                                          GROUP BY Object_PersonalBookkeeper_View.MemberId
+                                         )
+     -- Результат
      SELECT
              Movement.Id                                AS Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
@@ -235,7 +252,20 @@ BEGIN
            , CASE WHEN COALESCE (ObjectString_Retail_OKPO.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isOKPO_Retail
            , MovementString_Comment.ValueData         AS Comment
 
-           , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
+             -- Сотрудник подписант
+           , COALESCE (-- контрагент - замена
+                       tmpBranch_PersonalBookkeeper_partner.PersonalBookkeeperName
+                       -- контрагент
+                     , Object_PersonalSigning_partner.PersonalName
+                        -- договор - замена
+                     , tmpBranch_PersonalBookkeeper.PersonalBookkeeperName
+                       -- договор
+                     , Object_PersonalSigning.PersonalName
+                       -- филиал - Сотрудник (бухгалтер) подписант
+                     , ObjectString_PersonalBookkeeper.ValueData
+                       -- филиал - Сотрудник (бухгалтер)
+                     , Object_PersonalBookkeeper_View.PersonalName
+                     , '')  ::TVarChar AS PersonalSigningName
            
            , Object_PersonalCollation.PersonalCode AS PersonalCode_Collation
            , Object_PersonalCollation.PersonalName AS PersonalName_Collation
@@ -343,6 +373,13 @@ BEGIN
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+            -- Сотрудник подписант - контрагент
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalSigning
+                                 ON ObjectLink_Partner_PersonalSigning.ObjectId = Object_Partner.Id
+                                AND ObjectLink_Partner_PersonalSigning.DescId   = zc_ObjectLink_Partner_PersonalSigning()
+            LEFT JOIN Object_Personal_View AS Object_PersonalSigning_partner ON Object_PersonalSigning_partner.PersonalId = ObjectLink_Partner_PersonalSigning.ChildObjectId   
+            -- Сотрудник подписант - замена
+            LEFT JOIN tmpBranch_PersonalBookkeeper AS tmpBranch_PersonalBookkeeper_partner ON tmpBranch_PersonalBookkeeper_partner.MemberId = Object_PersonalSigning_partner.MemberId
 
             LEFT JOIN Object AS Object_Branch  ON Object_Branch.Id  = tmpMovement.BranchId
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = tmpMovement.DocumentTaxKindId
@@ -353,15 +390,20 @@ BEGIN
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
+            -- Сотрудник подписант - договор
             LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
                                  ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract_InvNumber.ContractId
                                 AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
             LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+            -- Сотрудник подписант - замена
+            LEFT JOIN tmpBranch_PersonalBookkeeper ON tmpBranch_PersonalBookkeeper.MemberId = Object_PersonalSigning.MemberId
 
+            -- Сотрудник (бухгалтер) - филиал
             LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                                  ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
                                 AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
             LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+            -- Сотрудник (бухгалтер) подписант - филиал
             LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
                                    ON ObjectString_PersonalBookkeeper.ObjectId = Object_Branch.Id
                                   AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()
@@ -446,4 +488,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '31.01.2022', inEndDate:= '31.01.2022', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '31.01.2024', inEndDate:= '31.01.2024', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

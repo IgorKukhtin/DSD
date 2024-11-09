@@ -306,6 +306,25 @@ order by 4*/
 
      -- Данные по заголовку налоговой
      OPEN Cursor1 FOR
+       -- Сотрудник (бухгалтер) подписант
+       WITH tmpBranch_PersonalBookkeeper AS (SELECT Object_PersonalBookkeeper_View.MemberId
+                                                  , MAX (ObjectString_PersonalBookkeeper.ValueData) AS PersonalBookkeeperName
+                                             FROM Object AS Object_Branch
+                                                  -- Сотрудник (бухгалтер)
+                                                  LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
+                                                                       ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
+                                                                      AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
+                                                  LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+                                                  -- Сотрудник (бухгалтер) подписант
+                                                  INNER JOIN ObjectString AS ObjectString_PersonalBookkeeper
+                                                                          ON ObjectString_PersonalBookkeeper.ObjectId  = Object_Branch.Id
+                                                                         AND ObjectString_PersonalBookkeeper.DescId    = zc_objectString_Branch_PersonalBookkeeper()
+                                                                         AND ObjectString_PersonalBookkeeper.ValueData <> ''
+                                             WHERE Object_Branch.DescId   = zc_Object_Branch()
+                                               AND Object_Branch.isErased = FALSE
+                                             GROUP BY Object_PersonalBookkeeper_View.MemberId
+                                            )
+       -- Результат
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
@@ -320,21 +339,45 @@ order by 4*/
                   WHEN vbOperDate_begin  < '01.10.2024' THEN 'J1201012'
                   ELSE 'J1201016'
              END ::TVarChar AS CHARCODE
-           -- , 'Неграш О.В.'::TVarChar                    AS N10
-           , CASE WHEN Object_PersonalSigning.PersonalName <> ''
-                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
+
+
+             -- Сотрудник подписант
+           , CASE -- контрагент
+                  WHEN Object_PersonalSigning_partner.PersonalName <> ''
+                       THEN COALESCE (tmpBranch_PersonalBookkeeper_partner.PersonalBookkeeperName, Object_PersonalSigning_partner.PersonalName)
+
+                  -- договор - замена
+                  WHEN tmpBranch_PersonalBookkeeper.PersonalBookkeeperName <> ''
+                       THEN tmpBranch_PersonalBookkeeper.PersonalBookkeeperName
+                  -- договор
+                  WHEN Object_PersonalSigning.PersonalName <> ''
+                       THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
+                  -- филиал - Сотрудник (бухгалтер) подписант + Сотрудник (бухгалтер)
                   ELSE CASE WHEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,'') <> ''
                             THEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, zfConvert_FIO ( Object_PersonalBookkeeper_View.PersonalName, 1, FALSE),'')
                             ELSE 'Рудик Н.В.'
                        END
+
              END                            :: TVarChar AS N10
-           , CASE WHEN Object_PersonalSigning.PersonalName <> ''
-                  THEN UPPER (zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, TRUE))
+
+             -- Сотрудник подписант
+           , CASE -- контрагент
+                  WHEN Object_PersonalSigning_partner.PersonalName <> ''
+                       THEN UPPER (COALESCE (tmpBranch_PersonalBookkeeper_partner.PersonalBookkeeperName, Object_PersonalSigning_partner.PersonalName))
+
+                  -- договор - замена
+                  WHEN tmpBranch_PersonalBookkeeper.PersonalBookkeeperName <> ''
+                       THEN UPPER (tmpBranch_PersonalBookkeeper.PersonalBookkeeperName)
+                  -- договор
+                  WHEN Object_PersonalSigning.PersonalName <> ''
+                       THEN UPPER (zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, TRUE))
+                  -- филиал - Сотрудник (бухгалтер) подписант + Сотрудник (бухгалтер)
                   ELSE CASE WHEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,'') <> ''
                             THEN UPPER (COALESCE (ObjectString_PersonalBookkeeper.ValueData, zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE),'') )
                             ELSE UPPER ('Н. В. Рудик' )
                        END
              END                            :: TVarChar AS N10_ifin
+
            , 'оплата з поточного рахунка'::TVarChar     AS N9
 /*
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
@@ -631,10 +674,12 @@ order by 4*/
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
                                          ON MovementLinkObject_Branch.MovementId = Movement.Id
                                         AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+            -- Сотрудник (бухгалтер) - филиал
             LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                                  ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = MovementLinkObject_Branch.ObjectId
                                 AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
             LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
+            -- Сотрудник (бухгалтер) подписант - филиал
             LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
                                    ON ObjectString_PersonalBookkeeper.ObjectId = MovementLinkObject_Branch.ObjectId
                                   AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()
@@ -647,6 +692,14 @@ order by 4*/
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            -- Сотрудник подписант - контрагент
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalSigning
+                                 ON ObjectLink_Partner_PersonalSigning.ObjectId = MovementLinkObject_Partner.ObjectId
+                                AND ObjectLink_Partner_PersonalSigning.DescId   = zc_ObjectLink_Partner_PersonalSigning()
+            LEFT JOIN Object_Personal_View AS Object_PersonalSigning_partner ON Object_PersonalSigning_partner.PersonalId = ObjectLink_Partner_PersonalSigning.ChildObjectId   
+            -- Сотрудник подписант - замена
+            LEFT JOIN tmpBranch_PersonalBookkeeper AS tmpBranch_PersonalBookkeeper_partner ON tmpBranch_PersonalBookkeeper_partner.MemberId = Object_PersonalSigning_partner.MemberId
+
             LEFT JOIN ObjectString AS ObjectString_ToAddress
                                    ON ObjectString_ToAddress.ObjectId = MovementLinkObject_Partner.ObjectId
                                   AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
@@ -723,13 +776,14 @@ order by 4*/
                                  ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                 AND View_Contract.InvNumber <> '-'
-            -- ставка 0 таможня
 
-
+            -- Сотрудник подписант - договор
             LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
                                  ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
             LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId
+            -- Сотрудник подписант - замена
+            LEFT JOIN tmpBranch_PersonalBookkeeper ON tmpBranch_PersonalBookkeeper.MemberId = Object_PersonalSigning.MemberId
 
             LEFT JOIN ObjectString AS PersonalSigning_INN
                                    ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId

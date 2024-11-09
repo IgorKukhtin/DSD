@@ -401,9 +401,18 @@ BEGIN
            
            , Movement.AccessKeyId
 
-           -- подписант
-           , COALESCE (tmpContract_param.PersonalSigningName, COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper.ValueData, ''))  ::TVarChar AS PersonalSigningName
-           -- сверка
+             -- Сотрудник подписант
+           , COALESCE (-- контрагент
+                       Object_PersonalSigning_partner.ValueData
+                        -- договор
+                     , tmpContract_param.PersonalSigningName
+                       -- филиал - Сотрудник (бухгалтер) подписант
+                     , ObjectString_PersonalBookkeeper.ValueData
+                       -- филиал - Сотрудник (бухгалтер)
+                     , Object_PersonalBookkeeper.ValueData
+                     , '') ::TVarChar AS PersonalSigningName
+
+             -- сверка
            , tmpContract_param.PersonalCode_Collation  ::Integer
            , tmpContract_param.PersonalName_Collation  ::TVarChar
            , tmpContract_param.UnitName_Collation      ::TVarChar
@@ -510,6 +519,17 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            -- Сотрудник подписант - контрагент
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalSigning
+                                 ON ObjectLink_Partner_PersonalSigning.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_PersonalSigning.DescId   = zc_ObjectLink_Partner_PersonalSigning()
+            LEFT JOIN Object AS Object_PersonalSigning_partner ON Object_PersonalSigning_partner.Id = ObjectLink_Partner_PersonalSigning.ChildObjectId
+            /*LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                 ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Partner_PersonalSigning.ChildObjectId
+                                AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+            -- Сотрудник подписант - замена
+            LEFT JOIN tmpBranch_PersonalBookkeeper AS tmpBranch_PersonalBookkeeper_partner ON tmpBranch_PersonalBookkeeper_partner.MemberId = ObjectLink_Personal_Member.ChildObjectId*/
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()

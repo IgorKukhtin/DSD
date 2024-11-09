@@ -577,30 +577,55 @@ BEGIN
        )
     , tmpMITax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child())))
 
+         -- Сотрудник (бухгалтер) подписант
+       , tmpBranch_PersonalBookkeeper AS (SELECT Object_PersonalBookkeeper_View.MemberId
+                                               , MAX (ObjectString_PersonalBookkeeper.ValueData) AS PersonalBookkeeperName
+                                          FROM Object AS Object_Branch
+                                               -- Сотрудник (бухгалтер)
+                                               LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
+                                                                    ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
+                                                                   AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
+                                               LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+                                               -- Сотрудник (бухгалтер) подписант
+                                               INNER JOIN ObjectString AS ObjectString_PersonalBookkeeper
+                                                                       ON ObjectString_PersonalBookkeeper.ObjectId = Object_Branch.Id
+                                                                      AND ObjectString_PersonalBookkeeper.DescId   = zc_objectString_Branch_PersonalBookkeeper()
+                                                                      AND ObjectString_PersonalBookkeeper.ValueData <> ''
+                                          WHERE Object_Branch.DescId   = zc_Object_Branch()
+                                            AND Object_Branch.isErased = FALSE
+                                          GROUP BY Object_PersonalBookkeeper_View.MemberId
+                                         )
+      -- Сотрудник подписант - филиал
     , tmpPersonalBookkeeper AS (SELECT ObjectLink_Branch_PersonalBookkeeper.ObjectId AS BranchId
                                      , Object_PersonalBookkeeper_View.MemberId
                                      , PersonalBookkeeper_INN.ValueData AS PersonalBookkeeper_INN
-                                     , COALESCE (ObjectString_PersonalBookkeeper.ValueData, zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE) ) ::TVarChar AS PersonalName
+                                     , COALESCE (ObjectString_PersonalBookkeeper.ValueData, zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE)) AS PersonalName
+                                -- Сотрудник (бухгалтер) - филиал
                                 FROM ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                                      LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
                                      LEFT JOIN ObjectString AS PersonalBookkeeper_INN
                                                             ON PersonalBookkeeper_INN.ObjectId = Object_PersonalBookkeeper_View.MemberId
                                                            AND PersonalBookkeeper_INN.DescId = zc_ObjectString_Member_INN()
+                                    -- Сотрудник (бухгалтер) подписант - филиал
                                      LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
-                                                            ON ObjectString_PersonalBookkeeper.ObjectId = ObjectLink_Branch_PersonalBookkeeper.ObjectId
-                                                           AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()
+                                                            ON ObjectString_PersonalBookkeeper.ObjectId  = ObjectLink_Branch_PersonalBookkeeper.ObjectId
+                                                           AND ObjectString_PersonalBookkeeper.DescId    = zc_objectString_Branch_PersonalBookkeeper()
+                                                           AND ObjectString_PersonalBookkeeper.ValueData <> ''
                                 WHERE ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
                                 )
 
+      -- Сотрудник подписант - договор
     , tmpPersonalSigning AS (SELECT ObjectLink_Contract_PersonalSigning.ObjectId AS ContractId
                                   , Object_PersonalSigning.MemberId
                                   , PersonalSigning_INN.ValueData AS PersonalSigning_INN
-                                  , Object_PersonalSigning.PersonalName AS PersonalName
+                                  , COALESCE (tmpBranch_PersonalBookkeeper.PersonalBookkeeperName, zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, TRUE)) AS PersonalName
                              FROM ObjectLink AS ObjectLink_Contract_PersonalSigning
                                   LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId
                                   LEFT JOIN ObjectString AS PersonalSigning_INN
                                                          ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId
                                                         AND PersonalSigning_INN.DescId = zc_ObjectString_Member_INN()
+                                  -- Сотрудник подписант - замена
+                                  LEFT JOIN tmpBranch_PersonalBookkeeper ON tmpBranch_PersonalBookkeeper.MemberId = Object_PersonalSigning.MemberId
                              WHERE ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
                             )
 
@@ -826,6 +851,9 @@ BEGIN
                               -- Название юр.лица для филиала
                             , ObjectString_BranchJur.ValueData                AS BranchJur_From
 
+                              -- Сотрудник подписант
+                            , COALESCE (tmpBranch_PersonalBookkeeper_partner.PersonalBookkeeperName, Object_PersonalSigning_partner.PersonalName) AS PersonalSigningName
+
                        FROM tmpMovement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                          ON MovementLinkObject_From.MovementId = tmpMovement.Id
@@ -838,6 +866,13 @@ BEGIN
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                          ON MovementLinkObject_Partner.MovementId = tmpMovement.Id
                                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                            -- Сотрудник подписант - контрагент
+                            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalSigning
+                                                 ON ObjectLink_Partner_PersonalSigning.ObjectId = MovementLinkObject_Partner.ObjectId
+                                                AND ObjectLink_Partner_PersonalSigning.DescId   = zc_ObjectLink_Partner_PersonalSigning()
+                            LEFT JOIN Object_Personal_View AS Object_PersonalSigning_partner ON Object_PersonalSigning_partner.PersonalId = ObjectLink_Partner_PersonalSigning.ChildObjectId   
+                            -- Сотрудник подписант - замена
+                            LEFT JOIN tmpBranch_PersonalBookkeeper AS tmpBranch_PersonalBookkeeper_partner ON tmpBranch_PersonalBookkeeper_partner.MemberId = Object_PersonalSigning_partner.MemberId
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                                          ON MovementLinkObject_DocumentTaxKind.MovementId = tmpMovement.Id
@@ -934,22 +969,34 @@ BEGIN
                   WHEN vbOperDate_begin  < '01.10.2024' THEN 'J1201212'
                   ELSE 'J1201216'
              END ::TVarChar AS CHARCODE
-           -- , 'Неграш О.В.'::TVarChar                                        AS N10
-           , CASE WHEN tmpPersonalSigning.PersonalName <> ''
-                  THEN zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, FALSE)
+
+             -- Сотрудник подписант
+           , CASE -- контрагент
+                  WHEN tmpMovement_Data.PersonalSigningName <> ''
+                       THEN tmpMovement_Data.PersonalSigningName
+                  -- договор
+                  WHEN tmpPersonalSigning.PersonalName <> ''
+                       THEN tmpPersonalSigning.PersonalName
+                  -- филиал
                   ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> ''
-                            THEN tmpPersonalBookkeeper.PersonalName            --zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, FALSE)
+                            THEN tmpPersonalBookkeeper.PersonalName
                             ELSE 'Рудик Н.В.'
                        END
-             END                                                :: TVarChar AS N10
-           -- , 'А.В. МАРУХНО'::TVarChar                                        AS N10
-           , CASE WHEN tmpPersonalSigning.PersonalName <> ''
-                  THEN UPPER (zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, TRUE))
+             END :: TVarChar AS N10
+
+             -- Сотрудник подписант
+           , CASE -- контрагент
+                  WHEN tmpMovement_Data.PersonalSigningName <> ''
+                       THEN UPPER (tmpMovement_Data.PersonalSigningName)
+                  -- договор
+                  WHEN tmpPersonalSigning.PersonalName <> ''
+                       THEN UPPER (tmpPersonalSigning.PersonalName)
+                  -- филиал
                   ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> ''
-                            THEN UPPER (tmpPersonalBookkeeper.PersonalName)    --UPPER (zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, TRUE))
+                            THEN UPPER (tmpPersonalBookkeeper.PersonalName)
                             ELSE UPPER ('Н. В. Рудик')
                        END
-             END                            :: TVarChar AS N10_ifin
+             END :: TVarChar AS N10_ifin
 
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
 
