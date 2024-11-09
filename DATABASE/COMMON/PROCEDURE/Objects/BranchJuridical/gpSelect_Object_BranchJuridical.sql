@@ -7,9 +7,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_BranchJuridical(
 )
 RETURNS TABLE (Id Integer
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar 
              , RetailId Integer, RetailName TVarChar
-             , OKPO TVarChar  
+             , OKPO TVarChar      
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , isErased Boolean
         
              ) AS
@@ -28,16 +29,19 @@ BEGIN
            , Object_Branch.Id            AS BranchId
            , Object_Branch.ObjectCode    AS BranchCode
            , Object_Branch.ValueData     AS BranchName
-
+     
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ObjectCode AS JuridicalCode
            , Object_Juridical.ValueData  AS JuridicalName
-       
 
            , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
            , Object_Retail.Id                 AS RetailId
            , Object_Retail.ValueData          AS RetailName
            , ObjectHistory_JuridicalDetails_View.OKPO 
+
+           , Object_Unit.Id         AS UnitId
+           , Object_Unit.ObjectCode AS UnitCode
+           , Object_Unit.ValueData  AS UnitName
 
            , Object_BranchJuridical.isErased     AS isErased
 
@@ -52,6 +56,11 @@ BEGIN
                                  ON ObjectLink_Juridical.ObjectId = Object_BranchJuridical.Id
                                 AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                 ON ObjectLink_Unit.ObjectId = Object_BranchJuridical.Id
+                                AND ObjectLink_Unit.DescId = zc_ObjectLink_BranchJuridical_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 

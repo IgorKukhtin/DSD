@@ -4,7 +4,7 @@ object BranchJuridicalEditForm: TBranchJuridicalEditForm
   Caption = 
     #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' '#1092#1080#1083#1080#1072#1083#1072#1084' ('#1087#1088#1086#1089#1084#1086#1090#1088' '#1085#1072#1082#1083#1072 +
     #1076#1085#1099#1093')>'
-  ClientHeight = 193
+  ClientHeight = 237
   ClientWidth = 388
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,8 +19,8 @@ object BranchJuridicalEditForm: TBranchJuridicalEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 101
-    Top = 145
+    Left = 93
+    Top = 193
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -28,8 +28,8 @@ object BranchJuridicalEditForm: TBranchJuridicalEditForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 245
-    Top = 145
+    Left = 237
+    Top = 193
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -69,6 +69,23 @@ object BranchJuridicalEditForm: TBranchJuridicalEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 5
+    Width = 340
+  end
+  object cxLabel1: TcxLabel
+    Left = 20
+    Top = 123
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  end
+  object edUnit: TcxButtonEdit
+    Left = 20
+    Top = 142
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
     Width = 340
   end
   object ActionList: TActionList
@@ -115,24 +132,35 @@ object BranchJuridicalEditForm: TBranchJuridicalEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 141
+    Left = 192
+    Top = 189
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -140,6 +168,7 @@ object BranchJuridicalEditForm: TBranchJuridicalEditForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 199
     Top = 8
@@ -155,32 +184,52 @@ object BranchJuridicalEditForm: TBranchJuridicalEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 16
@@ -205,56 +254,91 @@ object BranchJuridicalEditForm: TBranchJuridicalEditForm
     Left = 95
     Top = 65528
   end
-  object BranchGuides: TdsdGuides
+  object GuidesBranch: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 184
     Top = 40
   end
-  object JuridicalGuides: TdsdGuides
+  object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 192
     Top = 88
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 184
+    Top = 129
   end
 end
