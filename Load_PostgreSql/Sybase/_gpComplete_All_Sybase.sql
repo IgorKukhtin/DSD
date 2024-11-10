@@ -24,8 +24,8 @@ BEGIN
      IF vbStatusId <> zc_Enum_Status_Complete() AND inSession <> '' THEN RETURN; END IF;
      
      -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
-     /*IF    (EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 846, 8461, 256716, 1387416))
-         OR EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To()   AND MLO.ObjectId IN (8459, 846, 8461, 256716, 1387416))
+     /*IF    (EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 8462, 8461, 256716, 1387416))
+         OR EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To()   AND MLO.ObjectId IN (8459, 8462, 8461, 256716, 1387416))
            )
         AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
       THEN RETURN; END IF;*/
