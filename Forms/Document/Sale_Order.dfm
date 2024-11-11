@@ -2,7 +2,6 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 585
   ClientWidth = 1370
-  ExplicitLeft = -2
   ExplicitWidth = 1386
   ExplicitHeight = 624
   PixelsPerInch = 96
@@ -2147,11 +2146,8 @@ inherited Sale_OrderForm: TSale_OrderForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMovement
+      StoredProc = spUpdate_MI_Sale_Price
       StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMovement
-        end
         item
           StoredProc = spUpdate_MI_Sale_Price
         end
