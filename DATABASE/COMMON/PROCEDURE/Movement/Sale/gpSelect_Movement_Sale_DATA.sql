@@ -117,28 +117,40 @@ end if;
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
                               )
-        , tmpBranchJuridical AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId
-                                 FROM ObjectLink AS ObjectLink_Juridical
-                                      INNER JOIN ObjectLink AS ObjectLink_Branch
-                                                            ON ObjectLink_Branch.ObjectId = ObjectLink_Juridical.ObjectId
-                                                           AND ObjectLink_Branch.DescId = zc_ObjectLink_BranchJuridical_Branch()
-                                 WHERE ObjectLink_Juridical.ChildObjectId > 0
-                                   AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
-                                   AND ObjectLink_Branch.ChildObjectId IN (SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
+        , tmpBranchJuridical_all AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId, COALESCE (ObjectLink_Unit.ChildObjectId, 0) AS UnitId
+                                     FROM ObjectLink AS ObjectLink_Juridical
+                                          INNER JOIN ObjectLink AS ObjectLink_Branch
+                                                                ON ObjectLink_Branch.ObjectId = ObjectLink_Juridical.ObjectId
+                                                               AND ObjectLink_Branch.DescId  = zc_ObjectLink_BranchJuridical_Branch()
+                                          LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                               ON ObjectLink_Unit.ObjectId = ObjectLink_Juridical.ObjectId
+                                                              AND ObjectLink_Unit.DescId = zc_ObjectLink_BranchJuridical_Unit()
+                                     WHERE ObjectLink_Juridical.ChildObjectId > 0
+                                       AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
+                                       AND ObjectLink_Branch.ChildObjectId IN (SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
+                                    )
+        , tmpBranchJuridical AS (SELECT DISTINCT tmpBranchJuridical_all.JuridicalId, tmpBranchJuridical_all.UnitId
+                                 FROM tmpBranchJuridical_all
 
                                 UNION
-                                 SELECT DISTINCT OL_JuridicalGroup.ObjectId AS JuridicalId
+                                 SELECT DISTINCT OL_JuridicalGroup.ObjectId AS JuridicalId, 0 AS UnitId
                                  FROM ObjectLink AS OL_JuridicalGroup
+                                      LEFT JOIN tmpBranchJuridical_all ON tmpBranchJuridical_all.JuridicalId = OL_JuridicalGroup.ObjectId
                                  WHERE OL_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
                                    AND OL_JuridicalGroup.ChildObjectId IN (SELECT DISTINCT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId)
                                    AND vbIsZp = TRUE
+                                   -- åñëè íåò
+                                   AND tmpBranchJuridical_all.JuridicalId IS NULL
 
                                 UNION
-                                 SELECT Object_Juridical.Id AS JuridicalId
+                                 SELECT Object_Juridical.Id AS JuridicalId, 0 AS UnitId
                                  FROM Object AS Object_Juridical
+                                      LEFT JOIN tmpBranchJuridical_all ON tmpBranchJuridical_all.JuridicalId = Object_Juridical.Id
                                  WHERE Object_Juridical.Id IN (7314357) -- Ì'ßÑÍÀ ÂÅÑÍÀ  ÒÎÐÃ²ÂÅËÜÍÈÉ ÁÓÄÈÍÎÊ ÒÎÂ 
                                    AND Object_Juridical.DescId = zc_Object_Juridical()
                                    AND vbIsZp = TRUE
+                                   -- åñëè íåò
+                                   AND tmpBranchJuridical_all.JuridicalId IS NULL
                                 )
         , tmpMovement_all AS (SELECT Movement.Id
                                , Movement.OperDate
@@ -203,7 +215,10 @@ end if;
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
                                   ON ObjectLink_Unit_Business.ObjectId = tmpMovementLinkObject_From.ObjectId
                                  AND ObjectLink_Unit_Business.DescId   = zc_ObjectLink_Unit_Business()
-        WHERE (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0
+        WHERE (tmpBranchJuridical.UnitId = tmpMovementLinkObject_From.ObjectId OR COALESCE (tmpBranchJuridical.UnitId, 0) = 0
+            OR tmpRoleAccessKey.AccessKeyId > 0
+              )
+          AND (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0
                -- Ñêëàä ÃÏ ô.Çàïîðîæüå
             OR (vbIsZp = TRUE AND tmpMovementLinkObject_From.ObjectId = 301309)
             OR vbIsIrna = TRUE

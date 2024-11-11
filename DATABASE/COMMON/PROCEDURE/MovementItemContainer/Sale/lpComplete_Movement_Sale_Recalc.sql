@@ -21,13 +21,21 @@ BEGIN
      -- if inUserId = 5 then return; end if;
 
      -- Временно захардкодил - !!!только для этого склада!!!
-     IF inUnitId = 8459 -- Склад Реализации
+     IF inUnitId = zc_Unit_RK() -- Склад Реализации
          OR inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
          OR (inUnitId IN (8444 -- Склад ОХЛАЖДЕНКА
                         , 8445 -- Склад МИНУСОВКА
                         , 133049 -- Склад реализации мясо
                          )
              AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Sale())
+            )
+         OR (inUnitId = 8458 -- Склад База ГП
+             AND EXISTS (SELECT 1
+                         FROM MovementLinkObject AS MLO
+                         WHERE MLO.MovementId = inMovementId
+                           AND MLO.DescId     = zc_MovementLinkObject_To()
+                           AND MLO.ObjectId   = zc_Unit_RK()
+                        )
             )
      THEN
          -- для этих не надо

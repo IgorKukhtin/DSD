@@ -130,6 +130,18 @@ BEGIN
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId
                                WHERE EXISTS (SELECT 1 FROM tmpRoleAccessKey_user WHERE tmpRoleAccessKey_user.AccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye())
                               )
+        , tmpBranchJuridical AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId, COALESCE (ObjectLink_Unit.ChildObjectId, 0) AS UnitId
+                                 FROM ObjectLink AS ObjectLink_Juridical
+                                      INNER JOIN ObjectLink AS ObjectLink_Branch
+                                                            ON ObjectLink_Branch.ObjectId = ObjectLink_Juridical.ObjectId
+                                                           AND ObjectLink_Branch.DescId  = zc_ObjectLink_BranchJuridical_Branch()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                           ON ObjectLink_Unit.ObjectId = ObjectLink_Juridical.ObjectId
+                                                          AND ObjectLink_Unit.DescId = zc_ObjectLink_BranchJuridical_Unit()
+                                 WHERE ObjectLink_Juridical.ChildObjectId > 0
+                                   AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
+                                   AND ObjectLink_Branch.ChildObjectId IN (SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
+                                )
         , tmpPersonal AS (SELECT lfSelect.MemberId
                                , lfSelect.PersonalId
                                , lfSelect.UnitId
@@ -143,14 +155,25 @@ BEGIN
                           FROM tmpStatus
                                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.StatusId = tmpStatus.StatusId
                                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                   AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                               LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                             ON MovementLinkObject_To.MovementId = Movement.Id
                                                            AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
                                                     ON ObjectLink_Unit_Business.ObjectId = MovementLinkObject_To.ObjectId
                                                    AND ObjectLink_Unit_Business.DescId   = zc_ObjectLink_Unit_Business()
+
                           WHERE inIsPartnerDate = FALSE
+                          --AND (tmpBranchJuridical.UnitId = MovementLinkObject_To.ObjectId OR COALESCE (tmpBranchJuridical.UnitId, 0) = 0)
                             AND (tmpRoleAccessKey.AccessKeyId > 0
+                              OR tmpBranchJuridical.JuridicalId > 0
                               OR vbIsIrna IS NULL
                               OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business.ChildObjectId = zc_Business_Irna())
                                 )
@@ -162,16 +185,27 @@ BEGIN
                                JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnIn()
                                JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
                                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                   AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                               LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                             ON MovementLinkObject_To.MovementId = Movement.Id
                                                            AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
                                                     ON ObjectLink_Unit_Business.ObjectId = MovementLinkObject_To.ObjectId
                                                    AND ObjectLink_Unit_Business.DescId   = zc_ObjectLink_Unit_Business()
+
                           WHERE inIsPartnerDate = TRUE
                             AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                             AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                          --AND (tmpBranchJuridical.UnitId = MovementLinkObject_To.ObjectId OR COALESCE (tmpBranchJuridical.UnitId, 0) = 0)
                             AND (tmpRoleAccessKey.AccessKeyId > 0
+                              OR tmpBranchJuridical.JuridicalId > 0
                               OR vbIsIrna IS NULL
                               OR (vbIsIrna = TRUE  AND ObjectLink_Unit_Business.ChildObjectId = zc_Business_Irna())
                                 )

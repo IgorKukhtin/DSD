@@ -10,8 +10,6 @@ BEGIN
      -- таблица - ѕроводки
      PERFORM lpComplete_Movement_All_CreateTemp();
 
-     -- таблица - Promo-recalc
-     CREATE TEMP TABLE _tmpItem_Promo_recalc (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperPrice TFloat, MovementId_promo Integer, OperPrice_promo TFloat, CountForPrice_promo TFloat, isChangePercent_promo Boolean) ON COMMIT DROP;
      -- таблица - суммовые элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_Goods Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId_ProfitLoss_20200 Integer, ContainerId Integer, AccountId Integer
                                    , ContainerId_Transit Integer
@@ -39,6 +37,15 @@ BEGIN
                                , isPartion_container Boolean
                                , OperCount_start TFloat, OperCountCount_start TFloat, OperCount_ChangePercent_start TFloat, OperCount_Partner_start TFloat
                                 ) ON COMMIT DROP;
+
+     -- таблица - 
+     IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpItem_Promo_recalc')
+     THEN
+         -- таблица - Promo-recalc
+         CREATE TEMP TABLE _tmpItem_Promo_recalc (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperPrice TFloat, MovementId_promo Integer, OperPrice_promo TFloat, CountForPrice_promo TFloat, isChangePercent_promo Boolean) ON COMMIT DROP;
+     ELSE
+         DELETE FROM _tmpItem_Promo_recalc;
+     END IF;
 
      -- таблица - 
      IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpList_Goods_1942')

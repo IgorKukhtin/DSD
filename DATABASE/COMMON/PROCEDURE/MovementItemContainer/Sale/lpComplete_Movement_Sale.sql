@@ -12,6 +12,8 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale(
 RETURNS VOID
 AS
 $BODY$
+  DECLARE vbUserId_save Integer;
+
   DECLARE vbMovementId_Tax Integer;
 
   DECLARE vbMovementItemId_check Integer;
@@ -121,6 +123,10 @@ $BODY$
 
   DECLARE vbPersent_check TFloat;
 BEGIN
+
+     -- проверка отклонения по кол-ву
+     vbUserId_save:= inUserId;
+     inUserId:= ABS (inUserId);
 
      -- проверка отклонения по кол-ву
      vbPersent_check:= 25;
@@ -2420,6 +2426,8 @@ end if;
      -- Проверка - RK + Склад Неликвид
      IF vbUnitId_From IN (zc_Unit_RK(), 9558031) AND COALESCE (vbMovementId_Order, 0) = 0
     AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
+    -- AND inUserId <> 5
+    AND vbUserId_save > 0
     AND EXISTS (SELECT 1
                 FROM _tmpItem
                 WHERE -- isTareReturning
@@ -4991,7 +4999,7 @@ end if;
      -- 6.2.3. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := vbMovementDescId
-                                , inUserId     := inUserId
+                                , inUserId     := CASE WHEN vbUserId_save < 0 THEN vbUserId_save ELSE inUserId END
                                  );
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
