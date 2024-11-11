@@ -86,6 +86,8 @@ type
     macPrintTRM_Group_gr: TMultiAction;
     bbmacPrintCEH_Group_gr: TdxBarButton;
     bbmacPrintTRM_Group_gr: TdxBarButton;
+    cbIsTerm: TcxCheckBox;
+    actRefresh_Term: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
