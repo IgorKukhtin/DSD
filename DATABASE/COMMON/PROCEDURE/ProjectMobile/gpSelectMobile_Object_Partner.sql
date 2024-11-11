@@ -77,7 +77,10 @@ BEGIN
                                              WHEN View_Contract_ContractKey.ContractId_Key IN (8318399, 1029784)
                                                   -- !!!замена!!!
                                                   THEN 8318399
-                                                  
+
+                                             WHEN View_Contract_ContractKey.ContractId_Key IN (10112693, 7530763)
+                                                  -- !!!замена!!!
+                                                  THEN 10112693
 
                                              WHEN (Object.ValueData ILIKE '%физобмен%' 
                                                 OR Object.ValueData ILIKE '%обмін%'
