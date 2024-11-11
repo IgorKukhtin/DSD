@@ -432,15 +432,16 @@ BEGIN
                          )
          -- не показываются эти партии
        , tmpReport_isPartion_disable AS (SELECT gpReport.ContainerId
-                                         FROM gpReport_ProductionUnion_TaxExitUpdate (inStartDate      := CASE WHEN inIsPartion = TRUE THEN inStartDate ELSE NULL END
-                                                                                    , inEndDate        := CASE WHEN inIsPartion = TRUE THEN inEndDate   ELSE NULL END
-                                                                                    , inFromId         := CASE WHEN inIsPartion = TRUE THEN inFromId    ELSE NULL END
-                                                                                    , inToId           := CASE WHEN inIsPartion = TRUE THEN inToId      ELSE NULL END
+                                         FROM gpReport_ProductionUnion_TaxExitUpdate (inStartDate      := CASE WHEN inIsTerm = TRUE THEN inStartDate ELSE NULL END
+                                                                                    , inEndDate        := CASE WHEN inIsTerm = TRUE THEN inEndDate   ELSE NULL END
+                                                                                    , inFromId         := CASE WHEN inIsTerm = TRUE THEN inFromId    ELSE NULL END
+                                                                                    , inToId           := CASE WHEN inIsTerm = TRUE THEN inToId      ELSE NULL END
                                                                                     , inParam          := inParam
                                                                                     , inIsList         := inIsList
                                                                                     , inIsListReport   := inIsListReport
                                                                                       -- !!! всегда по партиям
                                                                                     , inIsPartion      := FALSE
+                                                                                    , inIsTerm         := inIsTerm
                                                                                     , inSession        := inSession
                                                                                      ) AS gpReport
                                          WHERE gpReport.isPrint = FALSE
@@ -448,6 +449,7 @@ BEGIN
                                            AND inIsPartion      = TRUE
                                            -- ???
                                            -- AND inParam > 0
+                                           AND inIsTerm = TRUE
                                         )
          -- результат - группируется
        , tmpResult AS
@@ -845,6 +847,8 @@ BEGIN
           , tmpResult.Part_main_det       ::TFloat AS Part_main_det       -- Доля
 
           , CASE WHEN inIsPartion = TRUE
+                      THEN TRUE
+                 WHEN inIsTerm = FALSE
                       THEN TRUE
 
                  WHEN -- Норма отклонения П/Ф (ГП), кг
