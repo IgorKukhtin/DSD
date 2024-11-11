@@ -40,6 +40,7 @@ type
     edToGroup: TcxButtonEdit;
     ToGroupGuides: TdsdGuides;
     cbisPartion: TcxCheckBox;
+    cbIsTerm: TcxCheckBox;
   private
     { Private declarations }
   public

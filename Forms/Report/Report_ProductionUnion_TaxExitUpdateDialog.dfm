@@ -3,8 +3,8 @@ object Report_ProductionUnion_TaxExitUpdateDialogForm: TReport_ProductionUnion_T
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1058#1077#1093#1085#1086#1083#1086#1075'>'
-  ClientHeight = 265
-  ClientWidth = 226
+  ClientHeight = 271
+  ClientWidth = 232
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object Report_ProductionUnion_TaxExitUpdateDialogForm: TReport_ProductionUnion_T
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 11
-    Top = 216
+    Top = 232
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_ProductionUnion_TaxExitUpdateDialogForm: TReport_ProductionUnion_T
   end
   object cxButton2: TcxButton
     Left = 136
-    Top = 216
+    Top = 232
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -64,12 +64,12 @@ object Report_ProductionUnion_TaxExitUpdateDialogForm: TReport_ProductionUnion_T
   end
   object cxLabel5: TcxLabel
     Left = 11
-    Top = 94
+    Top = 110
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086'):'
   end
   object edFromGroup: TcxButtonEdit
     Left = 11
-    Top = 115
+    Top = 131
     Properties.Buttons = <
       item
         Default = True
@@ -81,12 +81,12 @@ object Report_ProductionUnion_TaxExitUpdateDialogForm: TReport_ProductionUnion_T
   end
   object cxLabel8: TcxLabel
     Left = 11
-    Top = 149
+    Top = 165
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
   end
   object edToGroup: TcxButtonEdit
     Left = 11
-    Top = 171
+    Top = 187
     Properties.Buttons = <
       item
         Default = True
@@ -98,9 +98,16 @@ object Report_ProductionUnion_TaxExitUpdateDialogForm: TReport_ProductionUnion_T
   end
   object cbisPartion: TcxCheckBox
     Left = 8
-    Top = 62
+    Top = 56
     Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1087#1072#1088#1090#1080#1080
     TabOrder = 10
+    Width = 138
+  end
+  object cbIsTerm: TcxCheckBox
+    Left = 8
+    Top = 83
+    Caption = #1058#1077#1088#1084#1080#1095#1082#1072
+    TabOrder = 11
     Width = 138
   end
   object PeriodChoice: TPeriodChoice
@@ -111,7 +118,7 @@ object Report_ProductionUnion_TaxExitUpdateDialogForm: TReport_ProductionUnion_T
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 160
-    Top = 225
+    Top = 241
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -124,7 +131,7 @@ object Report_ProductionUnion_TaxExitUpdateDialogForm: TReport_ProductionUnion_T
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 104
-    Top = 229
+    Top = 245
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -185,9 +192,17 @@ object Report_ProductionUnion_TaxExitUpdateDialogForm: TReport_ProductionUnion_T
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsTerm'
+        Value = Null
+        Component = cbIsTerm
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 152
-    Top = 137
+    Top = 153
   end
   object FromGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -218,7 +233,7 @@ object Report_ProductionUnion_TaxExitUpdateDialogForm: TReport_ProductionUnion_T
         MultiSelectSeparator = ','
       end>
     Left = 64
-    Top = 113
+    Top = 129
   end
   object ToGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -249,6 +264,6 @@ object Report_ProductionUnion_TaxExitUpdateDialogForm: TReport_ProductionUnion_T
         MultiSelectSeparator = ','
       end>
     Left = 53
-    Top = 176
+    Top = 192
   end
 end

@@ -231,6 +231,8 @@ type
     bbPrintTRM_Group: TdxBarButton;
     spPrint_TaxExitUpdate_groupTRM: TdsdStoredProc;
     spPrint_TaxExitUpdate_groupCeh: TdsdStoredProc;
+    spPrint_TaxExitUpdate_term: TdsdStoredProc;
+    spPrint_TaxExitUpdate_grid_term: TdsdStoredProc;
   private
     { Private declarations }
   public

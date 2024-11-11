@@ -828,9 +828,16 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
     end
     object cbisPartion: TcxCheckBox
       Left = 519
-      Top = 6
+      Top = 2
       Action = actRefresh_Partion
       TabOrder = 8
+      Width = 138
+    end
+    object cbIsTerm: TcxCheckBox
+      Left = 519
+      Top = 29
+      Action = actRefresh_Term
+      TabOrder = 9
       Width = 138
     end
   end
@@ -860,7 +867,20 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       end>
   end
   inherited ActionList: TActionList
-    object actRefresh_Partion: TdsdDataSetRefresh [0]
+    object actRefresh_Term: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1058#1077#1088#1084#1080#1095#1082#1072
+      Hint = #1058#1077#1088#1084#1080#1095#1082#1072
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
+    object actRefresh_Partion: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1468,6 +1488,14 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsTerm'
+          Value = Null
+          Component = cbIsTerm
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1696,6 +1724,14 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTerm'
+        Value = Null
+        Component = cbIsTerm
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 208
@@ -1876,8 +1912,8 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
     Top = 232
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 160
-    Top = 272
+    Left = 168
+    Top = 264
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -2064,6 +2100,13 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTerm'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 872
@@ -2132,6 +2175,14 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       item
         Name = 'inisPartion'
         Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTerm'
+        Value = True
+        Component = cbIsTerm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2256,6 +2307,13 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTerm'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 1016
@@ -2323,6 +2381,13 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       end
       item
         Name = 'inisPartion'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTerm'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
