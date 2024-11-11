@@ -828,15 +828,17 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
     end
     object cbisPartion: TcxCheckBox
       Left = 519
-      Top = 2
-      Action = actRefresh_Partion
+      Top = 5
+      Hint = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1087#1072#1088#1090#1080#1080
+      Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1087#1072#1088#1090#1080#1080
       TabOrder = 8
       Width = 138
     end
     object cbIsTerm: TcxCheckBox
       Left = 519
       Top = 29
-      Action = actRefresh_Term
+      Hint = #1058#1077#1088#1084#1080#1095#1082#1072
+      Caption = #1058#1077#1088#1084#1080#1095#1082#1072
       TabOrder = 9
       Width = 138
     end
