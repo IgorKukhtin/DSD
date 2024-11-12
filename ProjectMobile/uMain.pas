@@ -1080,7 +1080,6 @@ type
     procedure bOptimizeDBClick_two(Sender: TObject);
     procedure LinkListControlToField14FilledListItem(Sender: TObject;
       const AEditor: IBindListEditorItem);
-    procedure LinkListControlToField2FilledListItem(Sender: TObject; const AEditor: IBindListEditorItem);
     procedure lwJuridicalCollationItemClick(const Sender: TObject; const AItem: TListViewItem);
     procedure bSyncReturnInClick(Sender: TObject);
     procedure LocationSensor1LocationChanged(Sender: TObject; const OldLocation,
@@ -1660,30 +1659,6 @@ begin
       Kredit := lwJuridicalCollation.Items[AEditor.CurrentIndex].Objects.FindDrawable('Kredit');
       if Assigned(Kredit) then
         (Kredit as TListItemText).TextColor := DocColor;
-    end;
-  end;
-end;
-
-procedure TfrmMain.LinkListControlToField2FilledListItem(Sender: TObject; const AEditor: IBindListEditorItem);
-var
-  PartnerCount, PartnerName: TListItemDrawable;
-  PartnerColor: TAlphaColor;
-begin
-  if (AEditor.CurrentIndex > -1) and Assigned(lwPartner) and
-    Assigned(lwPartner.Items[AEditor.CurrentIndex]) and
-    Assigned(lwPartner.Items[AEditor.CurrentIndex].Objects) then
-  begin
-    PartnerCount := lwPartner.Items[AEditor.CurrentIndex].Objects.FindDrawable('PartnerCount');
-    PartnerColor := TAlphaColors.Black;
-    if Assigned(PartnerCount) then
-      if StrToIntDef((PartnerCount as TListItemText).Text, 0) > 0 then
-        PartnerColor := TAlphaColors.Green;
-
-    PartnerName := lwPartner.Items[AEditor.CurrentIndex].Objects.FindDrawable('Name');
-    if Assigned(PartnerName) then
-    begin
-      (PartnerName as TListItemText).TextColor := PartnerColor;
-      (PartnerName as TListItemText).SelectedTextColor := PartnerColor;
     end;
   end;
 end;
@@ -2274,11 +2249,31 @@ end;
 
 procedure TfrmMain.lwPartnerUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
+var
+  PartnerCount, PartnerName: TListItemDrawable;
+  PartnerColor: TAlphaColor;
 begin
   // установка иконки аддресса
   TListItemImage(AItem.Objects.FindDrawable('imAddress')).ImageIndex := 2;
   // установка иконки договора
   TListItemImage(AItem.Objects.FindDrawable('imContact')).ImageIndex := 3;
+
+  if Assigned(AItem) and Assigned(AItem.Objects) then
+  begin
+    PartnerCount := AItem.Objects.FindDrawable('PartnerCount');
+    PartnerColor := TAlphaColors.Black;
+    if Assigned(PartnerCount) then
+      if StrToIntDef((PartnerCount as TListItemText).Text, 0) > 0 then
+        PartnerColor := TAlphaColors.Green;
+
+    PartnerName := AItem.Objects.FindDrawable('Name');
+    if Assigned(PartnerName) then
+    begin
+      (PartnerName as TListItemText).TextColor := PartnerColor;
+      (PartnerName as TListItemText).SelectedTextColor := PartnerColor;
+    end;
+  end;
+
 end;
 
 procedure TfrmMain.lwPhotoDocsItemClickEx(const Sender: TObject;
@@ -4010,7 +4005,7 @@ end;
 
 procedure TfrmMain.bPartnersClick(Sender: TObject);
 begin
-  ShowPartners(8, 'Все ТТ');
+  ShowPartners(9, 'Все ТТ');
 end;
 
 // переход на форму отображения маршрута контрагента
@@ -5577,13 +5572,14 @@ var
   I: Integer;
   lDay: TLabel;
 begin
-  for I := 0 to Pred(ComponentCount) do
-    if (Components[I] is TLabel) then
-    begin
-      lDay := Components[I] as TLabel;
-      if (lDay.Tag = Day) and (lDay.Text = '0') then
-        Exit;
-    end;
+  if Day < 9 then
+    for I := 0 to Pred(ComponentCount) do
+      if (Components[I] is TLabel) then
+      begin
+        lDay := Components[I] as TLabel;
+        if (lDay.Tag = Day) and (lDay.Text = '0') then
+          Exit;
+      end;
 
   ClearListSearch(lwPartner);
 
