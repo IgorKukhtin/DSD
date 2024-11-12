@@ -66,6 +66,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsCode_main_old  Integer  
              , GoodsName_main_old  TVarChar 
              , EndDate_old  TDateTime
+             , GoodsSubDate TDateTime 
+             , isNotDate    Boolean
               )
 AS
 $BODY$
@@ -305,7 +307,8 @@ BEGIN
            , Object_Goods_main_old.ObjectCode       ::Integer    AS GoodsCode_main_old
            , Object_Goods_main_old.ValueData        ::TVarChar   AS GoodsName_main_old
            , ObjectDate_End_old.ValueData           ::TDateTime  AS EndDate_old
-
+           , ObjectDate_GoodsSub.ValueData          ::TDateTime  AS GoodsSubDate
+           , TRUE                                   ::Boolean    AS isNotDate
        FROM tmpGoodsByGoodsKind AS Object_GoodsByGoodsKind_View
             /*LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
                                  ON ObjectLink_GoodsByGoodsKind_GoodsBasis.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -586,6 +589,10 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_End_old
                                  ON ObjectDate_End_old.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectDate_End_old.DescId = zc_ObjectDate_GoodsByGoodsKind_End_old()
+
+            LEFT JOIN ObjectDate AS ObjectDate_GoodsSub
+                                 ON ObjectDate_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectDate_GoodsSub.DescId = zc_ObjectDate_GoodsByGoodsKind_GoodsSub()
             --
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Receipt
                                  ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -619,6 +626,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.11.24        * GoodsSubDate
  04.11.24        * GoodsIncomeId, GoodsKindIncomeId
  16.02.24        * PackLimit, isPackLimit
  22.01.24        * isPackOrder

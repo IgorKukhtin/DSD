@@ -474,6 +474,22 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderHint = #1056#1077#1094#1077#1087#1090#1091#1088#1072' ('#1089#1093#1077#1084#1072' '#1089' '#1090#1091#1096#1077#1085#1082#1086#1081')'
             Width = 100
           end
+          object GoodsSubDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1087#1077#1088#1077#1089#1086#1088'. - '#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsSubDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072', '#1089' '#1082#1086#1090#1086#1088#1086#1081' '#1092#1086#1088#1084#1080#1088#1091#1077#1090#1089#1103' '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' - '#1088#1072#1089#1093#1086#1076
+            Width = 80
+          end
+          object isNotDate: TcxGridDBColumn
+            Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' ('#1087'/'#1088')'
+            DataBinding.FieldName = 'isNotDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' ('#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' - '#1088#1072#1089#1093#1086#1076')'
+            Width = 70
+          end
           object GoodsSubCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087'/'#1088')'
             DataBinding.FieldName = 'GoodsSubCode'
@@ -2108,6 +2124,24 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Component = MasterCDS
         ComponentItem = 'DaysQ'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsSubDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsSubDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotDate'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
