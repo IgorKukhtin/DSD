@@ -256,10 +256,9 @@ BEGIN
         END IF;
 
     END IF;
-
-    -- Результат
-    RETURN QUERY
-        WITH tmpContainer AS (SELECT Container.Id
+    
+   CREATE TEMP TABLE tmpContainer ON COMMIT DROP
+                          AS (SELECT Container.Id
                                    , Container.ObjectId        AS GoodsId       -- товар
                                    , _tmpWhereOject.Id         AS WhereObjectId -- Объект анализа
                                    , _tmpWhereOject.ObjectType AS ObjectType    -- тип объекта анализа
@@ -290,8 +289,11 @@ BEGIN
                               WHERE (inAccountGroupId = 0
                                   OR COALESCE (ObjectLink_Account_AccountGroup.ChildObjectId, zc_Enum_AccountGroup_20000()) = inAccountGroupId
                                     )
-                             )
-           , tmpVirt AS (SELECT MovementItem.ObjectId                 AS GoodsId
+                             );
+
+
+   CREATE TEMP TABLE tmpVirt ON COMMIT DROP
+                     AS (SELECT MovementItem.ObjectId                 AS GoodsId
                               , MovementLinkObject_From.ObjectId      AS FromId
                               , MovementLinkObject_To.ObjectId        AS ToId
                               , SUM (MIFloat_AmountPartner.ValueData) AS AmountPartner
@@ -319,31 +321,18 @@ BEGIN
                            AND Movement.StatusId = zc_Enum_Status_Complete()
                            AND Movement.DescId   = zc_Movement_SendOnPrice()
                            AND (_tmpWhereOject_from.Id > 0 OR _tmpWhereOject_to.Id > 0)
+                           AND vbDescId = zc_Object_Unit()
                          GROUP BY MovementItem.ObjectId
                                 , MovementLinkObject_From.ObjectId
                                 , MovementLinkObject_To.ObjectId
-                        )
-           , DDD
-        AS(
-            SELECT
-                DD.Id
-               ,DD.GoodsId
-               ,DD.WhereObjectId
-               ,DD.ObjectType
-               ,DD.AccountGroupId
-               ,DD.BranchId
-               ,DD.PaidKindId
-               , COALESCE (SUM (DD.Amount), 0) :: TFloat            AS Amount
-               , COALESCE (SUM (MIC_Amount_Start), 0) :: TFloat     AS MIC_Amount_Start
-               , COALESCE (SUM (MIC_Amount_End), 0) :: TFloat       AS MIC_Amount_End
-               , COALESCE (SUM (MIC_Amount_IN), 0) :: TFloat        AS MIC_Amount_IN
-               , COALESCE (SUM (MIC_Amount_INBay), 0) :: TFloat     AS MIC_Amount_INBay
-               , COALESCE (SUM (MIC_Amount_OUT), 0) :: TFloat       AS MIC_Amount_OUT
-               , COALESCE (SUM (MIC_Amount_OUTSale), 0) :: TFloat   AS MIC_Amount_OUTSale
-               , COALESCE (SUM (MIC_Amount_Inventory), 0) :: TFloat AS MIC_Amount_Inventory
-               , COALESCE (SUM (MIC_Amount_Loss), 0) :: TFloat      AS MIC_Amount_Loss
-            FROM(
-                    SELECT
+                        );
+
+ RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from tmpVirt);
+ RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from tmpContainer);
+
+
+   CREATE TEMP TABLE DD ON COMMIT DROP
+                AS (SELECT
                          tmpContainer.Id
                        , tmpContainer.GoodsId
                        , tmpContainer.WhereObjectId
@@ -410,7 +399,27 @@ BEGIN
                        , tmpContainer.BranchId
                        , tmpContainer.PaidKindId
                        , tmpContainer.AccountGroupId
-                ) AS DD
+                );
+
+   CREATE TEMP TABLE DDD ON COMMIT DROP
+        AS (SELECT
+                DD.Id
+               ,DD.GoodsId
+               ,DD.WhereObjectId
+               ,DD.ObjectType
+               ,DD.AccountGroupId
+               ,DD.BranchId
+               ,DD.PaidKindId
+               , COALESCE (SUM (DD.Amount), 0) :: TFloat            AS Amount
+               , COALESCE (SUM (MIC_Amount_Start), 0) :: TFloat     AS MIC_Amount_Start
+               , COALESCE (SUM (MIC_Amount_End), 0) :: TFloat       AS MIC_Amount_End
+               , COALESCE (SUM (MIC_Amount_IN), 0) :: TFloat        AS MIC_Amount_IN
+               , COALESCE (SUM (MIC_Amount_INBay), 0) :: TFloat     AS MIC_Amount_INBay
+               , COALESCE (SUM (MIC_Amount_OUT), 0) :: TFloat       AS MIC_Amount_OUT
+               , COALESCE (SUM (MIC_Amount_OUTSale), 0) :: TFloat   AS MIC_Amount_OUTSale
+               , COALESCE (SUM (MIC_Amount_Inventory), 0) :: TFloat AS MIC_Amount_Inventory
+               , COALESCE (SUM (MIC_Amount_Loss), 0) :: TFloat      AS MIC_Amount_Loss
+            FROM DD
             GROUP BY
                 DD.Id
                ,DD.GoodsId
@@ -429,7 +438,11 @@ BEGIN
                 COALESCE(SUM(MIC_Amount_OUTSale),0) <> 0 OR
                 COALESCE(SUM(MIC_Amount_Inventory),0) <> 0 OR
                 COALESCE(SUM(MIC_Amount_Loss),0) <> 0
-        )
+           );
+
+
+    -- Результат
+    RETURN QUERY
         SELECT
             Object_Goods.Id                                    AS GoodsId         --ИД товара
            ,Object_Goods.ObjectCode                            AS GoodsCode       --Код Товара
@@ -517,7 +530,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Report_Tara (TDateTime,TDateTime,Boolean,Boolean,Boolean,Boolean,Boolean,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
