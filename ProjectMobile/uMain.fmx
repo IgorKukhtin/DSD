@@ -786,7 +786,7 @@ object frmMain: TfrmMain
       Size.Height = 508.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 0
+      TabIndex = 10
       TabOrder = 1
       TabPosition = None
       OnChange = ChangeMainPageUpdate
@@ -860,7 +860,7 @@ object frmMain: TfrmMain
           item
           end>
         TextSettings.Trimming = None
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -4535,7 +4535,7 @@ object frmMain: TfrmMain
           item
           end>
         TextSettings.Trimming = None
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -22122,6 +22122,13 @@ object frmMain: TfrmMain
       Text = ' '#1042#1074#1077#1076#1080#1090#1077' '#1087#1072#1088#1086#1083#1100' '#1072#1076#1084#1080#1085#1080#1089#1090#1088#1072#1090#1086#1088#1072
     end
   end
+  object TimerPopupClose: TTimer
+    Enabled = False
+    Interval = 200
+    OnTimer = TimerPopupCloseTimer
+    Left = 167
+    Top = 219
+  end
   object blMain: TBindingsList
     Methods = <>
     OutputConverters = <>
@@ -24014,12 +24021,5 @@ object frmMain: TfrmMain
     ScopeMappings = <>
     Left = 96
     Top = 212
-  end
-  object TimerPopupClose: TTimer
-    Enabled = False
-    Interval = 200
-    OnTimer = TimerPopupCloseTimer
-    Left = 167
-    Top = 219
   end
 end
