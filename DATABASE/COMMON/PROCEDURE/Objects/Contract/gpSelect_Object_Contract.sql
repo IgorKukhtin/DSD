@@ -61,7 +61,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , isWMS Boolean
              , isRealEx Boolean
              , isIrna Boolean
-             , isNotTareReturning Boolean             
+             , isNotTareReturning Boolean
+             , isMarketNot Boolean             
 
              , DayTaxSummary TFloat
              , DocumentCount TFloat, DateDocument TDateTime
@@ -276,10 +277,11 @@ BEGIN
        , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
        , COALESCE (ObjectBoolean_Vat.ValueData, False)      AS isVat
        , COALESCE (ObjectBoolean_NotVat.ValueData, False)   AS isNotVat
-       , COALESCE (ObjectBoolean_isWMS.ValueData, FALSE) ::Boolean AS isWMS
-       , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
-       , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
+       , COALESCE (ObjectBoolean_isWMS.ValueData, FALSE)              ::Boolean AS isWMS
+       , COALESCE (ObjectBoolean_RealEx.ValueData, False)             :: Boolean AS isRealEx
+       , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)         :: Boolean AS isIrna
        , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
+       , COALESCE (ObjectBoolean_MarketNot.ValueData, FALSE)          :: Boolean AS isMarketNot
        
        , ObjectFloat_DayTaxSummary.ValueData AS DayTaxSummary
        , ObjectFloat_DocumentCount.ValueData AS DocumentCount
@@ -388,6 +390,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
                                 ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_MarketNot
+                                ON ObjectBoolean_MarketNot.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_MarketNot.DescId = zc_ObjectBoolean_Contract_MarketNot()
 
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
@@ -549,6 +555,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 11.11.24         * isMarketNot
  26.09.23         * isNotTareReturning
  01.05.23         * NotVat
  04.05.22         *

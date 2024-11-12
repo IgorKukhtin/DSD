@@ -364,6 +364,7 @@ type
     macUpdate_Personal: TMultiAction;
     bbUpdate_Personal: TdxBarButton;
     cePersonal_update: TcxButtonEdit;
+    isMarketNot: TcxGridDBColumn;
 
   private
     { Private declarations }

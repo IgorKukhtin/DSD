@@ -76,6 +76,8 @@ type
     spUpdate_PackOrder: TdsdStoredProc;
     actUpdate_PackOrder: TdsdDataSetRefresh;
     bbUpdate_PackOrder: TdxBarButton;
+    GoodsSubDate: TcxGridDBColumn;
+    isNotDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

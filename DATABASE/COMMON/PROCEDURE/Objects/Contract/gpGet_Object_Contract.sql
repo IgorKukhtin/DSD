@@ -46,7 +46,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , isUnique Boolean
              , isRealEx Boolean
              , isNotVat Boolean
-             , isNotTareReturning Boolean
+             , isNotTareReturning Boolean 
+             , isMarketNot Boolean
              
              , PriceListId Integer, PriceListName TVarChar
              , PriceListPromoId Integer, PriceListPromoName TVarChar
@@ -148,6 +149,7 @@ BEGIN
            , CAST (false as Boolean)   AS isRealEx
            , CAST (FALSE AS Boolean)   AS isNotVat 
            , CAST (FALSE AS Boolean)   AS isNotTareReturning
+           , CAST (FALSE AS Boolean)   AS isMarketNot
 
            , CAST (0 as Integer)       AS PriceListId 
            , CAST ('' as TVarChar)     AS PriceListName 
@@ -254,6 +256,7 @@ BEGIN
            , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
            , COALESCE (ObjectBoolean_NotVat.ValueData, False)             :: Boolean AS isNotVat
            , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
+           , COALESCE (ObjectBoolean_MarketNot.ValueData, FALSE)          :: Boolean AS isMarketNot
            
            , Object_PriceList.Id         AS PriceListId 
            , Object_PriceList.ValueData  AS PriceListName 
@@ -343,6 +346,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
                                     ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
                                    AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_MarketNot
+                                    ON ObjectBoolean_MarketNot.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_MarketNot.DescId = zc_ObjectBoolean_Contract_MarketNot()
                                
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
@@ -453,6 +460,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.11.24         * isMarketNot
  26.09.23         * isNotTareReturning
  01.05.23         * isNotVat
  21.03.22         * isRealEx

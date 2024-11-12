@@ -1647,7 +1647,16 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 70
+          Width = 80
+        end
+        object isMarketNot: TcxGridDBColumn
+          Caption = #1054#1075#1088'. '#1076#1086#1089#1090#1091#1087' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+          DataBinding.FieldName = 'isMarketNot'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+          Options.Editing = False
+          Width = 80
         end
       end
       object cxGridLevel: TcxGridLevel
