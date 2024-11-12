@@ -308,6 +308,12 @@ type
     EditAsset_two: TcxButtonEdit;
     AssetName_two: TcxGridDBColumn;
     bbUpdateAsset_two: TSpeedButton;
+    PanelLeft_all: TPanel;
+    PanelTop_all: TPanel;
+    PanelGoodsKind_all: TPanel;
+    PanelLeft_1: TPanel;
+    PanelBottom_all: TPanel;
+    PanelRight_2: TPanel;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -558,7 +564,7 @@ end;
 procedure TMainCehForm.InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
 var i,i2:Integer;
 begin
-     PanelGoodsKind.Visible:=(GoodsKindWeighingGroupId>0)
+     PanelGoodsKind_all.Visible:=(GoodsKindWeighingGroupId>0)
                            or((SettingMain.isGoodsComplete = TRUE)
                            and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_CuterWeight)
                            and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealWeight)
@@ -584,12 +590,13 @@ begin
                  if GoodsKind_Array[i].Number = GoodsKindWeighingGroupId
                  then begin i2:=i2+1;Items.Add('('+IntToStr(GoodsKind_Array[i].Code)+') '+ GoodsKind_Array[i].Name);end;
           //
-          if i2<5 then Columns:=1 else Columns:=2;
-          if i2>25 then PanelGoodsKind.Height:=235
-          else if i2>22 then PanelGoodsKind.Height:=205
-          else if i2>15 then PanelGoodsKind.Height:=185 else PanelGoodsKind.Height:=155;
+          if i2<5 then Columns:=1 else if i2<20 then Columns:=2 else Columns:=3;
+          //if i2>25 then PanelGoodsKind_all.Height:=245
+          //else if i2>22 then PanelGoodsKind_all.Height:=205
+          //else if i2>15 then PanelGoodsKind_all.Height:=185 else PanelGoodsKind_all.Height:=155;
           if SettingMain.isModeSorting = TRUE
-          then begin PanelGoodsKind.Height:= 375;
+          then begin PanelGoodsKind_all.Align:= alTop;
+                     PanelGoodsKind_all.Height:= 375;
                      PanelGoodsKind.Font.Size:= 14;
                      rgGoodsKind.Font.Size:= 14;
           end;
@@ -988,7 +995,7 @@ begin
        end;
 
        // проверили параметр
-       if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindId_list').AsString <> '')
+       if (PanelGoodsKind_all.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindId_list').AsString <> '')
           and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
        then if System.Pos(',' + IntToStr(GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id) + ',', ',' + ParamsMI.ParamByName('GoodsKindId_list').AsString + ',') = 0
             then
@@ -1032,7 +1039,7 @@ begin
        ParamsMovement.ParamByName('NumberKVK').AsString:= trim(EditNumberKVK.Text);
 
        // доопределили параметр
-       if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
+       if (PanelGoodsKind_all.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
        then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
        else ParamsMI.ParamByName('GoodsKindId').AsInteger:= 0;
 
@@ -2216,7 +2223,7 @@ begin
            or(ParamsMI.ParamByName('isEnterCount').AsBoolean = TRUE)
           then if HeadCountPanel.Visible then ActiveControl:=EditEnterCount;
           //и выставим вид упаковки
-          if (PanelGoodsKind.Visible) {and (rgGoodsKind.ItemIndex>=0)} and (rgGoodsKind.Items.Count > 1) and (ParamsMI.ParamByName('GoodsKindCode_max').AsInteger > 0)
+          if (PanelGoodsKind_all.Visible) {and (rgGoodsKind.ItemIndex>=0)} and (rgGoodsKind.Items.Count > 1) and (ParamsMI.ParamByName('GoodsKindCode_max').AsInteger > 0)
              and (oldGoodsCode <> GoodsCode_int) and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
           then rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,ParamsMI.ParamByName('GoodsKindCode_max').AsInteger);
 
@@ -2297,7 +2304,7 @@ begin
                  exit;
            end
       else begin
-                if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindId_list').AsString <> '')
+                if (PanelGoodsKind_all.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindId_list').AsString <> '')
                    and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
                 then if System.Pos(',' + IntToStr(GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id) + ',', ',' + ParamsMI.ParamByName('GoodsKindId_list').AsString + ',') = 0
                      then
@@ -2542,7 +2549,7 @@ begin
                execParams.Free;
           end;
           //
-          if PanelGoodsKind.Visible then ActiveControl:=EditGoodsKindCode
+          if PanelGoodsKind_all.Visible then ActiveControl:=EditGoodsKindCode
           else if PanelPartionGoods.Visible then ActiveControl:=EditPartionGoods
                else ActiveControl:=EditCount;
      end;
@@ -2708,7 +2715,7 @@ procedure TMainCehForm.EditEnterCountKeyDown(Sender: TObject; var Key: Word;Shif
 begin
      if Key = 13 then
      begin
-          if PanelGoodsKind.Visible then ActiveControl:=EditGoodsKindCode
+          if PanelGoodsKind_all.Visible then ActiveControl:=EditGoodsKindCode
           else if PanelPartionGoods.Visible then ActiveControl:=EditPartionGoods
                else ActiveControl:=EditCount;
      end;
@@ -3142,6 +3149,7 @@ begin
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.WriteParamsMovement;
+var h_1, h_2 : Integer;
 begin
   PanelPartionDate.Visible:=ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean=true;
   PanelStorageLine.Visible:=ParamsMovement.ParamByName('isStorageLine').asBoolean=true;
@@ -3209,6 +3217,42 @@ begin
 
   end;
 
+  //
+  h_1:= gbStartWeighing.Height + PanelGoods.Height;
+  if PanelMovementInfo.Visible then h_1:= h_1 + PanelMovementInfo.Height;
+  //
+  h_2:= PanelOperDate.Height;
+  if PanelPartionDate.Visible then h_2:= h_2 + PanelPartionDate.Height;
+  if PanelStorageLine.Visible then h_2:= h_2 + PanelStorageLine.Height;
+  if PanelArticleLoss.Visible then h_2:= h_2 + PanelArticleLoss.Height;
+  if PersonalGroupPanel.Visible then h_2:= h_2 + PersonalGroupPanel.Height;
+  if KVKPanel.Visible then h_2:= h_2 + KVKPanel.Height;
+  //
+  if h_1 > h_2 then PanelTop_all.Height:= h_1 + 1 else PanelTop_all.Height:= h_2 + 1;
+  //
+  //
+  h_1:= 0;
+  h_2:= 0;
+  //
+  if PanelPartionGoods.Visible then h_1:= h_1 + PanelPartionGoods.Height;
+  if infoPanelCount.Visible then h_1:= h_1 + infoPanelCount.Height;
+  if infoPanelTare_enter.Visible then h_1:= h_1 + infoPanelTare_enter.Height;
+  if infoPanelSkewer1.Visible then h_1:= h_1 + infoPanelSkewer1.Height;
+  if infoPanelSkewer2.Visible then h_1:= h_1 + infoPanelSkewer2.Height;
+  if infoPanelWeightOther.Visible then h_1:= h_1 + infoPanelWeightOther.Height;
+  if SubjectDocPanel.Visible then h_1:= h_1 + SubjectDocPanel.Height;
+  if AssetPanel.Visible then h_1:= h_1 + AssetPanel.Height;
+  if Asset_twoPanel.Visible then h_1:= h_1 + Asset_twoPanel.Height;
+  if infoPanel_Weight.Visible then h_1:= h_1 + infoPanel_Weight.Height;
+  //
+  if PanelPartionGoods.Visible then h_2:= h_2 + PanelPartionGoods.Height;
+  if HeadCountPanel.Visible then h_2:= h_2 + HeadCountPanel.Height;
+  if rgScale.Visible then h_2:= h_2 + rgScale.Height;
+  if PanelSticker_Ceh.Visible then h_2:= h_2 + PanelSticker_Ceh.Height;
+  if infoPanel_Scale.Visible then h_2:= h_2 + infoPanel_Scale.Height;
+  //
+  if h_1 > h_2 then PanelBottom_all.Height:= h_1 + 1 else PanelBottom_all.Height:= h_2 + 1;
+
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.RefreshDataSet;
@@ -3248,7 +3292,7 @@ begin
        then begin
             PanelGoodsName.Caption:= ParamsMI.ParamByName('GoodsName').asString;
             //и выставим вид упаковки
-            if (PanelGoodsKind.Visible) {and (rgGoodsKind.ItemIndex>=0)} and (rgGoodsKind.Items.Count > 1)
+            if (PanelGoodsKind_all.Visible) {and (rgGoodsKind.ItemIndex>=0)} and (rgGoodsKind.Items.Count > 1)
                and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
             then rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,ParamsLight.ParamByName('GoodsKindCode').AsInteger);
        end
