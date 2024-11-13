@@ -207,7 +207,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_Asset() RETURNS Integer AS $BO
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_Asset', 'Признак - ОС' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_Asset');
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_HeadCount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_HeadCount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_HeadCount', 'Признак - Проверка Количество голов' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_HeadCount');
 
 
 

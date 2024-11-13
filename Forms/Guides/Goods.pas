@@ -185,6 +185,7 @@ type
     macStartLoad_Direct: TMultiAction;
     bbStartLoad_Direct: TdxBarButton;
     Comment: TcxGridDBColumn;
+    isHeadCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

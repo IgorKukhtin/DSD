@@ -886,9 +886,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -1775,10 +1772,10 @@ object IncomeForm: TIncomeForm
     object actPrintDiff: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint_diff
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_diff
         end>
       Caption = #1040#1082#1090' '#1085#1077#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1081
       Hint = #1040#1082#1090' '#1085#1077#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1081
@@ -3972,10 +3969,17 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisActDiff'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 567
-    Top = 208
+    Left = 599
+    Top = 224
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Income'
@@ -4809,5 +4813,36 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 977
     Top = 216
+  end
+  object spSelectPrint_diff: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisActDiff'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 607
+    Top = 256
   end
 end

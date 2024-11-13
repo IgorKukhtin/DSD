@@ -23,7 +23,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar , ShortName TVarChar
              , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar
              , GoodsGroupDirectionId Integer, GoodsGroupDirectionName TVarChar
              , PriceListId Integer, PriceListName TVarChar, StartDate TDateTime, ValuePrice TFloat
-             , Comment TVarChar
+             , Comment TVarChar 
+             , isHeadCount Boolean
               )
 AS
 $BODY$
@@ -95,6 +96,7 @@ BEGIN
            , zc_DateStart()                AS StartDate 
            , CAST (0 as TFloat)            AS ValuePrice
            , NULL              ::TVarChar  AS Comment
+           , FALSE             ::Boolean   AS isHeadCount
       
        ;
    ELSE
@@ -152,6 +154,8 @@ BEGIN
            , COALESCE (tmp.ValuePrice, 0) ::  TFloat     AS ValuePrice
 
            , ObjectString_Goods_Comment.ValueData ::TVarChar AS Comment
+
+           , COALESCE (ObjectBoolean_Goods_HeadCount.ValueData, FALSE)  :: Boolean AS isHeadCount
        FROM Object AS Object_Goods
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -204,6 +208,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Goods_Comment
                                  ON ObjectString_Goods_Comment.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_Comment.DescId = zc_ObjectString_Goods_Comment()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_HeadCount
+                                  ON ObjectBoolean_Goods_HeadCount.ObjectId = Object_Goods.Id 
+                                 AND ObjectBoolean_Goods_HeadCount.DescId = zc_ObjectBoolean_Goods_HeadCount()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 

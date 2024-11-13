@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar, Name
              , isNameOrig Boolean
              , isIrna Boolean
              , isAsset Boolean
+             , isHeadCount Boolean
              , isErased Boolean
              , Comment TVarChar
               )
@@ -125,10 +126,11 @@ BEGIN
             , CASE WHEN Object_Goods_basis.Id > 0 AND Object_Goods_basis.Id <> COALESCE (Object_Goods_main.Id, 0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_basis
             , CASE WHEN Object_Goods_main.Id  > 0 AND Object_Goods_main. Id <> COALESCE (Object_Goods.Id,      0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_main
 
-            , COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE)     :: Boolean AS isNameOrig
+            , COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE)         :: Boolean AS isNameOrig
 
-            , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
-            , COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE)  :: Boolean AS isAsset
+            , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)       :: Boolean AS isIrna
+            , COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE)      :: Boolean AS isAsset
+            , COALESCE (ObjectBoolean_Goods_HeadCount.ValueData, FALSE)  :: Boolean AS isHeadCount
 
             , Object_Goods.isErased       AS isErased
             
@@ -248,6 +250,10 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
                                      ON ObjectBoolean_Goods_Asset.ObjectId = Object_Goods.Id 
                                     AND ObjectBoolean_Goods_Asset.DescId = zc_ObjectBoolean_Goods_Asset()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_HeadCount
+                                     ON ObjectBoolean_Goods_HeadCount.ObjectId = Object_Goods.Id 
+                                    AND ObjectBoolean_Goods_HeadCount.DescId = zc_ObjectBoolean_Goods_HeadCount()
 
              LEFT JOIN ObjectDate AS ObjectDate_BUH
                                   ON ObjectDate_BUH.ObjectId = Object_Goods.Id
@@ -374,6 +380,7 @@ BEGIN
             , FALSE                           AS isNameOrig
             , FALSE                           AS isIrna
             , FALSE                           AS isAsset
+            , FALSE                           AS isHeadCount
             , FALSE                           AS isErased
             , NULL                ::TVarChar AS Comment
       ;
@@ -387,6 +394,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 12.11.24         *
  18.10.24         * Comment
  22.08.24         *
  17.01.24         *

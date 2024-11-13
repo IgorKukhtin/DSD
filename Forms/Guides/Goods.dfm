@@ -237,6 +237,15 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 70
       end
+      object isHeadCount: TcxGridDBColumn
+        Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1050#1086#1083'. '#1075#1086#1083#1086#1074
+        DataBinding.FieldName = 'isHeadCount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1074#1077#1088#1082#1072' '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
+        Options.Editing = False
+        Width = 70
+      end
       object AssetName: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
         DataBinding.FieldName = 'AssetName'
