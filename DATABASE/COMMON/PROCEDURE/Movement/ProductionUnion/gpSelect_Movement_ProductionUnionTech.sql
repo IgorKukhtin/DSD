@@ -375,7 +375,7 @@ BEGIN
             , _tmpListMaster.MovementItemId
             , _tmpListMaster.MovementItemId_order
             , _tmpListMaster.InvNumber
-            , _tmpListMaster.OperDate
+            , COALESCE (_tmpListMaster.OperDate, inStartDate) :: TDateTime AS OperDate
             , _tmpListMaster.DocumentKindId
             , Object_DocumentKind.ValueData     AS DocumentKindName
             
@@ -425,7 +425,7 @@ BEGIN
 
 
             , ObjectFloat_TermProduction.ValueData AS TermProduction
-            , CASE WHEN _tmpListMaster.isPartionDate = TRUE THEN TO_CHAR (_tmpListMaster.OperDate, 'DD.MM.YYYY') ELSE '*' || TO_CHAR (MIDate_PartionGoods.ValueData, 'DD.MM.YYYY')  END :: TVarChar AS PartionGoodsDate
+            , CASE WHEN _tmpListMaster.isPartionDate = TRUE THEN TO_CHAR (COALESCE (_tmpListMaster.OperDate, inStartDate), 'DD.MM.YYYY') ELSE '*' || TO_CHAR (COALESCE (MIDate_PartionGoods.ValueData, inStartDate), 'DD.MM.YYYY')  END :: TVarChar AS PartionGoodsDate
             , (CASE WHEN _tmpListMaster.isPartionDate = TRUE THEN _tmpListMaster.OperDate ELSE MIDate_PartionGoods.ValueData END
              + (COALESCE (ObjectFloat_TermProduction.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS PartionGoodsDateClose
 

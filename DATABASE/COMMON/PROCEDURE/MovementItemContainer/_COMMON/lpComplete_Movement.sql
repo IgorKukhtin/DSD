@@ -114,6 +114,8 @@ BEGIN
          <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
          -- Проведение документов - нет проверки по филиалу
          AND NOT EXISTS  (SELECT 1 FROM Object_Role_Process_View WHERE Object_Role_Process_View.ProcessId = zc_Enum_Process_UpdateMovement_Branch() AND Object_Role_Process_View.UserId = inUserId)
+         -- Проведение возврат - все филиалы
+         AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = 11539194)
       THEN
           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на проведение документа № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
       END IF;
@@ -124,6 +126,8 @@ BEGIN
          <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
          -- Проведение документов - нет проверки по филиалу
          AND NOT EXISTS  (SELECT 1 FROM Object_Role_Process_View WHERE Object_Role_Process_View.ProcessId = zc_Enum_Process_UpdateMovement_Branch() AND Object_Role_Process_View.UserId = inUserId)
+         -- Проведение возврат - все филиалы
+         AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = 11539194)
       THEN
           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на проведение документа <%> № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT ItemName FROM MovementDesc WHERE Id = inDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
       END IF;
@@ -134,6 +138,8 @@ BEGIN
          <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
          -- Проведение документов - нет проверки по филиалу
          AND NOT EXISTS  (SELECT 1 FROM Object_Role_Process_View WHERE Object_Role_Process_View.ProcessId = zc_Enum_Process_UpdateMovement_Branch() AND Object_Role_Process_View.UserId = inUserId)
+         -- Проведение возврат - все филиалы
+         AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = 11539194)
       THEN
           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на проведение документа <%> № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT ItemName FROM MovementDesc WHERE Id = inDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
       END IF;
