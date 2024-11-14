@@ -1647,12 +1647,17 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportType_GoodsPropertyValue_GoodsBox() RETU
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_GoodsPropertyValue_GoodsBox() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_GoodsPropertyValue_GoodsBox' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
+--Загрузка ContractGoodsMovement из файла    --  Документ <Товары в договорах (Спецификация)>
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_ContractGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_ContractGoods' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_ContractGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_ContractGoods' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 14.11.24         * Загрузка ContractGoodsMovement
  24.07.24         * Загрузка GoodsNormDiff
  26.06.24         * Загрузка БВ из csv
  25.06.24         * Загрузка Разрешенные пересорты товара+вид товара

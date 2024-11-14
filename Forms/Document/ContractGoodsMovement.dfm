@@ -2,7 +2,6 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
   ClientHeight = 596
   ClientWidth = 1181
-  ExplicitLeft = 0
   ExplicitWidth = 1197
   ExplicitHeight = 635
   PixelsPerInch = 96
@@ -12,18 +11,18 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Width = 1181
     Height = 479
     ExplicitTop = 117
-    ExplicitWidth = 1076
-    ExplicitHeight = 521
+    ExplicitWidth = 1181
+    ExplicitHeight = 479
     ClientRectBottom = 479
     ClientRectRight = 1181
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1076
-      ExplicitHeight = 497
+      ExplicitWidth = 1181
+      ExplicitHeight = 455
       inherited cxGrid: TcxGrid
         Width = 1181
         Height = 455
-        ExplicitWidth = 1076
-        ExplicitHeight = 497
+        ExplicitWidth = 1181
+        ExplicitHeight = 455
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -275,7 +274,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Width = 1181
     Height = 91
     TabOrder = 3
-    ExplicitWidth = 1076
+    ExplicitWidth = 1181
     ExplicitHeight = 91
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1002,6 +1001,59 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actLoadExcel: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072' Excel?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1080#1079' '#1092#1072#1081#1083#1072' Excel'
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1080#1079' '#1092#1072#1081#1083#1072' Excel'
+      ImageIndex = 41
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'InMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1110,6 +1162,10 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbLoadExcel'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1159,6 +1215,10 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     end
     object bbInsertRecord: TdxBarButton
       Action = InsertRecord1
+      Category = 0
+    end
+    object bbLoadExcel: TdxBarButton
+      Action = actLoadExcel
       Category = 0
     end
   end
@@ -1241,9 +1301,14 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Value = False
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 400
+    Left = 272
+    Top = 360
   end
   inherited StatusGuides: TdsdGuides
     Left = 48
@@ -1844,8 +1909,8 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 367
-    Top = 376
+    Left = 375
+    Top = 336
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'
@@ -2188,5 +2253,37 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       end>
     Left = 216
     Top = 72
+  end
+  object spGetImportSetting: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TContractGoodsMovementForm;zc_Object_ImportSetting_ContractGoods'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 328
   end
 end

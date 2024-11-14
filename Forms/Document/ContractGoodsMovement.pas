@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxSplitter;
+  cxSplitter, ExternalLoad, dsdCommon;
 
 type
   TContractGoodsMovementForm = class(TAncestorDocumentForm)
@@ -100,6 +100,11 @@ type
     edRoundPrice: TcxCurrencyEdit;
     CountForAmount: TcxGridDBColumn;
     edPriceWithVAT: TcxCheckBox;
+    spGetImportSetting: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actLoadExcel: TMultiAction;
+    bbLoadExcel: TdxBarButton;
+    actDoLoad: TExecuteImportSettingsAction;
   private
     { Private declarations }
   public
