@@ -81,6 +81,14 @@ BEGIN
              AND '01.11.2016' <= vbOperDate -- Дата когда стартанула схема для этих 3-х складов
              AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Sale())
             )
+         OR (inUnitId = 8458 -- Склад База ГП
+             AND EXISTS (SELECT 1
+                         FROM MovementLinkObject AS MLO
+                         WHERE MLO.MovementId = inMovementId
+                           AND MLO.DescId     = zc_MovementLinkObject_To()
+                           AND MLO.ObjectId   = zc_Unit_RK()
+                        )
+            )
         -- AND inUserId = 5
      THEN
 

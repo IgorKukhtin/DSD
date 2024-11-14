@@ -112,6 +112,27 @@ BEGIN
                     WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner() 
                       AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
+
+                   UNION
+                    SELECT Movement.*, MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                         , MovementLinkObject_Contract.ObjectId AS ContractId
+                    FROM Movement
+                         LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner() 
+
+                         INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                       ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                      AND MovementLinkObject_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
+                                                      --AND MovementLinkObject_PaidKind.ObjectId   = inPaidKindId
+                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                      ON MovementLinkObject_Contract.MovementId  = Movement.Id
+                                                     AND MovementLinkObject_Contract.DescId      = zc_MovementLinkObject_Contract()
+                    WHERE Movement.DescId = zc_Movement_Income()
+                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                      AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                      AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
+
                    )
        , tmpMLO AS (SELECT MovementLinkObject.* FROM MovementLinkObject WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                    )

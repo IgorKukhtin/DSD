@@ -1,15 +1,15 @@
 inherited DialogPrintForm: TDialogPrintForm
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1077#1095#1072#1090#1080
-  ClientHeight = 233
+  ClientHeight = 345
   ClientWidth = 301
   OldCreateOrder = True
   Position = poScreenCenter
   ExplicitWidth = 317
-  ExplicitHeight = 272
+  ExplicitHeight = 384
   PixelsPerInch = 96
   TextHeight = 14
   inherited bbPanel: TPanel
-    Top = 192
+    Top = 304
     Width = 301
     ExplicitTop = 192
     ExplicitWidth = 301
@@ -218,8 +218,8 @@ inherited DialogPrintForm: TDialogPrintForm
     Left = 0
     Top = 142
     Width = 301
-    Height = 50
-    Align = alClient
+    Height = 54
+    Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
     object LabelDateValue: TLabel
@@ -248,6 +248,70 @@ inherited DialogPrintForm: TDialogPrintForm
       Properties.OnChange = DateValueEditPropertiesChange
       TabOrder = 0
       Width = 95
+    end
+  end
+  object PanelComment: TPanel
+    Left = 0
+    Top = 250
+    Width = 301
+    Height = 48
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 4
+    ExplicitTop = 192
+    object Label1: TLabel
+      Left = 4
+      Top = 1
+      Width = 73
+      Height = 14
+      Alignment = taCenter
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077':'
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clNavy
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object CommentEdit: TEdit
+      Left = 4
+      Top = 22
+      Width = 280
+      Height = 22
+      TabOrder = 0
+      Text = 'CommentEdit'
+    end
+  end
+  object PanelInvNumberPartner: TPanel
+    Left = 0
+    Top = 196
+    Width = 301
+    Height = 54
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 5
+    ExplicitTop = 202
+    object Label4: TLabel
+      Left = 4
+      Top = 2
+      Width = 139
+      Height = 14
+      Alignment = taCenter
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#8470
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clNavy
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object InvNumberPartnerEdit: TEdit
+      Left = 4
+      Top = 22
+      Width = 280
+      Height = 22
+      TabOrder = 0
+      Text = 'InvNumberPartnerEdit'
     end
   end
 end

@@ -450,7 +450,12 @@ BEGIN
             + -- плюс Вес "гофроящиков"
               COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)
             + -- плюс Вес Упаковок (пакетов)
-              CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
+              CASE WHEN tmpMovementItem.CountPackage_calc > 0
+                       THEN tmpMovementItem.CountPackage_calc
+                          * -- вес 1-ого пакета
+                            COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+
+                   WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
                         THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
                              CAST (tmpMovementItem.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/) AS NUMERIC (16, 0))
                            * -- вес 1-ого пакета

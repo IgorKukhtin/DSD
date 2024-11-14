@@ -866,7 +866,7 @@ BEGIN
                                                                                                                                                                      THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
                                                                                                                                                                      ELSE -1
                                                                                                                                                                 END
-                                                                                                                                              , inGoodsId    := 0
+                                                                                                                                              , inGoodsId    := (SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE LIMIT 1)
                                                                                                                                               , inUserId     := vbUserId
                                                                                                                                                ) AS tmp
                                                                                                          LIMIT 1)

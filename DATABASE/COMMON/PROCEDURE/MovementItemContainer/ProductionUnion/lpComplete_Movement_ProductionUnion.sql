@@ -499,10 +499,10 @@ BEGIN
                                                    , MovementItem.ObjectId                         AS GoodsId
                                                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                                    , COALESCE (MIB_Etiketka.ValueData, FALSE)      AS isEtiketka
-                                              FROM _tmpItem_pr
+                                              FROM MovementItem AS MovementItem_master
                                                    INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                                           AND MovementItem.DescId     = zc_MI_Child()
-                                                                          AND MovementItem.ParentId   = _tmpItem_pr.MovementItemId
+                                                                          AND MovementItem.ParentId   = MovementItem_master.Id
                                                                           AND MovementItem.isErased   = FALSE
                                 
                                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -519,6 +519,9 @@ BEGIN
                                                    LEFT JOIN MovementItemBoolean AS MIB_Etiketka
                                                                                  ON MIB_Etiketka.MovementItemId = MovementItem.Id
                                                                                 AND MIB_Etiketka.DescId         = zc_MIBoolean_Etiketka()
+                                              WHERE MovementItem_master.MovementId = inMovementId
+                                                AND MovementItem_master.DescId     = zc_MI_Master()
+                                                AND MovementItem_master.isErased   = FALSE
                                              )
                       , tmpItem_child AS (SELECT tmpItem_child_all.MovementItemId
                                                , tmpItem_child_all.ParentId
@@ -536,8 +539,15 @@ BEGIN
                                                , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId_child
                                                , ObjectFloat_Value_Receipt.ValueData             AS Value_Receipt
                                                , ObjectFloat_Value.ValueData                     AS Value_ReceiptChild
-                                          FROM (SELECT DISTINCT _tmpItem_pr.GoodsId, _tmpItem_pr.GoodsKindId
-                                                FROM _tmpItem_pr
+                                          FROM (SELECT DISTINCT MovementItem.ObjectId AS GoodsId
+                                                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                                FROM MovementItem
+                                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                WHERE MovementItem.MovementId = inMovementId
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.isErased   = FALSE
                                                ) AS tmpGoods
                                                INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                                      ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
@@ -590,7 +600,18 @@ BEGIN
                                                , tmpReceiptChild.GoodsKindId_child
                                                , tmpReceiptChild.Value_Receipt
                                                , tmpReceiptChild.Value_ReceiptChild
-                                          FROM _tmpItem_pr
+                                          FROM (SELECT MovementItem.Id AS MovementItemId
+                                                     , MovementItem.Amount AS OperCount
+                                                     , MovementItem.ObjectId AS GoodsId
+                                                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                                FROM MovementItem
+                                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                WHERE MovementItem.MovementId = inMovementId
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.isErased   = FALSE
+                                               ) AS _tmpItem_pr
                                                INNER JOIN tmpReceiptChild ON tmpReceiptChild.GoodsId     = _tmpItem_pr.GoodsId
                                                                          AND tmpReceiptChild.GoodsKindId = _tmpItem_pr.GoodsKindId
                                          )
@@ -601,6 +622,8 @@ BEGIN
                         , COALESCE (tmpItem_child.GoodsKindId, tmpItem_ReceiptChild.GoodsKindId_child)  AS GoodsKindId_child
                         , CASE WHEN COALESCE (tmpItem_child.Ord, 0) > 1 OR tmpItem_ReceiptChild.GoodsId_child IS NULL
                                     THEN 0
+                               --WHEN CAST (tmpItem_ReceiptChild.OperCount * tmpItem_ReceiptChild.Value_ReceiptChild / tmpItem_ReceiptChild.Value_Receipt AS NUMERIC (16, 0)) > 1
+                               --     THEN CAST (tmpItem_ReceiptChild.OperCount * tmpItem_ReceiptChild.Value_ReceiptChild / tmpItem_ReceiptChild.Value_Receipt AS NUMERIC (16, 0))
                                ELSE CAST (tmpItem_ReceiptChild.OperCount * tmpItem_ReceiptChild.Value_ReceiptChild / tmpItem_ReceiptChild.Value_Receipt AS NUMERIC (16, 0))
                           END AS OperCount
                    FROM tmpItem_ReceiptChild
@@ -617,7 +640,12 @@ BEGIN
          PERFORM lpSetErased_MovementItem (inMovementItemId:= tmpMI.MovementItemId, inUserId:= inUserId)
          FROM (WITH tmpItem_child_all AS (SELECT MovementItem.Id                               AS MovementItemId
                                                , COALESCE (MIB_Etiketka.ValueData, FALSE)      AS isEtiketka
-                                          FROM _tmpItem_pr
+                                          FROM (SELECT MovementItem.Id AS MovementItemId
+                                                FROM MovementItem
+                                                WHERE MovementItem.MovementId = inMovementId
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.isErased   = FALSE
+                                               ) AS _tmpItem_pr
                                                INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                                       AND MovementItem.DescId     = zc_MI_Child()
                                                                       AND MovementItem.ParentId   = _tmpItem_pr.MovementItemId

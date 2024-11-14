@@ -590,7 +590,11 @@ begin
                  if GoodsKind_Array[i].Number = GoodsKindWeighingGroupId
                  then begin i2:=i2+1;Items.Add('('+IntToStr(GoodsKind_Array[i].Code)+') '+ GoodsKind_Array[i].Name);end;
           //
-          if i2<5 then Columns:=1 else if i2<20 then Columns:=2 else Columns:=3;
+          if i2<5 then Columns:=1 else if i2<15 then Columns:=2
+          else if i2<25
+               then begin Columns:=3; PanelLeft_all.Width:= 400; end
+               else if i2>45 then begin Columns:=6; PanelLeft_all.Width:= 550; end
+               else begin Columns:=4; PanelLeft_all.Width:= 450; end;
           //if i2>25 then PanelGoodsKind_all.Height:=245
           //else if i2>22 then PanelGoodsKind_all.Height:=205
           //else if i2>15 then PanelGoodsKind_all.Height:=185 else PanelGoodsKind_all.Height:=155;

@@ -203,7 +203,7 @@ BEGIN
                                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                                       ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                                      AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-                                   WHERE ObjectHistoryFloat_PriceListItem_Value.ValueData > 0
+                                   WHERE ObjectHistoryFloat_PriceListItem_Value.ValueData >= 0
                                   )
                   , tmpAll AS (SELECT tmpMI.MovementItemId
                                     , tmpMI.MovementId_promo

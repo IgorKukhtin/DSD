@@ -109,6 +109,48 @@ BEGIN
      DELETE FROM _tmpItemSumm_Unit;
 
 
+     -- сначала - замена
+     PERFORM lpInsert_MovementItemProtocol (tmpMI.MovementItemId, inUserId, FALSE)
+     FROM (SELECT MovementItem.Id AS MovementItemId
+                , lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, ObjectLink_GoodsByGoodsKind_GoodsIncome.ChildObjectId, MovementItem.MovementId, MovementItem.Amount, MovementItem.ParentId)
+                , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), MovementItem.Id, ObjectLink_GoodsByGoodsKind_GoodsKindIncome.ChildObjectId)
+
+                , CASE WHEN MILO_GoodsReal.ObjectId     IS NULL THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsReal(), MovementItem.Id, MovementItem.ObjectId) END
+                , CASE WHEN MILO_GoodsKindReal.ObjectId IS NULL THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindReal(), MovementItem.Id, MILO_GoodsKind.ObjectId) END
+
+           FROM MovementItem
+                INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = MovementItem.ObjectId
+                LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                 ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                                AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+
+                LEFT JOIN MovementItemLinkObject AS MILO_GoodsReal
+                                                 ON MILO_GoodsReal.MovementItemId = MovementItem.Id
+                                                AND MILO_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
+                LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindReal
+                                                 ON MILO_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                AND MILO_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
+
+                INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsIncome
+                                      ON ObjectLink_GoodsByGoodsKind_GoodsIncome.ObjectId      = Object_GoodsByGoodsKind_View.Id
+                                     AND ObjectLink_GoodsByGoodsKind_GoodsIncome.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsIncome()
+                                     AND ObjectLink_GoodsByGoodsKind_GoodsIncome.ChildObjectId > 0
+                LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindIncome
+                                     ON ObjectLink_GoodsByGoodsKind_GoodsKindIncome.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                    AND ObjectLink_GoodsByGoodsKind_GoodsKindIncome.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindIncome()
+
+           WHERE MovementItem.MovementId = inMovementId
+             AND MovementItem.isErased   = FALSE
+             AND MovementItem.DescId     = zc_MI_Master()
+             AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (MILO_GoodsKind.ObjectId, 0)
+             --
+             AND (ObjectLink_GoodsByGoodsKind_GoodsIncome.ChildObjectId                   <> MovementItem.ObjectId
+               OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindIncome.ChildObjectId, 0) <> COALESCE (MILO_GoodsKind.ObjectId, 0)
+                 )
+          ) AS tmpMI
+    ;
+
+
      -- формируются Партии для Сырья
      PERFORM lpInsertUpdate_MovementItemString (inDescId        := zc_MIString_PartionGoodsCalc()
                                               , inMovementItemId:= MovementItem.Id

@@ -1553,6 +1553,41 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      END IF;
 
 
+     -- Проверка - ячейку на Ошибка нельзя менять
+     IF ((ioPartionCellId_1  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_1,  0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_2  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_2,  0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_3  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_3,  0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_4  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_4,  0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_5  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_5,  0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_6  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_6,  0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_7  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_7,  0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_8  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_8,  0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_9  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_9,  0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_10 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_10, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_11 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_11, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_12 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_12, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_13 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_13, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_14 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_14, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_15 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_15, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_16 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_16, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_17 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_17, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_18 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_18, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_19 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_19, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_20 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_20, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_21 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_21, 0) = zc_PartionCell_Err())
+      OR (ioPartionCellId_22 <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_22, 0) = zc_PartionCell_Err())
+       )
+     -- Роль - Все права для изменений ячейки хранения
+     AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11278315)
+     -- Роль - Переброска ячейки в ошибку
+     AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11539212)
+     --
+     AND vbUserId <> 5
+     AND 1=1
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав заменять на ячейку <%>.', lfGet_Object_ValueData_sh(zc_PartionCell_Err());
+     END IF;
+
      -- 1. Проверка - для ячейки может быть только одна партия
      IF vbPartionCellId_1 > 0
      THEN

@@ -1,4 +1,4 @@
--- Function: gpInsert_Scale_MI()
+   -- Function: gpInsert_Scale_MI()
 
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
@@ -317,7 +317,12 @@ BEGIN
         AND inPricePartner > 0
      THEN
          -- цена поставщика - из накладной - ввод в контроле
-         vbPrice_301:= inPricePartner;
+         IF inPriceIncome > 0
+         THEN
+             vbPrice_301:= inPriceIncome; -- inPricePartner;
+         ELSE 
+             vbPrice_301:= inPricePartner;
+         END IF;
      ELSE
 
      -- определили !!!только для OBV!!!

@@ -7,11 +7,9 @@ CREATE OR REPLACE FUNCTION gpMovementItem_ProductionPeresort_SetUnErased(
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
 )
-  RETURNS Boolean
+RETURNS Boolean
 AS
 $BODY$
-   DECLARE vboutIsErased Boolean;
-   DECLARE vbChildId Integer;
 BEGIN
    
    
@@ -19,9 +17,13 @@ BEGIN
    
    IF COALESCE (inMovementItemId,0) <> 0
    THEN
-      vbChildId := (SELECT Id FROM MovementItem where ParentId   = inMovementItemId
-                                                  AND DescId     = zc_MI_Child());
-      vboutIsErased:= (SELECT tmp.outIsErased FROM gpMovementItem_ProductionUnion_Child_SetUnErased(vbChildId, inSession) AS tmp);
+      PERFORM gpMovementItem_ProductionUnion_Child_SetUnErased (MovementItem.Id, inSession)
+      FROM MovementItem
+      WHERE MovementItem.ParentId   = inMovementItemId
+        AND MovementItem.DescId     = zc_MI_Child()
+        AND MovementItem.isErased   = TRUE
+      ;
+
    END IF; 
 
 END;

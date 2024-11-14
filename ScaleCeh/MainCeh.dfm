@@ -1658,8 +1658,6 @@ object MainCehForm: TMainCehForm
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitLeft = 4
-        ExplicitHeight = 281
         object gbStartWeighing: TRadioGroup
           Left = 0
           Top = 0
@@ -1680,7 +1678,6 @@ object MainCehForm: TMainCehForm
           TabOrder = 1
           OnClick = gbStartWeighingClick
           OnEnter = gbStartWeighingEnter
-          ExplicitLeft = -5
         end
         object PanelMovementInfo: TPanel
           Left = 0
@@ -1707,8 +1704,6 @@ object MainCehForm: TMainCehForm
               'MemoMovementInfo')
             ReadOnly = True
             TabOrder = 0
-            ExplicitLeft = -2
-            ExplicitTop = -2
           end
         end
         object PanelGoods: TPanel
@@ -1733,8 +1728,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitLeft = 4
-            ExplicitTop = -6
+            ExplicitWidth = 61
           end
           object infoPanelGoodsCode: TPanel
             Left = 0
@@ -1854,7 +1848,6 @@ object MainCehForm: TMainCehForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 1
-        ExplicitHeight = 129
         object PanelOperDate: TPanel
           Left = 0
           Top = 0
@@ -1877,8 +1870,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitLeft = -1
-            ExplicitTop = 6
+            ExplicitWidth = 59
           end
           object OperDateEdit: TcxDateEdit
             Left = 10
@@ -1913,8 +1905,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitLeft = 0
-            ExplicitTop = 3
+            ExplicitWidth = 62
           end
           object PartionDateEdit: TcxDateEdit
             Left = 10
@@ -1949,8 +1940,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitLeft = -2
-            ExplicitTop = 4
+            ExplicitWidth = 78
           end
           object EditStorageLine: TcxButtonEdit
             Left = 4
@@ -1996,8 +1986,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitLeft = -2
-            ExplicitTop = 3
+            ExplicitWidth = 100
           end
           object EditArticleLoss: TcxButtonEdit
             Left = 4
@@ -2043,8 +2032,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitLeft = 6
-            ExplicitTop = -1
+            ExplicitWidth = 74
           end
           object EditPersonalGroup: TcxButtonEdit
             Left = 4
@@ -2121,8 +2109,6 @@ object MainCehForm: TMainCehForm
             BevelInner = bvRaised
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = -4
-            ExplicitTop = 3
             object LabelPersonalKVK: TLabel
               Left = 1
               Top = 1
@@ -2171,8 +2157,6 @@ object MainCehForm: TMainCehForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 173
-      ExplicitHeight = 121
       object PanelGoodsKind: TPanel
         Left = 0
         Top = 0
@@ -2181,7 +2165,6 @@ object MainCehForm: TMainCehForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 161
         object LabelGoodsKind: TLabel
           Left = 0
           Top = 0
@@ -2235,10 +2218,10 @@ object MainCehForm: TMainCehForm
           Font.Style = []
           ParentFont = False
           TabOrder = 1
+          WordWrap = True
           OnClick = rgGoodsKindClick
           ExplicitLeft = -4
           ExplicitTop = 41
-          ExplicitHeight = 117
         end
       end
     end
@@ -2264,8 +2247,6 @@ object MainCehForm: TMainCehForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 1
-        ExplicitTop = 6
-        ExplicitHeight = 418
         object PanelPartionGoods: TPanel
           Left = 0
           Top = 0
@@ -2308,7 +2289,6 @@ object MainCehForm: TMainCehForm
           Height = 49
           Align = alTop
           TabOrder = 1
-          ExplicitTop = 41
           object LabelCount_all: TLabel
             Left = 1
             Top = 1
@@ -2323,8 +2303,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitLeft = -4
-            ExplicitTop = 3
+            ExplicitWidth = 88
           end
           object PanelCount: TPanel
             Left = 1
@@ -2334,7 +2313,6 @@ object MainCehForm: TMainCehForm
             Align = alLeft
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitHeight = 35
             object LabelCount: TLabel
               Left = 0
               Top = 0
@@ -2372,7 +2350,6 @@ object MainCehForm: TMainCehForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitHeight = 35
             object LabelCountPack: TLabel
               Left = 0
               Top = 0
@@ -2411,7 +2388,6 @@ object MainCehForm: TMainCehForm
           Height = 35
           Align = alTop
           TabOrder = 2
-          ExplicitTop = 194
           object PanelSkewer2: TPanel
             Left = 1
             Top = 1
@@ -2420,7 +2396,6 @@ object MainCehForm: TMainCehForm
             Align = alLeft
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitHeight = 35
             object LabelSkewer2: TLabel
               Left = 0
               Top = 0
@@ -2460,7 +2435,6 @@ object MainCehForm: TMainCehForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitHeight = 35
             object LabelWeightSkewer2: TLabel
               Left = 0
               Top = 0
@@ -2475,7 +2449,7 @@ object MainCehForm: TMainCehForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitTop = 3
+              ExplicitWidth = 19
             end
             object PanelWeightSkewer2: TPanel
               Left = 0
@@ -2492,7 +2466,6 @@ object MainCehForm: TMainCehForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
-              ExplicitHeight = 21
             end
           end
         end
@@ -2507,7 +2480,7 @@ object MainCehForm: TMainCehForm
             Left = 1
             Top = 1
             Width = 220
-            Height = 13
+            Height = 14
             Align = alTop
             Alignment = taCenter
             Caption = #1058#1072#1088#1072
@@ -2517,24 +2490,21 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitLeft = -4
-            ExplicitTop = 4
+            ExplicitWidth = 26
           end
           object infoPanelWeightTare_enter: TPanel
             Left = 1
-            Top = 14
+            Top = 15
             Width = 100
-            Height = 34
+            Height = 33
             Align = alLeft
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitTop = 15
-            ExplicitHeight = 35
             object LabelWeightTare_enter: TLabel
               Left = 0
               Top = 0
               Width = 100
-              Height = 11
+              Height = 14
               Align = alTop
               Alignment = taCenter
               Caption = #1042#1077#1089
@@ -2544,6 +2514,7 @@ object MainCehForm: TMainCehForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
+              ExplicitWidth = 19
             end
             object EditWeightTare_enter: TcxCurrencyEdit
               Left = 4
@@ -2561,14 +2532,12 @@ object MainCehForm: TMainCehForm
           end
           object infoPanelWeightTare_enter_two: TPanel
             Left = 101
-            Top = 14
+            Top = 15
             Width = 120
-            Height = 34
+            Height = 33
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitTop = 15
-            ExplicitHeight = 35
             object LabelWeightTare_enter_two: TLabel
               Left = 0
               Top = 0
@@ -2589,7 +2558,7 @@ object MainCehForm: TMainCehForm
               Left = 0
               Top = 14
               Width = 120
-              Height = 20
+              Height = 19
               Align = alClient
               BevelOuter = bvNone
               Caption = 'PanelWeightTare_enter_two'
@@ -2600,7 +2569,6 @@ object MainCehForm: TMainCehForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
-              ExplicitHeight = 21
             end
           end
         end
@@ -2611,7 +2579,6 @@ object MainCehForm: TMainCehForm
           Height = 49
           Align = alTop
           TabOrder = 4
-          ExplicitTop = 143
           object LabelSkewer: TLabel
             Left = 1
             Top = 1
@@ -2626,8 +2593,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitLeft = -4
-            ExplicitTop = 4
+            ExplicitWidth = 81
           end
           object PanelSkewer1: TPanel
             Left = 1
@@ -2637,7 +2603,6 @@ object MainCehForm: TMainCehForm
             Align = alLeft
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitHeight = 35
             object LabelSkewer1: TLabel
               Left = 0
               Top = 0
@@ -2652,8 +2617,7 @@ object MainCehForm: TMainCehForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitLeft = -6
-              ExplicitTop = 6
+              ExplicitWidth = 81
             end
             object EditSkewer1: TcxCurrencyEdit
               Left = 4
@@ -2678,7 +2642,6 @@ object MainCehForm: TMainCehForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitHeight = 35
             object LabelWeightSkewer1: TLabel
               Left = 0
               Top = 0
@@ -2710,7 +2673,6 @@ object MainCehForm: TMainCehForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
-              ExplicitHeight = 21
             end
           end
         end
@@ -2729,8 +2691,7 @@ object MainCehForm: TMainCehForm
             Align = alTop
             Alignment = taCenter
             Caption = #1055#1088#1086#1095#1080#1077', '#1086#1073#1097#1080#1081' '#1074#1077#1089', '#1082#1075
-            ExplicitLeft = -4
-            ExplicitTop = 4
+            ExplicitWidth = 125
           end
           object EditWeightOther: TcxCurrencyEdit
             Left = 55
@@ -2754,7 +2715,6 @@ object MainCehForm: TMainCehForm
           Height = 33
           Align = alBottom
           TabOrder = 7
-          ExplicitTop = 385
           object Label_Weight: TLabel
             Left = 1
             Top = 1
@@ -2769,8 +2729,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitLeft = -3
-            ExplicitTop = -2
+            ExplicitWidth = 66
           end
           object Panel_Weight: TPanel
             Left = 1
@@ -2787,7 +2746,6 @@ object MainCehForm: TMainCehForm
             Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 0
-            ExplicitHeight = 20
           end
         end
         object SubjectDocPanel: TPanel
@@ -2799,7 +2757,6 @@ object MainCehForm: TMainCehForm
           Alignment = taLeftJustify
           BevelOuter = bvNone
           TabOrder = 6
-          ExplicitTop = 280
           object SubjectDocLabel: TLabel
             Left = 0
             Top = 0
@@ -2814,8 +2771,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
-            ExplicitLeft = -6
-            ExplicitTop = -7
+            ExplicitWidth = 103
           end
           object EditSubjectDoc: TcxButtonEdit
             Left = 3
@@ -2848,7 +2804,6 @@ object MainCehForm: TMainCehForm
           Alignment = taLeftJustify
           BevelOuter = bvNone
           TabOrder = 8
-          ExplicitTop = 315
           object AssetLabel: TLabel
             Left = 0
             Top = 0
@@ -2863,8 +2818,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
-            ExplicitLeft = -6
-            ExplicitTop = 5
+            ExplicitWidth = 91
           end
           object EditAsset: TcxButtonEdit
             Left = 3
@@ -2897,7 +2851,6 @@ object MainCehForm: TMainCehForm
           Alignment = taLeftJustify
           BevelOuter = bvNone
           TabOrder = 9
-          ExplicitTop = 350
           object Asset_twoLabel: TLabel
             Left = 0
             Top = 0
@@ -2912,7 +2865,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
-            ExplicitTop = 3
+            ExplicitWidth = 91
           end
           object EditAsset_two: TcxButtonEdit
             Left = 3
@@ -2945,7 +2898,6 @@ object MainCehForm: TMainCehForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 418
         object HeadCountPanel: TPanel
           Left = 0
           Top = 151
@@ -2954,7 +2906,6 @@ object MainCehForm: TMainCehForm
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 4
-          ExplicitTop = 171
           object HeadCountLabel: TLabel
             Left = 0
             Top = 0
@@ -2963,8 +2914,7 @@ object MainCehForm: TMainCehForm
             Align = alTop
             Alignment = taCenter
             Caption = #1042#1074#1086#1076' '#1050#1054#1051#1048#1063#1045#1057#1058#1042#1054
-            ExplicitLeft = 5
-            ExplicitTop = 2
+            ExplicitWidth = 97
           end
           object EditEnterCount: TcxCurrencyEdit
             Left = 10
@@ -2997,8 +2947,6 @@ object MainCehForm: TMainCehForm
           Caption = #1042#1077#1089#1099
           TabOrder = 1
           OnClick = rgScaleClick
-          ExplicitLeft = 1
-          ExplicitTop = 233
         end
         object PanelSticker_Ceh: TPanel
           Left = 0
@@ -3014,7 +2962,6 @@ object MainCehForm: TMainCehForm
           ParentFont = False
           TabOrder = 2
           Visible = False
-          ExplicitTop = 348
           object cbSticker_Ceh: TCheckBox
             Left = 6
             Top = 10
@@ -3037,7 +2984,6 @@ object MainCehForm: TMainCehForm
           Font.Style = []
           ParentFont = False
           TabOrder = 3
-          ExplicitTop = 383
           object ScaleLabel: TLabel
             Left = 1
             Top = 1
@@ -3046,7 +2992,7 @@ object MainCehForm: TMainCehForm
             Align = alTop
             Alignment = taCenter
             Caption = 'Scale.Active = ???'
-            ExplicitTop = 0
+            ExplicitWidth = 91
           end
           object PanelWeight_Scale: TPanel
             Left = 1

@@ -34,6 +34,7 @@ RETURNS TABLE (Number              Integer
              , isTransport_link    Boolean -- Scale - проверка <Штрих код Путевой лист>
              , isSubjectDoc        Boolean -- Scale + ScaleCeh - будет проверка на ввод <Основание Возврат>
              , isComment           Boolean -- Scale + ScaleCeh - будет диалог для
+             , isInvNumberPartner  Boolean -- 
              , isPersonalGroup     Boolean -- ScaleCeh - будет проверка на ввод <№ бригады>
              , isOrderInternal     Boolean -- ScaleCeh - проверка для операции - разрешается только через заявку
              , isSticker_Ceh       Boolean -- ScaleCeh - при взвешивании в данной операции - сразу печатается Стикер на термопринтере
@@ -102,6 +103,7 @@ BEGIN
                                        , isTransport_link         Boolean
                                        , isSubjectDoc             Boolean
                                        , isComment                Boolean
+                                       , isInvNumberPartner       Boolean
                                        , isPersonalGroup          Boolean
                                        , isOrderInternal          Boolean
                                        , isSticker_Ceh            Boolean
@@ -123,7 +125,7 @@ BEGIN
     -- формирование
     INSERT INTO _tmpToolsWeighing (Number, MovementDescId, MovementDescId_next, FromId, ToId, FromId_next, ToId_next
                                  , PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn
-                                 , isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isPersonalGroup, isOrderInternal
+                                 , isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isInvNumberPartner, isPersonalGroup, isOrderInternal
                                  , isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, isListInventory, isAsset
                                  , isPartionCell, isReReturnIn, isCloseInventory, isCalc_Sh, isRePack
                                  , isOperCountPartner, isReturnOut_Date, isCalc_PriceVat
@@ -184,6 +186,7 @@ BEGIN
             , CASE WHEN tmp.isTransport_link    ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
             , CASE WHEN tmp.isSubjectDoc        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSubjectDoc
             , CASE WHEN tmp.isComment           ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isComment
+            , CASE WHEN tmp.isInvNumberPartner  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isInvNumberPartner
             , CASE WHEN tmp.isPersonalGroup     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPersonalGroup
             , CASE WHEN tmp.isOrderInternal     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOrderInternal
             , CASE WHEN tmp.isSticker_Ceh       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSticker_Ceh
@@ -232,6 +235,7 @@ BEGIN
                         , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                                                     inSession)              END AS isTransport_link
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSubjectDoc',       'FALSE',                                                     inSession)              END AS isSubjectDoc
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isComment',          'FALSE',                                                     inSession)              END AS isComment
+                        , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isInvNumberPartner', 'FALSE',                                                     inSession)              END AS isInvNumberPartner
                         , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isPersonalGroup',    'FALSE',                                                     inSession)              END AS isPersonalGroup
                         , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isOrderInternal',    'FALSE',                                                     inSession)              END AS isOrderInternal
                         , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSticker_Ceh',      'FALSE',                                                     inSession)              END AS isSticker_Ceh
@@ -499,6 +503,7 @@ BEGIN
            , _tmpToolsWeighing.isTransport_link
            , _tmpToolsWeighing.isSubjectDoc
            , _tmpToolsWeighing.isComment
+           , _tmpToolsWeighing.isInvNumberPartner
            , _tmpToolsWeighing.isPersonalGroup
            , _tmpToolsWeighing.isOrderInternal
            , _tmpToolsWeighing.isSticker_Ceh
@@ -619,6 +624,7 @@ BEGIN
             , FALSE AS isTransport_link
             , FALSE AS isSubjectDoc
             , FALSE AS isComment
+            , FALSE AS isInvNumberPartner
             , FALSE AS isPersonalGroup
             , FALSE AS isOrderInternal
             , FALSE AS isSticker_Ceh

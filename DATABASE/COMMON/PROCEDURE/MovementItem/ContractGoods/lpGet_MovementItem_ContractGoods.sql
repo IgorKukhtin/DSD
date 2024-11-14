@@ -203,7 +203,7 @@ BEGIN
                           THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 3))
-                     ELSE CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 4))
+                     ELSE CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_notVat 
                 -- миним расчетная цена
@@ -215,7 +215,7 @@ BEGIN
                           THEN CAST (tmpData.ValuePrice_from / 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 3))
-                     ELSE CAST (tmpData.ValuePrice_from / 1.2 AS NUMERIC (16, 4))
+                     ELSE CAST (tmpData.ValuePrice_from / 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_from_notVat
                 -- макс расчетная цена
@@ -227,7 +227,7 @@ BEGIN
                           THEN CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 3))
-                     ELSE CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 4))
+                     ELSE CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_to_notVat
               
@@ -240,7 +240,7 @@ BEGIN
                           THEN CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 3))
-                     ELSE CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 4))
+                     ELSE CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_addVat 
                 -- миним расчетная цена
@@ -252,7 +252,7 @@ BEGIN
                           THEN CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 3))
-                     ELSE CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 4))
+                     ELSE CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_from_addVat
                 -- макс расчетная цена
@@ -264,7 +264,7 @@ BEGIN
                           THEN CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 3))
-                     ELSE CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 4))
+                     ELSE CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_to_addVat
 
@@ -295,7 +295,7 @@ BEGIN
                                   THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
                              WHEN tmpData.RoundPrice = 3
                                   THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
-                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
                         END) :: TFloat AS ValuePrice
                         
                      , ((1 - tmpData.DiffPrice :: TFloat / 100)
@@ -307,7 +307,7 @@ BEGIN
                                   THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
                              WHEN tmpData.RoundPrice = 3
                                   THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
-                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
                         END) :: TFloat AS ValuePrice_from
                      , ((1 + tmpData.DiffPrice :: TFloat / 100)
                       * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
@@ -318,7 +318,7 @@ BEGIN
                                   THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
                              WHEN tmpData.RoundPrice = 3
                                   THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
-                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
                         END) :: TFloat AS ValuePrice_to
        
                      , tmpData.ValuePrice_orig :: TFloat AS ValuePrice_orig

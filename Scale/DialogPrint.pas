@@ -40,6 +40,12 @@ type
     PanelDateValue: TPanel;
     LabelDateValue: TLabel;
     DateValueEdit: TcxDateEdit;
+    PanelComment: TPanel;
+    Label1: TLabel;
+    PanelInvNumberPartner: TPanel;
+    Label4: TLabel;
+    CommentEdit: TEdit;
+    InvNumberPartnerEdit: TEdit;
     procedure cbPrintTransportClick(Sender: TObject);
     procedure cbPrintQualityClick(Sender: TObject);
     procedure cbPrintTaxClick(Sender: TObject);
@@ -68,6 +74,13 @@ begin
      else cbPrintMovement.Checked:= isMovement;
      //
      PanelDateValue.Visible:= (SettingMain.isCeh = FALSE) or (ParamsMovement.ParamByName('isOperDatePartner').AsBoolean = true);
+     //
+     PanelInvNumberPartner.Visible:= (SettingMain.isCeh = FALSE) and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true);
+     PanelComment.Visible:= (SettingMain.isCeh = FALSE) and (ParamsMovement.ParamByName('isComment').AsBoolean = true) and (ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Loss);
+     //
+     if not PanelInvNumberPartner.Visible then Self.Height:= Self.Height - PanelInvNumberPartner.Height;
+     if not PanelComment.Visible then Self.Height:= Self.Height - PanelComment.Height;
+     if not PanelDateValue.Visible then Self.Height:= Self.Height - PanelDateValue.Height;
      //
      cbPrintPackGross.Checked:= FALSE;
      cbPrintDiffOrder.Checked:= FALSE;//(MovementDescId=zc_Movement_Sale)or(MovementDescId=zc_Movement_SendOnPrice);
@@ -117,6 +130,23 @@ begin
      then str_pok_post:='поставщика'
      else str_pok_post:='покупателя';
 
+     //
+     if (PanelInvNumberPartner.Visible = TRUE) and (InvNumberPartnerEdit.Text <> '') then
+     begin
+          Result:= DMMainScaleForm.gpUpdate_Scale_MovementString(ParamsMovement.ParamByName('MovementId').AsInteger
+                                                               , 'zc_MovementString_InvNumberPartner'
+                                                               , InvNumberPartnerEdit.Text
+                                                                );
+          if not Result then exit;
+     end;
+     if (PanelComment.Visible = TRUE) and (CommentEdit.Text <> '') then
+     begin
+          Result:= DMMainScaleForm.gpUpdate_Scale_MovementString(ParamsMovement.ParamByName('MovementId').AsInteger
+                                                               , 'zc_MovementString_Comment'
+                                                               , CommentEdit.Text
+                                                                );
+          if not Result then exit;
+     end;
      //
      if PanelDateValue.Visible = TRUE then
      begin

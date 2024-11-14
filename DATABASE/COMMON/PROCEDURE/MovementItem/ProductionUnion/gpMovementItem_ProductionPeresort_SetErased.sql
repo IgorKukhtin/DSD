@@ -9,27 +9,28 @@ CREATE OR REPLACE FUNCTION gpMovementItem_ProductionPeresort_SetErased(
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
 )
-  RETURNS Boolean
+RETURNS Boolean
 AS
 $BODY$
-   DECLARE vboutIsErased Boolean;
-   DECLARE vbChildId Integer;
 BEGIN
-   
-   
+
+
    outIsErased := (SELECT dd.outIsErased FROM gpMovementItem_ProductionUnion_Master_SetErased(inMovementItemId, inSession) as dd);
-   
+
    IF COALESCE (inMovementItemId,0) <> 0
    THEN
-      vbChildId := (SELECT Id FROM MovementItem where ParentId   = inMovementItemId
-                                                  AND DescId     = zc_MI_Child());
-      vboutIsErased:= (SELECT dd1.outIsErased FROM gpMovementItem_ProductionUnion_Child_SetErased(vbChildId, inSession) as dd1);
-   END IF; 
+      PERFORM gpMovementItem_ProductionUnion_Child_SetErased (MovementItem.Id, inSession)
+      FROM MovementItem
+      WHERE MovementItem.ParentId   = inMovementItemId
+        AND MovementItem.DescId     = zc_MI_Child()
+        AND MovementItem.isErased   = FALSE
+      ;
+
+   END IF;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpMovementItem_ProductionPeresort_SetErased (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
