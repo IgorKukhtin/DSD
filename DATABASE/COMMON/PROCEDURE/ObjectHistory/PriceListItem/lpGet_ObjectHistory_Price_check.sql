@@ -87,7 +87,7 @@ BEGIN
            -- !!!замена!!!
            IF vbPrice_check > 0 THEN inPrice:= vbPrice_check; END IF;
 
-       ELSEIF COALESCE (inPrice, 0) <> COALESCE (vbPrice_check, 0)
+       ELSEIF ABS (ROUND (COALESCE (inPrice, 0), 2) - COALESCE (vbPrice_check, 0)) >= 0.01
           -- 
           AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View AS RoleAccessKeyView WHERE RoleAccessKeyView.UserId = inUserId AND RoleAccessKeyView.AccessKeyId = zc_Enum_Process_Update_MI_OperPrice())
           -- Проведение документов - нет проверки по филиалу
