@@ -311,6 +311,7 @@ begin
 
      ParamAdd(Params,'isSubjectDoc',ftBoolean);
      ParamAdd(Params,'isComment',ftBoolean);
+     ParamAdd(Params,'isInvNumberPartner',ftBoolean);
      ParamAdd(Params,'SubjectDocId',ftInteger);
      ParamAdd(Params,'SubjectDocCode',ftInteger);
      ParamAdd(Params,'SubjectDocName',ftString);

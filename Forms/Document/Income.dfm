@@ -583,7 +583,7 @@ object IncomeForm: TIncomeForm
           end
           object GoodsKindRealName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1092#1072#1082#1090')'
-            DataBinding.FieldName = 'GoodsKindName'
+            DataBinding.FieldName = 'GoodsKindRealName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

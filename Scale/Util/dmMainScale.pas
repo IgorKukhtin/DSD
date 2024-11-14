@@ -32,6 +32,7 @@ type
     function gpUpdate_Scale_MIDate(execParams:TParams): Boolean;
     function gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
     function gpUpdate_Scale_MLM(execParams:TParams): Boolean;
+    function gpUpdate_Scale_MovementString(inMovementId:Integer; inDescCode, inValueData : String): Boolean;
     function gpUpdate_Scale_MovementDate(execParams:TParams): Boolean;
     // Scale + ScaleCeh
     function lpGet_BranchName(inBranchCode:Integer): String;
@@ -536,6 +537,27 @@ begin
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpUpdate_Scale_MovementDate');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_MovementString(inMovementId:Integer; inDescCode, inValueData : String): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do begin
+       StoredProcName:= 'gpUpdate_Scale_MovementString';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, inMovementId);
+       Params.AddParam('inDescCode', ftString, ptInput, inDescCode);
+       Params.AddParam('inValueData', ftString, ptInput, inValueData);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MLM');
        end;}
     end;
     Result:=true;
