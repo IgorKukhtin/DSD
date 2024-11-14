@@ -1622,10 +1622,10 @@ BEGIN
                                        THEN COALESCE (MIF_PricePartner.ValueData, 0)
                                   -- делаем с НДС
                                   WHEN vbIsPriceWithVAT_begin = TRUE  AND COALESCE (MIB_PriceWithVAT.ValueData, FALSE) = FALSE
-                                       THEN COALESCE (MIF_PricePartner.ValueData, 0) * (1 + vbVATPercent_begin / 100)
+                                       THEN ROUND (COALESCE (MIF_PricePartner.ValueData, 0) * (1 + vbVATPercent_begin / 100), 2)
                                   -- делаем без НДС
                                   WHEN vbIsPriceWithVAT_begin = FALSE AND COALESCE (MIB_PriceWithVAT.ValueData, FALSE) = TRUE
-                                       THEN COALESCE (MIF_PricePartner.ValueData, 0) / (1 + vbVATPercent_begin / 100)
+                                       THEN ROUND (COALESCE (MIF_PricePartner.ValueData, 0) / (1 + vbVATPercent_begin / 100), 2)
 
                              END AS PricePartner
 

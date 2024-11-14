@@ -1,8 +1,9 @@
 -- Function: lpInsertUpdate_Movement_Income_Value()
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -24,6 +25,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income_Value(
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
     IN inCurrencyValue       TFloat    , -- курс валюты
+    IN inComment             TVarChar  , --
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -53,6 +55,9 @@ BEGIN
                                         , ioParValue          := NULL  :: TFloat
                                         , inUserId            := inUserId
                                          ) AS tmp);
+
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
 END;
 $BODY$

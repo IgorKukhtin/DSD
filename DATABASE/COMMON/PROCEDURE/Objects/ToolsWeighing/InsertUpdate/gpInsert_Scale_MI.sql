@@ -310,18 +310,25 @@ BEGIN
          inPrice_Return:= vbPricePromo;
 
      ELSE
+
      -- определили !!!только для SPEC!!!
      IF vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
         AND (inBranchCode BETWEEN 301 AND 310 -- Dnepr-SPEC-Zapch
             )
         AND inPricePartner > 0
      THEN
-         -- цена поставщика - из накладной - ввод в контроле
+         -- цена
          IF inPriceIncome > 0
          THEN
+             -- цена по спецификации
              vbPrice_301:= inPriceIncome; -- inPricePartner;
-         ELSE 
-             vbPrice_301:= inPricePartner;
+         ELSE
+             -- из накладной - ввод в контроле
+             vbPrice_301:= CASE COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT()), FALSE)
+                                WHEN inIsPriceWithVAT THEN inPricePartner
+                                WHEN FALSE AND inIsPriceWithVAT = TRUE  THEN inPricePartner / (1 + COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId =  inMovementId AND MF.DescId = zc_MovementFloat_VATPercent()), 0) / 100)
+                                WHEN TRUE  AND inIsPriceWithVAT = FALSE THEN inPricePartner * (1 + COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId =  inMovementId AND MF.DescId = zc_MovementFloat_VATPercent()), 0) / 100)
+                           END;
          END IF;
      ELSE
 
@@ -744,6 +751,18 @@ BEGIN
                                                            , inIsBarCode           := CASE WHEN vbUserId = 5 THEN TRUE ELSE inIsBarCode END
                                                            , inSession             := inSession
                                                             );
+
+         -- дописали св-во для SPEC
+         IF vbMovementDescId IN (zc_Movement_Income())
+            AND (inBranchCode BETWEEN 301 AND 310 -- Dnepr-SPEC
+                )
+         THEN
+             -- цена поставщика для Сырья - из накладной
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), vbId, inPricePartner);
+             -- Цена с НДС да/нет - для цена поставщика
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PriceWithVAT(), vbId, inIsPriceWithVAT);
+
+         END IF;
 
          -- дописали св-во для OBV
          IF vbMovementDescId IN (zc_Movement_Income())
