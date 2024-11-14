@@ -252,7 +252,17 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+        Options.Editing = False
         Width = 69
+      end
+      object InvNumberPartner: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088'.'
+        DataBinding.FieldName = 'InvNumberPartner'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+        Options.Editing = False
+        Width = 55
       end
       object OperDate_parent: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
@@ -1672,6 +1682,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216

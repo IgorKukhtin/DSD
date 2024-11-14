@@ -184,6 +184,8 @@ type
     AssetName: TcxGridDBColumn;
     cxLabel25: TcxLabel;
     edOperDatePartner: TcxDateEdit;
+    edInvNumberPartner: TcxTextEdit;
+    cxLabel26: TcxLabel;
   private
   public
   end;
