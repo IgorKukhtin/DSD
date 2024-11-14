@@ -41,8 +41,8 @@ object IncomeEdit_PartnerParamForm: TIncomeEdit_PartnerParamForm
     Left = 40
     Top = 39
     EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.##'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 2
     Width = 249
   end

@@ -12,7 +12,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
@@ -39,7 +40,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inPriceListId         Integer   , -- прайс
     IN inStartDate           TDateTime , -- дата прайса
     --IN inDate_BUH            TDateTime , -- Дата до которой действует Название товара(бухг.)
-    IN inValuePrice          TFloat    , -- значение цены
+    IN inValuePrice          TFloat    , -- значение цены   
+    IN inisHeadCount         Boolean   , -- Проверка Количество голов
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -170,6 +172,9 @@ BEGIN
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Comment(), ioId, inComment);
 
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_HeadCount(), ioId, inisHeadCount);
+
    
    IF inValuePrice <> 0 AND inPriceListId <> 0
       AND ((vbIsUpdate = FALSE) OR NOT EXISTS (SELECT 1 FROM gpSelect_ObjectHistory_PriceListGoodsItem (inPriceListId:= inPriceListId, inGoodsId:= ioId, inGoodsKindId:= 0, inSession := inSession) as tmp LIMIT 1))
@@ -197,6 +202,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.11.24         * inisHeadCount
  18.10.24         * inComment
  22.08.24         *
  19.12.23         *

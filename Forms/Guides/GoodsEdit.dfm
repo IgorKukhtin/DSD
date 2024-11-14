@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 373
+  ClientHeight = 405
   ClientWidth = 643
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 374
-    Top = 333
+    Left = 213
+    Top = 372
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 514
-    Top = 333
+    Left = 353
+    Top = 372
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -355,7 +355,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 43
-    Width = 273
+    Width = 274
   end
   object cxLabel21: TcxLabel
     Left = 343
@@ -375,7 +375,7 @@
     Properties.ReadOnly = True
     ShowHint = True
     TabOrder = 45
-    Width = 273
+    Width = 274
   end
   object cxLabel22: TcxLabel
     Left = 343
@@ -392,18 +392,28 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 47
-    Width = 273
+    Width = 274
   end
   object cxLabel23: TcxLabel
-    Left = 40
-    Top = 315
+    Left = 343
+    Top = 316
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
-    Left = 40
-    Top = 333
+    Left = 343
+    Top = 335
     TabOrder = 49
-    Width = 272
+    Width = 274
+  end
+  object cbHeadCount: TcxCheckBox
+    Left = 40
+    Top = 335
+    Hint = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
+    Caption = #1055#1088#1086#1074#1077#1088#1082#1072' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074'>'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 50
+    Width = 194
   end
   object ActionList: TActionList
     Left = 304
@@ -620,10 +630,15 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDate_BUH'
+        Name = 'inisHeadCount'
         Value = Null
-        Component = edDate_BUH
-        DataType = ftDateTime
+        Component = cbHeadCount
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
@@ -924,6 +939,13 @@
         Value = Null
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isHeadCount'
+        Value = Null
+        Component = cbHeadCount
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

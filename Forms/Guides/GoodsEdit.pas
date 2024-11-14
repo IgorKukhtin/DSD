@@ -98,6 +98,7 @@ type
     GuidesGoodsGroupDirection: TdsdGuides;
     cxLabel23: TcxLabel;
     ceComment: TcxTextEdit;
+    cbHeadCount: TcxCheckBox;
   private
     { Private declarations }
   public

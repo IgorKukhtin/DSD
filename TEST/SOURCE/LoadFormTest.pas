@@ -651,19 +651,19 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
    //exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   exit;
-
+   {
   TsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTreeForm');
 
@@ -1084,7 +1084,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeEdit_PartnerParamForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeEdit_PartnerParamForm');
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TChange—urrencyUserDialogForm'));
+  exit;
+  {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChange—urrencyUserDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChange—urrencyUserDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202Form'));
