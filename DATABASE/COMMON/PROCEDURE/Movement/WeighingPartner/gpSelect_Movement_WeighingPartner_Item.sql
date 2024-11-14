@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingPartner_Item(
     IN inIsErased           Boolean ,
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, OperDatePartner TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
              , MovementId_Tax Integer, InvNumberPartner_Tax TVarChar, OperDate_Tax TDateTime
@@ -140,7 +140,8 @@ BEGIN
 
 
        SELECT  Movement.Id
-             , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
+             , zfConvert_StringToNumber (Movement.InvNumber)        AS InvNumber
+             , MovementString_InvNumberPartner.ValueData ::TVarChar AS InvNumberPartner
              , Movement.OperDate 
              , MovementDate_OperDatePartner.ValueData ::TDateTime AS OperDatePartner
              , Object_Status.ObjectCode          AS StatusCode
@@ -348,6 +349,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -704,6 +709,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.11.24         * InvNumberPartner
  08.11.23         *
  12.04.22         *
  06.09.21         *

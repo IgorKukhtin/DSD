@@ -26,6 +26,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 4
     object edInvNumber: TcxTextEdit
       Left = 175
       Top = 22
@@ -329,12 +330,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Width = 94
     end
     object cxLabel23: TcxLabel
-      Left = 175
+      Left = 262
       Top = 84
       Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
     end
     object ed: TcxButtonEdit
-      Left = 175
+      Left = 262
       Top = 99
       Properties.Buttons = <
         item
@@ -344,7 +345,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 38
-      Width = 295
+      Width = 208
     end
     object cxLabel24: TcxLabel
       Left = 476
@@ -368,6 +369,18 @@ object WeighingPartnerForm: TWeighingPartnerForm
       ShowHint = True
       TabOrder = 41
       Width = 129
+    end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 175
+      Top = 99
+      Properties.ReadOnly = True
+      TabOrder = 42
+      Width = 80
+    end
+    object cxLabel26: TcxLabel
+      Left = 175
+      Top = 84
+      Caption = #8470' '#1076#1086#1082'.'#1091' '#1082#1086#1085#1090#1088'.'
     end
   end
   object cxPageControl: TcxPageControl
@@ -1275,12 +1288,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Width = 118
   end
   object cxLabel25: TcxLabel
-    Left = 9
+    Left = 67
     Top = 84
     Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088'.'
   end
   object edOperDatePartner: TcxDateEdit
-    Left = 9
+    Left = 67
     Top = 99
     Hint = #1044#1072#1090#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
     EditValue = 42184d
@@ -1290,7 +1303,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Properties.ShowTime = False
     ShowHint = True
     TabOrder = 16
-    Width = 104
+    Width = 102
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2679,6 +2692,13 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = cbisList
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberPartner'
+        Value = Null
+        Component = edInvNumberPartner
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -2719,8 +2739,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
     IdParam.ComponentItem = 'Id'
     IdParam.MultiSelectSeparator = ','
     StoredProcName = 'gpUpdate_Status_WeighingPartner'
-    Left = 133
-    Top = 24
+    Left = 109
+    Top = 32
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -2781,7 +2801,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 23
-    Top = 42
+    Top = 2
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_WeighingPartner'
@@ -2805,8 +2825,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 76
-    Top = 42
+    Left = 68
+    Top = 18
   end
   object UserGuides: TdsdGuides
     KeyField = 'Id'
@@ -3023,8 +3043,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 52
-    Top = 8
+    Left = 68
+    Top = 65528
   end
   object HeaderSaver3: THeaderSaver
     IdParam.Value = Null
@@ -3304,7 +3324,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 270
-    Top = 72
+    Left = 382
+    Top = 96
   end
 end

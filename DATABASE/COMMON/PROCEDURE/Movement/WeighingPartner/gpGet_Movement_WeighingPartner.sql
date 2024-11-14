@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingPartner(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementId_Order Integer, InvNumberOrder TVarChar
@@ -63,6 +63,7 @@ BEGIN
        RETURN QUERY
        SELECT  Movement.Id
              , Movement.InvNumber
+             , MovementString_InvNumberPartner.ValueData ::TVarChar AS InvNumberPartner
              , Movement.OperDate 
              , MovementDate_OperDatePartner.ValueData ::TDateTime AS OperDatePartner
              , Object_Status.ObjectCode          AS StatusCode
@@ -185,6 +186,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId =  Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
