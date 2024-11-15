@@ -221,7 +221,7 @@ BEGIN
                                                                     AND tmpPrice_2.GoodsKindId = 0
                                     LEFT JOIN tmpPrice AS tmpPrice_3 ON tmpPrice_3.GoodsId     = tmpMI.GoodsId
                                                                     AND tmpPrice_3.GoodsKindId = zc_GoodsKind_Basis()
-                               WHERE COALESCE (tmpPrice_1.OperPrice, tmpPrice_2.OperPrice, tmpPrice_3.OperPrice, 0) > 0
+                               WHERE COALESCE (tmpPrice_1.OperPrice, tmpPrice_2.OperPrice, tmpPrice_3.OperPrice, 0) >= 0
                                  AND (tmpMI.OperPrice_old <> CASE WHEN tmpMI.MovementId_promo > 0 THEN tmpMI.OperPrice_promo
                                                                   ELSE COALESCE (tmpPrice_1.OperPrice, tmpPrice_2.OperPrice, tmpPrice_3.OperPrice, 0)
                                                              END
@@ -229,7 +229,7 @@ BEGIN
                                      )
                               )
                -- Сохранили Цены
-               SELECT CASE WHEN tmpAll.OperPrice > 0 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmpAll.MovementItemId, tmpAll.OperPrice) END
+               SELECT CASE WHEN tmpAll.OperPrice >= 0 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmpAll.MovementItemId, tmpAll.OperPrice) END
                       -- сохранили свойство <MovementId-Акция>
                     , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), tmpAll.MovementItemId, COALESCE (tmpAll.MovementId_promo, 0))
                        -- сохранили свойство <(-)% Скидки (+)% Наценки>

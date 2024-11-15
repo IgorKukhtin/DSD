@@ -15,6 +15,7 @@ $BODY$
    DECLARE vbMovementId_check      Integer;
    DECLARE vbServiceDate           TDateTime;
    DECLARE vbServiceDateId         Integer;
+   DECLARE vbServiceDateId_next    Integer;
    DECLARE vbPersonalServiceListId Integer;
    DECLARE vbMovementItemId_err    Integer;
    DECLARE vbInsertDate            TDateTime;
@@ -42,6 +43,7 @@ BEGIN
      -- Нашли
      vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate());
      vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
+     vbServiceDateId_next:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate + INTERVAL '1 MONTH');
      -- Нашли
      vbPersonalServiceListId:= (SELECT MLO.ObjectId AS PersonalServiceListId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
 
@@ -60,7 +62,7 @@ BEGIN
          PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, inUserId, FALSE)
          FROM -- сохранили
               (SELECT MovementItem.Id AS MovementItemId
-                      -- Сумма доплата за ревизию - Ведомость охрана 
+                      -- Сумма доплата за ревизию - Ведомость охрана
                     , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAuditAdd(), MovementItem.Id, 0)
                       -- Сумма доплата за прогул
                     , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSkip(), MovementItem.Id, 0)
@@ -82,7 +84,7 @@ BEGIN
                  AND (MIF_SummAuditAdd.ValueData <> 0 OR MIF_SummSkip.ValueData <> 0 OR MIF_SummMedicdayAdd.ValueData <> 0)
               ) AS tmp
             ;
-     
+
      END IF;
 
 
@@ -116,7 +118,7 @@ BEGIN
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummMedicdayAdd()), 0)
                     -- "минус" <за прогул>
                   - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummSkip()), 0)
-                    -- 
+                    --
                   , MovementItem.ParentId
                   )
      FROM MovementItem
@@ -170,7 +172,7 @@ BEGIN
             OR NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = ABS (inUserId))
          THEN
              -- Нашли
-             vbInsertDate:= (SELECT MIN (tmp.OperDate) 
+             vbInsertDate:= (SELECT MIN (tmp.OperDate)
                              FROM (SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId
                          UNION ALL SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol_arc AS MovementProtocol WHERE MovementProtocol.MovementId = inMovementId
                          UNION ALL SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol_arc_arc AS MovementProtocol WHERE MovementProtocol.MovementId = inMovementId
@@ -941,7 +943,7 @@ BEGIN
                                                                AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
              LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
                                                 AND Object_ObjectTo.DescId = zc_Object_Founder()
-        WHERE MIF.ValueData <> 0 
+        WHERE MIF.ValueData <> 0
           AND Object_ObjectTo.Id IS NULL
 
        UNION ALL
@@ -1125,6 +1127,76 @@ BEGIN
              INNER JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
                                                  AND Object_ObjectTo.DescId = zc_Object_Founder()
         WHERE MIF_ret.ValueData <> 0
+
+
+      UNION ALL
+        -- перевыставления - <Карта БН (округление) - 2ф>
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , _tmpItem.ObjectId
+             , _tmpItem.ObjectDescId
+
+               -- <Карта БН (округление) - 2ф>
+             , tmpServiceDate.mySign * MIF_SummCardSecondDiff.ValueData AS OperSumm
+
+             , _tmpItem.MovementItemId
+
+             , 0 AS ContainerId                                               -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
+               -- Управленческие группы назначения
+             , _tmpItem.InfoMoneyGroupId
+               -- Управленческие назначения
+             , _tmpItem.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , _tmpItem.InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо
+             , zc_Juridical_Basis() AS JuridicalId_Basis
+
+             , _tmpItem.UnitId
+             , _tmpItem.PositionId
+             , MILinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
+
+               -- Филиал Баланс
+             , _tmpItem.BranchId_Balance
+               -- Филиал ОПиУ
+             , _tmpItem.BranchId_ProfitLoss
+
+               -- Месяц начислений: перевыставления
+             , tmpServiceDate.ServiceDateId
+
+             , 0 AS ContractId
+             , 0 AS PaidKindId
+
+             , zc_Enum_AnalyzerId_PersonalService_SummDiff() -- это Карта БН (округление) - 2ф
+             , _tmpItem.ObjectIntId_Analyzer                 -- надо, сохраним "оригинал"
+
+             , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+
+        FROM _tmpItem
+             LEFT JOIN (SELECT -1 AS mySign, vbServiceDateId AS ServiceDateId UNION SELECT 1 AS mySign, vbServiceDateId_next AS ServiceDateId
+                       ) AS tmpServiceDate ON 1 = 1
+             -- <Карта БН (округление) - 2ф>
+             LEFT JOIN MovementItemFloat AS MIF_SummCardSecondDiff
+                                         ON MIF_SummCardSecondDiff.MovementItemId = _tmpItem.MovementItemId
+                                        AND MIF_SummCardSecondDiff.DescId         = zc_MIFloat_SummCardSecondDiff()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
+                                              ON MILinkObject_PersonalServiceList.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_PersonalServiceList.DescId         = zc_MILinkObject_PersonalServiceList()
+
+        WHERE MIF_SummCardSecondDiff.ValueData <> 0
+          AND MILinkObject_PersonalServiceList.ObjectId > 0
+
        ;
 
 /*
@@ -1193,7 +1265,7 @@ BEGIN
 */
 
 
-     -- 4.10. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты) - ДА надо "минус" <Налоги - удержания с ЗП> И <Алименты - удержания> И <Удержания сторонними юр.л.> 
+     -- 4.10. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты) - ДА надо "минус" <Налоги - удержания с ЗП> И <Алименты - удержания> И <Удержания сторонними юр.л.>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummToPay(), tmpMovement.MovementItemId, -1 * OperSumm
                                                                                                  + tmpMovement.SummSocialAdd
                                                                                                --+ tmpMovement.SummHouseAdd
@@ -1328,7 +1400,7 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Position
                                                               ON CLO_Position.ContainerId = CLO_Personal.ContainerId
                                                              AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
-                           
+
                           )
    , tmpMIContainer AS (SELECT MIContainer.ContainerId
                              , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()                      THEN  1 * MIContainer.Amount ELSE 0 END)  AS SummTransport

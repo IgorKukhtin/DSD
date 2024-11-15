@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TCash_PersonalForm = class(TAncestorDocumentForm)
@@ -118,6 +118,7 @@ type
     SummCardSecond_diff_00807: TcxGridDBColumn;
     SummCardSecond_all_005: TcxGridDBColumn;
     SummCardSecond_diff_005: TcxGridDBColumn;
+    AmountService_diff: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -248,6 +248,8 @@ BEGIN
 
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_PersonalService_Nalog(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1301, inName:= 'Сумма Налоги - удержания с ЗП',                      inEnumName:= 'zc_Enum_AnalyzerId_PersonalService_Nalog');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_PersonalService_NalogRet(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1302, inName:= 'Сумма Налоги - возмещение к ЗП',                     inEnumName:= 'zc_Enum_AnalyzerId_PersonalService_NalogRet');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_PersonalService_SummDiff(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1302, inName:= 'Карта БН (округление)',                              inEnumName:= 'zc_Enum_AnalyzerId_PersonalService_SummDiff');
+
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_MobileBills_Personal(),     inDescId:= zc_Object_AnalyzerId(), inCode:= 1303, inName:= 'Сумма мобильная связь - удержания с ЗП',             inEnumName:= 'zc_Enum_AnalyzerId_MobileBills_Personal');
      --
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_TareReturning(), inDescId:= zc_Object_AnalyzerId(), inCode:= 2001, inName:= 'Кол-во, возвратная тара', inEnumName:= 'zc_Enum_AnalyzerId_TareReturning');

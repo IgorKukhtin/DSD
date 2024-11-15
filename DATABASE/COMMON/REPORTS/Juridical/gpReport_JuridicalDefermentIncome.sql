@@ -123,7 +123,7 @@ BEGIN
                             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - vbLenght     AND MIContainer.OperDate >= ContractDate - 2 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm2
                             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 2 * vbLenght AND MIContainer.OperDate >= ContractDate - 3 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm3
                             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 3 * vbLenght AND MIContainer.OperDate >= ContractDate - 4 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm4
-                            , ContractCondition_DefermentPayment.ContractConditionKindId
+                            , COALESCE (ContractCondition_DefermentPayment.ContractConditionKindId, zc_Enum_ContractConditionKind_DelayDayCalendar()) AS ContractConditionKindId
                             , COALESCE (ContractCondition_DefermentPayment.DayCount, 0) AS DayCount
                             , COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) AS DelayCreditLimit
                             , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) AS ContractDate
@@ -184,7 +184,7 @@ BEGIN
                                , Container.Amount
                                , View_Contract_ContractKey.ContractId_Key
                                , CLO_Juridical.ObjectId  
-                               , ContractConditionKindId
+                               , COALESCE (ContractCondition_DefermentPayment.ContractConditionKindId, zc_Enum_ContractConditionKind_DelayDayCalendar())
                                , DayCount
                                , DelayCreditLimit
                                , ContractDate
@@ -464,7 +464,7 @@ BEGIN
                             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - vbLenght     AND MIContainer.OperDate >= ContractDate - 2 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm2
                             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 2 * vbLenght AND MIContainer.OperDate >= ContractDate - 3 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm3
                             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 3 * vbLenght AND MIContainer.OperDate >= ContractDate - 4 * vbLenght) AND Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleSumm4
-                            , ContractCondition_DefermentPayment.ContractConditionKindId
+                            , COALESCE (ContractCondition_DefermentPayment.ContractConditionKindId, zc_Enum_ContractConditionKind_DelayDayCalendar()) AS ContractConditionKindId
                             , COALESCE (ContractCondition_DefermentPayment.DayCount, 0) AS DayCount
                             , COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) AS DelayCreditLimit
                             , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) AS ContractDate
@@ -523,7 +523,7 @@ BEGIN
                                , Container.Amount
                                , View_Contract_ContractKey.ContractId_Key
                                , CLO_Juridical.ObjectId  
-                               , ContractConditionKindId
+                               , COALESCE (ContractCondition_DefermentPayment.ContractConditionKindId, zc_Enum_ContractConditionKind_DelayDayCalendar())
                                , DayCount
                                , DelayCreditLimit
                                , ContractDate
