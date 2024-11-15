@@ -1,25 +1,25 @@
 inherited ContractGoodsMovementForm: TContractGoodsMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
   ClientHeight = 596
-  ClientWidth = 1181
-  ExplicitWidth = 1197
+  ClientWidth = 1204
+  ExplicitWidth = 1220
   ExplicitHeight = 635
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 117
-    Width = 1181
+    Width = 1204
     Height = 479
     ExplicitTop = 117
     ExplicitWidth = 1181
     ExplicitHeight = 479
     ClientRectBottom = 479
-    ClientRectRight = 1181
+    ClientRectRight = 1204
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1181
       ExplicitHeight = 455
       inherited cxGrid: TcxGrid
-        Width = 1181
+        Width = 1204
         Height = 455
         ExplicitWidth = 1181
         ExplicitHeight = 455
@@ -271,7 +271,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1181
+    Width = 1204
     Height = 91
     TabOrder = 3
     ExplicitWidth = 1181
@@ -537,10 +537,17 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
   end
   object edPriceWithVAT: TcxCheckBox [4]
     Left = 740
-    Top = 62
+    Top = 48
     Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 8
     Width = 128
+  end
+  object cbMultWithVAT: TcxCheckBox [5]
+    Left = 740
+    Top = 70
+    Caption = #1062#1077#1085#1072' '#1082#1088#1072#1090#1085#1072#1103' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 9
+    Width = 166
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 883
@@ -1535,6 +1542,13 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMultWithVAT'
+        Value = Null
+        Component = cbMultWithVAT
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1614,6 +1628,14 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisMultWithVAT'
+        Value = Null
+        Component = cbMultWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = 'False'
         Component = ceComment
@@ -1657,6 +1679,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Control = ceComment
       end
       item
+        Control = cbMultWithVAT
       end
       item
       end
@@ -2029,8 +2052,8 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 512
-    Top = 80
+    Left = 568
+    Top = 64
   end
   object spUpdate_MI_ContractGoods_Save_No: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ContractGoods'

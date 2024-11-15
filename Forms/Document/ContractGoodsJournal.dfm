@@ -264,6 +264,15 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 94
           end
+          object isMultWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1082#1088#1072#1090#1085#1072#1103' '#1053#1044#1057
+            DataBinding.FieldName = 'isMultWithVAT'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1082#1088#1072#1090#1085#1072#1103' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 76
+          end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'

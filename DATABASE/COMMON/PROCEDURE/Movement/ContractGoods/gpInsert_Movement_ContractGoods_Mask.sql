@@ -27,7 +27,8 @@ BEGIN
                                                   , inCurrencyId   := tmp.CurrencyId
                                                   , inDiffPrice    := tmp.DiffPrice ::TFloat
                                                   , inRoundPrice   := tmp.RoundPrice::TFloat 
-                                                  , inPriceWithVAT := tmp.PriceWithVAT ::Boolean
+                                                  , inPriceWithVAT := tmp.PriceWithVAT  ::Boolean 
+                                                  , inisMultWithVAT:= tmp.isMultWithVAT ::Boolean
                                                   , inComment      := '' ::TVarChar
                                                   , inUserId       := vbUserId
                                                    )

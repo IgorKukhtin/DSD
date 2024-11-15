@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  ExternalLoad;
+  ExternalLoad, dsdCommon;
 
 type
   TContractGoodsJournalForm = class(TAncestorJournalForm)
@@ -60,6 +60,7 @@ type
     CurrencyName: TcxGridDBColumn;
     DiffPrice: TcxGridDBColumn;
     RoundPrice: TcxGridDBColumn;
+    isMultWithVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

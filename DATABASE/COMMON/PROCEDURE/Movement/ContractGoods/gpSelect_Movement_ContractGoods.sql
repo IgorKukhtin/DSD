@@ -40,7 +40,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
              , PriceListId_curr Integer, PriceListName_curr TVarChar
              
              , DiffPrice TFloat, RoundPrice TFloat
-             , PriceWithVAT Boolean
+             , PriceWithVAT Boolean 
+             , isMultWithVAT Boolean
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -184,6 +185,7 @@ BEGIN
            , MovementFloat_RoundPrice.ValueData ::TFloat AS RoundPrice           
 
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
+           , COALESCE (MovementBoolean_MultWithVAT.ValueData, FALSE)  :: Boolean AS isMultWithVAT
 
            , MovementString_Comment.ValueData    AS Comment
 
@@ -208,8 +210,12 @@ BEGIN
                                   AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_MultWithVAT
+                                      ON MovementBoolean_MultWithVAT.MovementId = Movement.Id
+                                     AND MovementBoolean_MultWithVAT.DescId = zc_MovementBoolean_MultWithVAT()
 
             LEFT JOIN MovementFloat AS MovementFloat_DiffPrice
                                     ON MovementFloat_DiffPrice.MovementId = Movement.Id
@@ -266,6 +272,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.11.24         *
  08.11.23         * 
  15.09.22         *
  05.07.21         *
