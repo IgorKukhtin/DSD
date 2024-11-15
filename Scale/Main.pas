@@ -1563,7 +1563,9 @@ end;
 procedure TMainForm.pSetComment;
 var execParams:TParams;
 begin
-     if ParamsMovement.ParamByName('isComment').AsBoolean = FALSE then exit;
+     if (ParamsMovement.ParamByName('isComment').AsBoolean = FALSE)
+      or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+     then exit;
      //
      with DialogStringValueForm do
      begin

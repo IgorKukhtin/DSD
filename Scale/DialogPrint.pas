@@ -73,11 +73,15 @@ begin
      then cbPrintMovement.Checked:= TRUE
      else cbPrintMovement.Checked:= isMovement;
      //
-     PanelDateValue.Visible:= (SettingMain.isCeh = FALSE) or (ParamsMovement.ParamByName('isOperDatePartner').AsBoolean = true);
+     if SettingMain.isOperDatePartner = TRUE
+     then ParamsMovement.ParamByName('isOperDatePartner').AsBoolean:= TRUE
+     else ParamsMovement.ParamByName('isOperDatePartner').AsBoolean:= DMMainScaleForm.gpGet_Scale_Movement_OperDatePartner(ParamsMovement);
+     PanelDateValue.Visible:= ParamsMovement.ParamByName('isOperDatePartner').AsBoolean = TRUE;
      //
      PanelInvNumberPartner.Visible:= (SettingMain.isCeh = FALSE) and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true);
      PanelComment.Visible:= (SettingMain.isCeh = FALSE) and (ParamsMovement.ParamByName('isComment').AsBoolean = true) and (ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Loss);
      //
+     Self.Height:= 384;
      if not PanelInvNumberPartner.Visible then Self.Height:= Self.Height - PanelInvNumberPartner.Height;
      if not PanelComment.Visible then Self.Height:= Self.Height - PanelComment.Height;
      if not PanelDateValue.Visible then Self.Height:= Self.Height - PanelDateValue.Height;
@@ -105,13 +109,13 @@ begin
      then PrintCountEdit.Text:=IntToStr(CountMovement)
      else PrintCountEdit.Text:=GetArrayList_Value_byName(Default_Array,'PrintCount');
      //
-     if SettingMain.isOperDatePartner = TRUE
-     then ParamsMovement.ParamByName('isOperDatePartner').AsBoolean:= TRUE
-     else ParamsMovement.ParamByName('isOperDatePartner').AsBoolean:= DMMainScaleForm.gpGet_Scale_Movement_OperDatePartner(ParamsMovement);
      DateValueEdit.Text:= DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
      PanelDateValue.Visible:= ParamsMovement.ParamByName('isOperDatePartner').AsBoolean = TRUE;
      //
      ActiveControl:=PrintCountEdit;
+     //
+     CommentEdit.Text:='';
+     InvNumberPartnerEdit.Text:='';
      //
      if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income
      then LabelDateValue.Caption:='Дата у поставщика'
