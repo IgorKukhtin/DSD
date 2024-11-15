@@ -172,6 +172,14 @@ BEGIN
 
 
      -- проверка
+     IF COALESCE (inHeadCount, 0) = 0 AND vbMovementDescId = zc_Movement_Income()
+        AND EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inGoodsId AND OB.DescId = zc_ObjectBoolean_Goods_HeadCount() AND OB.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не определено значение <Кол-во голов>.';
+     END IF;
+
+
+     -- проверка
      IF vbUnitId = 8451 -- ЦЕХ упаковки
         AND vbToId = 8459 -- Розподільчий комплекс
         AND inGoodsKindId = zc_GoodsKind_Basis()

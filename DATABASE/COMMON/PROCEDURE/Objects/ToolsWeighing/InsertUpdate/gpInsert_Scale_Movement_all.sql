@@ -851,7 +851,7 @@ BEGIN
                                                                                     THEN inOperDatePartner
                                                                                     ELSE inOperDate
                                                                                END
-                                                  , inInvNumberPartner      := ''
+                                                  , inInvNumberPartner      := tmp.InvNumberPartner
                                                   , inPriceWithVAT          := CASE WHEN inBranchCode BETWEEN 1 AND 310
                                                                                          THEN COALESCE ((SELECT tmp.isPriceWithVAT
                                                                                                          FROM lpGet_MovementItem_ContractGoods (inOperDate   := CASE WHEN inBranchCode BETWEEN 1 AND 310 AND vbMovementDescId = zc_Movement_Income()
@@ -884,6 +884,7 @@ BEGIN
                                                   , inCurrencyDocumentId    := 0
                                                   , inCurrencyPartnerId     := 0
                                                   , inCurrencyValue         := 0
+                                                  , inComment               := tmp.Comment
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_ReturnOut()
