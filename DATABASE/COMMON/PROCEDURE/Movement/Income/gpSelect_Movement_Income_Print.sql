@@ -61,6 +61,7 @@ BEGIN
           , COALESCE (MovementString_InvNumberPartner.ValueData,'') ::TVarChar AS InvNumberPartner
 
             INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePercentTo, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
+               , vbOperDate, vbInvNumberPartner
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -162,7 +163,7 @@ BEGIN
          SELECT
              Movement.Id
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
-           , Movement.InvNumber
+           , CASE WHEN COALESCE (vbInvNumberPartner,'') <> '' THEN vbInvNumberPartner ELSE Movement.InvNumber END InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
@@ -591,7 +592,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Income_Print (Integer,  TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -602,6 +602,8 @@ ALTER FUNCTION gpSelect_Movement_Income_Print (Integer,  TVarChar) OWNER TO post
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Movement_Income_Print (inMovementId := 432692, inSession:= '5'); FETCH ALL "<unnamed portal 26>";
+
+select * from gpSelect_Movement_Income_Print(inMovementId := 29770688 , inisActDiff := 'True' ,  inSession := '9457');
 
 /*
 
