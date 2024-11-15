@@ -1,8 +1,5 @@
 -- Function: lpInsertUpdate_Movement_Income_Value()
 
--- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
--- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
--- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income_Value(
@@ -15,11 +12,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income_Value(
 
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
+    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
 
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN inPaidKindId          Integer   , -- Виды форм оплаты 
+    IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
     IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
@@ -33,28 +30,27 @@ AS
 $BODY$
 BEGIN
      -- сохранили <Документ>
-     ioId:= 
-    (SELECT tmp.ioId
-     FROM lpInsertUpdate_Movement_Income (ioId                := ioId
-                                        , inInvNumber         := inInvNumber
-                                        , inOperDate          := inOperDate
-                                        , inOperDatePartner   := inOperDatePartner
-                                        , inInvNumberPartner  := inInvNumberPartner
-                                        , ioPriceWithVAT      := inPriceWithVAT
-                                        , ioVATPercent        := inVATPercent
-                                        , inChangePercent     := inChangePercent
-                                        , inFromId            := inFromId
-                                        , inToId              := inToId
-                                        , inPaidKindId        := inPaidKindId
-                                        , inContractId        := inContractId
-                                        , inPersonalPackerId  := inPersonalPackerId
-                                        , ioPriceListId       := Null  ::Integer
-                                        , inCurrencyDocumentId:= inCurrencyDocumentId
-                                        , inCurrencyPartnerId := inCurrencyPartnerId
-                                        , ioCurrencyValue     := inCurrencyValue
-                                        , ioParValue          := NULL  :: TFloat
-                                        , inUserId            := inUserId
-                                         ) AS tmp);
+     ioId:= (SELECT tmp.ioId
+             FROM lpInsertUpdate_Movement_Income (ioId                := ioId
+                                                , inInvNumber         := inInvNumber
+                                                , inOperDate          := inOperDate
+                                                , inOperDatePartner   := inOperDatePartner
+                                                , inInvNumberPartner  := inInvNumberPartner
+                                                , ioPriceWithVAT      := inPriceWithVAT
+                                                , ioVATPercent        := inVATPercent
+                                                , inChangePercent     := inChangePercent
+                                                , inFromId            := inFromId
+                                                , inToId              := inToId
+                                                , inPaidKindId        := inPaidKindId
+                                                , inContractId        := inContractId
+                                                , inPersonalPackerId  := inPersonalPackerId
+                                                , ioPriceListId       := Null  ::Integer
+                                                , inCurrencyDocumentId:= inCurrencyDocumentId
+                                                , inCurrencyPartnerId := inCurrencyPartnerId
+                                                , ioCurrencyValue     := inCurrencyValue
+                                                , ioParValue          := NULL  :: TFloat
+                                                , inUserId            := inUserId
+                                                 ) AS tmp);
 
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);

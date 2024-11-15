@@ -29,6 +29,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , SummCompensation TFloat
              , SummAvance TFloat
+             , AmountService_diff TFloat
+
              , Amount_current TFloat, Amount_avance TFloat, Amount_avance_ret TFloat, Amount_service TFloat
              , SummRemains TFloat, SummCardSecondRemains TFloat
              , AmountCardSecond_avance TFloat
@@ -749,6 +751,28 @@ BEGIN
                                      , tmpContainer.PersonalServiceListId
                                    --, MIContainer.MovementDescId
                              )
+       -- <Карта БН (округление) - 2ф>
+     , tmpMIContainer_diff AS (SELECT SUM (MIContainer.Amount) AS AmountService_diff
+                                   , tmpContainer.PersonalId
+                                   , tmpContainer.UnitId
+                                   , tmpContainer.PositionId
+                                   , tmpContainer.InfoMoneyId
+                                   , tmpContainer.PersonalServiceListId
+                                   , MAX (MIContainer.MovementId) AS MovementId_find
+                                   , MAX (tmpContainer.ContainerId) AS ContainerId_find
+                              FROM tmpContainer
+                                   INNER JOIN MovementItemContainer AS MIContainer
+                                                                    ON MIContainer.ContainerId    = tmpContainer.ContainerId
+                                                                   AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                   AND MIContainer.MovementDescId = zc_Movement_PersonalService()
+                                                                   -- <Карта БН (округление) - 2ф>
+                                                                   AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_PersonalService_SummDiff()
+                              GROUP BY tmpContainer.PersonalId
+                                     , tmpContainer.UnitId
+                                     , tmpContainer.PositionId
+                                     , tmpContainer.InfoMoneyId
+                                     , tmpContainer.PersonalServiceListId
+                             )
          , tmpAvance_Only AS (SELECT MI_Child.ObjectId     AS PersonalId
                                    , SUM (CASE WHEN MI_Child.MovementId = inMovementId THEN 0 ELSE MI_Child.Amount END) AS Amount
                               FROM Movement
@@ -787,7 +811,7 @@ BEGIN
                                    , tmpParent.UnitId
                                    , tmpParent.PositionId
                                    , tmpParent.InfoMoneyId
-                                   , SUM (tmpParent.SummService)                  AS SummService
+                                   , SUM (tmpParent.SummService) AS SummService
                                    , SUM (tmpParent.SummToPay_cash)               AS SummToPay_cash
                                    , SUM (tmpParent.SummToPay)                    AS SummToPay
                                    , SUM (tmpParent.SummCard)                     AS SummCard
@@ -818,6 +842,7 @@ BEGIN
                                    , SUM (tmpMIContainer.Amount_avance_ret)       AS Amount_avance_ret
                                    , SUM (tmpMIContainer.AmountCardSecond_avance) AS AmountCardSecond_avance
                                    , SUM (tmpMIContainer.Amount_service)          AS Amount_service
+                                   , SUM (COALESCE (tmpMIContainer_diff.AmountService_diff, 0)) AS AmountService_diff
                                    , 0 AS PersonalServiceListId
                                    , MAX (tmpMIContainer.MovementId_find)         AS MovementId_find
                                    , MAX (tmpMIContainer.ContainerId_find)        AS ContainerId_find
@@ -829,6 +854,12 @@ BEGIN
                                                            AND tmpMIContainer.PositionId            = tmpParent.PositionId
                                                            AND tmpMIContainer.InfoMoneyId           = tmpParent.InfoMoneyId
                                                            AND tmpMIContainer.PersonalServiceListId = tmpParent.PersonalServiceListId
+                                   LEFT JOIN tmpMIContainer_diff ON tmpMIContainer_diff.PersonalId            = tmpParent.PersonalId
+                                                                AND tmpMIContainer_diff.UnitId                = tmpParent.UnitId
+                                                                AND tmpMIContainer_diff.PositionId            = tmpParent.PositionId
+                                                                AND tmpMIContainer_diff.InfoMoneyId           = tmpParent.InfoMoneyId
+                                                                AND tmpMIContainer_diff.PersonalServiceListId = tmpParent.PersonalServiceListId
+                                                           
                               GROUP BY tmpParent.PersonalId
                                      , tmpParent.MemberId_Personal
                                      , tmpParent.UnitId
@@ -870,6 +901,7 @@ BEGIN
                                    , tmpService.Amount_avance_ret
                                    , tmpService.AmountCardSecond_avance
                                    , tmpService.Amount_service
+                                   , tmpService.AmountService_diff
                                    , COALESCE (tmpMI.PersonalId, tmpService.PersonalId)   AS PersonalId
                                    , COALESCE (tmpService.MemberId_Personal, 0)           AS MemberId_Personal
                                    , COALESCE (tmpMI.UnitId, tmpService.UnitId)           AS UnitId
@@ -918,8 +950,11 @@ BEGIN
 
             , tmpData.Amount           :: TFloat AS Amount
             , tmpData.SummService      :: TFloat AS SummService
-            , tmpData.SummToPay_cash   :: TFloat AS SummToPay_cash
-            , tmpData.SummToPay        :: TFloat AS SummToPay
+              -- К выплате (из кассы) минус Карта БН (округление) - 2ф
+            , (tmpData.SummToPay_cash  - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay_cash
+              -- К выплате (итог)
+            , (tmpData.SummToPay       - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay
+              --
             , tmpData.SummCard         :: TFloat AS SummCard
             , tmpData.SummCardSecond   :: TFloat AS SummCardSecond
             , tmpData.SummAvCardSecond :: TFloat AS SummAvCardSecond
@@ -972,11 +1007,16 @@ BEGIN
             , tmpData.SummCompensation     :: TFloat AS SummCompensation
             , tmpData.SummAvance           :: TFloat AS SummAvance
 
+              -- Карта БН (округление) - 2ф
+            , tmpData.AmountService_diff   :: TFloat AS AmountService_diff
+
             , tmpData.Amount_current     :: TFloat AS Amount_current
             , CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END :: TFloat AS Amount_avance
             , tmpData.Amount_avance_ret  :: TFloat AS Amount_avance_ret
-              -- CASE WHEN vbUserId = 5 THEN 0 ELSE END
+
             , (COALESCE (tmpData.Amount_service, 0) + COALESCE (tmpAvance_Only.Amount, 0)) :: TFloat AS Amount_service
+
+              -- Ост. к выпл. из кассы
             , (COALESCE (tmpData.SummToPay_cash, 0)
                - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN 0 ELSE COALESCE (tmpData.Amount, 0) END
                - COALESCE (tmpData.Amount_avance_ret, 0)
@@ -984,8 +1024,11 @@ BEGIN
                - COALESCE (tmpData.Amount_service, 0)
                -- !!!схема премии!!!
                - COALESCE (tmpAvance_Only.Amount, 0)
+                 -- Карта БН (округление) - 2ф
+               - COALESCE (tmpData.AmountService_diff, 0)
               ) :: TFloat AS SummRemains
 
+              -- Ост. к выпл. Карта БН 2ф. 
             , (CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0
                     ELSE COALESCE (tmpData.SummCardSecond, 0)
                        + COALESCE (tmpData.SummAvCardSecond, 0)
@@ -993,6 +1036,10 @@ BEGIN
                        - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN COALESCE (tmpData.Amount, 0) ELSE 0 END
                          --
                        - CASE WHEN tmpData.SummCardSecondCash > 0 THEN 0 ELSE COALESCE (tmpData.AmountCardSecond_avance, 0) END
+
+                         -- Карта БН (округление) - 2ф
+                       - COALESCE (tmpData.AmountService_diff, 0)
+
                END) :: TFloat AS SummCardSecondRemains
 
               -- Карта БН - 2ф.  (выплачено)
