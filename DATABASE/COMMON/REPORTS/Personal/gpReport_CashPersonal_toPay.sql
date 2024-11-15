@@ -1,4 +1,4 @@
- -- Function: gpReport_CashPersonal_toPay ()
+-- Function: gpReport_CashPersonal_toPay ()
 
 DROP FUNCTION IF EXISTS gpReport_CashPersonal_toPay (TDateTime, Integer, TVarChar);
 
@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_CashPersonal_toPay(
     IN inPersonalId                Integer,   --
     IN inSession                   TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer, ContainerId Integer, ParentId Integer, OperDate TDateTime, InvNumber TVarChar
+RETURNS TABLE (MovementId Integer, ContainerId Integer, ParentId Integer, OperDate TDateTime, InvNumber TVarChar, ItemName TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -97,48 +97,52 @@ BEGIN
                       WHERE CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
                      )
 
- , tmpMovement AS (SELECT MIContainer.MovementId
-                        , MIContainer.MovementDescId
-                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalService() THEN NULL ELSE MIContainer.MovementId END AS MovementId_begin
-                        , MIContainer.AnalyzerId
-                        , tmpContainer.AccountId
-                        , -1 * tmpContainer.Amount AS Amount_rem
-                        , tmpContainer.PersonalId
-                        , tmpContainer.InfoMoneyId
-                        , tmpContainer.UnitId
-                        , tmpContainer.PositionId
-                        , tmpContainer.PersonalServiceListId
-                        , tmpContainer.BranchId
-                        , tmpContainer.ContainerId
-                        , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash()            THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount
-                        , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalService(), zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Service
-                        , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_BankAccount()     THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount_Bank
-                   FROM tmpContainer
-                        INNER JOIN MovementItemContainer AS MIContainer
-                                                         ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                        AND MIContainer.DescId      = zc_MIContainer_Summ()
-                        LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                                     ON MovementLinkObject_PersonalServiceList.MovementId = MIContainer.MovementId
-                                                    AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
-                        LEFT JOIN ObjectBoolean AS ObjectBoolean_CompensationNot
-                                                ON ObjectBoolean_CompensationNot.ObjectId  = MovementLinkObject_PersonalServiceList.ObjectId
-                                               AND ObjectBoolean_CompensationNot.DescId    = zc_ObjectBoolean_PersonalServiceList_CompensationNot()
-                                               AND ObjectBoolean_CompensationNot.ValueData = TRUE
-                   -- Исключить из расчета компенсации для отпуска
-                   WHERE ObjectBoolean_CompensationNot.ObjectId IS NULL
-
-                   GROUP BY MIContainer.MovementId
-                          , MIContainer.MovementDescId
-                          , MIContainer.AnalyzerId
-                          , tmpContainer.AccountId
-                          , tmpContainer.Amount
-                          , tmpContainer.PersonalId
-                          , tmpContainer.InfoMoneyId
-                          , tmpContainer.UnitId
-                          , tmpContainer.PositionId
-                          , tmpContainer.PersonalServiceListId
-                          , tmpContainer.BranchId
-                          , tmpContainer.ContainerId
+ , tmpMovement AS (SELECT *
+                          -- № п/п
+                        , ROW_NUMBER() OVER (PARTITION BY tmpMovement.ContainerId ORDER BY tmpMovement.Amount_Service DESC) AS Ord
+                   FROM (SELECT MIContainer.MovementId
+                              , MIContainer.MovementDescId
+                              , CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalService() THEN NULL ELSE MIContainer.MovementId END AS MovementId_begin
+                              , MIContainer.AnalyzerId
+                              , tmpContainer.AccountId
+                              , -1 * tmpContainer.Amount AS Amount_rem
+                              , tmpContainer.PersonalId
+                              , tmpContainer.InfoMoneyId
+                              , tmpContainer.UnitId
+                              , tmpContainer.PositionId
+                              , tmpContainer.PersonalServiceListId
+                              , tmpContainer.BranchId
+                              , tmpContainer.ContainerId
+                              , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash()            THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount
+                              , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalService(), zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Service
+                              , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_BankAccount()     THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount_Bank
+                         FROM tmpContainer
+                              INNER JOIN MovementItemContainer AS MIContainer
+                                                               ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                              AND MIContainer.DescId      = zc_MIContainer_Summ()
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                           ON MovementLinkObject_PersonalServiceList.MovementId = MIContainer.MovementId
+                                                          AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_CompensationNot
+                                                      ON ObjectBoolean_CompensationNot.ObjectId  = MovementLinkObject_PersonalServiceList.ObjectId
+                                                     AND ObjectBoolean_CompensationNot.DescId    = zc_ObjectBoolean_PersonalServiceList_CompensationNot()
+                                                     AND ObjectBoolean_CompensationNot.ValueData = TRUE
+                         -- Исключить из расчета компенсации для отпуска
+                         WHERE ObjectBoolean_CompensationNot.ObjectId IS NULL
+      
+                         GROUP BY MIContainer.MovementId
+                                , MIContainer.MovementDescId
+                                , MIContainer.AnalyzerId
+                                , tmpContainer.AccountId
+                                , tmpContainer.Amount
+                                , tmpContainer.PersonalId
+                                , tmpContainer.InfoMoneyId
+                                , tmpContainer.UnitId
+                                , tmpContainer.PositionId
+                                , tmpContainer.PersonalServiceListId
+                                , tmpContainer.BranchId
+                                , tmpContainer.ContainerId
+                        ) AS tmpMovement
                   )
    
  , tmpMI_begin AS (SELECT MI_Master.*
@@ -154,6 +158,7 @@ BEGIN
          , Movement.ParentId
          , Movement.OperDate
          , Movement.InvNumber
+         , MovementDesc.ItemName
          , tmpMovement.PersonalId
          , Object_Personal.ObjectCode AS PersonalCode
          , Object_Personal.ValueData  AS PersonalName
@@ -193,7 +198,7 @@ BEGIN
          , tmpMovement.Amount         :: TFloat AS Amount
          , tmpMovement.Amount_Service :: TFloat AS Amount_Service
          , tmpMovement.Amount_Bank    :: TFloat AS Amount_Bank
-         , CASE WHEN tmpMovement.Amount_Service <> 0 THEN tmpMovement.Amount_rem ELSE 0 END    :: TFloat AS Amount_rem
+         , CASE WHEN tmpMovement.Ord = 1 THEN tmpMovement.Amount_rem ELSE 0 END    :: TFloat AS Amount_rem
          
          , Object_Analyzer.ValueData    AS AnalyzerName
          , OS_Analyzer.ValueData        AS AnalyzerName_enum
@@ -204,6 +209,7 @@ BEGIN
 
     FROM tmpMovement
          LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
+         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
          LEFT JOIN Object AS Object_Personal            ON Object_Personal.Id            = tmpMovement.PersonalId
          LEFT JOIN Object AS Object_Position            ON Object_Position.Id            = tmpMovement.PositionId
