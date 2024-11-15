@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TReport_CashPersonal_toPayForm = class(TAncestorReportForm)
@@ -46,6 +46,8 @@ type
     Amount_Service: TcxGridDBColumn;
     Amount_Bank: TcxGridDBColumn;
     Amount_rem: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
+    ContainerId: TcxGridDBColumn;
   private
     { Private declarations }
   public

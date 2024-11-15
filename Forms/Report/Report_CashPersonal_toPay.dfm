@@ -74,7 +74,9 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
               Kind = skSum
               Column = Amount_rem
             end>
-          OptionsData.Editing = False
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -98,6 +100,14 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
             Options.Editing = False
             Width = 82
           end
+          object ItemName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
@@ -111,6 +121,7 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object UnitCode: TcxGridDBColumn
@@ -142,6 +153,7 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 140
           end
           object PersonalName: TcxGridDBColumn
@@ -168,6 +180,7 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Amount_Bank: TcxGridDBColumn
@@ -178,6 +191,7 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Amount: TcxGridDBColumn
@@ -199,6 +213,7 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object IsMain: TcxGridDBColumn
@@ -260,6 +275,7 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
             DataBinding.FieldName = 'PersonalServiceListName_parent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object AnalyzerName: TcxGridDBColumn
@@ -267,6 +283,7 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
             DataBinding.FieldName = 'AnalyzerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object AnalyzerName_enum: TcxGridDBColumn
@@ -275,7 +292,23 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
+          end
+          object ContainerId: TcxGridDBColumn
+            Caption = '***'
+            DataBinding.FieldName = 'ContainerId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
