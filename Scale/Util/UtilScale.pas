@@ -257,6 +257,7 @@ begin
 
      ParamAdd(Params,'MovementId',ftInteger); //документ взвешивания
      ParamAdd(Params,'InvNumber',ftString);
+     ParamAdd(Params,'InvNumberPartner',ftString);
      ParamAdd(Params,'OperDate_Movement',ftDateTime);
 
      // информативное для сообщения
@@ -312,6 +313,8 @@ begin
      ParamAdd(Params,'isSubjectDoc',ftBoolean);
      ParamAdd(Params,'isComment',ftBoolean);
      ParamAdd(Params,'isInvNumberPartner',ftBoolean);
+     ParamAdd(Params,'isDocPartner',ftBoolean);
+
      ParamAdd(Params,'SubjectDocId',ftInteger);
      ParamAdd(Params,'SubjectDocCode',ftInteger);
      ParamAdd(Params,'SubjectDocName',ftString);

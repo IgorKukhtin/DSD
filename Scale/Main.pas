@@ -357,6 +357,7 @@ type
     procedure pSetSubjectDoc;
     procedure pSetRetail;
     procedure pSetComment;
+    procedure pSetInvNumberPartner;
     procedure pSetReason;
     procedure pSetAsset;
 
@@ -949,6 +950,20 @@ begin
           end
           else
             ParamsMI.ParamByName('inPartionGoodsDate').AsDateTime:= Date;
+     end;
+     // сначала определить Номер док у контрагента
+     if (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE) and (ParamsMovement.ParamByName('InvNumberPartner').AsString = '')
+     then pSetInvNumberPartner;
+
+     if (ParamsMovement.ParamByName('InvNumberPartner').AsString = '') and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true) then
+     begin
+          PanelMovementDesc.Caption:='Ошибка.Не определена <Документ поставщика №>';
+          exit;
+     end;
+     // если надо проверить что док приход от поставщика уже сформирован
+     if (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE) and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
+     then begin
+
      end;
      //
      //т.е. изначально будем считать что это НЕ сканирование
@@ -1560,6 +1575,30 @@ begin
      WriteParamsMovement;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainForm.pSetInvNumberPartner;
+var execParams:TParams;
+begin
+     if (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = FALSE)
+     then exit;
+     //
+     with DialogStringValueForm do
+     begin
+          LabelStringValue.Caption:='Документ поставщика № для <'+ParamsMovement.ParamByName('MovementDescName_master').asString+'>';
+          ActiveControl:=StringValueEdit;
+          StringValueEdit.Text:=ParamsMovement.ParamByName('InvNumberPartner').AsString;
+          if Execute (false, false)
+          then begin ParamsMovement.ParamByName('InvNumberPartner').AsString:= StringValueEdit.Text;
+                     PanelPartner.Caption:=GetPanelPartnerCaption(ParamsMovement);
+          end;
+          //
+          DMMainScaleForm.gpUpdate_Scale_MovementString(ParamsMovement.ParamByName('MovementId').AsInteger
+                                                      , 'zc_MovementString_InvNumberPartner'
+                                                      , ParamsMovement.ParamByName('InvNumberPartner').AsString
+                                                       );
+     end;
+     //
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainForm.pSetComment;
 var execParams:TParams;
 begin
@@ -2077,7 +2116,9 @@ begin
           if ParamByName('isEdiOrdspr').asBoolean=TRUE then str_edi:=str_edi+'пн.';
           if ParamByName('isEdiDesadv').asBoolean=TRUE then str_edi:=str_edi+'ув.';
 
-          Result:=str_edi+'('+IntToStr(ParamByName('calcPartnerCode').asInteger)+')'+ParamByName('calcPartnerName').asString;
+          if (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE) and (ParamsMovement.ParamByName('InvNumberPartner').AsString <> '')
+          then Result:='№ ' + ParamsMovement.ParamByName('InvNumberPartner').AsString +' - ('+IntToStr(ParamByName('calcPartnerCode').asInteger)+')'+ParamByName('calcPartnerName').asString
+          else Result:=str_edi+'('+IntToStr(ParamByName('calcPartnerCode').asInteger)+')'+ParamByName('calcPartnerName').asString;
      end;
 end;
 //------------------------------------------------------------------------------------------------

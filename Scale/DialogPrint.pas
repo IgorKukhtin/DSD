@@ -79,6 +79,7 @@ begin
      PanelDateValue.Visible:= ParamsMovement.ParamByName('isOperDatePartner').AsBoolean = TRUE;
      //
      PanelInvNumberPartner.Visible:= (SettingMain.isCeh = FALSE) and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true);
+     InvNumberPartnerEdit.Text:= ParamsMovement.ParamByName('InvNumberPartner').AsString;
      PanelComment.Visible:= (SettingMain.isCeh = FALSE) and (ParamsMovement.ParamByName('isComment').AsBoolean = true) and (ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Loss);
      //
      Self.Height:= 384;
