@@ -38,7 +38,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
              , MovementPromo TVarChar, PricePromo TFloat
-             , isBarCode Boolean 
+             , isBarCode Boolean
              , isAmountPartnerSecond Boolean
              , isPriceWithVAT Boolean  
              , PriceRetOutDate TDateTime
@@ -167,13 +167,14 @@ end if;*/
                   , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
 
                   , COALESCE (MIBoolean_BarCode.ValueData, FALSE) :: Boolean AS isBarCode
-                  , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean AS isAmountPartnerSecond
-                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE)        :: Boolean AS isPriceWithVAT
-                  , COALESCE (MIDate_PriceRetOut.ValueData, NULL)             ::TDateTime AS PriceRetOutDate
 
                   , MovementItem.isErased
                   
                   , MIFloat_PromoMovement.ValueData AS MovementPromoId
+
+                  , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean  AS isAmountPartnerSecond
+                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, true)        :: Boolean  AS isPriceWithVAT
+                  , COALESCE (MIDate_PriceRetOut.ValueData, NULL)             ::TDateTime AS PriceRetOutDate
 
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -183,6 +184,7 @@ end if;*/
                   LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
                                                 ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
                                                AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+
                   LEFT JOIN MovementItemBoolean AS MIBoolean_AmountPartnerSecond
                                                 ON MIBoolean_AmountPartnerSecond.MovementItemId = MovementItem.Id
                                                AND MIBoolean_AmountPartnerSecond.DescId = zc_MIBoolean_AmountPartnerSecond()
@@ -198,10 +200,11 @@ end if;*/
                                             AND MIDate_Update.DescId = zc_MIDate_Update()
                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
-                                            AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods() 
+                                            AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                   LEFT JOIN MovementItemDate AS MIDate_PriceRetOut
                                              ON MIDate_PriceRetOut.MovementItemId = MovementItem.Id
                                             AND MIDate_PriceRetOut.DescId = zc_MIDate_PriceRetOut()
+
                   LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
@@ -391,14 +394,15 @@ end if;*/
                   , zc_DateStart()  AS EndBegin
                   , 0     :: TFloat AS diffBegin_sec
 
-                  , COALESCE (MIBoolean_BarCode.ValueData, FALSE)             :: Boolean AS isBarCode
-                  , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean AS isAmountPartnerSecond
-                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE)        :: Boolean AS isPriceWithVAT
-                  , COALESCE (MIDate_PriceRetOut.ValueData, NULL)             ::TDateTime AS PriceRetOutDate
+                  , COALESCE (MIBoolean_BarCode.ValueData, FALSE) :: Boolean AS isBarCode
 
                   , MovementItem.isErased
                  
                   , MIFloat_PromoMovement.ValueData :: Integer AS MovementPromoId
+ 
+                  , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean AS isAmountPartnerSecond
+                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, true)        :: Boolean AS isPriceWithVAT
+                  , COALESCE (MIDate_PriceRetOut.ValueData, NULL)             ::TDateTime AS PriceRetOutDate
 
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN Movement ON Movement.Id = inMovementId
@@ -410,6 +414,7 @@ end if;*/
                   LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
                                                 ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
                                                AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+
                   LEFT JOIN MovementItemBoolean AS MIBoolean_AmountPartnerSecond
                                                 ON MIBoolean_AmountPartnerSecond.MovementItemId = MovementItem.Id
                                                AND MIBoolean_AmountPartnerSecond.DescId = zc_MIBoolean_AmountPartnerSecond()
@@ -420,6 +425,7 @@ end if;*/
                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
                   LEFT JOIN MovementItemDate AS MIDate_PriceRetOut
                                              ON MIDate_PriceRetOut.MovementItemId = MovementItem.Id
                                             AND MIDate_PriceRetOut.DescId = zc_MIDate_PriceRetOut()
@@ -565,10 +571,10 @@ end if;*/
            , tmpMIPromo.PricePromo :: TFloat AS PricePromo
 
            , tmpMI.isBarCode
+
            , tmpMI.isAmountPartnerSecond ::Boolean
            , tmpMI.isPriceWithVAT        ::Boolean
            , tmpMI.PriceRetOutDate       ::TDateTime
-           
 
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
@@ -644,7 +650,7 @@ end if;*/
                   , tmpMI.isAmountPartnerSecond
                   , tmpMI.isPriceWithVAT
                   , tmpMI.PriceRetOutDate
-                  , tmpMI.isErased
+                 , tmpMI.isErased
              FROM tmpMI_1 AS tmpMI
             GROUP BY tmpMI.MovementItemId
                    , tmpMI.GoodsId
@@ -665,10 +671,7 @@ end if;*/
                    , tmpMI.AssetId_two
                    , tmpMI.InsertDate
                    , tmpMI.UpdateDate
-                   , tmpMI.isBarCode  
-                   , tmpMI.isAmountPartnerSecond
-                   , tmpMI.isPriceWithVAT
-                   , tmpMI.PriceRetOutDate
+                   , tmpMI.isBarCode
                    , tmpMI.isErased
                    , tmpMI.MovementPromoId
                    , tmpMI.WeightTare1
@@ -677,6 +680,9 @@ end if;*/
                    , tmpMI.WeightTare4
                    , tmpMI.WeightTare5
                    , tmpMI.WeightTare6
+                   , tmpMI.isAmountPartnerSecond
+                   , tmpMI.isPriceWithVAT
+                   , tmpMI.PriceRetOutDate
             ) AS tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
@@ -720,7 +726,6 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingPartner (Integer, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
- 21.10.24         *
  18.10.24         * 
  18.10.22         * Asset
  04.11.19         *
@@ -731,3 +736,5 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingPartner (Integer, Boolean, Boolean,
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_MovementItem_WeighingPartner (inMovementId:= 14764281 , inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+-- select * from gpSelect_MovementItem_WeighingPartner(inMovementId := 29774297  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '9457');
+

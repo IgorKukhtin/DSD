@@ -105,6 +105,7 @@ type
     actLoadExcel: TMultiAction;
     bbLoadExcel: TdxBarButton;
     actDoLoad: TExecuteImportSettingsAction;
+    cbMultWithVAT: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
              , CurrencyId Integer, CurrencyName TVarChar
              , DiffPrice TFloat, RoundPrice TFloat
              , PriceWithVAT Boolean
+             , isMultWithVAT Boolean
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , isMask Boolean --‚ÂÌÛÚ¸ false
@@ -77,6 +78,7 @@ BEGIN
              , CAST (0 AS TFloat) 		 AS DiffPrice
              , CAST (0 AS TFloat) 		 AS RoundPrice
              , CAST (False AS Boolean)                          AS PriceWithVAT
+             , CAST (FALSE AS Boolean)                          AS isMultWithVAT
              , CAST ('' AS TVarChar) 		                    AS Comment
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP        ::TDateTime             AS InsertDate 
@@ -121,6 +123,7 @@ BEGIN
            , MovementFloat_RoundPrice.ValueData ::TFloat AS RoundPrice
 
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
+           , COALESCE (MovementBoolean_MultWithVAT.ValueData, FALSE)  :: Boolean AS isMultWithVAT
 
            , MovementString_Comment.ValueData       AS Comment
 
@@ -137,6 +140,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+            LEFT JOIN MovementBoolean AS MovementBoolean_MultWithVAT
+                                      ON MovementBoolean_MultWithVAT.MovementId =  Movement.Id
+                                     AND MovementBoolean_MultWithVAT.DescId = zc_MovementBoolean_MultWithVAT()
 
             LEFT JOIN MovementFloat AS MovementFloat_DiffPrice
                                     ON MovementFloat_DiffPrice.MovementId = Movement.Id
@@ -188,6 +194,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.11.24         *
  08.11.23         *
  15.09.22         *
  02.08.22         * 

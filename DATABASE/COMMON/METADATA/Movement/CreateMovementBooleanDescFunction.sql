@@ -499,6 +499,9 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_PriceDiff() RETURNS integer AS $BO
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_PriceDiff', 'Отклонение по цене'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_PriceDiff');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_MultWithVAT() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_MultWithVAT'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_MultWithVAT', 'Цена кратная НДС'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_MultWithVAT');
 
 
   
@@ -506,6 +509,7 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 15.11.24         * zc_MovementBoolean_MultWithVAT
  08.10.24         * zc_MovementBoolean_PriceDiff
  20.08.24         * zc_MovementBoolean_Etiketka
  16.06.24         * zc_MovementBoolean_TotalSumm_GoodsReal
