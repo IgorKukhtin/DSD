@@ -69,6 +69,7 @@ BEGIN
                                                                    ON MIContainer.ContainerId    = tmpContainer.ContainerId
                                                                   AND MIContainer.MovementDescId = zc_Movement_PersonalService()
                                                                   AND MIContainer.Amount         <> 0
+                                                                  AND MIContainer.AnalyzerId     <> zc_Enum_AnalyzerId_PersonalService_SummDiff()
                              LIMIT 1
                           );
 
