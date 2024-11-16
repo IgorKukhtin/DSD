@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpGet_Scale_Movement(
 RETURNS TABLE (MovementId       Integer
              , BarCode          TVarChar
              , InvNumber        TVarChar
+             , InvNumberPartner TVarChar
              , OperDate         TDateTime
 
              , MovementDescNumber Integer
@@ -295,6 +296,7 @@ BEGIN
        SELECT tmpMovement.Id                                 AS MovementId
             , '' ::TVarChar                                  AS BarCode
             , tmpMovement.InvNumber                          AS InvNumber
+            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
             , tmpMovement.OperDate                           AS OperDate
 
             , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
@@ -403,6 +405,10 @@ BEGIN
        FROM tmpMovement
             LEFT JOIN tmpMovementTransport ON tmpMovementTransport.MovementId_Transport = tmpMovement.MovementId_Transport
             LEFT JOIN tmpJuridicalPrint ON tmpJuridicalPrint.JuridicalId = tmpMovement.JuridicalId
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId = tmpMovement.Id
+                                    AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = tmpMovement.MovementId_Order
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
