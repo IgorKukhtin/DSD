@@ -767,6 +767,7 @@ BEGIN
                                                                    AND MIContainer.MovementDescId = zc_Movement_PersonalService()
                                                                    -- <Карта БН (округление) - 2ф>
                                                                    AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_PersonalService_SummDiff()
+                                                                   --and 1=0
                               GROUP BY tmpContainer.PersonalId
                                      , tmpContainer.UnitId
                                      , tmpContainer.PositionId
@@ -1036,9 +1037,6 @@ BEGIN
                        - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN COALESCE (tmpData.Amount, 0) ELSE 0 END
                          --
                        - CASE WHEN tmpData.SummCardSecondCash > 0 THEN 0 ELSE COALESCE (tmpData.AmountCardSecond_avance, 0) END
-
-                         -- Карта БН (округление) - 2ф
-                       - COALESCE (tmpData.AmountService_diff, 0)
 
                END) :: TFloat AS SummCardSecondRemains
 

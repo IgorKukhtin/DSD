@@ -138,7 +138,9 @@ BEGIN
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
-       WHERE Movement.Id =  inMovementId;
+       WHERE Movement.Id =  inMovementId
+       LIMIT 1
+      ;
 
    END IF;  
   

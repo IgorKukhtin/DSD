@@ -1175,8 +1175,9 @@ END IF;
            SELECT tmpMI_res.MovementItemId, tmpMI_res.MemberId, tmpMI_res.PersonalId, tmpMI_res.UnitId, tmpMI_res.PositionId, tmpMI_res.InfoMoneyId
                 , tmpMI_res.PersonalServiceListId, tmpMI_res.FineSubjectId, tmpMI_res.UnitId_FineSubject
 
-                  -- пересчитали
-                , CASE WHEN vbUserId = 5 AND 1=0 THEN tmpMI_res.SummCardSecondRecalc_orig
+                  -- НЕ пересчитали
+                , CASE WHEN 1=1 THEN tmpMI_res.SummCardSecondRecalc_orig
+                       /*WHEN vbUserId = 5 AND 1=0 THEN tmpMI_res.SummCardSecondRecalc
                   ELSE
                   -- 1
                   CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1
@@ -1217,7 +1218,7 @@ END IF;
                                       THEN tmpMI_res.SummCard_2 - tmpList_limit_res.SummCard_new
                                  ELSE 0
                             END
-                  END
+                  END*/
                   END AS SummCardSecondRecalc
 
                   --
@@ -1282,10 +1283,10 @@ END IF;
      IF vbUserId = 5 AND 1=0
      THEN
          RAISE EXCEPTION '<%>   <%>   <%>   <%>'
-       , (select sum (_tmpMI.SummCard_1) from _tmpMI where MemberId = 13063)
-       , (select sum (_tmpMI.SummCard_2) from _tmpMI where MemberId = 13063)
-       , (select sum (_tmpMI.SummCard_3) from _tmpMI where MemberId = 13063)
-       , (select sum (_tmpMI.SummCardSecondRecalc) from _tmpMI where MemberId = 13063)
+       , (select sum (_tmpMI.SummCard_1) from _tmpMI where PersonalId = 5897096)
+       , (select sum (_tmpMI.SummCard_2) from _tmpMI where PersonalId = 5897096)
+       , (select sum (_tmpMI.SummCard_3) from _tmpMI where PersonalId = 5897096)
+       , (select sum (_tmpMI.SummCardSecondRecalc) from _tmpMI where PersonalId = 5897096)
        ;
          /*RAISE EXCEPTION 'Ошибка.Admin <%>  <%>  <%>  <%>.'
                        , (SELECT SUM (_tmpMI.SummCardSecondRecalc) FROM _tmpMI)
@@ -1359,9 +1360,17 @@ END IF;
 
              -- сохранили свойство <Карта БН (округление) - 2ф>
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondDiff(), _tmpMI.MovementItemId
-                                             , ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro - _tmpMI.SummCard_1
+                                             , 
+                                               CASE WHEN 1=1 THEN
+                                               ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro -- - _tmpMI.SummCard_1
+                                             + ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro -- - _tmpMI.SummCard_2
+                                             + ROUND (_tmpMI.SummCard_3 / vbKoeff_ro, 0) * vbKoeff_ro -- - _tmpMI.SummCard_3
+                                             - _tmpMI.SummCardSecondRecalc
+                                               ELSE
+                                               ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro - _tmpMI.SummCard_1
                                              + ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro - _tmpMI.SummCard_2
                                              + ROUND (_tmpMI.SummCard_3 / vbKoeff_ro, 0) * vbKoeff_ro - _tmpMI.SummCard_3
+                                             END
                                               )
 
      FROM
@@ -1372,13 +1381,15 @@ END IF;
                                                             , inSummService        := 0
                                                             , inSummCardRecalc     := 0
                                                             , inSummCardSecondRecalc:= CASE WHEN vbPersonalServiceListId_avance > 0 THEN 0
+                                                                                            --WHEN vbUserId = 5 THEN _tmpMI.SummCardSecondRecalc
                                                                                             ELSE -- _tmpMI.SummCardSecondRecalc
                                                                                                  ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro
                                                                                                + ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro
                                                                                                + ROUND (_tmpMI.SummCard_3 / vbKoeff_ro, 0) * vbKoeff_ro
                                                                                        END
                                                             , inSummCardSecondCash := 0
-                                                            , inSummAvCardSecondRecalc:= CASE WHEN vbPersonalServiceListId_avance > 0
+                                                            , inSummAvCardSecondRecalc:= CASE --WHEN vbUserId = 5 AND vbPersonalServiceListId_avance > 0 THEN _tmpMI.SummCardSecondRecalc
+                                                                                              WHEN vbPersonalServiceListId_avance > 0
                                                                                               THEN -- _tmpMI.SummCardSecondRecalc
                                                                                                    ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro
                                                                                                  + ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro
@@ -1434,6 +1445,9 @@ END IF;
           , _tmpMI.SummCard_2
             -- сумма для третьего места
           , _tmpMI.SummCard_3
+
+            -- сумма для третьего места
+          , _tmpMI.SummCardSecondRecalc
 
      FROM _tmpMI
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
