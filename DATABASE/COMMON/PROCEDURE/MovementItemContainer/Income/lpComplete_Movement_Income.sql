@@ -119,7 +119,17 @@ BEGIN
                 , CASE WHEN MILO_GoodsKindReal.ObjectId IS NULL THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindReal(), MovementItem.Id, MILO_GoodsKind.ObjectId) END
 
            FROM MovementItem
-                INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = MovementItem.ObjectId
+                -- INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = MovementItem.ObjectId
+
+                INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                      ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = MovementItem.ObjectId
+                                     AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                INNER JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                            AND Object_GoodsByGoodsKind.isErased = FALSE
+                LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                     ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = Object_GoodsByGoodsKind.Id
+                                    AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+
                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                  ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                 AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -132,17 +142,17 @@ BEGIN
                                                 AND MILO_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
 
                 INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsIncome
-                                      ON ObjectLink_GoodsByGoodsKind_GoodsIncome.ObjectId      = Object_GoodsByGoodsKind_View.Id
+                                      ON ObjectLink_GoodsByGoodsKind_GoodsIncome.ObjectId      = Object_GoodsByGoodsKind.Id
                                      AND ObjectLink_GoodsByGoodsKind_GoodsIncome.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsIncome()
                                      AND ObjectLink_GoodsByGoodsKind_GoodsIncome.ChildObjectId > 0
                 LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindIncome
-                                     ON ObjectLink_GoodsByGoodsKind_GoodsKindIncome.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                     ON ObjectLink_GoodsByGoodsKind_GoodsKindIncome.ObjectId = Object_GoodsByGoodsKind.Id
                                     AND ObjectLink_GoodsByGoodsKind_GoodsKindIncome.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindIncome()
 
            WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.isErased   = FALSE
              AND MovementItem.DescId     = zc_MI_Master()
-             AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (MILO_GoodsKind.ObjectId, 0)
+             AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) = COALESCE (MILO_GoodsKind.ObjectId, 0)
              --
              AND (ObjectLink_GoodsByGoodsKind_GoodsIncome.ChildObjectId                   <> MovementItem.ObjectId
                OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindIncome.ChildObjectId, 0) <> COALESCE (MILO_GoodsKind.ObjectId, 0)
