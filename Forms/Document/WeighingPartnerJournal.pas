@@ -130,6 +130,7 @@ type
     IP: TcxGridDBColumn;
     TotalCountKg: TcxGridDBColumn;
     TotalCountSh: TcxGridDBColumn;
+    isDocPartner: TcxGridDBColumn;
   private
   public
   end;

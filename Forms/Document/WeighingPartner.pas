@@ -188,6 +188,7 @@ type
     cxLabel26: TcxLabel;
     actWeighingPartner_ActDiffF: TdsdInsertUpdateAction;
     bbactWeighingPartner_ActDiffF: TdxBarButton;
+    cbDocPartner: TcxCheckBox;
   private
   public
   end;

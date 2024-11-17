@@ -381,6 +381,17 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Top = 84
       Caption = #8470' '#1076#1086#1082'.'#1091' '#1082#1086#1085#1090#1088'.'
     end
+    object cbDocPartner: TcxCheckBox
+      Left = 886
+      Top = 99
+      Hint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 44
+      Width = 187
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -404,8 +415,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Height = 283
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 48
-        ExplicitTop = -8
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -2770,6 +2779,13 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = edInvNumberPartner
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDocPartner'
+        Value = Null
+        Component = cbDocPartner
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -3016,8 +3032,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 795
-    Top = 60
+    Left = 771
+    Top = 44
   end
   object spUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_WeighingPartner'

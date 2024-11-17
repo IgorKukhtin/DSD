@@ -255,6 +255,15 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Options.Editing = False
         Width = 69
       end
+      object isDocPartner: TcxGridDBColumn
+        Caption = #1044#1086#1082'. '#1087#1086#1089#1090#1072#1074#1097'.'
+        DataBinding.FieldName = 'isDocPartner'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+        Width = 80
+      end
       object InvNumberPartner: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088'.'
         DataBinding.FieldName = 'InvNumberPartner'

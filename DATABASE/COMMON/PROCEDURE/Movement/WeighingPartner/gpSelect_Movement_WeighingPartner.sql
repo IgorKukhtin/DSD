@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime
              , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
              , isList Boolean
+             , isDocPartner Boolean
              , PriceWithVAT Boolean
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat, TotalCountKg TFloat, TotalCountSh TFloat
@@ -138,6 +139,7 @@ BEGIN
              , COALESCE (Object_Member.ValueData, View_PersonalDriver.PersonalName) AS PersonalDriverName
 
              , COALESCE (MovementBoolean_List.ValueData,False) :: Boolean AS isList
+             , COALESCE (MovementBoolean_DocPartner.ValueData, FALSE) ::Boolean AS isDocPartner
              , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData             AS VATPercent
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
@@ -265,6 +267,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_List
                                       ON MovementBoolean_List.MovementId = Movement.Id
                                      AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
+            LEFT JOIN MovementBoolean AS MovementBoolean_DocPartner
+                                      ON MovementBoolean_DocPartner.MovementId = Movement.Id
+                                     AND MovementBoolean_DocPartner.DescId = zc_MovementBoolean_DocPartner()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -475,6 +480,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 17.11.24         * isDocPartner
  14.11.24         * InvNumberPartner
  08.11.23         *
  12.04.22         *
