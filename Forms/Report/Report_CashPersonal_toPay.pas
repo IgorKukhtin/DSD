@@ -48,6 +48,9 @@ type
     Amount_rem: TcxGridDBColumn;
     ItemName: TcxGridDBColumn;
     ContainerId: TcxGridDBColumn;
+    getMovementForm: TdsdStoredProc;
+    actGetForm: TdsdExecStoredProc;
+    mactOpenDocument: TMultiAction;
   private
     { Private declarations }
   public

@@ -3,7 +3,6 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
   ClientHeight = 483
   ClientWidth = 1094
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -217
   ExplicitWidth = 1110
   ExplicitHeight = 522
   PixelsPerInch = 96
@@ -485,7 +484,9 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1072#1089#1089#1072', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
       ImageIndex = 28
       FormName = 'TCash_PersonalForm'
-      FormNameParam.Value = 'TCash_PersonalForm'
+      FormNameParam.Value = Null
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -511,8 +512,41 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actGetForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actGetForm'
+    end
+    object mactOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetForm
+        end
+        item
+          Action = actOpenMovementForm
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 28
     end
   end
   inherited MasterDS: TDataSource
@@ -597,7 +631,7 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
       Category = 0
     end
     object bbOpenMovementForm: TdxBarButton
-      Action = actOpenMovementForm
+      Action = mactOpenDocument
       Category = 0
     end
   end
@@ -660,6 +694,13 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
         Name = 'ServiceDate'
         Value = Null
         Component = edServiceDate
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -728,5 +769,30 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
       end>
     Left = 224
     Top = 21
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 176
   end
 end
