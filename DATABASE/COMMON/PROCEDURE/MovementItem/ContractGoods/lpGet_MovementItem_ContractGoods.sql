@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION lpGet_MovementItem_ContractGoods(
     IN inGoodsId            Integer   , --
     IN inUserId             Integer     --
 )
-RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, isPriceWithVAT Boolean
+RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, isPriceWithVAT Boolean, isMultWithVAT Boolean
              , MovementItemId Integer, GoodsId Integer, GoodsKindId Integer
 
                -- цена расчетная в грн - с учетом курса и округления
@@ -99,6 +99,7 @@ BEGIN
                                , Movement.InvNumber                             AS InvNumber
                                , Movement.OperDate                              AS OperDate
                                , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) AS isPriceWithVAT
+                               , COALESCE (MovementBoolean_MultWithVAT.ValueData, FALSE)  AS isMultWithVAT
                                , MLO_Contract.ObjectId                          AS ContractId
                                , ObjectLink_Contract_Juridical.ChildObjectId    AS JuridicalId
                                , MLO_Currency.ObjectId                          AS CurrencyId
@@ -108,11 +109,23 @@ BEGIN
                                , MovementItem.ObjectId                          AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
                                  --
-                               , COALESCE (MIF_Price.ValueData, 0)  * CASE WHEN COALESCE (MLO_Currency.ObjectId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
-                                                                           WHEN tmpCurrencyList.CurrencyValue > 0 AND tmpCurrencyList.ParValue > 0 THEN tmpCurrencyList.CurrencyValue / tmpCurrencyList.ParValue
-                                                                           WHEN tmpCurrencyList.CurrencyValue > 0 THEN tmpCurrencyList.CurrencyValue
-                                                                           ELSE 0
-                                                                      END       AS ValuePrice
+                               , CASE WHEN MovementBoolean_MultWithVAT.ValueData = TRUE
+                                     --AND COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) = FALSE
+                                           THEN ROUND (COALESCE (MIF_Price.ValueData, 0)
+                                                     * CASE WHEN COALESCE (MLO_Currency.ObjectId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
+                                                            WHEN tmpCurrencyList.CurrencyValue > 0 AND tmpCurrencyList.ParValue > 0 THEN tmpCurrencyList.CurrencyValue / tmpCurrencyList.ParValue
+                                                            WHEN tmpCurrencyList.CurrencyValue > 0 THEN tmpCurrencyList.CurrencyValue
+                                                            ELSE 0
+                                                       END / 5
+                                                      ) * 5
+
+                                      ELSE COALESCE (MIF_Price.ValueData, 0)
+                                         * CASE WHEN COALESCE (MLO_Currency.ObjectId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
+                                                WHEN tmpCurrencyList.CurrencyValue > 0 AND tmpCurrencyList.ParValue > 0 THEN tmpCurrencyList.CurrencyValue / tmpCurrencyList.ParValue
+                                                WHEN tmpCurrencyList.CurrencyValue > 0 THEN tmpCurrencyList.CurrencyValue
+                                                ELSE 0
+                                           END
+                                 END AS ValuePrice
                                  --
                                , COALESCE (MIF_Price.ValueData, 0)              AS ValuePrice_orig
                                  -- Коэфф перевода из кол-ва поставщика
@@ -127,6 +140,7 @@ BEGIN
                                  -- № п/п
                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC, Movement.Id DESC) AS Ord
                           FROM Movement
+                          
                                INNER JOIN MovementLinkObject AS MLO_Contract
                                                              ON MLO_Contract.MovementId = Movement.Id
                                                             AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
@@ -134,6 +148,9 @@ BEGIN
                                LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                          ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                                         AND MovementBoolean_PriceWithVAT.DescId     = zc_MovementBoolean_PriceWithVAT()
+                               LEFT JOIN MovementBoolean AS MovementBoolean_MultWithVAT
+                                                         ON MovementBoolean_MultWithVAT.MovementId = Movement.Id
+                                                        AND MovementBoolean_MultWithVAT.DescId     = zc_MovementBoolean_MultWithVAT()
                                LEFT JOIN MovementLinkObject AS MLO_Currency
                                                             ON MLO_Currency.MovementId = Movement.Id
                                                            AND MLO_Currency.DescId     = zc_MovementLinkObject_Currency()
@@ -180,6 +197,7 @@ BEGIN
               , tmpData.InvNumber
               , tmpData.OperDate
               , tmpData.isPriceWithVAT
+              , tmpData.isMultWithVAT
               , tmpData.MovementItemId
               , tmpData.GoodsId
               , tmpData.GoodsKindId
