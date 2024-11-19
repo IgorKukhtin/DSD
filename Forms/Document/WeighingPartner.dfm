@@ -494,6 +494,11 @@ object WeighingPartnerForm: TWeighingPartnerForm
               Format = ',0.####'
               Kind = skSum
               Column = LevelNumber
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartner
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -575,6 +580,11 @@ object WeighingPartnerForm: TWeighingPartnerForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartner
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
