@@ -460,6 +460,59 @@ BEGIN
                     , MIFloat_CountForPrice.ValueData
                     , COALESCE (MIFloat_PricePartner.ValueData,0)
             )
+     --данные из док взвешивание
+  , tmpGoods_WeighingPartner AS (WITH
+                                 tmpMov AS (SELECT Movement.*
+                                            FROM Movement 
+                                                 INNER JOIN MovementString AS MovementString_InvNumberPartner
+                                                                           ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                                                          AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                                                          AND MovementString_InvNumberPartner.ValueData = vbInvNumberPartner
+                                                                          AND COALESCE (vbInvNumberPartner,'') <> ''
+                                            WHERE Movement.OperDate = vbOperDate
+                                              AND Movement.DescId = zc_Movement_WeighingPartner()
+                                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                                              AND inisActDiff = TRUE
+                                            )
+                               , tmpMI AS (
+                                          SELECT MovementItem.*
+                                          FROM MovementItem
+                                          WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = FALSE
+                                          )
+                               , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
+                                                       FROM MovementItemLinkObject
+                                                       WHERE MovementItemLinkObject.MovementItemId in (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                         AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                                       )
+                               , tmpMIBoolean AS (SELECT MovementItemBoolean.*
+                                                  FROM MovementItemBoolean
+                                                  WHERE MovementItemBoolean.MovementItemId in (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                    AND MovementItemBoolean.DescId = zc_MIBoolean_ReturnOut()
+                                                  )
+                               , tmpMIString AS (SELECT MovementItemString.*
+                                                  FROM MovementItemString
+                                                  WHERE MovementItemString.MovementItemId in (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                    AND MovementItemString.DescId = zc_MIString_Comment()
+                                                  )
+
+                                 SELECT MovementItem.ObjectId                           AS GoodsId
+                                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
+                                      , COALESCE (MIBoolean_ReturnOut.ValueData, FALSE) AS isReturnOut
+                                      , COALESCE (MIString_Comment.ValueData, '')       AS Comment 
+                                 FROM tmpMI AS MovementItem
+                                      LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                      LEFT JOIN MovementItemBoolean AS MIBoolean_ReturnOut
+                                                                    ON MIBoolean_ReturnOut.MovementItemId = MovementItem.Id
+                                                                   AND MIBoolean_ReturnOut.DescId = zc_MIBoolean_ReturnOut()
+                                      LEFT JOIN MovementItemString AS MIString_Comment
+                                                                   ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                                  AND MIString_Comment.DescId = zc_MIString_Comment()
+                                 )
+
 
        SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
@@ -564,7 +617,10 @@ BEGIN
                   THEN CAST ((tmpMI.PricePartner + tmpMI.PricePartner * (vbVATPercent / 100) ) AS NUMERIC (16, 4))
                   ELSE CAST (tmpMI.PricePartner AS NUMERIC (16, 4))
              END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-             AS PricePartnerWVAT
+             AS PricePartnerWVAT 
+             
+           , COALESCE (tmpGoods_WeighingPartner.isReturnOut, FALSE) ::Boolean  AS isReturnOut
+           , COALESCE (tmpGoods_WeighingPartner.Comment,'')         ::TVarChar AS Comment
     
        FROM tmpMI
 
@@ -581,7 +637,8 @@ BEGIN
 
             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
-
+            LEFT JOIN tmpGoods_WeighingPartner ON tmpGoods_WeighingPartner.GoodsId = tmpMI.GoodsId
+                                              AND COALESCE (tmpGoods_WeighingPartner.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
        WHERE tmpMI.AmountPartner <> 0 OR tmpMI.AmountPacker <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
 
@@ -601,9 +658,9 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_Print (inMovementId := 432692, inSession:= '5'); FETCH ALL "<unnamed portal 26>";
+-- SELECT * FROM gpSelect_Movement_Income_Print (inMovementId := 432692, inSession:= '5'); FETCH ALL "<unnamed portal 10>";
 
-select * from gpSelect_Movement_Income_Print(inMovementId := 29770688 , inisActDiff := 'True' ,  inSession := '9457');
+--select * from gpSelect_Movement_Income_Print(inMovementId := 432692 , inisActDiff := 'True' ,  inSession := '9457');FETCH ALL "<unnamed portal 18>";
 
 /*
 

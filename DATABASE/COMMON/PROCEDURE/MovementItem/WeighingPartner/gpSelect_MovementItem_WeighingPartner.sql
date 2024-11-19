@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , CountTare3   TFloat
              , CountTare4   TFloat            
              , CountTare5   TFloat
-             , CountTare6   TFloat
+             , CountTare6   TFloat                     
              , WeightTare1  TFloat
              , WeightTare2  TFloat
              , WeightTare3  TFloat
@@ -40,7 +40,9 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , MovementPromo TVarChar, PricePromo TFloat
              , isBarCode Boolean
              , isAmountPartnerSecond Boolean
-             , isPriceWithVAT Boolean  
+             , isPriceWithVAT Boolean 
+             , isReturnOut Boolean
+             , Comment TVarChar 
              , PriceRetOutDate TDateTime
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
@@ -174,8 +176,11 @@ end if;*/
 
                   , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean  AS isAmountPartnerSecond
                   , COALESCE (MIBoolean_PriceWithVAT.ValueData, true)         :: Boolean  AS isPriceWithVAT
+                  , COALESCE (MIBoolean_ReturnOut.ValueData, FALSE)           :: Boolean  AS isReturnOut
                   , COALESCE (MIDate_PriceRetOut.ValueData, NULL)             ::TDateTime AS PriceRetOutDate
-                  , COALESCE (MIFloat_SummPartner.ValueData,0)                ::TFloat    AS SummPartner
+                  , COALESCE (MIFloat_SummPartner.ValueData,0)                ::TFloat    AS SummPartner 
+                  , COALESCE (MIString_Comment.ValueData, '')                 :: TVarChar AS Comment
+                  
 
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -192,6 +197,10 @@ end if;*/
                   LEFT JOIN MovementItemBoolean AS MIBoolean_PriceWithVAT
                                                 ON MIBoolean_PriceWithVAT.MovementItemId = MovementItem.Id
                                                AND MIBoolean_PriceWithVAT.DescId = zc_MIBoolean_PriceWithVAT()
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_ReturnOut
+                                                ON MIBoolean_ReturnOut.MovementItemId = MovementItem.Id
+                                               AND MIBoolean_ReturnOut.DescId = zc_MIBoolean_ReturnOut()
+
 
                   LEFT JOIN MovementItemDate AS MIDate_Insert
                                              ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -209,6 +218,9 @@ end if;*/
                   LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                  LEFT JOIN MovementItemString AS MIString_Comment
+                                               ON MIString_Comment.MovementItemId = MovementItem.Id
+                                              AND MIString_Comment.DescId = zc_MIString_Comment()
 
                   LEFT JOIN MovementItemDate AS MIDate_StartBegin
                                              ON MIDate_StartBegin.MovementItemId = MovementItem.Id
@@ -405,10 +417,12 @@ end if;*/
                  
                   , MIFloat_PromoMovement.ValueData :: Integer AS MovementPromoId
  
-                  , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean AS isAmountPartnerSecond
-                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, true)         :: Boolean AS isPriceWithVAT
+                  , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean  AS isAmountPartnerSecond
+                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, true)         :: Boolean  AS isPriceWithVAT
+                  , COALESCE (MIBoolean_ReturnOut.ValueData, FALSE)           :: Boolean  AS isReturnOut
                   , COALESCE (MIDate_PriceRetOut.ValueData, NULL)             ::TDateTime AS PriceRetOutDate
-                  , COALESCE (MIFloat_SummPartner.ValueData,0)                ::TFloat    AS SummPartner
+                  , COALESCE (MIFloat_SummPartner.ValueData,0)                ::TFloat    AS SummPartner 
+                  , COALESCE (MIString_Comment.ValueData, '')                 :: TVarChar AS Comment
 
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN Movement ON Movement.Id = inMovementId
@@ -428,6 +442,10 @@ end if;*/
                                                 ON MIBoolean_PriceWithVAT.MovementItemId = MovementItem.Id
                                                AND MIBoolean_PriceWithVAT.DescId = zc_MIBoolean_PriceWithVAT()
 
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_ReturnOut
+                                                ON MIBoolean_ReturnOut.MovementItemId = MovementItem.Id
+                                               AND MIBoolean_ReturnOut.DescId = zc_MIBoolean_ReturnOut()
+
                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -439,6 +457,9 @@ end if;*/
                   LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                  LEFT JOIN MovementItemString AS MIString_Comment
+                                               ON MIString_Comment.MovementItemId = MovementItem.Id
+                                              AND MIString_Comment.DescId = zc_MIString_Comment()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -585,6 +606,8 @@ end if;*/
 
            , tmpMI.isAmountPartnerSecond ::Boolean
            , tmpMI.isPriceWithVAT        ::Boolean
+           , tmpMI.isReturnOut           ::Boolean
+           , tmpMI.Comment               ::TVarChar
            , tmpMI.PriceRetOutDate       ::TDateTime
 
            , Object_InfoMoney_View.InfoMoneyCode
@@ -661,7 +684,9 @@ end if;*/
                   , tmpMI.isBarCode
                   , tmpMI.isAmountPartnerSecond
                   , tmpMI.isPriceWithVAT
-                  , tmpMI.PriceRetOutDate
+                  , tmpMI.isReturnOut
+                  , tmpMI.PriceRetOutDate 
+                  , STRING_AGG (DISTINCT tmpMI.Comment, ';') ::TVarChar AS Comment
                  , tmpMI.isErased
              FROM tmpMI_1 AS tmpMI
             GROUP BY tmpMI.MovementItemId
@@ -695,6 +720,8 @@ end if;*/
                    , tmpMI.isAmountPartnerSecond
                    , tmpMI.isPriceWithVAT
                    , tmpMI.PriceRetOutDate
+                   , tmpMI.isReturnOut
+                   --, tmpMI.Comment
             ) AS tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
@@ -727,13 +754,12 @@ end if;*/
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                     ON MovementFloat_MovementDesc.MovementId =  inMovementId
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
-
      ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_WeighingPartner (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_MovementItem_WeighingPartner (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
