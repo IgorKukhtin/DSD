@@ -303,14 +303,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 307
     ClientRectBottom = 244
     ClientRectRight = 886
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 283
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -318,7 +316,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         Height = 220
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 283
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -357,12 +354,11 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_mi
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartner
+              Column = AmountPartner_calc
             end
             item
               Format = ',0.####'
@@ -423,12 +419,11 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_mi
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartner
+              Column = AmountPartner_calc
             end
             item
               Format = ',0.####'
@@ -520,18 +515,19 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             Width = 90
           end
           object AmountPartnerSecond: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'AmountPartnerSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 70
           end
           object ChangePercentAmount: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
+            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086#1084
             DataBinding.FieldName = 'ChangePercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -540,16 +536,17 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
-          object AmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-            DataBinding.FieldName = 'AmountPartner'
+          object AmountPartner_calc: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            DataBinding.FieldName = 'AmountPartner_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             Options.Editing = False
-            Width = 70
+            Width = 82
           end
           object PricePartnerNoVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
@@ -565,17 +562,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
           object PricePartnerWVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'PricePartnerWVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Amount_mi: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076' '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'Amount_mi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -607,35 +593,38 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             Width = 70
           end
           object AmountPartner_income: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1080#1093#1086#1076'.)'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'AmountPartner_income'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1055#1086' '#1076#1072#1085#1085#1099#1084' '#1057#1050#1051#1040#1044
             Options.Editing = False
             Width = 70
           end
-          object PricePartner_Income: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1080#1093#1086#1076'.)'
-            DataBinding.FieldName = 'PricePartner_Income'
+          object PriceWVat_Income: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'PriceWVat_Income'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1055#1086' '#1076#1072#1085#1085#1099#1084' '#1057#1050#1051#1040#1044
             Options.Editing = False
             Width = 70
           end
           object SummPartner_income: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1080#1093#1086#1076'.)'
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'SummPartner_income'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' '#1055#1086' '#1076#1072#1085#1085#1099#1084' '#1057#1050#1051#1040#1044
             Options.Editing = False
             Width = 70
           end
@@ -649,6 +638,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1077
             Options.Editing = False
+            Width = 82
           end
           object Price_diff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1094#1077#1085#1077' '#1073#1077#1079' '#1053#1044#1057
@@ -675,7 +665,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             DataBinding.FieldName = 'isReturnOut'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 66
           end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
@@ -691,6 +681,13 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
+          end
+          object PriceNoVAT_Income: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'PriceNoVAT_Income'
+            Visible = False
+            VisibleForCustomization = False
             Width = 70
           end
         end
@@ -2354,6 +2351,74 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountPartnerSecond'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPartnerSecond'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPartner_income'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPartner_income'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPricePartnerWVAT'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PricePartnerWVAT'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPricePartnerNoVAT'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PricePartnerNoVAT'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountPartner_calc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPartner_calc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummPartnerWVAT'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummPartnerWVAT'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummPartnerNoVAT'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummPartnerNoVAT'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmount_diff'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_diff'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisAmountPartnerSecond'
         Value = Null
         Component = MasterCDS
@@ -2381,8 +2446,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 329
-    Top = 360
+    Left = 425
+    Top = 304
   end
   object OrderChoiceGuides: TdsdGuides
     KeyField = 'Id'

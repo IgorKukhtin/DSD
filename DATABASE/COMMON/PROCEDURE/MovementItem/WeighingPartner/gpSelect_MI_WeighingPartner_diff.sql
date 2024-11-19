@@ -10,12 +10,12 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_WeighingPartner_diff(
 RETURNS TABLE (Ord Integer, Id Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsKindName TVarChar, MeasureName TVarChar
-             , AmountPartner TFloat, AmountPartnerSecond TFloat 
+             , AmountPartner_calc TFloat, AmountPartnerSecond TFloat 
              , ChangePercentAmount TFloat
              , PricePartnerNoVAT TFloat, PricePartnerWVAT TFloat
              , SummPartnerNoVAT TFloat, SummPartnerWVAT TFloat
              
-             , AmountPartner_income TFloat, PricePartner_Income TFloat, SummPartner_income TFloat
+             , AmountPartner_income TFloat, PriceWVat_Income TFloat, PriceNoVAT_Income TFloat, SummPartner_income TFloat
              , Amount_diff TFloat, Price_diff TFloat 
              , isAmountPartnerSecond Boolean
              , isReturnOut Boolean
@@ -104,7 +104,8 @@ BEGIN
                         , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) AS AmountPartnerSecond
                         , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
                         
-                        , COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountPartner   
+                        --, COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountPartner 
+                        , (COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) * (1- COALESCE (MIFloat_ChangePercentAmount.ValueData, 0)/ 100))   AS AmountPartner
                         
                           --  цена без НДС, до 4 знаков
                         , CASE WHEN COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE) = TRUE
@@ -120,7 +121,7 @@ BEGIN
                                           AS NUMERIC (16, 4))
                           END            AS PricePartnerWVAT
       
-                          --  сумма без НДС, до 4 знаков
+                        /*  --  сумма без НДС, до 4 знаков
                         , COALESCE (MIFloat_AmountPartner.ValueData, 0) *
                           CASE WHEN COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE) = TRUE
                                THEN CAST (COALESCE (MIFloat_PricePartner.ValueData, 0) - COALESCE (MIFloat_PricePartner.ValueData, 0) * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
@@ -135,7 +136,7 @@ BEGIN
                                ELSE CAST (COALESCE (MIFloat_PricePartner.ValueData, 0) 
                                           AS NUMERIC (16, 4))
                           END            AS SummPartnerWVAT
-      
+                         */
                         , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean AS isAmountPartnerSecond
                         , COALESCE (MIBoolean_ReturnOut.ValueData, FALSE)           :: Boolean  AS isReturnOut
                         , COALESCE (MIString_Comment.ValueData,'')                  :: TVarChar AS Comment
@@ -332,8 +333,8 @@ BEGIN
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
 
-           , tmpMI.AmountPartner_total        :: TFloat AS AmountPartner
-           , tmpMI.AmountPartnerSecond  :: TFloat AS AmountPartnerSecond
+           , tmpMI.AmountPartner_total        :: TFloat AS AmountPartner_calc
+           , tmpMI.AmountPartnerSecond_total  :: TFloat AS AmountPartnerSecond
 
            , tmpMI.ChangePercentAmount  :: TFloat
  
@@ -342,16 +343,17 @@ BEGIN
              --  цена с НДС, до 4 знаков
            , tmpMI.PricePartnerWVAT ::TFloat
              --  сумма без НДС, до 4 знаков
-           , tmpMI.SummPartnerNoVAT ::TFloat AS SummPartnerNoVAT
+           , (tmpMI.PricePartnerNoVAT * tmpMI.AmountPartner_total) ::TFloat AS SummPartnerNoVAT
              -- сумма с НДС, до 4 знаков
-           , tmpMI.SummPartnerWVAT  ::TFloat AS SummPartnerWVAT
+           , (tmpMI.PricePartnerWVAT * tmpMI.AmountPartner_total)  ::TFloat AS SummPartnerWVAT
 
-           , tmpMI_Income.Amount    ::TFloat AS AmountPartner_income
-           , tmpMI_Income.PriceWVAT ::TFloat AS PricePartner_Income
+           , tmpMI_Income.Amount                  ::TFloat AS AmountPartner_income
+           , tmpMI_Income.PriceWVAT               ::TFloat AS PriceWVat_Income
+           , COALESCE (tmpMI_Income.PriceNoVAT,0) ::TFloat AS PriceNoVAT_Income
            , tmpMI_Income.SummWVAT  ::TFloat AS SummPartner_income
 
-           , (COALESCE (tmpMI.AmountPartnerSecond,0) - COALESCE (tmpMI_Income.Amount,0)) ::TFloat   AS Amount_diff
-           , (COALESCE (tmpMI.PricePartnerNoVAT,0) - COALESCE (tmpMI_Income.PriceNoVAT,0)) ::TFloat AS Price_diff
+           , (COALESCE (tmpMI.AmountPartner_total,0) - COALESCE (tmpMI_Income.Amount,0)) ::TFloat AS Amount_diff
+           , (COALESCE (tmpMI.PricePartnerNoVAT,0) - COALESCE (tmpMI_Income.PriceNoVAT,0))     ::TFloat AS Price_diff
 
            , tmpMI.isAmountPartnerSecond ::Boolean
            , tmpMI.isReturnOut           ::Boolean

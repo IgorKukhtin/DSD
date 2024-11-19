@@ -111,8 +111,7 @@ type
     cxLabel17: TcxLabel;
     ContractGuides: TdsdGuides;
     edWeighingNumber: TcxCurrencyEdit;
-    Amount_mi: TcxGridDBColumn;
-    AmountPartner: TcxGridDBColumn;
+    AmountPartner_calc: TcxGridDBColumn;
     AmountPartner_income: TcxGridDBColumn;
     edContractTag: TcxButtonEdit;
     ContractTagGuides: TdsdGuides;
@@ -141,6 +140,7 @@ type
     edInvNumberPartner: TcxTextEdit;
     cxLabel26: TcxLabel;
     Ord: TcxGridDBColumn;
+    PriceNoVAT_Income: TcxGridDBColumn;
   private
   public
   end;

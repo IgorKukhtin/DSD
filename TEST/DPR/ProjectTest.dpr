@@ -24,8 +24,6 @@ program ProjectTest;
 
 
 
-{$R '..\..\Forms\Document\WeighingPartner.dfm' :TForm(WeighingPartner)}
-
 uses
   DUnitTestRunner,
   VKDBFDataSet in '..\..\SOURCE\DBF\VKDBFDataSet.pas',
@@ -371,6 +369,7 @@ uses
   Partner_Object in '..\..\Forms\Guides\Partner_Object.pas' {Partner_ObjectForm: TParentForm},
   WeighingProductionJournal in '..\..\Forms\Document\WeighingProductionJournal.pas' {WeighingProductionJournalForm: TParentForm},
   WeighingProduction in '..\..\Forms\Document\WeighingProduction.pas' {WeighingProductionForm: TParentForm},
+  WeighingPartner in '..\..\Forms\Document\WeighingPartner.pas' {WeighingPartnerForm: TParentForm},
   WeighingPartnerJournal in '..\..\Forms\Document\WeighingPartnerJournal.pas' {WeighingPartnerJournalForm: TParentForm},
   Report_CheckTax in '..\..\Forms\Report\Report_CheckTax.pas' {Report_CheckTaxForm: TParentForm},
   AccountGroup in '..\..\Forms\Guides\AccountGroup.pas' {AccountGroupForm: TParentForm},
