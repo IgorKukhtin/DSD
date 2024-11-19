@@ -10,12 +10,12 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WeighingPartner(
 )
 RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
-             , Amount TFloat, Amount_mi TFloat, AmountPartner TFloat, AmountPartnerSecond TFloat, AmountPartner_mi TFloat 
+             , Amount TFloat, Amount_mi TFloat, AmountPartner TFloat, AmountPartnerSecond TFloat, SummPartner TFloat, AmountPartner_mi TFloat 
              , RealWeight TFloat, CountTare TFloat, WeightTare TFloat
              , CountTare1   TFloat
              , CountTare2   TFloat
              , CountTare3   TFloat
-             , CountTare4   TFloat
+             , CountTare4   TFloat            
              , CountTare5   TFloat
              , CountTare6   TFloat
              , WeightTare1  TFloat
@@ -173,8 +173,9 @@ end if;*/
                   , MIFloat_PromoMovement.ValueData AS MovementPromoId
 
                   , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean  AS isAmountPartnerSecond
-                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, true)        :: Boolean  AS isPriceWithVAT
+                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, true)         :: Boolean  AS isPriceWithVAT
                   , COALESCE (MIDate_PriceRetOut.ValueData, NULL)             ::TDateTime AS PriceRetOutDate
+                  , COALESCE (MIFloat_SummPartner.ValueData,0)                ::TFloat    AS SummPartner
 
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -225,6 +226,10 @@ end if;*/
                   LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                               ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                              AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummPartner
+                                              ON MIFloat_SummPartner.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummPartner.DescId = zc_MIFloat_SummPartner()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -401,8 +406,9 @@ end if;*/
                   , MIFloat_PromoMovement.ValueData :: Integer AS MovementPromoId
  
                   , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean AS isAmountPartnerSecond
-                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, true)        :: Boolean AS isPriceWithVAT
+                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, true)         :: Boolean AS isPriceWithVAT
                   , COALESCE (MIDate_PriceRetOut.ValueData, NULL)             ::TDateTime AS PriceRetOutDate
+                  , COALESCE (MIFloat_SummPartner.ValueData,0)                ::TFloat    AS SummPartner
 
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN Movement ON Movement.Id = inMovementId
@@ -446,6 +452,10 @@ end if;*/
                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                               ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                              AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummPartner
+                                              ON MIFloat_SummPartner.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummPartner.DescId = zc_MIFloat_SummPartner()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                               ON MIFloat_CountPack.MovementItemId = MovementItem.Id
@@ -507,8 +517,9 @@ end if;*/
            , tmpMI.Amount :: TFloat           AS Amount
            , tmpMI.Amount_mi :: TFloat        AS Amount_mi
 
-           , CASE WHEN tmpMI.AmountPartner = 0 THEN NULL ELSE tmpMI.AmountPartner END :: TFloat       AS AmountPartner
-           , tmpMI.AmountPartnerSecond                                                :: TFloat       AS AmountPartnerSecond 
+           , CASE WHEN tmpMI.AmountPartner = 0 THEN NULL ELSE tmpMI.AmountPartner END :: TFloat  AS AmountPartner
+           , tmpMI.AmountPartnerSecond                                                :: TFloat  AS AmountPartnerSecond 
+           , tmpMI.SummPartner                                                        :: TFloat  AS SummPartner
            
            , CASE WHEN tmpMI.AmountPartner_mi = 0 THEN NULL ELSE tmpMI.AmountPartner_mi END :: TFloat AS AmountPartner_mi
 
@@ -591,6 +602,7 @@ end if;*/
                   , SUM (tmpMI.AmountPartner)    AS AmountPartner
                   , SUM (tmpMI.AmountPartnerSecond) AS AmountPartnerSecond
                   , SUM (tmpMI.AmountPartner_mi) AS AmountPartner_mi
+                  , SUM (tmpMI.SummPartner)      AS SummPartner
 
                   , SUM (tmpMI.RealWeight)     AS RealWeight
                   , SUM (tmpMI.CountTare)      AS CountTare
