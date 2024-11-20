@@ -189,6 +189,10 @@ type
     actWeighingPartner_ActDiffF: TdsdInsertUpdateAction;
     bbactWeighingPartner_ActDiffF: TdxBarButton;
     cbDocPartner: TcxCheckBox;
+    cbReason1: TcxCheckBox;
+    cbReason2: TcxCheckBox;
+    cxLabel27: TcxLabel;
+    edChangePercentAmount: TcxCurrencyEdit;
   private
   public
   end;

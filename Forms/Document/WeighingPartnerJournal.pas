@@ -131,6 +131,9 @@ type
     TotalCountKg: TcxGridDBColumn;
     TotalCountSh: TcxGridDBColumn;
     isDocPartner: TcxGridDBColumn;
+    isReason2: TcxGridDBColumn;
+    isReason1: TcxGridDBColumn;
+    ChangePercentAmount: TcxGridDBColumn;
   private
   public
   end;

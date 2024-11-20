@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , PartionGoods TVarChar
              , WeighingNumber TFloat
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime
-             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat, ChangePercentAmount TFloat
              , MovementDescId Integer
              , MovementDescNumber Integer, MovementDescName TVarChar
              , DescId_from Integer, FromId Integer, FromName TVarChar
@@ -30,7 +30,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
 
              , isPromo Boolean
              , isList Boolean
-             , isDocPartner Boolean
+             , isDocPartner Boolean 
+             , isReason1 Boolean
+             , isReason2 Boolean
 
              , PersonalId1 Integer, PersonalName1 TVarChar
              , PersonalId2 Integer, PersonalName2 TVarChar
@@ -100,6 +102,7 @@ BEGIN
              , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData             AS VATPercent
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
+             , MovementFloat_ChangePercentAmount.ValueData    AS ChangePercentAmount
 
              , MovementFloat_MovementDesc.ValueData :: Integer AS MovementDescId
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
@@ -138,7 +141,9 @@ BEGIN
 
              , COALESCE (MovementBoolean_Promo.ValueData, FALSE) :: Boolean AS isPromo
              , COALESCE (MovementBoolean_List.ValueData,False)   :: Boolean AS isList
-             , COALESCE (MovementBoolean_DocPartner.ValueData, FALSE) ::Boolean AS isDocPartner
+             , COALESCE (MovementBoolean_DocPartner.ValueData, FALSE) ::Boolean AS isDocPartner 
+             , COALESCE (MovementBoolean_Reason1.ValueData, False) ::Boolean AS isReason1
+             , COALESCE (MovementBoolean_Reason2.ValueData, False) ::Boolean AS isReason2
 
              , Object_Personal1.Id AS PersonalId1, Object_Personal1.ValueData AS PersonalName1
              , Object_Personal2.Id AS PersonalId2, Object_Personal2.ValueData AS PersonalName2
@@ -202,6 +207,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercentAmount
+                                    ON MovementFloat_ChangePercentAmount.MovementId = Movement.Id
+                                   AND MovementFloat_ChangePercentAmount.DescId = zc_MovementFloat_ChangePercentAmount()
 
             LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
                                     ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
@@ -220,6 +228,13 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_DocPartner
                                       ON MovementBoolean_DocPartner.MovementId = Movement.Id
                                      AND MovementBoolean_DocPartner.DescId = zc_MovementBoolean_DocPartner()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Reason1
+                                      ON MovementBoolean_Reason1.MovementId = Movement.Id
+                                     AND MovementBoolean_Reason1.DescId = zc_MovementBoolean_Reason1()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Reason2
+                                      ON MovementBoolean_Reason2.MovementId = Movement.Id
+                                     AND MovementBoolean_Reason2.DescId = zc_MovementBoolean_Reason2()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

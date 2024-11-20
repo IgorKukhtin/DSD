@@ -500,10 +500,10 @@ BEGIN
                                  SELECT MovementItem.ObjectId                           AS GoodsId
                                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
                                       , COALESCE (MIBoolean_ReturnOut.ValueData, FALSE) AS isReturnOut
-                                      , COALESCE (MIString_Comment.ValueData, '')       AS Comment 
+                                      , STRING_AGG (DISTINCT COALESCE (MIString_Comment.ValueData, ''), ';') AS Comment 
                                  FROM tmpMI AS MovementItem
                                       LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
-                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                       LEFT JOIN MovementItemBoolean AS MIBoolean_ReturnOut
                                                                     ON MIBoolean_ReturnOut.MovementItemId = MovementItem.Id
@@ -511,6 +511,10 @@ BEGIN
                                       LEFT JOIN MovementItemString AS MIString_Comment
                                                                    ON MIString_Comment.MovementItemId = MovementItem.Id
                                                                   AND MIString_Comment.DescId = zc_MIString_Comment()
+                                 GROUP BY MovementItem.ObjectId 
+                                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                        , COALESCE (MIBoolean_ReturnOut.ValueData, FALSE)
+                                 
                                  )
 
 
