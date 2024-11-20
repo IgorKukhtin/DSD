@@ -113,6 +113,29 @@ BEGIN
     END IF;
 
 
+
+    CREATE TEMP TABLE tmpMovement (Id Integer, OperDate TDateTime) ON COMMIT DROP;
+    INSERT INTO  tmpMovement (Id, OperDate)
+       SELECT Movement.Id AS Id, Movement.OperDate ::TDateTime AS OperDate
+       FROM Movement  
+            INNER JOIN MovementString AS MovementString_InvNumberPartner
+                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                     AND MovementString_InvNumberPartner.ValueData = vbInvNumberPartner 
+                                     AND COALESCE (MovementString_InvNumberPartner.ValueData,'') <> '' 
+                                     AND vbInvNumberPartner <> ''                         
+       WHERE Movement.OperDate BETWEEN (vbOperDate - INTERVAL '1 DAY')::TDateTime AND vbOperDate
+         AND Movement.DescId = zc_Movement_Income()
+         AND Movement.StatusId = zc_Enum_Status_Complete()
+         AND inisActDiff = TRUE
+         AND Movement.Id <> inMovementId
+     UNION
+       --текущий док, всегда, даже если нет  InvNumberPartner
+       SELECT inMovementId AS Id, vbOperDate ::TDateTime  AS OperDate
+       ;
+
+
+
       --
     OPEN Cursor1 FOR
     WITH
@@ -217,8 +240,9 @@ BEGIN
            , COALESCE (MovementBoolean_isIncome.ValueData, TRUE) ::Boolean AS isIncome
  
            , Object_Car.ValueData                        AS CarName
-           , Onject_PersonalDriver.ValueData            AS PersonalDriverName
-           , Object_Juridical_Car.ValueData              AS JuridicalName_Car          
+           , Onject_PersonalDriver.ValueData             AS PersonalDriverName
+           , Object_Juridical_Car.ValueData              AS JuridicalName_Car 
+           , (SELECT MAX(tmpMovement.OperDate)::TDateTime AS OperDate FROM tmpMovement) ::TDateTime AS OperDate_ActDiff         
        FROM Movement
           --  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
@@ -364,25 +388,7 @@ BEGIN
     WITH
 
     --выбираем приходы, нужно объединить все накл за этот день, если у них одинаковый InvNumberPartner  дл€ јкта –азногласий
-    tmpMovement AS (SELECT Movement.Id
-                    FROM Movement  
-                         INNER JOIN MovementString AS MovementString_InvNumberPartner
-                                                   ON MovementString_InvNumberPartner.MovementId = Movement.Id
-                                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-                                                  AND MovementString_InvNumberPartner.ValueData = vbInvNumberPartner 
-                                                  AND COALESCE (MovementString_InvNumberPartner.ValueData,'') <> '' 
-                                                  AND vbInvNumberPartner <> ''                         
-                    WHERE Movement.OperDate = vbOperDate
-                      AND Movement.DescId = zc_Movement_Income()
-                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                      AND inisActDiff = TRUE
-                      AND Movement.Id <> inMovementId
-                  UNION
-                    --текущий док, всегда, даже если нет  InvNumberPartner
-                    SELECT inMovementId AS Id
-                    )
-
-  , tmpMI_All AS (SELECT MovementItem.*
+    tmpMI_All AS (SELECT MovementItem.*
                   FROM MovementItem
                   WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                     AND MovementItem.DescId     = zc_MI_Master()
@@ -664,7 +670,7 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_Income_Print (inMovementId := 432692, inSession:= '5'); FETCH ALL "<unnamed portal 10>";
 
---select * from gpSelect_Movement_Income_Print(inMovementId := 432692 , inisActDiff := 'True' ,  inSession := '9457');FETCH ALL "<unnamed portal 18>";
+--  select * from gpSelect_Movement_Income_Print(inMovementId := 432692 , inisActDiff := 'True' ,  inSession := '9457');FETCH ALL "<unnamed portal 8>";
 
 /*
 
