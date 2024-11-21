@@ -23,6 +23,12 @@ BEGIN
                         ;
      END IF;
 
+
+     IF inDescId = zc_MIFloat_SummCardSecondDiff() AND inValueData > 20
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение для округления = <%> не может быть больше 20.', inValueData;
+     END IF;
+
      -- изменить <свойство>
      UPDATE MovementItemFloat SET ValueData = inValueData WHERE MovementItemId = inMovementItemId AND DescId = inDescId;
 

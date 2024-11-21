@@ -110,7 +110,7 @@ BEGIN
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
                                  --
                                , CASE WHEN MovementBoolean_MultWithVAT.ValueData = TRUE
-                                     --AND COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) = FALSE
+                                       AND COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) = FALSE
                                            THEN ROUND (COALESCE (MIF_Price.ValueData, 0)
                                                      * CASE WHEN COALESCE (MLO_Currency.ObjectId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
                                                             WHEN tmpCurrencyList.CurrencyValue > 0 AND tmpCurrencyList.ParValue > 0 THEN tmpCurrencyList.CurrencyValue / tmpCurrencyList.ParValue
@@ -302,6 +302,7 @@ BEGIN
                      , tmpData.InvNumber
                      , tmpData.OperDate
                      , tmpData.isPriceWithVAT
+                     , tmpData.isMultWithVAT
                      , tmpData.MovementItemId
                      , tmpData.GoodsId
                      , tmpData.GoodsKindId
