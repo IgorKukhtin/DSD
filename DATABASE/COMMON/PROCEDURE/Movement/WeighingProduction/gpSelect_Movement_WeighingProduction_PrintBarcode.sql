@@ -79,6 +79,8 @@ BEGIN
                    , MIFloat_WeightTare.ValueData    AS WeightTare
                    , MIString_KVK.ValueData          AS KVK
                    , MILinkObject_PersonalKVK.ObjectId AS PersonalKVKId
+                   
+                   , MIDate_Insert.ValueData           AS InsertDate
 
               FROM MovementItem
                    LEFT JOIN MovementItemFloat AS MIFloat_Count
@@ -90,6 +92,10 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                                ON MIFloat_CountPack.MovementItemId = MovementItem.Id
                                               AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+
+                   LEFT JOIN MovementItemDate AS MIDate_Insert
+                                              ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                             AND MIDate_Insert.DescId         = zc_MIDate_Insert()
 
                    LEFT JOIN MovementItemFloat AS MIFloat_WeightTare
                                                ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
@@ -176,6 +182,7 @@ BEGIN
            , vbStoreKeeperName  :: TVarChar     AS StoreKeeperName
            , tmpMI.KVK          :: TVarChar     AS KVK
            , Object_PersonalKVK.ValueData       AS PersonalKVKName
+           , tmpMI.InsertDate
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
