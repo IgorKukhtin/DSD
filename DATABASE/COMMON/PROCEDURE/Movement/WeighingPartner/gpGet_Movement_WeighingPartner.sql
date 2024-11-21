@@ -138,7 +138,7 @@ BEGIN
 
              , COALESCE (MovementBoolean_Promo.ValueData, FALSE) :: Boolean AS isPromo
              , COALESCE (MovementBoolean_List.ValueData,False)   :: Boolean AS isList
-             , COALESCE (MovementBoolean_DocPartner.ValueData, FALSE) ::Boolean AS isDocPartner
+             , CASE WHEN MovementBoolean_DocPartner.MovementId > 0 THEN TRUE ELSE FALSE END ::Boolean AS isDocPartner
 
              , Object_Personal1.Id AS PersonalId1, Object_Personal1.ValueData AS PersonalName1
              , Object_Personal2.Id AS PersonalId2, Object_Personal2.ValueData AS PersonalName2
