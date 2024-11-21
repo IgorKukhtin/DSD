@@ -70,23 +70,43 @@ BEGIN
      -- Проверка
      IF EXISTS (SELECT 1
                 FROM MovementItem
-                WHERE MovementItem.MovementId = inMovementId
+                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                   AND MovementItem.DescId     = zc_MI_Master()
                   AND MovementItem.isErased   = FALSE
-                GROUP BY MovementItem.ObjectId
+                WHERE MovementItem.MovementId = inMovementId
+                GROUP BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId)
                 HAVING MIN (MovementItem.Amount) <> MAX (MovementItem.Amount)
                )
      THEN
-         RAISE EXCEPTION 'Ошибка.Для товара <%> введен разный Процент скидки : <%> и <%>.'
+         RAISE EXCEPTION 'Ошибка.Для товара <%> <%> введен разный Процент скидки : <%> и <%>.'
                        , lfGet_Object_ValueData(
                          (SELECT MovementItem.ObjectId
                           FROM MovementItem
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                           WHERE MovementItem.MovementId = inMovementId
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
-                          GROUP BY MovementItem.ObjectId
+                          GROUP BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId)
                           HAVING MIN (MovementItem.Amount) <> MAX (MovementItem.Amount)
-                          ORDER BY MovementItem.ObjectId
+                          ORDER BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId)
+                          LIMIT 1
+                         ))
+                       , lfGet_Object_ValueData(
+                         (SELECT MILinkObject_GoodsKind.ObjectId
+                          FROM MovementItem
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
+                          GROUP BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId)
+                          HAVING MIN (MovementItem.Amount) <> MAX (MovementItem.Amount)
+                          ORDER BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId)
                           LIMIT 1
                          ))
                        , zfConvert_FloatToString(
@@ -204,6 +224,9 @@ BEGIN
                                 , inDescId     := zc_Movement_Promo()
                                 , inUserId     := vbUserId
                                  );
+
+     if vbUserId = 5 AND 1=1 then RAISE EXCEPTION 'Нет Прав - что б ничего не делать'; end if;
+
 
 END;
 $BODY$
