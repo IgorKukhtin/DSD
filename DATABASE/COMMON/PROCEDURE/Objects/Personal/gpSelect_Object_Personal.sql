@@ -114,6 +114,14 @@ BEGIN
 
    -- Результат
    RETURN QUERY
+
+     WITH tmpUser_Member AS (SELECT ObjectLink_User_Member.*
+                             FROM ObjectLink AS ObjectLink_User_Member
+                                  JOIN Object AS Object_User ON Object_User.Id       = ObjectLink_User_Member.ObjectId
+                                                            AND Object_User.isErased = FALSE
+                             WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                            )
+
      SELECT
            Object_Personal_View.PersonalId   AS Id
          , Object_Personal_View.PersonalCode AS MemberCode
@@ -238,9 +246,9 @@ BEGIN
                               AND ObjectLink_Member_BankSecond.DescId = zc_ObjectLink_Member_BankSecond()
           LEFT JOIN Object AS Object_BankSecond ON Object_BankSecond.Id = ObjectLink_Member_BankSecond.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                               ON ObjectLink_User_Member.ChildObjectId = Object_Personal_View.MemberId          --ObjectLink_User_Member.ObjectId
-                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+          LEFT JOIN tmpUser_Member AS ObjectLink_User_Member
+                                   ON ObjectLink_User_Member.ChildObjectId = Object_Personal_View.MemberId          --ObjectLink_User_Member.ObjectId
+                                  AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
         
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                ON ObjectLink_Unit_Branch.ObjectId = Object_Personal_View.UnitId
