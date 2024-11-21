@@ -391,6 +391,10 @@ type
     spUpdateTotalSumm_GoodsReal: TdsdStoredProc;
     actUpdateTotalSumm_GoodsReal: TdsdExecStoredProc;
     bbUpdateTotalSumm_GoodsReal: TdxBarButton;
+    spSelectPrint_TTN_final: TdsdStoredProc;
+    actPrint_TTN_final: TdsdPrintAction;
+    macPrint_TTN_final: TMultiAction;
+    bbPrint_TTN_final: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1034,6 +1034,10 @@
 				<Form>WeighingProductionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\WeighingPartner.pas">
+				<Form>WeighingPartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\WeighingPartnerJournal.pas">
 				<Form>WeighingPartnerJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>

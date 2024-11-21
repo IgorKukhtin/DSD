@@ -564,6 +564,26 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
+      object ChangePercentAmount: TcxGridDBColumn
+        Caption = '% '#1089#1082#1080#1076#1082#1080' '#1082#1086#1083'.'
+        DataBinding.FieldName = 'ChangePercentAmount'
+        Options.Editing = False
+        Width = 70
+      end
+      object isReason1: TcxGridDBColumn
+        Caption = #1057#1082'. '#1087#1086' '#1058#1077#1084#1087#1077#1088#1072#1090#1091#1088#1077
+        DataBinding.FieldName = 'isReason1'
+        HeaderHint = #1055#1088#1080#1095#1080#1085#1072' '#1089#1082#1080#1076#1082#1080' '#1058#1077#1084#1087#1077#1088#1072#1090#1091#1088#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object isReason2: TcxGridDBColumn
+        Caption = #1057#1082'. '#1087#1086' '#1050#1072#1095#1077#1089#1090#1074#1091
+        DataBinding.FieldName = 'isReason2'
+        HeaderHint = #1055#1088#1080#1095#1080#1085#1072' '#1089#1082#1080#1076#1082#1080' '#1050#1072#1095#1077#1089#1090#1074#1086
+        Options.Editing = False
+        Width = 70
+      end
       object PriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'PriceWithVAT'

@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , isList Boolean
              , isDocPartner Boolean
              , PriceWithVAT Boolean
-             , VATPercent TFloat, ChangePercent TFloat
+             , VATPercent TFloat, ChangePercent TFloat, ChangePercentAmount TFloat 
              , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat, TotalCountKg TFloat, TotalCountSh TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromName TVarChar, ToName TVarChar
@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , Comment TVarChar
              , IP TVarChar
              , isPromo Boolean
+             , isReason1 Boolean, isReason2 Boolean
              , MovementPromo TVarChar
              , BranchCode    Integer
              , SubjectDocId Integer, SubjectDocName TVarChar
@@ -143,6 +144,7 @@ BEGIN
              , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData             AS VATPercent
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
+             , MovementFloat_ChangePercentAmount.ValueData    AS ChangePercentAmount
              , MovementFloat_TotalCount.ValueData             AS TotalCount
              , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
              , MovementFloat_TotalCountTare.ValueData         AS TotalCountTare
@@ -188,7 +190,10 @@ BEGIN
              , MovementString_Comment.ValueData   AS Comment
              , MovementString_IP.ValueData        AS IP
 
-             , COALESCE (MovementBoolean_Promo.ValueData, False) :: Boolean AS isPromo
+             , COALESCE (MovementBoolean_Promo.ValueData, False)  :: Boolean AS isPromo 
+             , COALESCE (MovementBoolean_Reason1.ValueData, False) ::Boolean AS isReason1
+             , COALESCE (MovementBoolean_Reason2.ValueData, False) ::Boolean AS isReason2
+
              , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
              , MovementFloat_BranchCode.ValueData :: Integer AS BranchCode
@@ -271,12 +276,22 @@ BEGIN
                                       ON MovementBoolean_DocPartner.MovementId = Movement.Id
                                      AND MovementBoolean_DocPartner.DescId = zc_MovementBoolean_DocPartner()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Reason1
+                                      ON MovementBoolean_Reason1.MovementId = Movement.Id
+                                     AND MovementBoolean_Reason1.DescId = zc_MovementBoolean_Reason1()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Reason2
+                                      ON MovementBoolean_Reason2.MovementId = Movement.Id
+                                     AND MovementBoolean_Reason2.DescId = zc_MovementBoolean_Reason2()
+   
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercentAmount
+                                    ON MovementFloat_ChangePercentAmount.MovementId = Movement.Id
+                                   AND MovementFloat_ChangePercentAmount.DescId = zc_MovementFloat_ChangePercentAmount()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id

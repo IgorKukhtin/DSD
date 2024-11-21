@@ -26,6 +26,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -24
+    ExplicitTop = 84
     object edInvNumber: TcxTextEdit
       Left = 175
       Top = 22
@@ -359,7 +361,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Width = 276
     end
     object cbisList: TcxCheckBox
-      Left = 758
+      Left = 756
       Top = 99
       Hint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1090#1086#1074#1072#1088#1086#1074
       Caption = #1048#1085#1074#1077#1085#1090'. '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
@@ -367,7 +369,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 41
-      Width = 129
+      Width = 125
     end
     object edInvNumberPartner: TcxTextEdit
       Left = 175
@@ -382,15 +384,35 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Caption = #8470' '#1076#1086#1082'.'#1091' '#1082#1086#1085#1090#1088'.'
     end
     object cbDocPartner: TcxCheckBox
-      Left = 886
+      Left = 883
       Top = 99
       Hint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090'.'
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 44
-      Width = 187
+      Width = 104
+    end
+    object cbReason1: TcxCheckBox
+      Left = 1058
+      Top = 99
+      Caption = #1057#1082'. '#1087#1086' '#1058#1077#1084#1087#1077#1088#1072#1090#1091#1088#1077
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 45
+      Width = 129
+    end
+    object cbReason2: TcxCheckBox
+      Left = 1188
+      Top = 99
+      Caption = #1057#1082'. '#1087#1086' '#1050#1072#1095#1077#1089#1090#1074#1091
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 46
+      Width = 112
     end
   end
   object cxPageControl: TcxPageControl
@@ -1352,6 +1374,20 @@ object WeighingPartnerForm: TWeighingPartnerForm
     ShowHint = True
     TabOrder = 16
     Width = 102
+  end
+  object cxLabel27: TcxLabel
+    Left = 987
+    Top = 84
+    Caption = '% '#1089#1082'. '#1074' '#1082#1086#1083'.'
+  end
+  object edChangePercentAmount: TcxCurrencyEdit
+    Left = 988
+    Top = 99
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    Properties.ReadOnly = True
+    TabOrder = 18
+    Width = 64
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2796,6 +2832,29 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = cbDocPartner
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercentAmount'
+        Value = Null
+        Component = edChangePercentAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReason1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReason1'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReason2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReason2'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -3392,8 +3451,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1176
-    Top = 64
+    Left = 1128
+    Top = 16
   end
   object GuidesSubjectDoc: TdsdGuides
     KeyField = 'Id'
