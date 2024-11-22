@@ -398,12 +398,14 @@ BEGIN
        --
         --          
        SELECT 
-             Movement.InvNumber                         AS InvNumber_Sale
+             ''::TVarChar /* Movement.InvNumber*/                         AS InvNumber_Sale  
+            --(SELECT STRING_AGG (DISTINCT _tmpMovement.InvNumber_Sale, ';' ) FROM _tmpMovement) AS InvNumber_Sale  
            , zfFormat_BarCode (zc_BarCodePref_Movement(), tmpTransportGoods.Id) AS IdBarCode             
              -- параметр для Склад ГП ф.Киев + Львов - !!!временно!!!
            , CASE WHEN MovementLinkObject_From.ObjectId IN (8411, 3080691) THEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDate_Sale
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner_Sale
-           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner_Sale
+           --, COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)  AS OperDatePartner_Sale
+           , ''::TVarChar AS OperDatePartner_Sale
 
            , tmpSale_Total.TotalCountKg       AS TotalCountKg
            , tmpSale_Total.TotalCountSh       AS TotalCountSh
