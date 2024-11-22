@@ -176,7 +176,7 @@ BEGIN
   , tmpMI_SaleReturn AS (SELECT MIFloat_PromoMovement.MovementId_promo
                               , Movement.Month_Partner
                               , MovementItem.ObjectId                          AS GoodsId
-                              , COALESCE (MILinkObject_GoodsKind.ObjectId,0)   AS GoodsKindId      
+                              , COALESCE (MILinkObject_GoodsKind.ObjectId,0)   AS GoodsKindId
                               , SUM (CASE WHEN Movement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData,0) ELSE 0 END)     AS AmountOut    --продажа
                               , SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData,0) ELSE 0 END) AS AmountIn     --возврат
                          FROM tmpMovement AS Movement
@@ -294,7 +294,8 @@ BEGIN
                    
               FROM tmpMI_SaleReturn
                    --показываем только товары проданные за период и факт продажи возврата и менсяц по дате покупателя.
-                   LEFT JOIN tmpMI_1 AS MI_PromoGoods ON MI_PromoGoods.GoodsId = tmpMI_SaleReturn.GoodsId
+                   LEFT JOIN tmpMI_1 AS MI_PromoGoods ON MI_PromoGoods.MovementId = tmpMI_SaleReturn.MovementId_promo
+                                                     AND MI_PromoGoods.GoodsId = tmpMI_SaleReturn.GoodsId
                                                      AND COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  COALESCE (MI_PromoGoods.GoodsKindId,0) -- COALESCE (MI_PromoGoods.GoodsKindCompleteId,0)
 
                    LEFT JOIN tmpMIFloat_PriceIn1 AS MIFloat_PriceIn1
