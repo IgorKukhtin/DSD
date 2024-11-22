@@ -1523,6 +1523,8 @@ type
     miReport_HistoryCost_Compare: TMenuItem;
     actPositionProperty: TdsdOpenForm;
     miPositionProperty: TMenuItem;
+    actReport_Promo_Result_Month: TdsdOpenForm;
+    miReport_Promo_Result_Month: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

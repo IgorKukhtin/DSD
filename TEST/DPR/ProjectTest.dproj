@@ -5431,6 +5431,10 @@
 				<Form>WeighingPartner_ActDiffForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Promo_Result_Month.pas">
+				<Form>Report_Promo_Result_MonthForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

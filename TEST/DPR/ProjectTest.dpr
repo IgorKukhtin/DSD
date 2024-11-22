@@ -1549,7 +1549,8 @@ uses
   PositionProperty in '..\..\Forms\Guides\PositionProperty.pas' {PositionPropertyForm: TParentForm},
   BankAccountMovement_Split in '..\..\Forms\Document\BankAccountMovement_Split.pas' {BankAccountMovement_SplitForm: TParentForm},
   Report_GoodsMI_ProductionUnionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionUnionDialog.pas' {Report_GoodsMI_ProductionUnionDialogForm: TParentForm},
-  WeighingPartner_ActDiff in '..\..\Forms\Document\WeighingPartner_ActDiff.pas' {WeighingPartner_ActDiffForm: TParentForm};
+  WeighingPartner_ActDiff in '..\..\Forms\Document\WeighingPartner_ActDiff.pas' {WeighingPartner_ActDiffForm: TParentForm},
+  Report_Promo_Result_Month in '..\..\Forms\Report\Report_Promo_Result_Month.pas' {Report_Promo_Result_MonthForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
