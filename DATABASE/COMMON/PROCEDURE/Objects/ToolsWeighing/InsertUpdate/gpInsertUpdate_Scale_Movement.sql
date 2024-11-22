@@ -11,30 +11,36 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integ
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar, Boolean, Boolean, Boolean, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inId                     Integer   , -- Ключ объекта <Документ>
     IN inOperDate               TDateTime , -- Дата документа
     IN inOperDatePartner        TDateTime , -- Дата накладной у контрагента
+    IN inInvNumberPartner       TVarChar  , -- Номер  контрагента
     IN inMovementDescId         Integer   , -- Вид документа
     IN inMovementDescNumber     Integer   , -- Вид документа
     IN inFromId                 Integer   , -- От кого (в документе)
     IN inToId                   Integer   , -- Кому (в документе)
     IN inContractId             Integer   , -- Договора
     IN inPaidKindId             Integer   , -- Форма оплаты
-    IN inPriceListId            Integer   , -- 
-    IN inSubjectDocId           Integer   , -- 
+    IN inPriceListId            Integer   , --
+    IN inSubjectDocId           Integer   , --
     IN inMovementId_Order       Integer   , -- ключ Документа заявка
     IN inMovementId_Transport   Integer   , -- ключ Документа ИЛИ - криво - через этот прараметр передаем - Через кого поступил возврат
     IN inChangePercent          TFloat    , -- (-)% Скидки (+)% Наценки
-    IN inBranchCode             Integer   , -- 
+    IN inChangePercentAmount    TFloat    , -- % скидки для кол-ва поставщика
+    IN inBranchCode             Integer   , --
     IN inComment                TVarChar  , --
     IN inIsListInventory        Boolean   , -- Инвентаризация только для выбранных товаров
+    IN inIsReason1              Boolean   , -- Причина скидки в кол-ве температура
+    IN inIsReason2              Boolean   , -- Причина скидки в кол-ве качество
     IN inMovementId_reReturnIn  Integer   , -- ключ Документа заявка
     IN inIP                     TVarChar,
     IN inSession                TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS TABLE (Id        Integer
              , InvNumber TVarChar
              , OperDate  TDateTime
@@ -66,7 +72,7 @@ BEGIN
                        , CHR (13)
                        ;
      END IF;
-          
+
 
      -- определили !!!только для Днепра!!!
      IF inMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
@@ -103,6 +109,7 @@ BEGIN
      inId:= gpInsertUpdate_Movement_WeighingPartner (ioId                  := inId
                                                    , inOperDate            := inOperDate
                                                    , inInvNumberOrder      := CASE WHEN inMovementId_Order <> 0 THEN (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_Order) ELSE '' END
+                                                   , inInvNumberPartner    := inInvNumberPartner
                                                    , inMovementDescId      := inMovementDescId
                                                    , inMovementDescNumber  := inMovementDescNumber
                                                    , inWeighingNumber      := CASE WHEN inId <> 0
@@ -146,8 +153,11 @@ BEGIN
                                                    , inBranchCode          := inBranchCode
                                                    , inPartionGoods        := '' :: TVarChar
                                                    , inChangePercent       := inChangePercent
+                                                   , inChangePercentAmount := inChangePercentAmount
                                                    , inComment             := inComment
                                                    , inIsProtocol          := FALSE
+                                                   , inIsReason1           := inIsReason1
+                                                   , inIsReason2           := inIsReason2
                                                    , inSession             := inSession
                                                     );
 
@@ -155,17 +165,17 @@ BEGIN
      -- дописали св-во - Через кого поступил возврат
      IF inMovementId_Transport <> 0 AND inMovementDescId = zc_Movement_ReturnIn() AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMovementId_Transport)
      THEN
-          -- сохранили связь с <Физические лица(Водитель/экспедитор)> 
+          -- сохранили связь с <Физические лица(Водитель/экспедитор)>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member(), inId, (SELECT Object_Personal_View.MemberId FROM Object_Personal_View WHERE Object_Personal_View.PersonalId = inMovementId_Transport));
      END IF;
-     
+
      -- дописали св-во - Инвентаризация только для выбранных товаров
      IF inMovementId_reReturnIn > 0
      THEN
-          -- сохранили 
+          -- сохранили
           PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_ReturnIn(), inId, inMovementId_reReturnIn);
      END IF;
-     
+
      -- дописали св-во - Инвентаризация только для выбранных товаров
      IF inMovementDescId = zc_Movement_Inventory() AND inIsListInventory = TRUE
      THEN
@@ -175,7 +185,7 @@ BEGIN
 
      -- сохранили свойство <IP>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_IP(), inId, inIP);
-     
+
 
      IF inMovementDescId IN (zc_Movement_Income()) AND inBranchCode BETWEEN 301 AND 310
      THEN

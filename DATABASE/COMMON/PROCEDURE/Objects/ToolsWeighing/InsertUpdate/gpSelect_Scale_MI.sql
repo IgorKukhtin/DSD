@@ -12,6 +12,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , PricePartner_in TFloat
                -- Количество у поставщика для Сырья (из накладной)
              , AmountPartner_in TFloat
+             , SummPartner_in TFloat
 
              -- Признак "без оплаты" - Кол-во поставщика
              , isAmountPartnerSecond_in  Boolean
@@ -69,6 +70,8 @@ BEGIN
                            , COALESCE (MIFloat_PricePartner.ValueData, 0) AS PricePartner_in
                              -- Количество у поставщика для Сырья (из накладной)
                            , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) AS AmountPartner_in
+                           , COALESCE (MIFloat_SummPartner.ValueData, 0)         AS SummPartner_in
+                           
 
                              -- Признак "без оплаты" - Кол-во поставщика
                            , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) AS isAmountPartnerSecond_in
@@ -157,6 +160,10 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
                                                        ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
                                                       AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummPartner
+                                                       ON MIFloat_SummPartner.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummPartner.DescId = zc_MIFloat_SummPartner()
+                                                      
                            -- Признак "без оплаты"
                            LEFT JOIN MovementItemBoolean AS MIBoolean_AmountPartnerSecond
                                                          ON MIBoolean_AmountPartnerSecond.MovementItemId = MovementItem.Id
@@ -310,6 +317,8 @@ BEGIN
            , tmpMI.PricePartner_in :: TFloat
              -- Количество у поставщика для Сырья (из накладной)
            , tmpMI.AmountPartner_in :: TFloat
+           , tmpMI.SummPartner_in   :: TFloat
+           
 
              -- Признак "без оплаты" - Кол-во поставщика
            , tmpMI.isAmountPartnerSecond_in :: Boolean

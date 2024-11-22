@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Movement(
     IN inIsComlete   Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, MovementId_DocPartner Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementId_parent Integer, OperDate_parent TDateTime, OperDatePartner_parent TDateTime, InvNumber_parent TVarChar
              , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
@@ -79,9 +79,43 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_UnComplete() AS StatusId
                          )
+         ,  tmpMovementDocPartner AS (SELECT Movement.Id                               AS MovementId
+                                           , MovementLinkObject_Contract.ObjectId      AS ContractId
+                                           , MovementLinkObject_PaidKind.ObjectId      AS PaidKindId
+                                           , COALESCE (MB_DocPartner.ValueData, FALSE) AS isDocPartner
+                                           , MS_InvNumberPartner.ValueData             AS InvNumberPartner
+                                      FROM Movement
+                                           INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                                        AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                           INNER JOIN MovementBoolean AS MB_DocPartner
+                                                                      ON MB_DocPartner.MovementId = Movement.Id
+                                                                     AND MB_DocPartner.DescId     = zc_MovementBoolean_DocPartner()
+                                           INNER JOIN MovementString AS MS_InvNumberPartner
+                                                                     ON MS_InvNumberPartner.MovementId = Movement.Id
+                                                                    AND MS_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+                                           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                      WHERE Movement.OperDate BETWEEN inStartDate - INTERVAL '1 DAY' AND inEndDate
+                                        AND Movement.DescId = zc_Movement_WeighingPartner()
+                                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                     )
        -- Результат
        SELECT  Movement.Id
              , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
+             , (CASE WHEN tmpMovementDocPartner.MovementId = Movement.Id AND tmpMovementDocPartner.isDocPartner = FALSE
+                         THEN '(--) '
+                    WHEN tmpMovementDocPartner.MovementId = Movement.Id AND tmpMovementDocPartner.isDocPartner = TRUE
+                         THEN '(++) '
+                    WHEN tmpMovementDocPartner.isDocPartner = FALSE
+                         THEN '(-) '
+                    WHEN tmpMovementDocPartner.isDocPartner = TRUE
+                         THEN '(+) '
+                    ELSE ''
+               END
+            || MS_InvNumberPartner.ValueData) :: TVarChar AS InvNumberPartner
+             , tmpMovementDocPartner.MovementId               AS MovementId_DocPartner
              , Movement.OperDate
              , Object_Status.ObjectCode                AS StatusCode
              , Object_Status.ValueData                 AS StatusName
@@ -203,6 +237,10 @@ BEGIN
                                     AND MovementFloat_BranchCode.ValueData  < 1000
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementString AS MS_InvNumberPartner
+                                     ON MS_InvNumberPartner.MovementId = Movement.Id
+                                    AND MS_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
@@ -347,7 +385,6 @@ BEGIN
             LEFT JOIN MovementString AS MS_InvNumberPartner_Tax ON MS_InvNumberPartner_Tax.MovementId = MovementLinkMovement_Tax.MovementChildId
                                                                AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
 
-
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
@@ -427,9 +464,25 @@ BEGIN
                                         AND MovementLinkObject_SubjectDoc.DescId     = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
+            LEFT JOIN tmpMovementDocPartner ON tmpMovementDocPartner.ContractId       = MovementLinkObject_Contract.ObjectId
+                                           AND tmpMovementDocPartner.PaidKindId       = MovementLinkObject_PaidKind.ObjectId
+                                           AND tmpMovementDocPartner.InvNumberPartner = MS_InvNumberPartner.ValueData
+
       UNION ALL
        SELECT  Movement.Id
              , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
+             , (CASE WHEN tmpMovementDocPartner.MovementId = Movement.Id AND tmpMovementDocPartner.isDocPartner = FALSE
+                         THEN '(--) '
+                    WHEN tmpMovementDocPartner.MovementId = Movement.Id AND tmpMovementDocPartner.isDocPartner = TRUE
+                         THEN '(++) '
+                    WHEN tmpMovementDocPartner.isDocPartner = FALSE
+                         THEN '(-) '
+                    WHEN tmpMovementDocPartner.isDocPartner = TRUE
+                         THEN '(+) '
+                    ELSE ''
+               END
+            || MS_InvNumberPartner.ValueData) :: TVarChar AS InvNumberPartner
+             , tmpMovementDocPartner.MovementId               AS MovementId_DocPartner
              , Movement.OperDate
              , Object_Status.ObjectCode                AS StatusCode
              , Object_Status.ValueData                 AS StatusName
@@ -695,7 +748,6 @@ BEGIN
             LEFT JOIN MovementString AS MS_InvNumberPartner_Tax ON MS_InvNumberPartner_Tax.MovementId = MovementLinkMovement_Tax.MovementChildId
                                                                AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
 
-
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
@@ -774,6 +826,13 @@ BEGIN
                                          ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
                                         AND MovementLinkObject_SubjectDoc.DescId     = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+            
+            LEFT JOIN MovementString AS MS_InvNumberPartner
+                                     ON MS_InvNumberPartner.MovementId = Movement.Id
+                                    AND MS_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+            LEFT JOIN tmpMovementDocPartner ON tmpMovementDocPartner.ContractId       = MovementLinkObject_Contract.ObjectId
+                                           AND tmpMovementDocPartner.PaidKindId       = MovementLinkObject_PaidKind.ObjectId
+                                           AND tmpMovementDocPartner.InvNumberPartner = MS_InvNumberPartner.ValueData
 
        ORDER BY 1 DESC
       ;

@@ -6,8 +6,9 @@
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TFloat, TFloat, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -57,6 +58,8 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inPricePartner          TFloat    , -- цена поставщика - из накладной - ввод в контроле
     IN inPriceIncome           TFloat    , -- цена по спецификации
     IN inAmountPartnerSecond   TFloat    , -- Кол-во поставщика - из накладной
+    IN inSummPartner           TFloat    , -- Сумма поставщика - из накладной
+    IN inIsDocPartner          Boolean   , -- Приход от поставщика - документ поставщика
 
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -174,6 +177,7 @@ BEGIN
      -- проверка
      IF COALESCE (inHeadCount, 0) = 0 AND vbMovementDescId = zc_Movement_Income()
         AND EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inGoodsId AND OB.DescId = zc_ObjectBoolean_Goods_HeadCount() AND OB.ValueData = TRUE)
+        AND inIsDocPartner = FALSE
      THEN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Кол-во голов>.';
      END IF;
@@ -770,6 +774,9 @@ BEGIN
              -- Цена с НДС да/нет - для цена поставщика
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PriceWithVAT(), vbId, inIsPriceWithVAT);
 
+             -- сохранили протокол
+             PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, FALSE);
+
          END IF;
 
          -- дописали св-во для OBV
@@ -788,6 +795,26 @@ BEGIN
              -- Цена с НДС да/нет - для цена поставщика
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PriceWithVAT(), vbId, inIsPriceWithVAT);
 
+             IF inSummPartner > 0
+             THEN
+                 -- Сумма у поставщика - из накладной
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPartner(), vbId, inSummPartner);
+             END IF;
+
+             -- сохранили протокол
+             PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, FALSE);
+
+         END IF;
+         
+         -- дописали св-во для DOC
+         IF inIsDocPartner = TRUE AND NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_DocPartner() AND MB.ValueData = FALSE)
+         THEN
+             -- сохранили свойство <Документ поставщика (да/нет)>
+             PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DocPartner(), inMovementId, FALSE);
+
+             -- сохранили протокол
+             PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+
          END IF;
 
          IF vbMovementDescId IN (zc_Movement_ReturnOut())
@@ -796,8 +823,12 @@ BEGIN
          THEN
              -- Дата для цены возврат поставщику
              PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PriceRetOut(), vbId, inOperDate_ReturnOut);
-         END IF;
 
+             -- сохранили протокол
+             PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, FALSE);
+
+         END IF;
+         
 
          --
          vbTotalSumm:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_TotalSumm());
@@ -806,6 +837,7 @@ BEGIN
          IF vbMovementDescId IN (zc_Movement_Income()) AND (inBranchCode BETWEEN 201 AND 210)
          THEN
              vbTotalSummPartner:= (WITH tmpMI AS (SELECT SUM (COALESCE (MIF_AmountPartnerSecond.ValueData, 0))AS AmountPartner
+                                                       , SUM (COALESCE (MIFloat_SummPartner.ValueData, 0))    AS SummPartner
                                                        , COALESCE (MIF_PricePartner.ValueData, 0)             AS PricePartner
                                                        , COALESCE (MIB_PriceWithVAT.ValueData, FALSE)         AS isPriceWithVAT
                                                        , MovementItem.ObjectId                                AS GoodsId
@@ -827,6 +859,10 @@ BEGIN
                                                        LEFT JOIN MovementItemBoolean AS MIB_PriceWithVAT
                                                                                      ON MIB_PriceWithVAT.MovementItemId = MovementItem.Id
                                                                                     AND MIB_PriceWithVAT.DescId         = zc_MIBoolean_PriceWithVAT()
+                                                       --  Сумма Поставщика 
+                                                       LEFT JOIN MovementItemFloat AS MIFloat_SummPartner
+                                                                                   ON MIFloat_SummPartner.MovementItemId = MovementItem.Id
+                                                                                  AND MIFloat_SummPartner.DescId         = zc_MIFloat_SummPartner()
 
                                                   WHERE MovementItem.MovementId = inMovementId
                                                     AND MovementItem.DescId     = zc_MI_Master()
@@ -836,17 +872,21 @@ BEGIN
                                                          , MovementItem.ObjectId
                                                          , COALESCE (MILO_GoodsKind.ObjectId, 0)
                                                  )
-                                 , tmpMI_summ AS (SELECT CAST (tmpMI.AmountPartner * tmpMI.PricePartner AS NUMERIC (16, 2)) AS Summ_notVat
+                                 , tmpMI_summ AS (SELECT CASE WHEN tmpMI.SummPartner <> 0 THEN tmpMI.SummPartner
+                                                              ELSE CAST (tmpMI.AmountPartner * tmpMI.PricePartner AS NUMERIC (16, 2))
+                                                         END AS Summ_notVat
                                                        , 0 AS Summ_addVat
                                                   FROM tmpMI
                                                   WHERE NOT EXISTS (SELECT 1 FROM tmpMI WHERE tmpMI.isPriceWithVAT = TRUE)
 
                                                  UNION
                                                   SELECT 0 AS Summ_notVat
-                                                       , CAST (CAST (tmpMI.AmountPartner * tmpMI.PricePartner AS NUMERIC (16, 2))
-                                                             * CASE WHEN tmpMI.isPriceWithVAT = FALSE THEN 1.2 ELSE 1 END
-                                                               AS NUMERIC (16, 2)
-                                                              ) AS Summ_addVat
+                                                       , CASE WHEN tmpMI.SummPartner <> 0 THEN tmpMI.SummPartner
+                                                              ELSE CAST (CAST (tmpMI.AmountPartner * tmpMI.PricePartner AS NUMERIC (16, 2))
+                                                                       * CASE WHEN tmpMI.isPriceWithVAT = FALSE THEN 1.2 ELSE 1 END
+                                                                         AS NUMERIC (16, 2)
+                                                                        )
+                                                         END AS Summ_addVat
                                                   FROM tmpMI
                                                   WHERE EXISTS (SELECT 1 FROM tmpMI WHERE tmpMI.isPriceWithVAT = TRUE)
                                                  )
