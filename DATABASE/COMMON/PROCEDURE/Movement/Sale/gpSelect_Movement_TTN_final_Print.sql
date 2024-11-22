@@ -418,9 +418,10 @@ BEGIN
                   WHEN vbMovementDescId <> zc_Movement_ReturnIn()
                        THEN OH_JuridicalDetails_From.FullName
                   ELSE OH_JuridicalDetails_To.FullName
-             END AS JuridicalName_Basis             --Замовник Алан
-
-           , (CASE WHEN Object_To.Id IN (11216101) --AND vbUserId = 5
+             END AS JuridicalName_Basis             --Замовник Алан 
+             
+            -- дублируем Алан для итоговой
+           /*, (CASE WHEN Object_To.Id IN (11216101) --AND vbUserId = 5
                         THEN '' -- inToId := 3470472 , inPartnerId := 11216101
 
                    ELSE OH_JuridicalDetails_To.FullName
@@ -439,6 +440,26 @@ BEGIN
               END      :: TVarChar AS JuridicalAddress_To
 
            , OH_JuridicalDetails_To.OKPO AS OKPO_To
+           */  
+           , OH_JuridicalDetails_From.FullName AS JuridicalName_To
+           , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn()
+               THEN
+                 CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_from.ValueData <> '' AND ObjectString_Unit_Address_from.ValueData NOT ILIKE '% - O - %'
+                           THEN ObjectString_Unit_Address_from.ValueData
+                      ELSE OH_JuridicalDetails_From.JuridicalAddress
+                 END 
+               ELSE   
+                 (CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_from.ValueData <> '' AND ObjectString_Unit_Address_from.ValueData NOT ILIKE '% - O - %'
+                           THEN ObjectString_Unit_Address_from.ValueData
+                      ELSE CASE WHEN ObjectString_PostalCodeFrom.ValueData  <> '' THEN ObjectString_PostalCodeFrom.ValueData || ' '      ELSE '' END
+                        || CASE WHEN View_Partner_AddressFrom.RegionName    <> '' THEN View_Partner_AddressFrom.RegionName   || ' обл., ' ELSE '' END
+                        || CASE WHEN View_Partner_AddressFrom.ProvinceName  <> '' THEN View_Partner_AddressFrom.ProvinceName || ' р-н, '  ELSE '' END
+                        || ObjectString_FromAddress.ValueData
+                  END
+                )
+             END  :: TVarChar AS JuridicalAddress_To
+           , OH_JuridicalDetails_From.OKPO AS OKPO_To
+           
 
            , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn()
                THEN
@@ -586,7 +607,7 @@ BEGIN
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To() 
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()      --для итоговой Вантажоодержувач тоже Алан
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Unit_Address_from
@@ -639,7 +660,7 @@ BEGIN
 
             LEFT JOIN t2
                    AS OH_JuridicalDetails_To
-                   ON OH_JuridicalDetails_To.JuridicalId = vbToId_find
+                   ON OH_JuridicalDetails_To.JuridicalId = vbToId_find      --для итоговой Вантажоодержувач тоже Алан
                   AND vbOperDate_find >= OH_JuridicalDetails_To.StartDate
                   AND vbOperDate_find <  OH_JuridicalDetails_To.EndDate
 
