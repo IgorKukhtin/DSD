@@ -10,7 +10,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateT
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -31,8 +32,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner(
     IN inBranchCode           Integer   , -- 
     IN inPartionGoods         TVarChar  , -- Партия товара
     IN inChangePercent        TFloat    , -- (-)% Скидки (+)% Наценки
+    IN inChangePercentAmount  TFloat    , -- % скидки для кол-ва поставщика
     IN inComment              TVarChar  , --
     IN inIsProtocol           Boolean   , --
+    IN inIsReason1            Boolean   , -- Причина скидки в кол-ве температура 
+    IN inIsReason2            Boolean   , -- Причина скидки в кол-ве качество 
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -150,8 +154,17 @@ BEGIN
      -- сохранили связь с документом <Transport>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), ioId, inMovementId_Transport);
 
-     -- сохранили свойство <(-)% Скидки (+)% Наценки >
+     -- сохранили свойство <(-)% Скидки (+)% Наценки>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+
+     -- сохранили свойство <% скидки для кол-ва поставщика>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercentAmount(), ioId, inChangePercentAmount);
+
+     -- сохранили свойство <Причина скидки в кол-ве температура>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Reason1(), ioId, inIsReason1);
+
+     -- сохранили свойство <Причина скидки в кол-ве качество>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Reason2(), ioId, inIsReason2);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
