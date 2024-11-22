@@ -150,6 +150,7 @@ type
     bbUpdateStatus: TSpeedButton;
     actUpdateStatus: TAction;
     cbIncome_diff: TCheckBox;
+    InvNumberPartner: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -642,6 +643,8 @@ end;
 procedure TGuideMovementForm.FormCreate(Sender: TObject);
 begin
   bbChangeMember.Enabled:=GetArrayList_Value_byName(Default_Array,'isPersonalComplete') = AnsiUpperCase('TRUE');
+
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('InvNumberPartner').Index].Visible := ((SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 210));
 
   Create_ParamsMovement(ParamsMovement_local);
 

@@ -782,6 +782,11 @@ object GuideMovementForm: TGuideMovementForm
           HeaderAlignmentVert = vaCenter
           Width = 70
         end
+        object InvNumberPartner: TcxGridDBColumn
+          Caption = #8470' '#1076#1086#1082'. ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+          DataBinding.FieldName = 'InvNumberPartner'
+          Width = 70
+        end
         object InvNumberOrder: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1082'.  '#1086#1089#1085#1086#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'InvNumberOrder'

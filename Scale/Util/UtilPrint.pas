@@ -159,6 +159,7 @@ type
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
     actPrint_Income_diff: TdsdPrintAction;
+    spSelectPrint_Income_diff: TdsdStoredProc;
   private
   end;
 

@@ -1409,6 +1409,19 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 55
         end
+        object SummPartner_in: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+          DataBinding.FieldName = 'SummPartner_in'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          Options.Editing = False
+          Width = 55
+        end
         object isPriceWithVAT_in: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
           DataBinding.FieldName = 'isPriceWithVAT_in'
@@ -3025,8 +3038,6 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 5
-          ExplicitTop = 12
         end
       end
       object infoPanelPriceList: TPanel
@@ -3548,6 +3559,36 @@ object MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actWeighingPartner_ActDiffF: TdsdInsertUpdateAction
+      Category = 'ScaleLib'
+      MoveParams = <>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1040#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1040#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
+      ImageIndex = 43
+      FormName = 'TWeighingPartner_ActDiffForm'
+      FormNameParam.Value = 'TWeighingPartner_ActDiffForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_begin'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   object spProtocol_isExit: TdsdStoredProc
     StoredProcName = 'gpInsert_LoginProtocol'
@@ -3594,6 +3635,11 @@ object MainForm: TMainForm
         Name = 'IP_str'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_begin'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 178

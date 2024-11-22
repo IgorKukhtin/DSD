@@ -37,6 +37,7 @@ type
     // Scale + ScaleCeh
     function lpGet_BranchName(inBranchCode:Integer): String;
     function gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
+    function gpGet_Scale_Movement_checkInvNumberPartner(var execParamsMovement:TParams): Boolean;
     // Scale
     function gpGet_Scale_Movement_findOldPeriod(var execParamsMovement:TParams): Boolean;
     function gpGet_Scale_Movement_OperDatePartner(var execParamsMovement:TParams): Boolean;
@@ -438,6 +439,28 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_Movement_checkInvNumberPartner(var execParamsMovement:TParams): Boolean;
+begin
+    Result:=false;
+    //if execParamsMovement.ParamByName('MovementId').AsInteger<>0 then
+    with spSelect do begin
+       StoredProcName:='gpGet_Scale_Movement_checkInvNumberPartner';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inPartnerId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('calcPartnerId').AsInteger);
+       Params.AddParam('inContractId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('ContractId').AsInteger);
+       Params.AddParam('inInvNumberPartner', ftString, ptInputOutput, execParamsMovement.ParamByName('InvNumberPartner').AsString);
+       //try
+         Execute;
+         Result:=DataSet.FieldByName('isOk').asBoolean;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
 function TDMMainScaleForm.gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
 begin
     Result:=false;
@@ -648,6 +671,7 @@ begin
        Params.AddParam('inOperDatePartner', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDatePartner').AsDateTime);
        Params.AddParam('inIsDocInsert', ftBoolean, ptInput, execParamsMovement.ParamByName('isDocInsert').AsBoolean);
        Params.AddParam('inIsOldPeriod', ftBoolean, ptInput, execParamsMovement.ParamByName('isOldPeriod').AsBoolean);
+       Params.AddParam('inIsDocPartner', ftBoolean, ptInput, execParamsMovement.ParamByName('isDocPartner').AsBoolean);
        Params.AddParam('inIP', ftString, ptInput, SettingMain.IP_str);
        //try
          Execute;
@@ -697,6 +721,7 @@ begin
        Params.AddParam('inId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inOperDatePartner', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDatePartner').AsDateTime);
+       Params.AddParam('inInvNumberPartner', ftString, ptInput, execParamsMovement.ParamByName('InvNumberPartner').AsString);
        Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
        Params.AddParam('inMovementDescNumber', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescNumber').AsInteger);
        Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
@@ -711,10 +736,21 @@ begin
        and(execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
        then Params.AddParam('inMovementId_Transport', ftInteger, ptInput, execParamsMovement.ParamByName('PersonalDriverId').AsInteger)
        else Params.AddParam('inMovementId_Transport', ftInteger, ptInput, execParamsMovement.ParamByName('TransportId').AsInteger);
+
+       //(-)% Скидки (+)% Наценки
        Params.AddParam('inChangePercent', ftFloat, ptInput, execParamsMovement.ParamByName('ChangePercent').AsFloat);
+       //% скидки для кол-ва поставщика
+       Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMovement.ParamByName('DiscountAmountPartner').AsFloat);
+
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inComment', ftString, ptInput, execParamsMovement.ParamByName('DocumentComment').AsString);
+       //
        Params.AddParam('inIsListInventory', ftBoolean, ptInput, execParamsMovement.ParamByName('isListInventory').AsBoolean);
+       // скидка за несоотвестветствие температуры
+       Params.AddParam('inIsReason1', ftBoolean, ptInput, execParamsMovement.ParamByName('isDiscount_t').AsBoolean);
+       // скидка за несоотвестветствие качеству
+       Params.AddParam('inIsReason2', ftBoolean, ptInput, execParamsMovement.ParamByName('isDiscount_q').AsBoolean);
+
        Params.AddParam('inMovementId_reReturnIn', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId_reReturnIn').AsInteger);
        Params.AddParam('inIP', ftString, ptInput, SettingMain.IP_str);
        //try
@@ -795,7 +831,8 @@ begin
        Params.AddParam('inPricePartner', ftFloat, ptInput, execParamsMI.ParamByName('PricePartner').AsFloat);
        Params.AddParam('inPriceIncome', ftFloat, ptInput, execParamsMI.ParamByName('PriceIncome').AsFloat);
        Params.AddParam('inAmountPartnerSecond', ftFloat, ptInput, execParamsMI.ParamByName('AmountPartnerSecond').AsFloat);
-
+       Params.AddParam('inSummPartner', ftFloat, ptInput, execParamsMI.ParamByName('SummPartner').AsFloat);
+       Params.AddParam('inIsDocPartner', ftBoolean, ptInput, ParamsMovement.ParamByName('isDocPartner').AsBoolean);
 
        //try
          Execute;
@@ -1846,6 +1883,7 @@ begin
                         execParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
 
                         execParamsMovement.ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
+                        execParamsMovement.ParamByName('isOperPricePartner').asBoolean      := CDS.FieldByName('isOperPricePartner').asBoolean;
                         execParamsMovement.ParamByName('isReturnOut_Date').asBoolean        := CDS.FieldByName('isReturnOut_Date').asBoolean;
                         execParamsMovement.ParamByName('isCalc_PriceVat').asBoolean         := CDS.FieldByName('isCalc_PriceVat').asBoolean;
 
@@ -1893,6 +1931,7 @@ begin
                         ParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
 
                         ParamsMovement.ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
+                        ParamsMovement.ParamByName('isOperPricePartner').asBoolean      := CDS.FieldByName('isOperPricePartner').asBoolean;
                         ParamsMovement.ParamByName('isReturnOut_Date').asBoolean        := CDS.FieldByName('isReturnOut_Date').asBoolean;
                         ParamsMovement.ParamByName('isCalc_PriceVat').asBoolean         := CDS.FieldByName('isCalc_PriceVat').asBoolean;
                         //

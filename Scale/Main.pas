@@ -287,6 +287,8 @@ type
     bbUpdatePricePartner: TSpeedButton;
     gbTotalSummPartner: TGroupBox;
     PanelTotalSummPartner: TPanel;
+    SummPartner_in: TcxGridDBColumn;
+    actWeighingPartner_ActDiffF: TdsdInsertUpdateAction;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -432,6 +434,8 @@ end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.Save_Movement_all:Boolean;
 var execParams:TParams;
+    MovementId_begin : Integer;
+    isOpen_ActDiff : Boolean;
 begin
      Result:=false;
      //
@@ -446,6 +450,8 @@ begin
      // Проверка - нужен ли Акт
      ParamsMovement.ParamByName('isFind_diff_inf').AsBoolean:=FALSE;
      if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+    and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
+    and (1=0)
      then begin
           if DMMainScaleForm.gpUpdate_Scale_Movement_Income_PricePartner(ParamsMovement, TRUE) = TRUE
           then
@@ -569,6 +575,9 @@ begin
      if DMMainScaleForm.gpInsert_Movement_all(ParamsMovement) then
      begin
           //
+          MovementId_begin:= ParamsMovement.ParamByName('MovementId_begin').AsInteger;
+          MovementId_begin:= ParamsMovement.ParamByName('MovementId').AsInteger;
+          isOpen_ActDiff:= ParamsMovement.ParamByName('MovementId').AsBoolean;
           //Комплектовщики
           Create_ParamsPersonalComplete(execParams);
           execParams.ParamByName('MovementId').AsInteger:=ParamsMovement.ParamByName('MovementId').AsInteger;
@@ -581,10 +590,13 @@ begin
           execParams.Free;
           //
           //Print and Create Quality + Transport + Tax
-          Print_Movement_afterSave;
+          if (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
+          and(ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = FALSE)
+          then Print_Movement_afterSave;
           //
           // если надо печатать Акт т.к. есть отклонение или цены или кол-ва
-          if ParamsMovement.ParamByName('isFind_diff_inf').AsBoolean=TRUE
+          if (ParamsMovement.ParamByName('isFind_diff_inf').AsBoolean=TRUE)
+         and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
           then Print_Income_diff (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           //
           //EDI
@@ -612,6 +624,13 @@ begin
           WriteParamsMovement;
      end;
      err_count:=0;
+     //
+     if isOpen_ActDiff = TRUE
+     then begin
+             FormParams.ParamByName('MovementId_begin').Value:=MovementId_begin;
+             actWeighingPartner_ActDiffF.Execute;
+     end;
+
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.Print_Movement_afterSave:Boolean;
@@ -893,6 +912,8 @@ begin
           then DMMainScaleForm.gpGet_Scale_Transport(ParamsMovement,'')
           else DMMainScaleForm.gpGet_Scale_Transport(ParamsMovement,EditBarCodeTransport.Text);
           //
+          ParamsMovement.ParamByName('InvNumberPartner').AsString:='';
+          //
           WriteParamsMovement;
           //
           if (MovementId_save <> 0)or(ParamsMovement.ParamByName('MovementId_get').AsInteger<>0) then
@@ -957,14 +978,19 @@ begin
 
      if (ParamsMovement.ParamByName('InvNumberPartner').AsString = '') and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true) then
      begin
-          PanelMovementDesc.Caption:='Ошибка.Не определена <Документ поставщика №>';
+          PanelMovementDesc.Caption:='Ошибка.Не определен <Документ поставщика №>';
           exit;
      end;
      // если надо проверить что док приход от поставщика уже сформирован
      if (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE) and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
-     then begin
-
-     end;
+     then
+          if not DMMainScaleForm.gpGet_Scale_Movement_checkInvNumberPartner(ParamsMovement)
+          then begin
+                  ShowMessage('Ошибка.Необходимо сначала сформировать Документ Поставщика.');
+                  ParamsMovement.ParamByName('InvNumberPartner').AsString:='';
+                  WriteParamsMovement;
+                  exit;
+          end;
      //
      //т.е. изначально будем считать что это НЕ сканирование
      ParamsMI.ParamByName('isBarCode').AsBoolean:= FALSE;
@@ -2399,6 +2425,13 @@ end;
 function TMainForm.fGetScale_CurrentWeight:Double;
 var WeightStr : String;
 begin
+     if ParamsMovement.ParamByName('isDocPartner').AsBoolean = TRUE
+     then begin
+       Result:= 0;
+       PanelWeight_Scale.Caption:=FloatToStr(Result);
+       exit;
+     end;
+     //
      // открываем ВЕСЫ, только когда НУЖЕН вес
      //Initialize_Scale_DB;
      // считывание веса

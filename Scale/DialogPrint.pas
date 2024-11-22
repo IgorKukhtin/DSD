@@ -46,6 +46,11 @@ type
     Label4: TLabel;
     CommentEdit: TEdit;
     InvNumberPartnerEdit: TEdit;
+    PanelDiscountAmountPartner: TPanel;
+    Label2: TLabel;
+    rgDiscountAmountPartner: TRadioGroup;
+    DiscountAmountPartnerEdit: TcxCurrencyEdit;
+    btnSaveAll: TBitBtn;
     procedure cbPrintTransportClick(Sender: TObject);
     procedure cbPrintQualityClick(Sender: TObject);
     procedure cbPrintTaxClick(Sender: TObject);
@@ -53,6 +58,10 @@ type
     procedure cbPrintPackClick(Sender: TObject);
     procedure cbPrintSpecClick(Sender: TObject);
     procedure DateValueEditPropertiesChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure DiscountAmountPartnerEditPropertiesChange(Sender: TObject);
+    procedure btnSaveAllClick(Sender: TObject);
+    procedure bbOkClick(Sender: TObject);
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
@@ -80,12 +89,29 @@ begin
      //
      PanelInvNumberPartner.Visible:= (SettingMain.isCeh = FALSE) and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true);
      InvNumberPartnerEdit.Text:= ParamsMovement.ParamByName('InvNumberPartner').AsString;
+     CommentEdit.Text:='';
      PanelComment.Visible:= (SettingMain.isCeh = FALSE) and (ParamsMovement.ParamByName('isComment').AsBoolean = true) and (ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Loss);
+     PanelDiscountAmountPartner.Visible:= ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE;
+     btnSaveAll.Visible:= ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE;
+     if btnSaveAll.Visible then
+     begin
+         bbOk.Left:= 10;
+         bbCancel.Left:= 217;
+     end
+     else
+     begin
+         bbOk.Left:= 44;
+         bbCancel.Left:= 167;
+     end;
      //
-     Self.Height:= 384;
+     rgDiscountAmountPartner.ItemIndex:= -1;
+     DiscountAmountPartnerEdit.Text:= '0';
+     //
+     Self.Height:= 458; //384;
      if not PanelInvNumberPartner.Visible then Self.Height:= Self.Height - PanelInvNumberPartner.Height;
      if not PanelComment.Visible then Self.Height:= Self.Height - PanelComment.Height;
      if not PanelDateValue.Visible then Self.Height:= Self.Height - PanelDateValue.Height;
+     if not PanelDiscountAmountPartner.Visible then Self.Height:= Self.Height - PanelDiscountAmountPartner.Height;
      //
      cbPrintPackGross.Checked:= FALSE;
      cbPrintDiffOrder.Checked:= FALSE;//(MovementDescId=zc_Movement_Sale)or(MovementDescId=zc_Movement_SendOnPrice);
@@ -115,9 +141,6 @@ begin
      //
      ActiveControl:=PrintCountEdit;
      //
-     CommentEdit.Text:='';
-     InvNumberPartnerEdit.Text:='';
-     //
      if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income
      then LabelDateValue.Caption:='Дата у поставщика'
      else LabelDateValue.Caption:='Дата у покупателя';
@@ -125,6 +148,12 @@ begin
      Result:=(ShowModal=mrOk);
 end;
 
+
+procedure TDialogPrintForm.FormCreate(Sender: TObject);
+begin
+  inherited;
+  Self.OnResize:= nil;
+end;
 
 function TDialogPrintForm.Checked: boolean; //Проверка корректного ввода в Edit
 var str_pok_post:String;
@@ -152,6 +181,8 @@ begin
                                                                 );
           if not Result then exit;
      end;
+     //
+     Result:=false;
      //
      if PanelDateValue.Visible = TRUE then
      begin
@@ -194,6 +225,26 @@ begin
          end;
      end;
      //
+     try ParamsMovement.ParamByName('DiscountAmountPartner').AsFloat:= StrToFloat(DiscountAmountPartnerEdit.Text)
+     except ParamsMovement.ParamByName('DiscountAmountPartner').AsFloat:= 0;
+     end;
+     if (rgDiscountAmountPartner.ItemIndex = -1) and (ParamsMovement.ParamByName('DiscountAmountPartner').AsFloat > 0)
+     then begin
+               ShowMessage('Ошибка.Для скидки по весу '+DiscountAmountPartnerEdit.Text+'% необходимо выбрать вид скидки.');
+               ActiveControl:= rgDiscountAmountPartner;
+               exit;
+     end;
+     if (rgDiscountAmountPartner.ItemIndex >= 0) and (ParamsMovement.ParamByName('DiscountAmountPartner').AsFloat = 0)
+     then begin
+               ShowMessage('Ошибка.Для скидки '+rgDiscountAmountPartner.Items[rgDiscountAmountPartner.ItemIndex]+' необходимо заполнить % скидки по весу.');
+               ActiveControl:= DiscountAmountPartnerEdit;
+               exit;
+     end;
+     //
+     ParamsMovement.ParamByName('isDiscount_q').AsBoolean:= rgDiscountAmountPartner.ItemIndex = 0;
+     ParamsMovement.ParamByName('isDiscount_t').AsBoolean:= rgDiscountAmountPartner.ItemIndex = 1;
+
+     //
      try Result:=(StrToInt(PrintCountEdit.Text)>0) and (StrToInt(PrintCountEdit.Text)<11);
      except Result:=false;
      end;
@@ -216,6 +267,13 @@ begin
   inherited;
   if SettingMain.isOperDatePartner = TRUE
   then DateValueEdit.Text:= DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogPrintForm.DiscountAmountPartnerEditPropertiesChange(
+  Sender: TObject);
+begin
+  if (trim(DiscountAmountPartnerEdit.Text) = '') OR (trim(DiscountAmountPartnerEdit.Text) = '0')
+  then rgDiscountAmountPartner.ItemIndex:= -1;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPrintForm.cbPrintTransportClick(Sender: TObject);
@@ -244,6 +302,20 @@ begin
          if  (ParamsMovement.ParamByName('MovementDescId').AsInteger<>zc_Movement_Sale)
           or (GetArrayList_Value_byName(Default_Array,'isTax') <> AnsiUpperCase('TRUE'))
          then cbPrintTax.Checked:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogPrintForm.bbOkClick(Sender: TObject);
+begin
+  ParamsMovement.ParamByName('isOpen_ActDiff').AsBoolean:= FALSE;
+  inherited;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogPrintForm.btnSaveAllClick(Sender: TObject);
+begin
+    ParamsMovement.ParamByName('isOpen_ActDiff').AsBoolean:= TRUE;
+    //
+    if Checked
+    then ModalResult:=mrOk;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPrintForm.cbPrintAccountClick(Sender: TObject);

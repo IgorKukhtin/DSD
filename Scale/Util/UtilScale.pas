@@ -125,6 +125,8 @@ type
 
   function isEqualFloatValues (Value1,Value2:Double):boolean;
 
+  function _myTrunct_4 (Value:Double):Double;
+
   procedure MyDelay(mySec:Integer);
   procedure MyDelay_two(mySec:Integer);
 
@@ -237,6 +239,16 @@ var
 implementation
 //uses DMMainScale;
 {------------------------------------------------------------------------}
+function _myTrunct_4 (Value:Double):Double;
+var Value_int : Integer;
+begin
+    Value_int := trunc(Value * 100000);
+    if (Value_int mod 10) >= 5
+    then Result:= (trunc(Value_int  / 10) + 1) / 10000
+    else Result:= (trunc(Value_int  / 10) + 0) / 10000
+
+end;
+{------------------------------------------------------------------------}
 procedure Create_ParamsMovement(var Params:TParams);
 begin
      Params:=nil;
@@ -291,7 +303,13 @@ begin
      ParamAdd(Params,'calcPartnerId',ftInteger);
      ParamAdd(Params,'calcPartnerCode',ftInteger);
      ParamAdd(Params,'calcPartnerName',ftString);
-     ParamAdd(Params,'ChangePercentAmount',ftFloat);
+
+     ParamAdd(Params,'ChangePercentAmount',ftFloat); // % скидки для кол-ва - дефолт?
+     ParamAdd(Params,'DiscountAmountPartner',ftFloat); // % скидки для кол-ва поставщика
+     ParamAdd(Params,'isDiscount_q',ftBoolean); // скидка за несоотвестветствие качеству
+     ParamAdd(Params,'isDiscount_t',ftBoolean); // скидка за несоотвестветствие температуры
+     ParamAdd(Params,'isOpen_ActDiff',ftBoolean); // скидка за несоотвестветствие температуры
+
      ParamAdd(Params,'ChangePercent',ftFloat);
      ParamAddValue(Params,'isContractGoods',ftBoolean, FALSE);//
 
@@ -362,6 +380,7 @@ begin
      ParamAdd(Params,'isCalc_Sh',ftBoolean);
 
      ParamAdd(Params,'isOperCountPartner',ftBoolean); // Кол-во поставщика
+     ParamAdd(Params,'isOperPricePartner',ftBoolean); // цены поставщика
      ParamAdd(Params,'isReturnOut_Date',ftBoolean);   // Дата для цены возврат поставщику
      ParamAdd(Params,'isCalc_PriceVat',ftBoolean);    // Расчет цены с НДС или без
 
@@ -591,6 +610,7 @@ begin
      ParamAdd(Params,'isPriceWithVAT',ftBoolean);     // Цена с НДС да/нет - для цена поставщика
      ParamAdd(Params,'OperDate_ReturnOut',ftDateTime);// Дата для цены возврат поставщику
      ParamAdd(Params,'PricePartner',ftFloat);         // цена поставщика - ввод в контроле
+     ParamAdd(Params,'SummPartner',ftFloat);         // цена поставщика - ввод в контроле
      ParamAdd(Params,'PriceIncome',ftFloat);          // цена по спецификации
      ParamAdd(Params,'AmountPartnerSecond',ftFloat);  // Кол-во поставщика
 

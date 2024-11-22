@@ -133,6 +133,7 @@ begin
            ParamsMovement.ParamByName('isCalc_Sh').asBoolean               := CDS.FieldByName('isCalc_Sh').asBoolean;
 
            ParamsMovement.ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
+           ParamsMovement.ParamByName('isOperPricePartner').asBoolean      := CDS.FieldByName('isOperPricePartner').asBoolean;
            ParamsMovement.ParamByName('isReturnOut_Date').asBoolean        := CDS.FieldByName('isReturnOut_Date').asBoolean;
            ParamsMovement.ParamByName('isCalc_PriceVat').asBoolean         := CDS.FieldByName('isCalc_PriceVat').asBoolean;
 
@@ -432,6 +433,7 @@ begin
           ParamByName('isCalc_Sh').asBoolean               := CDS.FieldByName('isCalc_Sh').asBoolean;
 
           ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
+          ParamByName('isOperPricePartner').asBoolean      := CDS.FieldByName('isOperPricePartner').asBoolean;
           ParamByName('isReturnOut_Date').asBoolean        := CDS.FieldByName('isReturnOut_Date').asBoolean;
           ParamByName('isCalc_PriceVat').asBoolean         := CDS.FieldByName('isCalc_PriceVat').asBoolean;
 

@@ -1640,10 +1640,10 @@ object UtilPrintForm: TUtilPrintForm
     object actPrint_Income_diff: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint_Income
+      StoredProc = spSelectPrint_Income_diff
       StoredProcList = <
         item
-          StoredProc = spSelectPrint_Income
+          StoredProc = spSelectPrint_Income_diff
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -2861,10 +2861,17 @@ object UtilPrintForm: TUtilPrintForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsActDiff'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
-    Top = 376
+    Left = 320
+    Top = 392
   end
   object spSelectPrint_Send: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send_Print'
@@ -3710,5 +3717,36 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 720
     Top = 64
+  end
+  object spSelectPrint_Income_diff: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsActDiff'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 280
+    Top = 377
   end
 end
