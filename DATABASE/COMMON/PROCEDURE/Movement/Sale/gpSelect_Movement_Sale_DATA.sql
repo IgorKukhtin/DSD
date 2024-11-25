@@ -88,7 +88,7 @@ if inUserId = 1613484 then
 end if;
 */
      -- !!!т.к. нельзя когда много данных в гриде!!!
-     IF inStartDate + (INTERVAL '200 DAY') <= inEndDate
+     IF inStartDate + (INTERVAL '400 DAY') <= inEndDate
      THEN
          inStartDate:= inEndDate + (INTERVAL '1 DAY');
      END IF;

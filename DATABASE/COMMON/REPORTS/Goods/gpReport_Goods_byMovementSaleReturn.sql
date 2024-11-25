@@ -294,7 +294,7 @@ BEGIN
 
         UNION ALL
           -- 1.3.
-          SELECT 'за сутки Алан'             :: TVarChar AS GroupName
+          SELECT 'за сутки'                           :: TVarChar AS GroupName
                , SUM (tmpData.SaleAmountDay)           :: TFloat   AS SaleAmount
                , SUM (tmpData.SaleAmountPartnerDay)    :: TFloat   AS SaleAmountPartner
                , SUM (tmpData.ReturnAmountDay)         :: TFloat   AS ReturnAmount
@@ -307,11 +307,11 @@ BEGIN
                , 1 AS Num
                , 3 AS Num2
           FROM tmpData
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
 
         UNION ALL
           -- 1.4.
-          SELECT 'сред. Кг/сутки Алан'                             :: TVarChar AS GroupName
+          SELECT 'сред. Кг/сутки'                             :: TVarChar AS GroupName
                , (SUM (tmpData.SaleAmount)          / vbCountDays) :: TFloat   AS SaleAmount
                , (SUM (tmpData.SaleAmountPartner)   / vbCountDays) :: TFloat   AS SaleAmountPartner
                , (SUM (tmpData.ReturnAmount)        / vbCountDays) :: TFloat   AS ReturnAmount
@@ -324,7 +324,7 @@ BEGIN
                , 4 AS Num2
           FROM tmpData
                LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
 
         UNION ALL
           -- 2.1.
@@ -340,7 +340,7 @@ BEGIN
                , 2 AS Num
                , 0 AS Num2
           FROM tmpData
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
 
         UNION ALL
           -- 2.2.
@@ -360,7 +360,7 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport
                                      ON ObjectFloat_ColorReport.ObjectId = Object_TradeMark.Id
                                     AND ObjectFloat_ColorReport.DescId = zc_ObjectFloat_TradeMark_ColorReport()
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
           GROUP BY Object_TradeMark.ValueData, COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
 
         UNION ALL
@@ -377,7 +377,7 @@ BEGIN
                , 3 AS Num
                , 0 AS Num2
           FROM tmpData
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
 
         UNION ALL
           -- 3.2.
@@ -397,7 +397,7 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport
                                      ON ObjectFloat_ColorReport.ObjectId = Object_GoodsGroupPropertyParent.Id
                                     AND ObjectFloat_ColorReport.DescId = zc_ObjectFloat_GoodsGroupProperty_ColorReport()
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
           GROUP BY Object_GoodsGroupPropertyParent.ValueData
                  , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
 
@@ -701,7 +701,7 @@ BEGIN
                              , CAST (ROW_NUMBER() OVER (ORDER BY Object_TradeMark.ObjectCode)   AS Integer) AS Num2
                         FROM tmpData
                              LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
-                        WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+                        WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
                            OR tmpData.GroupNum = 2             --- тушенка
                         GROUP BY Object_TradeMark.ObjectCode
                                , tmpData.StartDate
@@ -817,7 +817,7 @@ BEGIN
 
         UNION ALL
           -- 1.3.
-          SELECT 'за сутки Алан'             :: TVarChar AS GroupName
+          SELECT 'за сутки'             :: TVarChar AS GroupName
                , SUM (tmpData.SaleAmountDay)           :: TFloat   AS SaleAmount
                , SUM (tmpData.SaleAmountPartnerDay)    :: TFloat   AS SaleAmountPartner
                , SUM (tmpData.ReturnAmountDay)         :: TFloat   AS ReturnAmount
@@ -830,11 +830,11 @@ BEGIN
                , 1 AS Num
                , 3 AS Num2
           FROM tmpData
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
 
         UNION ALL
           -- 1.4.
-          SELECT 'сред. Кг/сутки Алан'                             :: TVarChar AS GroupName
+          SELECT 'сред. Кг/сутки'                             :: TVarChar AS GroupName
                , (SUM (tmpData.SaleAmount)          / vbCountDays) :: TFloat   AS SaleAmount
                , (SUM (tmpData.SaleAmountPartner)   / vbCountDays) :: TFloat   AS SaleAmountPartner
                , (SUM (tmpData.ReturnAmount)        / vbCountDays) :: TFloat   AS ReturnAmount
@@ -847,7 +847,7 @@ BEGIN
                , 4 AS Num2
           FROM tmpData
                LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
 
         UNION ALL
           -- 2.1.
@@ -863,7 +863,7 @@ BEGIN
                , 2 AS Num
                , 0 AS Num2
           FROM tmpData
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
 
         UNION ALL
           -- 2.2.
@@ -883,7 +883,7 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport
                                      ON ObjectFloat_ColorReport.ObjectId = Object_TradeMark.Id
                                     AND ObjectFloat_ColorReport.DescId = zc_ObjectFloat_TradeMark_ColorReport()
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
           GROUP BY Object_TradeMark.ValueData, COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
 
         UNION ALL
@@ -900,7 +900,7 @@ BEGIN
                , 3 AS Num
                , 0 AS Num2
           FROM tmpData
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
 
         UNION ALL
           -- 3.2.
@@ -920,7 +920,7 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport
                                      ON ObjectFloat_ColorReport.ObjectId = Object_GoodsGroupPropertyParent.Id
                                     AND ObjectFloat_ColorReport.DescId = zc_ObjectFloat_GoodsGroupProperty_ColorReport()
-          WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+          WHERE tmpData.GoodsPlatformId IN (416935, 416936) ---'%Алан%'
           GROUP BY Object_GoodsGroupPropertyParent.ValueData
                  , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
 

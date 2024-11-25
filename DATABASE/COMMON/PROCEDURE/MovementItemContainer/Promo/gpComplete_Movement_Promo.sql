@@ -73,9 +73,9 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.DescId     = zc_MI_Master()
                   AND MovementItem.isErased   = FALSE
-                WHERE MovementItem.MovementId = inMovementId
                 GROUP BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId)
                 HAVING MIN (MovementItem.Amount) <> MAX (MovementItem.Amount)
                )
@@ -96,7 +96,7 @@ BEGIN
                           LIMIT 1
                          ))
                        , lfGet_Object_ValueData(
-                         (SELECT MILinkObject_GoodsKind.ObjectId
+                         (SELECT COALESCE (MILinkObject_GoodsKind.ObjectId)
                           FROM MovementItem
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id

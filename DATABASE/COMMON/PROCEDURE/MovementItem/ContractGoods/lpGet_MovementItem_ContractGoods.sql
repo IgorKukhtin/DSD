@@ -108,7 +108,7 @@ BEGIN
                                , MovementItem.Id                                AS MovementItemId
                                , MovementItem.ObjectId                          AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
-                                 --
+                                 -- Цена в ГРН
                                , CASE WHEN MovementBoolean_MultWithVAT.ValueData = TRUE
                                        AND COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) = FALSE
                                            THEN ROUND (COALESCE (MIF_Price.ValueData, 0)
@@ -212,9 +212,32 @@ BEGIN
               , tmpData.DiffPrice
               , tmpData.RoundPrice
 
-                -- цена / 1.2
+                -- цена БЕЗ НДС / 1.2
               , CASE WHEN tmpData.isPriceWithVAT = FALSE
+                          -- уже без НДС, ничего не делаем
                           THEN tmpData.ValuePrice
+
+                     -- считаем без НДС
+                     WHEN tmpData.RoundPrice = 0 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice / 1.2 / 5 * 1) * 5 / 1
+
+                     WHEN tmpData.RoundPrice = 1 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice / 1.2 / 5 * 10) * 5 / 10
+
+                     WHEN tmpData.RoundPrice = 2 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice / 1.2 / 5 * 100) * 5 / 100
+                     
+                     WHEN tmpData.RoundPrice = 3 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice / 1.2 / 5 * 1000) * 5 / 1000
+
+                     WHEN tmpData.RoundPrice = 4 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice / 1.2 / 5 * 10000) * 5 / 10000
+
+                     -- иначе 2 ЗНАКА
+                     WHEN tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice / 1.2 / 5 * 100) * 5 / 100
+
+                     -- считаем без НДС
                      WHEN tmpData.RoundPrice = 1
                           THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 1))
                      WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
@@ -227,6 +250,28 @@ BEGIN
                 -- миним расчетная цена
               , CASE WHEN tmpData.isPriceWithVAT = FALSE
                           THEN tmpData.ValuePrice_from
+
+                     -- считаем без НДС
+                     WHEN tmpData.RoundPrice = 0 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_from / 1.2 / 5 * 1) * 5 / 1
+
+                     WHEN tmpData.RoundPrice = 1 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_from / 1.2 / 5 * 10) * 5 / 10
+
+                     WHEN tmpData.RoundPrice = 2 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_from / 1.2 / 5 * 100) * 5 / 100
+                     
+                     WHEN tmpData.RoundPrice = 3 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_from / 1.2 / 5 * 1000) * 5 / 1000
+
+                     WHEN tmpData.RoundPrice = 4 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_from / 1.2 / 5 * 10000) * 5 / 10000
+
+                     -- иначе 2 ЗНАКА
+                     WHEN tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_from / 1.2 / 5 * 100) * 5 / 100
+
+                     -- считаем без НДС
                      WHEN tmpData.RoundPrice = 1
                           THEN CAST (tmpData.ValuePrice_from / 1.2 AS NUMERIC (16, 1))
                      WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
@@ -239,6 +284,28 @@ BEGIN
                 -- макс расчетная цена
               , CASE WHEN tmpData.isPriceWithVAT = FALSE
                           THEN tmpData.ValuePrice_to
+
+                     -- считаем без НДС
+                     WHEN tmpData.RoundPrice = 0 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_to / 1.2 / 5 * 1) * 5 / 1
+
+                     WHEN tmpData.RoundPrice = 1 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_to / 1.2 / 5 * 10) * 5 / 10
+
+                     WHEN tmpData.RoundPrice = 2 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_to / 1.2 / 5 * 100) * 5 / 100
+                     
+                     WHEN tmpData.RoundPrice = 3 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_to / 1.2 / 5 * 1000) * 5 / 1000
+
+                     WHEN tmpData.RoundPrice = 4 AND tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_to / 1.2 / 5 * 10000) * 5 / 10000
+
+                     -- иначе 2 ЗНАКА
+                     WHEN tmpData.isMultWithVAT = TRUE
+                          THEN ROUND (tmpData.ValuePrice_to / 1.2 / 5 * 100) * 5 / 100
+
+                     -- считаем без НДС
                      WHEN tmpData.RoundPrice = 1
                           THEN CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 1))
                      WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
@@ -249,9 +316,11 @@ BEGIN
 
                 END :: TFloat AS ValuePrice_to_notVat
               
-                -- цена * 1.2
+                -- цена с НДС * 1.2
               , CASE WHEN tmpData.isPriceWithVAT = TRUE
+                          -- уже с НДС, ничего не делаем
                           THEN tmpData.ValuePrice
+                     -- считаем с НДС
                      WHEN tmpData.RoundPrice = 1
                           THEN CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 1))
                      WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
@@ -308,6 +377,11 @@ BEGIN
                      , tmpData.GoodsKindId
                      , (CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
                                   THEN tmpData.ValuePrice
+
+                             -- округление НЕ здесь ????
+                             WHEN 1 = 1
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+
                              WHEN tmpData.RoundPrice = 1
                                   THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
                              WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
@@ -320,6 +394,11 @@ BEGIN
                      , ((1 - tmpData.DiffPrice :: TFloat / 100)
                       * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
                                   THEN tmpData.ValuePrice
+
+                             -- округление НЕ здесь ????
+                             WHEN 1 = 1
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+
                              WHEN tmpData.RoundPrice = 1
                                   THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
                              WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
@@ -331,6 +410,11 @@ BEGIN
                      , ((1 + tmpData.DiffPrice :: TFloat / 100)
                       * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
                                   THEN tmpData.ValuePrice
+
+                             -- округление НЕ здесь ????
+                             WHEN 1 = 1
+                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+
                              WHEN tmpData.RoundPrice = 1
                                   THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
                              WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0

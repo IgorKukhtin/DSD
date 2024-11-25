@@ -12,7 +12,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integ
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
--- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar, Boolean, Boolean, Boolean, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
@@ -31,12 +31,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inMovementId_Order       Integer   , -- ключ Документа заявка
     IN inMovementId_Transport   Integer   , -- ключ Документа ИЛИ - криво - через этот прараметр передаем - Через кого поступил возврат
     IN inChangePercent          TFloat    , -- (-)% Скидки (+)% Наценки
-    IN inChangePercentAmount    TFloat    , -- % скидки для кол-ва поставщика
+  --IN inChangePercentAmount    TFloat    , -- % скидки для кол-ва поставщика
     IN inBranchCode             Integer   , --
     IN inComment                TVarChar  , --
     IN inIsListInventory        Boolean   , -- Инвентаризация только для выбранных товаров
-    IN inIsReason1              Boolean   , -- Причина скидки в кол-ве температура
-    IN inIsReason2              Boolean   , -- Причина скидки в кол-ве качество
+  --IN inIsReason1              Boolean   , -- Причина скидки в кол-ве температура
+  --IN inIsReason2              Boolean   , -- Причина скидки в кол-ве качество
     IN inMovementId_reReturnIn  Integer   , -- ключ Документа заявка
     IN inIP                     TVarChar,
     IN inSession                TVarChar    -- сессия пользователя
@@ -153,11 +153,11 @@ BEGIN
                                                    , inBranchCode          := inBranchCode
                                                    , inPartionGoods        := '' :: TVarChar
                                                    , inChangePercent       := inChangePercent
-                                                   , inChangePercentAmount := inChangePercentAmount
+                                                 --, inChangePercentAmount := inChangePercentAmount
                                                    , inComment             := inComment
                                                    , inIsProtocol          := FALSE
-                                                   , inIsReason1           := inIsReason1
-                                                   , inIsReason2           := inIsReason2
+                                                 --, inIsReason1           := inIsReason1
+                                                 --, inIsReason2           := inIsReason2
                                                    , inSession             := inSession
                                                     );
 
