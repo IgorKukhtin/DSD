@@ -133,7 +133,7 @@ BEGIN
                                     -- для вида товара - срок годности в днях
                                   , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
                                     -- Уменьшение на N дней от даты покупателя в качественном
-                                  , ObjectFloat_GK_DaysQ.ValueData       AS DaysQ_gk
+                                  , ObjectFloat_GK_DaysQ.ValueData AS DaysQ_gk
                              FROM tmpMI
                                   JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                                   ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = tmpMI.ObjectId
@@ -674,10 +674,15 @@ BEGIN
                     )
           , tmpMIGoodsByGoodsKind AS
                             (SELECT tmpMI.*
+                                    -- для вида товара - Вид оболонки, №4
                                   , ObjectString_GK_Value1.ValueData     AS Value1_gk
+                                    -- для вида товара - Вид пакування/стан продукції 
                                   , ObjectString_GK_Value11.ValueData    AS Value11_gk
+                                    -- для вида товара - срок годности в днях
                                   , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
-                                  , ObjectFloat_GK_DaysQ.ValueData       AS DaysQ_gk
+                                    -- Уменьшение на N дней от даты покупателя в качественном
+                                  , ObjectFloat_GK_DaysQ.ValueData AS DaysQ_gk
+
                              FROM tmpMI
                                   JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                                   ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = tmpMI.ObjectId

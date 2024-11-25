@@ -1196,8 +1196,14 @@ BEGIN
 
         WHERE MIF_SummCardSecondDiff.ValueData <> 0
           AND MILinkObject_PersonalServiceList.ObjectId > 0
-
+          --AND inUserId <> 5
        ;
+
+
+IF inUserId = 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpItem);
+end if;
 
 /*
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -1371,6 +1377,8 @@ BEGIN
                                                               ON CLO_Position.ContainerId = CLO_Personal.ContainerId
                                                              AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
                            WHERE _tmpItem.ObjectDescId = zc_Object_Personal()
+                             AND _tmpItem.AnalyzerId <> zc_Enum_AnalyzerId_PersonalService_SummDiff()
+
                           UNION
                            SELECT DISTINCT CLO_Personal.ContainerId         AS ContainerId
                                          , CLO_PersonalServiceList.ObjectId AS PersonalServiceListId
@@ -1379,6 +1387,7 @@ BEGIN
                                          , CLO_Position.ObjectId            AS PositionId
                                          , CLO_InfoMoney.ObjectId           AS InfoMoneyId
                            FROM (SELECT DISTINCT _tmpItem.PersonalServiceListId, _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.ObjectDescId = zc_Object_Personal()
+                                                                                                                      AND _tmpItem.AnalyzerId <> zc_Enum_AnalyzerId_PersonalService_SummDiff()
                                 ) AS tmp
                                 INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
                                                                ON CLO_PersonalServiceList.ObjectId    = tmp.PersonalServiceListId
@@ -1410,7 +1419,9 @@ BEGIN
                              , SUM (CASE WHEN MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_MobileBills_Personal() THEN  1 * MIContainer.Amount ELSE 0 END)  AS SummPhone
                         FROM MovementItemContainer AS MIContainer
                         WHERE MIContainer.ContainerId IN (SELECT tmpListContainer.ContainerId FROM tmpListContainer)
-                          AND MIContainer.OperDate >= DATE_TRUNC ('MONTH', (SELECT DISTINCT OperDate FROM _tmpItem ) - INTERVAL '3 MONTH')
+                          AND MIContainer.OperDate >= DATE_TRUNC ('MONTH', (SELECT DISTINCT OperDate FROM _tmpItem
+                                                                            WHERE _tmpItem.AnalyzerId <> zc_Enum_AnalyzerId_PersonalService_SummDiff()
+                                                                           ) - INTERVAL '3 MONTH')
                         GROUP BY MIContainer.ContainerId
                        )
            -- Результат
@@ -1510,6 +1521,7 @@ BEGIN
                                                  AND tmpMI.UnitId                = tmpListContainer.UnitId
                                                  AND tmpMI.PositionId            = tmpListContainer.PositionId
                                                  AND tmpMI.InfoMoneyId           = tmpListContainer.InfoMoneyId
+                                                 AND tmpMI.AnalyzerId            <> zc_Enum_AnalyzerId_PersonalService_SummDiff()
                  WHERE tmpListContainer.InfoMoneyId = zc_Enum_InfoMoney_60101() -- Заработная плата
                    AND tmpMI.ObjectId IS NULL
                  GROUP BY tmpListContainer.PersonalServiceListId

@@ -75,6 +75,39 @@ BEGIN
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
                               )
+        , tmpBranchJuridical_all AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId, COALESCE (ObjectLink_Unit.ChildObjectId, 0) AS UnitId
+                                     FROM ObjectLink AS ObjectLink_Juridical
+                                          INNER JOIN ObjectLink AS ObjectLink_Branch
+                                                                ON ObjectLink_Branch.ObjectId = ObjectLink_Juridical.ObjectId
+                                                               AND ObjectLink_Branch.DescId  = zc_ObjectLink_BranchJuridical_Branch()
+                                          LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                               ON ObjectLink_Unit.ObjectId = ObjectLink_Juridical.ObjectId
+                                                              AND ObjectLink_Unit.DescId = zc_ObjectLink_BranchJuridical_Unit()
+                                     WHERE ObjectLink_Juridical.ChildObjectId > 0
+                                       AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
+                                       AND ObjectLink_Branch.ChildObjectId IN (SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
+                                    )
+        , tmpBranchJuridical AS (SELECT DISTINCT tmpBranchJuridical_all.JuridicalId, tmpBranchJuridical_all.UnitId
+                                 FROM tmpBranchJuridical_all
+
+                                UNION
+                                 SELECT DISTINCT OL_JuridicalGroup.ObjectId AS JuridicalId, 0 AS UnitId
+                                 FROM ObjectLink AS OL_JuridicalGroup
+                                      LEFT JOIN tmpBranchJuridical_all ON tmpBranchJuridical_all.JuridicalId = OL_JuridicalGroup.ObjectId
+                                 WHERE OL_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+                                   AND OL_JuridicalGroup.ChildObjectId IN (SELECT DISTINCT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId)
+                                   -- если нет
+                                   AND tmpBranchJuridical_all.JuridicalId IS NULL
+
+                                UNION
+                                 SELECT Object_Juridical.Id AS JuridicalId, 0 AS UnitId
+                                 FROM Object AS Object_Juridical
+                                      LEFT JOIN tmpBranchJuridical_all ON tmpBranchJuridical_all.JuridicalId = Object_Juridical.Id
+                                 WHERE Object_Juridical.Id IN (7314357) -- М'ЯСНА ВЕСНА  ТОРГІВЕЛЬНИЙ БУДИНОК ТОВ 
+                                   AND Object_Juridical.DescId = zc_Object_Juridical()
+                                   -- если нет
+                                   AND tmpBranchJuridical_all.JuridicalId IS NULL
+                                )
         --документы Заявка на возврат тары
        /*  --не должно здесь біть
        
@@ -182,30 +215,61 @@ BEGIN
            
            , zfCalc_PartionMovementName (Movement_Transport.DescId, MovementDesc_Transport.ItemName, Movement_Transport.InvNumber, Movement_Transport.OperDate) ::TVarChar AS InvNumber_Transport_Full
 
-       FROM (SELECT Movement.id
-                  , MovementLinkObject_To.ObjectId AS ToId
+       FROM (SELECT Movement.Id                      AS Id
+                  , MovementLinkObject_From.ObjectId AS FromId
+                  , MovementLinkObject_To.ObjectId   AS ToId
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                  LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                 ON MovementLinkObject_To.MovementId = Movement.Id
                                                AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                                AND (MovementLinkObject_To.ObjectId   = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
+                  LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical 
+                                       ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                      AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+
+                  LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                               ON MovementLinkObject_From.MovementId = Movement.Id
+                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
              WHERE inIsPartnerDate = FALSE
+               AND (tmpBranchJuridical.UnitId = MovementLinkObject_From.ObjectId OR COALESCE (tmpBranchJuridical.UnitId, 0) = 0
+                 OR tmpRoleAccessKey.AccessKeyId > 0
+                   )
+               AND (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0)
+
             UNION ALL
-             SELECT MovementDate_OperDatePartner.MovementId  AS Id
-                  , MovementLinkObject_To.ObjectId AS ToId
+             SELECT MovementDate_OperDatePartner.MovementId AS Id
+                  , MovementLinkObject_From.ObjectId        AS FromId
+                  , MovementLinkObject_To.ObjectId          AS ToId
              FROM MovementDate AS MovementDate_OperDatePartner
                   JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_Sale()
                   JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                  LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                 ON MovementLinkObject_To.MovementId = MovementDate_OperDatePartner.MovementId
                                                AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                                AND (MovementLinkObject_To.ObjectId   = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
+                  LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical 
+                                       ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                      AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+
+                  LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                               ON MovementLinkObject_From.MovementId = Movement.Id
+                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
              WHERE inIsPartnerDate = TRUE
                AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+               AND (tmpBranchJuridical.UnitId = MovementLinkObject_From.ObjectId OR COALESCE (tmpBranchJuridical.UnitId, 0) = 0
+                 OR tmpRoleAccessKey.AccessKeyId > 0
+                   )
+               AND (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0)
+
             /*UNION ALL
             --Заявка на возврат тары
              SELECT tmpOrderReturnTare.Id
@@ -276,10 +340,7 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
 
             LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
 
@@ -320,7 +381,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Sale_Choice (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

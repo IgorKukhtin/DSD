@@ -69,7 +69,21 @@ BEGIN
                          -- Zaporozhye
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentZaporozhye() AS AccessKeyId
                                WHERE EXISTS (SELECT 1 FROM tmpRoleAccessKey_user WHERE tmpRoleAccessKey_user.AccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr())
+                         UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId
+                               WHERE EXISTS (SELECT 1 FROM tmpRoleAccessKey_user WHERE tmpRoleAccessKey_user.AccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye())
                               )
+        , tmpBranchJuridical AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId, COALESCE (ObjectLink_Unit.ChildObjectId, 0) AS UnitId
+                                 FROM ObjectLink AS ObjectLink_Juridical
+                                      INNER JOIN ObjectLink AS ObjectLink_Branch
+                                                            ON ObjectLink_Branch.ObjectId = ObjectLink_Juridical.ObjectId
+                                                           AND ObjectLink_Branch.DescId  = zc_ObjectLink_BranchJuridical_Branch()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                           ON ObjectLink_Unit.ObjectId = ObjectLink_Juridical.ObjectId
+                                                          AND ObjectLink_Unit.DescId = zc_ObjectLink_BranchJuridical_Unit()
+                                 WHERE ObjectLink_Juridical.ChildObjectId > 0
+                                   AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
+                                   AND ObjectLink_Branch.ChildObjectId IN (SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
+                                )
      SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -285,4 +299,4 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Choice (TDateTime, TDateTime, Boolean,
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnIn_Choice(instartdate := ('01.01.2015')::TDateTime , inenddate := ('07.01.2015')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inPartnerId := 17474 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_ReturnIn_Choice(instartdate := ('01.01.2025')::TDateTime , inenddate := ('07.01.2025')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inPartnerId := 17474 ,  inSession := '5');
