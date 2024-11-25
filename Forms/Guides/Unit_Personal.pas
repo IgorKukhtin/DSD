@@ -23,7 +23,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxSplitter, cxButtonEdit, cxCalendar, cxContainer, Vcl.ComCtrls,
   dxCore, cxDateUtils, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  Vcl.ExtCtrls, ChoicePeriod;
+  Vcl.ExtCtrls, ChoicePeriod, dsdCommon;
 
 type
   TUnit_PersonalForm = class(TParentForm)

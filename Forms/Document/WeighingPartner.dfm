@@ -26,8 +26,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -24
-    ExplicitTop = 84
     object edInvNumber: TcxTextEdit
       Left = 175
       Top = 22
@@ -1372,7 +1370,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Properties.SaveTime = False
     Properties.ShowTime = False
     ShowHint = True
-    TabOrder = 16
+    TabOrder = 15
     Width = 102
   end
   object cxLabel27: TcxLabel
@@ -2843,16 +2841,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
       item
         Name = 'isReason1'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isReason1'
+        Component = cbReason1
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'isReason2'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isReason2'
+        Component = cbReason1
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

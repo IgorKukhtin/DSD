@@ -383,8 +383,8 @@ inherited DialogPrintForm: TDialogPrintForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.'
       Properties.Nullable = False
-      Properties.OnChange = DiscountAmountPartnerEditPropertiesChange
       TabOrder = 1
+      OnExit = DiscountAmountPartnerEditExit
       Width = 76
     end
   end

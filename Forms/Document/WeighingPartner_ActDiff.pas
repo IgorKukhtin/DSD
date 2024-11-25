@@ -43,9 +43,7 @@ type
     edOperDate: TcxDateEdit;
     cxLabel2: TcxLabel;
     edFrom: TcxButtonEdit;
-    edTo: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
     dsdGuidesFrom: TdsdGuides;
     dsdGuidesTo: TdsdGuides;
     PopupMenu: TPopupMenu;
@@ -101,18 +99,14 @@ type
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
-    edOperDate_parent: TcxDateEdit;
-    cxLabel12: TcxLabel;
-    edInvNumber_parent: TcxTextEdit;
-    cxLabel14: TcxLabel;
     cxLabel15: TcxLabel;
     cxLabel16: TcxLabel;
     edContract: TcxButtonEdit;
     cxLabel17: TcxLabel;
     ContractGuides: TdsdGuides;
     edWeighingNumber: TcxCurrencyEdit;
-    AmountPartner_calc: TcxGridDBColumn;
     AmountPartner_income: TcxGridDBColumn;
+    Amount_income: TcxGridDBColumn;
     edContractTag: TcxButtonEdit;
     ContractTagGuides: TdsdGuides;
     MeasureName: TcxGridDBColumn;
@@ -130,17 +124,20 @@ type
     actUpdatePersonalComlete: TdsdDataSetRefresh;
     macUpdatePersonalComlete: TMultiAction;
     bbUpdatePersonalComlete: TdxBarButton;
-    cxLabel23: TcxLabel;
-    ed: TcxButtonEdit;
     GuidesSubjectDoc: TdsdGuides;
     cxLabel24: TcxLabel;
     ceComment: TcxTextEdit;
-    cxLabel25: TcxLabel;
-    edOperDatePartner: TcxDateEdit;
     edInvNumberPartner: TcxTextEdit;
     cxLabel26: TcxLabel;
     Ord: TcxGridDBColumn;
     PriceNoVAT_Income: TcxGridDBColumn;
+    SummNoVAT_income: TcxGridDBColumn;
+    Amount_income_calc: TcxGridDBColumn;
+    Summ_diff: TcxGridDBColumn;
+    isReason_2: TcxGridDBColumn;
+    isReason_1: TcxGridDBColumn;
+    ReasonName: TcxGridDBColumn;
+    cbDocPartner: TcxCheckBox;
   private
   public
   end;

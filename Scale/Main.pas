@@ -450,8 +450,8 @@ begin
      // Проверка - нужен ли Акт
      ParamsMovement.ParamByName('isFind_diff_inf').AsBoolean:=FALSE;
      if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <=202) and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
-    and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
-    and (1=0)
+    and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = TRUE)
+    //and (1=0)
      then begin
           if DMMainScaleForm.gpUpdate_Scale_Movement_Income_PricePartner(ParamsMovement, TRUE) = TRUE
           then
@@ -577,7 +577,7 @@ begin
           //
           MovementId_begin:= ParamsMovement.ParamByName('MovementId_begin').AsInteger;
           MovementId_begin:= ParamsMovement.ParamByName('MovementId').AsInteger;
-          isOpen_ActDiff:= ParamsMovement.ParamByName('MovementId').AsBoolean;
+          isOpen_ActDiff:= ParamsMovement.ParamByName('isOpen_ActDiff').AsBoolean;
           //Комплектовщики
           Create_ParamsPersonalComplete(execParams);
           execParams.ParamByName('MovementId').AsInteger:=ParamsMovement.ParamByName('MovementId').AsInteger;
@@ -974,10 +974,12 @@ begin
      end;
      // сначала определить Номер док у контрагента
      if (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE) and (ParamsMovement.ParamByName('InvNumberPartner').AsString = '')
+    and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
      then pSetInvNumberPartner;
 
-     if (ParamsMovement.ParamByName('InvNumberPartner').AsString = '') and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true) then
-     begin
+     if (ParamsMovement.ParamByName('InvNumberPartner').AsString = '') and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true)
+    and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
+     then begin
           PanelMovementDesc.Caption:='Ошибка.Не определен <Документ поставщика №>';
           exit;
      end;
