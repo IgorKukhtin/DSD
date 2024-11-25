@@ -806,6 +806,14 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         end
         item
           Visible = True
+          ItemName = 'bbActDiffEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -877,6 +885,10 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
     end
     object bbUpdatePersonalComlete: TdxBarButton
       Action = macUpdatePersonalComlete
+      Category = 0
+    end
+    object bbActDiffEdit: TdxBarButton
+      Action = actActDiffEdit
       Category = 0
     end
   end
@@ -1435,6 +1447,43 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084' / '#1057#1090#1080#1082#1077#1088#1086#1074#1097#1080#1082#1072#1084
       ImageIndex = 55
     end
+    object actActDiffEdit: TdsdInsertUpdateAction
+      Category = 'Edit'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TWeighingPartner_ActDiffEditForm'
+      FormNameParam.Value = 'TWeighingPartner_ActDiffEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = False
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1877,8 +1926,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 188
-    Top = 50
+    Left = 68
+    Top = 58
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'

@@ -138,6 +138,8 @@ type
     isReason_1: TcxGridDBColumn;
     ReasonName: TcxGridDBColumn;
     cbDocPartner: TcxCheckBox;
+    actActDiffEdit: TdsdInsertUpdateAction;
+    bbActDiffEdit: TdxBarButton;
   private
   public
   end;
