@@ -537,20 +537,45 @@ order by 4*/
 
            , OH_JuridicalDetails_From.INN               AS INN_From
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
-           , CASE WHEN Object_PersonalSigning.PersonalName <> ''
-                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
+
+           , CASE -- контрагент
+                  WHEN Object_PersonalSigning_partner.PersonalName <> ''
+                       THEN COALESCE (tmpBranch_PersonalBookkeeper_partner.PersonalBookkeeperName, Object_PersonalSigning_partner.PersonalName)
+
+                  -- договор - замена
+                  WHEN tmpBranch_PersonalBookkeeper.PersonalBookkeeperName <> ''
+                       THEN tmpBranch_PersonalBookkeeper.PersonalBookkeeperName
+                  -- договор
+                  WHEN Object_PersonalSigning.PersonalName <> ''
+                       THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
+
+                  -- филиал - Сотрудник (бухгалтер) подписант + Сотрудник (бухгалтер)
                   ELSE CASE WHEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,'') <> ''
                             THEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE),'')
                             ELSE 'Рудик Н.В.'
                        END
               END                           :: TVarChar AS AccounterName_From
-           , CASE WHEN Object_PersonalSigning.PersonalName <> ''
-                  THEN PersonalSigning_INN.ValueData
+     
+             -- Сотрудник подписант
+           , CASE -- контрагент
+                  WHEN Object_PersonalSigning_partner.PersonalName <> ''
+                       THEN PersonalSigning_INN_partner.ValueData
+
+                  -- договор - замена
+                  WHEN tmpBranch_PersonalBookkeeper.PersonalBookkeeperName <> ''
+                       THEN PersonalSigning_INN_two.ValueData
+
+                  -- договор
+                  WHEN Object_PersonalSigning.PersonalName <> ''
+                       THEN PersonalSigning_INN.ValueData
+
+                  -- филиал - Сотрудник (бухгалтер) подписант + Сотрудник (бухгалтер)
                   ELSE CASE WHEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,'') <> ''
                             THEN PersonalBookkeeper_INN.ValueData
                             ELSE '2649713447'
                        END
              END                            :: TVarChar AS AccounterINN_From
+
            , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
@@ -699,6 +724,9 @@ order by 4*/
             LEFT JOIN Object_Personal_View AS Object_PersonalSigning_partner ON Object_PersonalSigning_partner.PersonalId = ObjectLink_Partner_PersonalSigning.ChildObjectId   
             -- Сотрудник подписант - замена
             LEFT JOIN tmpBranch_PersonalBookkeeper AS tmpBranch_PersonalBookkeeper_partner ON tmpBranch_PersonalBookkeeper_partner.MemberId = Object_PersonalSigning_partner.MemberId
+            LEFT JOIN ObjectString AS PersonalSigning_INN_partner
+                                   ON PersonalSigning_INN_partner.ObjectId = COALESCE (tmpBranch_PersonalBookkeeper_partner.MemberId, Object_PersonalSigning_partner.MemberId)
+                                  AND PersonalSigning_INN_partner.DescId   = zc_ObjectString_Member_INN()
 
             LEFT JOIN ObjectString AS ObjectString_ToAddress
                                    ON ObjectString_ToAddress.ObjectId = MovementLinkObject_Partner.ObjectId
@@ -784,6 +812,9 @@ order by 4*/
             LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId
             -- Сотрудник подписант - замена
             LEFT JOIN tmpBranch_PersonalBookkeeper ON tmpBranch_PersonalBookkeeper.MemberId = Object_PersonalSigning.MemberId
+            LEFT JOIN ObjectString AS PersonalSigning_INN_two
+                                   ON PersonalSigning_INN_two.ObjectId = tmpBranch_PersonalBookkeeper.MemberId
+                                  AND PersonalSigning_INN_two.DescId   = zc_ObjectString_Member_INN()
 
             LEFT JOIN ObjectString AS PersonalSigning_INN
                                    ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId

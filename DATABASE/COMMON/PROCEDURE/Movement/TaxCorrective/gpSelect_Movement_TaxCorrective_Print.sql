@@ -853,6 +853,7 @@ BEGIN
 
                               -- Сотрудник подписант
                             , COALESCE (tmpBranch_PersonalBookkeeper_partner.PersonalBookkeeperName, Object_PersonalSigning_partner.PersonalName) AS PersonalSigningName
+                            , PersonalSigning_INN.ValueData AS Signing_INN
 
                        FROM tmpMovement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -870,9 +871,13 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalSigning
                                                  ON ObjectLink_Partner_PersonalSigning.ObjectId = MovementLinkObject_Partner.ObjectId
                                                 AND ObjectLink_Partner_PersonalSigning.DescId   = zc_ObjectLink_Partner_PersonalSigning()
-                            LEFT JOIN Object_Personal_View AS Object_PersonalSigning_partner ON Object_PersonalSigning_partner.PersonalId = ObjectLink_Partner_PersonalSigning.ChildObjectId   
+                            LEFT JOIN Object_Personal_View AS Object_PersonalSigning_partner ON Object_PersonalSigning_partner.PersonalId = ObjectLink_Partner_PersonalSigning.ChildObjectId
                             -- Сотрудник подписант - замена
                             LEFT JOIN tmpBranch_PersonalBookkeeper AS tmpBranch_PersonalBookkeeper_partner ON tmpBranch_PersonalBookkeeper_partner.MemberId = Object_PersonalSigning_partner.MemberId
+                            LEFT JOIN ObjectString AS PersonalSigning_INN
+                                                   ON PersonalSigning_INN.ObjectId = COALESCE (tmpBranch_PersonalBookkeeper_partner.MemberId, Object_PersonalSigning_partner.MemberId)
+                                                  AND PersonalSigning_INN.DescId   = zc_ObjectString_Member_INN()
+                            
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                                          ON MovementLinkObject_DocumentTaxKind.MovementId = tmpMovement.Id
@@ -1109,6 +1114,7 @@ BEGIN
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
          -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To
+
            , CASE WHEN tmpPersonalSigning.PersonalName <> ''
                   THEN zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, FALSE)
                   ELSE CASE WHEN COALESCE (tmpPersonalBookkeeper.PersonalName,'') <> ''
@@ -1116,8 +1122,13 @@ BEGIN
                             ELSE 'Рудик Н.В.' /*'А.В. Марухно'*/
                        END
              END                                                :: TVarChar AS AccounterName_To
-           , CASE WHEN tmpPersonalSigning.PersonalName <> ''
-                  THEN tmpPersonalSigning.PersonalSigning_INN
+           , CASE -- контрагент
+                  WHEN tmpMovement_Data.PersonalSigningName <> ''
+                       THEN tmpMovement_Data.Signing_INN
+                  -- договор
+                  WHEN tmpPersonalSigning.PersonalName <> ''
+                       THEN tmpPersonalSigning.PersonalSigning_INN
+                  -- филиал
                   ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> ''
                             THEN tmpPersonalBookkeeper.PersonalBookkeeper_INN
                             ELSE '2649713447'
