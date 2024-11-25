@@ -193,6 +193,15 @@ type
     cbReason2: TcxCheckBox;
     cxLabel27: TcxLabel;
     edChangePercentAmount: TcxCurrencyEdit;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint_diff: TdsdStoredProc;
+    spSelectPrint_all: TdsdStoredProc;
+    actPrint_all: TdsdPrintAction;
+    actPrint_diff: TdsdPrintAction;
+    bbPrint_diff: TdxBarButton;
+    bbPrint_all: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
   private
   public
   end;

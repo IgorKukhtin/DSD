@@ -1370,7 +1370,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Properties.SaveTime = False
     Properties.ShowTime = False
     ShowHint = True
-    TabOrder = 15
+    TabOrder = 14
     Width = 102
   end
   object cxLabel27: TcxLabel
@@ -1550,7 +1550,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -1626,6 +1626,29 @@ object WeighingPartnerForm: TWeighingPartnerForm
     object bbactWeighingPartner_ActDiffF: TdxBarButton
       Action = actWeighingPartner_ActDiffF
       Category = 0
+    end
+    object bbPrint_diff: TdxBarButton
+      Action = actPrint_diff
+      Category = 0
+    end
+    object bbPrint_all: TdxBarButton
+      Action = actPrint_all
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint_diff'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_all'
+        end>
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2207,6 +2230,86 @@ object WeighingPartnerForm: TWeighingPartnerForm
       ActionType = acUpdate
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object actPrint_all: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrint_all
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_all
+        end>
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Hint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingPartner'
+      ReportNameParam.Value = 'PrintMovement_WeighingPartner'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_diff: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrint_diff
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_diff
+        end>
+      Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
+      Hint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'isAll'
+          Value = 'false'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingPartner'
+      ReportNameParam.Value = 'PrintMovement_WeighingPartner'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object MasterDS: TDataSource
@@ -3478,5 +3581,79 @@ object WeighingPartnerForm: TWeighingPartnerForm
       end>
     Left = 382
     Top = 96
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 1188
+    Top = 257
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 1188
+    Top = 286
+  end
+  object spSelectPrint_diff: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_WeighingPartner_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1127
+    Top = 256
+  end
+  object spSelectPrint_all: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_WeighingPartner_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1127
+    Top = 304
   end
 end
