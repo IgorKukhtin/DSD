@@ -4,63 +4,119 @@ DROP FUNCTION IF EXISTS gpSelect_MI_WeighingPartner_diff (Integer, Boolean, TVar
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_WeighingPartner_diff(
     IN inMovementId  Integer      , -- ключ Документа
-    IN inIsErased    Boolean      , -- 
+    IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Ord Integer, Id Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Ord Integer, Id Integer, MovementId Integer, MovementId_WeighingPartner Integer, MovementId_income Integer
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
-             , GoodsKindName TVarChar, MeasureName TVarChar
-             , AmountPartner_calc TFloat, AmountPartnerSecond TFloat 
-             , ChangePercentAmount TFloat
+             , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
+
+             --, AmountPartner_calc TFloat
+             , AmountPartnerSecond TFloat
              , PricePartnerNoVAT TFloat, PricePartnerWVAT TFloat
              , SummPartnerNoVAT TFloat, SummPartnerWVAT TFloat
-             
-             , AmountPartner_income TFloat, PriceWVat_Income TFloat, PriceNoVAT_Income TFloat, SummPartner_income TFloat
-             , Amount_diff TFloat, Price_diff TFloat 
+
+             , ChangePercentAmount TFloat
+
+             , Amount_income TFloat, Amount_income_calc TFloat, AmountPartner_income TFloat, PriceNoVAT_income TFloat, PriceWVat_income TFloat, SummNoVAT_income TFloat, SummWVAT_income TFloat
+             , Amount_diff TFloat, Price_diff TFloat, Summ_diff TFloat
              , isAmountPartnerSecond Boolean
              , isReturnOut Boolean
+             , isReason_1 Boolean, isReason_2 Boolean
+             , ReasonName TVarChar
              , Comment TVarChar
-             , isErased Boolean 
-             
+             , isErased Boolean
+
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbMovementId_find_min Integer;
+   DECLARE vbMovementId_find_max Integer;
+   DECLARE vbContractId Integer;
+   DECLARE vbPaidKindId Integer;
    DECLARE vbVATPercent TFloat;
-   DECLARE vbInvNumberPartner TVarChar; 
+   DECLARE vbInvNumberPartner TVarChar;
    DECLARE vbOperDate TDateTime;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_WeighingPartner());
+     vbUserId:= lpGetUserBySession (inSession);
+
 
      -- параметры из документа
-     SELECT Movement.OperDate
-          , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
-          , COALESCE (MovementString_InvNumberPartner.ValueData,'') ::TVarChar AS InvNumberPartner
-            INTO vbOperDate, vbVATPercent, vbInvNumberPartner
-     FROM Movement
-          LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                  ON MovementFloat_VATPercent.MovementId = Movement.Id
-                                 AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+     vbOperDate        := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     vbInvNumberPartner:= (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberPartner());
+     vbContractId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
+     vbPaidKindId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind());
 
-          LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                   ON MovementString_InvNumberPartner.MovementId = Movement.Id
-                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-     WHERE Movement.Id = inMovementId
-    ;
+     -- Проверка
+     IF COALESCE (vbInvNumberPartner, '') = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлен Номер документа поставщика.';
+     END IF;
+
+
+     -- если НЕ Документ поставщика
+     IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_DocPartner())
+     THEN
+         -- замена - поиск Документ поставщика
+         SELECT MIN (Movement.Id), MAX (Movement.Id)
+                INTO vbMovementId_find_min, vbMovementId_find_max
+         FROM Movement
+              -- есть такое св-во
+              INNER JOIN MovementBoolean AS MovementBoolean_DocPartner
+                                         ON MovementBoolean_DocPartner.MovementId = Movement.Id
+                                        AND MovementBoolean_DocPartner.DescId     = zc_MovementBoolean_DocPartner()
+              INNER JOIN MovementString AS MovementString_InvNumberPartner
+                                        ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                       AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+                                       --  с таким номером Поставщика
+                                       AND MovementString_InvNumberPartner.ValueData = vbInvNumberPartner
+              INNER JOIN MovementLinkObject AS MLO_Contract
+                                            ON MLO_Contract.MovementId = Movement.Id
+                                           AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                           --  с таким Договором
+                                           AND MLO_Contract.ObjectId   = vbContractId
+         WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 DAY' AND vbOperDate
+           AND Movement.DescId   = zc_Movement_WeighingPartner()
+           AND Movement.StatusId = zc_Enum_Status_Complete()
+        ;
+
+         -- Проверка
+         IF vbMovementId_find_min <> vbMovementId_find_max
+         THEN
+             RAISE EXCEPTION 'Ошибка.Найдено несколько документов поставщика.';
+         END IF;
+
+         -- Проверка
+         IF COALESCE (vbMovementId_find_min, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ поставщика не найден.';
+         END IF;
+
+         -- замена - поиск Документ поставщика
+         inMovementId:= vbMovementId_find_min;
+
+     END IF;
+
+
+     -- параметры из документа
+     vbVATPercent:= (SELECT COALESCE (MF.ValueData, 0) FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_VATPercent());
 
 
      -- inShowAll:= TRUE;
-     RETURN QUERY 
+     RETURN QUERY
 
-   WITH tmpMIList AS (SELECT MovementItem.Id AS MovementItemId
-                           , MovementItem.*
-                           , MovementItem.isErased AS isErasedMI
-                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                            AND MovementItem.DescId     = zc_MI_Master()
-                                            AND MovementItem.isErased   = tmpIsErased.isErased
-                     )
+        WITH -- Док. Взвешивание - данные Поставщика
+             tmpMIList AS (SELECT MovementItem.Id AS MovementItemId
+                                , MovementItem.*
+                           FROM (SELECT FALSE AS isErased) AS tmpIsErased
+                                JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = tmpIsErased.isErased
+                          )
 
       , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
                               FROM MovementItemLinkObject
@@ -68,10 +124,9 @@ BEGIN
                                 AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
                              )
 
-      , tmpMI_Float AS (SELECT MovementItemFloat.*
+            , tmpMI_Float AS (SELECT MovementItemFloat.*
                               FROM MovementItemFloat
                               WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIList.MovementItemId FROM tmpMIList)
-                               -- AND MovementItemFloat.DescId = zc_MILinkObject_GoodsKind()
                              )
 
       , tmpMI_Boolean AS (SELECT MovementItemBoolean.*
@@ -90,294 +145,461 @@ BEGIN
                                                             )
                          )
 
-      , tmpMI AS (
-             SELECT tmp.*
-                  , SUM (COALESCE (tmp.AmountPartner, 0)) OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId) AS AmountPartner_total
-                  , SUM (COALESCE (tmp.AmountPartnerSecond, 0)) OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId) AS AmountPartnerSecond_total
-                  , ROW_NUMBER () OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId ORDER BY tmp.AmountPartnerSecond desc) AS ord
-             FROM (     
-                   SELECT MovementItem.Id :: Integer                   AS MovementItemId
-                        , MovementItem.ObjectId                         AS GoodsId  
-                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-      
-                        --, MovementItem.Amount
-                        , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) AS AmountPartnerSecond
-                        , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
-                        
-                        --, COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountPartner 
-                        , (COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) * (1- COALESCE (MIFloat_ChangePercentAmount.ValueData, 0)/ 100))   AS AmountPartner
-                        
-                          --  цена без НДС, до 4 знаков
-                        , CASE WHEN COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE) = TRUE
-                               THEN CAST (COALESCE (MIFloat_PricePartner.ValueData, 0) - COALESCE (MIFloat_PricePartner.ValueData, 0) * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
-                               ELSE COALESCE (MIFloat_PricePartner.ValueData, 0)
-                          END            AS PricePartnerNoVAT
-      
-                          --  цена с НДС, до 4 знаков
-                        , CASE WHEN COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE) <> TRUE
-                               THEN CAST ((COALESCE (MIFloat_PricePartner.ValueData, 0) + COALESCE (MIFloat_PricePartner.ValueData, 0) * (vbVATPercent / 100))
-                                          AS NUMERIC (16, 4))
-                               ELSE CAST (COALESCE (MIFloat_PricePartner.ValueData, 0) 
-                                          AS NUMERIC (16, 4))
-                          END            AS PricePartnerWVAT
-      
-                        /*  --  сумма без НДС, до 4 знаков
-                        , COALESCE (MIFloat_AmountPartner.ValueData, 0) *
-                          CASE WHEN COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE) = TRUE
-                               THEN CAST (COALESCE (MIFloat_PricePartner.ValueData, 0) - COALESCE (MIFloat_PricePartner.ValueData, 0) * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
-                               ELSE COALESCE (MIFloat_PricePartner.ValueData, 0)
-                          END            AS SummPartnerNoVAT
-      
-                          -- сумма с НДС, до 4 знаков
-                        , COALESCE (MIFloat_AmountPartner.ValueData, 0) *
-                          CASE WHEN COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE) <> TRUE
-                               THEN CAST ((COALESCE (MIFloat_PricePartner.ValueData, 0) + COALESCE (MIFloat_PricePartner.ValueData, 0) * (vbVATPercent / 100))
-                                          AS NUMERIC (16, 4))
-                               ELSE CAST (COALESCE (MIFloat_PricePartner.ValueData, 0) 
-                                          AS NUMERIC (16, 4))
-                          END            AS SummPartnerWVAT
-                         */
-                        , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean AS isAmountPartnerSecond
-                        , COALESCE (MIBoolean_ReturnOut.ValueData, FALSE)           :: Boolean  AS isReturnOut
-                        , COALESCE (MIString_Comment.ValueData,'')                  :: TVarChar AS Comment
-      
-                        , MovementItem.isErased
-                        
-                   FROM tmpMIList AS MovementItem 
-                        LEFT JOIN tmpMI_Boolean AS MIBoolean_AmountPartnerSecond
-                                                ON MIBoolean_AmountPartnerSecond.MovementItemId = MovementItem.Id
-                                               AND MIBoolean_AmountPartnerSecond.DescId = zc_MIBoolean_AmountPartnerSecond()
-                        LEFT JOIN tmpMI_Boolean AS MIBoolean_PriceWithVAT
-                                                ON MIBoolean_PriceWithVAT.MovementItemId = MovementItem.Id
-                                               AND MIBoolean_PriceWithVAT.DescId = zc_MIBoolean_PriceWithVAT()
-                        LEFT JOIN tmpMI_Boolean AS MIBoolean_ReturnOut
-                                                ON MIBoolean_ReturnOut.MovementItemId = MovementItem.Id
-                                               AND MIBoolean_ReturnOut.DescId = zc_MIBoolean_ReturnOut()
-      
-                        LEFT JOIN tmpMI_String AS MIString_Comment
-                                               ON MIString_Comment.MovementItemId = MovementItem.Id
-                                              AND MIString_Comment.DescId = zc_MIString_Comment()
-      
-                        LEFT JOIN tmpMI_Float AS MIFloat_ChangePercentAmount
-                                              ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
-                                             AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
-      
-                        LEFT JOIN tmpMI_Float AS MIFloat_AmountPartner
-                                                    ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                        LEFT JOIN tmpMI_Float AS MIFloat_AmountPartnerSecond
-                                                    ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
-      
-                        LEFT JOIN tmpMI_Float AS MIFloat_PricePartner
-                                                    ON MIFloat_PricePartner.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_PricePartner.DescId = zc_MIFloat_PricePartner()
-      
-                        /*LEFT JOIN MovementItemFloat AS MIFloat_SummPartner
-                                                    ON MIFloat_SummPartner.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_SummPartner.DescId = zc_MIFloat_SummPartner()*/
-      
-                        LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
-                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                   --WHERE COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) <> 0 
-                   ) AS tmp
-              )
+      , tmpMI_wp AS (SELECT tmpMI.*
+                            -- расчет сумма без НДС, 2 знака
+                          , CASE WHEN tmpMI.isPriceWithVAT = TRUE AND tmpMI.SummPartner > 0
+                                      -- если ввели сумма с НДС
+                                      THEN CAST (tmpMI.SummPartner / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
 
-      , tmpMI_Income AS(WITH
-                        --выбираем приходы, нужно выбрать все накл с одинаковым InvNumberPartner для Акта Разногласий
-                        tmpMovement AS (SELECT Movement.Id
-                                        FROM Movement  
-                                             INNER JOIN MovementString AS MovementString_InvNumberPartner
-                                                                       ON MovementString_InvNumberPartner.MovementId = Movement.Id
-                                                                      AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-                                                                      AND MovementString_InvNumberPartner.ValueData = vbInvNumberPartner 
-                                                                      AND vbInvNumberPartner <> ''                         
-                                        WHERE Movement.OperDate = vbOperDate
-                                          AND Movement.DescId = zc_Movement_Income()
-                                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                                        )
-                          
-                      , tmpMF_ChangePercent AS (SELECT MovementFloat_ChangePercent.*
-                                                FROM MovementFloat AS MovementFloat_ChangePercent
-                                                WHERE MovementFloat_ChangePercent.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent() 
-                                                )  
-                      , tmpMF_VATPercent AS (SELECT MovementFloat_ChangePercent.*
-                                             FROM MovementFloat AS MovementFloat_ChangePercent
-                                             WHERE MovementFloat_ChangePercent.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_VATPercent() 
-                                             )
-                      , tmpMB_PriceWithVAT AS (SELECT MovementBoolean.*
-                                               FROM MovementBoolean
-                                               WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                                 AND MovementBoolean.DescId = zc_MovementBoolean_PriceWithVAT() 
-                                               )
-                      , tmpMIList AS (SELECT MovementItem.*
-                                      FROM MovementItem
-                                      WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                        AND MovementItem.DescId     = zc_MI_Master()
-                                        AND MovementItem.isErased   = FALSE
-                                      )
-                     , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
-                                             FROM MovementItemLinkObject
-                                             WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIList.Id FROM tmpMIList)
-                                               AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
-                                             )
+                                 WHEN tmpMI.SummPartner > 0
+                                      -- если ввели сумма без НДС
+                                      THEN tmpMI.SummPartner
 
-                     , tmpMI_Float AS (SELECT MovementItemFloat.*
-                                       FROM MovementItemFloat
-                                       WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIList.Id FROM tmpMIList)
-                                         AND MovementItemFloat.DescId IN (zc_MIFloat_PricePartner()
-                                                                        , zc_MIFloat_Price()
-                                                                        )
-                                       )
+                                 ELSE CAST (tmpMI.PricePartnerNoVAT * tmpMI.AmountPartnerSecond AS NUMERIC (16, 2))
+
+                            END AS SummPartnerNoVAT
+
+                            -- расчет сумма с НДС, до 2 знака
+                          , CASE WHEN tmpMI.isPriceWithVAT = TRUE AND tmpMI.SummPartner > 0
+                                      -- если ввели сумма с НДС
+                                      THEN tmpMI.SummPartner
+
+                                 WHEN tmpMI.SummPartner > 0
+                                      -- если ввели сумма без НДС
+                                      THEN CAST (tmpMI.SummPartner * (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+
+                                 ELSE CAST (tmpMI.PricePartnerWVAT * tmpMI.AmountPartnerSecond AS NUMERIC (16, 2))
+
+                            END AS SummPartnerWVAT
+
+                     FROM (SELECT MovementItem.Id                               AS MovementItemId
+                                , MovementItem.MovementId                       AS MovementId
+                                , MovementItem.ObjectId                         AS GoodsId
+                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+
+                                  -- Количество Поставщика - Документ Поставщика
+                                , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) AS AmountPartnerSecond
+                                  -- Цена/Сумма с НДС (да/нет)
+                                , COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE)  AS isPriceWithVAT
+                                  -- Сумма Поставщика
+                                , COALESCE (MIFloat_SummPartner.ValueData, 0)         AS SummPartner
+
+                                  -- расчет цена без НДС, до 2 или 4 знака
+                                , CASE WHEN MIBoolean_PriceWithVAT.ValueData = TRUE AND MIFloat_SummPartner.ValueData > 0 AND MIFloat_AmountPartnerSecond.ValueData > 0
+                                            -- если ввели сумма с НДС
+                                            THEN CAST (MIFloat_SummPartner.ValueData / MIFloat_AmountPartnerSecond.ValueData / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
+
+                                       WHEN MIBoolean_PriceWithVAT.ValueData = TRUE
+                                            -- если ввели цена с НДС
+                                            THEN CAST (COALESCE (MIFloat_PricePartner.ValueData, 0) / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+
+                                       WHEN MIFloat_SummPartner.ValueData > 0 AND MIFloat_AmountPartnerSecond.ValueData > 0
+                                            -- если ввели сумма без НДС
+                                            THEN CAST (MIFloat_SummPartner.ValueData / MIFloat_AmountPartnerSecond.ValueData AS NUMERIC (16, 4))
+
+                                       -- ничего не делаем
+                                       ELSE COALESCE (MIFloat_PricePartner.ValueData, 0)
+
+                                  END AS PricePartnerNoVAT
+
+                                  -- расчет цена с НДС, до 2 или 4 знака
+                                , CASE WHEN MIBoolean_PriceWithVAT.ValueData = TRUE AND MIFloat_SummPartner.ValueData > 0 AND MIFloat_AmountPartnerSecond.ValueData > 0
+                                            -- если ввели сумма с НДС
+                                            THEN CAST (MIFloat_SummPartner.ValueData / MIFloat_AmountPartnerSecond.ValueData AS NUMERIC (16, 4))
+
+                                       WHEN MIBoolean_PriceWithVAT.ValueData = TRUE
+                                            -- если ввели цена с НДС - ничего не делаем
+                                            THEN COALESCE (MIFloat_PricePartner.ValueData, 0)
+
+                                       WHEN MIFloat_SummPartner.ValueData > 0 AND MIFloat_AmountPartnerSecond.ValueData > 0
+                                            -- если ввели сумма без НДС
+                                            THEN CAST (MIFloat_SummPartner.ValueData / MIFloat_AmountPartnerSecond.ValueData * (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
+
+                                       -- если ввели цена без НДС
+                                       ELSE CAST (COALESCE (MIFloat_PricePartner.ValueData, 0) * (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
+
+                                  END AS PricePartnerWVAT
+
+                                  -- Признак "без оплаты"
+                                , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean AS isAmountPartnerSecond
+                                  -- Возврат да/нет
+                                , COALESCE (MIBoolean_ReturnOut.ValueData, FALSE)           :: Boolean  AS isReturnOut
+                                  --
+                                , COALESCE (MIString_Comment.ValueData,'')                  :: TVarChar AS Comment
+
+                           FROM tmpMIList AS MovementItem
+                                LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                -- Признак "без оплаты"
+                                LEFT JOIN tmpMI_Boolean AS MIBoolean_AmountPartnerSecond
+                                                        ON MIBoolean_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                                       AND MIBoolean_AmountPartnerSecond.DescId         = zc_MIBoolean_AmountPartnerSecond()
+                                -- Цена/Сумма с НДС (да/нет)
+                                LEFT JOIN tmpMI_Boolean AS MIBoolean_PriceWithVAT
+                                                        ON MIBoolean_PriceWithVAT.MovementItemId = MovementItem.Id
+                                                       AND MIBoolean_PriceWithVAT.DescId         = zc_MIBoolean_PriceWithVAT()
+                                -- Возврат да/нет
+                                LEFT JOIN tmpMI_Boolean AS MIBoolean_ReturnOut
+                                                        ON MIBoolean_ReturnOut.MovementItemId = MovementItem.Id
+                                                       AND MIBoolean_ReturnOut.DescId         = zc_MIBoolean_ReturnOut()
+
+                                LEFT JOIN tmpMI_String AS MIString_Comment
+                                                       ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                      AND MIString_Comment.DescId = zc_MIString_Comment()
+                                -- Количество Поставщика - Документ Поставщика
+                                LEFT JOIN tmpMI_Float AS MIFloat_AmountPartnerSecond
+                                                      ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
+
+                                -- Цена Поставщика
+                                LEFT JOIN tmpMI_Float AS MIFloat_PricePartner
+                                                      ON MIFloat_PricePartner.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_PricePartner.DescId = zc_MIFloat_PricePartner()
+                                -- Сумма Поставщика
+                                LEFT JOIN tmpMI_Float AS MIFloat_SummPartner
+                                                      ON MIFloat_SummPartner.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_SummPartner.DescId         = zc_MIFloat_SummPartner()
+                          ) AS tmpMI
+                    )
+
+        -- ВСЕ приходы, с одинаковым InvNumberPartner + ContractId + PaidKindId +  для Акта Разногласий
+      , tmpMovement AS (SELECT Movement.Id                                               AS MovementId
+                             , Movement_WeighingPartner.Id                               AS MovementId_WeighingPartner
+                               -- % Скидки для кол-во поставщик
+                             , COALESCE (MovementFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
+                               -- Причина скидки в кол-ве температура
+                             , COALESCE (MB_Reason1.ValueData, FALSE)                    AS isReason_1
+                               -- Причина скидки в кол-ве качество
+                             , COALESCE (MB_Reason2.ValueData, FALSE)                    AS isReason_2
+                        FROM Movement
+                             INNER JOIN MovementString AS MovementString_InvNumberPartner
+                                                       ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                                      AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+                                                      AND MovementString_InvNumberPartner.ValueData  = vbInvNumberPartner
+                                                      AND vbInvNumberPartner <> ''
+                             INNER JOIN MovementLinkObject AS MLO_Contract
+                                                           ON MLO_Contract.MovementId = Movement.Id
+                                                          AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                                          AND MLO_Contract.ObjectId   = vbContractId
+                             INNER JOIN MovementLinkObject AS MLO_PaidKind
+                                                           ON MLO_PaidKind.MovementId = Movement.Id
+                                                          AND MLO_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
+                                                          AND MLO_PaidKind.ObjectId   = vbPaidKindId
+                             LEFT JOIN Movement AS Movement_WeighingPartner
+                                                ON Movement_WeighingPartner.ParentId = Movement.Id
+                                               AND Movement_WeighingPartner.DescId   = zc_Movement_WeighingPartner()
+                             -- % Скидки для кол-во поставщик
+                             LEFT JOIN MovementFloat AS MovementFloat_ChangePercentAmount
+                                                     ON MovementFloat_ChangePercentAmount.MovementId = Movement_WeighingPartner.Id
+                                                    AND MovementFloat_ChangePercentAmount.DescId     = zc_MovementFloat_ChangePercentAmount()
+                             -- Причина скидки в кол-ве температура
+                             LEFT JOIN MovementBoolean AS MB_Reason1
+                                                       ON MB_Reason1.MovementId = Movement_WeighingPartner.Id
+                                                      AND MB_Reason1.DescId     = zc_MovementBoolean_Reason1()
+                             -- Причина скидки в кол-ве качество
+                             LEFT JOIN MovementBoolean AS MB_Reason2
+                                                       ON MB_Reason2.MovementId = Movement_WeighingPartner.Id
+                                                      AND MB_Reason2.DescId     = zc_MovementBoolean_Reason2()
+
+                        WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 DAY' AND vbOperDate
+                          AND Movement.DescId   = zc_Movement_Income()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                       )
+
+          , tmpMF_VATPercent AS (SELECT MovementFloat_ChangePercent.*
+                                 FROM MovementFloat AS MovementFloat_ChangePercent
+                                 WHERE MovementFloat_ChangePercent.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_VATPercent()
+                                 )
+          , tmpMB_PriceWithVAT AS (SELECT MovementBoolean.*
+                                   FROM MovementBoolean
+                                   WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                                     AND MovementBoolean.DescId     = zc_MovementBoolean_PriceWithVAT()
+                                   )
+   , tmpMI_Income_all AS (SELECT MovementItem.*
+                          FROM MovementItem
+                          WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
+                         )
+     , tmpMILO_GoodsKind_in AS (SELECT MovementItemLinkObject.*
+                                FROM MovementItemLinkObject
+                                WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Income_all.Id FROM tmpMI_Income_all)
+                                  AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                               )
+       , tmpMI_Float_Price AS (SELECT MovementItemFloat.*
+                               FROM MovementItemFloat
+                               WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Income_all.Id FROM tmpMI_Income_all)
+                                 AND MovementItemFloat.DescId = zc_MIFloat_Price()
+                              )
+         -- Количество Поставщика - Документ Приход
+   , tmpMI_Float_AmountPartner AS (SELECT MovementItemFloat.*
+                                   FROM MovementItemFloat
+                                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Income_all.Id FROM tmpMI_Income_all)
+                                     AND MovementItemFloat.DescId = zc_MIFloat_AmountPartner()
+                                  )
+
+      , tmpMI_All AS (SELECT MovementItem.ObjectId AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                             -- Кол-во факт
+                           , SUM (MovementItem.Amount) AS Amount
+                             -- Кол-во факт Поставщик
+                           , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
+                             -- расчет цена без НДС, до 2 или 4 знака
+                           , CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
+                                       -- если ввели цена с НДС - ничего не делаем
+                                       THEN CAST (COALESCE (MIFloat_Price.ValueData, 0) / (1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100)  AS NUMERIC (16, 4))
+
+                                  -- если ввели цена без НДС
+                                  ELSE COALESCE (MIFloat_Price.ValueData, 0)
+
+                             END AS PriceNoVAT
+                             -- расчет цена с НДС, до 2 или 4 знака
+                           , CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
+                                       -- если ввели цена с НДС - ничего не делаем
+                                       THEN COALESCE (MIFloat_Price.ValueData, 0)
+
+                                  -- если ввели цена без НДС
+                                  ELSE CAST (COALESCE (MIFloat_Price.ValueData, 0) * (1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100) AS NUMERIC (16, 4))
+
+                             END AS PriceWVAT
+
+                             -- % Скидки для кол-во поставщик
+                           , tmpMovement.ChangePercentAmount
+                             -- Причина скидки в кол-ве температура
+                           , tmpMovement.isReason_1
+                             -- Причина скидки в кол-ве качество
+                           , tmpMovement.isReason_2
+                             --
+                           , CASE WHEN tmpMovement.ChangePercentAmount > 0 OR tmpMovement.isReason_1 = TRUE OR tmpMovement.isReason_2 = TRUE THEN tmpMovement.MovementId_WeighingPartner ELSE 0 END AS MovementId_WeighingPartner
+                           , CASE WHEN tmpMovement.ChangePercentAmount > 0 OR tmpMovement.isReason_1 = TRUE OR tmpMovement.isReason_2 = TRUE THEN tmpMovement.MovementId                 ELSE 0 END AS MovementId_income
+
+                      FROM tmpMI_Income_all AS MovementItem
+                           LEFT JOIN tmpMovement ON tmpMovement.MovementId = MovementItem.MovementId
+
+                           LEFT JOIN tmpMI_Float_AmountPartner AS MIFloat_AmountPartner
+                                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                           LEFT JOIN tmpMI_Float_Price AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                           LEFT JOIN tmpMILO_GoodsKind_in AS MILinkObject_GoodsKind
+                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                           LEFT JOIN tmpMB_PriceWithVAT AS MovementBoolean_PriceWithVAT
+                                                        ON MovementBoolean_PriceWithVAT.MovementId = MovementItem.MovementId
+                           LEFT JOIN tmpMF_VATPercent AS MovementFloat_VATPercent
+                                                      ON MovementFloat_VATPercent.MovementId = MovementItem.MovementId
+
+                      GROUP BY MovementItem.ObjectId
+                             , MILinkObject_GoodsKind.ObjectId
+                             , MIFloat_Price.ValueData
+                             , MovementBoolean_PriceWithVAT.ValueData
+                             , COALESCE (MovementFloat_VATPercent.ValueData, 0)
+                             , tmpMovement.ChangePercentAmount
+                             , tmpMovement.isReason_1
+                             , tmpMovement.isReason_2
+                             , CASE WHEN tmpMovement.ChangePercentAmount > 0 OR tmpMovement.isReason_1 = TRUE OR tmpMovement.isReason_2 = TRUE THEN tmpMovement.MovementId_WeighingPartner ELSE 0 END
+                             , CASE WHEN tmpMovement.ChangePercentAmount > 0 OR tmpMovement.isReason_1 = TRUE OR tmpMovement.isReason_2 = TRUE THEN tmpMovement.MovementId                 ELSE 0 END
+                     )
+         -- Результат
+       , tmpMI_Income AS (SELECT tmpMI_All.MovementId_WeighingPartner
+                               , tmpMI_All.MovementId_income
+                               , tmpMI_All.GoodsId
+                               , tmpMI_All.GoodsKindId
+                                 -- Кол-во факт
+                               , tmpMI_All.Amount
+                                 -- Кол-во факт Поставщик
+                               , tmpMI_All.AmountPartner
+                                 -- цена без НДС
+                               , tmpMI_All.PriceNoVAT
+                                 -- цена с НДС
+                               , tmpMI_All.PriceWVAT
      
-                     , tmpMI_All AS (SELECT MovementItem.ObjectId AS GoodsId
-                                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                          , CASE WHEN MovementLinkObject_PaidKind.ObjectId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                                                      THEN CAST ( (1 +  COALESCE (MovementFloat_ChangePercent.ValueData, 0) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                 ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                                            END AS Price
-                                          , SUM (MovementItem.Amount) AS Amount
-                                          --, SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
-                                          --, COALESCE (MIFloat_PricePartner.ValueData,0)         AS PricePartner
-                                            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
-                                            , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
-                                     FROM tmpMIList AS MovementItem
-                                          LEFT JOIN tmpMF_ChangePercent AS MovementFloat_ChangePercent
-                                                                        ON MovementFloat_ChangePercent.MovementId = MovementItem.MovementId
-                        
-                                          LEFT JOIN tmpMI_Float AS MIFloat_Price
-                                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                                      -- AND MIFloat_Price.ValueData <> 0
-                         
-                                          LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
-                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                        
-                                          LEFT JOIN tmpMB_PriceWithVAT AS MovementBoolean_PriceWithVAT
-                                                                       ON MovementBoolean_PriceWithVAT.MovementId = MovementItem.MovementId
-                                          LEFT JOIN tmpMF_VATPercent AS MovementFloat_VATPercent
-                                                                     ON MovementFloat_VATPercent.MovementId = MovementItem.MovementId
- 
-                                          LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                                                       ON MovementLinkObject_PaidKind.MovementId = MovementItem.MovementId
-                                                                      AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind())
-                                     GROUP BY MovementItem.ObjectId
-                                            , MILinkObject_GoodsKind.ObjectId
-                                            , MIFloat_Price.ValueData
-                                            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
-                                            , COALESCE (MovementFloat_VATPercent.ValueData, 0) 
-                                            , MovementLinkObject_PaidKind.ObjectId   
-                                            ,  COALESCE (MovementFloat_ChangePercent.ValueData, 0)
-                                    )
-                     SELECT tmp.GoodsId
-                          , tmp.GoodsKindId
-                          , SUM (tmp.Amount) AS Amount
-                            --  цена без НДС, до 4 знаков
-                          , CASE WHEN COALESCE (tmp.PriceWithVAT, FALSE) = TRUE
-                                 THEN CAST (COALESCE (tmp.Price, 0) - COALESCE (tmp.Price, 0) * (tmp.VATPercent / (tmp.VATPercent + 100)) AS NUMERIC (16, 2))
-                                 ELSE COALESCE (tmp.Price, 0)
-                            END            AS PriceNoVAT
-
-                            --  цена с НДС, до 4 знаков
-                          , CASE WHEN COALESCE (tmp.PriceWithVAT, FALSE) <> TRUE
-                                 THEN CAST ((COALESCE (tmp.Price, 0) + COALESCE (tmp.Price, 0) * (tmp.VATPercent / 100))
-                                            AS NUMERIC (16, 4))
-                                 ELSE CAST (COALESCE (tmp.Price, 0) 
-                                            AS NUMERIC (16, 4))
-                            END            AS PriceWVAT
-
-                            --  сумма без НДС, до 4 знаков
-                          , SUM (tmp.Amount *
-                                 CASE WHEN COALESCE (tmp.PriceWithVAT, FALSE) = TRUE
-                                      THEN CAST (COALESCE (tmp.Price, 0) - COALESCE (tmp.Price, 0) * (tmp.VATPercent / (tmp.VATPercent + 100)) AS NUMERIC (16, 2))
-                                      ELSE COALESCE (tmp.Price, 0)
-                                 END)            AS SummNoVAT
-        
-                            -- сумма с НДС, до 4 знаков
-                          , SUM (tmp.Amount *
-                                 CASE WHEN COALESCE (tmp.PriceWithVAT, FALSE) <> TRUE
-                                      THEN CAST ((COALESCE (tmp.Price, 0) + COALESCE (tmp.Price, 0) * (tmp.VATPercent / 100))
-                                                 AS NUMERIC (16, 4))
-                                      ELSE CAST (COALESCE (tmp.Price, 0) 
-                                                 AS NUMERIC (16, 4))
-                                 END)            AS SummWVAT                          
-                     FROM tmpMI_All AS tmp 
-                     GROUP BY tmp.GoodsId
-                          , tmp.GoodsKindId 
-                          , CASE WHEN COALESCE (tmp.PriceWithVAT, FALSE) = TRUE
-                                 THEN CAST (COALESCE (tmp.Price, 0) - COALESCE (tmp.Price, 0) * (tmp.VATPercent / (tmp.VATPercent + 100)) AS NUMERIC (16, 2))
-                                 ELSE COALESCE (tmp.Price, 0)
-                            END
-                            --  цена с НДС, до 4 знаков
-                          , CASE WHEN COALESCE (tmp.PriceWithVAT, FALSE) <> TRUE
-                                 THEN CAST ((COALESCE (tmp.Price, 0) + COALESCE (tmp.Price, 0) * (tmp.VATPercent / 100))
-                                            AS NUMERIC (16, 4))
-                                 ELSE CAST (COALESCE (tmp.Price, 0) 
-                                            AS NUMERIC (16, 4))
-                            END 
-                     
-            )
-
-
-
-       -- Результат     
-       SELECT ROW_NUMBER() OVER (ORDER BY tmpMI.MovementItemId) ::Integer AS Ord
-           , tmpMI.MovementItemId :: Integer  AS Id
+                               , CAST (tmpMI_All.PriceNoVAT * tmpMI_All.Amount AS NUMERIC (16, 2)) AS SummNoVAT
+                               , CAST (tmpMI_All.PriceWVAT  * tmpMI_All.Amount AS NUMERIC (16, 2)) AS SummWVAT
+     
+                                 -- % Скидки для кол-во поставщик
+                               , tmpMI_All.ChangePercentAmount
+                                 --
+                               , tmpMI_All.isReason_1
+                               , tmpMI_All.isReason_2
+                                 -- накопительное кол-во
+                               , SUM (tmpMI_All.Amount) OVER (PARTITION BY tmpMI_All.GoodsId, tmpMI_All.GoodsKindId
+                                                              ORDER BY CASE WHEN tmpMI_All.ChangePercentAmount > 0 OR tmpMI_All.isReason_1 = TRUE OR tmpMI_All.isReason_2 = TRUE THEN 0 ELSE 1 END ASC
+                                                             ) AS Amount_sum
+     
+                                 -- № п/п
+                               , ROW_NUMBER ()          OVER (PARTITION BY tmpMI_All.GoodsId, tmpMI_All.GoodsKindId
+                                                              ORDER BY CASE WHEN tmpMI_All.ChangePercentAmount > 0 OR tmpMI_All.isReason_1 = TRUE OR tmpMI_All.isReason_2 = TRUE THEN 1 ELSE 0 END ASC
+                                                             ) AS Ord
+     
+                          FROM tmpMI_All
+                         )
+       -- Результат
+       SELECT ROW_NUMBER() OVER (ORDER BY tmpMI_wp.MovementItemId) :: Integer AS Ord
+             -- для 1.Взвешивание - док поставщика
+           , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN 0                                       ELSE tmpMI_wp.MovementItemId END :: Integer  AS Id
+             -- для 1.Взвешивание - док поставщика
+           , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN 0                                       ELSE tmpMI_wp.MovementId     END :: Integer  AS MovementId
+             -- для 2.Взвешивание - док склад
+           , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN tmpMI_Income.MovementId_WeighingPartner ELSE 0                       END :: Integer  AS MovementId_WeighingPartner
+             -- для 2.Взвешивание - док склад
+           , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN tmpMI_Income.MovementId_income          ELSE 0                       END :: Integer  AS MovementId_income
+             --
+           , Object_Goods.Id                  AS GoodsId
            , Object_Goods.ObjectCode          AS GoodsCode
            , Object_Goods.ValueData           AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_GoodsKind.ValueData      AS GoodsKindName
-           , Object_Measure.ValueData        AS MeasureName
+           , Object_GoodsKind.Id              AS GoodsKindId
+           , Object_GoodsKind.ValueData       AS GoodsKindName
+           , Object_Measure.ValueData         AS MeasureName
 
-           , tmpMI.AmountPartner_total        :: TFloat AS AmountPartner_calc
-           , tmpMI.AmountPartnerSecond_total  :: TFloat AS AmountPartnerSecond
+             -- Количество Поставщика
+           , CASE WHEN COALESCE (tmpMI_Income.Ord, 1) = 1
+                       -- Сколько осталось
+                       THEN tmpMI_wp.AmountPartnerSecond - COALESCE(tmpMI_Income.Amount_sum - tmpMI_Income.Amount, 0)
+                  ELSE tmpMI_Income.Amount
+             END :: TFloat AS AmountPartnerSecond
 
-           , tmpMI.ChangePercentAmount  :: TFloat
- 
-             --  цена без НДС, до 4 знаков
-           , tmpMI.PricePartnerNoVAT ::TFloat
-             --  цена с НДС, до 4 знаков
-           , tmpMI.PricePartnerWVAT ::TFloat
+             -- цена Поставщика без НДС, до 4 знаков
+           , tmpMI_wp.PricePartnerNoVAT          :: TFloat AS PricePartnerNoVAT
+             -- цена Поставщика с НДС, до 4 знаков
+           , tmpMI_wp.PricePartnerWVAT           :: TFloat AS PricePartnerWVAT
+
              --  сумма без НДС, до 4 знаков
-           , (tmpMI.PricePartnerNoVAT * tmpMI.AmountPartner_total) ::TFloat AS SummPartnerNoVAT
+         --, tmpMI_wp.SummPartnerNoVAT ::TFloat AS SummPartnerNoVAT
+           , (CASE WHEN COALESCE (tmpMI_Income.Ord, 1) = 1
+                        -- Сколько осталось
+                        THEN tmpMI_wp.AmountPartnerSecond - COALESCE(tmpMI_Income.Amount_sum - tmpMI_Income.Amount, 0)
+                   ELSE tmpMI_Income.Amount
+              END
+            * tmpMI_wp.PricePartnerNoVAT
+             ) ::TFloat AS SummPartnerNoVAT
+
              -- сумма с НДС, до 4 знаков
-           , (tmpMI.PricePartnerWVAT * tmpMI.AmountPartner_total)  ::TFloat AS SummPartnerWVAT
+         --, tmpMI_wp.SummPartnerWVAT  ::TFloat AS SummPartnerWVAT
+           , (CASE WHEN COALESCE (tmpMI_Income.Ord, 1) = 1
+                        -- Сколько осталось
+                        THEN tmpMI_wp.AmountPartnerSecond - COALESCE(tmpMI_Income.Amount_sum - tmpMI_Income.Amount, 0)
+                   ELSE tmpMI_Income.Amount
+              END
+            * tmpMI_wp.PricePartnerWVAT
+             ) ::TFloat AS SummPartnerWVAT
 
-           , tmpMI_Income.Amount                  ::TFloat AS AmountPartner_income
-           , tmpMI_Income.PriceWVAT               ::TFloat AS PriceWVat_Income
-           , COALESCE (tmpMI_Income.PriceNoVAT,0) ::TFloat AS PriceNoVAT_Income
-           , tmpMI_Income.SummWVAT  ::TFloat AS SummPartner_income
+             -- % скидки кол-во
+           , tmpMI_Income.ChangePercentAmount :: TFloat AS ChangePercentAmount
 
-           , (COALESCE (tmpMI.AmountPartner_total,0) - COALESCE (tmpMI_Income.Amount,0)) ::TFloat AS Amount_diff
-           , (COALESCE (tmpMI.PricePartnerNoVAT,0) - COALESCE (tmpMI_Income.PriceNoVAT,0))     ::TFloat AS Price_diff
+             -- Кол-во (склад)
+           , tmpMI_Income.Amount              :: TFloat AS Amount_income
 
-           , tmpMI.isAmountPartnerSecond ::Boolean
-           , tmpMI.isReturnOut           ::Boolean
-           , tmpMI.Comment        ::TVarChar
-           , tmpMI.isErased
+             -- Кол-во Поставшик с учетом % скидки кол-во
+           , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE
+                  -- только здесь % скидки кол-во
+                  THEN tmpMI_Income.Amount * (1 - tmpMI_Income.ChangePercentAmount/100)
+                  -- Признак "без оплаты"
+                  WHEN tmpMI_wp.isAmountPartnerSecond = TRUE
+                      -- Сколько осталось
+                  THEN tmpMI_wp.AmountPartnerSecond - COALESCE(tmpMI_Income.Amount_sum - tmpMI_Income.Amount, 0)
+                  -- Сколько приняли
+                  ELSE tmpMI_Income.Amount
 
-       FROM tmpMI
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+             END :: TFloat AS Amount_income_calc
+
+              -- Кол-во Поставшик - Документ Приход от Поставщика
+           , tmpMI_Income.AmountPartner           :: TFloat AS AmountPartner_income
+
+           , tmpMI_Income.PriceNoVAT              :: TFloat AS PriceNoVAT_income
+           , tmpMI_Income.PriceWVAT               :: TFloat AS PriceWVat_income
+           , tmpMI_Income.SummNoVAT               :: TFloat AS SummNoVAT_income
+           , tmpMI_Income.SummWVAT                :: TFloat AS SummWVAT_income
+
+             -- Разница в количестве
+           , (-- наши данные
+              CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE
+                   -- только здесь % скидки кол-во
+                   THEN tmpMI_Income.Amount * (1 - tmpMI_Income.ChangePercentAmount/100)
+                   -- Признак "без оплаты"
+                   WHEN tmpMI_wp.isAmountPartnerSecond = TRUE
+                       -- Сколько осталось
+                   THEN tmpMI_wp.AmountPartnerSecond - COALESCE(tmpMI_Income.Amount_sum - tmpMI_Income.Amount, 0)
+                   -- Сколько приняли
+                   ELSE tmpMI_Income.Amount
+ 
+              END
+              -- док поставщика
+            - CASE WHEN COALESCE (tmpMI_Income.Ord, 1) = 1
+                        -- Сколько осталось
+                        THEN tmpMI_wp.AmountPartnerSecond - COALESCE(tmpMI_Income.Amount_sum - tmpMI_Income.Amount, 0)
+                   ELSE tmpMI_Income.Amount
+              END
+             ) :: TFloat AS Amount_diff
+
+             -- Разница в цене без НДС
+           , (COALESCE (tmpMI_Income.PriceNoVAT,0) - tmpMI_wp.PricePartnerNoVAT
+             ) :: TFloat AS Price_diff
+             
+             -- Сумма разницы без НДС
+           , (-- наши данные
+            - CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE
+                   -- только здесь % скидки кол-во
+                   THEN tmpMI_Income.Amount * (1 - tmpMI_Income.ChangePercentAmount/100)
+                   -- Признак "без оплаты"
+                   WHEN tmpMI_wp.isAmountPartnerSecond = TRUE
+                       -- Сколько осталось
+                   THEN tmpMI_wp.AmountPartnerSecond - COALESCE(tmpMI_Income.Amount_sum - tmpMI_Income.Amount, 0)
+                   -- Сколько приняли
+                   ELSE tmpMI_Income.Amount
+  
+              END * tmpMI_Income.PriceNoVAT
+              -- док поставщика
+            - CASE WHEN COALESCE (tmpMI_Income.Ord, 1) = 1
+                        -- Сколько осталось
+                        THEN tmpMI_wp.AmountPartnerSecond - COALESCE(tmpMI_Income.Amount_sum - tmpMI_Income.Amount, 0)
+                   ELSE tmpMI_Income.Amount
+              END * tmpMI_wp.PricePartnerNoVAT
+             
+             ) :: TFloat AS Summ_diff
+
+             -- Признак "без оплаты"
+           , tmpMI_wp.isAmountPartnerSecond ::Boolean
+             -- Возврат да/нет
+           , tmpMI_wp.isReturnOut           ::Boolean
+             -- Причина скидки в кол-ве температура
+           , tmpMI_Income.isReason_1
+             -- Причина скидки в кол-ве качество
+           , tmpMI_Income.isReason_2
+             -- Причина
+           , CASE WHEN tmpMI_Income.isReason_1 = TRUE
+                  THEN 'скидка за несоотвестветствие температуры'
+                  WHEN tmpMI_Income.isReason_2 = TRUE
+                  THEN 'скидка за несоотвестветствие качеству'
+                  ELSE ''
+             END :: TVarChar AS ReasonName
+             --
+           , tmpMI_wp.Comment               ::TVarChar
+
+           , FALSE :: Boolean AS isErased
+
+       FROM tmpMI_wp
+            LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpMI_wp.GoodsId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_wp.GoodsKindId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpMI_wp.GoodsId
+                                AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-  
-            LEFT JOIN tmpMI_Income ON tmpMI_Income.GoodsId  = Object_Goods.Id
-                                  AND COALESCE (tmpMI_Income.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
-                                  AND tmpMI.ord = 1
-       WHERE tmpMI.ord = 1
-     ;
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI_wp.GoodsId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN tmpMI_Income ON tmpMI_Income.GoodsId     = tmpMI_wp.GoodsId
+                                  AND tmpMI_Income.GoodsKindId = tmpMI_wp.GoodsKindId
+      ;
 
 END;
 $BODY$
@@ -390,4 +612,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_WeighingPartner_diff (inMovementId:= 29774297  , inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_WeighingPartner_diff (inMovementId:= 29844891, inIsErased:= TRUE, inSession:= '2')

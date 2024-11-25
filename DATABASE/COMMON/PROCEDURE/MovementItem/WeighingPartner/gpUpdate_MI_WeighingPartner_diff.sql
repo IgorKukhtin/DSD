@@ -2,26 +2,21 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_diff (Integer, Integer, TFloat, Boolean, Boolean, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_diff (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_diff (Integer, Integer, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_WeighingPartner_diff(
-    IN inId                     Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId             Integer   , -- Ключ объекта <Документ>
-    IN inChangePercentAmount    TFloat    , -- % скидки для кол-ва 
-    IN inAmountPartnerSecond    TFloat    , 
-    IN inAmountPartner_income   TFloat    ,
-    IN inPricePartnerWVAT       TFloat    ,
-    IN inPricePartnerNoVAT      TFloat    , 
-   OUT outAmountPartner_calc    TFloat    , 
-   OUT outSummPartnerWVAT       TFloat    ,
-   OUT outSummPartnerNoVAT      TFloat    ,
-   OUT outAmount_diff           TFloat    ,
-   OUT outPrice_diff            TFloat    ,
-    IN inisAmountPartnerSecond  Boolean   ,
-    IN inisReturnOut            Boolean   , --   
-    IN inComment                TVarChar  , -- 
-    IN inSession                TVarChar    -- сессия пользователя
+    IN inId                         Integer   , -- 1.Взвешивание - док поставщика
+    IN inMovementId_WeighingPartner Integer   , -- 2.Взвешивание - док склад
+    IN inChangePercentAmount        TFloat    , -- для 2. - % скидки кол-во
+    IN inIsReason_1                 Boolean   , -- для 2. - Причина скидки в кол-ве температура
+    IN inIsReason_2                 Boolean   , -- для 2. - Причина скидки в кол-ве качество
+
+    IN inIsAmountPartnerSecond      Boolean   , -- для 1. - Признак "без оплаты"
+    IN inIsReturnOut                Boolean   , -- для 1. - 
+    IN inComment                    TVarChar  , -- для 1. - 
+    IN inSession                    TVarChar    -- сессия пользователя
 )                              
-RETURNS RECORD
+RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -31,33 +26,51 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- сохранили свойство <% скидки для кол-ва>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentAmount(), inId, inChangePercentAmount);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPartnerSecond(), inId, inisAmountPartnerSecond);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_ReturnOut(), inId, inisReturnOut);
-
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), inId, inComment);
-
-     outAmountPartner_calc := (inAmountPartnerSecond * (1 - inChangePercentAmount / 100))::TFloat;
-     outSummPartnerNoVAT   := (outAmountPartner_calc * inPricePartnerNoVAT);
-     outSummPartnerWVAT    := (outAmountPartner_calc * inPricePartnerWVAT); 
-     outAmount_diff        := (COALESCE (outAmountPartner_calc, 0) - COALESCE (inAmountPartner_income, 0));
-     
-     --RAISE EXCEPTION 'Ошибка.<%>   <%>   <%>  <%>  .', outAmountPartner_calc, outSummPartnerNoVAT, outSummPartnerWVAT, outAmount_diff;
-
-     IF vbUserId = 9457
+     IF inMovementId_WeighingPartner <> 0
      THEN
-          RAISE EXCEPTION 'Ошибка.Тест ОК.';
+         -- сохранили свойство <% скидки для кол-ва>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercentAmount(), inMovementId_WeighingPartner, inChangePercentAmount);
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Reason1(), inMovementId_WeighingPartner, inIsReason_1);
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Reason2(), inMovementId_WeighingPartner, inIsReason_2);
+
+         PERFORM lpInsert_MovementProtocol (inMovementId_WeighingPartner, vbUserId, FALSE);
+
+     ELSE
+         IF inChangePercentAmount <> 0 OR inIsReason_1 = TRUE OR inIsReason_2 = TRUE
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав изменять значение <% скидки количеством>.';
+         END IF;
      END IF;
 
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     IF inId <> 0
+     THEN
+         -- сохранили свойство <Признак "без оплаты">
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPartnerSecond(), inId, inIsAmountPartnerSecond);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_ReturnOut(), inId, inIsReturnOut);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), inId, inComment);
+    
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
+     ELSE
+         IF inIsAmountPartnerSecond = TRUE
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав изменять Признак "без оплаты".';
+         END IF;
+
+         IF inIsReturnOut = TRUE
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав изменять Признак "Возврат".';
+         END IF;
+
+         IF inComment <>''
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав изменять <Примечание>.';
+         END IF;
+
+     END IF;
 
 END;
 $BODY$
