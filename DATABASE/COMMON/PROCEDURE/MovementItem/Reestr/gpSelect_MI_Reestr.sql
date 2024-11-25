@@ -32,9 +32,8 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
-     RETURN QUERY
-       WITH -- строчная часть реестра
-            tmpMI AS (SELECT MovementItem.Id            AS MovementItemId
+     CREATE TEMP TABLE tmpMI ON COMMIT DROP
+                  AS (SELECT MovementItem.Id            AS MovementItemId
                            , MovementItem.ObjectId      AS MemberId
                            , MIDate_Insert.ValueData    AS InsertDate
                            , MovementFloat_MovementItemId.MovementId AS MovementId_Sale
@@ -49,8 +48,11 @@ BEGIN
                            LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                                    ON MovementFloat_MovementItemId.ValueData = MovementItem.Id
                                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                      )
-       -- Результат
+                      );
+
+
+     -- Результат
+     RETURN QUERY
      SELECT  tmp.MovementItemId                           AS Id
            , CAST (ROW_NUMBER() OVER (ORDER BY tmp.MovementItemId) AS Integer) AS LineNum
            , tmp.MemberId                                 AS MemberId
