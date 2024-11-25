@@ -141,6 +141,8 @@ var
  i : integer;
 begin
 
+  LoadReportFromFile('PrintMovement_WeighingPartner', ReportPath + '\Товарный Учет\PrintMovement_WeighingPartner.fr3');
+  exit;
   LoadReportFromFile('PrintMovement_Income_ActDiff', ReportPath + '\Товарный Учет\PrintMovement_Income_ActDiff.fr3');
   exit;
 {

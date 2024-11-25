@@ -134,6 +134,15 @@ type
     isReason2: TcxGridDBColumn;
     isReason1: TcxGridDBColumn;
     ChangePercentAmount: TcxGridDBColumn;
+    PrintItemsCDS: TClientDataSet;
+    PrintHeaderCDS: TClientDataSet;
+    spSelectPrint_diff: TdsdStoredProc;
+    actPrint_diff: TdsdPrintAction;
+    spSelectPrint_all: TdsdStoredProc;
+    actPrint_all: TdsdPrintAction;
+    bbPrint_diff: TdxBarButton;
+    bbPrint_all: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
   private
   public
   end;
