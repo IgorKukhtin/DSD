@@ -1470,7 +1470,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1074#1086#1076' '#1062#1045#1053#1040' '#1055#1086#1089#1090'.'
         TabOrder = 4
-        ExplicitTop = 124
         object EditPrice: TcxCurrencyEdit
           Left = 4
           Top = 14
@@ -1538,7 +1537,7 @@ object GuideGoodsForm: TGuideGoodsForm
         end
         object cbAmountPartnerSecond: TCheckBox
           Left = 16
-          Top = 42
+          Top = 40
           Width = 82
           Height = 17
           Caption = #1073#1077#1079' '#1086#1087#1083#1072#1090#1099

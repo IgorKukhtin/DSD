@@ -66,9 +66,9 @@ type
     function gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
     function gpUpdate_Scale_Movement_PersonalLoss(execParams:TParams): Boolean;
     //
+    function gpUpdate_Scale_Movement_ChangePercentAmount (execParamsMovement : TParams): Boolean;
     function gpUpdate_Scale_Movement_Income_PricePartner (execParams : TParams; inIsUpdate : Boolean): Boolean;
     function gpUpdate_Scale_MI_Income_PricePartner(MovementDescId, BranchCode, MovementItemId  : Integer; PricePartner, AmountPartnerSecond : Double; isAmountPartnerSecond, isPriceWithVAT : Boolean; inOperDate_ReturnOut : TDateTime): Boolean;
-
     // Scale + ScaleCeh
     function gpUpdate_Scale_Movement_Status(MovementId_parent:Integer): Boolean;
 
@@ -303,6 +303,33 @@ begin
        end;}
     end;
     Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_Movement_ChangePercentAmount (execParamsMovement : TParams): Boolean;
+begin
+    Result:=false;
+    //
+    with spSelect do begin
+       StoredProcName:='gpUpdate_Scale_Movement_ChangePercentAmount';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       //% скидки для кол-ва поставщика
+       Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMovement.ParamByName('DiscountAmountPartner').AsFloat);
+       // скидка за несоотвестветствие температуры
+       Params.AddParam('inIsReason1', ftBoolean, ptInput, execParamsMovement.ParamByName('isDiscount_t').AsBoolean);
+       // скидка за несоотвестветствие качеству
+       Params.AddParam('inIsReason2', ftBoolean, ptInput, execParamsMovement.ParamByName('isDiscount_q').AsBoolean);
+       //
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       //try
+         Execute;
+         Result:=true;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
+       end;}
+    end;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpUpdate_Scale_Movement_Income_PricePartner(execParams:TParams; inIsUpdate : Boolean): Boolean;
@@ -739,17 +766,11 @@ begin
 
        //(-)% Скидки (+)% Наценки
        Params.AddParam('inChangePercent', ftFloat, ptInput, execParamsMovement.ParamByName('ChangePercent').AsFloat);
-       //% скидки для кол-ва поставщика
-       Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMovement.ParamByName('DiscountAmountPartner').AsFloat);
 
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inComment', ftString, ptInput, execParamsMovement.ParamByName('DocumentComment').AsString);
        //
        Params.AddParam('inIsListInventory', ftBoolean, ptInput, execParamsMovement.ParamByName('isListInventory').AsBoolean);
-       // скидка за несоотвестветствие температуры
-       Params.AddParam('inIsReason1', ftBoolean, ptInput, execParamsMovement.ParamByName('isDiscount_t').AsBoolean);
-       // скидка за несоотвестветствие качеству
-       Params.AddParam('inIsReason2', ftBoolean, ptInput, execParamsMovement.ParamByName('isDiscount_q').AsBoolean);
 
        Params.AddParam('inMovementId_reReturnIn', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId_reReturnIn').AsInteger);
        Params.AddParam('inIP', ftString, ptInput, SettingMain.IP_str);

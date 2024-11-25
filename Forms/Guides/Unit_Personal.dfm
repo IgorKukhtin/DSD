@@ -22,7 +22,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
     Top = 26
     Width = 8
     Height = 362
-    ExplicitHeight = 394
+    ExplicitLeft = 8
   end
   object cxGrid: TcxGrid
     Left = 8
@@ -841,6 +841,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 176
     Top = 200

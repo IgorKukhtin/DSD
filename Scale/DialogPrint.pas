@@ -59,9 +59,9 @@ type
     procedure cbPrintSpecClick(Sender: TObject);
     procedure DateValueEditPropertiesChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure DiscountAmountPartnerEditPropertiesChange(Sender: TObject);
     procedure btnSaveAllClick(Sender: TObject);
     procedure bbOkClick(Sender: TObject);
+    procedure DiscountAmountPartnerEditExit(Sender: TObject);
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
@@ -243,6 +243,12 @@ begin
      //
      ParamsMovement.ParamByName('isDiscount_q').AsBoolean:= rgDiscountAmountPartner.ItemIndex = 0;
      ParamsMovement.ParamByName('isDiscount_t').AsBoolean:= rgDiscountAmountPartner.ItemIndex = 1;
+     //
+     if (ParamsMovement.ParamByName('DiscountAmountPartner').AsFloat > 0) or(rgDiscountAmountPartner.ItemIndex >=0) then
+     begin
+          Result:= DMMainScaleForm.gpUpdate_Scale_Movement_ChangePercentAmount(ParamsMovement);
+          if not Result then exit;
+     end;
 
      //
      try Result:=(StrToInt(PrintCountEdit.Text)>0) and (StrToInt(PrintCountEdit.Text)<11);
@@ -269,8 +275,7 @@ begin
   then DateValueEdit.Text:= DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogPrintForm.DiscountAmountPartnerEditPropertiesChange(
-  Sender: TObject);
+procedure TDialogPrintForm.DiscountAmountPartnerEditExit(Sender: TObject);
 begin
   if (trim(DiscountAmountPartnerEdit.Text) = '') OR (trim(DiscountAmountPartnerEdit.Text) = '0')
   then rgDiscountAmountPartner.ItemIndex:= -1;

@@ -339,6 +339,7 @@ begin
      //
      gbPriceIncome.Visible:= false; //gbPrice.Visible;
      gbAmountPartner.Visible:= execParamsMovement.ParamByName('isOperCountPartner').AsBoolean = TRUE;
+     cbAmountPartnerSecond.Visible:= false; // (execParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE);
      EditPriceIncome.Text:='0';
      EditAmountPartner.Text:='0';
      //

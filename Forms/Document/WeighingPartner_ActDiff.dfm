@@ -1,9 +1,7 @@
 object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
   Left = 0
   Top = 0
-  Caption = 
-    #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')> '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1040#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080 +
-    #1081
+  Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1040#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
   ClientHeight = 399
   ClientWidth = 886
   Color = clBtnFace
@@ -65,31 +63,13 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 3
-      Width = 216
-    end
-    object edTo: TcxButtonEdit
-      Left = 588
-      Top = 22
-      Properties.Buttons = <
-        item
-          Default = True
-          Enabled = False
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
       TabOrder = 2
-      Width = 264
+      Width = 216
     end
     object cxLabel3: TcxLabel
       Left = 365
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
-    end
-    object cxLabel4: TcxLabel
-      Left = 588
-      Top = 5
-      Caption = #1050#1086#1084#1091
     end
     object cxLabel5: TcxLabel
       Left = 114
@@ -109,7 +89,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
-      TabOrder = 4
+      TabOrder = 3
       Width = 105
     end
     object cxLabel11: TcxLabel
@@ -136,7 +116,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
-      TabOrder = 12
+      TabOrder = 10
       Width = 160
     end
     object cxLabel9: TcxLabel
@@ -152,17 +132,17 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
-      TabOrder = 14
+      TabOrder = 12
       Width = 105
     end
     object cxLabel10: TcxLabel
-      Left = 588
-      Top = 45
+      Left = 589
+      Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 588
-      Top = 63
+      Left = 589
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -170,35 +150,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 16
-      Width = 69
-    end
-    object edOperDate_parent: TcxDateEdit
-      Left = 262
-      Top = 63
-      EditValue = 42184d
-      Properties.ReadOnly = True
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 17
-      Width = 96
-    end
-    object cxLabel12: TcxLabel
-      Left = 262
-      Top = 45
-      Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085')'
-    end
-    object edInvNumber_parent: TcxTextEdit
-      Left = 175
-      Top = 63
-      Properties.ReadOnly = True
-      TabOrder = 19
-      Width = 80
-    end
-    object cxLabel14: TcxLabel
-      Left = 175
-      Top = 45
-      Caption = #8470' '#1076#1086#1082'.('#1075#1083#1072#1074#1085')'
+      TabOrder = 14
+      Width = 148
     end
     object cxLabel15: TcxLabel
       Left = 9
@@ -206,12 +159,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077
     end
     object cxLabel16: TcxLabel
-      Left = 670
+      Left = 589
       Top = 45
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
-      Left = 660
+      Left = 589
       Top = 63
       Properties.Buttons = <
         item
@@ -219,12 +172,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
           Enabled = False
           Kind = bkEllipsis
         end>
-      TabOrder = 23
-      Width = 92
+      TabOrder = 17
+      Width = 148
     end
     object cxLabel17: TcxLabel
-      Left = 761
-      Top = 45
+      Left = 589
+      Top = 84
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
     end
     object edWeighingNumber: TcxCurrencyEdit
@@ -235,12 +188,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = True
-      TabOrder = 25
+      TabOrder = 19
       Width = 54
     end
     object edContractTag: TcxButtonEdit
-      Left = 755
-      Top = 63
+      Left = 589
+      Top = 102
       Properties.Buttons = <
         item
           Default = True
@@ -248,50 +201,43 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 26
-      Width = 97
-    end
-    object cxLabel23: TcxLabel
-      Left = 262
-      Top = 84
-      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
-    end
-    object ed: TcxButtonEdit
-      Left = 262
-      Top = 99
-      Properties.Buttons = <
-        item
-          Default = True
-          Enabled = False
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 28
-      Width = 208
+      TabOrder = 20
+      Width = 148
     end
     object cxLabel24: TcxLabel
-      Left = 476
+      Left = 9
       Top = 84
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 476
-      Top = 99
+      Left = 9
+      Top = 102
       Properties.ReadOnly = True
-      TabOrder = 30
-      Width = 376
+      TabOrder = 22
+      Width = 349
     end
     object edInvNumberPartner: TcxTextEdit
       Left = 175
-      Top = 99
+      Top = 63
       Properties.ReadOnly = True
-      TabOrder = 31
-      Width = 80
+      TabOrder = 23
+      Width = 183
     end
     object cxLabel26: TcxLabel
       Left = 175
-      Top = 84
-      Caption = #8470' '#1076#1086#1082'.'#1091' '#1082#1086#1085#1090#1088'.'
+      Top = 45
+      Caption = #8470' '#1076#1086#1082'. '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    end
+    object cbDocPartner: TcxCheckBox
+      Left = 405
+      Top = 102
+      Hint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 25
+      Width = 141
     end
   end
   object cxPageControl: TcxPageControl
@@ -329,67 +275,49 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Price_diff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountPartner_calc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountPartner_income
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount_income
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = SummPartnerNoVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = SummWVAT_income
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = SummNoVAT_income
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_income_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartnerSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_diff
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -398,62 +326,52 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Price_diff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountPartner_calc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountPartner_income
             end
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Amount_income
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartnerNoVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWVAT_income
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNoVAT_income
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_income_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartnerSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_diff
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -473,10 +391,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 40
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -498,14 +418,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             Options.Editing = False
             Width = 200
           end
-          object MeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
@@ -514,93 +426,96 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             Options.Editing = False
             Width = 90
           end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
           object AmountPartnerSecond: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'AmountPartnerSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 70
           end
-          object ChangePercentAmount: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086#1084
-            DataBinding.FieldName = 'ChangePercentAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 71
-          end
-          object AmountPartner_calc: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-            DataBinding.FieldName = 'AmountPartner_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-            Options.Editing = False
-            Width = 82
-          end
           object PricePartnerNoVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
+            Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'. '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'PricePartnerNoVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1073#1077#1079' '#1053#1044#1057
             Options.Editing = False
-            Width = 55
+            Width = 70
           end
           object PricePartnerWVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
+            Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'. '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'PricePartnerWVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
           object SummPartnerNoVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090'. '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'SummPartnerNoVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
-            Width = 55
+            Width = 70
           end
           object SummPartnerWVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090'. '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'SummPartnerWVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
-          object AmountPartner_income: TcxGridDBColumn
+          object Amount_income: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'AmountPartner_income'
+            DataBinding.FieldName = 'Amount_income'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1055#1086' '#1076#1072#1085#1085#1099#1084' '#1057#1050#1051#1040#1044
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object PriceNoVAT_Income: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'PriceNoVAT_Income'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 70
           end
@@ -612,19 +527,91 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1055#1086' '#1076#1072#1085#1085#1099#1084' '#1057#1050#1051#1040#1044
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 70
           end
-          object SummPartner_income: TcxGridDBColumn
+          object SummNoVAT_income: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'SummNoVAT_income'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 75
+          end
+          object SummWVAT_income: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'SummPartner_income'
+            DataBinding.FieldName = 'SummWVAT_income'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' '#1055#1086' '#1076#1072#1085#1085#1099#1084' '#1057#1050#1051#1040#1044
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 75
+          end
+          object ChangePercentAmount: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'ChangePercentAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 71
+          end
+          object Amount_income_calc: TcxGridDBColumn
+            Caption = '***'#1050#1086#1083'-'#1074#1086' '#1087#1086#1089#1090'. '#1089#1086' '#1089#1082#1080#1076'.'
+            DataBinding.FieldName = 'Amount_income_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1086#1089#1090#1072#1074#1096#1080#1082' '#1089' '#1091#1095#1077#1090#1086#1084' % '#1089#1082#1080#1076#1082#1080' '#1082#1086#1083'-'#1074#1086
+            Options.Editing = False
+            Width = 80
+          end
+          object isReason_2: TcxGridDBColumn
+            Caption = #1079#1072' '#1050#1072#1095'.'
+            DataBinding.FieldName = 'isReason_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1082#1080#1076#1082#1072' '#1079#1072' '#1085#1077#1089#1086#1086#1090#1074#1077#1089#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1082#1072#1095#1077#1089#1090#1074#1091
+            Width = 50
+          end
+          object isReason_1: TcxGridDBColumn
+            Caption = #1079#1072' '#1058#1077#1084#1087'.'
+            DataBinding.FieldName = 'isReason_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1082#1080#1076#1082#1072' '#1079#1072' '#1085#1077#1089#1086#1086#1090#1074#1077#1089#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1090#1077#1084#1087#1077#1088#1072#1090#1091#1088#1099
+            Width = 50
+          end
+          object ReasonName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'ReasonName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountPartner_income: TcxGridDBColumn
+            Caption = '***'#1050#1086#1083'-'#1074#1086' '#1087#1086#1089#1090'. '
+            DataBinding.FieldName = 'AmountPartner_income'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 70
           end
@@ -652,12 +639,22 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             Options.Editing = False
             Width = 70
           end
+          object Summ_diff: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1099' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'Summ_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object isAmountPartnerSecond: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' "'#1073#1077#1079' '#1086#1087#1083#1072#1090#1099'"'
+            Caption = #1041#1077#1079' '#1086#1087#1083#1072#1090#1099' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isAmountPartnerSecond'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1079#1085#1072#1082' "'#1073#1077#1079' '#1086#1087#1083#1072#1090#1099'" ('#1076#1072' / '#1085#1077#1090')'
+            HeaderHint = #1055#1088#1080#1079#1085#1072#1082' '#1041#1077#1079' '#1086#1087#1083#1072#1090#1099' ('#1076#1072'/'#1085#1077#1090')'
             Width = 66
           end
           object isReturnOut: TcxGridDBColumn
@@ -665,10 +662,11 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             DataBinding.FieldName = 'isReturnOut'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1079#1085#1072#1082' '#1042#1086#1079#1074#1088#1072#1090' ('#1076#1072'/'#1085#1077#1090')'
             Width = 66
           end
           object Comment: TcxGridDBColumn
-            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -681,13 +679,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
-          end
-          object PriceNoVAT_Income: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'PriceNoVAT_Income'
-            Visible = False
-            VisibleForCustomization = False
             Width = 70
           end
         end
@@ -707,24 +698,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       end>
     Properties.ReadOnly = True
     TabOrder = 2
-    Width = 102
-  end
-  object cxLabel25: TcxLabel
-    Left = 67
-    Top = 84
-    Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088'.'
-  end
-  object edOperDatePartner: TcxDateEdit
-    Left = 67
-    Top = 99
-    Hint = #1044#1072#1090#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-    EditValue = 42184d
-    ParentShowHint = False
-    Properties.ReadOnly = True
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    ShowHint = True
-    TabOrder = 8
     Width = 102
   end
   object FormParams: TdsdFormParams
@@ -882,9 +855,9 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Category = 0
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbErased: TdxBarButton
       Action = SetErased
@@ -986,6 +959,9 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       StoredProcList = <
         item
           StoredProc = spUpdateMI
+        end
+        item
+          StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -1504,7 +1480,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
   end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edTo
     DisableGuidesOpen = True
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
@@ -1530,7 +1505,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 736
+    Left = 752
+    Top = 112
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1587,7 +1563,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         Control = edFrom
       end
       item
-        Control = edTo
       end
       item
       end
@@ -1606,7 +1581,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
     Top = 217
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_WeighingPartner'
+    StoredProcName = 'gpGet_Movement_WeighingPartner_diff'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1616,6 +1591,13 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end
       item
@@ -1640,6 +1622,13 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'InvNumberPartner'
+        Value = Null
+        Component = edInvNumberPartner
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementId_Order'
         Value = Null
         Component = OrderChoiceGuides
@@ -1655,12 +1644,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_parent'
-        Value = ''
-        Component = edInvNumber_parent
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'WeighingNumber'
         Value = 0.000000000000000000
         Component = edWeighingNumber
@@ -1670,20 +1653,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDatePartner'
-        Value = Null
-        Component = edOperDatePartner
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate_parent'
-        Value = 0d
-        Component = edOperDate_parent
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -1712,20 +1681,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         Name = 'FromName'
         Value = ''
         Component = dsdGuidesFrom
-        ComponentItem = 'TextValue'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToId'
-        Value = ''
-        Component = dsdGuidesTo
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToName'
-        Value = ''
-        Component = dsdGuidesTo
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end
@@ -1795,285 +1750,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ChangePercent'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isPromo'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartionGoods'
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementDescName'
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementDescNumber'
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MemberId'
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MemberName'
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId1'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName1'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId1'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName1'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId2'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId2'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName2'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName2'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId2'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId2'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName2'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName2'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId3'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId3'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName3'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName3'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId3'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId3'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName4'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName4'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName3'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName31'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId4'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId4'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName4'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName4'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId4'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId4'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId55'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId5'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName5'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName5'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId5'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId5'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName5'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName5'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId1_Stick'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId1_Stick'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName1_Stick'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName1_Stick'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId1_Stick'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId1_Stick'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName1_Stick'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName1_Stick'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalGroupId'
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalGroupName'
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SubjectDocId'
-        Value = Null
-        Component = GuidesSubjectDoc
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SubjectDocName'
-        Value = Null
-        Component = GuidesSubjectDoc
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Comment'
         Value = Null
         Component = ceComment
@@ -2081,17 +1757,10 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isList'
+        Name = 'isDocPartner'
         Value = Null
+        Component = cbDocPartner
         DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberPartner'
-        Value = Null
-        Component = edInvNumberPartner
-        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2124,18 +1793,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       end>
     Left = 144
     Top = 200
-  end
-  object ChangeStatus: TChangeStatus
-    KeyField = 'Code'
-    LookupControl = ceStatus
-    DisableGuidesOpen = True
-    IdParam.Value = Null
-    IdParam.Component = FormParams
-    IdParam.ComponentItem = 'Id'
-    IdParam.MultiSelectSeparator = ','
-    StoredProcName = 'gpUpdate_Status_WeighingPartner'
-    Left = 53
-    Top = 24
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -2195,11 +1852,11 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 7
-    Top = 50
+    Left = 135
+    Top = 58
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_WeighingPartner'
+    StoredProcName = 'gpUpdate_Status_WeighingPartner_diff'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2220,8 +1877,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 36
-    Top = 18
+    Left = 188
+    Top = 50
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -2251,8 +1908,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 608
-    Top = 64
+    Left = 696
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -2282,8 +1938,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 688
-    Top = 56
+    Left = 672
+    Top = 104
   end
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -2334,10 +1990,10 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId'
+        Name = 'inMovementId_WeighingPartner'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
+        Component = MasterCDS
+        ComponentItem = 'MovementId_WeighingPartner'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2351,75 +2007,25 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPartnerSecond'
+        Name = 'inIsReason_1'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountPartnerSecond'
-        DataType = ftFloat
+        ComponentItem = 'isReason_1'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPartner_income'
+        Name = 'inIsReason_2'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountPartner_income'
-        DataType = ftFloat
+        ComponentItem = 'isReason_2'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPricePartnerWVAT'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PricePartnerWVAT'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPricePartnerNoVAT'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PricePartnerNoVAT'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountPartner_calc'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountPartner_calc'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSummPartnerWVAT'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummPartnerWVAT'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSummPartnerNoVAT'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummPartnerNoVAT'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmount_diff'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Amount_diff'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisAmountPartnerSecond'
+        Name = 'inIsAmountPartnerSecond'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isAmountPartnerSecond'
@@ -2428,7 +2034,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisReturnOut'
+        Name = 'inIsReturnOut'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isReturnOut'
@@ -2507,8 +2113,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 52
-    Top = 24
+    Left = 236
+    Top = 120
   end
   object spUpdate_PersonalComlete: TdsdStoredProc
     StoredProcName = 'gpUpdate_Scale_Movement_PersonalComlete'
@@ -2625,7 +2231,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
   end
   object GuidesSubjectDoc: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ed
     DisableGuidesOpen = True
     FormNameParam.Value = 'TDocumentKindForm'
     FormNameParam.DataType = ftString
@@ -2650,7 +2255,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 382
-    Top = 96
+    Left = 486
+    Top = 200
   end
 end
