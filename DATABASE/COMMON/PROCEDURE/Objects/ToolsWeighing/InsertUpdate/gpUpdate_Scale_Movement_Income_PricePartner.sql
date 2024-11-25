@@ -35,10 +35,10 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ <Взвешивание> не сформирован.';
      END IF;
 
-     --
+     -- параметры из документа
      vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
-     --
+     -- параметры из документа
      vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
      -- Проверка
      IF COALESCE (vbContractId, 0) = 0
@@ -119,14 +119,17 @@ BEGIN
      -- Обновляются цены - из Спецификации
      IF inIsUpdate = TRUE AND zc_Movement_WeighingPartner() = (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId)
      THEN
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), _tmpMI.MovementItemId, _tmpContractGoods.ValuePrice)
-         FROM _tmpMI
-              INNER JOIN _tmpContractGoods
-                      ON _tmpContractGoods.GoodsId     = _tmpMI.GoodsId
-                     AND _tmpContractGoods.GoodsKindId = _tmpMI.GoodsKindId
-                     AND _tmpContractGoods.ValuePrice  <> _tmpMI.Price
-                     AND _tmpContractGoods.ValuePrice  > 0
-                    ;
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (_tmpMI.MovementItemId, vbUserId, FALSE)
+         FROM (SELECT lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), _tmpMI.MovementItemId, _tmpContractGoods.ValuePrice)
+                     , _tmpMI.MovementItemId
+               FROM _tmpMI
+                    INNER JOIN _tmpContractGoods
+                            ON _tmpContractGoods.GoodsId     = _tmpMI.GoodsId
+                           AND _tmpContractGoods.GoodsKindId = _tmpMI.GoodsKindId
+                           AND _tmpContractGoods.ValuePrice  <> _tmpMI.Price
+                           AND _tmpContractGoods.ValuePrice  > 0
+              ) AS _tmpMI;
 
      END IF;
 
@@ -200,4 +203,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Scale_Movement_Income_PricePartner (inMovementId:= 29547683, inBranchCode:= 201, inIsUpdate:= TRUE, inSession:= '5')
+-- SELECT * FROM gpUpdate_Scale_Movement_Income_PricePartner (inMovementId:= 29844891, inBranchCode:= 201, inIsUpdate:= TRUE, inSession:= '5')

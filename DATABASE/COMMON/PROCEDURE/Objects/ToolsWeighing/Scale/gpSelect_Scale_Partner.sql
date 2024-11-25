@@ -284,6 +284,7 @@ BEGIN
                                                                                 , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
                                                                                 , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
                                                                                 , zc_Enum_InfoMoneyDestination_20300() -- МНМА
+                                                                                , zc_Enum_InfoMoneyDestination_20400() -- ГСМ
                                                                                 , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                 , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
                                                                                  )

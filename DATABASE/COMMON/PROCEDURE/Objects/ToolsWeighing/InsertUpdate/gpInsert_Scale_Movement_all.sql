@@ -2209,6 +2209,18 @@ BEGIN
 
         END IF;
 
+    ELSE 
+            -- финиш - сохранили <ƒокумент> - <¬звешивание (контрагент)> - только дату + ParentId + AccessKeyId
+            PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, vbOperDate_scale, Movement.ParentId, Movement.AccessKeyId)
+            FROM Movement
+            WHERE Movement.Id = inMovementId;
+
+            -- сохранили свойство <ѕротокол взвешивани€>
+            PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndWeighing(), inMovementId, CURRENT_TIMESTAMP);
+
+            -- сохранили свойство <IP>
+            PERFORM lpInsertUpdate_MovementString (zc_MovementString_IP(), inMovementId, inIP);
+
     END IF; -- if inIsDocPartner = FALSE - сохранили <строчна€ часть>
 
 
