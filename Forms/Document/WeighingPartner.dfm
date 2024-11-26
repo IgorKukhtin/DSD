@@ -1370,7 +1370,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Properties.SaveTime = False
     Properties.ShowTime = False
     ShowHint = True
-    TabOrder = 14
+    TabOrder = 13
     Width = 102
   end
   object cxLabel27: TcxLabel
@@ -2218,12 +2218,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Component = FormParams
           ComponentItem = 'Id'
           ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 42370d
-          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = False
