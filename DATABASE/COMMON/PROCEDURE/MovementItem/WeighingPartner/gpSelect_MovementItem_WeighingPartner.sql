@@ -175,7 +175,7 @@ end if;*/
                   , MIFloat_PromoMovement.ValueData AS MovementPromoId
 
                   , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean  AS isAmountPartnerSecond
-                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, true)         :: Boolean  AS isPriceWithVAT
+                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE)         :: Boolean  AS isPriceWithVAT
                   , COALESCE (MIBoolean_ReturnOut.ValueData, FALSE)           :: Boolean  AS isReturnOut
                   , COALESCE (MIDate_PriceRetOut.ValueData, NULL)             ::TDateTime AS PriceRetOutDate
                   , COALESCE (MIFloat_SummPartner.ValueData,0)                ::TFloat    AS SummPartner 
@@ -418,7 +418,7 @@ end if;*/
                   , MIFloat_PromoMovement.ValueData :: Integer AS MovementPromoId
  
                   , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) :: Boolean  AS isAmountPartnerSecond
-                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, true)         :: Boolean  AS isPriceWithVAT
+                  , COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE)        :: Boolean  AS isPriceWithVAT
                   , COALESCE (MIBoolean_ReturnOut.ValueData, FALSE)           :: Boolean  AS isReturnOut
                   , COALESCE (MIDate_PriceRetOut.ValueData, NULL)             ::TDateTime AS PriceRetOutDate
                   , COALESCE (MIFloat_SummPartner.ValueData,0)                ::TFloat    AS SummPartner 
