@@ -146,6 +146,9 @@ type
     bbPrintDiff: TdxBarButton;
     Separator: TdxBarSeparator;
     spSelectPrint_diff: TdsdStoredProc;
+    spSelectPrint_byPartnerl: TdsdStoredProc;
+    actPrint_byPartner: TdsdPrintAction;
+    bbPrint_byPartner: TdxBarButton;
   private
   public
   end;

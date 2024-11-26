@@ -884,6 +884,14 @@ object IncomeJournalForm: TIncomeJournalForm
         item
           Visible = True
           ItemName = 'bbPrintDiff'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_byPartner'
         end>
     end
     object bbPrintDiff: TdxBarButton
@@ -896,6 +904,10 @@ object IncomeJournalForm: TIncomeJournalForm
       Hint = 'bbSeparator'
       Visible = ivAlways
       ShowCaption = False
+    end
+    object bbPrint_byPartner: TdxBarButton
+      Action = actPrint_byPartner
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -1507,6 +1519,53 @@ object IncomeJournalForm: TIncomeJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_byPartner: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_byPartnerl
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_byPartnerl
+        end>
+      Caption = #1055#1088#1080#1093#1086#1076' ('#1087#1086' '#8470' '#1087#1086#1089#1090#1072#1074#1097'.)'
+      Hint = #1055#1088#1080#1093#1086#1076' ('#1087#1086' '#8470' '#1087#1086#1089#1090#1072#1074#1097'.)'
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Income'
+      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actUpdate_PriceDiff: TdsdUpdateDataSet
       Category = 'Price'
       MoveParams = <>
@@ -1962,6 +2021,48 @@ object IncomeJournalForm: TIncomeJournalForm
       end>
     PackSize = 1
     Left = 360
+    Top = 312
+  end
+  object spSelectPrint_byPartnerl: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_Print_byPartner'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = '1'
+        Component = ClientDataSet
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberPartner'
+        Value = '1'
+        Component = ClientDataSet
+        ComponentItem = 'InvNumberPartner'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
     Top = 312
   end
 end
