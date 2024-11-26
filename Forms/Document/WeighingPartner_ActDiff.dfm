@@ -2400,22 +2400,26 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
     OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inContractId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MovementId_income'
+        ComponentItem = 'ContractId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParam1'
+        Name = 'inOperDate'
         Value = '1'
+        Component = edOperDate
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParam2'
+        Name = 'inInvNumberPartner'
         Value = '1'
+        Component = edInvNumberPartner
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

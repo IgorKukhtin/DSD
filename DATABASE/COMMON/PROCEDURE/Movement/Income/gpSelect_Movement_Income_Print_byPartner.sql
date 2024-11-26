@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_Income_Print_byPartner()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Print_byPartner (Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Print_byPartner (Integer, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income_Print_byPartner(
-    IN inMovementId        Integer  , -- ключ Документа
-    IN inParam1            Integer  , -- 
-    IN inParam2            Integer  , -- 
+    IN inContractId        Integer  , -- Договор    
+   -- IN inPaidKindId        Integer  ,   
+    IN inOperDate          TDateTime , -- 
+    IN inInvNumberPartner  TVarChar , -- 
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -32,15 +34,52 @@ $BODY$
 
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbGoodsPropertyId_basis Integer;
-    DECLARE vbContractId Integer;
     DECLARE vbIsProcess_BranchIn Boolean;
-    DECLARE vbInvNumberPartner TVarChar;
-    DECLARE vbOperDate TDateTime;
-
+    DECLARE vbMovementId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income_Print());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- Проверка
+     IF COALESCE (inInvNumberPartner, '') = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлен Номер документа поставщика.';
+     END IF;
+
+
+    -- ВСЕ приходы, с одинаковым InvNumberPartner + ContractId + PaidKindId   
+    CREATE TEMP TABLE tmpMovement (MovementId Integer, OperDate TDateTime, MovementId_WeighingPartner Integer) ON COMMIT DROP;
+    INSERT INTO  tmpMovement (MovementId, OperDate, MovementId_WeighingPartner)
+       SELECT Movement.Id                 AS MovementId
+            , Movement.OperDate           AS OperDate
+            , Movement_WeighingPartner.Id AS MovementId_WeighingPartner
+       FROM Movement
+            INNER JOIN MovementString AS MovementString_InvNumberPartner
+                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                     AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+                                     AND MovementString_InvNumberPartner.ValueData  = inInvNumberPartner
+                                     AND inInvNumberPartner <> ''
+            INNER JOIN MovementLinkObject AS MLO_Contract
+                                          ON MLO_Contract.MovementId = Movement.Id
+                                         AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                         AND MLO_Contract.ObjectId   = inContractId
+       /*     INNER JOIN MovementLinkObject AS MLO_PaidKind
+                                          ON MLO_PaidKind.MovementId = Movement.Id
+                                         AND MLO_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
+                                         AND MLO_PaidKind.ObjectId   = inPaidKindId */
+            LEFT JOIN Movement AS Movement_WeighingPartner
+                               ON Movement_WeighingPartner.ParentId = Movement.Id
+                              AND Movement_WeighingPartner.DescId   = zc_Movement_WeighingPartner()
+       WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate
+         AND Movement.DescId   = zc_Movement_Income()
+         AND Movement.StatusId = zc_Enum_Status_Complete()
+        ;
+
+    --переопределим документ, что б всегда ператался один и тот же , берем макс. Id
+    vbMovementId := (SELECT  MAX (tmpMovement.MovementId)
+                     FROM tmpMovement
+                     );
 
 
      -- параметры из документа
@@ -54,12 +93,8 @@ BEGIN
           , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId), MovementLinkObject_To.ObjectId) AS GoodsPropertyId
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)     AS GoodsPropertyId_basis
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
-          , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
-          , COALESCE (MovementString_InvNumberPartner.ValueData,'') ::TVarChar AS InvNumberPartner 
-          , Movement.OperDate
 
-            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePercentTo, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
-               , vbInvNumberPartner, vbOperDate
+            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePercentTo, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -88,10 +123,7 @@ BEGIN
                                   ON MovementFloat_ChangePercentTo.MovementId = Movement.Id
                                  AND MovementFloat_ChangePercentTo.DescId = zc_MovementFloat_ChangePercentPartner()                              
 
-          LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                   ON MovementString_InvNumberPartner.MovementId = Movement.Id
-                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()      
-     WHERE Movement.Id = inMovementId
+     WHERE Movement.Id = vbMovementId
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
 
@@ -100,60 +132,18 @@ BEGIN
     THEN
         IF vbStatusId = zc_Enum_Status_Erased() OR vbUserId = 5
         THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
+            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = vbMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = vbMovementId);
         END IF;
         IF vbStatusId = zc_Enum_Status_UnComplete()
         THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
+            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = vbMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = vbMovementId);
         END IF;
         -- это уже странная ошибка
         -- RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
     END IF;
 
 
-    -- ВСЕ приходы, с одинаковым InvNumberPartner + ContractId + PaidKindId       + для Акта Разногласий
-    CREATE TEMP TABLE tmpMovement (MovementId Integer, OperDate TDateTime, MovementId_WeighingPartner Integer) ON COMMIT DROP;
-    INSERT INTO  tmpMovement (MovementId, OperDate, MovementId_WeighingPartner)
-       SELECT Movement.Id                 AS MovementId
-            , Movement.OperDate           AS OperDate
-            , Movement_WeighingPartner.Id AS MovementId_WeighingPartner
-       FROM Movement
-            INNER JOIN MovementString AS MovementString_InvNumberPartner
-                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
-                                     AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
-                                     AND MovementString_InvNumberPartner.ValueData  = vbInvNumberPartner
-                                     AND vbInvNumberPartner <> ''
-            INNER JOIN MovementLinkObject AS MLO_Contract
-                                          ON MLO_Contract.MovementId = Movement.Id
-                                         AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
-                                         AND MLO_Contract.ObjectId   = vbContractId
-            INNER JOIN MovementLinkObject AS MLO_PaidKind
-                                          ON MLO_PaidKind.MovementId = Movement.Id
-                                         AND MLO_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
-                                         AND MLO_PaidKind.ObjectId   = vbPaidKindId
-            LEFT JOIN Movement AS Movement_WeighingPartner
-                               ON Movement_WeighingPartner.ParentId = Movement.Id
-                              AND Movement_WeighingPartner.DescId   = zc_Movement_WeighingPartner()
-       WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 DAY' AND vbOperDate
-         AND Movement.DescId   = zc_Movement_Income()
-         AND Movement.StatusId = zc_Enum_Status_Complete()
-     UNION
-       --текущий док, если нет  InvNumberPartner
-       SELECT Movement.Id                 AS MovementId
-            , Movement.OperDate           AS OperDate
-            , Movement_WeighingPartner.Id AS MovementId_WeighingPartner
-       FROM Movement  
-            LEFT JOIN Movement AS Movement_WeighingPartner
-                               ON Movement_WeighingPartner.ParentId = Movement.Id
-                              AND Movement_WeighingPartner.DescId   = zc_Movement_WeighingPartner()
-       WHERE COALESCE (vbInvNumberPartner,'') = ''
-         AND Movement.Id = inMovementId                 
-       ;
 
-    --переопределим документ, что б всегда ператался один и тот же , берем макс. Id
-    inMovementId := (SELECT  MAX (tmpMovement.MovementId)
-                     FROM tmpMovement
-                     );
 
       --
     OPEN Cursor1 FOR
@@ -178,7 +168,7 @@ BEGIN
 
   , tmpMovementBoolean AS (SELECT MovementBoolean.*
                            FROM MovementBoolean
-                           WHERE MovementBoolean.MovementId = inMovementId
+                           WHERE MovementBoolean.MovementId = vbMovementId
                              AND MovementBoolean.DescId IN (zc_MovementBoolean_isIncome()
                                                           , zc_MovementBoolean_PriceWithVAT()
                                                           )
@@ -186,12 +176,12 @@ BEGIN
 
   , tmpMovementLinkObject AS (SELECT MovementLinkObject.*
                            FROM MovementLinkObject
-                           WHERE MovementLinkObject.MovementId = inMovementId
+                           WHERE MovementLinkObject.MovementId = vbMovementId
                          )
 
   , tmpMovementLinkMovement AS (SELECT MovementLinkMovement.*
                            FROM MovementLinkMovement
-                           WHERE MovementLinkMovement.MovementId = inMovementId
+                           WHERE MovementLinkMovement.MovementId = vbMovementId
                              AND MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Transport()
                                                           )
                          )
@@ -205,8 +195,8 @@ BEGIN
          SELECT
              Movement.Id
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
-           , COALESCE (MovementString_InvNumberPartner.ValueData, Movement.InvNumber) ::TVarChar  AS InvNumber
-           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     ::TDateTime AS OperDate
+           , Movement.InvNumber ::TVarChar  AS InvNumber
+           , Movement.OperDate     ::TDateTime AS OperDate
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
 
@@ -411,7 +401,7 @@ BEGIN
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object AS Onject_PersonalDriver ON Onject_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
                            
-      WHERE Movement.Id = inMovementId
+      WHERE Movement.Id = vbMovementId
          AND Movement.DescId = zc_Movement_Income();
      
     RETURN NEXT Cursor1;
@@ -692,5 +682,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_Print_byPartner (inMovementId := 29846911 , inParam1:=1, inParam2:=1, inSession:= '5'); FETCH ALL "<unnamed portal 18>";
+-- SELECT * FROM gpSelect_Movement_Income_Print_byPartner (inContractId := 1942426 , inOperDate:='25.11.2024'::TDateTime, inInvNumberPartner:='300441100', inSession:= '5');  FETCH ALL "<unnamed portal 6>";
 

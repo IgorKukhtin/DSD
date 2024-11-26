@@ -2036,22 +2036,28 @@ object IncomeJournalForm: TIncomeJournalForm
     OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inContractId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'Id'
+        ComponentItem = 'ContractId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParam1'
+        Name = 'inOperDate'
         Value = '1'
+        Component = ClientDataSet
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParam2'
+        Name = 'inInvNumberPartner'
         Value = '1'
+        Component = ClientDataSet
+        ComponentItem = 'InvNumberPartner'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
