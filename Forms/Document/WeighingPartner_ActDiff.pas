@@ -140,6 +140,11 @@ type
     cbDocPartner: TcxCheckBox;
     actActDiffEdit: TdsdInsertUpdateAction;
     bbActDiffEdit: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint_byPartnerl: TdsdStoredProc;
+    actPrint_byPartner: TdsdPrintAction;
+    bbPrint_byPartner: TdxBarButton;
   private
   public
   end;

@@ -205,8 +205,8 @@ BEGIN
          SELECT
              Movement.Id
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
-           , Movement.InvNumber
-           , Movement.OperDate
+           , COALESCE (MovementString_InvNumberPartner.ValueData, Movement.InvNumber) ::TVarChar  AS InvNumber
+           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     ::TDateTime AS OperDate
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
 
