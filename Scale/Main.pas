@@ -459,14 +459,17 @@ begin
               ParamsMovement.ParamByName('isFind_diff_inf').AsBoolean:=TRUE;
               //если откл по цене, надо переспросить
               if ParamsMovement.ParamByName('isPrice_diff_inf').AsBoolean = true
-              then
+              then begin
                 if not DialogMsgForm.Execute
                              ('Найдено отклонение цены от спецификации.'
                               ,'Для <('+ParamsMovement.ParamByName('GoodsCode_inf').AsString+') '+ParamsMovement.ParamByName('GoodsName_inf').AsString+'>'
                              +' с ценой поставщика  = <'+FloatToStr(ParamsMovement.ParamByName('PricePartner_inf').AsFloat)+'>.'
                      ,'Будет сформирован Акт разногласий.'
-                      + 'Продолжить?')//,mtConfirmation,mbYesNoCancel,0) <> 6
-                then exit;
+                      //+ 'Продолжить?'
+                      )//,mtConfirmation,mbYesNoCancel,0) <> 6
+                then ;
+                Print_Income_Price_diff (ParamsMovement.ParamByName('MovementDescId').AsInteger);
+              end;
 
      end;
      //

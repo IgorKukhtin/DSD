@@ -132,7 +132,8 @@ uses
   DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
   dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas',
   DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
-  DialogIncome_PricePartner in '..\Scale\DialogIncome_PricePartner.pas' {DialogIncome_PricePartnerForm};
+  DialogIncome_PricePartner in '..\Scale\DialogIncome_PricePartner.pas' {DialogIncome_PricePartnerForm},
+  DialogChangePercentAmount in '..\Scale\DialogChangePercentAmount.pas' {DialogChangePercentAmountForm};
 
 {$R *.res}
 
@@ -192,6 +193,7 @@ begin
          Application.CreateForm(TGuideReasonForm, GuideReasonForm);
          Application.CreateForm(TGuideAssetForm, GuideAssetForm);
          Application.CreateForm(TGuideRetailForm, GuideRetailForm);
+         Application.CreateForm(TDialogChangePercentAmountForm, DialogChangePercentAmountForm);
   end
   else
 
@@ -243,6 +245,7 @@ begin
          Application.CreateForm(TGuideReasonForm, GuideReasonForm);
          Application.CreateForm(TGuideAssetForm, GuideAssetForm);
          Application.CreateForm(TGuideRetailForm, GuideRetailForm);
+         Application.CreateForm(TDialogChangePercentAmountForm, DialogChangePercentAmountForm);
   end;
   //
   Application.Run;

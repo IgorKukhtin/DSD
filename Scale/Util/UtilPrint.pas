@@ -160,6 +160,8 @@ type
     actSPPrintTTNProcName: TdsdExecStoredProc;
     actPrint_Income_diff: TdsdPrintAction;
     spSelectPrint_Income_diff: TdsdStoredProc;
+    spSelectPrint_Income_Price_diff: TdsdStoredProc;
+    actPrint_Income_Price_diff: TdsdPrintAction;
   private
   end;
 
@@ -181,6 +183,7 @@ type
   function Print_QualityDoc_list(MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
   function Print_ReportGoodsBalance (StartDate,EndDate:TDateTime; UnitId : Integer; UnitName : String; isGoodsKind, isPartionGoods:Boolean):Boolean;
   function Print_Income_diff (MovementId: Integer):Boolean;
+  function Print_Income_Price_diff (MovementId: Integer):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
   procedure SendEDI_OrdSpr (MovementId: Integer);
@@ -279,6 +282,16 @@ begin
      //
      UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
      UtilPrintForm.actPrint_Income_diff.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Income_Price_diff (MovementId: Integer):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+     UtilPrintForm.actPrint_Income_Price_diff.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_ReturnOut (MovementId: Integer);

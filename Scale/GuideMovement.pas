@@ -151,6 +151,11 @@ type
     actUpdateStatus: TAction;
     cbIncome_diff: TCheckBox;
     InvNumberPartner: TcxGridDBColumn;
+    bbChangePercentAmount: TSpeedButton;
+    OperDatePartner: TcxGridDBColumn;
+    ChangePercentAmount: TcxGridDBColumn;
+    isReason1: TcxGridDBColumn;
+    isReason2: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -188,6 +193,7 @@ type
     procedure actChangeTransportExecute(Sender: TObject);
     procedure actUpdateStatusExecute(Sender: TObject);
     procedure cbIncome_diffClick(Sender: TObject);
+    procedure bbChangePercentAmountClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -215,7 +221,7 @@ var
 
 implementation
 {$R *.dfm}
-uses dmMainScale,UtilScale,UtilPrint,Main,DialogMovementDesc, DialogDateValue, GuideMovementTransport;
+uses dmMainScale,UtilScale,UtilPrint,Main,DialogMovementDesc, DialogDateValue, GuideMovementTransport, DialogChangePercentAmount;
 {------------------------------------------------------------------------------}
 function TGuideMovementForm.Execute(var execParamsMovement:TParams;isChoice:Boolean): boolean;
 begin
@@ -282,6 +288,29 @@ begin
           ParamByName('inEndDate').Value:=EndDate;
           ParamByName('inIsComlete').Value:=not isChoice_local;
           Execute;
+     end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbChangePercentAmountClick(Sender: TObject);
+begin
+     //
+     with DialogChangePercentAmountForm do begin
+        MovementId_wp:= CDS.FieldByName('Id').AsInteger;
+        MovementId_DocPartner:= CDS.FieldByName('MovementId_DocPartner').AsInteger;
+        InvNumberEdit.Text:= CDS.FieldByName('InvNumber').AsString;
+        InvNumberPartnerEdit.Text:= CDS.FieldByName('InvNumberPartner').AsString;
+        PartnertEdit.Text:= CDS.FieldByName('FromName').AsString;
+        DateValueEdit.Text:= DateToStr(CDS.FieldByName('OperDatePartner').AsDateTime);
+        //
+        DiscountAmountPartnerEdit.Text:= FloatToStr(CDS.FieldByName('ChangePercentAmount').AsFloat);
+        if CDS.FieldByName('isReason1').AsBoolean = TRUE
+        then rgDiscountAmountPartner.ItemIndex:= 1
+        else
+            if CDS.FieldByName('isReason2').AsBoolean = TRUE
+            then rgDiscountAmountPartner.ItemIndex:= 0
+            else rgDiscountAmountPartner.ItemIndex:= -1;
+        //
+        if Execute then RefreshDataSet;
      end;
 end;
 {------------------------------------------------------------------------------}
@@ -645,6 +674,8 @@ begin
   bbChangeMember.Enabled:=GetArrayList_Value_byName(Default_Array,'isPersonalComplete') = AnsiUpperCase('TRUE');
 
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('InvNumberPartner').Index].Visible := ((SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 210));
+
+  bbChangePercentAmount.Visible := (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 210);
 
   Create_ParamsMovement(ParamsMovement_local);
 
