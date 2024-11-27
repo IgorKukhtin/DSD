@@ -2044,6 +2044,22 @@ object IncomeJournalForm: TIncomeJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PaidKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'FromId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate'
         Value = '1'
         Component = ClientDataSet

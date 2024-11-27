@@ -18,8 +18,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CurrencyValue TFloat, ParValue TFloat
              , isCurrencyUser Boolean 
              , isPriceDiff Boolean
-             , FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
-             , PaidKindName TVarChar
+             , FromId Integer, FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , JuridicalName_From TVarChar, OKPO_From TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -100,11 +100,13 @@ BEGIN
            , COALESCE (MovementBoolean_CurrencyUser.ValueData, FALSE) ::Boolean    AS isCurrencyUser
            , COALESCE (MovementBoolean_PriceDiff.ValueData, FALSE)    ::Boolean    AS isPriceDiff
 
+           , Object_From.Id                              AS FromId
            , Object_From.ValueData                       AS FromName
            , ObjectDesc_from.ItemName                    AS ItemName_from
            , Object_To.Id                                AS ToId
            , Object_To.ValueData                         AS ToName
            , ObjectDesc_to.ItemName                      AS ItemName_to
+           , Object_PaidKind.Id                          AS PaidKindId
            , Object_PaidKind.ValueData                   AS PaidKindName
            , View_Contract_InvNumber.ContractId          AS ContractId
            , View_Contract_InvNumber.ContractCode        AS ContractCode

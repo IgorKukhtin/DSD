@@ -44,8 +44,8 @@ type
     cxLabel2: TcxLabel;
     edFrom: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    dsdGuidesFrom: TdsdGuides;
-    dsdGuidesTo: TdsdGuides;
+    GuidesFrom: TdsdGuides;
+    GuidesTo: TdsdGuides;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
@@ -88,7 +88,7 @@ type
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     IsErased: TcxGridDBColumn;
-    StatusGuides: TdsdGuides;
+    GuidesStatus: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
@@ -98,17 +98,17 @@ type
     edEndWeighing: TcxDateEdit;
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
-    PaidKindGuides: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
     cxLabel15: TcxLabel;
     cxLabel16: TcxLabel;
     edContract: TcxButtonEdit;
     cxLabel17: TcxLabel;
-    ContractGuides: TdsdGuides;
+    GuidesContract: TdsdGuides;
     edWeighingNumber: TcxCurrencyEdit;
     AmountPartner_income: TcxGridDBColumn;
     Amount_income: TcxGridDBColumn;
     edContractTag: TcxButtonEdit;
-    ContractTagGuides: TdsdGuides;
+    GuidesContractTag: TdsdGuides;
     MeasureName: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     spUpdateMI: TdsdStoredProc;
@@ -145,6 +145,18 @@ type
     spSelectPrint_byPartnerl: TdsdStoredProc;
     actPrint_byPartner: TdsdPrintAction;
     bbPrint_byPartner: TdxBarButton;
+    spPrint_Act: TdsdStoredProc;
+    actPrintDiff: TdsdPrintAction;
+    bbsPrint: TdxBarSubItem;
+    bbPrintDiff: TdxBarButton;
+    actPrint_all: TdsdPrintAction;
+    bbPrint_DiffPartner: TdxBarButton;
+    actPrint_AllPartner: TdsdPrintAction;
+    spSelectPrint_allPartner: TdsdStoredProc;
+    spSelectPrint_diffPartner: TdsdStoredProc;
+    actPrint_DiffPartner: TdsdPrintAction;
+    bbPrint_AllPartner: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
   private
   public
   end;

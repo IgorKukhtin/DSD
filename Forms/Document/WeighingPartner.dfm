@@ -1648,7 +1648,22 @@ object WeighingPartnerForm: TWeighingPartnerForm
         item
           Visible = True
           ItemName = 'bbPrint_all'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
         end>
+    end
+    object bb: TdxBarButton
+      Action = dsdPrintAction1
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1670,6 +1685,50 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Images = dmMain.ImageList
     Left = 51
     Top = 231
+    object dsdPrintAction1: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrint_allPartner
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_allPartner
+        end>
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#8470' '#1087#1086#1089#1090'.)'
+      Hint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#8470' '#1087#1086#1089#1090'.)'
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingPartner'
+      ReportNameParam.Value = 'PrintMovement_WeighingPartner'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -3573,8 +3632,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 382
-    Top = 96
+    Left = 366
+    Top = 64
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -3605,6 +3664,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '1'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3640,6 +3705,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inParam'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisShowAll'
         Value = True
         DataType = ftBoolean
@@ -3647,7 +3718,44 @@ object WeighingPartnerForm: TWeighingPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1127
-    Top = 304
+    Left = 1103
+    Top = 312
+  end
+  object spSelectPrint_allPartner: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_WeighingPartner_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 999
+    Top = 336
   end
 end
