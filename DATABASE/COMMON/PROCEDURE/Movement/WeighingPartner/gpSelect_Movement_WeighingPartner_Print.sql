@@ -43,6 +43,8 @@ BEGIN
      WHERE Movement.Id = inMovementId
      ;
 
+
+
     OPEN Cursor1 FOR
        SELECT  zfConvert_StringToNumber (Movement.InvNumber)        AS InvNumber
              , MovementString_InvNumberPartner.ValueData ::TVarChar AS InvNumberPartner
