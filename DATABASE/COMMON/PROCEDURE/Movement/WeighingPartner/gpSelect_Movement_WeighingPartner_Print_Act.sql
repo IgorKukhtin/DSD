@@ -26,6 +26,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income_Print());
      vbUserId:= lpGetUserBySession (inSession);
 
+     IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_DocPartner() AND MB.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не проведен.';
+     END IF;
 
      -- параметры из документа
      SELECT Movement.StatusId
@@ -34,7 +38,7 @@ BEGIN
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
           , COALESCE (MovementString_InvNumberPartner.ValueData,'') ::TVarChar AS InvNumberPartner
 
-            INTO vbStatusId, vbOperDate, vbPaidKindId, vbContractId
+            INTO vbStatusId, vbOperDate, vbContractId, vbPaidKindId
                , vbInvNumberPartner
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -84,9 +88,9 @@ BEGIN
                                           ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                          AND MovementLinkObject_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
                                          AND MovementLinkObject_PaidKind.ObjectId   = vbPaidKindId
-            LEFT JOIN tmpMovementLinkMovement AS MovementLinkMovement_Transport
-                                              ON MovementLinkMovement_Transport.MovementId = Movement.Id
-                                             AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
        WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 DAY' AND vbOperDate + INTERVAL '1 DAY'
          AND Movement.DescId = zc_Movement_Income()
          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -255,39 +259,41 @@ BEGIN
                                     , gpSelect.PriceNoVAT_income
                                     , gpSelect.PriceWVat_income
 
+                                    , gpSelect.isReturnOut
+                                    , gpSelect.ReasonName
+
                                FROM gpSelect_MI_WeighingPartner_diff (inMovementId, FALSE, inSession) AS gpSelect
                               )
 
 
-       SELECT tmpMI_partner.GoodsId          AS Id
-           , tmpMI_partner.GoodsCode         AS GoodsCode
-           , tmpMI_partner.GoodsName         AS GoodsName_two
-           , tmpMI_partner.GoodsKindName     AS GoodsKindName
-           , tmpMI_partner.MeasureName       AS MeasureName
+       SELECT tmpMI_partner.GoodsCode        AS GoodsCode
+            , tmpMI_partner.GoodsName        AS GoodsName_two
+            , tmpMI_partner.GoodsKindName    AS GoodsKindName
+            , tmpMI_partner.MeasureName      AS MeasureName
 
-             -- Количество Поставщика
-           , tmpMI_partner.AmountPartnerSecond AS AmountPartnerSecond
-             -- Кол-во Поставщик с учетом % скидки кол-во
-           , tmpMI_partner.Amount_income_calc  AS AmountPartner
+              -- Количество Поставщика
+            , tmpMI_partner.AmountPartnerSecond AS AmountPartnerSecond
+              -- Кол-во Поставщик с учетом % скидки кол-во
+            , tmpMI_partner.Amount_income_calc  AS AmountPartner
 
-             -- Разница в количестве
-           , tmpMI_partner.Amount_diff
-             -- Сумма разницы без НДС
-           , tmpMI_partner.Summ_diff
+              -- Разница в количестве
+            , tmpMI_partner.Amount_diff
+              -- Сумма разницы без НДС
+            , tmpMI_partner.Summ_diff
 
-             -- цена Поставщика без НДС, до 4 знаков
-           , tmpMI_partner.PricePartnerNoVAT
-             -- цена Поставщика с НДС, до 4 знаков
-           , tmpMI_partner.PricePartnerWVAT
+              -- цена Поставщика без НДС, до 4 знаков
+            , tmpMI_partner.PricePartnerNoVAT
+              -- цена Поставщика с НДС, до 4 знаков
+            , tmpMI_partner.PricePartnerWVAT
 
-             -- цена приход без НДС
-           , tmpMI_Income.PriceNoVAT_income              :: TFloat AS PriceNoVAT
-             -- цена приход с НДС
-           , tmpMI_Income.PriceWVat_income               :: TFloat AS PriceWVat
+              -- цена приход без НДС
+            , tmpMI_partner.PriceNoVAT_income              :: TFloat AS PriceNoVAT
+              -- цена приход с НДС
+            , tmpMI_partner.PriceWVat_income               :: TFloat AS PriceWVat
 
-             --
-           , tmpMI_partner.isReturnOut
-           , tmpMI_partner.ReasonName AS Comment
+              --
+            , tmpMI_partner.isReturnOut
+            , tmpMI_partner.ReasonName AS Comment
 
        FROM tmpMI_partner
        ORDER BY tmpMI_partner.GoodsName, tmpMI_partner.GoodsKindName
@@ -308,4 +314,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_Print (inMovementId := 29874523, inSession:= '5'); -- FETCH ALL "<unnamed portal 10>";
+-- SELECT * FROM gpSelect_Movement_WeighingPartner_Print_Act (inMovementId := 29874523, inSession:= '5'); -- FETCH ALL "<unnamed portal 10>";

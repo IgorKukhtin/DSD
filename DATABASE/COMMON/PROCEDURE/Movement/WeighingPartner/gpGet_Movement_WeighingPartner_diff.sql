@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , UserId Integer, UserName TVarChar
-             , isDocPartner Boolean 
+             , isDocPartner Boolean
              , Comment TVarChar
               )
 AS
@@ -86,7 +86,9 @@ BEGIN
 
      RETURN QUERY
         WITH tmpStatus AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_Status())
-        SELECT gpGet.Id, gpGet.InvNumber, gpGet.InvNumberPartner, gpGet.OperDate, gpGet.OperDatePartner
+        SELECT gpGet.Id, gpGet.InvNumber
+             , ('№ ' || gpGet.InvNumberPartner || ' От ' || zfConvert_DateToString (gpGet.OperDatePartner)) :: TVarChar AS InvNumberPartner
+             , gpGet.OperDate, gpGet.OperDatePartner
 
              , tmpStatus.ObjectCode AS StatusCode
              , tmpStatus.ValueData  AS StatusName
@@ -115,4 +117,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_WeighingPartner_diff (inMovementId:= 29839567, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_WeighingPartner_diff (inMovementId:= 29774297, inSession:= zfCalc_UserAdmin())
