@@ -3,7 +3,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
   Top = 0
   Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1040#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
   ClientHeight = 441
-  ClientWidth = 956
+  ClientWidth = 1112
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,12 +21,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 956
+    Width = 1112
     Height = 129
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 886
+    ExplicitWidth = 956
     object edInvNumber: TcxTextEdit
       Left = 175
       Top = 22
@@ -244,32 +244,28 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 155
-    Width = 956
+    Width = 1112
     Height = 286
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 886
-    ExplicitHeight = 244
+    ExplicitWidth = 956
     ClientRectBottom = 286
-    ClientRectRight = 956
+    ClientRectRight = 1112
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 886
-      ExplicitHeight = 220
+      ExplicitWidth = 956
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 956
+        Width = 1112
         Height = 262
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -3
-        ExplicitTop = 16
-        ExplicitHeight = 220
+        ExplicitWidth = 956
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -931,16 +927,37 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_all'
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_DiffPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_AllPartner'
         end>
     end
     object bbPrintDiff: TdxBarButton
       Action = actPrintDiff
       Category = 0
     end
-    object bbPrint_all: TdxBarButton
-      Action = actPrint_all
+    object bbPrint_DiffPartner: TdxBarButton
+      Action = actPrint_DiffPartner
+      Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' ('#1087#1086' '#8470' '#1087#1086#1089#1090#1072#1074#1097'.)'
       Category = 0
+    end
+    object bbPrint_AllPartner: TdxBarButton
+      Action = actPrint_AllPartner
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086' '#8470' '#1087#1086#1089#1090#1072#1074#1097'.)'
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -962,6 +979,63 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
     Images = dmMain.ImageList
     Left = 51
     Top = 231
+    object actPrint_DiffPartner: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_diffPartner
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_diffPartner
+        end
+        item
+        end>
+      Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
+      Hint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingPartner'
+      ReportNameParam.Value = 'PrintMovement_WeighingPartner'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1013,6 +1087,63 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actPrint_AllPartner: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_allPartner
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_allPartner
+        end
+        item
+        end>
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Hint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingPartner'
+      ReportNameParam.Value = 'PrintMovement_WeighingPartner'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1643,10 +1774,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint_all
       StoredProcList = <
         item
-          StoredProc = spSelectPrint_all
         end>
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       Hint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -2013,8 +2142,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 216
-    Top = 224
+    Left = 168
+    Top = 240
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -2362,8 +2491,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 236
-    Top = 120
+    Left = 260
+    Top = 232
   end
   object spUpdate_PersonalComlete: TdsdStoredProc
     StoredProcName = 'gpUpdate_Scale_Movement_PersonalComlete'
@@ -2606,7 +2735,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
     Left = 880
     Top = 288
   end
-  object spSelectPrint_all: TdsdStoredProc
+  object spSelectPrint_allPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_WeighingPartner_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -2627,6 +2756,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inParam'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisShowAll'
         Value = True
         DataType = ftBoolean
@@ -2634,7 +2769,44 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 879
-    Top = 336
+    Left = 991
+    Top = 304
+  end
+  object spSelectPrint_diffPartner: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_WeighingPartner_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1047
+    Top = 304
   end
 end

@@ -149,9 +149,14 @@ type
     actPrintDiff: TdsdPrintAction;
     bbsPrint: TdxBarSubItem;
     bbPrintDiff: TdxBarButton;
-    spSelectPrint_all: TdsdStoredProc;
     actPrint_all: TdsdPrintAction;
-    bbPrint_all: TdxBarButton;
+    bbPrint_DiffPartner: TdxBarButton;
+    actPrint_AllPartner: TdsdPrintAction;
+    spSelectPrint_allPartner: TdsdStoredProc;
+    spSelectPrint_diffPartner: TdsdStoredProc;
+    actPrint_DiffPartner: TdsdPrintAction;
+    bbPrint_AllPartner: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
   private
   public
   end;

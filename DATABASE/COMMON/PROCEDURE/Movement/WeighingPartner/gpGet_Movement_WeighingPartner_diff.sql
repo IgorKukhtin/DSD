@@ -74,7 +74,7 @@ BEGIN
          -- Проверка
          IF COALESCE (vbMovementId_find_min, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Документов поставщика не найден.';
+             RAISE EXCEPTION 'Ошибка.Документ поставщика не найден.';
          END IF;
 
          -- замена - поиск Документ поставщика
@@ -102,7 +102,7 @@ BEGIN
              , gpGet.Comment
         FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession
                                             ) AS gpGet
-             LEFT JOIN tmpStatus ON tmpStatus.Id = CASE WHEN gpGet.isDocPartner_real = TRUE THEN zc_Enum_Status_Complete() ELSE zc_Enum_Status_UmComplete() END;
+             LEFT JOIN tmpStatus ON tmpStatus.Id = CASE WHEN gpGet.isDocPartner_real = TRUE THEN zc_Enum_Status_Complete() ELSE zc_Enum_Status_UnComplete() END;
 
 END;
 $BODY$

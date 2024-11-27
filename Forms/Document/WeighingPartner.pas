@@ -202,6 +202,10 @@ type
     bbPrint_diff: TdxBarButton;
     bbPrint_all: TdxBarButton;
     bbsPrint: TdxBarSubItem;
+    spSelectPrint_allPartner: TdsdStoredProc;
+    dsdPrintAction1: TdsdPrintAction;
+    bb: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
   private
   public
   end;

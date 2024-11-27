@@ -24,7 +24,6 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitTop = -1
     object deStart: TcxDateEdit
       Left = 102
       Top = 5
@@ -64,7 +63,6 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -40
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -2106,6 +2104,12 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inParam'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisShowAll'
         Value = False
         DataType = ftBoolean
@@ -2133,6 +2137,12 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '1'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

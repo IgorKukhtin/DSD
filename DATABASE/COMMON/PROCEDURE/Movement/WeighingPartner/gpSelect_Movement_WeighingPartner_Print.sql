@@ -1,9 +1,11 @@
 -- Function: gpSelect_Movement_WeighingPartner_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Print (Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Print (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Print (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingPartner_Print(
     IN inMovementId                 Integer  , -- ключ Документа
+    IN inParam                      Integer , -- 1 - для текущего документа,  2 - для всех док. по Номеру поставщика
     IN inisShowAll                  Boolean  , -- 2 печати показываем все или  "Отклонение по цене
     IN inSession                    TVarChar    -- сессия пользователя
 )
@@ -25,6 +27,9 @@ BEGIN
      --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_WeighingPartner_Print());
      vbUserId:= lpGetUserBySession (inSession);
 
+     IF inParam = 1
+     THEN
+     
      --Данные из шапки документа
      SELECT Movement.DescId
           , Movement.StatusId
@@ -227,7 +232,50 @@ BEGIN
         ;
 
 
-    RETURN NEXT Cursor2;
+    RETURN NEXT Cursor2;  
+    
+    END IF;
+    
+    --данные из всех док. взвешивания
+    IF inParam = 2
+    THEN
+
+    CREATE TEMP TABLE tmpGet (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
+                            , FromName TVarChar, PaidKindName TVarChar, ContractName TVarChar, ContractSigningDate TDateTime) ON COMMIT DROP;
+    INSERT INTO  tmpGet (Id, InvNumber, InvNumberPartner, OperDate, OperDatePartner
+                            , FromName, PaidKindName, ContractName, ContractSigningDate)
+       SELECT gpGet.Id, gpGet.InvNumber, gpGet.InvNumberPartner, gpGet.OperDate, gpGet.OperDatePartner
+            , gpGet.FromName
+            , gpGet.PaidKindName
+            , gpGet.ContractName
+            , ObjectDate_Signing.ValueData  ::TDateTime AS ContractSigningDate
+        FROM gpGet_Movement_WeighingPartner_diff (inMovementId:= inMovementId, inSession:= inSession
+                                            ) AS gpGet
+             LEFT JOIN ObjectDate AS ObjectDate_Signing
+                                      ON ObjectDate_Signing.ObjectId = gpGet.ContractId
+                                     AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+                                     AND gpGet.ContractName <> '-'
+        ;
+       --переопределяем документ на док. поставщика 
+       inMovementId := (SELECT tmpGet.Id FROM tmpGet);
+        
+      OPEN Cursor1 FOR
+ 
+      SELECT *
+      FROM tmpGet;
+
+      RETURN NEXT Cursor1; 
+  
+      OPEN Cursor2 FOR 
+      
+      SELECT tmp.*
+      FROM gpSelect_MI_WeighingPartner_diff (inMovementId:= inMovementId, inisErased := FALSE, inSession:= inSession) AS tmp
+      WHERE inisShowAll = True OR COALESCE (Price_diff,0) <> 0
+      ;
+      RETURN NEXT Cursor2;
+    
+    END IF;
+    
 
 END;
 $BODY$
