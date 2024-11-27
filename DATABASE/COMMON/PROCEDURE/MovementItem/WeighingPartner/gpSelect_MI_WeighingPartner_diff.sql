@@ -496,7 +496,7 @@ BEGIN
              -- Кол-во (склад)
            , tmpMI_Income.Amount              :: TFloat AS Amount_income
 
-             -- Кол-во Поставшик с учетом % скидки кол-во
+             -- Кол-во Поставщик с учетом % скидки кол-во
            , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE
                   -- только здесь % скидки кол-во
                   THEN tmpMI_Income.Amount * (1 - tmpMI_Income.ChangePercentAmount/100)
@@ -509,7 +509,7 @@ BEGIN
 
              END :: TFloat AS Amount_income_calc
 
-              -- Кол-во Поставшик - Документ Приход от Поставщика
+              -- Кол-во Поставщик - Документ Приход от Поставщика - информативно
            , tmpMI_Income.AmountPartner           :: TFloat AS AmountPartner_income
 
            , tmpMI_Income.PriceNoVAT              :: TFloat AS PriceNoVAT_income
