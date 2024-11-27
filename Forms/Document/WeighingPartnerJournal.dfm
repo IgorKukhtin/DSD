@@ -2104,12 +2104,6 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParam'
-        Value = '1'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisShowAll'
         Value = False
         DataType = ftBoolean
@@ -2137,12 +2131,6 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '1'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
