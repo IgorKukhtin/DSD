@@ -3755,7 +3755,7 @@ object UtilPrintForm: TUtilPrintForm
     Top = 64
   end
   object spSelectPrint_Income_diff: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Income_Print'
+    StoredProcName = 'gpSelect_Movement_WeighingPartner_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -3775,8 +3775,8 @@ object UtilPrintForm: TUtilPrintForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsActDiff'
-        Value = True
+        Name = 'inIsShowAll '
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -126,6 +126,7 @@ type
   function isEqualFloatValues (Value1,Value2:Double):boolean;
 
   function _myTrunct_4 (Value:Double):Double;
+  function _myTrunct_2 (Value:Double):Double;
 
   procedure MyDelay(mySec:Integer);
   procedure MyDelay_two(mySec:Integer);
@@ -246,6 +247,16 @@ begin
     if (Value_int mod 10) >= 5
     then Result:= (trunc(Value_int  / 10) + 1) / 10000
     else Result:= (trunc(Value_int  / 10) + 0) / 10000
+
+end;
+{------------------------------------------------------------------------}
+function _myTrunct_2 (Value:Double):Double;
+var Value_int : Int64;
+begin
+    Value_int := trunc(Value * 1000);
+    if (Value_int mod 10) >= 5
+    then Result:= (trunc(Value_int  / 10) + 1) / 100
+    else Result:= (trunc(Value_int  / 10) + 0) / 100
 
 end;
 {------------------------------------------------------------------------}

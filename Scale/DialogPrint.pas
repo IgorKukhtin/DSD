@@ -73,7 +73,7 @@ var
 
 implementation
 {$R *.dfm}
-uses UtilScale, DMMainScale;
+uses UtilScale, DMMainScale, Data.DB;
 {------------------------------------------------------------------------------}
 function TDialogPrintForm.Execute(MovementDescId:Integer;CountMovement:Integer; isMovement, isAccount, isTransport, isQuality, isPack, isPackGross, isSpec, isTax : Boolean): Boolean; //Проверка корректного ввода в Edit
 begin
@@ -157,6 +157,7 @@ end;
 
 function TDialogPrintForm.Checked: boolean; //Проверка корректного ввода в Edit
 var str_pok_post:String;
+    execParams:TParams;
 begin
      Result:=false;
      //
@@ -164,6 +165,13 @@ begin
      then str_pok_post:='поставщика'
      else str_pok_post:='покупателя';
 
+     if (ParamsMovement.ParamByName('isDocPartner').AsBoolean = TRUE)
+        and (trim(InvNumberPartnerEdit.Text) = '')
+     then begin
+               ShowMessage('Ошибка.Необходимо заполнить Документ Поставщика №.');
+               ActiveControl:=InvNumberPartnerEdit;
+               exit;
+     end;
      //
      if (PanelInvNumberPartner.Visible = TRUE) and (InvNumberPartnerEdit.Text <> '') then
      begin
@@ -265,7 +273,15 @@ begin
          then begin
             Result:=false;
             exit;
-          end;
+         end
+         else begin
+                  execParams:=nil;
+                  ParamAddValue(execParams,'inMovementId',ftInteger,ParamsMovement.ParamByName('MovementId').AsInteger);
+                  ParamAddValue(execParams,'inDescCode',ftString,'zc_MovementDate_OperDatePartner');
+                  ParamAddValue(execParams,'inValueData',ftDateTime,ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
+                  //
+                  DMMainScaleForm.gpUpdate_Scale_MovementDate(execParams);
+         end;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPrintForm.DateValueEditPropertiesChange(Sender: TObject);

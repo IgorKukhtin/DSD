@@ -24,7 +24,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TTransportGoodsJournalForm = class(TAncestorJournalForm)
@@ -66,6 +66,10 @@ type
     actSPPrintTTNProcName: TdsdExecStoredProc;
     mactPrint_TTN: TMultiAction;
     isExternal: TcxGridDBColumn;
+    spSelectPrint_TTN_final: TdsdStoredProc;
+    actPrint_TTN_final: TdsdPrintAction;
+    macPrint_TTN_final: TMultiAction;
+    bbPrint_TTN_final: TdxBarButton;
   private
     { Private declarations }
   public

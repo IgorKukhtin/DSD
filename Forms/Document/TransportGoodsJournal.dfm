@@ -6,7 +6,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 991
-  ExplicitHeight = 575
+  ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -447,10 +447,10 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     Width = 975
     ExplicitWidth = 975
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 45292d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 45292d
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -739,6 +739,69 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
       ImageIndex = 7
       DataSource = MasterDS
     end
+    object actPrint_TTN_final: TdsdPrintAction
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN_final
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN_final
+        end>
+      Caption = 'actPrint_TTN_final'
+      Hint = 'actPrint_TTN_final'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrint_TTN_final: TMultiAction
+      Category = 'Print_TTN'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintTTNProcName
+        end
+        item
+          Action = actPrint_TTN_final
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086#1074#1086#1081' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086#1074#1086#1081' '#1058#1058#1053
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -855,6 +918,14 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_TTN_final'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -904,6 +975,10 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = actChoiceGuides
+      Category = 0
+    end
+    object bbPrint_TTN_final: TdxBarButton
+      Action = macPrint_TTN_final
       Category = 0
     end
   end
@@ -1116,5 +1191,29 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     PackSize = 1
     Left = 824
     Top = 296
+  end
+  object spSelectPrint_TTN_final: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TTN_final_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 623
+    Top = 425
   end
 end

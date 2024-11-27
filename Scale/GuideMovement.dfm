@@ -1524,6 +1524,21 @@ object GuideMovementForm: TGuideMovementForm
       TabOrder = 12
       OnClick = cbIncome_diffClick
     end
+    object cbIncome_Price_diff: TCheckBox
+      Left = 889
+      Top = 23
+      Width = 144
+      Height = 17
+      Caption = #1055#1088#1080#1093#1086#1076' ('#1088#1072#1079#1085#1080#1094#1072' '#1094#1077#1085')'
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 13
+      OnClick = cbIncome_Price_diffClick
+    end
   end
   object DS: TDataSource
     DataSet = CDS

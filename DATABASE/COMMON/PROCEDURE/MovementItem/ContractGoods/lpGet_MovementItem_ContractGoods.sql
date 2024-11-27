@@ -108,9 +108,10 @@ BEGIN
                                , MovementItem.Id                                AS MovementItemId
                                , MovementItem.ObjectId                          AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
-                                 -- Цена в ГРН
+                                 -- Цена в ГРН - по курсу
                                , CASE WHEN MovementBoolean_MultWithVAT.ValueData = TRUE
                                        AND COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) = FALSE
+                                           -- если надо кратно 5
                                            THEN ROUND (COALESCE (MIF_Price.ValueData, 0)
                                                      * CASE WHEN COALESCE (MLO_Currency.ObjectId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
                                                             WHEN tmpCurrencyList.CurrencyValue > 0 AND tmpCurrencyList.ParValue > 0 THEN tmpCurrencyList.CurrencyValue / tmpCurrencyList.ParValue
@@ -119,13 +120,14 @@ BEGIN
                                                        END / 5
                                                       ) * 5
 
+                                      -- если только перевести по курсу - НЕТ округлений
                                       ELSE COALESCE (MIF_Price.ValueData, 0)
                                          * CASE WHEN COALESCE (MLO_Currency.ObjectId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
                                                 WHEN tmpCurrencyList.CurrencyValue > 0 AND tmpCurrencyList.ParValue > 0 THEN tmpCurrencyList.CurrencyValue / tmpCurrencyList.ParValue
                                                 WHEN tmpCurrencyList.CurrencyValue > 0 THEN tmpCurrencyList.CurrencyValue
                                                 ELSE 0
                                            END
-                                 END AS ValuePrice
+                                 END AS ValuePrice_GRN
                                  --
                                , COALESCE (MIF_Price.ValueData, 0)              AS ValuePrice_orig
                                  -- Коэфф перевода из кол-ва поставщика
@@ -201,11 +203,49 @@ BEGIN
               , tmpData.MovementItemId
               , tmpData.GoodsId
               , tmpData.GoodsKindId
-              , tmpData.ValuePrice
-                 
-              , tmpData.ValuePrice_from
-              , tmpData.ValuePrice_to
 
+                -- Цена из спецификации
+              , CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
+                          THEN tmpData.ValuePrice
+                     WHEN tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
+                     WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                     WHEN tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
+                     WHEN tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+                     ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                END :: TFloat
+                -- Цена из спецификации - от
+              , CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
+                          THEN tmpData.ValuePrice_from
+                     WHEN tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 1))
+                     WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 2))
+                     WHEN tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 3))
+                     WHEN tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 4))
+                     ELSE CAST (tmpData.ValuePrice_from AS NUMERIC (16, 2))
+                END :: TFloat
+
+                -- Цена из спецификации - до
+              , CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
+                          THEN tmpData.ValuePrice_to
+                     WHEN tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice_to AS NUMERIC (16, 1))
+                     WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
+                          THEN CAST (tmpData.ValuePrice_to AS NUMERIC (16, 2))
+                     WHEN tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice_to AS NUMERIC (16, 3))
+                     WHEN tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice_to AS NUMERIC (16, 4))
+                     ELSE CAST (tmpData.ValuePrice_to AS NUMERIC (16, 2))
+                END :: TFloat
+
+                -- Цена из спецификации - оригинал (в валюте)
               , tmpData.ValuePrice_orig
 
               , tmpData.CountForAmount
@@ -213,9 +253,19 @@ BEGIN
               , tmpData.RoundPrice
 
                 -- цена БЕЗ НДС / 1.2
-              , CASE WHEN tmpData.isPriceWithVAT = FALSE
+              , CASE WHEN tmpData.isPriceWithVAT = FALSE AND COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
                           -- уже без НДС, ничего не делаем
                           THEN tmpData.ValuePrice
+
+                     -- уже без НДС
+                     WHEN tmpData.isPriceWithVAT = FALSE AND tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
+                     WHEN tmpData.isPriceWithVAT = FALSE AND  (tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0)
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                     WHEN tmpData.isPriceWithVAT = FALSE AND tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
+                     WHEN tmpData.isPriceWithVAT = FALSE AND tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
 
                      -- считаем без НДС
                      WHEN tmpData.RoundPrice = 0 AND tmpData.isMultWithVAT = TRUE
@@ -244,12 +294,26 @@ BEGIN
                           THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 3))
+                     WHEN tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 4))
+
                      ELSE CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_notVat 
+
                 -- миним расчетная цена
-              , CASE WHEN tmpData.isPriceWithVAT = FALSE
+              , CASE WHEN tmpData.isPriceWithVAT = FALSE AND COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
                           THEN tmpData.ValuePrice_from
+
+                     -- уже без НДС
+                     WHEN tmpData.isPriceWithVAT = FALSE AND tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 1))
+                     WHEN tmpData.isPriceWithVAT = FALSE AND (tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0)
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 2))
+                     WHEN tmpData.isPriceWithVAT = FALSE AND tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 3))
+                     WHEN tmpData.isPriceWithVAT = FALSE AND tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 4))
 
                      -- считаем без НДС
                      WHEN tmpData.RoundPrice = 0 AND tmpData.isMultWithVAT = TRUE
@@ -278,12 +342,26 @@ BEGIN
                           THEN CAST (tmpData.ValuePrice_from / 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 3))
+                     WHEN tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice / 1.2 AS NUMERIC (16, 4))
+
                      ELSE CAST (tmpData.ValuePrice_from / 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_from_notVat
+
                 -- макс расчетная цена
-              , CASE WHEN tmpData.isPriceWithVAT = FALSE
+              , CASE WHEN tmpData.isPriceWithVAT = FALSE AND COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
                           THEN tmpData.ValuePrice_to
+
+                     -- уже без НДС
+                     WHEN tmpData.isPriceWithVAT = FALSE AND tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice_to AS NUMERIC (16, 1))
+                     WHEN tmpData.isPriceWithVAT = FALSE AND (tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0)
+                          THEN CAST (tmpData.ValuePrice_to AS NUMERIC (16, 2))
+                     WHEN tmpData.isPriceWithVAT = FALSE AND tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice_to AS NUMERIC (16, 3))
+                     WHEN tmpData.isPriceWithVAT = FALSE AND tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice_to AS NUMERIC (16, 4))
 
                      -- считаем без НДС
                      WHEN tmpData.RoundPrice = 0 AND tmpData.isMultWithVAT = TRUE
@@ -312,14 +390,28 @@ BEGIN
                           THEN CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 3))
+                     WHEN tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 4))
+
                      ELSE CAST (tmpData.ValuePrice_to / 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_to_notVat
               
                 -- цена с НДС * 1.2
-              , CASE WHEN tmpData.isPriceWithVAT = TRUE
+              , CASE WHEN tmpData.isPriceWithVAT = TRUE AND COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
                           -- уже с НДС, ничего не делаем
                           THEN tmpData.ValuePrice
+
+                     -- уже с НДС
+                     WHEN tmpData.isPriceWithVAT = TRUE AND tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
+                     WHEN tmpData.isPriceWithVAT = TRUE AND (tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0)
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                     WHEN tmpData.isPriceWithVAT = TRUE AND tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
+                     WHEN tmpData.isPriceWithVAT = TRUE AND tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+
                      -- считаем с НДС
                      WHEN tmpData.RoundPrice = 1
                           THEN CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 1))
@@ -327,30 +419,63 @@ BEGIN
                           THEN CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 3))
+                     WHEN tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 4))
+
                      ELSE CAST (tmpData.ValuePrice * 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_addVat 
+
                 -- миним расчетная цена
-              , CASE WHEN tmpData.isPriceWithVAT = TRUE
+              , CASE WHEN tmpData.isPriceWithVAT = TRUE AND COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
                           THEN tmpData.ValuePrice_from
+
+                     -- уже с НДС
+                     WHEN tmpData.isPriceWithVAT = TRUE AND tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 1))
+                     WHEN tmpData.isPriceWithVAT = TRUE AND (tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0)
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 2))
+                     WHEN tmpData.isPriceWithVAT = TRUE AND tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 3))
+                     WHEN tmpData.isPriceWithVAT = TRUE AND tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 4))
+
                      WHEN tmpData.RoundPrice = 1
                           THEN CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 1))
                      WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
                           THEN CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 3))
+                     WHEN tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 4))
+
                      ELSE CAST (tmpData.ValuePrice_from * 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_from_addVat
+
                 -- макс расчетная цена
-              , CASE WHEN tmpData.isPriceWithVAT = TRUE
+              , CASE WHEN tmpData.isPriceWithVAT = TRUE AND COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
                           THEN tmpData.ValuePrice_to
+
+                     -- уже с НДС
+                     WHEN tmpData.isPriceWithVAT = TRUE AND tmpData.RoundPrice = 1
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 1))
+                     WHEN tmpData.isPriceWithVAT = TRUE AND (tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0)
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 2))
+                     WHEN tmpData.isPriceWithVAT = TRUE AND tmpData.RoundPrice = 3
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 3))
+                     WHEN tmpData.isPriceWithVAT = TRUE AND tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice_from AS NUMERIC (16, 4))
+
                      WHEN tmpData.RoundPrice = 1
                           THEN CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 1))
                      WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
                           THEN CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 2))
                      WHEN tmpData.RoundPrice = 3
                           THEN CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 3))
+                     WHEN tmpData.RoundPrice = 4
+                          THEN CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 4))
+
                      ELSE CAST (tmpData.ValuePrice_to * 1.2 AS NUMERIC (16, 2))
 
                 END :: TFloat AS ValuePrice_to_addVat
@@ -375,53 +500,55 @@ BEGIN
                      , tmpData.MovementItemId
                      , tmpData.GoodsId
                      , tmpData.GoodsKindId
+                       --
                      , (CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
-                                  THEN tmpData.ValuePrice
+                                  THEN tmpData.ValuePrice_GRN
 
                              -- округление НЕ здесь ????
                              WHEN 1 = 1
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+                                  THEN tmpData.ValuePrice_GRN
 
                              WHEN tmpData.RoundPrice = 1
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
+                                  THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 1))
                              WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                                  THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 2))
                              WHEN tmpData.RoundPrice = 3
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
-                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                                  THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 3))
+                             ELSE CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 2))
                         END) :: TFloat AS ValuePrice
                         
                      , ((1 - tmpData.DiffPrice :: TFloat / 100)
                       * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
-                                  THEN tmpData.ValuePrice
+                                  THEN tmpData.ValuePrice_GRN
 
                              -- округление НЕ здесь ????
                              WHEN 1 = 1
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+                                  THEN tmpData.ValuePrice_GRN
 
                              WHEN tmpData.RoundPrice = 1
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
+                                  THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 1))
                              WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                                  THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 2))
                              WHEN tmpData.RoundPrice = 3
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
-                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                                  THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 3))
+                             ELSE CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 2))
                         END) :: TFloat AS ValuePrice_from
+
                      , ((1 + tmpData.DiffPrice :: TFloat / 100)
                       * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
-                                  THEN tmpData.ValuePrice
+                                  THEN tmpData.ValuePrice_GRN
 
                              -- округление НЕ здесь ????
                              WHEN 1 = 1
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 4))
+                                  THEN tmpData.ValuePrice_GRN
 
                              WHEN tmpData.RoundPrice = 1
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 1))
+                                  THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 1))
                              WHEN tmpData.RoundPrice = 2 OR tmpData.RoundPrice = 0
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                                  THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 2))
                              WHEN tmpData.RoundPrice = 3
-                                  THEN CAST (tmpData.ValuePrice AS NUMERIC (16, 3))
-                             ELSE CAST (tmpData.ValuePrice AS NUMERIC (16, 2))
+                                  THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 3))
+                             ELSE CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 2))
                         END) :: TFloat AS ValuePrice_to
        
                      , tmpData.ValuePrice_orig :: TFloat AS ValuePrice_orig
@@ -463,4 +590,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpGet_MovementItem_ContractGoods (inOperDate:= CURRENT_DATE, inJuridicalId:=0, inPartnerId:= 0, inContractId:= 6523523, inGoodsId:= 0, inUserId:= 5)
+-- SELECT * FROM lpGet_MovementItem_ContractGoods (inOperDate:= CURRENT_DATE, inJuridicalId:=0, inPartnerId:= 0, inContractId:= 10485535, inGoodsId:= 0, inUserId:= 5)

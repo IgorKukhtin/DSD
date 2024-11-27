@@ -170,8 +170,17 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-      SELECT CASE WHEN inMovementDescId = zc_Movement_Sale() THEN vbOperDatePartner ELSE inOperDate END :: TDateTime AS OperDatePartner
-           , CASE WHEN inMovementDescId = zc_Movement_Sale() THEN TRUE
+      SELECT CASE WHEN inMovementDescId = zc_Movement_Income() AND inBranchCode BETWEEN 201 AND 203
+                   AND EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_DocPartner())
+                       THEN inOperDate
+                  WHEN inMovementDescId = zc_Movement_Sale()   THEN vbOperDatePartner
+                  ELSE inOperDate
+             END :: TDateTime AS OperDatePartner
+
+           , CASE WHEN inMovementDescId = zc_Movement_Income() AND inBranchCode BETWEEN 201 AND 203
+                   AND EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_DocPartner())
+                       THEN TRUE
+                  WHEN inMovementDescId = zc_Movement_Sale() THEN TRUE
                 --WHEN inBranchCode IN (301, 302) AND inMovementDescId = zc_Movement_Income() THEN TRUE
                   ELSE FALSE
              END :: Boolean   AS isDialog

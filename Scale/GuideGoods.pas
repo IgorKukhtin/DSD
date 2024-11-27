@@ -1048,14 +1048,17 @@ begin
                 if (ParamsMI.ParamByName('SummPartner').AsFloat > 0)
                and (ParamsMovement.ParamByName('isOperCountPartner').AsBoolean = TRUE) and (ParamsMI.ParamByName('AmountPartnerSecond').AsFloat > 0)
                 // !!!для кол-во поставщика!!!
-                then calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
+                then if cbPriceWithVAT.Checked = TRUE
+                     then calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
+                     else calcPricePartner:= _myTrunct_2 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
 
                 else
                     if (ParamsMI.ParamByName('SummPartner').AsFloat > 0)
                    and (ParamsMovement.ParamByName('isOperCountPartner').AsBoolean = FALSE) and (ParamsMI.ParamByName('RealWeight').AsFloat > 0)
                     // !!!для кол-во ФАКТ!!!
-                    then calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
-
+                    then if cbPriceWithVAT.Checked = TRUE
+                         then calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
+                         else calcPricePartner:= _myTrunct_2 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
                     else calcPricePartner:=0;
 
             except

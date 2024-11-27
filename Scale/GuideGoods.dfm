@@ -1484,7 +1484,7 @@ object GuideGoodsForm: TGuideGoodsForm
           Width = 125
         end
         object cbPriceWithVAT: TCheckBox
-          Left = 7
+          Left = 3
           Top = 38
           Width = 126
           Height = 17
