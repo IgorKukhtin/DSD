@@ -240,7 +240,7 @@ implementation
 //uses DMMainScale;
 {------------------------------------------------------------------------}
 function _myTrunct_4 (Value:Double):Double;
-var Value_int : Integer;
+var Value_int : Int64;
 begin
     Value_int := trunc(Value * 100000);
     if (Value_int mod 10) >= 5
@@ -332,6 +332,7 @@ begin
      ParamAdd(Params,'isComment',ftBoolean);
      ParamAdd(Params,'isInvNumberPartner',ftBoolean);
      ParamAdd(Params,'isDocPartner',ftBoolean);
+     //ParamAdd(Params,'MovementId_DocPartner',ftInteger);
 
      ParamAdd(Params,'SubjectDocId',ftInteger);
      ParamAdd(Params,'SubjectDocCode',ftInteger);

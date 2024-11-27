@@ -35,8 +35,8 @@ object GuideMovementForm: TGuideMovementForm
       BevelOuter = bvNone
       TabOrder = 0
       object ButtonExit: TSpeedButton
-        Left = 676
-        Top = 3
+        Left = 717
+        Top = 2
         Width = 31
         Height = 29
         Action = actExit
@@ -107,8 +107,8 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbPrint: TSpeedButton
-        Left = 431
-        Top = 5
+        Left = 432
+        Top = 3
         Width = 31
         Height = 29
         Hint = #1055#1077#1095#1072#1090#1100
@@ -385,7 +385,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbSale_Order_diffTaxClick
       end
       object bbPrintStickerTermo: TSpeedButton
-        Left = 642
+        Left = 682
         Top = 2
         Width = 31
         Height = 29
@@ -478,7 +478,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbExport_EmailClick
       end
       object bbQualityDoc_list: TSpeedButton
-        Left = 468
+        Left = 469
         Top = 2
         Width = 31
         Height = 29
@@ -549,6 +549,51 @@ object GuideMovementForm: TGuideMovementForm
           0444444444444448904444444444444449904444444444444444}
         ParentShowHint = False
         ShowHint = True
+      end
+      object bbChangePercentAmount: TSpeedButton
+        Left = 642
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1089#1082#1080#1076#1082#1080' / '#1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045
+        Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF000991090F098C096F098509AF098009BF097A09BF0976
+          099F0972095FFFFFFF00FFFFFF00FFFFFF000962095FFFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00099E092F099709EF09960CFF09AB26FF09BA3CFF09BE47FF09A7
+          35FF097809FF097409DF0972092F0969095F096309FFFFFFFF00FFFFFF00FFFF
+          FF0009AB090F09A509EF09A60FFF09CF41FF09E663FF09F57CFF09FF8FFF09FF
+          9DFF09FE93FF09AB3CFF097709EF097209FF096D09FFFFFFFF00FFFFFF00FFFF
+          FF0009AD096F09AC09FF09B81CFF09B21AFF09B321FF09B327FF09C13DFF09FF
+          90FF09FFACFF09FFB1FF09931DFF09DE74FF097609FFFFFFFF00FFFFFF00FFFF
+          FF0009AD09BF09AD09FF09AC09DF09AA098F09A5097F09A1097F099E09DF099A
+          09FF09D65BFF09FFB2FF09FFAAFF09FFB5FF098009FFFFFFFF00FFFFFF00FFFF
+          FF0009AD09BF09AD099FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0009A1
+          09BF099D09FF09E974FF09FFB5FF09FFB6FF098909FFFFFFFF00FFFFFF00FFFF
+          FF0009AD094FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0009AC095F09AA
+          09FF09AD14FF09DE5FFF09DC60FF09DA60FF099209FFFFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0009AD09FF09AD
+          09FF09AB09FF09A509FF099C09FF099609FF099609FFFFFFFF00099609FF0991
+          09FF098B09FF098409FF097E09FF097709FF097D09EFFFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00099E09FF09F9
+          8BFF09F78BFF09F589FF09A129FF097F09EF0978092FFFFFFF00FFFFFF00FFFF
+          FF00FFFFFF000962090F0962095FFFFFFF00FFFFFF00FFFFFF0009A509FF09FF
+          B6FF09FFB5FF09F789FF098E09FF098809CF0985091FFFFFFF00FFFFFF00FFFF
+          FF000967091F096209CF096209BFFFFFFF00FFFFFF00FFFFFF0009AB09FF09FF
+          B5FF09FF94FF09FFB2FF09EC7AFF099712FF098809FF098309BF097D09AF0976
+          09BF096F09FF096709FF096309AFFFFFFF00FFFFFF00FFFFFF0009AD09FF09D4
+          49FF09AF14FF09FFA5FF09FFABFF09FF9AFF09D961FF09C147FF09A327FF09AB
+          2DFF09A320FF097009FF096A096FFFFFFF00FFFFFF00FFFFFF0009AD09FF09AD
+          09FC09AC09CF09B81DFF09EF75FF09FF9DFF09FF8EFF09F57AFF09E562FF09C0
+          37FF09830BFF097809CF0972090FFFFFFF00FFFFFF00FFFFFF0009AD09FC09AD
+          092F09AD090F09AC099F09AB09FF09AC11FF09B828FF09B023FF099E14FF098E
+          09FF098609BF0981090FFFFFFF00FFFFFF00FFFFFF00FFFFFF0009AD092FFFFF
+          FF00FFFFFF00FFFFFF0009AD091F09AA096F09A5097F099F097F099A097F0993
+          092FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbChangePercentAmountClick
       end
     end
     object cxDBGrid: TcxGrid
@@ -782,17 +827,30 @@ object GuideMovementForm: TGuideMovementForm
           HeaderAlignmentVert = vaCenter
           Width = 70
         end
-        object InvNumberPartner: TcxGridDBColumn
-          Caption = #8470' '#1076#1086#1082'. ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
-          DataBinding.FieldName = 'InvNumberPartner'
-          Width = 70
-        end
         object InvNumberOrder: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1082'.  '#1086#1089#1085#1086#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'InvNumberOrder'
           GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
+        object InvNumberPartner: TcxGridDBColumn
+          Caption = #8470' '#1076#1086#1082'. '#1087#1086#1089#1090#1072#1074#1097'.'
+          DataBinding.FieldName = 'InvNumberPartner'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          Options.Editing = False
+          Width = 70
+        end
+        object OperDatePartner: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090'.'
+          DataBinding.FieldName = 'OperDatePartner'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
           Options.Editing = False
           Width = 70
         end
@@ -964,6 +1022,36 @@ object GuideMovementForm: TGuideMovementForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 52
+        end
+        object ChangePercentAmount: TcxGridDBColumn
+          Caption = #1057#1082#1080#1076#1082#1072' '#1074#1077#1089' '#1087#1086#1089#1090'.'
+          DataBinding.FieldName = 'ChangePercentAmount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = '% '#1089#1082#1080#1076#1082#1080' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          Options.Editing = False
+          Width = 70
+        end
+        object isReason1: TcxGridDBColumn
+          Caption = #1089#1082#1080#1076#1082#1072' '#1079#1072' '#1090#1077#1084#1087'.'
+          DataBinding.FieldName = 'isReason1'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
+        object isReason2: TcxGridDBColumn
+          Caption = #1089#1082#1080#1076#1082#1072' '#1079#1072' '#1082#1072#1095'.'
+          DataBinding.FieldName = 'isReason2'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
         end
         object ContractName: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1075'.'

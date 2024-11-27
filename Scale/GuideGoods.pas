@@ -667,6 +667,9 @@ begin
            then if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
                 then ActiveControl:=EditPrice
                 else
+                if (gbSummPartner.Visible = TRUE) and (ActiveControl<>EditSummPartner) and ((EditPrice.Text = '') or (EditPrice.Text = '0'))
+                then ActiveControl:=EditSummPartner
+                else
                 if (gbAmountPartner.Visible = TRUE)and (ActiveControl<>EditAmountPartner)
                 then ActiveControl:=EditAmountPartner
                 else
@@ -698,7 +701,7 @@ begin
                               then ActiveControl:=EditTare1
                               else ActiveControl:=EditTareCount
       else
-      if (ActiveControl=EditWeightValue)or(ActiveControl=EditPrice)
+      if (ActiveControl=EditWeightValue)or(ActiveControl=EditPrice)or(ActiveControl=EditSummPartner)
       then if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
            then ActiveControl:=EditPrice
            else
@@ -1041,9 +1044,19 @@ begin
 
             //цена поставщика - ввод в контроле
             try ParamsMI.ParamByName('SummPartner').AsFloat:= StrToFloat(EditSummPartner.Text);
-                if (ParamsMI.ParamByName('SummPartner').AsFloat > 0) and (ParamsMI.ParamByName('AmountPartnerSecond').AsFloat > 0)
+                //if (ParamsMI.ParamByName('SummPartner').AsFloat > 0) and (ParamsMI.ParamByName('AmountPartnerSecond').AsFloat > 0)
+                if (ParamsMI.ParamByName('SummPartner').AsFloat > 0)
+               and (ParamsMovement.ParamByName('isOperCountPartner').AsBoolean = TRUE) and (ParamsMI.ParamByName('AmountPartnerSecond').AsFloat > 0)
+                // !!!для кол-во поставщика!!!
                 then calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
-                else calcPricePartner:=0;
+
+                else
+                    if (ParamsMI.ParamByName('SummPartner').AsFloat > 0)
+                   and (ParamsMovement.ParamByName('isOperCountPartner').AsBoolean = FALSE) and (ParamsMI.ParamByName('RealWeight').AsFloat > 0)
+                    // !!!для кол-во ФАКТ!!!
+                    then calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
+
+                    else calcPricePartner:=0;
 
             except
                   ParamsMI.ParamByName('SummPartner').AsFloat:= 0;
@@ -1066,7 +1079,7 @@ begin
             if (calcPricePartner <= 0) and (CDS.FieldByName('isNotPriceIncome').AsBoolean = FALSE)
             then begin
                      Result:= false;
-                     ShowMessage('Ошибка.ЦЕНА не может быть <= 0.');
+                     ShowMessage('Ошибка.ЦЕНА не может быть = 0.');
                      ActiveControl:= EditPrice;
                      exit;
             end;
@@ -1518,6 +1531,8 @@ begin
       //and(ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
         )
      or(ParamsMovement.ParamByName('isDocPartner').AsBoolean = TRUE)
+     //or(gbSummPartner.Visible)
+     //or((gbSummPartner.Visible)and (ActiveControl=EditPrice))
      then exit;
      //
      if (trim(EditGoodsCode.Text) = '')
@@ -1535,7 +1550,7 @@ begin
           else
      else if CDS.RecordCount=1
           then try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text);
-          except ParamsMI.ParamByName('RealWeight').AsFloat:=0;end;
+               except ParamsMI.ParamByName('RealWeight').AsFloat:=0;end;
 
      if gbPrice.Visible = TRUE
      then begin
@@ -1545,6 +1560,7 @@ begin
                end;
                //
                if (StrToFloat(EditPrice.Text) <= 0) and (CDS.FieldByName('isNotPriceIncome').AsBoolean = FALSE)
+                  and (gbSummPartner.Visible = FALSE)
                then ActiveControl:=EditPrice
      end;
 
@@ -1569,9 +1585,9 @@ begin
         if (gbSummPartner.Visible = TRUE) and ((EditPrice.Text = '') or (EditPrice.Text = '0'))
         then ActiveControl:=EditSummPartner
         else
-        if (gbAmountPartner.Visible = TRUE)
-         then ActiveControl:=EditAmountPartner
-         else
+        //if (gbAmountPartner.Visible = TRUE)
+        // then ActiveControl:=EditAmountPartner
+        // else
          if rgGoodsKind.Items.Count>1
          then ActiveControl:=EditGoodsKindCode
          else if infoPanelTareFix.Visible
@@ -1584,9 +1600,9 @@ procedure TGuideGoodsForm.EditSummPartnerKeyDown(Sender: TObject; var Key: Word;
 begin
     if Key=13
     then
-        if (gbAmountPartner.Visible = TRUE)
-         then ActiveControl:=EditAmountPartner
-         else
+        //if (gbAmountPartner.Visible = TRUE)
+        // then ActiveControl:=EditAmountPartner
+        // else
          if rgGoodsKind.Items.Count>1
          then ActiveControl:=EditGoodsKindCode
          else if infoPanelTareFix.Visible

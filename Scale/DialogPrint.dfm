@@ -35,7 +35,7 @@ inherited DialogPrintForm: TDialogPrintForm
       ExplicitHeight = 27
     end
     object btnSaveAll: TBitBtn
-      Left = 92
+      Left = 93
       Top = 9
       Width = 118
       Height = 27
@@ -288,7 +288,7 @@ inherited DialogPrintForm: TDialogPrintForm
     TabOrder = 4
     object Label1: TLabel
       Left = 4
-      Top = 1
+      Top = 2
       Width = 73
       Height = 14
       Alignment = taCenter
@@ -302,7 +302,7 @@ inherited DialogPrintForm: TDialogPrintForm
     end
     object CommentEdit: TEdit
       Left = 4
-      Top = 22
+      Top = 20
       Width = 280
       Height = 22
       TabOrder = 0
