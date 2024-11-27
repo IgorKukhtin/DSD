@@ -1665,8 +1665,8 @@ object UtilPrintForm: TUtilPrintForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income_ActDiff'
-      ReportNameParam.Value = 'PrintMovement_Income_ActDiff'
+      ReportName = 'PrintMovement_Income_wp_ActDiff'
+      ReportNameParam.Value = 'PrintMovement_Income_wp_ActDiff'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1677,13 +1677,13 @@ object UtilPrintForm: TUtilPrintForm
     object actPrint_Income_Price_diff: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint_Income_diff
+      StoredProc = spSelectPrint_Income_Price_diff
       StoredProcList = <
         item
-          StoredProc = spSelectPrint_Income_diff
+          StoredProc = spSelectPrint_Income_Price_diff
         end>
-      Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
-      Hint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
+      Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1072#1084
+      Hint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1072#1084
       ImageIndex = 20
       DataSets = <
         item
@@ -3755,7 +3755,7 @@ object UtilPrintForm: TUtilPrintForm
     Top = 64
   end
   object spSelectPrint_Income_diff: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_WeighingPartner_Print'
+    StoredProcName = 'gpSelect_Movement_WeighingPartner_Print_Act'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -3771,13 +3771,6 @@ object UtilPrintForm: TUtilPrintForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsShowAll '
-        Value = False
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
