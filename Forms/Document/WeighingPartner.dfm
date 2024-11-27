@@ -3668,12 +3668,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParam'
-        Value = '1'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisShowAll'
         Value = False
         DataType = ftBoolean
@@ -3705,12 +3699,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParam'
-        Value = '1'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisShowAll'
         Value = True
         DataType = ftBoolean
@@ -3738,12 +3726,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '2'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

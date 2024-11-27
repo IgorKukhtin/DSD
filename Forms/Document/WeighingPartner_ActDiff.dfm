@@ -2695,12 +2695,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParam'
-        Value = '2'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisShowAll'
         Value = True
         DataType = ftBoolean
@@ -2728,12 +2722,6 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '2'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
