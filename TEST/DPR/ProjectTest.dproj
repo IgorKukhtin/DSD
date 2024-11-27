@@ -5439,6 +5439,14 @@
 				<Form>WeighingPartner_ActDiffEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ContractGoodsMovement.pas">
+				<Form>Report_ContractGoodsMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ContractGoodsMovementDialog.pas">
+				<Form>Report_ContractGoodsMovementDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

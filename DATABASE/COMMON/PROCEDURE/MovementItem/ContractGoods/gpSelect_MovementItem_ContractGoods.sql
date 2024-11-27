@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer
              , ChangePrice     TFloat
              , ChangePercent   TFloat
              , CountForAmount  TFloat
+             , CountForPrice   TFloat
              , Comment TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -157,6 +158,7 @@ BEGIN
                                                          , zc_MIFloat_ChangePrice()
                                                          , zc_MIFloat_ChangePercent()
                                                          , zc_MIFloat_CountForAmount()
+                                                         , zc_MIFloat_CountForPrice()
                                                           )
                        )
      , tmpMI_Boolean AS (SELECT MovementItemBoolean.*
@@ -173,6 +175,7 @@ BEGIN
                       , COALESCE (MIFloat_ChangePrice.ValueData, 0)   AS ChangePrice
                       , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
                       , COALESCE (MIFloat_CountForAmount.ValueData,1) AS CountForAmount
+                      , COALESCE (MIFloat_CountForPrice.ValueData,1)  AS CountForPrice
                       , MIString_Comment.ValueData        :: TVarChar AS Comment
                       , COALESCE (MIBoolean_BonusNo.ValueData, FALSE) ::Boolean AS isBonusNo
                       , MovementItem.isErased
@@ -190,6 +193,9 @@ BEGIN
                       LEFT JOIN tmpMI_Float AS MIFloat_CountForAmount
                                             ON MIFloat_CountForAmount.MovementItemId = MovementItem.Id
                                            AND MIFloat_CountForAmount.DescId = zc_MIFloat_CountForAmount()
+                      LEFT JOIN tmpMI_Float AS MIFloat_CountForPrice
+                                            ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                           AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
                       LEFT JOIN tmpMI_String AS MIString_Comment
                                              ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -220,6 +226,7 @@ BEGIN
            , 0                :: TFloat    AS ChangePrice
            , 0                :: TFloat    AS ChangePercent
            , 1                :: TFloat    AS CountForAmount
+           , 1                :: TFloat    AS CountForPrice
            , ''               :: TVarChar  AS Comment
 
            , ''           ::TVarChar       AS InsertName
@@ -283,6 +290,7 @@ BEGIN
            , tmpMI.ChangePrice       :: TFloat AS ChangePrice
            , tmpMI.ChangePercent     :: TFloat AS ChangePercent 
            , tmpMI.CountForAmount    :: TFloat AS CountForAmount
+           , tmpMI.CountForPrice     :: TFloat AS CountForPrice
 
            , tmpMI.Comment           :: TVarChar AS Comment
 
@@ -376,6 +384,7 @@ BEGIN
                                                          , zc_MIFloat_ChangePrice()
                                                          , zc_MIFloat_ChangePercent() 
                                                          , zc_MIFloat_CountForAmount()
+                                                         , zc_MIFloat_CountForPrice()
                                                           )
                        )
 
@@ -421,6 +430,7 @@ BEGIN
            , COALESCE (MIFloat_ChangePrice.ValueData, 0)   :: TFloat AS ChangePrice
            , COALESCE (MIFloat_ChangePercent.ValueData, 0) :: TFloat AS ChangePercent 
            , COALESCE (MIFloat_CountForAmount.ValueData,1) :: TFloat AS CountForAmount
+           , COALESCE (MIFloat_CountForPrice.ValueData,1)  :: TFloat AS CountForPrice
 
            , MIString_Comment.ValueData                       :: TVarChar AS Comment
 
@@ -460,6 +470,9 @@ BEGIN
             LEFT JOIN tmpMI_Float AS MIFloat_CountForAmount
                                   ON MIFloat_CountForAmount.MovementItemId = tmpMI.MovementItemId
                                  AND MIFloat_CountForAmount.DescId = zc_MIFloat_CountForAmount()
+            LEFT JOIN tmpMI_Float AS MIFloat_CountForPrice
+                                  ON MIFloat_CountForPrice.MovementItemId = tmpMI.MovementItemId
+                                 AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
@@ -510,6 +523,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.11.24         *
  28.07.22         *
  28.08.21         * isSale
  25.08.21         * isBonusNo
