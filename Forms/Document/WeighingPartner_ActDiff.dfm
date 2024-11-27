@@ -1634,8 +1634,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Category = 'Edit'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
       ShortCut = 115
-      ImageIndex = 1
       FormName = 'TWeighingPartner_ActDiffEditForm'
       FormNameParam.Value = 'TWeighingPartner_ActDiffEditForm'
       FormNameParam.DataType = ftString
@@ -2600,42 +2600,10 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
     OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inContractId'
+        Name = 'inMovementId'
         Value = Null
-        Component = GuidesContract
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartnerId'
-        Value = Null
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = '1'
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInvNumberPartner'
-        Value = '1'
-        Component = edInvNumberPartner
-        DataType = ftString
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
