@@ -774,6 +774,12 @@ BEGIN
              -- Цена с НДС да/нет - для цена поставщика
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PriceWithVAT(), vbId, inIsPriceWithVAT);
 
+             IF inSummPartner > 0
+             THEN
+                 -- Сумма у поставщика - из накладной
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPartner(), vbId, inSummPartner);
+             END IF;
+
              -- сохранили протокол
              PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, FALSE);
 

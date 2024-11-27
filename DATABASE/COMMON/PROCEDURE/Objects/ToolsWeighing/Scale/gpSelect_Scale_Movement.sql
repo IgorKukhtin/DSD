@@ -8,8 +8,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Movement(
     IN inIsComlete   Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, MovementId_DocPartner Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, MovementId_DocPartner Integer, OperDate TDateTime, OperDatePartner TDateTime, StatusCode Integer, StatusName TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime
+             , ChangePercentAmount TFloat, isReason1 Boolean, isReason2 Boolean
+
              , MovementId_parent Integer, OperDate_parent TDateTime, OperDatePartner_parent TDateTime, InvNumber_parent TVarChar
              , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, StartRunPlan TDateTime
@@ -84,6 +86,7 @@ BEGIN
                                            , MovementLinkObject_PaidKind.ObjectId      AS PaidKindId
                                            , COALESCE (MB_DocPartner.ValueData, FALSE) AS isDocPartner
                                            , MS_InvNumberPartner.ValueData             AS InvNumberPartner
+                                           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
                                       FROM Movement
                                            INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -97,6 +100,9 @@ BEGIN
                                            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                                  ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                       WHERE Movement.OperDate BETWEEN inStartDate - INTERVAL '1 DAY' AND inEndDate
                                         AND Movement.DescId = zc_Movement_WeighingPartner()
                                         AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -115,13 +121,18 @@ BEGIN
                     ELSE ''
                END
             || MS_InvNumberPartner.ValueData) :: TVarChar AS InvNumberPartner
-             , tmpMovementDocPartner.MovementId               AS MovementId_DocPartner
+             , tmpMovementDocPartner.MovementId           AS MovementId_DocPartner
              , Movement.OperDate
+             , COALESCE (tmpMovementDocPartner.OperDatePartner, MovementDate_OperDatePartner_wp.ValueData) :: TDateTime AS OperDatePartner
              , Object_Status.ObjectCode                AS StatusCode
              , Object_Status.ValueData                 AS StatusName
 
              , MovementDate_StartWeighing.ValueData  AS StartWeighing
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
+
+             , MF_ChangePercentAmount.ValueData    AS ChangePercentAmount
+             , MB_Reason1.ValueData                AS isReason1
+             , MB_Reason2.ValueData                AS isReason2
 
              , Movement_Parent.Id                      AS MovementId_parent
              , Movement_Parent.OperDate                AS OperDate_parent
@@ -238,15 +249,30 @@ BEGIN
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            LEFT JOIN MovementFloat AS MF_ChangePercentAmount
+                                    ON MF_ChangePercentAmount.MovementId = Movement.Id
+                                   AND MF_ChangePercentAmount.DescId     = zc_MovementFloat_ChangePercentAmount()
+            LEFT JOIN MovementBoolean AS MB_Reason1
+                                      ON MB_Reason1.MovementId = Movement.Id
+                                     AND MB_Reason1.DescId     = zc_MovementBoolean_Reason1()
+            LEFT JOIN MovementBoolean AS MB_Reason2
+                                      ON MB_Reason2.MovementId = Movement.Id
+                                     AND MB_Reason2.DescId     = zc_MovementBoolean_Reason2()
+
             LEFT JOIN MovementString AS MS_InvNumberPartner
                                      ON MS_InvNumberPartner.MovementId = Movement.Id
                                     AND MS_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
 
+            -- у Взвешивания - нашли Главный
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement_Parent.Id
                                   AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+            -- у Взвешивания
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_wp
+                                   ON MovementDate_OperDatePartner_wp.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner_wp.DescId     = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
                                            ON MovementLinkMovement_TransportGoods.MovementId = Movement_Parent.Id
@@ -484,11 +510,16 @@ BEGIN
             || MS_InvNumberPartner.ValueData) :: TVarChar AS InvNumberPartner
              , tmpMovementDocPartner.MovementId               AS MovementId_DocPartner
              , Movement.OperDate
+             , COALESCE (tmpMovementDocPartner.OperDatePartner, MovementDate_OperDatePartner_wp.ValueData) :: TDateTime AS OperDatePartner
              , Object_Status.ObjectCode                AS StatusCode
              , Object_Status.ValueData                 AS StatusName
 
              , MovementDate_StartWeighing.ValueData  AS StartWeighing
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
+
+             , MF_ChangePercentAmount.ValueData    AS ChangePercentAmount
+             , MB_Reason1.ValueData                AS isReason1
+             , MB_Reason2.ValueData                AS isReason2
 
              , Movement_Parent.Id                      AS MovementId_parent
              , Movement_Parent.OperDate                AS OperDate_parent
@@ -605,11 +636,26 @@ BEGIN
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            LEFT JOIN MovementFloat AS MF_ChangePercentAmount
+                                    ON MF_ChangePercentAmount.MovementId = Movement.Id
+                                   AND MF_ChangePercentAmount.DescId     = zc_MovementFloat_ChangePercentAmount()
+            LEFT JOIN MovementBoolean AS MB_Reason1
+                                      ON MB_Reason1.MovementId = Movement.Id
+                                     AND MB_Reason1.DescId     = zc_MovementBoolean_Reason1()
+            LEFT JOIN MovementBoolean AS MB_Reason2
+                                      ON MB_Reason2.MovementId = Movement.Id
+                                     AND MB_Reason2.DescId     = zc_MovementBoolean_Reason2()
+
+            -- если Взвешивание - это Главный
             INNER JOIN Movement AS Movement_Parent ON Movement_Parent.ParentId = Movement.Id
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement_Parent.Id
                                   AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+            -- у Взвешивания
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_wp
+                                   ON MovementDate_OperDatePartner_wp.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner_wp.DescId     = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
                                            ON MovementLinkMovement_TransportGoods.MovementId = Movement_Parent.Id
