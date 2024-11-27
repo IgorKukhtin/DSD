@@ -25,9 +25,9 @@ object IncomeJournalForm: TIncomeJournalForm
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 102
       Top = 5
-      EditValue = 42370d
+      EditValue = 45292d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42370d
+      EditValue = 45292d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -955,7 +955,7 @@ object IncomeJournalForm: TIncomeJournalForm
         item
           StoredProc = spSelectPrint_diff
         end>
-      Caption = #1040#1082#1090' '#1085#1077#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1081
+      Caption = #1040#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
       Hint = #1040#1082#1090' '#1085#1077#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1081
       ImageIndex = 17
       DataSets = <
@@ -1537,8 +1537,8 @@ object IncomeJournalForm: TIncomeJournalForm
         item
           StoredProc = spSelectPrint_byPartnerl
         end>
-      Caption = #1055#1088#1080#1093#1086#1076' ('#1087#1086' '#8470' '#1087#1086#1089#1090#1072#1074#1097'.)'
-      Hint = #1055#1088#1080#1093#1086#1076' ('#1087#1086' '#8470' '#1087#1086#1089#1090#1072#1074#1097'.)'
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1055#1088#1080#1093#1086#1076' ('#1080#1090#1086#1075#1086')'
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1055#1088#1080#1093#1086#1076' ('#1080#1090#1086#1075#1086')'
       ImageIndex = 23
       DataSets = <
         item
@@ -2036,44 +2036,10 @@ object IncomeJournalForm: TIncomeJournalForm
     OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inContractId'
+        Name = 'inMovementId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'ContractId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'PaidKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartnerId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'FromId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = '1'
-        Component = ClientDataSet
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInvNumberPartner'
-        Value = '1'
-        Component = ClientDataSet
-        ComponentItem = 'InvNumberPartner'
-        DataType = ftString
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

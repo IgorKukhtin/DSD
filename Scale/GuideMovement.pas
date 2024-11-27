@@ -804,7 +804,7 @@ begin
                         );
 
      if cbIncome_diff.Checked
-     then Print_Income_diff (CDS.FieldByName('MovementId_parent').AsInteger
+     then Print_Income_diff (CDS.FieldByName('MovementId_DocPartner').AsInteger
                             );
 
      if cbIncome_Price_diff.Checked

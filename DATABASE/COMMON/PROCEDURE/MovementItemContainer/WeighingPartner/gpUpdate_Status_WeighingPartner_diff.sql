@@ -24,7 +24,7 @@ BEGIN
          WHEN zc_Enum_StatusCode_UnComplete() THEN
 
              --
-             PERFORM gpUnComplete_Movement_WeighingPartner (inMovementId, inSession);
+             -- PERFORM gpUnComplete_Movement_WeighingPartner (inMovementId, inSession);
              -- сохранили свойство <ƒокумент поставщика (да/нет)>
              PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DocPartner(), inMovementId, FALSE);
              -- сохранили протокол

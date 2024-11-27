@@ -84,7 +84,7 @@ BEGIN
                                                           AND MLO_PaidKind.ObjectId   = vbPaidKindId
                         WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 DAY' AND vbOperDate + INTERVAL '1 DAY'
                           AND Movement.DescId   = zc_Movement_Income()
-                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                        )
 
    , tmpMI_income AS (SELECT MovementItem.Id AS MovementItemId
@@ -168,15 +168,32 @@ BEGIN
               ) AS _tmpMI;
 
 
+     -- сохранили свойство <Дата накладной у контрагента>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), _tmpItem_income_diff.MovementId, (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner()))
+     FROM (SELECT DISTINCT _tmpItem_income_diff.MovementId FROM _tmpItem_income_diff) AS _tmpItem_income_diff
+    ;
 
      -- сохранили свойство <Документ поставщика (да/нет)>
-     -- PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DocPartner(), inMovementId, TRUE);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DocPartner(), inMovementId, TRUE);
 
-     -- проводим Документ + сохранили протокол
-     /*PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_WeighingPartner()
-                                , inUserId     := vbUserId
-                                 );*/
+     -- Расрроводим Документы
+     PERFORM lpUnComplete_Movement (inMovementId     := _tmpItem_income_diff.MovementId
+                                  , inUserId         := vbUserId
+                                   )
+     FROM (SELECT DISTINCT _tmpItem_income_diff.MovementId FROM _tmpItem_income_diff) AS _tmpItem_income_diff
+    ;
+
+     -- создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_Income_CreateTemp();
+     -- Проводим Документы
+     PERFORM lpComplete_Movement_Income (inMovementId     := _tmpItem_income_diff.MovementId
+                                       , inUserId         := vbUserId
+                                       , inIsLastComplete := TRUE
+                                        )
+     FROM (SELECT DISTINCT _tmpItem_income_diff.MovementId FROM _tmpItem_income_diff) AS _tmpItem_income_diff
+    ;
+
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
