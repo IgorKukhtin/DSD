@@ -54,8 +54,7 @@ var
 
 implementation
 uses UtilScale, DMMainScale
-//  System.SysUtils, System.Classes
-   , Data.DB // , Datasnap.DBClient, Vcl.Dialogs,Forms,Vcl.StdCtrls
+   , Data.DB
     ;
 {$R *.dfm}
 {------------------------------------------------------------------------------}

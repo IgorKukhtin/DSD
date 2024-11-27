@@ -156,6 +156,7 @@ type
     ChangePercentAmount: TcxGridDBColumn;
     isReason1: TcxGridDBColumn;
     isReason2: TcxGridDBColumn;
+    cbIncome_Price_diff: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -194,6 +195,7 @@ type
     procedure actUpdateStatusExecute(Sender: TObject);
     procedure cbIncome_diffClick(Sender: TObject);
     procedure bbChangePercentAmountClick(Sender: TObject);
+    procedure cbIncome_Price_diffClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -208,6 +210,7 @@ type
     procedure myCheckPrintPack;
     procedure myCheckPrintSpec;
     procedure myCheckIncome_diff;
+    procedure myCheckIncome_Price_diff;
 
     procedure CancelCxFilter;
     function Checked: boolean;
@@ -404,6 +407,11 @@ begin
      myCheckIncome_diff;
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideMovementForm.cbIncome_Price_diffClick(Sender: TObject);
+begin
+     myCheckIncome_Price_diff;
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideMovementForm.myCheckIncome_diff;
 begin
      if cbIncome_diff.Checked
@@ -411,6 +419,15 @@ begin
          if  (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Income)
           or (SettingMain.BranchCode < 201) or (SettingMain.BranchCode > 202)
          then cbIncome_diff.Checked:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.myCheckIncome_Price_diff;
+begin
+     if cbIncome_Price_diff.Checked
+     then
+         if  (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Income)
+          or (CDS.FieldByName('MovementId_DocPartner').AsInteger=0)
+         then cbIncome_Price_diff.Checked:=false;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.cbPrintAccountClick(Sender: TObject);
@@ -705,6 +722,7 @@ begin
      myCheckPrintAccount;
      myCheckPrintPack;
      myCheckIncome_diff;
+     myCheckIncome_price_diff;
      //
      if    not(cbPrintMovement.Checked)
        and not(cbPrintTax.Checked)
@@ -715,6 +733,7 @@ begin
        and not(cbPrintTransport.Checked)
        and not(cbPrintQuality.Checked)
        and not(cbIncome_diff.Checked)
+       and not(cbIncome_Price_diff.Checked)
      then begin
                ShowMessage('Ошибка.Не выбран вариант печати.');
                exit;
@@ -788,6 +807,9 @@ begin
      then Print_Income_diff (CDS.FieldByName('MovementId_parent').AsInteger
                             );
 
+     if cbIncome_Price_diff.Checked
+     then Print_Income_Price_diff (CDS.FieldByName('MovementId_DocPartner').AsInteger
+                                  );
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbPrint_diffClick(Sender: TObject);

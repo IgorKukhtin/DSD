@@ -464,11 +464,11 @@ begin
                              ('Найдено отклонение цены от спецификации.'
                               ,'Для <('+ParamsMovement.ParamByName('GoodsCode_inf').AsString+') '+ParamsMovement.ParamByName('GoodsName_inf').AsString+'>'
                              +' с ценой поставщика  = <'+FloatToStr(ParamsMovement.ParamByName('PricePartner_inf').AsFloat)+'>.'
-                     ,'Будет сформирован Акт разногласий.'
+                     ,'Будет сформирован Документ с разнице цен.'
                       //+ 'Продолжить?'
                       )//,mtConfirmation,mbYesNoCancel,0) <> 6
                 then ;
-                Print_Income_Price_diff (ParamsMovement.ParamByName('MovementDescId').AsInteger);
+                //Print_Income_Price_diff (ParamsMovement.ParamByName('MovementId').AsInteger);
               end;
 
      end;
@@ -606,8 +606,9 @@ begin
           if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then SendEDI_Invoice (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           if ParamsMovement.ParamByName('isEdiOrdspr').asBoolean=TRUE then SendEDI_OrdSpr (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then SendEDI_Desadv (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
-          //ExportEmail
-          if ParamsMovement.ParamByName('isExportEmail').asBoolean=TRUE then Export_Email (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+          //OBV - разница цен
+          if ParamsMovement.ParamByName('isPrice_diff_inf').AsBoolean = true
+          then Print_Income_Price_diff (ParamsMovement.ParamByName('MovementId').AsInteger);
           //
           //Initialize or Empty
              //НЕ будем автоматов открывать предыдущий док.
