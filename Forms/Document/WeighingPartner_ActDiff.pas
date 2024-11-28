@@ -159,6 +159,16 @@ type
     dxBarSeparator1: TdxBarSeparator;
     cxLabel25: TcxLabel;
     edOperDatePartner: TcxDateEdit;
+    spMovementComplete: TdsdStoredProc;
+    actComplete_del: TdsdChangeMovementStatus;
+    mactCompletePrint: TMultiAction;
+    actPrint_byPartneê_noPrew: TdsdPrintAction;
+    actContinueAction: TdsdContinueAction;
+    actPrintDiff_noPrew: TdsdPrintAction;
+    bbCompletePrint: TdxBarButton;
+    actCompleteMovement_: TChangeGuidesStatus;
+    dsdExecStoredProc1: TdsdExecStoredProc;
+    spStutusComplete: TdsdStoredProc;
   private
   public
   end;
