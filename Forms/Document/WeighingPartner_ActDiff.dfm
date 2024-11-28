@@ -1,8 +1,8 @@
-object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
+﻿object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
   Left = 0
   Top = 0
   Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1040#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
-  ClientHeight = 441
+  ClientHeight = 440
   ClientWidth = 1112
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -31,7 +31,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Top = 22
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 80
+      Width = 89
     end
     object cxLabel1: TcxLabel
       Left = 175
@@ -39,22 +39,22 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 262
+      Left = 270
       Top = 22
       EditValue = 42184d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 96
+      Width = 88
     end
     object cxLabel2: TcxLabel
-      Left = 262
+      Left = 270
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edFrom: TcxButtonEdit
-      Left = 365
+      Left = 367
       Top = 22
       Properties.Buttons = <
         item
@@ -67,7 +67,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Width = 216
     end
     object cxLabel3: TcxLabel
-      Left = 365
+      Left = 367
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
@@ -77,12 +77,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Caption = #8470' '#1074#1079#1074#1077#1096'.'
     end
     object cxLabel6: TcxLabel
-      Left = 365
+      Left = 369
       Top = 45
       Caption = #1053#1072#1095'. '#1074#1079#1074#1077#1096'.'
     end
     object edStartWeighing: TcxDateEdit
-      Left = 365
+      Left = 367
       Top = 63
       EditValue = 42184d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -120,12 +120,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Width = 160
     end
     object cxLabel9: TcxLabel
-      Left = 476
+      Left = 478
       Top = 45
       Caption = #1054#1082#1086#1085#1095'. '#1074#1079#1074#1077#1096'.'
     end
     object edEndWeighing: TcxDateEdit
-      Left = 476
+      Left = 478
       Top = 63
       EditValue = 42184d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -221,12 +221,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Top = 63
       Properties.ReadOnly = True
       TabOrder = 23
-      Width = 183
+      Width = 89
     end
     object cxLabel26: TcxLabel
       Left = 175
       Top = 45
-      Caption = #8470' '#1076#1086#1082'. '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Caption = #8470' '#1076#1086#1082'. '#1087#1086#1089#1090#1072#1074#1097'.'
     end
     object cbDocPartner: TcxCheckBox
       Left = 405
@@ -239,29 +239,50 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       TabOrder = 25
       Width = 141
     end
+    object cxLabel25: TcxLabel
+      Left = 270
+      Top = 45
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082' '#1091' '#1082#1086#1085#1090#1088'.'
+    end
+    object edOperDatePartner: TcxDateEdit
+      Left = 270
+      Top = 63
+      Hint = #1044#1072#1090#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      EditValue = 42184d
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      ShowHint = True
+      TabOrder = 27
+      Width = 88
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 155
     Width = 1112
-    Height = 286
+    Height = 285
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 286
+    ExplicitHeight = 286
+    ClientRectBottom = 285
     ClientRectRight = 1112
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 262
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1112
-        Height = 262
+        Height = 261
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 262
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -814,6 +835,14 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         end
         item
           Visible = True
+          ItemName = 'bbCompletePrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -958,6 +987,10 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Visible = ivAlways
       ShowCaption = False
     end
+    object bbCompletePrint: TdxBarButton
+      Action = mactCompletePrint
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1028,6 +1061,46 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       ImageIndex = 14
       ShortCut = 113
     end
+    object actPrintDiff_noPrew: TdsdPrintAction
+      Category = 'Complete'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spPrint_Act
+      StoredProcList = <
+        item
+          StoredProc = spPrint_Act
+        end>
+      Caption = #1040#1082#1090' '#1056#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
+      Hint = #1040#1082#1090' '#1056#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = 'PrintMovement_Income_wp_ActDiff'
+      ReportNameParam.Value = 'PrintMovement_Income_wp_ActDiff'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
@@ -1047,6 +1120,46 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object actPrint_byPartneк_noPrew: TdsdPrintAction
+      Category = 'Complete'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_byPartnerl
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_byPartnerl
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1055#1088#1080#1093#1086#1076' ('#1080#1090#1086#1075#1086')'
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1055#1088#1080#1093#1086#1076' ('#1080#1090#1086#1075#1086')'
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = 'PrintMovement_Income'
+      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -1185,6 +1298,23 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actCompleteMovement_: TChangeGuidesStatus
+      Category = 'Complete'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1752,6 +1882,62 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actComplete_del: TdsdChangeMovementStatus
+      Category = 'Complete'
+      MoveParams = <>
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+    end
+    object mactCompletePrint: TMultiAction
+      Category = 'Complete'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = dsdExecStoredProc1
+        end
+        item
+          Action = actPrint_byPartneк_noPrew
+        end
+        item
+          Action = actContinueAction
+        end
+        item
+          Action = actPrintDiff_noPrew
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080
+    end
+    object actContinueAction: TdsdContinueAction
+      Category = 'Complete'
+      MoveParams = <>
+      Caption = 'actContinueAction'
+      Continue.Value = False
+      Continue.Component = FormParams
+      Continue.ComponentItem = 'IsPrintAct'
+      Continue.DataType = ftBoolean
+      Continue.MultiSelectSeparator = ','
+    end
+    object dsdExecStoredProc1: TdsdExecStoredProc
+      Category = 'Complete'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spStutusComplete
+      StoredProcList = <
+        item
+          StoredProc = spStutusComplete
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = 'dsdExecStoredProc1'
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1946,6 +2132,13 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'OperDatePartner'
+        Value = Null
+        Component = edOperDatePartner
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementId_Order'
         Value = Null
         Component = OrderChoiceGuides
@@ -2079,6 +2272,14 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         Component = cbDocPartner
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDiff'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IsPrintAct'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 168
@@ -2194,8 +2395,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 68
-    Top = 58
+    Left = 52
+    Top = 74
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -2255,8 +2456,8 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 104
+    Left = 824
+    Top = 120
   end
   object GuidesContractTag: TdsdGuides
     KeyField = 'Id'
@@ -2696,5 +2897,45 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
     PackSize = 1
     Left = 1015
     Top = 312
+  end
+  object spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_WeighingPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 208
+    Top = 352
+  end
+  object spStutusComplete: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_WeighingPartner_diff'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStatusCode'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 548
+    Top = 306
   end
 end

@@ -704,9 +704,10 @@ inherited Report_ContractGoodsMovementForm: TReport_ContractGoodsMovementForm
         Component = PeriodChoice
       end
       item
+        Component = GuidesContract
       end>
-    Left = 184
-    Top = 136
+    Left = 736
+    Top = 8
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'

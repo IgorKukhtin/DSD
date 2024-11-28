@@ -1,3 +1,6 @@
+--select * from gpSelect_MI_WeighingPartner_diff(inMovementId := 29882177 , inIsErased := 'False' ,  inSession := '9457') AS tt
+--where tt.Price_diff = 0 OR tt.Amount_diff = 0
+
 -- Function: gpGet_Movement_WeighingPartner_diff (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_WeighingPartner_diff (Integer, TVarChar);
@@ -14,7 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , UserId Integer, UserName TVarChar
-             , isDocPartner Boolean
+             , isDocPartner Boolean 
+             , isDiff Boolean
              , Comment TVarChar
               )
 AS
@@ -26,7 +30,8 @@ $BODY$
    DECLARE vbContractId Integer;
    DECLARE vbPaidKindId Integer;
    DECLARE vbInvNumberPartner TVarChar;
-   DECLARE vbOperDate TDateTime;
+   DECLARE vbOperDate TDateTime; 
+   DECLARE vbisDiff Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_WeighingPartner());
@@ -82,12 +87,22 @@ BEGIN
 
      END IF;
 
+     -- возвращаем для печати акта иннфу о наличии отклонений
+     IF EXISTS (SELECT 1 
+                FROM gpSelect_MI_WeighingPartner_diff(inMovementId, 'False' ,  inSession := inSession) AS tmp
+                WHERE COALESCE (tmp.Price_diff,0) <> 0 OR COALESCE (tmp.Amount_diff,0) <> 0)
+     THEN
+         vbisDiff := TRUE;
+     ELSE 
+         vbisDiff := FALSE;
+     END IF;
 
 
      RETURN QUERY
         WITH tmpStatus AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_Status())
         SELECT gpGet.Id, gpGet.InvNumber
-             , ('№ ' || gpGet.InvNumberPartner || ' От ' || zfConvert_DateToString (gpGet.OperDatePartner)) :: TVarChar AS InvNumberPartner
+             --, ('№ ' || gpGet.InvNumberPartner || ' От ' || zfConvert_DateToString (gpGet.OperDatePartner)) :: TVarChar AS InvNumberPartner
+             , gpGet.InvNumberPartner
              , gpGet.OperDate, gpGet.OperDatePartner
 
              , tmpStatus.ObjectCode AS StatusCode
@@ -101,6 +116,7 @@ BEGIN
              , gpGet.ContractId, gpGet.ContractName, gpGet.ContractTagName
              , gpGet.UserId, gpGet.UserName
              , gpGet.isDocPartner
+             , vbisDiff ::Boolean AS isDiff
              , gpGet.Comment
         FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession
                                             ) AS gpGet
@@ -117,4 +133,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_WeighingPartner_diff (inMovementId:= 29774297, inSession:= zfCalc_UserAdmin())
+-- 
+SELECT * FROM gpGet_Movement_WeighingPartner_diff (inMovementId:= 29882177, inSession:= zfCalc_UserAdmin())
