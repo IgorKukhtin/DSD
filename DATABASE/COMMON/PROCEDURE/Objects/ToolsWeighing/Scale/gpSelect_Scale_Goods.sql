@@ -1058,7 +1058,7 @@ BEGIN
                                       , View_InfoMoney.InfoMoneyDestinationName
                                       , View_InfoMoney.InfoMoneyName
                                  FROM Object_InfoMoney_View AS View_InfoMoney
-                                 WHERE inIsGoodsComplete = TRUE
+                                 WHERE (inIsGoodsComplete = TRUE OR inBranchCode = 205)
                                    AND inBranchCode NOT BETWEEN 301 AND 310
                                    AND (View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна + Ирна
                                                                      , zc_Enum_InfoMoney_30101() -- Доходы + Готовая продукция

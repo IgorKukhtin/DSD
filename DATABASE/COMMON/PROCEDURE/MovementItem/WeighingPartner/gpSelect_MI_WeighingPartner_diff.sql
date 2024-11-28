@@ -435,9 +435,57 @@ BEGIN
                                  -- № п/п
                                , ROW_NUMBER ()          OVER (PARTITION BY tmpMI_All.GoodsId, tmpMI_All.GoodsKindId
                                                               ORDER BY CASE WHEN tmpMI_All.ChangePercentAmount > 0 OR tmpMI_All.isReason_1 = TRUE OR tmpMI_All.isReason_2 = TRUE THEN 1 ELSE 0 END ASC
-                                                             ) AS Ord
+                                                             ) 
+                               + CASE WHEN tmp_check.GoodsId IS NULL
+                                      THEN 1
+                                      ELSE 0
+                                 END AS Ord
      
                           FROM tmpMI_All
+                               LEFT JOIN (SELECT DISTINCT tmpMI_All.GoodsId, tmpMI_All.GoodsKindId
+                                          FROM tmpMI_All
+                                          WHERE tmpMI_All.isReason_1 = FALSE AND tmpMI_All.isReason_2 = FALSE -- AND tmpMI_All.ChangePercentAmount = 0
+                                         ) AS tmp_check
+                                           ON tmp_check.GoodsId     = tmpMI_All.GoodsId
+                                          AND tmp_check.GoodsKindId = tmpMI_All.GoodsKindId
+                         UNION
+                          SELECT 0 AS MovementId_WeighingPartner
+                               , 0 AS MovementId_income
+                               , tmpMI_All.GoodsId
+                               , tmpMI_All.GoodsKindId
+                                 -- Кол-во факт
+                               , 0 AS Amount
+                                 -- Кол-во факт Поставщик
+                               , 0 AS AmountPartner
+                                 -- цена без НДС
+                               , tmpMI_All.PriceNoVAT
+                                 -- цена с НДС
+                               , tmpMI_All.PriceWVAT
+     
+                               , 0 AS SummNoVAT
+                               , 0 AS SummWVAT
+     
+                                 -- % Скидки для кол-во поставщик
+                               , 0 AS ChangePercentAmount
+                                 --
+                               , FALSE AS isReason_1
+                               , FALSE AS isReason_2
+                                 -- накопительное кол-во
+                               , tmpMI_All.Amount_sum AS Amount_sum
+     
+                                 -- № п/п
+                               , 1 AS Ord
+                           FROM (SELECT tmpMI_All.GoodsId, tmpMI_All.GoodsKindId, tmpMI_All.PriceNoVAT, tmpMI_All.PriceWVAT, SUM (tmpMI_All.Amount) AS Amount_sum
+                                 FROM tmpMI_All
+                                 GROUP BY tmpMI_All.GoodsId, tmpMI_All.GoodsKindId, tmpMI_All.PriceNoVAT, tmpMI_All.PriceWVAT
+                                ) AS tmpMI_All
+                                LEFT JOIN (SELECT DISTINCT tmpMI_All.GoodsId, tmpMI_All.GoodsKindId
+                                           FROM tmpMI_All
+                                           WHERE tmpMI_All.isReason_1 = FALSE AND tmpMI_All.isReason_2 = FALSE -- AND tmpMI_All.ChangePercentAmount = 0
+                                          ) AS tmp_check
+                                            ON tmp_check.GoodsId     = tmpMI_All.GoodsId
+                                           AND tmp_check.GoodsKindId = tmpMI_All.GoodsKindId
+                           WHERE tmp_check.GoodsId IS NULL
                          )
        -- Результат
        SELECT ROW_NUMBER() OVER (ORDER BY tmpMI_wp.MovementItemId) :: Integer AS Ord
@@ -565,18 +613,26 @@ BEGIN
              ) :: TFloat AS Summ_diff
 
              -- Признак "без оплаты"
-           , tmpMI_wp.isAmountPartnerSecond ::Boolean
+           , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE
+                       THEN FALSE
+                  ELSE tmpMI_wp.isAmountPartnerSecond
+             END ::Boolean AS isAmountPartnerSecond
+                  
              -- Возврат да/нет
-           , tmpMI_wp.isReturnOut           ::Boolean
+           , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE
+                       THEN FALSE
+                  ELSE tmpMI_wp.isReturnOut
+             END ::Boolean AS isReturnOut
+
              -- Причина скидки в кол-ве температура
            , tmpMI_Income.isReason_1
              -- Причина скидки в кол-ве качество
            , tmpMI_Income.isReason_2
              -- Причина
            , CASE WHEN tmpMI_Income.isReason_1 = TRUE
-                  THEN 'скидка за несоотвестветствие температуры'
+                  THEN 'знижка за невідповідність температури' -- 'скидка за несоотвестветствие температуры'
                   WHEN tmpMI_Income.isReason_2 = TRUE
-                  THEN 'скидка за несоотвестветствие качеству'
+                  THEN 'знижка за невідповідність якості' -- 'скидка за несоотвестветствие качеству'
                   ELSE ''
              END :: TVarChar AS ReasonName
              --
@@ -612,4 +668,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_WeighingPartner_diff (inMovementId:= 29844891, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_WeighingPartner_diff (inMovementId:= 29882295, inIsErased:= TRUE, inSession:= '2')

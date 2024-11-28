@@ -38,7 +38,7 @@ BEGIN
      ELSE
          IF inChangePercentAmount <> 0 OR inIsReason_1 = TRUE OR inIsReason_2 = TRUE
          THEN
-              RAISE EXCEPTION 'Ошибка.Нет прав изменять значение <% скидки количеством>.';
+              RAISE EXCEPTION 'Ошибка.Нет прав изменять значение.';
          END IF;
      END IF;
 

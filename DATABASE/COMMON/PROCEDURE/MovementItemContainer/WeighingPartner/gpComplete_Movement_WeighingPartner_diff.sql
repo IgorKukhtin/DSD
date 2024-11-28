@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_WeighingPartner_diff (Integer, TVarC
 CREATE OR REPLACE FUNCTION gpComplete_Movement_WeighingPartner_diff(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -14,6 +14,7 @@ $BODY$
    DECLARE vbPaidKindId Integer;
    DECLARE vbInvNumberPartner TVarChar;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbOperDatePartner TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_WeighingPartner());
@@ -34,16 +35,38 @@ BEGIN
 
      -- параметры из документа
      vbOperDate        := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     vbOperDatePartner := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner());
      vbInvNumberPartner:= (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberPartner());
      vbContractId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
      vbPaidKindId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind());
 
 
-     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem_income_diff (MovementId Integer, MovementItemId Integer, AmountPartner TFloat, AmountPartnerSecond TFloat, PricePartner TFloat, Ord Integer) ON COMMIT DROP;
+     -- таблица - элементы Спецификации
+     CREATE TEMP TABLE _tmpContractGoods_diff ON COMMIT DROP
+        AS (SELECT lpGet.GoodsId, CASE WHEN lpGet.GoodsKindId > 0 THEN lpGet.GoodsKindId ELSE zc_GoodsKind_Basis() END AS GoodsKindId
+                 , lpGet.ValuePrice, lpGet.ValuePrice_from, lpGet.ValuePrice_to
+                   -- цена
+                 , CASE WHEN vbUserId = 5 THEN 100 ELSE 0 END + lpGet.ValuePrice_notVat AS ValuePrice_notVat
+                 , lpGet.ValuePrice_from_notVat, lpGet.ValuePrice_to_notVat
+                   -- цена
+                 , CASE WHEN vbUserId = 5 THEN 100 ELSE 0 END + lpGet.ValuePrice_addVat AS ValuePrice_addVat
+                 , lpGet.ValuePrice_from_addVat, lpGet.ValuePrice_to_addVat
+
+            FROM lpGet_MovementItem_ContractGoods (inOperDate    := vbOperDatePartner
+                                                 , inJuridicalId := 0
+                                                 , inPartnerId   := 0
+                                                 , inContractId  := vbContractId
+                                                 , inGoodsId     := 0
+                                                 , inUserId      := vbUserId
+                                                  ) AS lpGet
+           );
+
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem_income_diff (MovementId, MovementItemId, AmountPartner, AmountPartnerSecond, PricePartner, Ord)
+     CREATE TEMP TABLE _tmpItem_income_diff (MovementId Integer, MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, AmountPartnerSecond TFloat, PricePartner TFloat, OperPrice TFloat, Ord Integer) ON COMMIT DROP;
+
+     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     INSERT INTO _tmpItem_income_diff (MovementId, MovementItemId, GoodsId, GoodsKindId, AmountPartner, AmountPartnerSecond, PricePartner, OperPrice, Ord)
         WITH -- Док. Взвешивание - данные Поставщика
              tmpMI_partner AS (SELECT gpSelect.MovementId_income
                                     , gpSelect.GoodsId
@@ -55,7 +78,7 @@ BEGIN
                                       --
                                     , gpSelect.PricePartnerNoVAT
                                     , gpSelect.PricePartnerWVAT
- 
+
                                FROM gpSelect_MI_WeighingPartner_diff (inMovementId, FALSE, inSession) AS gpSelect
                               )
         -- ВСЕ приходы, с одинаковым InvNumberPartner + ContractId + PaidKindId +  для Акта Разногласий
@@ -105,12 +128,16 @@ BEGIN
        -- Результат
        SELECT tmpMI_income.MovementId
             , tmpMI_income.MovementItemId
+            , tmpMI_income.GoodsId
+            , tmpMI_income.GoodsKindId
               -- Кол-во Поставшик с учетом % скидки кол-во
             , tmpMI_partner.Amount_income_calc
               -- Количество Поставщика
             , tmpMI_partner.AmountPartnerSecond
               --
             , CASE WHEN tmpMI_income.isPriceWithVAT = TRUE THEN tmpMI_partner.PricePartnerWVAT ELSE tmpMI_partner.PricePartnerNoVAT END AS PricePartner
+              --
+            , CASE WHEN tmpMI_income.isPriceWithVAT = TRUE THEN _tmpContractGoods_diff.ValuePrice_addVat ELSE _tmpContractGoods_diff.ValuePrice_notVat END AS OperPrice
               -- № п/п
             , ROW_NUMBER() OVER (PARTITION BY tmpMI_income.MovementId, tmpMI_income.GoodsId, tmpMI_income.GoodsKindId ORDER BY tmpMI_income.Amount DESC) AS Ord
 
@@ -118,17 +145,24 @@ BEGIN
             INNER JOIN tmpMI_income ON tmpMI_income.MovementId  = tmpMI_partner.MovementId_income
                                    AND tmpMI_income.GoodsId     = tmpMI_partner.GoodsId
                                    AND tmpMI_income.GoodsKindId = tmpMI_partner.GoodsKindId
+            LEFT JOIN _tmpContractGoods_diff ON _tmpContractGoods_diff.GoodsId     = tmpMI_partner.GoodsId
+                                            AND _tmpContractGoods_diff.GoodsKindId = tmpMI_partner.GoodsKindId
+
        WHERE tmpMI_partner.MovementId_income > 0
 
       UNION ALL
        SELECT tmpMI_income.MovementId
             , tmpMI_income.MovementItemId
+            , tmpMI_income.GoodsId
+            , tmpMI_income.GoodsKindId
               -- Кол-во Поставшик с учетом % скидки кол-во
             , tmpMI_partner.Amount_income_calc
               -- Количество Поставщика
             , tmpMI_partner.AmountPartnerSecond
               --
             , CASE WHEN tmpMI_income.isPriceWithVAT = TRUE THEN tmpMI_partner.PricePartnerWVAT ELSE tmpMI_partner.PricePartnerNoVAT END AS PricePartner
+              --
+            , CASE WHEN tmpMI_income.isPriceWithVAT = TRUE THEN _tmpContractGoods_diff.ValuePrice_addVat ELSE _tmpContractGoods_diff.ValuePrice_notVat END AS OperPrice
               -- № п/п
             , ROW_NUMBER() OVER (PARTITION BY tmpMI_income.GoodsId, tmpMI_income.GoodsKindId ORDER BY tmpMI_income.Amount DESC) AS Ord
 
@@ -140,27 +174,34 @@ BEGIN
                                     ON tmpMI_partner_check.MovementId_income = tmpMI_income.MovementId
                                    AND tmpMI_partner_check.GoodsId           = tmpMI_income.GoodsId
                                    AND tmpMI_partner_check.GoodsKindId       = tmpMI_income.GoodsKindId
+            LEFT JOIN _tmpContractGoods_diff ON _tmpContractGoods_diff.GoodsId     = tmpMI_income.GoodsId
+                                            AND _tmpContractGoods_diff.GoodsKindId = tmpMI_income.GoodsKindId
        WHERE tmpMI_partner_check.MovementId_income IS NULL
       ;
 
 
-         -- сохранили протокол
+         -- 1. сохранили протокол
          PERFORM lpInsert_MovementItemProtocol (_tmpMI.MovementItemId, vbUserId, FALSE)
          -- сохранили
          FROM (SELECT CASE WHEN _tmpItem_income_diff.Ord = 1
-                           THEN 
+                           THEN
                                -- Количество Поставщика
                                lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), _tmpItem_income_diff.MovementItemId, _tmpItem_income_diff.AmountPartner)
-                      END
+                      END AS x1
 
                    ,  CASE WHEN _tmpItem_income_diff.Ord = 1
-                           THEN 
+                           THEN
                                -- Количество Поставщика -  по документу Поставщика
                                lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), _tmpItem_income_diff.MovementItemId, _tmpItem_income_diff.AmountPartnerSecond)
-                      END
+                      END AS x2
 
                       -- Цена Поставщика
-                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), _tmpItem_income_diff.MovementItemId, _tmpItem_income_diff.PricePartner)
+                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), _tmpItem_income_diff.MovementItemId, _tmpItem_income_diff.PricePartner) AS x3
+
+                      -- Цена
+                    , CASE WHEN _tmpItem_income_diff.OperPrice <> 0
+                           THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), _tmpItem_income_diff.MovementItemId, _tmpItem_income_diff.OperPrice)
+                      END AS x4
 
                     , _tmpItem_income_diff.MovementItemId
 
@@ -168,8 +209,38 @@ BEGIN
               ) AS _tmpMI;
 
 
+         -- 2.сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (_tmpMI.MovementItemId, vbUserId, FALSE)
+         -- сохранили
+         FROM (SELECT -- Цена
+                      CASE WHEN _tmpItem_income_diff.OperPrice <> 0
+                           THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), MovementItem.Id, _tmpItem_income_diff.OperPrice)
+                      END AS x1
+
+                    , MovementItem.Id AS MovementItemId
+
+               FROM MovementItem
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                    LEFT JOIN (SELECT DISTINCT
+                                      _tmpItem_income_diff.GoodsId
+                                    , _tmpItem_income_diff.GoodsKindId
+                                    , _tmpItem_income_diff.OperPrice
+                               FROM _tmpItem_income_diff
+                              ) AS _tmpItem_income_diff
+                                ON _tmpItem_income_diff.GoodsId     = MovementItem.ObjectId
+                               AND _tmpItem_income_diff.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
+
+               WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE
+              ) AS _tmpMI;
+
+
+
      -- сохранили свойство <Дата накладной у контрагента>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), _tmpItem_income_diff.MovementId, (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner()))
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), _tmpItem_income_diff.MovementId, vbOperDatePartner)
      FROM (SELECT DISTINCT _tmpItem_income_diff.MovementId FROM _tmpItem_income_diff) AS _tmpItem_income_diff
     ;
 
