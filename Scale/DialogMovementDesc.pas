@@ -168,7 +168,7 @@ begin
            ParamsMovement.ParamByName('GoodsPropertyCode').AsInteger:= 0;
            ParamsMovement.ParamByName('GoodsPropertyName').asString := '';
 
-           if (SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 202)
+           if ((SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 202))
           and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
           and (ParamsMovement.ParamByName('MovementDescNumber').AsInteger <> 78)
           and (ParamsMovement.ParamByName('MovementDescNumber').AsInteger <> 79)
@@ -627,7 +627,7 @@ begin
 
     end;
 
-           if (SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 202)
+           if ((SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 202))
           and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
           and (ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger <> 78)
           and (ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger <> 79)

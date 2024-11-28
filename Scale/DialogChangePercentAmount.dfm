@@ -108,7 +108,7 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
     object Label1: TLabel
       Left = 0
       Top = 0
-      Width = 330
+      Width = 67
       Height = 14
       Align = alTop
       Caption = ' '#1055#1086#1089#1090#1072#1074#1097#1080#1082':'
@@ -118,7 +118,6 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitWidth = 67
     end
     object PartnertEdit: TEdit
       Left = 4

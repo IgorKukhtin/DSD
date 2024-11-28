@@ -81,7 +81,7 @@ var DiscountAmountPartner : Double;
      execParams : TParams;
      OperDatePartner:TDateTime;
 begin
-     try OperDatePartner:= StrToFloat(DateValueEdit.Text)
+     try OperDatePartner:= StrToDate(DateValueEdit.Text)
      except
             ShowMessage('Ошибка.Заполните значение Дата у поставщика.');
             Result:=false;
