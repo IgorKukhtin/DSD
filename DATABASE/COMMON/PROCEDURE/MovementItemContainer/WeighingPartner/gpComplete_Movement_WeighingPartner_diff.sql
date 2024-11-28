@@ -46,10 +46,10 @@ BEGIN
         AS (SELECT lpGet.GoodsId, CASE WHEN lpGet.GoodsKindId > 0 THEN lpGet.GoodsKindId ELSE zc_GoodsKind_Basis() END AS GoodsKindId
                  , lpGet.ValuePrice, lpGet.ValuePrice_from, lpGet.ValuePrice_to
                    -- цена
-                 , CASE WHEN vbUserId = 5 THEN 100 ELSE 0 END + lpGet.ValuePrice_notVat AS ValuePrice_notVat
+                 , CASE WHEN vbUserId = 5 THEN 0 ELSE 0 END + lpGet.ValuePrice_notVat AS ValuePrice_notVat
                  , lpGet.ValuePrice_from_notVat, lpGet.ValuePrice_to_notVat
                    -- цена
-                 , CASE WHEN vbUserId = 5 THEN 100 ELSE 0 END + lpGet.ValuePrice_addVat AS ValuePrice_addVat
+                 , CASE WHEN vbUserId = 5 THEN 0 ELSE 0 END + lpGet.ValuePrice_addVat AS ValuePrice_addVat
                  , lpGet.ValuePrice_from_addVat, lpGet.ValuePrice_to_addVat
 
             FROM lpGet_MovementItem_ContractGoods (inOperDate    := vbOperDatePartner
