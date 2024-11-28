@@ -561,8 +561,8 @@ BEGIN
 
        WHERE _tmpToolsWeighing.MovementDescId > 0
       --AND (_tmpToolsWeighing.Number < 71 OR vbUserId = 5 OR inBranchCode <> 201 OR inIsCeh = TRUE)
-         AND (_tmpToolsWeighing.isDocPartner = FALSE OR vbUserId = 5)
-         AND (_tmpToolsWeighing.Number <> 80 OR vbUserId = 5 OR inBranchCode <> 201)
+         AND (_tmpToolsWeighing.isDocPartner = FALSE OR vbUserId in (5, 6604558))
+         AND (_tmpToolsWeighing.Number <> 80 OR vbUserId (5, 6604558) OR inBranchCode <> 201)
 
       UNION
        -- это группы

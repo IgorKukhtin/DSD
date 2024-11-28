@@ -168,6 +168,17 @@ begin
            ParamsMovement.ParamByName('GoodsPropertyCode').AsInteger:= 0;
            ParamsMovement.ParamByName('GoodsPropertyName').asString := '';
 
+           if (SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 202)
+          and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+          and (ParamsMovement.ParamByName('MovementDescNumber').AsInteger <> 78)
+          and (ParamsMovement.ParamByName('MovementDescNumber').AsInteger <> 79)
+           then
+           begin
+              ParamsMovement.ParamByName('isCalc_PriceVat').asBoolean         := false;
+              ParamsMovement.ParamByName('isComment').asBoolean               := false;
+              ParamsMovement.ParamByName('isOperCountPartner').asBoolean      := false;
+           end;
+
            Result:= true;
            exit;
      end;
@@ -615,6 +626,17 @@ begin
                end;
 
     end;
+
+           if (SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 202)
+          and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+          and (ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger <> 78)
+          and (ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger <> 79)
+           then
+           begin
+              ParamsMovement_local.ParamByName('isCalc_PriceVat').asBoolean         := false;
+              ParamsMovement_local.ParamByName('isComment').asBoolean               := false;
+              ParamsMovement_local.ParamByName('isOperCountPartner').asBoolean      := false;
+           end;
 
     if SettingMain.isCeh = FALSE then
     begin

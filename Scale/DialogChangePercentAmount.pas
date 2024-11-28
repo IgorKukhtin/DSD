@@ -79,7 +79,14 @@ var DiscountAmountPartner : Double;
      isDiscount_q:Boolean;
      isDiscount_t:Boolean;
      execParams : TParams;
+     OperDatePartner:TDateTime;
 begin
+     try OperDatePartner:= StrToFloat(DateValueEdit.Text)
+     except
+            ShowMessage('Ошибка.Заполните значение Дата у поставщика.');
+            Result:=false;
+            exit;
+     end;
      //
      try DiscountAmountPartner:= StrToFloat(DiscountAmountPartnerEdit.Text)
      except DiscountAmountPartner:= 0;
@@ -100,18 +107,26 @@ begin
      isDiscount_q:= rgDiscountAmountPartner.ItemIndex = 0;
      isDiscount_t:= rgDiscountAmountPartner.ItemIndex = 1;
      //
-     execParams:=nil;
-     ParamAddValue(execParams,'MovementId', ftInteger, MovementId_wp);   //
-     ParamAddValue(execParams,'DiscountAmountPartner', ftFloat, DiscountAmountPartner); //
-     ParamAddValue(execParams,'isDiscount_q', ftBoolean, isDiscount_q);  //
-     ParamAddValue(execParams,'isDiscount_t', ftBoolean, isDiscount_t);  //
-     //
      if (DiscountAmountPartner > 0) or(rgDiscountAmountPartner.ItemIndex >=0) then
      begin
+         execParams:=nil;
+         ParamAddValue(execParams,'MovementId', ftInteger, MovementId_wp);   //
+         ParamAddValue(execParams,'DiscountAmountPartner', ftFloat, DiscountAmountPartner); //
+         ParamAddValue(execParams,'isDiscount_q', ftBoolean, isDiscount_q);  //
+         ParamAddValue(execParams,'isDiscount_t', ftBoolean, isDiscount_t);  //
+         //
           Result:= DMMainScaleForm.gpUpdate_Scale_Movement_ChangePercentAmount(execParams);
           execParams.Free;
           if not Result then exit;
      end;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementId',ftInteger,MovementId_DocPartner);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MovementDate_OperDatePartner');
+     ParamAddValue(execParams,'inValueData',ftDateTime,OperDatePartner);
+     //
+     Result:= DMMainScaleForm.gpUpdate_Scale_MovementDate(execParams);
+     execParams.Free;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogChangePercentAmountForm.DiscountAmountPartnerEditExit(
