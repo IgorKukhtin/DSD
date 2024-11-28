@@ -3,7 +3,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ContractGoods(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ContractGoods(
     IN inChangePrice            TFloat    , -- Скидка в цене
     IN inChangePercent          TFloat    , -- % Скидки 
     IN inCountForAmount         TFloat    , -- Коэфф перевода из кол-ва поставщика
+    IN inCountForPrice          TFloat    , -- Цена за количество
     IN inComment                TVarChar  , -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -104,17 +106,18 @@ BEGIN
      END IF;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem_ContractGoods (ioId           := ioId
-                                                      , inMovementId   := inMovementId
-                                                      , inGoodsId      := inGoodsId
-                                                      , inGoodsKindId  := inGoodsKindId
-                                                      , inisBonusNo    := inisBonusNo
-                                                      , inPrice        := inPrice
+     ioId := lpInsertUpdate_MovementItem_ContractGoods (ioId            := ioId
+                                                      , inMovementId    := inMovementId
+                                                      , inGoodsId       := inGoodsId
+                                                      , inGoodsKindId   := inGoodsKindId
+                                                      , inisBonusNo     := inisBonusNo
+                                                      , inPrice         := inPrice
                                                       , inChangePrice   := inChangePrice
                                                       , inChangePercent := inChangePercent
                                                       , inCountForAmount:= inCountForAmount
-                                                      , inComment      := inComment
-                                                      , inUserId       := vbUserId
+                                                      , inCountForPrice := inCountForPrice
+                                                      , inComment       := inComment
+                                                      , inUserId        := vbUserId
                                                        ) AS tmp;
 
 END;
@@ -124,6 +127,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.11.24         *
  08.11.23         *
  28.07.22         *
  05.07.21         *

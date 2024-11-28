@@ -80,6 +80,7 @@ BEGIN
                                                       , inChangePrice   := inChangePrice
                                                       , inChangePercent := inChangePercent
                                                       , inCountForAmount:= inCountForAmount
+                                                      , inCountForPrice := 1 ::TFloat
                                                       , inComment       := inComment
                                                       , inUserId        := vbUserId
                                                        ) ;

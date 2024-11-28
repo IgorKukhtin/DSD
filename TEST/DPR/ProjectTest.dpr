@@ -1551,7 +1551,9 @@ uses
   Report_GoodsMI_ProductionUnionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionUnionDialog.pas' {Report_GoodsMI_ProductionUnionDialogForm: TParentForm},
   WeighingPartner_ActDiff in '..\..\Forms\Document\WeighingPartner_ActDiff.pas' {WeighingPartner_ActDiffForm: TParentForm},
   Report_Promo_Result_Month in '..\..\Forms\Report\Report_Promo_Result_Month.pas' {Report_Promo_Result_MonthForm: TParentForm},
-  WeighingPartner_ActDiffEdit in '..\..\Forms\Document\WeighingPartner_ActDiffEdit.pas' {WeighingPartner_ActDiffEditForm: TParentForm};
+  WeighingPartner_ActDiffEdit in '..\..\Forms\Document\WeighingPartner_ActDiffEdit.pas' {WeighingPartner_ActDiffEditForm: TParentForm},
+  Report_ContractGoodsMovement in '..\..\Forms\Report\Report_ContractGoodsMovement.pas' {Report_ContractGoodsMovementForm: TParentForm},
+  Report_ContractGoodsMovementDialog in '..\..\Forms\Report\Report_ContractGoodsMovementDialog.pas' {Report_ContractGoodsMovementDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

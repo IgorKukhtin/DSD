@@ -1525,6 +1525,8 @@ type
     miPositionProperty: TMenuItem;
     actReport_Promo_Result_Month: TdsdOpenForm;
     miReport_Promo_Result_Month: TMenuItem;
+    actReport_ContractGoodsMovement: TdsdOpenForm;
+    miReport_ContractGoodsMovement: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

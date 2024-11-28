@@ -2,6 +2,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
   ClientHeight = 596
   ClientWidth = 1204
+  ExplicitLeft = -85
   ExplicitWidth = 1220
   ExplicitHeight = 635
   PixelsPerInch = 96
@@ -11,17 +12,17 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Width = 1204
     Height = 479
     ExplicitTop = 117
-    ExplicitWidth = 1181
+    ExplicitWidth = 1204
     ExplicitHeight = 479
     ClientRectBottom = 479
     ClientRectRight = 1204
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1181
+      ExplicitWidth = 1204
       ExplicitHeight = 455
       inherited cxGrid: TcxGrid
         Width = 1204
         Height = 455
-        ExplicitWidth = 1181
+        ExplicitWidth = 1204
         ExplicitHeight = 455
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -228,6 +229,13 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             HeaderHint = #1050#1086#1101#1092#1092' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1080#1079' '#1082#1086#1083'-'#1074#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Width = 70
           end
+          object CountForPrice: TcxGridDBColumn [14]
+            Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'CountForPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -274,7 +282,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Width = 1204
     Height = 91
     TabOrder = 3
-    ExplicitWidth = 1181
+    ExplicitWidth = 1204
     ExplicitHeight = 91
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1800,6 +1808,15 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForAmount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
