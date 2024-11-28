@@ -13,7 +13,7 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
     Top = 193
     Width = 330
     ExplicitTop = 193
-    ExplicitWidth = 318
+    ExplicitWidth = 330
     inherited bbOk: TBitBtn
       Left = 20
       Top = 6
@@ -54,7 +54,6 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 318
     object Label2: TLabel
       Left = 69
       Top = 59
@@ -81,7 +80,6 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
         #1079#1072' '#1082#1072#1095#1077#1089#1090#1074#1086
         #1079#1072' '#1090#1077#1084#1087#1077#1088#1072#1090#1091#1088#1091)
       TabOrder = 0
-      ExplicitWidth = 318
     end
     object DiscountAmountPartnerEdit: TcxCurrencyEdit
       Left = 131
@@ -104,11 +102,10 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 318
     object Label1: TLabel
       Left = 0
       Top = 0
-      Width = 67
+      Width = 330
       Height = 14
       Align = alTop
       Caption = ' '#1055#1086#1089#1090#1072#1074#1097#1080#1082':'
@@ -118,6 +115,7 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitWidth = 67
     end
     object PartnertEdit: TEdit
       Left = 4
@@ -136,7 +134,6 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitWidth = 318
     object Label3: TLabel
       Left = 4
       Top = 2
@@ -225,7 +222,7 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
           Name = 'Id'
           Value = Null
           Component = FormParams
-          ComponentItem = 'MovementId_begin'
+          ComponentItem = 'MovementId_DocPartner'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -237,7 +234,7 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'MovementId_begin'
+        Name = 'MovementId_DocPartner'
         Value = Null
         MultiSelectSeparator = ','
       end>

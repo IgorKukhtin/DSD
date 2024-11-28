@@ -68,7 +68,7 @@ begin
      //
      if not Checked then exit;
      //
-     FormParams.ParamByName('MovementId_begin').Value:=MovementId_DocPartner;
+     FormParams.ParamByName('MovementId_DocPartner').Value:=MovementId_DocPartner;
      actWeighingPartner_ActDiffF.Execute;
      //
      ModalResult:= mrOK;
@@ -104,11 +104,20 @@ begin
                exit;
      end;
      //
+     if (MovementId_DocPartner = MovementId_wp) and ((rgDiscountAmountPartner.ItemIndex >= 0) or (DiscountAmountPartner > 0))
+     then begin
+               ShowMessage('Ошибка.Для накладной поставщика нельзя заполнить % скидки по весу.');
+               ActiveControl:= DiscountAmountPartnerEdit;
+               exit;
+     end;
+
+     //
      isDiscount_q:= rgDiscountAmountPartner.ItemIndex = 0;
      isDiscount_t:= rgDiscountAmountPartner.ItemIndex = 1;
      //
-     if (DiscountAmountPartner > 0) or(rgDiscountAmountPartner.ItemIndex >=0) then
-     begin
+     if ((DiscountAmountPartner > 0) or(rgDiscountAmountPartner.ItemIndex >=0))
+        and (MovementId_DocPartner <> MovementId_wp)
+     then begin
          execParams:=nil;
          ParamAddValue(execParams,'MovementId', ftInteger, MovementId_wp);   //
          ParamAddValue(execParams,'DiscountAmountPartner', ftFloat, DiscountAmountPartner); //
@@ -127,6 +136,7 @@ begin
      //
      Result:= DMMainScaleForm.gpUpdate_Scale_MovementDate(execParams);
      execParams.Free;
+     if not Result then exit;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogChangePercentAmountForm.DiscountAmountPartnerEditExit(
