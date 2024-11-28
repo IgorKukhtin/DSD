@@ -1,17 +1,17 @@
 inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
   ClientHeight = 234
-  ClientWidth = 318
+  ClientWidth = 330
   OldCreateOrder = True
   Position = poScreenCenter
   OnResize = nil
-  ExplicitWidth = 334
+  ExplicitWidth = 346
   ExplicitHeight = 273
   PixelsPerInch = 96
   TextHeight = 14
   inherited bbPanel: TPanel
     Top = 193
-    Width = 318
+    Width = 330
     ExplicitTop = 193
     ExplicitWidth = 318
     inherited bbOk: TBitBtn
@@ -49,11 +49,12 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
   object PanelNumberValue: TPanel
     Left = 0
     Top = 96
-    Width = 318
+    Width = 330
     Height = 97
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 318
     object Label2: TLabel
       Left = 69
       Top = 59
@@ -71,7 +72,7 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
     object rgDiscountAmountPartner: TRadioGroup
       Left = 0
       Top = 0
-      Width = 318
+      Width = 330
       Height = 46
       Align = alTop
       Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
@@ -80,6 +81,7 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
         #1079#1072' '#1082#1072#1095#1077#1089#1090#1074#1086
         #1079#1072' '#1090#1077#1084#1087#1077#1088#1072#1090#1091#1088#1091)
       TabOrder = 0
+      ExplicitWidth = 318
     end
     object DiscountAmountPartnerEdit: TcxCurrencyEdit
       Left = 131
@@ -97,15 +99,16 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 318
+    Width = 330
     Height = 48
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 318
     object Label1: TLabel
       Left = 0
       Top = 0
-      Width = 318
+      Width = 330
       Height = 14
       Align = alTop
       Caption = ' '#1055#1086#1089#1090#1072#1074#1097#1080#1082':'
@@ -129,11 +132,12 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
   object Panel2: TPanel
     Left = 0
     Top = 48
-    Width = 318
+    Width = 330
     Height = 48
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitWidth = 318
     object Label3: TLabel
       Left = 4
       Top = 2
@@ -163,10 +167,10 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
     object LabelDateValue: TLabel
       Left = 217
       Top = 2
-      Width = 64
+      Width = 103
       Height = 14
       Alignment = taCenter
-      Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1089#1090'.'
+      Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       Font.Charset = RUSSIAN_CHARSET
       Font.Color = clNavy
       Font.Height = -11
@@ -197,7 +201,7 @@ inherited DialogChangePercentAmountForm: TDialogChangePercentAmountForm
       Top = 20
       EditValue = 41640d
       Properties.DateButtons = [btnToday]
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
