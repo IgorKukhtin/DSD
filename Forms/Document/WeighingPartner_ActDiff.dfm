@@ -31,7 +31,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Top = 22
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 80
+      Width = 89
     end
     object cxLabel1: TcxLabel
       Left = 175
@@ -39,22 +39,22 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 262
+      Left = 270
       Top = 22
       EditValue = 42184d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 96
+      Width = 88
     end
     object cxLabel2: TcxLabel
-      Left = 262
+      Left = 270
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edFrom: TcxButtonEdit
-      Left = 365
+      Left = 367
       Top = 22
       Properties.Buttons = <
         item
@@ -67,7 +67,7 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Width = 216
     end
     object cxLabel3: TcxLabel
-      Left = 365
+      Left = 367
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
@@ -77,12 +77,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Caption = #8470' '#1074#1079#1074#1077#1096'.'
     end
     object cxLabel6: TcxLabel
-      Left = 365
+      Left = 369
       Top = 45
       Caption = #1053#1072#1095'. '#1074#1079#1074#1077#1096'.'
     end
     object edStartWeighing: TcxDateEdit
-      Left = 365
+      Left = 367
       Top = 63
       EditValue = 42184d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -120,12 +120,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Width = 160
     end
     object cxLabel9: TcxLabel
-      Left = 476
+      Left = 478
       Top = 45
       Caption = #1054#1082#1086#1085#1095'. '#1074#1079#1074#1077#1096'.'
     end
     object edEndWeighing: TcxDateEdit
-      Left = 476
+      Left = 478
       Top = 63
       EditValue = 42184d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -221,12 +221,12 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       Top = 63
       Properties.ReadOnly = True
       TabOrder = 23
-      Width = 183
+      Width = 89
     end
     object cxLabel26: TcxLabel
       Left = 175
       Top = 45
-      Caption = #8470' '#1076#1086#1082'. '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Caption = #8470' '#1076#1086#1082'. '#1087#1086#1089#1090#1072#1074#1097'.'
     end
     object cbDocPartner: TcxCheckBox
       Left = 405
@@ -238,6 +238,24 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
       ShowHint = True
       TabOrder = 25
       Width = 141
+    end
+    object cxLabel25: TcxLabel
+      Left = 270
+      Top = 45
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082' '#1091' '#1082#1086#1085#1090#1088'.'
+    end
+    object edOperDatePartner: TcxDateEdit
+      Left = 270
+      Top = 63
+      Hint = #1044#1072#1090#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      EditValue = 42184d
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      ShowHint = True
+      TabOrder = 27
+      Width = 88
     end
   end
   object cxPageControl: TcxPageControl
@@ -1943,6 +1961,13 @@ object WeighingPartner_ActDiffForm: TWeighingPartner_ActDiffForm
         Value = Null
         Component = edInvNumberPartner
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = Null
+        Component = edOperDatePartner
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item

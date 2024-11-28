@@ -157,6 +157,8 @@ type
     actPrint_DiffPartner: TdsdPrintAction;
     bbPrint_AllPartner: TdxBarButton;
     dxBarSeparator1: TdxBarSeparator;
+    cxLabel25: TcxLabel;
+    edOperDatePartner: TcxDateEdit;
   private
   public
   end;

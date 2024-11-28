@@ -87,7 +87,8 @@ BEGIN
      RETURN QUERY
         WITH tmpStatus AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_Status())
         SELECT gpGet.Id, gpGet.InvNumber
-             , ('№ ' || gpGet.InvNumberPartner || ' От ' || zfConvert_DateToString (gpGet.OperDatePartner)) :: TVarChar AS InvNumberPartner
+             --, ('№ ' || gpGet.InvNumberPartner || ' От ' || zfConvert_DateToString (gpGet.OperDatePartner)) :: TVarChar AS InvNumberPartner
+             , gpGet.InvNumberPartner
              , gpGet.OperDate, gpGet.OperDatePartner
 
              , tmpStatus.ObjectCode AS StatusCode
