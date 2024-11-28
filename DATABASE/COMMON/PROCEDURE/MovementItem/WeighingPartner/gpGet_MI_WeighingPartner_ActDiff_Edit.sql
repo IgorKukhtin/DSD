@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_MI_WeighingPartner_ActDiff_Edit(
     IN inGoodsKindId       Integer  ,
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
              , GoodsName TVarChar, GoodsKindName TVarChar
              , AmountPartnerSecond TFloat
              , PricePartner TFloat
@@ -78,6 +78,7 @@ BEGIN
              , Movement.InvNumber
              , MovementString_InvNumberPartner.ValueData  ::TVarChar AS InvNumberPartner
              , Movement.OperDate
+             , MovementDate_OperDatePartner.ValueData    ::TDateTime AS OperDatePartner
              
              , ('('||Object_Goods.ObjectCode||') '||Object_Goods.ValueData) ::TVarChar   AS GoodsName
              , Object_GoodsKind.ValueData       AS GoodsKindName
@@ -101,6 +102,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = inGoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = inGoodsKindId

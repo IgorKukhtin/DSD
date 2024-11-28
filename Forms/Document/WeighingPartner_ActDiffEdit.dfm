@@ -24,7 +24,7 @@
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
-    Left = 159
+    Left = 101
     Top = 8
     Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
   end
@@ -34,14 +34,14 @@
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edOperDate: TcxDateEdit [4]
-    Left = 159
+    Left = 99
     Top = 27
     EditValue = 42092d
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
-    Width = 106
+    Width = 80
   end
   object edInvNumber: TcxTextEdit [5]
     Left = 13
@@ -49,7 +49,7 @@
     Properties.ReadOnly = True
     TabOrder = 5
     Text = '0'
-    Width = 135
+    Width = 76
   end
   object cxLabel18: TcxLabel [6]
     Left = 13
@@ -60,26 +60,25 @@
     Left = 13
     Top = 226
     TabOrder = 7
-    Width = 388
+    Width = 396
   end
   object cbisReturnOut: TcxCheckBox [8]
-    Left = 278
+    Left = 287
     Top = 173
     Caption = #1042#1086#1079#1074#1088#1072#1090
     TabOrder = 8
     Width = 85
   end
   object cxLabel26: TcxLabel [9]
-    Left = 278
+    Left = 189
     Top = 8
     Caption = #8470' '#1076#1086#1082'. '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
   end
   object edInvNumberPartner: TcxTextEdit [10]
-    Left = 278
+    Left = 189
     Top = 27
-    Properties.ReadOnly = True
     TabOrder = 10
-    Width = 123
+    Width = 108
   end
   object edAmountPartnerSecond: TcxCurrencyEdit [11]
     Left = 13
@@ -111,15 +110,15 @@
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = False
     TabOrder = 14
-    Width = 105
+    Width = 117
   end
   object cxLabel3: TcxLabel [15]
-    Left = 278
+    Left = 287
     Top = 114
     Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090'.'
   end
   object edSummPartner: TcxCurrencyEdit [16]
-    Left = 278
+    Left = 287
     Top = 132
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -127,7 +126,7 @@
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = False
     TabOrder = 16
-    Width = 123
+    Width = 122
   end
   object cbisAmountPartnerSecond: TcxCheckBox [17]
     Left = 13
@@ -153,19 +152,36 @@
     Top = 79
     Properties.ReadOnly = True
     TabOrder = 20
-    Width = 252
+    Width = 284
   end
   object edGoodsKindName: TcxTextEdit [21]
-    Left = 278
+    Left = 307
     Top = 79
     Properties.ReadOnly = True
     TabOrder = 21
-    Width = 123
+    Width = 102
   end
   object cxLabel5: TcxLabel [22]
-    Left = 278
+    Left = 307
     Top = 60
     Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+  end
+  object cxLabel25: TcxLabel [23]
+    Left = 307
+    Top = 8
+    Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088'.'
+  end
+  object edOperDatePartner: TcxDateEdit [24]
+    Left = 307
+    Top = 27
+    Hint = #1044#1072#1090#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+    EditValue = 42184d
+    ParentShowHint = False
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    ShowHint = True
+    TabOrder = 24
+    Width = 102
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 72
@@ -224,6 +240,22 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberPartner'
+        Value = Null
+        Component = edInvNumberPartner
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = Null
+        Component = edOperDatePartner
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

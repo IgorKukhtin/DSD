@@ -43,6 +43,8 @@ type
     edGoodsName: TcxTextEdit;
     edGoodsKindName: TcxTextEdit;
     cxLabel5: TcxLabel;
+    cxLabel25: TcxLabel;
+    edOperDatePartner: TcxDateEdit;
   private
     { Private declarations }
   public

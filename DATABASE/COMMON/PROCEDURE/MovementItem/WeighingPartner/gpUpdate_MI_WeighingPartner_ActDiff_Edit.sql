@@ -1,10 +1,13 @@
 -- Function: gpUpdate_MI_WeighingPartner_ActDiff_Edit()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_WeighingPartner_ActDiff_Edit(
     IN inId                         Integer   , -- идентификатор строки
-    IN inMovementId                 Integer   , -- идентификатор документа
+    IN inMovementId                 Integer   , -- идентификатор документа 
+    IN inInvNumberPartner           TVarChar  , -- Номер  контрагента
+    IN inOperDatePartner            TDateTime , -- Дата документа  контрагента
     IN inAmountPartnerSecond        TFloat    , -- Количество Поставщика
     IN inPricePartner               TFloat    , -- цена Поставщика
     IN inSummPartner                TFloat    , -- сумма Поставщика
@@ -39,12 +42,17 @@ BEGIN
      ELSE
          inSummPartner := (inPricePartner * inAmountPartnerSecond);
      END IF;
+
+     -- сохранили свойство <Номер контрагента>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
+     -- сохранили связь с <Дата контрагента>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
      
-     -- сохранили свойство <Количество голов>
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), inId, inAmountPartnerSecond);
-      -- сохранили свойство <Количество голов>
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), inId, inPricePartner);
-     -- сохранили свойство <Количество голов>
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPartner(), inId, inSummPartner);
 
      -- сохранили свойство <Признак "без оплаты">
