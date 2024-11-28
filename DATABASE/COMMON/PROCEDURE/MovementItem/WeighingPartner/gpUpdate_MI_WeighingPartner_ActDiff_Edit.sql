@@ -44,9 +44,9 @@ BEGIN
      END IF;
 
      -- сохранили свойство <Номер контрагента>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), inId, inInvNumberPartner);
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), inMovementId, inInvNumberPartner);
      -- сохранили связь с <Дата контрагента>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inId, inOperDatePartner);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inMovementId, inOperDatePartner);
      
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), inId, inAmountPartnerSecond);
