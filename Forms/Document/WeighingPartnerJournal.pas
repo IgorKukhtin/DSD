@@ -143,6 +143,8 @@ type
     bbPrint_diff: TdxBarButton;
     bbPrint_all: TdxBarButton;
     bbsPrint: TdxBarSubItem;
+    actWeighingPartner_ActDiffF: TdsdInsertUpdateAction;
+    bbWeighingPartner_ActDiffF: TdxBarButton;
   private
   public
   end;
