@@ -1032,6 +1032,14 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbWeighingPartner_ActDiffF'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbsPrint'
         end
         item
@@ -1137,6 +1145,10 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
           Visible = True
           ItemName = 'bbPrint_all'
         end>
+    end
+    object bbWeighingPartner_ActDiffF: TdxBarButton
+      Action = actWeighingPartner_ActDiffF
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -1715,6 +1727,30 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actWeighingPartner_ActDiffF: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1040#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1040#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
+      ImageIndex = 43
+      FormName = 'TWeighingPartner_ActDiffForm'
+      FormNameParam.Value = 'TWeighingPartner_ActDiffForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object dsdStoredProc: TdsdStoredProc
