@@ -448,7 +448,7 @@ BEGIN
                                          ) AS tmp_check
                                            ON tmp_check.GoodsId     = tmpMI_All.GoodsId
                                           AND tmp_check.GoodsKindId = tmpMI_All.GoodsKindId
-                         UNION
+                         UNION ALL
                           SELECT 0 AS MovementId_WeighingPartner
                                , 0 AS MovementId_income
                                , tmpMI_All.GoodsId
@@ -592,7 +592,7 @@ BEGIN
              
              -- Сумма разницы без НДС
            , (-- наши данные
-            - CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE
+              CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE
                    -- только здесь % скидки кол-во
                    THEN tmpMI_Income.Amount * (1 - tmpMI_Income.ChangePercentAmount/100)
                    -- Признак "без оплаты"
@@ -608,7 +608,8 @@ BEGIN
                         -- Сколько осталось
                         THEN tmpMI_wp.AmountPartnerSecond - COALESCE(tmpMI_Income.Amount_sum - tmpMI_Income.Amount, 0)
                    ELSE tmpMI_Income.Amount
-              END * tmpMI_wp.PricePartnerNoVAT
+              END
+            * tmpMI_wp.PricePartnerNoVAT
              
              ) :: TFloat AS Summ_diff
 

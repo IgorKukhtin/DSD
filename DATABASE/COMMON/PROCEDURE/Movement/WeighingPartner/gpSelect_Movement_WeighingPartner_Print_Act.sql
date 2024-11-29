@@ -15,6 +15,9 @@ $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 
+    DECLARE vbMovementId_find_min Integer;
+    DECLARE vbMovementId_find_max Integer;
+
     DECLARE vbStatusId Integer;
     DECLARE vbOperDate TDateTime;
     DECLARE vbContractId Integer;
@@ -102,6 +105,61 @@ BEGIN
 
     -- !!!замена
     inMovementId:= (SELECT tmpMovement_list.MovementId FROM tmpMovement_list);
+
+
+     IF vbUserId = 5 AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка. %   %' , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+         , (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId)
+         ;
+     END IF;
+
+     -- если НЕ Документ поставщика
+     IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_DocPartner())
+     THEN
+         -- замена - поиск Документ поставщика
+         SELECT MIN (Movement.Id), MAX (Movement.Id)
+                INTO vbMovementId_find_min, vbMovementId_find_max
+         FROM Movement
+              -- есть такое св-во
+              INNER JOIN MovementBoolean AS MovementBoolean_DocPartner
+                                         ON MovementBoolean_DocPartner.MovementId = Movement.Id
+                                        AND MovementBoolean_DocPartner.DescId     = zc_MovementBoolean_DocPartner()
+              INNER JOIN MovementString AS MovementString_InvNumberPartner
+                                        ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                       AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+                                       --  с таким номером Поставщика
+                                       AND MovementString_InvNumberPartner.ValueData = vbInvNumberPartner
+              INNER JOIN MovementLinkObject AS MLO_Contract
+                                            ON MLO_Contract.MovementId = Movement.Id
+                                           AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                           --  с таким Договором
+                                           AND MLO_Contract.ObjectId   = vbContractId
+         WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 DAY' AND vbOperDate + INTERVAL '1 DAY'
+           AND Movement.DescId   = zc_Movement_WeighingPartner()
+           AND Movement.StatusId = zc_Enum_Status_Complete()
+        ;
+
+         -- Проверка
+         IF vbMovementId_find_min <> vbMovementId_find_max
+         THEN
+             RAISE EXCEPTION 'Ошибка.Найдено несколько документов поставщика.% № <%> от <%> % № <%> от <%>'
+                            , CHR (13)
+                            , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_find_min)
+                            , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = vbMovementId_find_min)
+                            , CHR (13)
+                            , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_find_max)
+                            , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = vbMovementId_find_max)
+                             ;
+         END IF;
+
+         -- Проверка
+         IF COALESCE (vbMovementId_find_min, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ поставщика не найден.';
+         END IF;
+
+     END IF;
 
 
     --

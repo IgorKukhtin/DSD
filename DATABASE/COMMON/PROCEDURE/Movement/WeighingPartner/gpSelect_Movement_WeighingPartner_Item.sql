@@ -144,8 +144,16 @@ BEGIN
              , MovementString_InvNumberPartner.ValueData ::TVarChar AS InvNumberPartner
              , Movement.OperDate 
              , MovementDate_OperDatePartner.ValueData ::TDateTime AS OperDatePartner
-             , Object_Status.ObjectCode          AS StatusCode
-             , Object_Status.ValueData           AS StatusName
+
+             , CASE WHEN MovementBoolean_DocPartner.ValueData = FALSE AND zc_Movement_Income() = MovementFloat_MovementDesc.ValueData :: Integer
+                    THEN 4
+                    ELSE Object_Status.ObjectCode
+               END :: Integer AS StatusCode
+
+             , CASE WHEN MovementBoolean_DocPartner.ValueData = FALSE AND zc_Movement_Income() = MovementFloat_MovementDesc.ValueData :: Integer
+                    THEN 'Не проведен'
+                    ELSE Object_Status.ValueData
+               END :: TVarChar AS StatusName
 
              , Movement_Parent.Id                AS MovementId_parent
              , Movement_Parent.OperDate          AS OperDate_parent
@@ -318,6 +326,10 @@ BEGIN
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_DocPartner
+                                      ON MovementBoolean_DocPartner.MovementId = Movement.Id
+                                     AND MovementBoolean_DocPartner.DescId = zc_MovementBoolean_DocPartner()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
                                            ON MovementLinkMovement_TransportGoods.MovementId = Movement_Parent.Id

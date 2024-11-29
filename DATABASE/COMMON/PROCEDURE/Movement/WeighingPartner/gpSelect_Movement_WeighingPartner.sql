@@ -94,8 +94,16 @@ BEGIN
              , MovementString_InvNumberPartner.ValueData ::TVarChar AS InvNumberPartner
              , Movement.OperDate
              , MovementDate_OperDatePartner.ValueData ::TDateTime AS OperDatePartner
-             , Object_Status.ObjectCode          AS StatusCode
-             , Object_Status.ValueData           AS StatusName
+
+             , CASE WHEN MovementBoolean_DocPartner.ValueData = FALSE AND zc_Movement_Income() = MovementFloat_MovementDesc.ValueData :: Integer
+                    THEN 4
+                    ELSE Object_Status.ObjectCode
+               END :: Integer AS StatusCode
+
+             , CASE WHEN MovementBoolean_DocPartner.ValueData = FALSE AND zc_Movement_Income() = MovementFloat_MovementDesc.ValueData :: Integer
+                    THEN 'Не проведен'
+                    ELSE Object_Status.ValueData
+               END :: TVarChar AS StatusName
 
              , Movement_Parent.Id                AS MovementId_parent
              , Movement_Parent.OperDate          AS OperDate_parent
@@ -140,7 +148,7 @@ BEGIN
              , COALESCE (Object_Member.ValueData, View_PersonalDriver.PersonalName) AS PersonalDriverName
 
              , COALESCE (MovementBoolean_List.ValueData,False) :: Boolean AS isList
-             , COALESCE (MovementBoolean_DocPartner.ValueData, FALSE) ::Boolean AS isDocPartner
+             , CASE WHEN MovementBoolean_DocPartner.MovementId > 0 THEN TRUE ELSE FALSE END ::Boolean AS isDocPartner
              , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData             AS VATPercent
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
