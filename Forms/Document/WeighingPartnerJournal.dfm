@@ -210,6 +210,11 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
             Description = #1059#1076#1072#1083#1077#1085
             ImageIndex = 13
             Value = 3
+          end
+          item
+            Description = '--'#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+            ImageIndex = 12
+            Value = 4
           end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
