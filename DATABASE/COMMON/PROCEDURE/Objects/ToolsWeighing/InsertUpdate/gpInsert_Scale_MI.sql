@@ -821,6 +821,11 @@ BEGIN
              -- сохранили протокол
              PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
+         ELSEIF inIsDocPartner = FALSE AND EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_DocPartner())
+         THEN
+             -- !!!УДАЛЕНИЕ
+             DELETE FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.DescId = zc_MovementBoolean_DocPartner();
+
          END IF;
 
          IF vbMovementDescId IN (zc_Movement_ReturnOut())

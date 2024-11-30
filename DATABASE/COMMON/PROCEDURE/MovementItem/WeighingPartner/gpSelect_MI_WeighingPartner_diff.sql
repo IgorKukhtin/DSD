@@ -110,19 +110,22 @@ BEGIN
      RETURN QUERY
 
         WITH -- Док. Взвешивание - данные Поставщика
-             tmpMIList AS (SELECT MovementItem.Id AS MovementItemId
-                                , MovementItem.*
-                           FROM (SELECT FALSE AS isErased) AS tmpIsErased
-                                JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                 AND MovementItem.DescId     = zc_MI_Master()
-                                                 AND MovementItem.isErased   = tmpIsErased.isErased
+             tmpMIList AS (SELECT MAX (MovementItem.Id) AS MovementItemId
+                                , SUM (MovementItem.Amount) As Amount
+                                , MovementItem.MovementId
+                                , MovementItem.ObjectId
+                                , COALESCE (MILO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                           FROM MovementItem
+                                LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                                 ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                                                AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   = FALSE
+                           GROUP BY MovementItem.MovementId
+                                  , MovementItem.ObjectId
+                                  , COALESCE (MILO_GoodsKind.ObjectId, 0)
                           )
-
-      , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
-                              FROM MovementItemLinkObject
-                              WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIList.MovementItemId FROM tmpMIList)
-                                AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
-                             )
 
             , tmpMI_Float AS (SELECT MovementItemFloat.*
                               FROM MovementItemFloat
@@ -175,7 +178,7 @@ BEGIN
                      FROM (SELECT MovementItem.Id                               AS MovementItemId
                                 , MovementItem.MovementId                       AS MovementId
                                 , MovementItem.ObjectId                         AS GoodsId
-                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                , MovementItem.GoodsKindId                      AS GoodsKindId
 
                                   -- Количество Поставщика - Документ Поставщика
                                 , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) AS AmountPartnerSecond
@@ -228,9 +231,6 @@ BEGIN
                                 , COALESCE (MIString_Comment.ValueData,'')                  :: TVarChar AS Comment
 
                            FROM tmpMIList AS MovementItem
-                                LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
-                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                                 -- Признак "без оплаты"
                                 LEFT JOIN tmpMI_Boolean AS MIBoolean_AmountPartnerSecond
                                                         ON MIBoolean_AmountPartnerSecond.MovementItemId = MovementItem.Id
@@ -326,7 +326,10 @@ BEGIN
      , tmpMILO_GoodsKind_in AS (SELECT MovementItemLinkObject.*
                                 FROM MovementItemLinkObject
                                 WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Income_all.Id FROM tmpMI_Income_all)
-                                  AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                  AND MovementItemLinkObject.DescId IN (zc_MILinkObject_GoodsKind()
+                                                                      , zc_MILinkObject_GoodsReal()
+                                                                      , zc_MILinkObject_GoodsKindReal()
+                                                                       )
                                )
        , tmpMI_Float_Price AS (SELECT MovementItemFloat.*
                                FROM MovementItemFloat
@@ -340,8 +343,8 @@ BEGIN
                                      AND MovementItemFloat.DescId = zc_MIFloat_AmountPartner()
                                   )
 
-      , tmpMI_All AS (SELECT MovementItem.ObjectId AS GoodsId
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+      , tmpMI_All AS (SELECT COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId)                  AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                              -- Кол-во факт
                            , SUM (MovementItem.Amount) AS Amount
                              -- Кол-во факт Поставщик
@@ -387,15 +390,21 @@ BEGIN
 
                            LEFT JOIN tmpMILO_GoodsKind_in AS MILinkObject_GoodsKind
                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                         AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                         AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                           LEFT JOIN tmpMILO_GoodsKind_in AS MILinkObject_GoodsReal
+                                                          ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
+                           LEFT JOIN tmpMILO_GoodsKind_in AS MILinkObject_GoodsKindReal
+                                                          ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
 
                            LEFT JOIN tmpMB_PriceWithVAT AS MovementBoolean_PriceWithVAT
                                                         ON MovementBoolean_PriceWithVAT.MovementId = MovementItem.MovementId
                            LEFT JOIN tmpMF_VATPercent AS MovementFloat_VATPercent
                                                       ON MovementFloat_VATPercent.MovementId = MovementItem.MovementId
 
-                      GROUP BY MovementItem.ObjectId
-                             , MILinkObject_GoodsKind.ObjectId
+                      GROUP BY COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId)
+                             , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId, 0)
                              , MIFloat_Price.ValueData
                              , MovementBoolean_PriceWithVAT.ValueData
                              , COALESCE (MovementFloat_VATPercent.ValueData, 0)
@@ -436,7 +445,8 @@ BEGIN
                                , ROW_NUMBER ()          OVER (PARTITION BY tmpMI_All.GoodsId, tmpMI_All.GoodsKindId
                                                               ORDER BY CASE WHEN tmpMI_All.ChangePercentAmount > 0 OR tmpMI_All.isReason_1 = TRUE OR tmpMI_All.isReason_2 = TRUE THEN 1 ELSE 0 END ASC
                                                              ) 
-                               + CASE WHEN tmp_check.GoodsId IS NULL
+                               + CASE -- WHEN vbUserId = 5 AND 1=0 THEN 0
+                                      WHEN tmp_check.GoodsId IS NULL
                                       THEN 1
                                       ELSE 0
                                  END AS Ord
@@ -486,6 +496,7 @@ BEGIN
                                             ON tmp_check.GoodsId     = tmpMI_All.GoodsId
                                            AND tmp_check.GoodsKindId = tmpMI_All.GoodsKindId
                            WHERE tmp_check.GoodsId IS NULL
+                           --AND vbUserId <> 5
                          )
        -- Результат
        SELECT ROW_NUMBER() OVER (ORDER BY tmpMI_wp.MovementItemId) :: Integer AS Ord

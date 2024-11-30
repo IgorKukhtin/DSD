@@ -98,7 +98,11 @@ BEGIN
             , tmpData AS (SELECT Movement.Id                                    AS MovementId
                                , Movement.InvNumber                             AS InvNumber
                                , Movement.OperDate                              AS OperDate
-                               , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) AS isPriceWithVAT
+                               , CASE WHEN inUserId=5
+                                           THEN FALSE
+                                      ELSE COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)
+                                 END AS isPriceWithVAT
+
                                , COALESCE (MovementBoolean_MultWithVAT.ValueData, FALSE)  AS isMultWithVAT
                                , MLO_Contract.ObjectId                          AS ContractId
                                , ObjectLink_Contract_Juridical.ChildObjectId    AS JuridicalId
@@ -109,10 +113,18 @@ BEGIN
                                , MovementItem.ObjectId                          AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
                                  -- Цена в ГРН - по курсу
-                               , CASE WHEN MovementBoolean_MultWithVAT.ValueData = TRUE
+                               , CASE WHEN inUserId=5
+                                           THEN 53.83333
+                                         * CASE WHEN COALESCE (MLO_Currency.ObjectId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
+                                                WHEN tmpCurrencyList.CurrencyValue > 0 AND tmpCurrencyList.ParValue > 0 THEN tmpCurrencyList.CurrencyValue / tmpCurrencyList.ParValue
+                                                WHEN tmpCurrencyList.CurrencyValue > 0 THEN tmpCurrencyList.CurrencyValue
+                                                ELSE 0
+                                           END
+
+                                    WHEN MovementBoolean_MultWithVAT.ValueData = TRUE
                                        AND COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) = FALSE
                                            -- если надо кратно 5
-                                           THEN ROUND (COALESCE (MIF_Price.ValueData, 0)
+                                           THEN ROUND (COALESCE (MIF_Price.ValueData, 0) / CASE WHEN MIF_CountForPrice.ValueData > 0 THEN MIF_CountForPrice.ValueData ELSE 1 END
                                                      * CASE WHEN COALESCE (MLO_Currency.ObjectId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
                                                             WHEN tmpCurrencyList.CurrencyValue > 0 AND tmpCurrencyList.ParValue > 0 THEN tmpCurrencyList.CurrencyValue / tmpCurrencyList.ParValue
                                                             WHEN tmpCurrencyList.CurrencyValue > 0 THEN tmpCurrencyList.CurrencyValue
@@ -121,21 +133,35 @@ BEGIN
                                                       ) * 5
 
                                       -- если только перевести по курсу - НЕТ округлений
-                                      ELSE COALESCE (MIF_Price.ValueData, 0)
+                                      ELSE COALESCE (MIF_Price.ValueData, 0) / CASE WHEN MIF_CountForPrice.ValueData > 0 THEN MIF_CountForPrice.ValueData ELSE 1 END
                                          * CASE WHEN COALESCE (MLO_Currency.ObjectId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
                                                 WHEN tmpCurrencyList.CurrencyValue > 0 AND tmpCurrencyList.ParValue > 0 THEN tmpCurrencyList.CurrencyValue / tmpCurrencyList.ParValue
                                                 WHEN tmpCurrencyList.CurrencyValue > 0 THEN tmpCurrencyList.CurrencyValue
                                                 ELSE 0
                                            END
                                  END AS ValuePrice_GRN
+
+                                 -- сначала Цена без НДС
+                               , CASE WHEN inUserId=5
+                                           THEN 53.83333
+                                      WHEN COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) = FALSE
+                                           THEN COALESCE (MIF_Price.ValueData, 0) / CASE WHEN MIF_CountForPrice.ValueData > 0 THEN MIF_CountForPrice.ValueData ELSE 1 END
+                                      -- если только перевести по курсу - НЕТ округлений
+                                      ELSE CAST (COALESCE (MIF_Price.ValueData, 0) / 1.2 / CASE WHEN MIF_CountForPrice.ValueData > 0 THEN MIF_CountForPrice.ValueData ELSE 1 END AS NUMERIC (16, 4))
+                                 END AS ValuePrice_orig_notVat
+
                                  --
                                , COALESCE (MIF_Price.ValueData, 0)              AS ValuePrice_orig
+                               , COALESCE (MIF_CountForPrice.ValueData, 0)      AS CountForPrice
                                  -- Коэфф перевода из кол-ва поставщика
                                , CASE WHEN MIF_CountForAmount.ValueData > 0 THEN MIF_CountForAmount.ValueData ELSE 1 END AS CountForAmount
                                  -- Разрешенный % отклонение для цены
                                , COALESCE (MFloat_DiffPrice.ValueData, 0)       AS DiffPrice
                                  -- Кол-во знаков для округления
-                               , COALESCE (MFloat_RoundPrice.ValueData, 0)      AS RoundPrice
+                               , CASE WHEN inUserId=5
+                                           THEN 4
+                                      ELSE COALESCE (MFloat_RoundPrice.ValueData, 0)
+                                 END AS RoundPrice
                                  --
                                , tmpCurrencyList.CurrencyValue
                                , tmpCurrencyList.ParValue
@@ -172,6 +198,9 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIF_Price
                                                            ON MIF_Price.MovementItemId = MovementItem.Id
                                                           AND MIF_Price.DescId         = zc_MIFloat_Price()
+                               LEFT JOIN MovementItemFloat AS MIF_CountForPrice
+                                                           ON MIF_CountForPrice.MovementItemId = MovementItem.Id
+                                                          AND MIF_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
                                -- Коэфф перевода из кол-ва поставщика
                                LEFT JOIN MovementItemFloat AS MIF_CountForAmount
                                                            ON MIF_CountForAmount.MovementItemId = MovementItem.Id
@@ -590,4 +619,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpGet_MovementItem_ContractGoods (inOperDate:= CURRENT_DATE, inJuridicalId:=0, inPartnerId:= 0, inContractId:= 10485535, inGoodsId:= 0, inUserId:= 5)
+-- SELECT * FROM lpGet_MovementItem_ContractGoods (inOperDate:= '22.11.2024', inJuridicalId:=0, inPartnerId:= 0, inContractId:= 10485535, inGoodsId:= 0, inUserId:= 5)

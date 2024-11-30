@@ -69,6 +69,10 @@ $BODY$
 
    DECLARE vbIsDocMany        Boolean;
    DECLARE vbIsCloseInventory Boolean;
+
+   DECLARE vbInvNumberPartner_find TVarChar;
+   DECLARE vbContractId_find Integer;
+   DECLARE vbMovementId_income_find Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
@@ -79,6 +83,51 @@ BEGIN
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
 
+     -- если это <Документ поставщика>
+     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_DocPartner())
+        AND zc_Movement_Income() = (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_MovementDesc()) :: Integer
+     THEN
+         vbInvNumberPartner_find:= (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberPartner());
+         vbContractId_find      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
+         --
+         IF vbInvNumberPartner_find <> ''
+         THEN
+             vbMovementId_income_find:= (SELECT Movement.Id
+                                         FROM Movement
+                                              -- есть такое св-во
+                                              INNER JOIN MovementBoolean AS MovementBoolean_DocPartner
+                                                                         ON MovementBoolean_DocPartner.MovementId = Movement.Id
+                                                                        AND MovementBoolean_DocPartner.DescId     = zc_MovementBoolean_DocPartner()
+                                              INNER JOIN MovementString AS MovementString_InvNumberPartner
+                                                                        ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                                                       AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+                                                                       --  с таким номером Поставщика
+                                                                       AND MovementString_InvNumberPartner.ValueData = vbInvNumberPartner_find
+                                              INNER JOIN MovementLinkObject AS MLO_Contract
+                                                                            ON MLO_Contract.MovementId = Movement.Id
+                                                                           AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                                                           --  с таким Договором
+                                                                           AND MLO_Contract.ObjectId   = vbContractId_find
+                                         WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY'
+                                           AND Movement.DescId   = zc_Movement_WeighingPartner()
+                                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                                         LIMIT 1
+                                        );
+         END IF;
+
+         -- поиск Документ поставщика
+         IF vbMovementId_income_find > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ поставщика % № = <%> (%) от <%> уже существует.%Дублирование запрещено.'
+                            , CHR (13)
+                            , vbInvNumberPartner_find
+                            , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_income_find)
+                            , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = vbMovementId_income_find)
+                            , CHR (13)
+                             ;
+         END IF;
+
+     END IF;
 
      -- проверка
      IF COALESCE (inMovementId, 0) = 0

@@ -112,8 +112,8 @@ BEGIN
 
    , tmpMI_income AS (SELECT MovementItem.Id AS MovementItemId
                            , MovementItem.MovementId
-                           , MovementItem.ObjectId AS GoodsId
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                           , COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId)                  AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                            , MovementItem.Amount
                            , tmpMovement.VATPercent
                            , tmpMovement.isPriceWithVAT
@@ -124,6 +124,12 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                                            ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                                            ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
                      )
        -- Результат
        SELECT tmpMI_income.MovementId
@@ -180,23 +186,29 @@ BEGIN
       ;
 
 
+IF vbUserId = 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>   <%>', (select _tmpItem_income_diff.AmountPartner from _tmpItem_income_diff WHERE _tmpItem_income_diff.MovementItemId = 308783810 )
+                                      , (select MovementItemFloat.ValueData from MovementItemFloat WHERE MovementItemFloat.MovementItemId = 308783810 and MovementItemFloat.descId = zc_MIFloat_AmountPartner())
+                                       ;
+END IF;
+
+
          -- 1. сохранили протокол
          PERFORM lpInsert_MovementItemProtocol (_tmpMI.MovementItemId, vbUserId, FALSE)
          -- сохранили
-         FROM (SELECT CASE WHEN _tmpItem_income_diff.Ord = 1
-                           THEN
-                               -- Количество Поставщика
-                               lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), _tmpItem_income_diff.MovementItemId, _tmpItem_income_diff.AmountPartner)
-                      END AS x1
+         FROM (SELECT 
+                      -- Количество Поставщика
+                      lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), _tmpItem_income_diff.MovementItemId
+                                                      , CASE WHEN _tmpItem_income_diff.Ord = 1 THEN _tmpItem_income_diff.AmountPartner ELSE 0 END
+                                                       )
 
-                   ,  CASE WHEN _tmpItem_income_diff.Ord = 1
-                           THEN
-                               -- Количество Поставщика -  по документу Поставщика
-                               lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), _tmpItem_income_diff.MovementItemId, _tmpItem_income_diff.AmountPartnerSecond)
-                      END AS x2
-
+                   ,  -- Количество Поставщика -  по документу Поставщика
+                      lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), _tmpItem_income_diff.MovementItemId
+                                                      , CASE WHEN _tmpItem_income_diff.Ord = 1 THEN _tmpItem_income_diff.AmountPartnerSecond ELSE 0 END
+                                                       )
                       -- Цена Поставщика
-                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), _tmpItem_income_diff.MovementItemId, _tmpItem_income_diff.PricePartner) AS x3
+                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), _tmpItem_income_diff.MovementItemId, _tmpItem_income_diff.PricePartner)
 
                       -- Цена
                     , CASE WHEN _tmpItem_income_diff.OperPrice <> 0
