@@ -267,14 +267,12 @@
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 286
     ClientRectBottom = 285
     ClientRectRight = 1112
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 262
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -282,7 +280,6 @@
         Height = 261
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 262
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -814,12 +811,24 @@
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
           BeginGroup = True
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -836,14 +845,6 @@
         item
           Visible = True
           ItemName = 'bbCompletePrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -951,10 +952,12 @@
     object bbActDiffEdit: TdxBarButton
       Action = actActDiffEdit
       Category = 0
+      PaintStyle = psCaptionGlyph
     end
     object bbPrint_byPartner: TdxBarButton
       Action = actPrint_byPartner
       Category = 0
+      PaintStyle = psCaptionGlyph
     end
     object bbsPrint: TdxBarSubItem
       Caption = #1055#1077#1095#1072#1090#1100
@@ -970,10 +973,12 @@
     object bbPrintDiff: TdxBarButton
       Action = actPrintDiff
       Category = 0
+      PaintStyle = psCaptionGlyph
     end
     object bbPrint_DiffPartner: TdxBarButton
       Action = actPrint_DiffPartner
       Category = 0
+      PaintStyle = psCaptionGlyph
     end
     object bbPrint_AllPartner: TdxBarButton
       Action = actPrint_AllPartner
@@ -990,6 +995,7 @@
     object bbCompletePrint: TdxBarButton
       Action = mactCompletePrint
       Category = 0
+      PaintStyle = psCaptionGlyph
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1023,6 +1029,7 @@
         end>
       Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1072#1084
       Hint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1072#1084
+      ImageIndex = 16
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1741,6 +1748,7 @@
         end>
       Caption = #1040#1082#1090' '#1056#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
       Hint = #1040#1082#1090' '#1056#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
+      ImageIndex = 18
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1765,7 +1773,7 @@
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      ShortCut = 115
+      ImageIndex = 1
       FormName = 'TWeighingPartner_ActDiffEditForm'
       FormNameParam.Value = 'TWeighingPartner_ActDiffEditForm'
       FormNameParam.DataType = ftString
@@ -1817,6 +1825,7 @@
         end>
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1055#1088#1080#1093#1086#1076' ('#1080#1090#1086#1075#1086')'
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1055#1088#1080#1093#1086#1076' ('#1080#1090#1086#1075#1086')'
+      ImageIndex = 17
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1913,6 +1922,7 @@
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080
+      ImageIndex = 12
     end
     object actContinueAction: TdsdContinueAction
       Category = 'Complete'
