@@ -2625,6 +2625,58 @@ object UtilPrintForm: TUtilPrintForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_TTN_final: TdsdPrintAction
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN_final
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN_final
+        end>
+      Caption = 'actPrint_TTN_final'
+      Hint = 'actPrint_TTN_final'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrint_TTN_final: TMultiAction
+      Category = 'Print_TTN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintTTNProcName
+        end
+        item
+          Action = actPrint_TTN_final
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086#1074#1086#1081' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086#1074#1086#1081' '#1058#1058#1053
+      ImageIndex = 16
+    end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
@@ -3808,5 +3860,29 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 282
     Top = 352
+  end
+  object spSelectPrint_TTN_final: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TTN_final_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 751
+    Top = 121
   end
 end

@@ -282,6 +282,10 @@ BEGIN
                     WHEN vbIsChild = TRUE
                          THEN _tmpItem.ObjectId -- дублируем для zc_Movement_ProfitLossService
 
+                    -- если это Расчеты с участниками
+                    WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
+                         THEN ObjectLink_Unit_Founder.ChildObjectId
+
                     ELSE 0 -- значит попадет в ОПиУ или в ОС
 
                END AS ObjectId
@@ -298,7 +302,12 @@ BEGIN
                     WHEN vbIsChild = TRUE
                          THEN _tmpItem.ObjectDescId -- из предыдущей проводки - дублируем для zc_Movement_ProfitLossService
 
+                    -- если это Расчеты с участниками
+                    WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
+                         THEN zc_Object_Founder()
+
                     ELSE 0 -- значит попадет в ОПиУ
+
                END AS ObjectDescId
 
              , CASE WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND vbMovementDescId = zc_Movement_Service()
@@ -378,6 +387,10 @@ BEGIN
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Founder
+                                  ON ObjectLink_Unit_Founder.ObjectId = _tmpItem.UnitId
+                                 AND ObjectLink_Unit_Founder.DescId   = zc_ObjectLink_Unit_Founder()
+
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = _tmpItem.UnitId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = _tmpItem.UnitId

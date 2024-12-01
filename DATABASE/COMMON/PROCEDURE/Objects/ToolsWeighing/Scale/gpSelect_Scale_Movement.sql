@@ -274,10 +274,16 @@ BEGIN
                                    ON MovementDate_OperDatePartner_wp.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner_wp.DescId     = zc_MovementDate_OperDatePartner()
 
+            -- ТТН у Главного
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
                                            ON MovementLinkMovement_TransportGoods.MovementId = Movement_Parent.Id
                                           AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
             LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
+
+            -- Путевой у ТТН
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport_tg
+                                           ON MovementLinkMovement_Transport_tg.MovementId = Movement_TransportGoods.Id
+                                          AND MovementLinkMovement_Transport_tg.DescId     = zc_MovementLinkMovement_Transport()
 
             LEFT JOIN MovementDate AS MovementDate_StartWeighing
                                    ON MovementDate_StartWeighing.MovementId =  Movement.Id
@@ -411,13 +417,17 @@ BEGIN
             LEFT JOIN MovementString AS MS_InvNumberPartner_Tax ON MS_InvNumberPartner_Tax.MovementId = MovementLinkMovement_Tax.MovementChildId
                                                                AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
 
+            -- Путевой у Взвешивания
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
-                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+                                          AND MovementLinkMovement_Transport.DescId     = zc_MovementLinkMovement_Transport()
+            -- Путевой у Главного
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport_parent
                                            ON MovementLinkMovement_Transport_parent.MovementId = Movement_Parent.Id
                                           AND MovementLinkMovement_Transport_parent.DescId     = zc_MovementLinkMovement_Transport()
-            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = COALESCE (MovementLinkMovement_Transport_parent.MovementChildId, MovementLinkMovement_Transport.MovementChildId)
+
+            -- Путевой лист
+            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = COALESCE (MovementLinkMovement_Transport_parent.MovementChildId, MovementLinkMovement_Transport.MovementChildId, MovementLinkMovement_Transport_tg.MovementChildId )
             LEFT JOIN MovementDate AS MovementDate_StartRunPlan
                                    ON MovementDate_StartRunPlan.MovementId = Movement_Transport.Id
                                   AND MovementDate_StartRunPlan.DescId = zc_MovementDate_StartRunPlan()
@@ -896,4 +906,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Movement (inStartDate:= '01.05.2023', inEndDate:= '01.05.2023', inIsComlete:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_Movement (inStartDate:= '01.05.2024', inEndDate:= '01.05.2024', inIsComlete:= TRUE, inSession:= zfCalc_UserAdmin())

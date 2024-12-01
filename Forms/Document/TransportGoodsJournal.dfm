@@ -801,6 +801,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086#1074#1086#1081' '#1058#1058#1053
       Hint = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086#1074#1086#1081' '#1058#1058#1053
+      ImageIndex = 16
     end
   end
   inherited MasterDS: TDataSource
@@ -980,6 +981,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     object bbPrint_TTN_final: TdxBarButton
       Action = macPrint_TTN_final
       Category = 0
+      PaintStyle = psCaptionGlyph
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

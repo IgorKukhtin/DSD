@@ -44,6 +44,7 @@ $BODY$
    DECLARE vbMovementId_find       Integer;
    DECLARE vbMovementId_begin      Integer;
    DECLARE vbMovementId_begin_next Integer;
+   DECLARE vbMovementId_cost       Integer;
    DECLARE vbMovementDescId        Integer;
    DECLARE vbIsTax                 Boolean;
 
@@ -1154,6 +1155,26 @@ BEGIN
           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Transport()
        ;
 
+        -- документ Затраты - в Приход
+        IF vbMovementDescId = zc_Movement_Income()
+        THEN
+            -- дописали документ Затраты
+            vbMovementId_cost:= (SELECT lpInsertUpdate_Movement_IncomeCost (ioId         := 0
+                                                                          , inParentId   := vbMovementId_begin                   -- док приход
+                                                                          , inMovementId := MovementLinkMovement.MovementChildId -- док услуг
+                                                                          , inComment    := ''
+                                                                          , inUserId     := vbUserId
+                                                                           ) AS MovementId_cost
+                                 FROM MovementLinkMovement
+                                      LEFT JOIN Movement ON Movement.ParentId = vbMovementId_begin AND Movement.DescId = zc_Movement_IncomeCost()
+                                                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 WHERE MovementLinkMovement.MovementChildId > 0
+                                   AND MovementLinkMovement.MovementId = inMovementId
+                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Transport()
+                                   AND Movement.ParentId IS NULL
+                                );
+
+        END IF;
 
         -- !!!Налоговая!!!
         IF vbIsTax = TRUE -- AND inSession <> '5'
@@ -2049,6 +2070,28 @@ BEGIN
                       PERFORM lpComplete_Movement_Income (inMovementId     := vbMovementId_begin
                                                         , inUserId         := vbUserId
                                                         , inIsLastComplete := NULL);
+
+                      -- документ Затраты - в Приход
+                      IF vbMovementId_cost > 0 
+                      THEN
+                          IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpItem')
+                          THEN
+                              DROP TABLE _tmpItem;
+                          END IF;
+              
+                          IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpItem_To')
+                          THEN
+                              DROP TABLE _tmpItem_To;
+                          END IF;
+                          IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpItem_SummPersonal')
+                          THEN
+                              DROP TABLE _tmpItem_SummPersonal;
+                          END IF;
+                          
+                          -- Провели
+                          PERFORM lpComplete_Movement_IncomeCost (vbMovementId_cost, vbUserId);
+                      END IF;
+
                   ELSE
                   -- <Возврат поставщику>
                   IF vbMovementDescId = zc_Movement_ReturnOut()

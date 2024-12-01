@@ -110,8 +110,8 @@ BEGIN
      RETURN QUERY
 
         WITH -- Док. Взвешивание - данные Поставщика
-             tmpMIList AS (SELECT MAX (MovementItem.Id) AS MovementItemId
-                                , SUM (MovementItem.Amount) As Amount
+             tmpMIList AS (SELECT MAX (MovementItem.Id)     AS Id
+                                , SUM (MovementItem.Amount) AS Amount
                                 , MovementItem.MovementId
                                 , MovementItem.ObjectId
                                 , COALESCE (MILO_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -129,12 +129,12 @@ BEGIN
 
             , tmpMI_Float AS (SELECT MovementItemFloat.*
                               FROM MovementItemFloat
-                              WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIList.MovementItemId FROM tmpMIList)
+                              WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIList.Id FROM tmpMIList)
                              )
 
       , tmpMI_Boolean AS (SELECT MovementItemBoolean.*
                           FROM MovementItemBoolean
-                          WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMIList.MovementItemId FROM tmpMIList)
+                          WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMIList.Id FROM tmpMIList)
                             AND MovementItemBoolean.DescId IN (zc_MIBoolean_AmountPartnerSecond()
                                                              , zc_MIBoolean_PriceWithVAT()
                                                              , zc_MIBoolean_ReturnOut()
@@ -143,7 +143,7 @@ BEGIN
 
       , tmpMI_String AS (SELECT MovementItemString.*
                          FROM MovementItemString
-                         WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMIList.MovementItemId FROM tmpMIList)
+                         WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMIList.Id FROM tmpMIList)
                            AND MovementItemString.DescId IN (zc_MIString_Comment()
                                                             )
                          )

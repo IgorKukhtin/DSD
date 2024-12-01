@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_HistoryCost()
 
-
 DROP FUNCTION IF EXISTS gpInsertUpdate_HistoryCost (TDateTime, TDateTime, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_HistoryCost(
@@ -266,6 +265,7 @@ end if;
                                         AND ContainerLinkObject_Account.ContainerId IS NULL
                                       GROUP BY Container_count.Id, Container_count.Amount
                                       HAVING Container_count.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0 -- AS StartSumm
+                                          OR 0 <> SUM (CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount <> 0 THEN 1 ELSE 0 END)
                                      )
         -- Результат - Суммы, если есть Остаток или Движение
         SELECT Container_Summ.Id AS ContainerId, Container_Summ.ParentId AS ContainerId_count

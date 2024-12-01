@@ -259,7 +259,7 @@ END IF;
      -- сохранили свойство <Документ поставщика (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DocPartner(), inMovementId, TRUE);
 
-     -- Расрроводим Документы
+     -- Распроводим Документы
      PERFORM lpUnComplete_Movement (inMovementId     := _tmpItem_income_diff.MovementId
                                   , inUserId         := vbUserId
                                    )

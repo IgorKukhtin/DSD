@@ -162,6 +162,9 @@ type
     spSelectPrint_Income_diff: TdsdStoredProc;
     spSelectPrint_Income_Price_diff: TdsdStoredProc;
     actPrint_Income_Price_diff: TdsdPrintAction;
+    spSelectPrint_TTN_final: TdsdStoredProc;
+    actPrint_TTN_final: TdsdPrintAction;
+    macPrint_TTN_final: TMultiAction;
   private
   end;
 
@@ -174,6 +177,7 @@ type
   function Print_Pack     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_PackGross(MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Transport(MovementDescId,MovementId,MovementId_sale:Integer; OperDate:TDateTime; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Transport_Total(MovementDescId,MovementId_sale:Integer; OperDate:TDateTime; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Quality  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean; isDiffTax:Boolean):Boolean;
   function Print_PackWeight (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
@@ -726,6 +730,35 @@ begin
              //Print
              if (MovementDescId = zc_Movement_Sale) or (MovementDescId = zc_Movement_SendOnPrice)
              then Print_TransportDocument(MovementId,MovementId_sale,OperDate,myPrintCount,isPreview)
+             else begin ShowMessage ('Ошибка.Форма печати <ТТН> не найдена.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать <ТТН> не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Transport_Total(MovementDescId,MovementId_sale: Integer;OperDate:TDateTime;myPrintCount:Integer;isPreview:Boolean):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     Result:=false;
+          //
+          try
+             //Print
+             if (MovementDescId = zc_Movement_Sale) or (MovementDescId = zc_Movement_SendOnPrice)
+             then begin
+                      if myPrintCount <= 0 then myPrintCount:=1;
+                      //
+                      UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId_sale;
+                      UtilPrintForm.FormParams.ParamByName('OperDate').Value := OperDate;
+                      UtilPrintForm.actPrint_TTN_final.CopiesCount:=myPrintCount;
+                      UtilPrintForm.actPrint_TTN_final.WithOutPreview:= not isPreview;
+                      //
+                      UtilPrintForm.macPrint_TTN_final.Execute;
+             end
              else begin ShowMessage ('Ошибка.Форма печати <ТТН> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <ТТН> не сформирована.');

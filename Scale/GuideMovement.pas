@@ -157,6 +157,7 @@ type
     isReason1: TcxGridDBColumn;
     isReason2: TcxGridDBColumn;
     cbIncome_Price_diff: TCheckBox;
+    cbPrintTransport_Total: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -196,6 +197,7 @@ type
     procedure cbIncome_diffClick(Sender: TObject);
     procedure bbChangePercentAmountClick(Sender: TObject);
     procedure cbIncome_Price_diffClick(Sender: TObject);
+    procedure cbPrintTransport_TotalClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -204,6 +206,7 @@ type
 
     procedure myCheckPrintMovement;
     procedure myCheckPrintTransport;
+    procedure myCheckPrintTransport_Total;
     procedure myCheckPrintQuality;
     procedure myCheckPrintTax;
     procedure myCheckPrintAccount;
@@ -253,12 +256,15 @@ begin
      //для начала снимаем всю печать
      cbPrintMovement.Checked:=false;
      cbPrintTransport.Checked:=false;
+     cbPrintTransport_Total.Checked:=false;
      cbPrintQuality.Checked:=false;
      cbPrintTax.Checked:=false;
      cbPrintAccount.Checked:=false;
      cbPrintPack.Checked:=false;
      cbPrintPackGross.Checked:=false;
      cbPrintSpec.Checked:=false;
+     cbIncome_Price_diff.Checked:=false;
+     cbIncome_diff.Checked:=false;
      //и отмечаем просмотр
      cbPrintPreview.Checked:=true;
 
@@ -333,13 +339,24 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.myCheckPrintTransport;
 begin
-     if cbPrintTransport.Checked
+     if (cbPrintTransport.Checked)or(cbPrintTransport_Total.Checked)
      then
          if ((CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale)
           and(CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
             )
           or(CDS.RecordCount=0)or(isChoice_local=true)
          then cbPrintTransport.Checked:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.myCheckPrintTransport_Total;
+begin
+     if (cbPrintTransport_Total.Checked)
+     then
+         if ((CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+          and(CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
+            )
+          or(CDS.RecordCount=0)or(isChoice_local=true)
+         then cbPrintTransport_Total.Checked:=false;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.myCheckPrintQuality;
@@ -395,6 +412,9 @@ begin myCheckPrintMovement;end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.cbPrintTransportClick(Sender: TObject);
 begin myCheckPrintTransport;end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.cbPrintTransport_TotalClick(Sender: TObject);
+begin myCheckPrintTransport_Total;end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.cbPrintQualityClick(Sender: TObject);
 begin myCheckPrintQuality;end;
@@ -694,6 +714,11 @@ begin
 
   bbChangePercentAmount.Visible := (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 210);
 
+  cbPrintTransport_Total.Visible := (SettingMain.BranchCode >= 1) and (SettingMain.BranchCode <= 1);
+
+  cbIncome_Price_diff.Visible := (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202);
+  cbIncome_diff.Visible := (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202);
+
   Create_ParamsMovement(ParamsMovement_local);
 
   with spSelect do
@@ -717,6 +742,7 @@ begin
      //
      myCheckPrintMovement;
      myCheckPrintTransport;
+     myCheckPrintTransport_Total;
      myCheckPrintQuality;
      myCheckPrintTax;
      myCheckPrintAccount;
@@ -731,6 +757,7 @@ begin
        and not(cbPrintPackGross.Checked)
        and not(cbPrintSpec.Checked)
        and not(cbPrintTransport.Checked)
+       and not(cbPrintTransport_Total.Checked)
        and not(cbPrintQuality.Checked)
        and not(cbIncome_diff.Checked)
        and not(cbIncome_Price_diff.Checked)
@@ -795,6 +822,14 @@ begin
                          , 1    // myPrintCount
                          , TRUE // isPreview
                           );
+     //
+     if cbPrintTransport_Total.Checked
+     then Print_Transport_Total (CDS.FieldByName('MovementDescId').AsInteger
+                               , CDS.FieldByName('MovementId_parent').AsInteger   // MovementId_sale
+                               , CDS.FieldByName('OperDate_parent').AsDateTime
+                               , 1    // myPrintCount
+                               , TRUE // isPreview
+                                );
      //
      if cbPrintQuality.Checked
      then Print_Quality (CDS.FieldByName('MovementDescId').AsInteger
