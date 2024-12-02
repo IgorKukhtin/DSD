@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_CurrencyList()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CurrencyList (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CurrencyList (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CurrencyList (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CurrencyList(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ Курсовая разница>
@@ -8,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CurrencyList(
     IN inOperDate                 TDateTime , -- Дата документа
     IN inAmount                   TFloat    , -- курс
     IN inParValue                 TFloat    , -- Номинал валюты для которой вводится курс
-    IN inComment                  TVarChar  , -- Комментарий
+    IN inComment                  TVarChar  , -- Комментарий 
+    IN inSiteTagId                Integer   , -- Категория Сайта
     IN inCurrencyFromId           Integer   , -- валюта в которой вводится курc
     IN inCurrencyToId             Integer   , -- валюта для которой вводится курс
     IN inPaidKindId               Integer   , -- Виды форм оплаты 
@@ -57,6 +59,9 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_CurrencyList(), inInvNumber, inOperDate, NULL, NULL);
 
+     -- сохранили связь с <Категория сайта>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SiteTag(), ioId, inSiteTagId);
+
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
@@ -99,7 +104,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.12.24         *
  21.02.23         *
 */
 

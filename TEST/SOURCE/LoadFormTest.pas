@@ -215,6 +215,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadSettingsServiceFormTest;
     procedure LoadSignInternalFormTest;
+    procedure LoadSiteTagFormTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadSheetWorkTimeCloseFormTest;
     procedure LoadSmsSettingsFormTest;
@@ -1535,6 +1536,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSignInternalEditForm');
 end;
 
+procedure TLoadFormTest.LoadSiteTagFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSiteTagForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSiteTagForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSiteTagEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSiteTagEditForm');
+end;
 
 procedure TLoadFormTest.LoadPersonalReportFormTest;
 begin

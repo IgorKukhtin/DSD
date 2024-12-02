@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ContractGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -14,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ContractGoods(
     --IN inEndBeginDate        TDateTime , -- По какую дату действует
    OUT outEndBeginDate       TDateTime , -- По какую дату действует
     IN inContractId          Integer   , -- 
-    IN inCurrencyId          Integer   , -- Валюта
+    IN inCurrencyId          Integer   , -- Валюта 
+    IN inSiteTagId           Integer   , -- Категория сайт
     IN inDiffPrice           TFloat    ,  -- Разрешенный % отклонение для цены
     IN inRoundPrice          TFloat    ,  -- Кол-во знаков для округления 
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет) 
@@ -38,6 +40,7 @@ BEGIN
                                                 --, inEndBeginDate := inEndBeginDate
                                                 , inContractId   := inContractId 
                                                 , inCurrencyId   := inCurrencyId
+                                                , inSiteTagId    := inSiteTagId
                                                 , inDiffPrice    := inDiffPrice
                                                 , inRoundPrice   := inRoundPrice 
                                                 , inPriceWithVAT := inPriceWithVAT
@@ -53,6 +56,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.12.24         *
  15.11.24         *
  29.11.23         *
  08.11.23         *

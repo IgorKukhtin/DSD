@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_CurrencyList(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , SiteTagId Integer, SiteTagName TVarChar
              , Amount TFloat, ParValue TFloat
              --, Amount_Currency TFloat
              , Comment TVarChar
@@ -44,6 +45,13 @@ BEGIN
                                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                               AND Movement.StatusId = tmpStatus.StatusId
                            )
+
+          , tmpMLO AS (SELECT MovementLinkObject.*
+                       FROM MovementLinkObject 
+                       WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                         AND MovementLinkObject.DescId IN (zc_MovementLinkObject_SiteTag())
+                        )
+
          /* , tmpMIContainer AS (SELECT MIContainer.MovementId
                                     , SUM (MIContainer.Amount) AS Amount_Currency
                                FROM MovementItemContainer AS MIContainer
@@ -81,6 +89,8 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
 
+           , COALESCE (Object_SiteTag.Id, 0)         ::Integer  AS SiteTagId
+           , COALESCE (Object_SiteTag.ValueData, '') ::TVarChar AS SiteTagName
 
            , MovementItem.Amount             AS Amount
            , MIFloat_ParValue.ValueData      AS ParValue
@@ -98,6 +108,11 @@ BEGIN
            -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN tmpMLO AS MovementLinkObject_SiteTag
+                             ON MovementLinkObject_SiteTag.MovementId = Movement.Id
+                            AND MovementLinkObject_SiteTag.DescId = zc_MovementLinkObject_SiteTag()
+            LEFT JOIN Object AS Object_SiteTag ON Object_SiteTag.Id = MovementLinkObject_SiteTag.ObjectId
 
             LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
             

@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_CurrencyList(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , SiteTagId Integer, SiteTagName TVarChar
              , Amount TFloat, ParValue TFloat
              , Comment TVarChar
              , CurrencyFromId Integer, CurrencyFromName TVarChar
@@ -35,6 +36,8 @@ BEGIN
            , inOperDate AS OperDate
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
+           , 0                                AS SiteTagId
+           , CAST ('' AS TVarChar)            AS SiteTagName
            , 0::TFloat                        AS Amount
            , 1::TFloat                        AS ParValue
            , ''::TVarChar                     AS Comment
@@ -57,6 +60,9 @@ BEGIN
            , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END AS OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
+
+           , COALESCE (Object_SiteTag.Id, 0)         ::Integer  AS SiteTagId
+           , COALESCE (Object_SiteTag.ValueData, '') ::TVarChar AS SiteTagName
                      
            , MovementItem.Amount AS Amount
 
@@ -75,6 +81,11 @@ BEGIN
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SiteTag
+                                         ON MovementLinkObject_SiteTag.MovementId = Movement.Id
+                                        AND MovementLinkObject_SiteTag.DescId = zc_MovementLinkObject_SiteTag()
+            LEFT JOIN Object AS Object_SiteTag ON Object_SiteTag.Id = MovementLinkObject_SiteTag.ObjectId
             
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 

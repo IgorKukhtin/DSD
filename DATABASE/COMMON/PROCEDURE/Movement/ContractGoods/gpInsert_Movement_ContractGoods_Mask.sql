@@ -25,6 +25,7 @@ BEGIN
                                                   , inOperDate     := inOperDate
                                                   , inContractId   := tmp.ContractId
                                                   , inCurrencyId   := tmp.CurrencyId
+                                                  , inSiteTagId    := tmp.SiteTagId
                                                   , inDiffPrice    := tmp.DiffPrice ::TFloat
                                                   , inRoundPrice   := tmp.RoundPrice::TFloat 
                                                   , inPriceWithVAT := tmp.PriceWithVAT  ::Boolean 

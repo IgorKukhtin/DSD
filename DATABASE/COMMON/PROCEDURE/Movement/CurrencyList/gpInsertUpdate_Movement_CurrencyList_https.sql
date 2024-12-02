@@ -100,7 +100,8 @@ BEGIN
                                                      , inOperDate                 := inOperDate
                                                      , inAmount                   := vbAmount
                                                      , inParValue                 := vbParValue
-                                                     , inComment                  := 'bank.gov.ua'
+                                                     , inComment                  := 'bank.gov.ua' 
+                                                     , inSiteTagId                := NULL ::Integer
                                                      , inCurrencyFromId           := vbCurrencyFromId
                                                      , inCurrencyToId             := vbCurrencyToId
                                                      , inPaidKindId               := vbPaidKindId

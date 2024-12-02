@@ -106,6 +106,9 @@ type
     bbLoadExcel: TdxBarButton;
     actDoLoad: TExecuteImportSettingsAction;
     cbMultWithVAT: TcxCheckBox;
+    cxLabel13: TcxLabel;
+    edSiteTag: TcxButtonEdit;
+    GuidesSiteTag: TdsdGuides;
   private
     { Private declarations }
   public

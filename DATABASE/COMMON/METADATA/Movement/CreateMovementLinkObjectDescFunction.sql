@@ -416,7 +416,12 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_InfoMoney_Market() RETURNS Inte
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_InfoMoney_Market', 'Статья для Сумма компенсации' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_InfoMoney_Market');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_SiteTag() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_SiteTag'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_SiteTag', 'Категория сайт' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_SiteTag');
 
+
+ 
 
 
 
@@ -657,6 +662,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 02.12.24         * zc_MovementLinkObject_SiteTag
  07.08.24         * zc_MovementLinkObject_TradeMark
  10.03.24         * zc_MovementLinkObject_BankSecond
                     zc_MovementLinkObject_BankSecondTwo_num

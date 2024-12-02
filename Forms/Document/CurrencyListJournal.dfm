@@ -12,18 +12,18 @@ inherited CurrencyListJournalForm: TCurrencyListJournalForm
     Width = 883
     Height = 469
     TabOrder = 3
-    ExplicitWidth = 921
-    ExplicitHeight = 592
+    ExplicitWidth = 883
+    ExplicitHeight = 469
     ClientRectBottom = 469
     ClientRectRight = 883
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 921
-      ExplicitHeight = 592
+      ExplicitWidth = 883
+      ExplicitHeight = 469
       inherited cxGrid: TcxGrid
         Width = 883
         Height = 469
-        ExplicitWidth = 921
-        ExplicitHeight = 592
+        ExplicitWidth = 883
+        ExplicitHeight = 469
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -68,6 +68,14 @@ inherited CurrencyListJournalForm: TCurrencyListJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object SiteTagName: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1089#1072#1081#1090#1072
+            DataBinding.FieldName = 'SiteTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
           end
           object Amount: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1082#1091#1088#1089#1072
@@ -131,7 +139,7 @@ inherited CurrencyListJournalForm: TCurrencyListJournalForm
   end
   inherited Panel: TPanel
     Width = 883
-    ExplicitWidth = 921
+    ExplicitWidth = 883
     inherited deStart: TcxDateEdit
       EditValue = 44927d
     end

@@ -61,6 +61,7 @@ type
     DiffPrice: TcxGridDBColumn;
     RoundPrice: TcxGridDBColumn;
     isMultWithVAT: TcxGridDBColumn;
+    SiteTagName: TcxGridDBColumn;
   private
     { Private declarations }
   public
