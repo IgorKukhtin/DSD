@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
            
              , JuridicalId Integer, JuridicalName TVarChar 
              , CurrencyId Integer, CurrencyName TVarChar
+             , SiteTagId Integer, SiteTagName TVarChar
              , PriceListId_first Integer, PriceListName_first TVarChar
              , PriceListId_curr Integer, PriceListName_curr TVarChar
              
@@ -176,6 +177,9 @@ BEGIN
            , Object_Currency.Id                  AS CurrencyId
            , Object_Currency.ValueData           AS CurrencyName
 
+           , COALESCE (Object_SiteTag.Id, 0)         ::Integer  AS SiteTagId
+           , COALESCE (Object_SiteTag.ValueData, '') ::TVarChar AS SiteTagName
+
            , Object_PriceList_first.Id           AS PriceListId_first
            , Object_PriceList_first.ValueData    AS PriceListName_first
            , Object_PriceList_curr.Id            AS PriceListId_curr
@@ -229,6 +233,11 @@ BEGIN
                                         AND MovementLinkObject_Currency.DescId = zc_MovementLinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MovementLinkObject_Currency.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SiteTag
+                                         ON MovementLinkObject_SiteTag.MovementId = Movement.Id
+                                        AND MovementLinkObject_SiteTag.DescId = zc_MovementLinkObject_SiteTag()
+            LEFT JOIN Object AS Object_SiteTag ON Object_SiteTag.Id = MovementLinkObject_SiteTag.ObjectId
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -272,6 +281,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.12.24         *
  15.11.24         *
  08.11.23         * 
  15.09.22         *

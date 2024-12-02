@@ -4,7 +4,8 @@
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, Boolean, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ContractGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -12,7 +13,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ContractGoods(
     IN inOperDate            TDateTime , -- Дата документа / С какой даты действует
    OUT outEndBeginDate       TDateTime , -- По какую дату действует
     IN inContractId          Integer   , --
-    IN inCurrencyId          Integer   , -- Валюта 
+    IN inCurrencyId          Integer   , -- Валюта
+    IN inSiteTagId           Integer   , -- Категория сайт 
     IN inDiffPrice           TFloat    ,  -- Разрешенный % отклонение для цены
     IN inRoundPrice          TFloat    ,  -- Кол-во знаков для округления   
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет) 
@@ -94,6 +96,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
      -- сохранили связь с <Валюта>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Currency(), ioId, inCurrencyId);
+     -- сохранили связь с <Категория сайта>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SiteTag(), ioId, inSiteTagId);
      
      -- сохранили свойство <Дата окончания> текущего документа
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), ioId, outEndBeginDate);
@@ -145,6 +149,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.12.24         *
  15.11.24         *
  29.11.23         *
  08.11.23         *

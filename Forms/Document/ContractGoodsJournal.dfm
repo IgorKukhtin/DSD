@@ -257,6 +257,14 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
             Options.Editing = False
             Width = 79
           end
+          object SiteTagName: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1089#1072#1081#1090#1072
+            DataBinding.FieldName = 'SiteTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'

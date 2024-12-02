@@ -2,7 +2,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
   ClientHeight = 596
   ClientWidth = 1204
-  ExplicitLeft = -85
+  ExplicitLeft = -38
   ExplicitWidth = 1220
   ExplicitHeight = 635
   PixelsPerInch = 96
@@ -320,15 +320,15 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Width = 165
     end
     object cxLabel22: TcxLabel
-      Left = 918
+      Left = 1038
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 918
+      Left = 1038
       Top = 62
       TabOrder = 7
-      Width = 266
+      Width = 146
     end
     object cxLabel8: TcxLabel
       Left = 918
@@ -347,8 +347,8 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Width = 112
     end
     object cxLabel7: TcxLabel
-      Left = 1038
-      Top = 5
+      Left = 1036
+      Top = 0
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
@@ -526,6 +526,23 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       ShowHint = True
       TabOrder = 31
       Width = 105
+    end
+    object cxLabel13: TcxLabel
+      Left = 918
+      Top = 45
+      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103', '#1089#1072#1081#1090#1072
+    end
+    object edSiteTag: TcxButtonEdit
+      Left = 918
+      Top = 62
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 33
+      Width = 112
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -1557,6 +1574,21 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Component = cbMultWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SiteTagId'
+        Value = Null
+        Component = GuidesSiteTag
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SiteTagName'
+        Value = Null
+        Component = GuidesSiteTag
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1607,6 +1639,14 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Name = 'inCurrencyId'
         Value = Null
         Component = GuidesCurrency
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSiteTagId'
+        Value = Null
+        Component = GuidesSiteTag
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2291,8 +2331,8 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 72
+    Left = 208
+    Top = 56
   end
   object spGetImportSetting: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2325,5 +2365,34 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     PackSize = 1
     Left = 896
     Top = 328
+  end
+  object GuidesSiteTag: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSiteTag
+    FormNameParam.Value = 'TSiteTagForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSiteTagForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSiteTag
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSiteTag
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 952
+    Top = 72
   end
 end

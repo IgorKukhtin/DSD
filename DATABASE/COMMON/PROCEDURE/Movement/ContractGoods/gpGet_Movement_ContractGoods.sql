@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
              , ContractTagId Integer, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
+             , SiteTagId Integer, SiteTagName TVarChar
              , DiffPrice TFloat, RoundPrice TFloat
              , PriceWithVAT Boolean
              , isMultWithVAT Boolean
@@ -74,6 +75,9 @@ BEGIN
 
              , ObjectCurrency.Id         AS CurrencyId	-- „Ì
              , ObjectCurrency.ValueData  AS CurrencyName
+             
+             , 0                         AS SiteTagId
+             , CAST ('' AS TVarChar)     AS SiteTagName
 
              , CAST (0 AS TFloat) 		 AS DiffPrice
              , CAST (0 AS TFloat) 		 AS RoundPrice
@@ -117,7 +121,10 @@ BEGIN
            , Object_Juridical.ValueData             AS JuridicalName
 
            , COALESCE (Object_Currency.Id, Object_CurrencyInf.Id)                AS CurrencyId
-           , COALESCE (Object_Currency.ValueData, Object_CurrencyInf.ValueData)  AS CurrencyName
+           , COALESCE (Object_Currency.ValueData, Object_CurrencyInf.ValueData)  AS CurrencyName 
+           
+           , COALESCE (Object_SiteTag.Id, 0)         ::Integer  AS SiteTagId
+           , COALESCE (Object_SiteTag.ValueData, '') ::TVarChar AS SiteTagName
 
            , MovementFloat_DiffPrice.ValueData  ::TFloat AS DiffPrice
            , MovementFloat_RoundPrice.ValueData ::TFloat AS RoundPrice
@@ -166,6 +173,11 @@ BEGIN
                                         AND MovementLinkObject_Currency.DescId = zc_MovementLinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MovementLinkObject_Currency.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SiteTag
+                                         ON MovementLinkObject_SiteTag.MovementId = Movement.Id
+                                        AND MovementLinkObject_SiteTag.DescId = zc_MovementLinkObject_SiteTag()
+            LEFT JOIN Object AS Object_SiteTag ON Object_SiteTag.Id = MovementLinkObject_SiteTag.ObjectId
+
             LEFT JOIN Object AS Object_CurrencyInf
                              ON Object_CurrencyInf.descid= zc_Object_Currency()
                             AND Object_CurrencyInf.id = 14461 --„Ì
@@ -194,6 +206,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.12.24         * SiteTag
  15.11.24         *
  08.11.23         *
  15.09.22         *
