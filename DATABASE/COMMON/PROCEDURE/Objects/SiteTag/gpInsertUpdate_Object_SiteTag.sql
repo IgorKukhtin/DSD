@@ -49,3 +49,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_SiteTag ()
+
