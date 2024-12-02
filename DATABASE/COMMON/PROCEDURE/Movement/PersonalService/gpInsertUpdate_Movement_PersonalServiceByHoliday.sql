@@ -155,6 +155,8 @@ BEGIN
                                                            AND tmp.Id <> inMovementId
                                                            -- !!!
                                                            AND tmp.isLoad = TRUE
+                                                           -- !!!
+                                                           AND tmp.StatusId = zc_Enum_Status_Complete()
                                                          )
                                  -- получили все, где док начисления ЗП - inMovementId_1
                                  SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday1,0)) AS SummHoliday_calc
@@ -204,6 +206,8 @@ BEGIN
                                                            AND tmp.Id <> inMovementId
                                                            -- !!!
                                                            -- AND tmp.isLoad = TRUE
+                                                           -- !!!
+                                                           AND tmp.StatusId = zc_Enum_Status_Complete()
                                                          )
                                  -- получили все, где док начисления ЗП - inMovementId_2
                                  SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday2,0)) AS SummHoliday_calc
@@ -225,11 +229,22 @@ BEGIN
      -- если нулевая сумма - 1
      IF COALESCE (vbSummHoliday1, 0) = 0 OR vbSummHoliday1 <> inSummHoliday1 + COALESCE (vbSummHoliday1_calc,0)
      THEN
-         -- Выбираем сохраненные данные из документа
-         CREATE TEMP TABLE tmpMI_1 ON COMMIT DROP AS
-                SELECT tmp.*
-                FROM gpSelect_MovementItem_PersonalService (inMovementId_1, FALSE, FALSE, inSession) AS tmp
-               ;
+         IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpMI_1')
+         THEN
+             DELETE FROM tmpMI_1;
+             -- Выбираем сохраненные данные из документа
+             INSERT INTO tmpMI_1
+                    SELECT tmp.*
+                    FROM gpSelect_MovementItem_PersonalService (inMovementId_1, FALSE, FALSE, inSession) AS tmp
+                   ;
+         ELSE
+             -- Выбираем сохраненные данные из документа
+             CREATE TEMP TABLE tmpMI_1 ON COMMIT DROP AS
+                    SELECT tmp.*
+                    FROM gpSelect_MovementItem_PersonalService (inMovementId_1, FALSE, FALSE, inSession) AS tmp
+                   ;
+         END IF;
+
 
          IF COALESCE (inMovementId_1, 0) = 0
          THEN
@@ -347,11 +362,21 @@ BEGIN
                                                                       );
          END IF;
 
-         -- Выбираем сохраненные данные из документа
-         CREATE TEMP TABLE tmpMI_2 ON COMMIT DROP AS
-                SELECT tmp.*
-                FROM gpSelect_MovementItem_PersonalService (inMovementId_2, FALSE, FALSE, inSession) AS tmp
-               ;
+         IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpMI_2')
+         THEN
+             DELETE FROM tmpMI_2;
+             -- Выбираем сохраненные данные из документа
+             INSERT INTO tmpMI_2
+                    SELECT *
+                    FROM gpSelect_MovementItem_PersonalService (inMovementId_2, FALSE, FALSE, inSession) AS tmp
+                   ;
+         ELSE
+             -- Выбираем сохраненные данные из документа
+             CREATE TEMP TABLE tmpMI_2 ON COMMIT DROP AS
+                    SELECT tmp.*
+                    FROM gpSelect_MovementItem_PersonalService (inMovementId_2, FALSE, FALSE, inSession) AS tmp
+                   ;
+         END IF;
 
          --
          PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                    := COALESCE (tmpMI.Id,0)                                  ::Integer
@@ -463,11 +488,11 @@ BEGIN
      IF vbUserId IN (5, 9457)
      THEN
          --
-         RAISE EXCEPTION 'Ошибка.Документ найден %<%>  %<%> %сумма 1 период <%> %сумма 2 период <%>'
+         RAISE EXCEPTION 'Ошибка.Документ найден %<%>  %<%> %сумма 1 период = <%> %сумма 2 период <%>'
                        , CHR (13)
-                       , (SELECT Movement.InvNumber||' от' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_1)
+                       , (SELECT Movement.InvNumber||' от ' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_1)
                        , CHR (13)
-                       , (SELECT Movement.InvNumber||' от' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_2)
+                       , (SELECT Movement.InvNumber||' от ' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_2)
                        , CHR (13)
                        , (zfConvert_FloatToString (COALESCE (inSummHoliday1,0) + COALESCE (vbSummHoliday1_calc,0)))
                        , CHR (13)

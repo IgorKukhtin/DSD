@@ -30,11 +30,12 @@ BEGIN
      IF ioId > 0
      THEN
          -- сначала распроведение
-         PERFORM lpUnComplete_Movement (inMovementId := ioId
-                                      , inUserId     := inUserId);
+         PERFORM gpUnComplete_Movement_MemberHoliday (inMovementId := ioId
+                                                    , inSession    := inUserId :: TVarChar
+                                                     );
          -- потом удаление - в табеле удаляется WorkTimeKind
-         IF inUserId <> 5 THEN PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, TRUE, (inUserId)::TVarChar);
-         END IF;
+         --IF inUserId <> 5 THEN PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, TRUE, (inUserId)::TVarChar);
+         --END IF;
      END IF;
      
      -- определяем признак Создание/Корректировка
@@ -60,7 +61,7 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_WorkTimeKind(), ioId, inWorkTimeKindId);
      
-     IF vbIsInsert = True
+     IF vbIsInsert = TRUE
      THEN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -75,14 +76,13 @@ BEGIN
 
   
      -- 5.1. сначала проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
-     IF inUserId <> 5 THEN PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, FALSE, (-1 * inUserId)::TVarChar);
-     END IF;
+     -- IF inUserId <> 5 THEN PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, FALSE, (-1 * inUserId)::TVarChar);
+     -- END IF;
 
      -- 5.2. потом проводим Документ + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := ioId
-                                , inDescId     := zc_Movement_MemberHoliday()
-                                , inUserId     := inUserId
-                                 );
+     PERFORM gpComplete_Movement_MemberHoliday (inMovementId := ioId
+                                              , inSession    := inUserId :: TVarChar
+                                               );
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

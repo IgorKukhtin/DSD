@@ -18,7 +18,7 @@ BEGIN
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
                                   
-     IF NOT EXISTS (SELECT 1
+     /*IF NOT EXISTS (SELECT 1
                     FROM Movement
                          INNER JOIN MovementDate AS MovementDate_BeginDateStart
                                                  ON MovementDate_BeginDateStart.MovementId = Movement.Id
@@ -29,15 +29,43 @@ BEGIN
                                                  ON MovementDate_BeginDateEnd.MovementId = Movement.Id
                                                 AND MovementDate_BeginDateEnd.DescId     = zc_MovementDate_BeginDateEnd()
                                                 AND MovementDate_BeginDateEnd.ValueData  = (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_BeginDateEnd())
-                    WHERE Movement.DescId = zc_Movement_MemberHoliday()
+                    WHERE Movement.DescId   = zc_Movement_MemberHoliday()
                       AND Movement.StatusId = zc_Enum_Status_Complete()
-                   )
+                   )*/
+     -- потом удаление - в табеле удаляется WorkTimeKind
+     IF vbUserId <> 5
      THEN
          -- при распроведении или удалении - в табеле автоматом  удаляется WorkTimeKind
          PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, TRUE, inSession);
      END IF;
 
-IF vbUserId = 5
+
+     -- если свойство <№ док Начисление зарплаты (1 период)> + <№ док Начисление зарплаты (2 период)>
+     IF EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_MovementId()     AND MF.ValueData > 0)
+     OR EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_MovementItemId() AND MF.ValueData > 0)
+     THEN
+         PERFORM gpInsertUpdate_Movement_PersonalServiceByHoliday (inMovementId             := inMovementId
+                                                                 , inMemberId               := gpGet.MemberId
+                                                                 , inPersonalId             := gpGet.PersonalId
+                                                                 , inPersonalServiceListId  := gpGet.PersonalServiceListId
+                                                                 , inMovementId_1           := (SELECT MF.ValueData :: Integer FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_MovementId())
+                                                                 , inMovementId_2           := (SELECT MF.ValueData :: Integer FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_MovementItemId())
+                                                                 , inSummHoliday1           := 0
+                                                                 , inSummHoliday2           := 0
+                                                                 , inAmountCompensation     := gpGet.AmountCompensation
+                                                                 , inServiceDate1           := gpGet.ServiceDateStart
+                                                                 , inServiceDate2           := gpGet.ServiceDateEnd
+                                                                 , inUnitId                 := gpGet.UnitId
+                                                                 , inPositionId             := gpGet.PositionId
+                                                                 , inisMain                 := gpGet.IsMain
+                                                                 , inSession                := inSession
+                                                                  )
+         FROM gpGet_Movement_MemberHolidayForPersonalService (inMovementId := inMovementId, inSession:= inSession) AS gpGet;
+
+     END IF;
+
+
+IF vbUserId = 5 AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.test Admin';
 END IF;

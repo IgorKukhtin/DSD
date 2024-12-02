@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_MemberHoliday(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar
+             , StatusId Integer, StatusCode Integer, StatusName TVarChar
              , OperDateStart TDateTime, OperDateEnd TDateTime
              , BeginDateStart TDateTime, BeginDateEnd TDateTime
              , MemberId Integer, MemberName TVarChar
@@ -264,6 +264,7 @@ BEGIN
              Movement.Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
+           , Object_Status.Id                      AS StatusId
            , Object_Status.ObjectCode              AS StatusCode
            , Object_Status.ValueData               AS StatusName
 
