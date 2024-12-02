@@ -1102,6 +1102,10 @@ INSERT INTO ObjectDesc (Code, ItemName)
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PositionProperty', 'Классификатор должности' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PositionProperty');
 
+  CREATE OR REPLACE FUNCTION zc_Object_SiteTag() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SiteTag'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_SiteTag', 'Категория сайт' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SiteTag');
+
 
 
 
@@ -1741,6 +1745,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 02.12.24         * zc_Object_SiteTag
  28.10.24         * zc_Object_PositionProperty
  23.07.24         * zc_Object_GoodsNormDiff
  22.06.24         * zc_Object_ViewPriceList
