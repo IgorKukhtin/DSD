@@ -97,7 +97,7 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-    WITH 
+    WITH
     --все докуменнты  продажи и возврата за период
     tmpMovementAll AS (SELECT MovementDate_OperDatePartner.MovementId AS Id
                             , DATE_TRUNC ('MONTH', COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)::TDateTime)  AS Month_Partner
@@ -154,7 +154,7 @@ BEGIN
 
                     WHERE (tmpJuridical.JuridicalId = inJuridicalId OR inJuridicalId = 0)
                       AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
-                      AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inJuridicalId = 0)
+                      AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
                     )
 
   , tmpMIAll AS (SELECT MovementItem.*
@@ -330,24 +330,61 @@ BEGIN
                           LEFT JOIN lpSelect_Movement_PromoPartner_Detail (inMovementId:= tmpMovement.Id) AS tmp ON 1=1 
                         --WHERE tmpMovement.Id = 29516976
                         )   
-  
+ 
+  --ищем интервал для предпродаж    -- предполагаем 2 периода
+  , tmpPeriod AS (WITH
+                  tmpDays AS (SELECT tmpMovement.Id AS MovementId
+                                   , tmpMovement.StartPromo, tmpMovement.EndPromo 
+                                   , tmpMovement.OperDateStart
+                                   --дней от даты старта продаж до сл. месяца и в след. месяце, далее доп продажи считать по этому кол-ву дней
+                                   , CASE WHEN DATE_TRUNC ('MONTH', tmpMovement.StartPromo) <> DATE_TRUNC ('MONTH', tmpMovement.EndPromo)
+                                          THEN DATE_TRUNC ('MONTH', tmpMovement.EndPromo) - tmpMovement.StartPromo + INTERVAL '1 day'
+                                          ELSE tmpMovement.EndPromo - tmpMovement.StartPromo + INTERVAL '1 day'
+                                     END AS Day1
+                                   , CASE WHEN DATE_TRUNC ('MONTH', tmpMovement.StartPromo) <> DATE_TRUNC ('MONTH', tmpMovement.EndPromo)
+                                          THEN tmpMovement.EndPromo - DATE_TRUNC ('MONTH', tmpMovement.EndPromo) + INTERVAL '1 day'
+                                          ELSE NULL ::Interval
+                                     END AS Day2
+                              FROM tmpMovement_Promo AS tmpMovement
+                              )
+
+                SELECT tmpDays.MovementId
+                     , DATE_TRUNC ('MONTH', tmpDays.StartPromo) AS Period_1
+                     , DATE_TRUNC ('MONTH', tmpDays.EndPromo)   AS Period_2
+                     
+                     , tmpDays.OperDateStart                                                  AS StartPeriod
+                     , tmpDays.OperDateStart + tmpDays.Day1 + tmpDays.Day2 - INTERVAL '1 day' AS EndPeriod
+                     
+                     , tmpDays.OperDateStart                                   AS StartPeriod_1
+                     , tmpDays.OperDateStart + tmpDays.Day1 - INTERVAL '1 day' AS EndPeriod_1
+                     , tmpDays.OperDateStart + tmpDays.Day1                    AS StartPeriod_2
+                     , tmpDays.OperDateStart + tmpDays.Day1 + tmpDays.Day2 - INTERVAL '1 day' AS EndPeriod_2
+                FROM tmpDays
+                )
+                
    --весь интервал, за который нужно выбрать продажи
-  , tmpPeriod AS (SELECT  MIN (tmpMovement.OperDateStart) AS OperDateStart, MAX (tmpMovement.OperDateEnd) AS OperDateEnd
+ /* , tmpPeriod AS (SELECT  MIN (tmpMovement.OperDateStart) AS OperDateStart, MAX (tmpMovement.OperDateEnd) AS OperDateEnd
                   FROM tmpMovement_Promo AS tmpMovement
-                  )
+                  
+                  ) */
    --док.продажи
   , tmpMovement_sale AS (SELECT Movement.Id           AS MovementId
-                              , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                             , _tmpPartner_new.MovementId  AS MovementId_promo
+                               , CASE WHEN MovementDate_OperDatePartner.ValueData BETWEEN tmpPeriod_Partner.StartPeriod_1 AND tmpPeriod_Partner.EndPeriod_1
+                                         THEN tmpPeriod_Partner.Period_1
+                                         ELSE tmpPeriod_Partner.Period_2
+                                    END AS OperDatePartner
                               , MLO_To.ObjectId       AS PartnerId
                               , MLO_Contract.ObjectId AS ContractId
-                         FROM tmpPeriod
+                         FROM (SELECT MIN (tmpPeriod.StartPeriod) AS StartPeriod , MAX(tmpPeriod.EndPeriod) AS EndPeriod FROM tmpPeriod) AS tmpPeriod
                               INNER JOIN MovementDate AS MovementDate_OperDatePartner
-                                                      ON MovementDate_OperDatePartner.ValueData BETWEEN tmpPeriod.OperDateStart AND tmpPeriod.OperDateEnd
+                                                      ON MovementDate_OperDatePartner.ValueData BETWEEN tmpPeriod.StartPeriod AND tmpPeriod.EndPeriod
                                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                               INNER JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = MovementDate_OperDatePartner.MovementId
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
-                              INNER JOIN _tmpPartner_new ON _tmpPartner_new.PartnerId = MLO_To.ObjectId 
+                              INNER JOIN _tmpPartner_new ON _tmpPartner_new.PartnerId = MLO_To.ObjectId
+                                                       -- AND _tmpPartner_new.MovementId = tmpPeriod.MovementId 
                               INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                                  AND Movement.DescId = zc_Movement_Sale()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -357,21 +394,30 @@ BEGIN
                               LEFT JOIN MovementLinkObject AS MLO_Contract
                                                            ON MLO_Contract.MovementId = MLO_To.MovementId
                                                           AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()
+                              INNER JOIN tmpPeriod AS tmpPeriod_Partner 
+                                                   ON tmpPeriod_Partner.MovementId = _tmpPartner_new.MovementId
+                                                  AND MovementDate_OperDatePartner.ValueData BETWEEN tmpPeriod_Partner.StartPeriod AND tmpPeriod_Partner.EndPeriod
                          WHERE (MLO_Contract.ObjectId = _tmpPartner_new.ContractId OR _tmpPartner_new.ContractId = 0)
                          )
   -- док.возвраты
   , tmpMovement_ReturnIn AS (SELECT Movement.Id           AS MovementId
-                                  , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                                  , _tmpPartner_new.MovementId  AS MovementId_promo
+                                  , CASE WHEN MovementDate_OperDatePartner.ValueData BETWEEN tmpPeriod_Partner.StartPeriod_1 AND tmpPeriod_Partner.EndPeriod_1
+                                         THEN tmpPeriod_Partner.Period_1
+                                         ELSE tmpPeriod_Partner.Period_2
+                                    END AS OperDatePartner
+                                    --, MovementDate_OperDatePartner.ValueData AS OperDatePartner
                                   , MLO_From.ObjectId     AS PartnerId
                                   , MLO_Contract.ObjectId AS ContractId
-                             FROM tmpPeriod
-                               INNER JOIN MovementDate AS MovementDate_OperDatePartner
-                                                       ON MovementDate_OperDatePartner.ValueData BETWEEN tmpPeriod.OperDateStart AND tmpPeriod.OperDateEnd
-                                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                             FROM (SELECT MIN (tmpPeriod.StartPeriod) AS StartPeriod , MAX(tmpPeriod.EndPeriod) AS EndPeriod FROM tmpPeriod) AS tmpPeriod
+                              INNER JOIN MovementDate AS MovementDate_OperDatePartner
+                                                      ON MovementDate_OperDatePartner.ValueData BETWEEN tmpPeriod.StartPeriod AND tmpPeriod.EndPeriod
+                                                     AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                INNER JOIN MovementLinkObject AS MLO_From
                                                              ON MLO_From.MovementId = MovementDate_OperDatePartner.MovementId
                                                             AND MLO_From.DescId = zc_MovementLinkObject_From()
                                INNER JOIN _tmpPartner_new ON _tmpPartner_new.PartnerId = MLO_From.ObjectId
+                                                         --AND _tmpPartner_new.MovementId = tmpPeriod.MovementId
                                INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                                   AND Movement.DescId = zc_Movement_ReturnIn()
                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -381,35 +427,12 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MLO_Contract
                                                             ON MLO_Contract.MovementId = MLO_From.MovementId
                                                            AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()
+                               INNER JOIN tmpPeriod AS tmpPeriod_Partner 
+                                                   ON tmpPeriod_Partner.MovementId = _tmpPartner_new.MovementId
+                                                  AND MovementDate_OperDatePartner.ValueData BETWEEN tmpPeriod_Partner.StartPeriod AND tmpPeriod_Partner.EndPeriod
                              WHERE (MLO_Contract.ObjectId = _tmpPartner_new.ContractId OR _tmpPartner_new.ContractId = 0)
                             )
-   /*                     
-
-
-
-  , tmpMI_promo_all AS (SELECT MI_PromoGoods.Id AS MovementItemId
-                             , MI_PromoGoods.GoodsId
-                             , CASE WHEN MI_PromoGoods.GoodsKindId > 0 THEN MI_PromoGoods.GoodsKindId ELSE COALESCE (MI_PromoGoods.GoodsKindCompleteId, 0) END AS GoodsKindId
-                           --, COALESCE (MI_PromoGoods.GoodsKindCompleteId, 0) AS GoodsKindId -- GoodsKindCompleteId
-                           --, 0 AS GoodsKindId
-                             , MI_PromoGoods.isErased
-                        FROM MovementItem_PromoGoods_View AS MI_PromoGoods
-                        WHERE MI_PromoGoods.MovementId  IN ( 29786084 ,29787104 )
-                       )
-      , tmpMI_promo AS (SELECT -- т.е. если установлено "для всех GoodsKindId" - запишем в него, иначе получится дублирование
-                               MAX (COALESCE (tmpMI_promo_all_find.MovementItemId, tmpMI_promo_all.MovementItemId)) AS MovementItemId
-                             , tmpMI_promo_all.GoodsId
-                             , COALESCE (tmpMI_promo_all_find.GoodsKindId, tmpMI_promo_all.GoodsKindId) AS GoodsKindId
-                        FROM tmpMI_promo_all
-                             LEFT JOIN tmpMI_promo_all AS tmpMI_promo_all_find ON tmpMI_promo_all_find.GoodsId     = tmpMI_promo_all.GoodsId
-                                                                              AND tmpMI_promo_all_find.GoodsKindId = 0
-                                                                              AND tmpMI_promo_all_find.isErased    = FALSE
-                        WHERE tmpMI_promo_all.isErased = FALSE
-                          -- AND (tmpMI_promo_all.GoodsKindId = 0 OR tmpMI_promo_all_find.GoodsId IS NULL) -- т.е. если установлено "для всех GoodsKindId" - надо откинуть с GoodsKindId <> 0, иначе получится дублирование
-                        GROUP BY tmpMI_promo_all.GoodsId
-                               , COALESCE (tmpMI_promo_all_find.GoodsKindId, tmpMI_promo_all.GoodsKindId)
-                       )
-                       */
+ 
    --данные по продажам
   , tmpMI_sale AS (WITH
                    tmpMI AS (SELECT MovementItem.*
@@ -429,27 +452,34 @@ BEGIN
                                 AND MovementItemFloat.DescId = zc_MIFloat_AmountPartner()
                               )                         
                    SELECT tmpMovement_sale.OperDatePartner
+                        , tmpMovement_sale.MovementId_promo
                         , tmpMovement_sale.PartnerId
                         , tmpMovement_sale.ContractId
                         , MovementItem.ObjectId AS GoodsId
                         , COALESCE (MILinkObject_GoodsKind.ObjectId,0)        AS GoodsKindId
                         , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
+                        , tmpMI_promo.GoodsWeight
+                        , tmpMI_promo.MeasureId
                    FROM tmpMovement_sale
                         INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = tmpMovement_sale.MovementId
                                                
                         LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                        --INNER JOIN tmpMI_1 AS tmpMI_promo ON tmpMI_promo.GoodsId = MovementItem.ObjectId
+                        INNER JOIN tmpMI_1 AS tmpMI_promo ON tmpMI_promo.GoodsId = MovementItem.ObjectId
+                                                         AND tmpMI_promo.MovementId = tmpMovement_sale.MovementId_promo
                         --                                AND (tmpMI_promo.GoodsKindId = MILinkObject_GoodsKind.ObjectId OR tmpMI_promo.GoodsKindId = 0)
                         LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                    GROUP BY tmpMovement_sale.OperDatePartner
+                          , tmpMovement_sale.MovementId_promo
                           , tmpMovement_sale.PartnerId
                           , tmpMovement_sale.ContractId
                           , MovementItem.ObjectId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+                          , tmpMI_promo.GoodsWeight
+                          , tmpMI_promo.MeasureId
                    )
    --данные по возвратам
   , tmpMI_ReturnIn AS (WITH
@@ -470,71 +500,75 @@ BEGIN
                                     AND MovementItemFloat.DescId = zc_MIFloat_AmountPartner()
                                   ) 
                        SELECT tmpMovement_ReturnIn.OperDatePartner
+                            , tmpMovement_ReturnIn.MovementId_promo
                             , tmpMovement_ReturnIn.PartnerId
                             , tmpMovement_ReturnIn.ContractId
                             , MovementItem.ObjectId AS GoodsId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId,0) AS GoodsKindId  
                             , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
+                            , tmpMI_promo.GoodsWeight
+                            , tmpMI_promo.MeasureId
                        FROM tmpMovement_ReturnIn
                             INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = tmpMovement_ReturnIn.MovementId
  
                             LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-                            --INNER JOIN tmpMI_1 AS tmpMI_promo ON tmpMI_promo.GoodsId      = MovementItem.ObjectId
+                            INNER JOIN tmpMI_1 AS tmpMI_promo ON tmpMI_promo.GoodsId   = MovementItem.ObjectId
+                                                             AND tmpMI_promo.MovementId = tmpMovement_ReturnIn.MovementId_promo
                             --                                AND (tmpMI_promo.GoodsKindId = MILinkObject_GoodsKind.ObjectId OR tmpMI_promo.GoodsKindId = 0)
                             LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
                                                  ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                 AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
-                       GROUP BY tmpMovement_ReturnIn.OperDatePartner
+                       GROUP BY tmpMovement_ReturnIn.OperDatePartner 
+                              , tmpMovement_ReturnIn.MovementId_promo
                               , tmpMovement_ReturnIn.PartnerId
                               , tmpMovement_ReturnIn.ContractId
                               , MovementItem.ObjectId
                               , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+                              , tmpMI_promo.GoodsWeight
+                              , tmpMI_promo.MeasureId
                        )
    -- данные продаж + возвратов, распределенные по акциям и периодам
   , tmpSaleReturn AS (WITH
                       tmpUnion AS (SELECT tmp.OperDatePartner
+                                        , tmp.MovementId_promo
                                         , tmp.PartnerId
                                         , tmp.ContractId
                                         , tmp.GoodsId
                                         , tmp.GoodsKindId  
                                         , tmp.AmountPartner  AS AmountReal
                                         , 0 AS AmountRetIn
+                                        , tmp.GoodsWeight
+                                        , tmp.MeasureId
                                    FROM tmpMI_sale AS tmp 
                                   UNION All
                                    SELECT  tmp.OperDatePartner
+                                         , tmp.MovementId_promo
                                          , tmp.PartnerId
                                          , tmp.ContractId
                                          , tmp.GoodsId
                                          , tmp.GoodsKindId  
                                          , 0  AS AmountReal
                                          , tmp.AmountPartner AS AmountRetIn
+                                         , tmp.GoodsWeight
+                                         , tmp.MeasureId
                                    FROM tmpMI_ReturnIn AS tmp
                                   )
                       --грк=уппируем по док акции + товар + вид  + период по месяцам
-                      SELECT tmpMovement.Id  AS MovementId_promo 
+                      SELECT tmpUnion.MovementId_promo 
                            , DATE_TRUNC ('MONTH', tmpUnion.OperDatePartner) AS Month_Partner
                            , tmpUnion.GoodsId
                            , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (tmpUnion.GoodsKindId,0) ELSE 0 END AS GoodsKindId        --выше все сгруппировано по товару -  поэтому здесь тоже все свернем только по товару
                            , SUM (COALESCE (tmpUnion.AmountReal,0))  AS AmountReal
                            , SUM (COALESCE (tmpUnion.AmountRetIn,0)) AS AmountRetIn
                            , SUM (COALESCE (tmpUnion.AmountReal,0)
-                                 /* * CASE WHEN tmpMI.MeasureId = zc_Measure_Sh() THEN tmpMI.GoodsWeight ELSE 1 END*/) AS AmountRealWeight
+                                  * CASE WHEN tmpUnion.MeasureId = zc_Measure_Sh() THEN tmpUnion.GoodsWeight ELSE 1 END) AS AmountRealWeight
                            , SUM (COALESCE (tmpUnion.AmountRetIn,0)
-                                 /* * CASE WHEN tmpMI.MeasureId = zc_Measure_Sh() THEN tmpMI.GoodsWeight ELSE 1 END*/) AS AmountRetInWeight
-                           
-                      FROM tmpMovement_Promo AS tmpMovement
-                          LEFT JOIN _tmpPartner_new ON _tmpPartner_new.MovementId = tmpMovement.Id
-                          LEFT JOIN tmpUnion ON tmpUnion.OperDatePartner BETWEEN tmpMovement.OperDateStart AND tmpMovement.OperDateEnd
-                                            AND tmpUnion.PartnerId =  _tmpPartner_new.PartnerId
-                                            AND (tmpUnion.ContractId =  _tmpPartner_new.ContractId OR _tmpPartner_new.ContractId = 0)
-                         /* LEFT JOIN tmpMI_1 AS tmpMI 
-                                            ON tmpMI.MovementId = tmpMovement.Id
-                                           AND tmpMI.GoodsId = tmpUnion.GoodsId
-                                           AND (COALESCE (tmpMI.GoodsKindId,0) = COALESCE (tmpUnion.GoodsKindId,0) OR COALESCE (tmpMI.GoodsKindId,0) = 0) 
-                         */
-                      GROUP BY tmpMovement.Id 
+                                  * CASE WHEN tmpUnion.MeasureId = zc_Measure_Sh() THEN tmpUnion.GoodsWeight ELSE 1 END) AS AmountRetInWeight
+                      FROM tmpUnion 
+                      Where tmpUnion.MovementId_promo = 28870588
+                      GROUP BY tmpUnion.MovementId_promo 
                              , DATE_TRUNC ('MONTH', tmpUnion.OperDatePartner)
                              , tmpUnion.GoodsId 
                              , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (tmpUnion.GoodsKindId,0) ELSE 0 END
@@ -542,7 +576,7 @@ BEGIN
                           OR SUM (COALESCE (tmpUnion.AmountRetIn,0)) <> 0
                      )
 
-                   
+                  
         SELECT
             Movement_Promo.Id                --ИД документа акции
           , Movement_Promo.InvNumber          -- * № документа акции
@@ -638,7 +672,7 @@ BEGIN
           , MI_PromoGoods.GoodsGroupNameFull
           , MI_PromoGoods.GoodsKindName
           , MI_PromoGoods.GoodsKindCompleteName
-          
+
           , CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE NULL END :: TFloat AS GoodsWeight
           
           , MI_PromoGoods.AmountPlanMin       :: TFloat --Минимум планируемого объема продаж на акционный период (в кг)
@@ -720,20 +754,21 @@ BEGIN
           , ''                                :: TVarChar  AS Comment                -- Примечание
           , ''                                :: TVarChar  AS CommentMain            -- Примечание    
           
-          , COALESCE (MI_PromoGoods.Month_Partner, tmpSaleReturn.Month_Partner) ::TDateTime AS Month_Partner --Месяц продажи / возврата - по дате покупателя / аналогичный период
+          , MI_PromoGoods.Month_Partner ::TDateTime AS Month_Partner --Месяц продажи / возврата - по дате покупателя / аналогичный период
           -- продажа за аналогичный период
           , COALESCE (tmpSaleReturn.AmountReal,0)       ::TFloat AS AmountReal_calc
           , COALESCE (tmpSaleReturn.AmountRealWeight,0) ::TFloat AS AmountRealWeight_calc
           -- возврат за аналогичный период
           , COALESCE (tmpSaleReturn.AmountRetIn,0)      ::TFloat AS AmountRetIn_calc
           , COALESCE (tmpSaleReturn.AmountRetInWeight,0)::TFloat AS AmountRetInWeight_calc
-        FROM tmpMovement_Promo AS Movement_Promo
+        FROM tmpMovement_Promo AS Movement_Promo   
             -- LEFT JOIN tmpVAT ON tmpVAT.PriceListId = Movement_Promo.PriceListId
-             LEFT JOIN tmpMI AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id 
+             LEFT JOIN tmpMI AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
+
              LEFT JOIN tmpSaleReturn ON tmpSaleReturn.MovementId_promo = Movement_Promo.Id
                                     AND tmpSaleReturn.GoodsId = MI_PromoGoods.GoodsId
                                     AND COALESCE (tmpSaleReturn.GoodsKindId,0) = COALESCE (MI_PromoGoods.GoodsKindId,0)
-                                    --AND (tmpSaleReturn.Month_Partner = MI_PromoGoods.Month_Partner OR MI_PromoGoods.Month_Partner IS NULL)
+                                    AND tmpSaleReturn.Month_Partner = MI_PromoGoods.Month_Partner
         ;
 END;
 $BODY$
@@ -748,3 +783,5 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Report_Promo_Result_Month (inStartDate:= '21.09.2017', inEndDate:= '21.09.2017', inIsPromo:= TRUE, inIsTender:= FALSE, inIsGoodsKind:= true, inUnitId:= 0, inRetailId:= 0, inMovementId:= 0, inJuridicalId:= 0, inSession:= zfCalc_UserAdmin());
 --SELECT * FROM gpSelect_Report_Promo_Result_Month (inStartDate:= '21.09.2024', inEndDate:= '21.09.2024', inIsPromo:= TRUE, inIsTender:= FALSE, inIsGoodsKind:= true, inUnitId:= 0, inRetailId:= 0, inMovementId:= 0, inJuridicalId:= 0, inSession:= zfCalc_UserAdmin());
+
+--select * from gpSelect_Report_Promo_Result_Month(inStartDate := ('16.10.2024')::TDateTime , inEndDate := ('16.10.2024')::TDateTime , inIsPromo := 'True' , inIsTender := 'False' , inisGoodsKind := 'False' , inUnitId := 0 , inRetailId := 310839 , inMovementId := 0 , inJuridicalId := 0 ,  inSession := '9457');
