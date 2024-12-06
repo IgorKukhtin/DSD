@@ -706,7 +706,7 @@ BEGIN
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
             LEFT JOIN tmpGoods_WeighingPartner ON tmpGoods_WeighingPartner.GoodsId = tmpMI.GoodsId
                                               AND COALESCE (tmpGoods_WeighingPartner.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
-       WHERE tmpMI.AmountPartner <> 0 OR tmpMI.AmountPacker <> 0
+       WHERE tmpMI.AmountPartner <> 0 OR tmpMI.AmountPacker <> 0 OR tmpMI.Amount <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
 
        ;
@@ -724,4 +724,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_Print_byPartner (inMovementId := 29874523, inSession:= '5'); --FETCH ALL "<unnamed portal 6>";
+-- SELECT * FROM gpSelect_Movement_Income_Print_byPartner (inMovementId := 29943753, inSession:= '5'); --FETCH ALL "<unnamed portal 6>";
