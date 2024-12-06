@@ -82,6 +82,26 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountInWeight_promo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealWeight_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetIn_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetInWeight_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -143,6 +163,26 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountInWeight_promo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealWeight_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetIn_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetInWeight_calc
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -424,6 +464,52 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
           object AmountRealWeight: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
             DataBinding.FieldName = 'AmountRealWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object AmountReal_calc: TcxGridDBColumn
+            Caption = '***'#1055#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'AmountReal_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object AmountRealWeight_calc: TcxGridDBColumn
+            Caption = '***'#1055#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
+            DataBinding.FieldName = 'AmountRealWeight_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object AmountRetIn_calc: TcxGridDBColumn
+            Caption = '***'#1042#1086#1079#1074#1088#1072#1090' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'AmountRetIn_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object AmountRetInWeight_calc: TcxGridDBColumn
+            Caption = '***'#1042#1086#1079#1074#1088#1072#1090' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
+            DataBinding.FieldName = 'AmountRetInWeight_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
