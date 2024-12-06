@@ -1532,10 +1532,10 @@ object IncomeJournalForm: TIncomeJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint_byPartnerl
+      StoredProc = spSelectPrint_byPartner
       StoredProcList = <
         item
-          StoredProc = spSelectPrint_byPartnerl
+          StoredProc = spSelectPrint_byPartner
         end>
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1055#1088#1080#1093#1086#1076' ('#1080#1090#1086#1075#1086')'
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1055#1088#1080#1093#1086#1076' ('#1080#1090#1086#1075#1086')'
@@ -2023,7 +2023,7 @@ object IncomeJournalForm: TIncomeJournalForm
     Left = 360
     Top = 312
   end
-  object spSelectPrint_byPartnerl: TdsdStoredProc
+  object spSelectPrint_byPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_Print_byPartner'
     DataSet = PrintHeaderCDS
     DataSets = <
