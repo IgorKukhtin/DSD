@@ -1144,6 +1144,13 @@ BEGIN
                 ) AS _tmpItem
           ) AS _tmpItem
      ;
+     
+     -- !!!меняется значение - переводится в валюту zc_Enum_Currency_Basis!!! - !!!нельзя что б переводился в строчной части!!!
+     IF vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND vbParValue <> 0
+     THEN
+         vbOperSumm_Partner:= CAST (vbOperSumm_Currency * vbCurrencyValue / vbParValue AS NUMERIC (16, 2));
+         vbOperSumm_Partner_ChangePercent:= CAST (vbOperSumm_Currency * vbCurrencyValue / vbParValue AS NUMERIC (16, 2));
+     END IF;
 
      -- Расчет Итоговых сумм по Контрагенту (по элементам)
      SELECT SUM (_tmpItem.OperSumm_PriceList), SUM (_tmpItem.OperSumm_PriceList_real), SUM (_tmpItem.OperSumm_Partner), SUM (_tmpItem.OperSumm_Partner_ChangePercent), SUM (_tmpItem.OperSumm_Currency)
@@ -3062,4 +3069,4 @@ $BODY$
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 10154, inSession:= '2')
 
 -- select gpComplete_All_Sybase(    25743210  ,  false    , '')
--- select gpComplete_All_Sybase(    25806599  ,  false    , '')
+-- select gpComplete_All_Sybase(    29901793  ,  false    , '')

@@ -29,25 +29,27 @@ BEGIN
      THEN
          -- по коду
          IF CHAR_LENGTH (inBarCode) < 12
-         THEN vbChoiceCellId:= (SELECT Object.Id
+         THEN vbChoiceCellId:= (WITH tmpObject AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_ChoiceCell() AND Object.isErased = FALSE)
+                                SELECT Object.Id
                                 FROM (SELECT zfConvert_StringToNumber (inBarCode) AS ObjectCode
                                      ) AS tmp
-                                      INNER JOIN Object ON Object.ObjectCode = tmp.ObjectCode
-                                                       AND Object.DescId = zc_Object_ChoiceCell()
-                                                       AND Object.isErased = FALSE
+                                      INNER JOIN tmpObject AS Object ON Object.ObjectCode = tmp.ObjectCode
+                                                                  --AND Object.DescId = zc_Object_ChoiceCell()
+                                                                  --AND Object.isErased = FALSE
                                 WHERE tmp.ObjectCode > 0
                                 );
 
          -- по штрих коду
          ELSEIF CHAR_LENGTH (inBarCode) = 12
          THEN
-              vbChoiceCellId:= (SELECT Object.Id
+              vbChoiceCellId:= (WITH tmpObject AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_ChoiceCell() AND Object.isErased = FALSE)
+                                SELECT Object.Id
                                 FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS ObjectId
                                      ) AS tmp
-                                      INNER JOIN Object ON Object.Id = tmp.ObjectId
-                                                       AND Object.DescId = zc_Object_ChoiceCell()
-                                                       AND Object.isErased = FALSE
-                                );
+                                      INNER JOIN tmpObject AS Object ON Object.Id = tmp.ObjectId
+                                                                  --AND Object.DescId = zc_Object_ChoiceCell()
+                                                                  --AND Object.isErased = FALSE
+                               );
          END IF;
 
      END IF;
@@ -83,7 +85,9 @@ BEGIN
      RETURN QUERY
         WITH -- ВСЕ заполненные места хранения - ячейки + ячейка "Отбор"
              tmpPartionCell_mi AS (SELECT DISTINCT lpSelect.PartionCellId, lpSelect.GoodsId, lpSelect.GoodsKindId, lpSelect.PartionGoodsDate
-                                   FROM lpSelect_Object_PartionCell_mi (inGoodsId:= vbGoodsId, inGoodsKindId:= vbGoodsKindId) AS lpSelect
+                                   FROM lpSelect_Object_PartionCell_mi (inGoodsId    := CASE WHEN vbGoodsId > 0 THEN vbGoodsId ELSE -1 END
+                                                                      , inGoodsKindId:= vbGoodsKindId
+                                                                       ) AS lpSelect
                                   )
              -- найдем последнюю партию в ячейка "Отбор"
            , tmpPartionCell_RK AS (SELECT tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.PartionGoodsDate

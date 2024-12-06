@@ -97,11 +97,13 @@ BEGIN
                                      FROM tmpPartionCell
                                           INNER JOIN _tmpPartionCell_mi ON _tmpPartionCell_mi.ObjectId = tmpPartionCell.Id
                                           INNER JOIN MovementItem ON MovementItem.Id = _tmpPartionCell_mi.MovementItemId
+                                                                 AND MovementItem.isErased = FALSE
                                           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                      WHERE inIsShowFree = FALSE
                                         AND (Movement.DescId = zc_Movement_Send()
-                                          OR (Movement.DescId = zc_Movement_WeighingProduction()
-                                          AND Movement.StatusId = zc_Enum_Status_UnComplete())
+                                          OR (Movement.DescId   = zc_Movement_WeighingProduction()
+                                          AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                             )
                                             )
                                      GROUP BY _tmpPartionCell_mi.ObjectId
                                     )
@@ -110,12 +112,14 @@ BEGIN
                                      FROM tmpPartionCell
                                           INNER JOIN _tmpPartionCell_mi ON _tmpPartionCell_mi.ObjectId = tmpPartionCell.Id
                                           INNER JOIN MovementItem ON MovementItem.Id = _tmpPartionCell_mi.MovementItemId
+                                                                 AND MovementItem.isErased = FALSE
                                           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                      WHERE inIsShowFree = TRUE
                                        AND _tmpPartionCell_mi.ObjectId <> zc_PartionCell_RK()
                                         AND (Movement.DescId = zc_Movement_Send()
-                                          OR (Movement.DescId = zc_Movement_WeighingProduction()
-                                          AND Movement.StatusId = zc_Enum_Status_UnComplete())
+                                          OR (Movement.DescId   = zc_Movement_WeighingProduction()
+                                          AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                             )
                                             )
                                     )
        -- занятые ячейки - показать MovementItem
@@ -140,12 +144,14 @@ BEGIN
                                           JOIN tmpMI AS MovementItem ON MovementItem.Id = tmpMILO_PartionCell_all.MovementItemId
 
                                           JOIN Movement ON Movement.Id       = MovementItem.MovementId
-                                                       AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                       AND Movement.DescId   = zc_Movement_Send()
-                                     WHERE ((Movement.DescId = zc_Movement_Send()
-                                         AND Movement.StatusId = zc_Enum_Status_Complete())
-                                         OR (Movement.DescId = zc_Movement_WeighingProduction()
-                                         AND Movement.StatusId = zc_Enum_Status_UnComplete())
+                                                     --AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                     --AND Movement.DescId   = zc_Movement_Send()
+                                     WHERE ((Movement.DescId   = zc_Movement_Send()
+                                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                                            )
+                                         OR (Movement.DescId   = zc_Movement_WeighingProduction()
+                                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                            )
                                            )
 
                                ) AS tmp

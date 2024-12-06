@@ -176,7 +176,6 @@ BEGIN
                            LEFT JOIN MovementItemDate AS MIDate_PriceRetOut
                                                       ON MIDate_PriceRetOut.MovementItemId = MovementItem.Id
                                                      AND MIDate_PriceRetOut.DescId         = zc_MIDate_PriceRetOut()
-                           
 
                            LEFT JOIN MovementItemFloat AS MIFloat_CountTare
                                                        ON MIFloat_CountTare.MovementItemId = MovementItem.Id
@@ -361,7 +360,7 @@ BEGIN
            , tmpMI.CountForPrice :: TFloat AS CountForPrice
 
            , tmpMI.PartionGoods :: TVarChar       AS PartionGoods
-           , tmpMI.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
+           , COALESCE (tmpMI.OperDate_ReturnOut, tmpMI.PartionGoodsDate) :: TDateTime  AS PartionGoodsDate
 
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Box.Id                   AS BoxId
