@@ -91,8 +91,12 @@ begin
      InvNumberPartnerEdit.Text:= ParamsMovement.ParamByName('InvNumberPartner').AsString;
      CommentEdit.Text:='';
      PanelComment.Visible:= (SettingMain.isCeh = FALSE) and (ParamsMovement.ParamByName('isComment').AsBoolean = true) and (ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Loss);
-     PanelDiscountAmountPartner.Visible:= ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE;
-     btnSaveAll.Visible:= ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE;
+     PanelDiscountAmountPartner.Visible:= (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
+                                      and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true)
+                                     ;
+     btnSaveAll.Visible:= (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
+                      and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true)
+                     ;
      if btnSaveAll.Visible then
      begin
          bbOk.Left:= 10;

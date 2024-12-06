@@ -172,6 +172,7 @@ type
     Price_Income_to_addVat: TcxGridDBColumn;
     gbSummPartner: TGroupBox;
     EditSummPartner: TcxCurrencyEdit;
+    RoundPrice: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -302,7 +303,6 @@ begin
           ;
 end;
 {------------------------------------------------------------------------------}
-
 function TGuideGoodsForm.Execute (execParamsMovement : TParams; isModeSave, isDialog : Boolean) : Boolean;
 var OperDate_params:TDateTime;
 begin
@@ -413,6 +413,36 @@ begin
              if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
              Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
              Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('FromId').AsInteger;
+             Params.ParamByName('inGoodsCode').Value      := 0;
+             Params.ParamByName('inGoodsName').Value      := '';
+             Execute;
+       end;
+     end
+     else
+     if (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut)
+     and(execParamsMovement.ParamByName('isContractGoods').AsBoolean = TRUE)
+   //and (1=0)
+     then
+     with spSelect do
+     begin
+       if ((oldParam1 <> execParamsMovement.ParamByName('ContractId').AsInteger)
+        or (oldParam2 <> execParamsMovement.ParamByName('ToId').AsInteger)
+        or (oldParam3 <> OperDate_params)
+          )
+       then begin
+             oldParam1:= execParamsMovement.ParamByName('ContractId').AsInteger;
+             oldParam2:= execParamsMovement.ParamByName('ToId').AsInteger;
+             oldParam3:= OperDate_params;
+             //
+             Params.ParamByName('inOperDate').Value:= OperDate_params;
+             //
+             Self.Caption:='Параметры продукции для поставщика <('+execParamsMovement.ParamByName('ToCode').asString + ')'
+                                                                 + execParamsMovement.ParamByName('ToName').asString + '>'
+                                                                 + ' от <'+DateToStr(OperDate_params)+'>'
+                                                                 ;
+             if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
+             Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
+             Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('ToId').AsInteger;
              Params.ParamByName('inGoodsCode').Value      := 0;
              Params.ParamByName('inGoodsName').Value      := '';
              Execute;
@@ -1045,20 +1075,85 @@ begin
             //цена поставщика - ввод в контроле
             try ParamsMI.ParamByName('SummPartner').AsFloat:= StrToFloat(EditSummPartner.Text);
                 //if (ParamsMI.ParamByName('SummPartner').AsFloat > 0) and (ParamsMI.ParamByName('AmountPartnerSecond').AsFloat > 0)
+
+                // !!!для кол-во поставщика!!!
                 if (ParamsMI.ParamByName('SummPartner').AsFloat > 0)
                and (ParamsMovement.ParamByName('isOperCountPartner').AsBoolean = TRUE) and (ParamsMI.ParamByName('AmountPartnerSecond').AsFloat > 0)
-                // !!!для кол-во поставщика!!!
-                then if cbPriceWithVAT.Checked = TRUE
-                     then calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
-                     else calcPricePartner:= _myTrunct_2 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
+                then // с НДС
+                     if cbPriceWithVAT.Checked = TRUE
+                     then if (CDS.FieldByName('RoundPrice').AsFloat = 0) or (CDS.FieldByName('RoundPrice').AsFloat = 4)
+                          then //4
+                               calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
+                          else if (CDS.FieldByName('RoundPrice').AsFloat = 3)
+                               then
+                               //3
+                               calcPricePartner:= _myTrunct_3 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
+
+                               else if (CDS.FieldByName('RoundPrice').AsFloat = 1)
+                               then
+                               //1
+                               calcPricePartner:= _myTrunct_1 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
+                               else
+                               //2
+                               calcPricePartner:= _myTrunct_2 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
+
+                     // без НДС
+                     else if (CDS.FieldByName('RoundPrice').AsFloat = 0) or (CDS.FieldByName('RoundPrice').AsFloat = 2)
+                          then //2
+                               calcPricePartner:= _myTrunct_2 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
+                          else if (CDS.FieldByName('RoundPrice').AsFloat = 3)
+                               then
+                               //3
+                               calcPricePartner:= _myTrunct_3 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
+
+                               else if (CDS.FieldByName('RoundPrice').AsFloat = 1)
+                               then
+                               //1
+                               calcPricePartner:= _myTrunct_1 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
+                               else
+                               //4
+                               calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('AmountPartnerSecond').AsFloat)
 
                 else
+                    // !!!для кол-во ФАКТ!!!
                     if (ParamsMI.ParamByName('SummPartner').AsFloat > 0)
                    and (ParamsMovement.ParamByName('isOperCountPartner').AsBoolean = FALSE) and (ParamsMI.ParamByName('RealWeight').AsFloat > 0)
-                    // !!!для кол-во ФАКТ!!!
-                    then if cbPriceWithVAT.Checked = TRUE
-                         then calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
-                         else calcPricePartner:= _myTrunct_2 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
+                    then // с НДС
+                         if cbPriceWithVAT.Checked = TRUE
+                         then if (CDS.FieldByName('RoundPrice').AsFloat = 0) or (CDS.FieldByName('RoundPrice').AsFloat = 4)
+                              then //4
+                                   calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
+                              else if (CDS.FieldByName('RoundPrice').AsFloat = 3)
+                                   then
+                                   //3
+                                   calcPricePartner:= _myTrunct_3 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
+
+                                   else if (CDS.FieldByName('RoundPrice').AsFloat = 1)
+                                   then
+                                   //1
+                                   calcPricePartner:= _myTrunct_1 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
+                                   else
+                                   //2
+                                   calcPricePartner:= _myTrunct_2 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
+
+
+                         // без НДС
+                         else if (CDS.FieldByName('RoundPrice').AsFloat = 0) or (CDS.FieldByName('RoundPrice').AsFloat = 2)
+                              then //2
+                                   calcPricePartner:= _myTrunct_2 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
+                              else if (CDS.FieldByName('RoundPrice').AsFloat = 3)
+                                   then
+                                   //3
+                                   calcPricePartner:= _myTrunct_3 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
+
+                                   else if (CDS.FieldByName('RoundPrice').AsFloat = 1)
+                                   then
+                                   //1
+                                   calcPricePartner:= _myTrunct_1 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
+                                   else
+                                   //4
+                                   calcPricePartner:= _myTrunct_4 (ParamsMI.ParamByName('SummPartner').AsFloat  / ParamsMI.ParamByName('RealWeight').AsFloat)
+
                     else calcPricePartner:=0;
 
             except
@@ -1104,7 +1199,7 @@ begin
                       begin
                          Result:= false;
                          if not DialogMsgForm.Execute
-                                    ('Ошибка', 'ЦЕНА не соответствует цене в спецификации.'
+                                    ('Ошибка', 'ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.'
                                    , 'Продолжить?')
                                     //,mtConfirmation,mbYesNoCancel,0) <> 6 // mbYes
                          then begin
@@ -1119,7 +1214,7 @@ begin
                       begin
                          Result:= false;
                          ActiveControl:= EditPrice;
-                         ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                         ShowMessage('Ошибка.ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.');
                          exit;
                       end
                 end
@@ -1133,7 +1228,7 @@ begin
                           begin
                              Result:= false;
                              if not DialogMsgForm.Execute
-                                        ('Ошибка.', 'ЦЕНА не соответствует цене в спецификации.'
+                                        ('Ошибка.', 'ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.'
                                        , 'Продолжить?')
                                        // ,mtConfirmation,mbYesNoCancel,0) <> 6
                              then begin
@@ -1147,7 +1242,7 @@ begin
                           else
                           begin
                              Result:= false;
-                             ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                             ShowMessage('Ошибка.ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.');
                              ActiveControl:= EditPrice;
                              exit;
                           end;
@@ -1169,7 +1264,7 @@ begin
                       begin
                          Result:= false;
                          if not DialogMsgForm.Execute
-                                    ('Ошибка.', 'ЦЕНА не соответствует цене в спецификации.'
+                                    ('Ошибка.', 'ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.'
                                    , 'Продолжить?')
                                     //,mtConfirmation,mbYesNoCancel,0) <> 6 // mbYes
                          then begin
@@ -1183,7 +1278,7 @@ begin
                       else
                       begin
                          Result:= false;
-                         ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                         ShowMessage('Ошибка.ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.');
                          ActiveControl:= EditPrice;
                          exit;
                       end
@@ -1198,7 +1293,7 @@ begin
                           begin
                              Result:= false;
                              if not DialogMsgForm.Execute
-                                        ('Ошибка.', 'ЦЕНА не соответствует цене в спецификации.'
+                                        ('Ошибка.', 'ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.'
                                        , 'Продолжить?')
                                         //,mtConfirmation,mbYesNoCancel,0) <> 6
                              then begin
@@ -1212,7 +1307,7 @@ begin
                           else
                           begin
                              Result:= false;
-                             ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                             ShowMessage('Ошибка.ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.');
                              ActiveControl:= EditPrice;
                              exit;
                           end;
@@ -1235,7 +1330,7 @@ begin
                          Result:= false;
                          //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
                          if not DialogMsgForm.Execute
-                                    ('Ошибка.', 'ЦЕНА не соответствует цене в спецификации.'
+                                    ('Ошибка.', 'ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.'
                                    , 'Продолжить?')
                                     //,mtConfirmation,mbYesNoCancel,0) <> 6 // mbYes
                          then begin
@@ -1250,7 +1345,7 @@ begin
                       begin
                          Result:= false;
                          //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
-                         ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                         ShowMessage('Ошибка.ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.');
                          ActiveControl:= EditPrice;
                          exit;
                       end
@@ -1266,7 +1361,7 @@ begin
                              Result:= false;
                              //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
                              if not DialogMsgForm.Execute
-                                        ('Ошибка.', 'ЦЕНА не соответствует цене в спецификации.'
+                                        ('Ошибка.', 'ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.'
                                        , 'Продолжить?')
                                         //,mtConfirmation,mbYesNoCancel,0) <> 6
                              then begin
@@ -1281,7 +1376,7 @@ begin
                           begin
                              Result:= false;
                              //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
-                             ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                             ShowMessage('Ошибка.ЦЕНА <' + FloatToStr(calcPricePartner) + '> не соответствует цене в спецификации.');
                              ActiveControl:= EditPrice;
                              exit;
                           end;
@@ -1531,6 +1626,8 @@ begin
       and(CDS.FieldByName('Weight').AsFloat > 0)
       and(CDS.RecordCount = 1)
       and(ActiveControl<>EditWeightValue)
+      and(ActiveControl<>EditPrice)
+      and(ActiveControl<>EditSummPartner)
       //and(ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
         )
      or(ParamsMovement.ParamByName('isDocPartner').AsBoolean = TRUE)

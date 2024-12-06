@@ -1136,9 +1136,14 @@ begin
          // Диалог для параметров товара из списка всех товаров + в нем сохранение MovementItem
          if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
           or((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
-             and((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)))
+             and((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+            )
           or((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
-             and((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)))
+             and((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+            )
+          or((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut)
+          and(ParamsMovement.ParamByName('isContractGoods').AsBoolean = TRUE)
+            )
          then
               if GuideGoodsPartnerForm.Execute (ParamsMovement, isModeSave, FALSE) = TRUE
               then begin
