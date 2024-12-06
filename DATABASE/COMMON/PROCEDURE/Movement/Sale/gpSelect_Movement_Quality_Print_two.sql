@@ -304,7 +304,10 @@ tmpMI AS
                                          ON ObjectLink_GoodsQuality_Goods.ChildObjectId = tmpMIGoods.GoodsId
                                         AND ObjectLink_GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
 
-                   LEFT JOIN Object AS Object_GoodsQuality ON Object_GoodsQuality.Id = ObjectLink_GoodsQuality_Goods.ObjectId
+                   INNER JOIN Object AS Object_GoodsQuality ON Object_GoodsQuality.Id        = ObjectLink_GoodsQuality_Goods.ObjectId
+                                                           AND (Object_GoodsQuality.isErased = FALSE
+                                                           --OR vbUserId = 5
+                                                               )
 
                    LEFT JOIN ObjectLink AS ObjectLink_GoodsQuality_Quality
                                         ON ObjectLink_GoodsQuality_Quality.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
@@ -943,7 +946,10 @@ tmpMI AS
                                                            ON ObjectLink_GoodsQuality_Goods.ChildObjectId = tmpMIGoods.GoodsId
                                                           AND ObjectLink_GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
 
-                                     LEFT JOIN Object AS Object_GoodsQuality ON Object_GoodsQuality.Id = ObjectLink_GoodsQuality_Goods.ObjectId
+                                     INNER JOIN Object AS Object_GoodsQuality ON Object_GoodsQuality.Id        = ObjectLink_GoodsQuality_Goods.ObjectId
+                                                                             AND (Object_GoodsQuality.isErased = FALSE
+                                                                             --OR vbUserId = 5
+                                                                                 )
 
                                      LEFT JOIN ObjectLink AS ObjectLink_GoodsQuality_Quality
                                                           ON ObjectLink_GoodsQuality_Quality.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
