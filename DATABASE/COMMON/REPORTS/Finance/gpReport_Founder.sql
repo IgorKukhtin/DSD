@@ -138,7 +138,7 @@ BEGIN
                     , 0 AS StartAmount
                     , SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm
                     , SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm
-                    , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Income(), zc_Movement_PersonalService(), zc_Movement_MobileBills()) THEN MIContainer.Amount ELSE 0 END) AS MoneySumm
+                    , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Income(), zc_Movement_PersonalService(), zc_Movement_Service(), zc_Movement_MobileBills()) THEN MIContainer.Amount ELSE 0 END) AS MoneySumm
                     , SUM (CASE WHEN Movement.DescId IN (zc_Movement_FounderService()) THEN -1 * MIContainer.Amount ELSE 0 END)     AS ServiceSumm
                     , 0 AS EndAmount
                     , MovementItem.ObjectId
