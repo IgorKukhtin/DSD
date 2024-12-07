@@ -53,7 +53,12 @@ $BODY$
 
    DECLARE curMI_ReturnIn refcursor;
    DECLARE curMI_Tax refcursor;
+
+   DECLARE vbOperDate_Begin1 TDateTime;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
 
@@ -534,6 +539,10 @@ BEGIN
                                      AND MI.DescId     = zc_MI_Child()
                                    --AND MI_Master.isErased   = FALSE
                                   )*/
+                  , tmpMIFloat AS (SELECT MIF.*
+                                   FROM MovementItemFloat AS MIF
+                                   WHERE MIF.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
+                                  )
 
                 , tmpMI AS (SELECT MovementLinkMovement_Tax.MovementChildId      AS MovementId_Tax
                                  , MI_Master.ObjectId                            AS GoodsId
@@ -637,23 +646,23 @@ BEGIN
                                                         AND MovementItem.DescId     = zc_MI_Child()
                                                         AND MovementItem.isErased   = FALSE
                                                         AND MovementItem.Amount <> 0
-                                 INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                 INNER JOIN tmpMIFloat AS MIFloat_MovementId
                                                               ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                              AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-                                 INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                 INNER JOIN tmpMIFloat AS MIFloat_MovementItemId
                                                               ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                                              AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
 
-                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                 LEFT JOIN tmpMIFloat AS MIFloat_Price
                                                              ON MIFloat_Price.MovementItemId = MI_Master.Id
                                                             AND MIFloat_Price.DescId         = zc_MIFloat_Price()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
+                                 LEFT JOIN tmpMIFloat AS MIFloat_PriceTax_calc
                                                              ON MIFloat_PriceTax_calc.MovementItemId = MI_Master.Id
                                                             AND MIFloat_PriceTax_calc.DescId         = zc_MIFloat_PriceTax_calc()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                 LEFT JOIN tmpMIFloat AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                 LEFT JOIN tmpMIFloat AS MIFloat_ChangePercent
                                                              ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
                                                             AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
 
@@ -1225,6 +1234,54 @@ then
 end if;
 
 
+
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+        SELECT vbUserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , (SELECT COUNT (*) FROM tmp_pg)                                                    AS Value1
+             , (SELECT COUNT (*) FROM tmp_pg WHERE position( 'autovacuum: VACUUM' in query) = 1) AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - vbOperDate_Begin1) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , NULL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
+               -- ProtocolData
+             , inMovementId :: TVarChar
+    || ', ' || inDocumentTaxKindId :: TVarChar
+    || ', ' || inDocumentTaxKindId_inf :: TVarChar
+    || ', ' || CHR (39) || zfConvert_DateToString (inStartDateTax) || CHR (39)
+    || ', ' || CASE WHEN inIsTaxLink = TRUE THEN 'TRUE' ELSE 'FALSE' END
+    || ', ' || inSession
+              ;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -1248,6 +1305,7 @@ $BODY$
 */
 
 -- тест
+-- SELECT * FROM ResourseProtocol where OperDate > CURRENT_DATE and ProcName ilike '%gpInsertUpdate_Movement_TaxCorrective_From_Kind%' ORDER BY Id DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3409416, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
 -- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3449385, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
 -- select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 16691011 , inDocumentTaxKindId := 566452 , inDocumentTaxKindId_inf := 566452 , inStartDateTax := NULL , inIsTaxLink := 'True' ,  inSession := '5');

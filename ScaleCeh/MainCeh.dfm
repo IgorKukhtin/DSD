@@ -2220,8 +2220,6 @@ object MainCehForm: TMainCehForm
           TabOrder = 1
           WordWrap = True
           OnClick = rgGoodsKindClick
-          ExplicitLeft = -4
-          ExplicitTop = 41
         end
       end
     end
@@ -2917,7 +2915,7 @@ object MainCehForm: TMainCehForm
             ExplicitWidth = 97
           end
           object EditEnterCount: TcxCurrencyEdit
-            Left = 10
+            Left = 7
             Top = 15
             ParentFont = False
             Properties.Alignment.Horz = taRightJustify

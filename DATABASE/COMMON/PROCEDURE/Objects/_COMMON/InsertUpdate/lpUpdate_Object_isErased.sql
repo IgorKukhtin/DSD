@@ -14,6 +14,14 @@ BEGIN
    -- !!!Только просмотр Аудитор!!!
    PERFORM lpCheckPeriodClose_auditor (NULL, NULL, NULL, NULL, inObjectId, inUserId);
 
+   IF inUserId IN (5, 9457) AND 1=0
+   THEN 
+       RAISE EXCEPTION 'Ошибка.%Нет прав удалять = <%>.'
+                          , CHR (13)
+                          , (SELECT ObjectDesc.ItemName FROM ObjectDesc JOIN Object ON Object.Id = inObjectId WHERE Object.DescId = ObjectDesc.Id)
+                           ;
+   END IF;
+
 
    -- изменили
    UPDATE Object SET isErased = NOT isErased WHERE Id = inObjectId  RETURNING DescId, isErased INTO vbDescId, vbIsErased;

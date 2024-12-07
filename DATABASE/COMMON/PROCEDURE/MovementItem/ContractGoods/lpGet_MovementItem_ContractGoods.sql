@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION lpGet_MovementItem_ContractGoods(
     IN inUserId             Integer     --
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, isPriceWithVAT Boolean, isMultWithVAT Boolean
-             , MovementItemId Integer, GoodsId Integer, GoodsKindId Integer
+             , MovementItemId Integer, GoodsId Integer, GoodsCode Integer, GoodsKindId Integer
 
                -- цена расчетная в грн - с учетом курса и округления
              , ValuePrice TFloat
@@ -98,7 +98,7 @@ BEGIN
             , tmpData AS (SELECT Movement.Id                                    AS MovementId
                                , Movement.InvNumber                             AS InvNumber
                                , Movement.OperDate                              AS OperDate
-                               , CASE WHEN inUserId=5
+                               , CASE WHEN inUserId=5 AND 1=0
                                            THEN FALSE
                                       ELSE COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)
                                  END AS isPriceWithVAT
@@ -111,9 +111,11 @@ BEGIN
 
                                , MovementItem.Id                                AS MovementItemId
                                , MovementItem.ObjectId                          AS GoodsId
+                               , Object_Goods.ObjectCode                        AS GoodsCode
+                               , Object_Goods.ValueData                         AS GoodsName
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
                                  -- Цена в ГРН - по курсу
-                               , CASE WHEN inUserId=5
+                               , CASE WHEN inUserId=5 AND 1=0
                                            THEN 53.83333
                                          * CASE WHEN COALESCE (MLO_Currency.ObjectId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
                                                 WHEN tmpCurrencyList.CurrencyValue > 0 AND tmpCurrencyList.ParValue > 0 THEN tmpCurrencyList.CurrencyValue / tmpCurrencyList.ParValue
@@ -142,7 +144,7 @@ BEGIN
                                  END AS ValuePrice_GRN
 
                                  -- сначала Цена без НДС
-                               , CASE WHEN inUserId=5
+                               , CASE WHEN inUserId=5 AND 1=0
                                            THEN 53.83333
                                       WHEN COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) = FALSE
                                            THEN COALESCE (MIF_Price.ValueData, 0) / CASE WHEN MIF_CountForPrice.ValueData > 0 THEN MIF_CountForPrice.ValueData ELSE 1 END
@@ -158,7 +160,7 @@ BEGIN
                                  -- Разрешенный % отклонение для цены
                                , COALESCE (MFloat_DiffPrice.ValueData, 0)       AS DiffPrice
                                  -- Кол-во знаков для округления
-                               , CASE WHEN inUserId=5
+                               , CASE WHEN inUserId=5 AND 1=0
                                            THEN 4
                                       ELSE COALESCE (MFloat_RoundPrice.ValueData, 0)
                                  END AS RoundPrice
@@ -192,6 +194,9 @@ BEGIN
                                                       AND MovementItem.DescId     = zc_MI_Master()
                                                       AND MovementItem.isErased   = FALSE
                                                       AND (MovementItem.ObjectId  = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
+
+                               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId                                                      
+
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -231,6 +236,7 @@ BEGIN
               , tmpData.isMultWithVAT
               , tmpData.MovementItemId
               , tmpData.GoodsId
+              , tmpData.GoodsCode
               , tmpData.GoodsKindId
 
                 -- Цена из спецификации
@@ -275,11 +281,11 @@ BEGIN
                 END :: TFloat
 
                 -- Цена из спецификации - оригинал (в валюте)
-              , tmpData.ValuePrice_orig
+              , tmpData.ValuePrice_orig :: TFloat
 
-              , tmpData.CountForAmount
-              , tmpData.DiffPrice
-              , tmpData.RoundPrice
+              , tmpData.CountForAmount  :: TFloat
+              , tmpData.DiffPrice       :: TFloat
+              , tmpData.RoundPrice      :: TFloat
 
                 -- цена БЕЗ НДС / 1.2
               , CASE WHEN tmpData.isPriceWithVAT = FALSE AND COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
@@ -528,6 +534,7 @@ BEGIN
                      , tmpData.isMultWithVAT
                      , tmpData.MovementItemId
                      , tmpData.GoodsId
+                     , tmpData.GoodsCode
                      , tmpData.GoodsKindId
                        --
                      , (CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
@@ -544,9 +551,9 @@ BEGIN
                              WHEN tmpData.RoundPrice = 3
                                   THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 3))
                              ELSE CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 2))
-                        END) :: TFloat AS ValuePrice
+                        END) AS ValuePrice
                         
-                     , ((1 - tmpData.DiffPrice :: TFloat / 100)
+                     , ((1 - tmpData.DiffPrice / 100)
                       * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
                                   THEN tmpData.ValuePrice_GRN
 
@@ -561,9 +568,9 @@ BEGIN
                              WHEN tmpData.RoundPrice = 3
                                   THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 3))
                              ELSE CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 2))
-                        END) :: TFloat AS ValuePrice_from
+                        END) AS ValuePrice_from
 
-                     , ((1 + tmpData.DiffPrice :: TFloat / 100)
+                     , ((1 + tmpData.DiffPrice / 100)
                       * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
                                   THEN tmpData.ValuePrice_GRN
 
@@ -578,25 +585,25 @@ BEGIN
                              WHEN tmpData.RoundPrice = 3
                                   THEN CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 3))
                              ELSE CAST (tmpData.ValuePrice_GRN AS NUMERIC (16, 2))
-                        END) :: TFloat AS ValuePrice_to
+                        END) AS ValuePrice_to
        
-                     , tmpData.ValuePrice_orig :: TFloat AS ValuePrice_orig
+                     , tmpData.ValuePrice_orig  AS ValuePrice_orig
        
-                     , tmpData.CountForAmount  :: TFloat AS CountForAmount
-                     , tmpData.DiffPrice       :: TFloat AS DiffPrice
-                     , tmpData.RoundPrice      :: TFloat AS RoundPrice
+                     , tmpData.CountForAmount   AS CountForAmount
+                     , tmpData.DiffPrice        AS DiffPrice
+                     , tmpData.RoundPrice       AS RoundPrice
        
                      , tmpData.JuridicalId
                      , Object_Juridical.ValueData AS JuridicalName
                      , Object_Contract_InvNumber_View.ContractId   AS ContractId
                      , Object_Contract_InvNumber_View.ContractCode AS ContractCode
                      , Object_Contract_InvNumber_View.InvNumber    AS ContractName
-                     , tmpData.PaidKindId :: Integer AS PaidKindId
-                     , Object_PaidKind.ValueData     AS PaidKindName
-                     , tmpData.CurrencyId :: Integer AS CurrencyId
-                     , Object_Currency.ValueData     AS CurrencyName
-                     , tmpData.CurrencyValue :: TFloat AS CurrencyValue
-                     , tmpData.ParValue      :: TFloat AS ParValue
+                     , tmpData.PaidKindId                          AS PaidKindId
+                     , Object_PaidKind.ValueData                   AS PaidKindName
+                     , tmpData.CurrencyId                          AS CurrencyId
+                     , Object_Currency.ValueData                   AS CurrencyName
+                     , tmpData.CurrencyValue                       AS CurrencyValue
+                     , tmpData.ParValue                            AS ParValue
                 FROM tmpData
        
                      LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId

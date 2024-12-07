@@ -49,6 +49,8 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , Price_Income_addVat       TFloat
              , Price_Income_from_addVat  TFloat
              , Price_Income_to_addVat    TFloat
+               -- Кол-во знаков для округления
+             , RoundPrice                TFloat
                --
              , CountForPrice_Income      TFloat
 
@@ -553,6 +555,8 @@ BEGIN
                  , 0 :: TFloat                     AS Price_Income_addVat
                  , 0 :: TFloat                     AS Price_Income_from_addVat
                  , 0 :: TFloat                     AS Price_Income_to_addVat
+                   -- Кол-во знаков для округления
+                 , 0 :: TFloat                     AS RoundPrice
                  
                  , 1 :: TFloat                     AS CountForPrice_Income
 
@@ -666,6 +670,8 @@ BEGIN
                               , tmp.ValuePrice_notVat, tmp.ValuePrice_from_notVat, tmp.ValuePrice_to_notVat
                                 -- цена
                               , tmp.ValuePrice_addVat, tmp.ValuePrice_from_addVat, tmp.ValuePrice_to_addVat
+                                -- Кол-во знаков для округления
+                              , tmp.RoundPrice
                          FROM lpGet_MovementItem_ContractGoods (inOperDate:= inOperDate, inJuridicalId:=0, inPartnerId:= 0, inContractId:= -1 * inOrderExternalId, inGoodsId:= 0, inUserId:= vbUserId) AS tmp
                         )
 
@@ -685,6 +691,8 @@ BEGIN
                               , tmpContractGoods.ValuePrice_notVat, tmpContractGoods.ValuePrice_from_notVat, tmpContractGoods.ValuePrice_to_notVat
                                 -- цена
                               , tmpContractGoods.ValuePrice_addVat, tmpContractGoods.ValuePrice_from_addVat, tmpContractGoods.ValuePrice_to_addVat
+                                -- Кол-во знаков для округления
+                              , tmpContractGoods.RoundPrice
                               
                               , tmpContractGoods.GoodsKindId
                          FROM tmpContractGoods
@@ -766,6 +774,8 @@ BEGIN
                 , tmpGoods.ValuePrice_notVat AS Price_Income_notVat, tmpGoods.ValuePrice_from_notVat AS Price_Income_from_notVat, tmpGoods.ValuePrice_to_notVat AS Price_Income_to_notVat
                   -- цена
                 , tmpGoods.ValuePrice_addVat AS Price_Income_addVat, tmpGoods.ValuePrice_from_addVat AS Price_Income_from_addVat, tmpGoods.ValuePrice_to_addVat AS Price_Income_to_addVat
+                  -- Кол-во знаков для округления
+                , tmpGoods.RoundPrice
                   --
                 , 1 :: TFloat                        AS CountForPrice_Income
 
@@ -1437,6 +1447,8 @@ BEGIN
                 , 0 :: TFloat                 AS Price_Income_addVat
                 , 0 :: TFloat                 AS Price_Income_from_addVat
                 , 0 :: TFloat                 AS Price_Income_to_addVat
+                   -- Кол-во знаков для округления
+                , 0 :: TFloat                 AS RoundPrice
                   -- 
                 , 1 :: TFloat                 AS CountForPrice_Income
 

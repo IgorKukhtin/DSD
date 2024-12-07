@@ -593,7 +593,8 @@ begin
           if i2<5 then Columns:=1 else if i2<15 then Columns:=2
           else if i2<25
                then begin Columns:=3; PanelLeft_all.Width:= 400; end
-               else if i2>45 then begin Columns:=6; PanelLeft_all.Width:= 550; end
+               else if i2>45 then begin Columns:=6; PanelLeft_all.Width:= 650; end
+               else if i2>25 then begin Columns:=5; PanelLeft_all.Width:= 500; end
                else begin Columns:=4; PanelLeft_all.Width:= 450; end;
           //if i2>25 then PanelGoodsKind_all.Height:=245
           //else if i2>22 then PanelGoodsKind_all.Height:=205
@@ -2808,6 +2809,14 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditEnterCountEnter(Sender: TObject);
 begin
+     if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss
+     then begin
+         EditEnterCount.Properties.DecimalPlaces:= 4;
+     end
+     else begin
+         EditEnterCount.Properties.DecimalPlaces:= 0;
+     end;
+     //
      if ((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
        or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kgg)
        or(//если —хема - втулки

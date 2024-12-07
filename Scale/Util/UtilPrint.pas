@@ -165,6 +165,8 @@ type
     spSelectPrint_TTN_final: TdsdStoredProc;
     actPrint_TTN_final: TdsdPrintAction;
     macPrint_TTN_final: TMultiAction;
+    spSelectPrint_Income_byPartner: TdsdStoredProc;
+    actPrint_Income_byPartner: TdsdPrintAction;
   private
   end;
 
@@ -276,6 +278,12 @@ procedure Print_Income (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.actPrint_Income.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_Income_byPartner (MovementId_wp: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId_wp;
+  UtilPrintForm.actPrint_Income_byPartner.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 function Print_Income_diff (MovementId: Integer):Boolean;
@@ -476,7 +484,15 @@ begin
                        then Print_SendOnPrice(MovementId,isSendOnPriceIn)
 
                        else if MovementDescId = zc_Movement_Income
-                            then Print_Income(MovementId)
+                            then if MovementId_by < 0
+                                 then if MovementId > 0
+                                      // реальный док поставщика
+                                      then Print_Income_byPartner(MovementId)
+                                      // док взвешивания - здесь только данные поставщика
+                                      else Print_Income_byPartner(-1 * MovementId_by)
+
+                                 else Print_Income(MovementId)
+
                             else if MovementDescId = zc_Movement_ReturnOut
                                   then Print_ReturnOut(MovementId)
 

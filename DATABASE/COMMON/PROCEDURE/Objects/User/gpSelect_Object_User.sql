@@ -50,6 +50,7 @@ END IF;
                              , lfSelect.DateOut
                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                        )
+      , tmpUserRole AS (SELECT * FROM gpSelect_Object_UserRole (inSession) WHERE vbUserId = 5 AND 1=0)
 
    SELECT 
          Object_User.Id
@@ -64,14 +65,14 @@ END IF;
        , ObjectString_UserSeal.ValueData  AS UserSeal
        , ObjectString_UserKey.ValueData   AS UserKey
 
-       , Object_Branch.ObjectCode  AS BranchCode
+       , COALESCE (tmpUserRole.Code, Object_Branch.ObjectCode) :: Integer AS BranchCode
        , Object_Branch.ValueData   AS BranchName
        , Object_Unit.ObjectCode    AS UnitCode
        , Object_Unit.ValueData     AS UnitName
        , Object_Position.ValueData AS PositionName
 
        , ObjectString_ProjectMobile.ValueData    AS ProjectMobile
-       , ObjectString_MobileModel.ValueData      AS MobileModel
+       , COALESCE (tmpUserRole.Name, ObjectString_MobileModel.ValueData) :: TVarChar AS MobileModel
        , ObjectString_MobileVesion.ValueData     AS MobileVesion
        , ObjectString_MobileVesionSDK.ValueData  AS MobileVesionSDK
 
@@ -92,6 +93,7 @@ END IF;
        , COALESCE (ObjectDate_User_GUID.ValueData, NULL) ::TDateTime AS Data_GUID
 
    FROM Object AS Object_User
+        LEFT JOIN tmpUserRole ON tmpUserRole.UserId = Object_User.Id
         LEFT JOIN ObjectString AS ObjectString_User_
                                ON ObjectString_User_.ObjectId = Object_User.Id
                               AND ObjectString_User_.DescId = zc_ObjectString_User_Password()

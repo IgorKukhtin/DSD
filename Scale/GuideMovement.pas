@@ -768,13 +768,23 @@ begin
 
      //
      if cbPrintMovement.Checked
-     then Print_Movement (CDS.FieldByName('MovementDescId').AsInteger
-                        , CDS.FieldByName('MovementId_parent').AsInteger// MovementId
-                        , CDS.FieldByName('Id').AsInteger               // MovementId_by
-                        , 1    // myPrintCount
-                        , TRUE // isPreview
-                        , DialogMovementDescForm.Get_isSendOnPriceIn(CDS.FieldByName('MovementDescNumber').AsInteger)
-                         );
+     then if (CDS.FieldByName('MovementId_DocPartner').AsInteger > 0) and (CDS.FieldByName('InvNumberPartner').AsString <> '') and (CDS.FieldByName('MovementDescId').AsInteger = zc_Movement_Income)
+          then
+              Print_Movement (CDS.FieldByName('MovementDescId').AsInteger
+                            , CDS.FieldByName('MovementId_parent').AsInteger// MovementId
+                            , -1 * CDS.FieldByName('MovementId_DocPartner').AsInteger
+                            , 1     // myPrintCount
+                            , TRUE  // isPreview
+                            , FALSE // isSendOnPriceIn
+                             )
+          else
+              Print_Movement (CDS.FieldByName('MovementDescId').AsInteger
+                            , CDS.FieldByName('MovementId_parent').AsInteger// MovementId
+                            , CDS.FieldByName('Id').AsInteger               // MovementId_by
+                            , 1    // myPrintCount
+                            , TRUE // isPreview
+                            , DialogMovementDescForm.Get_isSendOnPriceIn(CDS.FieldByName('MovementDescNumber').AsInteger)
+                             );
      //
      if cbPrintTax.Checked
      then Print_Tax (CDS.FieldByName('MovementDescId').AsInteger

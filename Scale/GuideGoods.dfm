@@ -475,6 +475,13 @@ object GuideGoodsForm: TGuideGoodsForm
           VisibleForCustomization = False
           Width = 70
         end
+        object RoundPrice: TcxGridDBColumn
+          Caption = #1050#1086#1083'-'#1074#1086' '#1079#1085#1072#1082#1086#1074
+          DataBinding.FieldName = 'RoundPrice'
+          Visible = False
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1079#1085#1072#1082#1086#1074' '#1076#1083#1103' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103
+          Width = 70
+        end
         object GoodsGroupNameFull: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072
           DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -1472,7 +1479,7 @@ object GuideGoodsForm: TGuideGoodsForm
         TabOrder = 4
         object EditPrice: TcxCurrencyEdit
           Left = 4
-          Top = 14
+          Top = 15
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
@@ -1554,7 +1561,7 @@ object GuideGoodsForm: TGuideGoodsForm
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076
         TabOrder = 7
         object OperDateEdit: TcxDateEdit
-          Left = 3
+          Left = 8
           Top = 15
           EditValue = 41640d
           ParentFont = False
@@ -1581,7 +1588,7 @@ object GuideGoodsForm: TGuideGoodsForm
         TabOrder = 8
         object EditSummPartner: TcxCurrencyEdit
           Left = 4
-          Top = 14
+          Top = 15
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True

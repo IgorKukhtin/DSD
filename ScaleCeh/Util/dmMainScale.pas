@@ -14,6 +14,10 @@ type
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
     function gpGet_Scale_PSW_delete (inPSW: String): String;
     function gpGet_Scale_Movement_OperDatePartner(var execParamsMovement:TParams): Boolean;
+
+    function gpUpdate_Scale_MovementString(MovementId : Integer; MovementStringDesc, InvNumberPartner : String): Boolean;
+    function gpUpdate_Scale_Movement_ChangePercentAmount(var execParams:TParams): Boolean;
+    function gpUpdate_Scale_MovementDate(var execParams:TParams): Boolean;
   end;
 
   // !!!Scale + ScaleCeh!!!
@@ -77,6 +81,21 @@ begin
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean; CountMovement,CountAccount,CountTransport,CountQuality,CountPack,CountSpec,CountTax : Integer): Boolean;
+begin
+  Result:=false;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_MovementString(MovementId : Integer; MovementStringDesc, InvNumberPartner : String): Boolean;
+begin
+  Result:=false;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_MovementDate(var execParams:TParams): Boolean;
+begin
+  Result:=false;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_Movement_ChangePercentAmount(var execParams:TParams): Boolean;
 begin
   Result:=false;
 end;

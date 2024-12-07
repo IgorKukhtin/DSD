@@ -81,6 +81,7 @@ $BODY$
    DECLARE vbTotalSummPartner TFloat;
    DECLARE vbRetailId  Integer;
    DECLARE vbToId      Integer;
+   DECLARE vbContactId Integer;
    DECLARE vbUnitId    Integer;
    DECLARE vbGoodsPropertyId Integer;
 
@@ -94,6 +95,8 @@ $BODY$
    DECLARE vbPricePromo            TFloat;
    DECLARE vbIsChangePercent_Promo Boolean;
    DECLARE vbChangePercent         TFloat;
+   
+   DECLARE vbMovementId_Income_find Integer;
 
    DECLARE vbRemainsCount_check TFloat;
 
@@ -141,13 +144,17 @@ BEGIN
           , ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
           , MovementLinkObject_From.ObjectId          AS UnitId
           , MovementLinkObject_To.ObjectId            AS ToId
-            INTO vbOperDate, vbMovementDescId, vbMovementId_order, vbRetailId, vbUnitId, vbToId
+          , MovementLinkObject_Contract.ObjectId       AS ContactId
+            INTO vbOperDate, vbMovementDescId, vbMovementId_order, vbRetailId, vbUnitId, vbToId, vbContactId
      FROM Movement
           LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
                                  AND MovementFloat.DescId = zc_MovementFloat_MovementDesc()
           LEFT JOIN MovementLinkMovement AS MLM_Order
                                          ON MLM_Order.MovementId = Movement.Id
                                         AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                      AND MovementLinkObject_Contract.DescId      = zc_MovementLinkObject_Contract()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
@@ -615,6 +622,91 @@ BEGIN
          END IF;
      END IF;
 
+
+     -- Нашли цену из прихода
+     IF vbMovementDescId IN (zc_Movement_ReturnOut())
+        AND (inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
+          OR inBranchCode BETWEEN 301 AND 310 -- Dnepr-OBV
+            )
+         -- Нагорная Я.Г. + Баранченко И.И.
+        AND vbUserId IN (5, 343013, 80372)
+     THEN
+         --
+         vbMovementId_Income_find:= (SELECT Movement.Id
+                                     FROM Movement
+                                         INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                                      AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                                                      -- Приход по єтому договору
+                                                                      AND MovementLinkObject_Contract.ObjectId   = vbContactId
+                                         INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                      AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                                                      -- Приход от этого поставщика
+                                                                      AND MovementLinkObject_From.ObjectId   = vbToId
+                        
+                                     WHERE Movement.OperDate = inOperDate_ReturnOut
+                                       AND Movement.DescId   = zc_Movement_Income()
+                                       AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                    );
+
+         -- проверка
+         IF COALESCE (vbMovementId_Income_find, 0) = 0
+         THEN
+            RAISE EXCEPTION 'Ошибка.Не найден документ поставщика %<%> %от <%> %договор <%>.'
+                          , CHR (13)
+                          , lfGet_Object_ValueData_sh (vbToId)
+                          , CHR (13)
+                          , zfConvert_DateToString (inOperDate_ReturnOut)
+                          , CHR (13)
+                          , lfGet_Object_ValueData_sh (vbContactId)
+                           ;
+         END IF;
+         
+         
+         -- Нашли цену из прихода
+         SELECT MIF_Price.ValueData, CASE WHEN MIF_CountForPrice.ValueData > 0 THEN MIF_CountForPrice.ValueData ELSE 1 END
+                INTO vbPrice_301, inCountForPrice
+         FROM MovementItem
+              LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                               ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                              AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+              -- цена поставщика
+              INNER JOIN MovementItemFloat AS MIF_Price
+                                           ON MIF_Price.MovementItemId = MovementItem.Id
+                                          AND MIF_Price.DescId         = zc_MIFloat_Price()
+                                          AND MIF_Price.ValueData      > 0
+         
+              LEFT JOIN MovementItemFloat AS MIF_CountForPrice
+                                          ON MIF_CountForPrice.MovementItemId = MovementItem.Id
+                                         AND MIF_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
+
+         WHERE MovementItem.MovementId = vbMovementId_Income_find
+           AND MovementItem.DescId     = zc_MI_Master()
+           AND MovementItem.isErased   = FALSE
+           AND MovementItem.ObjectId   = inGoodsId
+           AND COALESCE (MILO_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
+        ;
+
+
+         -- проверка
+         IF COALESCE (vbPrice_301, 0) = 0
+         THEN
+            RAISE EXCEPTION 'Ошибка.Не найден цена для поставщика %<%> %в документе №<%> от <%> %Товар = <%>%.'
+                          , CHR (13)
+                          , lfGet_Object_ValueData_sh (vbToId)
+                          , CHR (13)
+                          , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_Income_find)
+                          , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = vbMovementId_Income_find)
+                          , CHR (13)
+                          , lfGet_Object_ValueData (inGoodsId)
+                          , CASE WHEN inGoodsKindId > 0 THEN ' вид = <' || lfGet_Object_ValueData_sh (inGoodsKindId) ||'>' ELSE '' END
+                           ;
+         END IF;
+
+     END IF;
+
+
      IF vbMessageText = ''
      THEN
          -- сохранили
@@ -834,7 +926,6 @@ BEGIN
          THEN
              -- Дата для цены возврат поставщику
              PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PriceRetOut(), vbId, inOperDate_ReturnOut);
-
              -- сохранили протокол
              PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, FALSE);
 
@@ -856,7 +947,7 @@ BEGIN
                                                   FROM MovementItem
                                                        LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                                                         ON MILO_GoodsKind.MovementItemId = MovementItem.Id
-                                                                                       AND MILO_GoodsKind.DescId         = zc_MovementLinkObject_To()
+                                                                                       AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                                                        -- цена поставщика для Сырья - из накладной
                                                        LEFT JOIN MovementItemFloat AS MIF_PricePartner
                                                                                    ON MIF_PricePartner.MovementItemId = MovementItem.Id
