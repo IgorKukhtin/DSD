@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCount_unit TFloat, TotalCount_diff TFloat, TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
+             , TotalHeadCount TFloat, TotalLiveWeight TFloat
              , CurrencyValue TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
@@ -22,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PersonalPackerName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
              , GoodsCode Integer, GoodsName TVarChar, PartionGoods TVarChar
+             , HeadCount TFloat, LiveWeight TFloat
               )
 AS
 $BODY$
@@ -81,6 +83,9 @@ BEGIN
            , MovementFloat_TotalSummSpending.ValueData   AS TotalSummSpending
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
 
+           , COALESCE (MovementFloat_TotalHeadCount.ValueData, 0)  :: TFloat AS TotalHeadCount
+           , COALESCE (MovementFloat_TotalLiveWeight.ValueData, 0) :: TFloat AS TotalLiveWeight
+           
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
 
            , Object_From.ValueData             AS FromName
@@ -102,6 +107,9 @@ BEGIN
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
            , COALESCE (MIString_PartionGoods.ValueData, MIString_PartionGoodsCalc.ValueData) :: TVarChar AS PartionGoods
+           
+           , COALESCE (MIFloat_HeadCount.ValueData, 0)  :: TFloat AS HeadCount
+           , COALESCE (MIFloat_LiveWeight.ValueData, 0) :: TFloat AS LiveWeight
 
        FROM (SELECT Movement.Id
                   , MovementLinkObject_To.ObjectId AS ToId
@@ -168,6 +176,13 @@ BEGIN
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalLiveWeight
+                                    ON MovementFloat_TotalLiveWeight.MovementId = Movement.Id
+                                   AND MovementFloat_TotalLiveWeight.DescId = zc_MovementFloat_TotalLiveWeight()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalHeadCount
+                                    ON MovementFloat_TotalHeadCount.MovementId = Movement.Id
+                                   AND MovementFloat_TotalHeadCount.DescId = zc_MovementFloat_TotalHeadCount()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -224,7 +239,15 @@ BEGIN
             INNER JOIN MovementItemString AS MIString_PartionGoodsCalc
                                           ON MIString_PartionGoodsCalc.MovementItemId =  MovementItem.Id
                                          AND MIString_PartionGoodsCalc.DescId = zc_MIString_PartionGoodsCalc()                                        
-                                         AND MIString_PartionGoodsCalc.ValueData <> ''
+                                         AND MIString_PartionGoodsCalc.ValueData <> '' 
+
+            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+            LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
+                                        ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                       AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
+                                         
 
 
     ;

@@ -121,6 +121,16 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalCount_diff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalHeadCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalLiveWeight
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -172,6 +182,16 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalCount_diff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalHeadCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalLiveWeight
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -403,6 +423,28 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
+      end
+      object TotalHeadCount: TcxGridDBColumn
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
+        DataBinding.FieldName = 'TotalHeadCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object TotalLiveWeight: TcxGridDBColumn
+        Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
+        DataBinding.FieldName = 'TotalLiveWeight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object isPriceDiff: TcxGridDBColumn
         Caption = #1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077

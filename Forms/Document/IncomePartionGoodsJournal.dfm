@@ -121,6 +121,16 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalCount_diff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = HeadCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = LiveWeight
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -172,6 +182,16 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalCount_diff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = HeadCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = LiveWeight
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -455,6 +475,26 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object HeadCount: TcxGridDBColumn
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
+        DataBinding.FieldName = 'HeadCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object LiveWeight: TcxGridDBColumn
+        Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
+        DataBinding.FieldName = 'LiveWeight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
@@ -812,6 +852,9 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -836,7 +879,7 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -901,7 +944,7 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1330,10 +1373,14 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end
