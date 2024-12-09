@@ -45,7 +45,7 @@ BEGIN
 
    --IF vbMovementDescId NOT IN (zc_Movement_ReturnIn()) THEN RETURN; END IF;
 
-   --IF vbMovementDescId not IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice()) THEN RETURN; END IF;
+   -- IF vbMovementDescId not IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss()) THEN RETURN; END IF;
 
    --IF vbMovementDescId IN (zc_Movement_Inventory()) THEN RETURN; END IF;
    --IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 18 AND vbMovementDescId IN (zc_Movement_Inventory()) THEN RETURN; END IF;

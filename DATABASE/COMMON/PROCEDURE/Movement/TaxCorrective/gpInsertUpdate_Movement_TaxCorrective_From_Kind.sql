@@ -1236,7 +1236,7 @@ end if;
 
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-     INSERT INTO ResourseProtocol (UserId
+     /*INSERT INTO ResourseProtocol (UserId
                                  , OperDate
                                  , Value1
                                  , Value2
@@ -1279,7 +1279,7 @@ end if;
     || ', ' || CHR (39) || zfConvert_DateToString (inStartDateTax) || CHR (39)
     || ', ' || CASE WHEN inIsTaxLink = TRUE THEN 'TRUE' ELSE 'FALSE' END
     || ', ' || inSession
-              ;
+              ;*/
 
 
 END;
