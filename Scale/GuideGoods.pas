@@ -247,6 +247,9 @@ type
     procedure cbAmountPartnerSecondClick(Sender: TObject);
     procedure EditSummPartnerKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure EditPriceExit(Sender: TObject);
+    procedure EditSummPartnerExit(Sender: TObject);
+    procedure EditAmountPartnerExit(Sender: TObject);
   private
     oldParam1, oldParam2:Integer;
     oldParam3:TDateTime;
@@ -339,7 +342,8 @@ begin
      //
      gbPriceIncome.Visible:= false; //gbPrice.Visible;
      gbAmountPartner.Visible:= execParamsMovement.ParamByName('isOperCountPartner').AsBoolean = TRUE;
-     cbAmountPartnerSecond.Visible:= false; // (execParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE);
+     cbAmountPartnerSecond.Visible:=  (gbAmountPartner.Visible) and (execParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE);
+     cbAmountPartnerSecond.Checked:= FALSE;
      EditPriceIncome.Text:='0';
      EditAmountPartner.Text:='0';
      //
@@ -349,6 +353,12 @@ begin
      if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202)
      then
          gbWeightValue.Visible:= ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE;
+     //
+     gbWeightValue.Top:= 82;
+     gbPrice.Top:= 123;
+     gbSummPartner.Top:= 180;
+     gbAmountPartner.Top:= 219;
+     gbGoodsWieghtValue.Top:= 283;
      //
      gbOperDate.Visible:= execParamsMovement.ParamByName('isReturnOut_Date').AsBoolean = TRUE;
      //
@@ -1608,15 +1618,6 @@ begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditWeightValueExit(Sender: TObject);
 begin
-     //
-     if ((ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
-       or(ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut)
-        )
-       and (CDS.FieldByName('Price_Income').AsFloat > 0)
-     then begin
-           //EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
-     end;
-     //
      if ((CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg)
       and((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310))
       //and(ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
@@ -1626,8 +1627,8 @@ begin
       and(CDS.FieldByName('Weight').AsFloat > 0)
       and(CDS.RecordCount = 1)
       and(ActiveControl<>EditWeightValue)
-      and(ActiveControl<>EditPrice)
-      and(ActiveControl<>EditSummPartner)
+  //    and(ActiveControl<>EditPrice)
+  //    and(ActiveControl<>EditSummPartner)
       //and(ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
         )
      or(ParamsMovement.ParamByName('isDocPartner').AsBoolean = TRUE)
@@ -1650,8 +1651,23 @@ begin
           else
      else if CDS.RecordCount=1
           then try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text);
+               if (gbAmountPartner.Visible)
+                  and ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+               then EditAmountPartner.Text:= EditWeightValue.Text;
                except ParamsMI.ParamByName('RealWeight').AsFloat:=0;end;
 
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditPriceExit(Sender: TObject);
+begin
+     //
+     if ((ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+       or(ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut)
+        )
+       and (CDS.FieldByName('Price_Income').AsFloat > 0)
+     then begin
+           //EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
+     end;
      if gbPrice.Visible = TRUE
      then begin
                try StrToFloat(EditPrice.Text)
@@ -1663,7 +1679,22 @@ begin
                   and (gbSummPartner.Visible = FALSE)
                then ActiveControl:=EditPrice
      end;
-
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditSummPartnerExit(Sender: TObject);
+begin
+     {try StrToFloat(EditPrice.Text)
+     except ActiveControl:=EditSummPartner;
+            exit;
+     end;}
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditAmountPartnerExit(Sender: TObject);
+begin
+     try StrToFloat(EditPrice.Text)
+     except ActiveControl:=EditAmountPartner;
+            exit;
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditWeightValueKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
@@ -1700,9 +1731,9 @@ procedure TGuideGoodsForm.EditSummPartnerKeyDown(Sender: TObject; var Key: Word;
 begin
     if Key=13
     then
-        //if (gbAmountPartner.Visible = TRUE)
-        // then ActiveControl:=EditAmountPartner
-        // else
+        if (gbAmountPartner.Visible = TRUE)
+         then ActiveControl:=EditAmountPartner
+         else
          if rgGoodsKind.Items.Count>1
          then ActiveControl:=EditGoodsKindCode
          else if infoPanelTareFix.Visible

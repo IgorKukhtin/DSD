@@ -1486,7 +1486,7 @@ object GuideGoodsForm: TGuideGoodsForm
           Properties.DecimalPlaces = 4
           TabOrder = 0
           OnEnter = EditTareCountEnter
-          OnExit = EditWeightValueExit
+          OnExit = EditPriceExit
           OnKeyDown = EditPriceKeyDown
           Width = 125
         end
@@ -1538,7 +1538,7 @@ object GuideGoodsForm: TGuideGoodsForm
           Properties.DecimalPlaces = 4
           TabOrder = 0
           OnEnter = EditTareCountEnter
-          OnExit = EditWeightValueExit
+          OnExit = EditAmountPartnerExit
           OnKeyDown = EditAmountPartnerKeyDown
           Width = 125
         end
@@ -1595,7 +1595,7 @@ object GuideGoodsForm: TGuideGoodsForm
           Properties.DecimalPlaces = 4
           TabOrder = 0
           OnEnter = EditTareCountEnter
-          OnExit = EditWeightValueExit
+          OnExit = EditSummPartnerExit
           OnKeyDown = EditSummPartnerKeyDown
           Width = 125
         end
