@@ -83,6 +83,7 @@ $BODY$
   DECLARE vbTotalSummPhone            TFloat;
   DECLARE vbTotalHeadCount_Master     TFloat;
   DECLARE vbTotalHeadCount_Child      TFloat;
+  DECLARE vbTotalLiveWeight           TFloat;
 
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbVATPercent TFloat;
@@ -402,6 +403,7 @@ BEGIN
 
           , OperHeadCount_Master
           , OperHeadCount_Child
+          , OperLiveWeight
 
           , OperSumm_MedicdayAdd
           , OperDayMedicday
@@ -447,7 +449,8 @@ BEGIN
 
                , vbTotalSummCompensation, vbTotalSummCompensationRecalc
 
-               , vbTotalHeadCount_Master, vbTotalHeadCount_Child
+               , vbTotalHeadCount_Master, vbTotalHeadCount_Child 
+               , vbTotalLiveWeight
 
                , vbTotalSummMedicdayAdd, vbTotalDayMedicday, vbTotalSummSkip, vbTotalDaySkip
 
@@ -588,8 +591,9 @@ BEGIN
                                , SUM (COALESCE (MIFloat_SummCompensation.ValueData, 0))       AS OperSumm_Compensation
                                , SUM (COALESCE (MIFloat_SummCompensationRecalc.ValueData, 0)) AS OperSumm_CompensationRecalc
 
-                               , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS OperHeadCount_Master
-                               , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child()  THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS OperHeadCount_Child
+                               , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END)  AS OperHeadCount_Master
+                               , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child()  THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END)  AS OperHeadCount_Child
+                               , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN COALESCE (MIFloat_LiveWeight.ValueData, 0) ELSE 0 END) AS OperLiveWeight
 
                                , SUM (COALESCE (MIFloat_SummMedicdayAdd.ValueData, 0))            AS OperSumm_MedicdayAdd
                                , SUM (COALESCE (MIFloat_DayMedicday.ValueData, 0))            AS OperDayMedicday
@@ -858,7 +862,9 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                            ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                           AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-
+                               LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
+                                                           ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
                           WHERE Movement.Id = inMovementId
                           GROUP BY Movement.DescId
                                  , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END
@@ -1125,6 +1131,7 @@ BEGIN
                 , OperSumm_CompensationRecalc
                 , OperHeadCount_Master
                 , OperHeadCount_Child
+                , OperLiveWeight
                 , OperSumm_MedicdayAdd
                 , OperDayMedicday
                 , OperSumm_Skip
@@ -1300,6 +1307,7 @@ BEGIN
                       , SUM (tmpMI.OperSumm_CompensationRecalc) AS OperSumm_CompensationRecalc
                       , SUM (tmpMI.OperHeadCount_Master)      AS OperHeadCount_Master
                       , SUM (tmpMI.OperHeadCount_Child)       AS OperHeadCount_Child
+                      , SUM (tmpMI.OperLiveWeight)            AS OperLiveWeight
 
                       , SUM (tmpMI.OperSumm_MedicdayAdd)    AS OperSumm_MedicdayAdd
                       , SUM (tmpMI.OperDayMedicday)         AS OperDayMedicday
@@ -1450,6 +1458,7 @@ BEGIN
 
                             , tmpMI.OperHeadCount_Master
                             , tmpMI.OperHeadCount_Child
+                            , tmpMI.OperLiveWeight
 
                             , tmpMI.OperSumm_MedicdayAdd
                             , tmpMI.OperDayMedicday
@@ -1574,6 +1583,7 @@ BEGIN
 
                                    , tmpMI.OperHeadCount_Master
                                    , tmpMI.OperHeadCount_Child
+                                   , tmpMI.OperLiveWeight
 
                                    , tmpMI.OperSumm_MedicdayAdd
                                    , tmpMI.OperDayMedicday
@@ -1741,6 +1751,7 @@ BEGIN
 
                                    , tmpMI.OperHeadCount_Master
                                    , tmpMI.OperHeadCount_Child
+                                   , tmpMI.OperLiveWeight
 
                                    , tmpMI.OperSumm_MedicdayAdd
                                    , tmpMI.OperDayMedicday
@@ -1841,6 +1852,7 @@ BEGIN
 
                                    , tmpMI.OperHeadCount_Master
                                    , tmpMI.OperHeadCount_Child
+                                   , tmpMI.OperLiveWeight
 
                                    , tmpMI.OperSumm_MedicdayAdd
                                    , tmpMI.OperDayMedicday
@@ -2075,7 +2087,9 @@ BEGIN
          -- Сохранили свойство <Итого кол-во голов расход>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalHeadCount(), inMovementId, vbTotalHeadCount_Master);
          -- Сохранили свойство <Итого кол-во голов приход>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalHeadCountChild(), inMovementId, vbTotalHeadCount_Child);
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalHeadCountChild(), inMovementId, vbTotalHeadCount_Child); 
+         -- Сохранили свойство <Итого живой вес>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalLiveWeight(), inMovementId, vbTotalLiveWeight);
 
          -- Сохранили свойство <Итого сумма по Оборотной таре>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), inMovementId, vbOperSumm_Tare);
@@ -2104,6 +2118,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.24         * zc_MovementFloat_TotalLiveWeight
  02.05.23         *
  27.03.23         *
  17.01.22         * zc_MIFloat_SummAvance, zc_MIFloat_SummAvanceRecalc

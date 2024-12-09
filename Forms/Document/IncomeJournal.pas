@@ -149,6 +149,9 @@ type
     spSelectPrint_byPartner: TdsdStoredProc;
     actPrint_byPartner: TdsdPrintAction;
     bbPrint_byPartner: TdxBarButton;
+    spSelectPrintSklad: TdsdStoredProc;
+    actPrintSklad: TdsdPrintAction;
+    bbPrintSklad: TdxBarButton;
   private
   public
   end;

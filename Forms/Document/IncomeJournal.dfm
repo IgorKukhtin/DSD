@@ -121,6 +121,16 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalCount_diff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalHeadCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalLiveWeight
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -172,6 +182,16 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalCount_diff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalHeadCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalLiveWeight
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -403,6 +423,28 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
+      end
+      object TotalHeadCount: TcxGridDBColumn
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
+        DataBinding.FieldName = 'TotalHeadCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object TotalLiveWeight: TcxGridDBColumn
+        Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
+        DataBinding.FieldName = 'TotalLiveWeight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object isPriceDiff: TcxGridDBColumn
         Caption = #1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077
@@ -871,6 +913,10 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSklad'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintSticker'
         end
         item
@@ -907,6 +953,10 @@ object IncomeJournalForm: TIncomeJournalForm
     end
     object bbPrint_byPartner: TdxBarButton
       Action = actPrint_byPartner
+      Category = 0
+    end
+    object bbPrintSklad: TdxBarButton
+      Action = actPrintSklad
       Category = 0
     end
   end
@@ -977,6 +1027,53 @@ object IncomeJournalForm: TIncomeJournalForm
         end>
       ReportName = 'PrintMovement_Income_ActDiff'
       ReportNameParam.Value = 'PrintMovement_Income_ActDiff'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintSklad: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintSklad
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSklad
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1089#1082#1083#1072#1076')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1089#1082#1083#1072#1076')'
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Income_Sklad'
+      ReportNameParam.Value = 'PrintMovement_Income_Sklad'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -2046,5 +2143,29 @@ object IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 600
     Top = 312
+  end
+  object spSelectPrintSklad: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_Sklad_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 272
   end
 end

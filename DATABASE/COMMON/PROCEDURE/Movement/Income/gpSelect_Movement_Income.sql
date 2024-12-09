@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalCount_unit TFloat, TotalCount_diff TFloat
              , TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
+             , TotalHeadCount TFloat, TotalLiveWeight TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , isCurrencyUser Boolean 
              , isPriceDiff Boolean
@@ -94,6 +95,9 @@ BEGIN
            , MovementFloat_TotalSummPacker.ValueData     AS TotalSummPacker
            , MovementFloat_TotalSummSpending.ValueData   AS TotalSummSpending
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+
+           , COALESCE (MovementFloat_TotalHeadCount.ValueData, 0)  :: TFloat AS TotalHeadCount
+           , COALESCE (MovementFloat_TotalLiveWeight.ValueData, 0) :: TFloat AS TotalLiveWeight
 
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
            , COALESCE (MovementFloat_ParValue.ValueData, 1) :: TFloat              AS ParValue
@@ -216,6 +220,13 @@ BEGIN
                                     ON MovementFloat_TotalSummSpending.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummSpending.DescId = zc_MovementFloat_TotalSummSpending()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalLiveWeight
+                                    ON MovementFloat_TotalLiveWeight.MovementId = Movement.Id
+                                   AND MovementFloat_TotalLiveWeight.DescId = zc_MovementFloat_TotalLiveWeight()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalHeadCount
+                                    ON MovementFloat_TotalHeadCount.MovementId = Movement.Id
+                                   AND MovementFloat_TotalHeadCount.DescId = zc_MovementFloat_TotalHeadCount()
+
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId = Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
@@ -327,9 +338,10 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 07.12.24         * TotalLiveWeight, TotalHeadCount
  08.10.24         * isPriceDiff
  17.07.24         * CurrencyUser
- 02.12.20         * 
+ 02.12.20         *
  14.04.17         * add Movement_Order
  04.10.16         * add inJuridicalBasisId
  25.06.15         * add inIsErased
