@@ -886,9 +886,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -1567,6 +1564,10 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSklad'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintSticker'
         end
         item
@@ -1592,6 +1593,10 @@ object IncomeForm: TIncomeForm
       Hint = 'Separator'
       Visible = ivAlways
       ShowCaption = False
+    end
+    object bbPrintSklad: TdxBarButton
+      Action = actPrintSklad
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2743,6 +2748,53 @@ object IncomeForm: TIncomeForm
       DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
     end
+    object actPrintSklad: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintSklad
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSklad
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1089#1082#1083#1072#1076')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1089#1082#1083#1072#1076')'
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Income_Sklad'
+      ReportNameParam.Value = 'PrintMovement_Income_Sklad'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3706,8 +3758,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 398
-    Top = 408
+    Left = 382
+    Top = 392
   end
   object GuidesStatus: TdsdGuides
     KeyField = 'Id'
@@ -3981,8 +4033,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 599
-    Top = 224
+    Left = 575
+    Top = 200
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Income'
@@ -4255,8 +4307,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 656
-    Top = 281
+    Left = 648
+    Top = 313
   end
   object spInsertUpdate_IncomeCost: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_IncomeCost'
@@ -4847,5 +4899,29 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 607
     Top = 256
+  end
+  object spSelectPrintSklad: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_Sklad_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 519
+    Top = 208
   end
 end

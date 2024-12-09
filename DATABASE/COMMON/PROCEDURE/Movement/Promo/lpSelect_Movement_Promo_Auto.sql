@@ -54,18 +54,18 @@ end if;
                      , Movement_Promo_View.OperDateStart                                   AS StartPeriod_1
                      , Movement_Promo_View.OperDateStart 
                      + CASE WHEN DATE_TRUNC ('MONTH', Movement_Promo_View.StartPromo) <> DATE_TRUNC ('MONTH', Movement_Promo_View.EndPromo)
-                            THEN DATE_TRUNC ('MONTH', Movement_Promo_View.EndPromo) - Movement_Promo_View.StartPromo + INTERVAL '1 day'
+                            THEN (DATE_TRUNC ('MONTH', Movement_Promo_View.EndPromo)- INTERVAL '1 day') - Movement_Promo_View.StartPromo + INTERVAL '1 day'
                             ELSE Movement_Promo_View.EndPromo - Movement_Promo_View.StartPromo + INTERVAL '1 day'
                        END 
                      - INTERVAL '1 day' AS EndPeriod_1
                      , Movement_Promo_View.OperDateStart
                      + CASE WHEN DATE_TRUNC ('MONTH', Movement_Promo_View.StartPromo) <> DATE_TRUNC ('MONTH', Movement_Promo_View.EndPromo)
-                            THEN DATE_TRUNC ('MONTH', Movement_Promo_View.EndPromo) - Movement_Promo_View.StartPromo + INTERVAL '1 day'
+                            THEN (DATE_TRUNC ('MONTH', Movement_Promo_View.EndPromo)- INTERVAL '1 day') - Movement_Promo_View.StartPromo + INTERVAL '1 day'
                             ELSE Movement_Promo_View.EndPromo - Movement_Promo_View.StartPromo + INTERVAL '1 day'
                        END                    AS StartPeriod_2
                      , Movement_Promo_View.OperDateStart
                      + CASE WHEN DATE_TRUNC ('MONTH', Movement_Promo_View.StartPromo) <> DATE_TRUNC ('MONTH', Movement_Promo_View.EndPromo)
-                            THEN DATE_TRUNC ('MONTH', Movement_Promo_View.EndPromo) - Movement_Promo_View.StartPromo + INTERVAL '1 day'
+                            THEN (DATE_TRUNC ('MONTH', Movement_Promo_View.EndPromo)- INTERVAL '1 day') - Movement_Promo_View.StartPromo + INTERVAL '1 day'
                             ELSE Movement_Promo_View.EndPromo - Movement_Promo_View.StartPromo + INTERVAL '1 day'
                        END
                      + CASE WHEN DATE_TRUNC ('MONTH', Movement_Promo_View.StartPromo) <> DATE_TRUNC ('MONTH', Movement_Promo_View.EndPromo)

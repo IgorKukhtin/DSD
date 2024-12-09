@@ -144,3 +144,58 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpInsertUpdate_MovementItem_Income (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+
+
+
+
+/*
+ --сохранение  zc_MovementFloat_TotalHeadCount и zc_MovementFloat_TotalLiveWeight - за период 
+WITH tmpMovement AS (SELECT Movement.Id
+                          , Movement.InvNumber
+                                FROM Movement
+                                WHERE Movement.OperDate BETWEEN '01.01.2024' AND '31.12.2024'
+                                  AND Movement.DescId     = zc_Movement_Income() 
+                               
+                               )
+          , tmpMI AS  ( SELECT  *
+                        FROM MovementItem
+                        WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)   
+                           AND MovementItem.isErased = FALSE 
+                                                      AND MovementItem.DescId = zc_MI_Master()
+                      )   
+         , tmpMIFloat AS (
+                          SELECT *
+                          FROM MovementItemFloat
+                          WHERE MovementItemFloat.MovementItemId IN  (SELECT DISTINCT tmpMI.Id FROM tmpMI) 
+                           AND  MovementItemFloat.DescId IN (zc_MIFloat_HeadCount(), zc_MIFloat_LiveWeight()) 
+                          )
+, tmp AS (SELECT Movement.Id AS MovementId
+               , Movement.InvNumber  
+               , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))  AS HeadCount
+               , SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) AS LiveWeight
+
+          FROM tmpMovement AS Movement
+               INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+                                    
+
+               LEFT JOIN tmpMIFloat AS MIFloat_HeadCount
+                                           ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                          AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                          AND COALESCE (MIFloat_HeadCount.ValueData, 0) <> 0
+               LEFT JOIN tmpMIFloat AS MIFloat_LiveWeight
+                                           ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                          AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
+                                          AND COALESCE (MIFloat_LiveWeight.ValueData, 0) <> 0
+         --- WHERE Movement.Id = inMovementId
+          GROUP BY Movement.Id 
+         , Movement.InvNumber 
+         HAVING SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) <> 0
+             OR SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) <> 0
+         )
+
+SELECT * --- lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalHeadCount(), tmp.MovementId, tmp.HeadCount)
+                -- Сохранили свойство <Итого живой вес>
+         --, lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalLiveWeight(), tmp.MovementId, tmp.LiveWeight)
+FROM tmp
+
+*/

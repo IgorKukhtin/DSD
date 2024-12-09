@@ -253,6 +253,9 @@ type
     bbPrintDiff: TdxBarButton;
     dxBarSeparator1: TdxBarSeparator;
     spSelectPrint_diff: TdsdStoredProc;
+    spSelectPrintSklad: TdsdStoredProc;
+    actPrintSklad: TdsdPrintAction;
+    bbPrintSklad: TdxBarButton;
   private
   public
   end;
