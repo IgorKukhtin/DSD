@@ -626,7 +626,7 @@ BEGIN
      -- Нашли цену из прихода
      IF vbMovementDescId IN (zc_Movement_ReturnOut())
         AND (inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
-          OR inBranchCode BETWEEN 301 AND 310 -- Dnepr-OBV
+          OR inBranchCode BETWEEN 301 AND 310 -- Dnepr-SPEC
             )
          -- Нагорная Я.Г. + Баранченко И.И.
         AND vbUserId IN (5, 343013, 80372)
@@ -861,6 +861,11 @@ BEGIN
             AND (inBranchCode BETWEEN 301 AND 310 -- Dnepr-SPEC
                 )
          THEN
+             -- Количество у поставщика - из накладной
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), vbId, inAmountPartnerSecond);
+             -- без оплаты да/нет - Кол-во поставщика
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPartnerSecond(), vbId, inIsAmountPartnerSecond);
+
              -- цена поставщика для Сырья - из накладной
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), vbId, inPricePartner);
              -- Цена с НДС да/нет - для цена поставщика
@@ -879,17 +884,15 @@ BEGIN
 
          -- дописали св-во для OBV
          IF vbMovementDescId IN (zc_Movement_Income())
-            AND (inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
-                )
+            AND inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
          THEN
-             -- цена поставщика для Сырья - из накладной
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), vbId, inPricePartner);
              -- Количество у поставщика - из накладной
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), vbId, inAmountPartnerSecond);
-
              -- без оплаты да/нет - Кол-во поставщика
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPartnerSecond(), vbId, inIsAmountPartnerSecond);
 
+             -- цена поставщика для Сырья - из накладной
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), vbId, inPricePartner);
              -- Цена с НДС да/нет - для цена поставщика
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PriceWithVAT(), vbId, inIsPriceWithVAT);
 
