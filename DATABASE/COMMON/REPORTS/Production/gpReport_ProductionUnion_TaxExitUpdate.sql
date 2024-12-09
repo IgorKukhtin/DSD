@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_ProductionUnion_TaxExitUpdate (
     IN inParam          Integer   ,
     IN inIsList         Boolean   , --для печати - данных из грида
     IN inIsListReport   Boolean   , --для печати - данных из грида в отчете
-    IN inIsPartion      Boolean   , --  
+    IN inIsNotPartion   Boolean   , -- Группировать партии (да/нет)
     IN inIsTerm         Boolean   , --
     IN inSession        TVarChar    -- сессия пользователя
 )
@@ -71,7 +71,12 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpGetUserBySession (inSession);
+     IF zfConvert_StringToNumber (inSession) < 0
+     THEN
+         vbUserId:= -1 * zfConvert_StringToNumber (inSession);
+     ELSE
+         vbUserId:= lpGetUserBySession (inSession);
+     END IF;
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
@@ -85,8 +90,9 @@ BEGIN
                            , MIContainer.MovementItemId              AS MovementItemId
                            , MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
-                           --, COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
-                           , CASE WHEN inIsPartion = FALSE THEN COALESCE (CLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
+                             -- Группировать партии (да/нет)
+                           , CASE WHEN inIsNotPartion = FALSE THEN COALESCE (CLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
+                             --
                            , CASE WHEN MIContainer.IsActive = TRUE THEN MIContainer.Amount ELSE 0 END AS Amount
                       FROM MovementItemContainer AS MIContainer
                            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
@@ -121,8 +127,9 @@ BEGIN
                            , MIContainer.MovementItemId              AS MovementItemId
                            , MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
-                           --, COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
-                           , CASE WHEN inIsPartion = FALSE THEN COALESCE (CLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
+                             -- Группировать партии (да/нет)
+                           , CASE WHEN inIsNotPartion = FALSE THEN COALESCE (CLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
+                             --
                            , CASE WHEN MIContainer.IsActive = TRUE THEN MIContainer.Amount ELSE 0 END AS Amount
                       FROM MovementItemContainer AS MIContainer
                            INNER JOIN (SELECT DISTINCT OP.ObjectId AS MovementId FROM Object_Print AS OP WHERE OP.UserId = vbUserId) AS tmpOP ON tmpOP.MovementId = MIContainer.MovementId
@@ -154,7 +161,9 @@ BEGIN
        , tmpMI_WorkProgress_find AS
                      (SELECT MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
-                           , CASE WHEN inIsPartion = FALSE THEN COALESCE (CLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
+                             -- Группировать партии (да/нет)
+                           , CASE WHEN inIsNotPartion = FALSE THEN COALESCE (CLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
+                             --
                            , COALESCE (MIContainer.ObjectIntId_Analyzer, zc_GoodsKind_Basis()) AS GoodsKindId_Complete
                       FROM ObjectDate AS ObjectDate_PartionGoods_Value
                            INNER JOIN ContainerLinkObject AS CLO_PartionGoods
@@ -182,7 +191,7 @@ BEGIN
                         AND inIsList = FALSE
                       GROUP BY MIContainer.ContainerId
                              , MIContainer.ObjectId_Analyzer
-                             , CASE WHEN inIsPartion = FALSE THEN COALESCE (CLO_PartionGoods.ObjectId, 0) ELSE 0 END
+                             , CASE WHEN inIsNotPartion = FALSE THEN COALESCE (CLO_PartionGoods.ObjectId, 0) ELSE 0 END
                              , MIContainer.ObjectIntId_Analyzer
                      )
          -- приходы п/ф ГП - сгруппировать
@@ -440,13 +449,13 @@ BEGIN
                                                                                     , inIsList         := inIsList
                                                                                     , inIsListReport   := inIsListReport
                                                                                       -- !!! всегда по партиям
-                                                                                    , inIsPartion      := FALSE
+                                                                                    , inIsNotPartion   := FALSE
                                                                                     , inIsTerm         := inIsTerm
-                                                                                    , inSession        := inSession
+                                                                                    , inSession        := (-1 * vbUserId) :: TVarChar
                                                                                      ) AS gpReport
                                          WHERE gpReport.isPrint = FALSE
-                                           -- !!! если Группировка
-                                           AND inIsPartion      = TRUE
+                                           -- !!! если Группировка партии = да
+                                           AND inIsNotPartion   = TRUE
                                            -- ???
                                            -- AND inParam > 0
                                            AND inIsTerm = TRUE
@@ -498,7 +507,9 @@ BEGIN
                            , SUM (COALESCE (tmp.Part_main_det,0))       AS Part_main_det
 
                       FROM (-- Производство п/ф ГП
-                            SELECT CASE WHEN inIsPartion = FALSE THEN tmpMI_WorkProgress_in.ContainerId ELSE 0 END AS ContainerId
+                            SELECT -- !!! если Группировка партии = нет
+                                   CASE WHEN inIsNotPartion = FALSE THEN tmpMI_WorkProgress_in.ContainerId ELSE 0 END AS ContainerId
+                                   --
                                  , tmpMI_WorkProgress_in.GoodsId
                                  , tmpMI_WorkProgress_in.PartionGoodsId
                                  , tmpMI_WorkProgress_in.GoodsKindId_Complete
@@ -561,15 +572,18 @@ BEGIN
 
                             -- не показываются эти партии
                             WHERE tmpMI_WorkProgress_in.ContainerId NOT IN (SELECT tmpReport_isPartion_disable.ContainerId FROM tmpReport_isPartion_disable)
+                             --OR vbUserId = 5
 
-                            GROUP BY CASE WHEN inIsPartion = FALSE THEN tmpMI_WorkProgress_in.ContainerId ELSE 0 END
+                            GROUP BY CASE WHEN inIsNotPartion = FALSE THEN tmpMI_WorkProgress_in.ContainerId ELSE 0 END
                                    , tmpMI_WorkProgress_in.GoodsId
                                    , tmpMI_WorkProgress_in.PartionGoodsId
                                    , tmpMI_WorkProgress_in.GoodsKindId_Complete
 
                            UNION ALL
                             -- Приход ГП
-                            SELECT CASE WHEN inIsPartion = FALSE THEN tmpMI_GP_in.ContainerId ELSE 0 END AS ContainerId
+                            SELECT -- !!! если Группировка партии = нет
+                                   CASE WHEN inIsNotPartion = FALSE THEN tmpMI_GP_in.ContainerId ELSE 0 END AS ContainerId
+                                   --
                                  , tmpMI_GP_in.GoodsId
                                  , tmpMI_GP_in.PartionGoodsId
                                  , tmpMI_GP_in.GoodsKindId_Complete
@@ -609,10 +623,13 @@ BEGIN
                                                       AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                             -- не показываются эти партии
                             WHERE tmpMI_GP_in.ContainerId NOT IN (SELECT tmpReport_isPartion_disable.ContainerId FROM tmpReport_isPartion_disable)
+                             --OR vbUserId = 5
 
                            UNION ALL
                             -- Партии п/ф ГП которых нет в производстве
-                            SELECT CASE WHEN inIsPartion = FALSE THEN tmpMI_WorkProgress_find.ContainerId ELSE 0 END AS ContainerId
+                            SELECT -- !!! если Группировка партии = нет
+                                   CASE WHEN inIsNotPartion = FALSE THEN tmpMI_WorkProgress_find.ContainerId ELSE 0 END AS ContainerId
+                                   --
                                  , tmpMI_WorkProgress_find.GoodsId
                                  , tmpMI_WorkProgress_find.PartionGoodsId
                                  , tmpMI_WorkProgress_find.GoodsKindId_Complete
@@ -647,6 +664,7 @@ BEGIN
                             FROM tmpMI_WorkProgress_find
                             -- не показываются эти партии
                             WHERE tmpMI_WorkProgress_find.ContainerId NOT IN (SELECT tmpReport_isPartion_disable.ContainerId FROM tmpReport_isPartion_disable)
+                             --OR vbUserId = 5
 
                            ) AS tmp
                       GROUP BY tmp.ContainerId
@@ -708,7 +726,9 @@ BEGIN
          , (Object_Goods.ValueData || CASE WHEN vbUserId = 5 AND 1=0 THEN ' ' || tmpResult.MovementId ELSE '' END) :: TVarChar  AS GoodsName
          , Object_GoodsKindComplete.Id            AS GoodsKindId_Complete
          , Object_GoodsKindComplete.ValueData     AS GoodsKindName_Complete
-         , Object_Measure.ValueData               AS MeasureName
+         , CASE WHEN vbUserId = 5 THEN (select count(*) from tmpReport_isPartion_disable) :: TVarChar
+                ELSE Object_Measure.ValueData
+           END :: TVarChar AS MeasureName
          , ObjectDate_PartionGoods.ValueData  ::TDateTime  AS PartionGoodsDate
            -- ПЛАН Вес после шприц. (Рецептура)
          , tmpResult.RealDelicShp :: TFloat        AS RealDelicShp
@@ -846,11 +866,17 @@ BEGIN
           , tmpResult.AmountMain_part_det ::TFloat AS AmountMain_part_det --Переходящий П/Ф (расход), кг
           , tmpResult.Part_main_det       ::TFloat AS Part_main_det       -- Доля
 
-          , CASE WHEN inIsPartion = TRUE
+                      
+          , CASE -- !!! если Группировка партии = да
+                 WHEN inIsNotPartion = TRUE
+                      -- здесь уже печатаем все 
                       THEN TRUE
+                 -- если это НЕ термичка
                  WHEN inIsTerm = FALSE
+                      -- печатаем все 
                       THEN TRUE
 
+                 -- здесь уже печатаем НЕ все 
                  WHEN -- Норма отклонения П/Ф (ГП), кг
                       tmpGoodsNormDiff.ValuePF <
                       -- % впрыска отклонение
@@ -891,11 +917,45 @@ BEGIN
           --если печать из грида отчета - ограничиваем через товары
           INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpResult.GoodsId
                              AND COALESCE (tmpGoods.GoodsKindId_Complete,0) = COALESCE (tmpResult.GoodsKindId_Complete,0)
-                             AND (tmpGoods.PartionGoodsDate = ObjectDate_PartionGoods.ValueData ::TDateTime OR inIsPartion = TRUE)
+                             AND (tmpGoods.PartionGoodsDate = ObjectDate_PartionGoods.ValueData ::TDateTime OR inIsNotPartion = TRUE)
 
 
           LEFT JOIN tmpGoodsNormDiff ON tmpGoodsNormDiff.GoodsId = tmpResult.GoodsId
                                     AND COALESCE (tmpGoodsNormDiff.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId_Complete,0)
+
+       WHERE TRUE = CASE -- !!!без проверки!!!
+                         WHEN zfConvert_StringToNumber (inSession) < 0
+                              -- 
+                              THEN TRUE
+
+                         -- !!! если Группировка партии = да
+                         WHEN inIsNotPartion = TRUE
+                              -- здесь уже печатаем все 
+                              THEN TRUE
+                         -- если это НЕ термичка
+                         WHEN inIsTerm = FALSE
+                              -- печатаем все 
+                              THEN TRUE
+        
+                         -- здесь уже печатаем НЕ все 
+                         WHEN -- Норма отклонения П/Ф (ГП), кг
+                              tmpGoodsNormDiff.ValuePF <
+                              -- % впрыска отклонение
+                              ABS (-- ФАКТ
+                                   CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN ((COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0))
+                                                                                               / COALESCE (tmpResult.CuterCount_calc,0)
+                                                                                             - (COALESCE (tmpResult.ValuePF_in_sum ,0) - COALESCE (tmpResult.RealDelicShp_sum,0))
+                                                                                             - (COALESCE (tmpResult.RealDelicShp,0) - COALESCE (tmpResult.TaxLossVPR ,0))
+                                                                                              )
+                                       ELSE 0
+                                  END
+                                  -- МИНУС ПЛАН
+                                  - COALESCE (tmpResult.TaxLossVPR,0)
+                                  )
+                              THEN FALSE
+        
+                         ELSE TRUE
+                    END :: Boolean
     ;
 
 END;
@@ -911,5 +971,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_ProductionUnion_TaxExitUpdate(inStartDate := ('01.07.2024')::TDateTime , inEndDate := ('01.07.2024')::TDateTime , inFromId := 8448 , inToId := 8448 , inParam:=0, inIsList:= FALSE, inIsPartion:= TRUE, inSession := '9457');
---SELECT * FROM gpReport_ProductionUnion_TaxExitUpdate(inStartDate := ('01.07.2024')::TDateTime , inEndDate := ('01.07.2024')::TDateTime , inFromId := 8448 , inToId := 8448 , inParam:=0, inIsList:= FALSE, inIsListReport:= TRUE, inIsPartion:= TRUE, inIsTerm:= FALSE, inSession := '9457');
+-- SELECT * FROM gpReport_ProductionUnion_TaxExitUpdate(inStartDate := ('01.07.2024')::TDateTime , inEndDate := ('01.07.2024')::TDateTime , inFromId := 8448 , inToId := 8448 , inParam:=0, inIsList:= FALSE, inIsNotPartion:= TRUE, inSession := '9457');
+-- SELECT * FROM gpReport_ProductionUnion_TaxExitUpdate(inStartDate := ('17.11.2024')::TDateTime , inEndDate := ('19.11.2024')::TDateTime , inFromId := 8448 , inToId := 8448 , inParam := 0 , inIsList := 'False' , inIsListReport := 'False' , inisPartion := 'True' , inIsTerm := 'True', inSession := '5');
