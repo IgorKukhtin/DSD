@@ -155,7 +155,8 @@ BEGIN
          SELECT
              Movement.Id
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
-           , CASE WHEN COALESCE (vbInvNumberPartner,'') <> '' THEN vbInvNumberPartner ELSE Movement.InvNumber END InvNumber
+          -- , CASE WHEN COALESCE (vbInvNumberPartner,'') <> '' THEN vbInvNumberPartner ELSE Movement.InvNumber END AS InvNumber
+           , Movement.InvNumber AS InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
