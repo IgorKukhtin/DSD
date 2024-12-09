@@ -360,7 +360,7 @@ BEGIN
                       AND MovementItemFloat.DescId IN (zc_MIFloat_CountForPrice()
                                                      , zc_MIFloat_AmountPacker()
                                                      --, zc_MIFloat_AmountPartnerSecond()
-                                                     --, zc_MIFloat_AmountPartner()
+                                                     , zc_MIFloat_AmountPartner()
                                                      --, zc_MIFloat_PricePartner()
                                                      , zc_MIFloat_Price()
                                                      )
