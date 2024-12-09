@@ -450,7 +450,7 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
             Width = 104
           end
           object AmountReal: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Caption = '***'#1055#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountReal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -462,7 +462,7 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
             Width = 71
           end
           object AmountRealWeight: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
+            Caption = '***'#1055#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
             DataBinding.FieldName = 'AmountRealWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -473,7 +473,7 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
             Width = 79
           end
           object AmountReal_calc: TcxGridDBColumn
-            Caption = '***'#1055#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Caption = #1055#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountReal_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -485,7 +485,7 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
             Width = 71
           end
           object AmountRealWeight_calc: TcxGridDBColumn
-            Caption = '***'#1055#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
+            Caption = #1055#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
             DataBinding.FieldName = 'AmountRealWeight_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -496,7 +496,7 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
             Width = 79
           end
           object AmountRetIn_calc: TcxGridDBColumn
-            Caption = '***'#1042#1086#1079#1074#1088#1072#1090' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountRetIn_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -508,7 +508,7 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
             Width = 71
           end
           object AmountRetInWeight_calc: TcxGridDBColumn
-            Caption = '***'#1042#1086#1079#1074#1088#1072#1090' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1074' '#1076#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
             DataBinding.FieldName = 'AmountRetInWeight_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
