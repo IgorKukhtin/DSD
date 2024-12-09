@@ -115,11 +115,15 @@ BEGIN
    -- Результат
    RETURN QUERY
 
-     WITH tmpUser_Member AS (SELECT ObjectLink_User_Member.*
+     WITH tmpUser_Member AS (SELECT ObjectLink_User_Member.DescId
+                                  , ObjectLink_User_Member.ChildObjectId
+                                  , MAX (ObjectLink_User_Member.ObjectId) AS ObjectId
                              FROM ObjectLink AS ObjectLink_User_Member
                                   JOIN Object AS Object_User ON Object_User.Id       = ObjectLink_User_Member.ObjectId
                                                             AND Object_User.isErased = FALSE
                              WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                             GROUP BY ObjectLink_User_Member.DescId
+                                    , ObjectLink_User_Member.ChildObjectId
                             )
 
      SELECT
