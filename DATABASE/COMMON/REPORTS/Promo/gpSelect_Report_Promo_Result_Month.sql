@@ -474,10 +474,10 @@ BEGIN
           , MI_PromoGoods.AmountSale          :: TFloat -- продажа - возврат 
           , MI_PromoGoods.AmountSaleWeight    :: TFloat -- продажа - возврат 
           
-          , CAST (CASE WHEN COALESCE (MI_PromoGoods.AmountRealWeight, 0) = 0 AND MI_PromoGoods.AmountSaleWeight > 0
+          , CAST (CASE WHEN COALESCE (tmpSaleReturn.AmountRealWeight,0) = 0 AND MI_PromoGoods.AmountSaleWeight > 0
                             THEN 100
-                       WHEN COALESCE (MI_PromoGoods.AmountRealWeight, 0) <> 0
-                            THEN (MI_PromoGoods.AmountSaleWeight / MI_PromoGoods.AmountRealWeight - 1) *100
+                       WHEN COALESCE (tmpSaleReturn.AmountRealWeight, 0) <> 0
+                            THEN (MI_PromoGoods.AmountSaleWeight / tmpSaleReturn.AmountRealWeight - 1) *100
                        WHEN MI_PromoGoods.AmountSaleWeight < 0
                             THEN -100
                        ELSE 0
@@ -507,7 +507,7 @@ BEGIN
 
           , MI_PromoGoods.PriceIn1            --себестоимость факт,  за кг
           , (MI_PromoGoods.Price_Diff * COALESCE (MI_PromoGoods.AmountSaleWeight, 0))    :: TFloat AS Profit_Virt
-          , (MI_PromoGoods.Price * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.AmountReal, 0) ELSE COALESCE (MI_PromoGoods.AmountRealWeight, 0) END)         :: TFloat AS SummReal
+          , (MI_PromoGoods.Price * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (tmpSaleReturn.AmountReal, 0) ELSE COALESCE (tmpSaleReturn.AmountRealWeight, 0) END)         :: TFloat AS SummReal
           , (MI_PromoGoods.PriceWithVAT * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.AmountSale, 0) ELSE COALESCE (MI_PromoGoods.AmountSaleWeight, 0) END ) :: TFloat AS SummPromo
           , MI_PromoGoods.ContractCondition                                              :: TFloat AS ContractCondition      -- Бонус сети, %
           
