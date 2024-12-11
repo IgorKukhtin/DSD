@@ -1651,6 +1651,20 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         end>
       isShowModal = True
     end
+    object actOpenUnitPeresortForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1089#1086#1088#1090' '#1087#1086' '#1089#1082#1083#1072#1076#1072#1084
+      Hint = #1040#1074#1090#1086#1087#1077#1088#1077#1089#1086#1088#1090' '#1087#1086' '#1089#1082#1083#1072#1076#1072#1084
+      ImageIndex = 25
+      FormName = 'TUnitPeresortForm'
+      FormNameParam.Value = 'TUnitPeresortForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
     object GoodsKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1881,6 +1895,18 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenUnitPeresortForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -1926,6 +1952,10 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
     end
     object bbUpdate_PackOrder: TdxBarButton
       Action = actUpdate_PackOrder
+      Category = 0
+    end
+    object bbOpenUnitPeresortForm: TdxBarButton
+      Action = actOpenUnitPeresortForm
       Category = 0
     end
   end
