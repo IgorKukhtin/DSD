@@ -297,6 +297,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPaidKindinId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAccountId'
         Value = Null
         Component = GuidesAccount
@@ -316,14 +324,6 @@
         Name = 'inBeneficiarysBankId'
         Value = Null
         Component = dsdBeneficiarysBankGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindinId'
-        Value = Null
-        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
