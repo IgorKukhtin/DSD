@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BankAccount(
  INOUT ioId	                 Integer,       -- ключ объекта < Счет>
@@ -10,8 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BankAccount(
     IN inName                TVarChar,      -- Название объекта <Счет>
     IN inJuridicalId         Integer,       -- Юр. лицо
     IN inBankId              Integer,       -- Банк
-    IN inCurrencyId          Integer,       -- Валюта
-
+    IN inCurrencyId          Integer,       -- Валюта 
+    IN inPaidKindId          Integer,       -- Форма оплаты
     IN inAccountId           Integer,       -- Счет баланс
     IN inCorrespondentBankId Integer,       -- Банк корреспондент для счета
     IN inBeneficiarysBankId  Integer,       -- Банк бенефициара
@@ -49,6 +50,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Juridical(), ioId, inJuridicalId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Bank(), ioId, inBankId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Currency(), ioId, inCurrencyId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_PaidKind(), ioId, inPaidKindId);
    --
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Account(), ioId, inAccountId);
    
@@ -69,6 +71,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.12.24         * PaidKind
  04.07.18         * add inAccountId
  10.10.14                                                       *
  08.05.14                                        * add lpCheckRight

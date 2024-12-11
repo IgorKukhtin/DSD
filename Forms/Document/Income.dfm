@@ -26,6 +26,7 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = -5
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -169,8 +170,8 @@ object IncomeForm: TIncomeForm
       Width = 137
     end
     object cxLabel10: TcxLabel
-      Left = 603
-      Top = 5
+      Left = 601
+      Top = 0
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
-  ClientHeight = 321
+  ClientHeight = 315
   ClientWidth = 666
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,13 +24,13 @@
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 48
+    Top = 51
     Cursor = crDrag
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   end
   object cxButton1: TcxButton
-    Left = 368
-    Top = 284
+    Left = 376
+    Top = 276
     Width = 75
     Height = 25
     Action = dsdExecStoredProc
@@ -39,8 +39,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 512
-    Top = 284
+    Left = 520
+    Top = 276
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -51,7 +51,7 @@
   end
   object Код: TcxLabel
     Left = 40
-    Top = 3
+    Top = 5
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
@@ -60,26 +60,26 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 145
   end
   object cxLabel3: TcxLabel
     Left = 40
-    Top = 103
+    Top = 95
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object cxLabel2: TcxLabel
     Left = 40
-    Top = 159
+    Top = 147
     Caption = #1041#1072#1085#1082
   end
   object cxLabel4: TcxLabel
     Left = 40
-    Top = 215
+    Top = 203
     Caption = #1042#1072#1083#1102#1090#1072
   end
   object edJuridical: TcxButtonEdit
     Left = 40
-    Top = 128
+    Top = 120
     Properties.Buttons = <
       item
         Default = True
@@ -90,7 +90,7 @@
   end
   object edBank: TcxButtonEdit
     Left = 40
-    Top = 182
+    Top = 170
     Properties.Buttons = <
       item
         Default = True
@@ -101,7 +101,7 @@
   end
   object edCurrency: TcxButtonEdit
     Left = 40
-    Top = 238
+    Top = 226
     Properties.Buttons = <
       item
         Default = True
@@ -112,19 +112,19 @@
   end
   object edCorrespondentAccount: TcxTextEdit
     Left = 344
-    Top = 238
+    Top = 226
     TabOrder = 12
     Width = 273
   end
   object cxLabel5: TcxLabel
     Left = 344
-    Top = 215
+    Top = 203
     Cursor = crDrag
     Caption = #1057#1095#1077#1090' '#1074' '#1073#1072#1085#1082#1077' - '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1077
   end
   object cxLabel6: TcxLabel
     Left = 344
-    Top = 48
+    Top = 51
     Cursor = crDrag
     Caption = #1057#1095#1077#1090' '#1073#1072#1085#1082#1072' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
   end
@@ -136,24 +136,24 @@
   end
   object cxLabel7: TcxLabel
     Left = 344
-    Top = 105
+    Top = 97
     Cursor = crDrag
     Caption = #1057#1095#1077#1090' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
   end
   object edBeneficiarysAccount: TcxTextEdit
     Left = 344
-    Top = 128
+    Top = 120
     TabOrder = 17
     Width = 273
   end
   object cxLabel8: TcxLabel
     Left = 344
-    Top = 159
+    Top = 147
     Caption = #1041#1072#1085#1082' '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090' '#1076#1083#1103' '#1089#1095#1077#1090#1072
   end
   object edCorrespondentBank: TcxButtonEdit
     Left = 344
-    Top = 182
+    Top = 170
     Properties.Buttons = <
       item
         Default = True
@@ -164,7 +164,7 @@
   end
   object cxLabel9: TcxLabel
     Left = 344
-    Top = 3
+    Top = 5
     Caption = #1041#1072#1085#1082' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
   end
   object edBeneficiarysBank: TcxButtonEdit
@@ -180,13 +180,13 @@
   end
   object cxLabel10: TcxLabel
     Left = 40
-    Top = 267
+    Top = 255
     Cursor = crDrag
     Caption = #1057#1095#1077#1090' ('#1073#1072#1083#1072#1085#1089')'
   end
   object edAccount: TcxButtonEdit
     Left = 40
-    Top = 290
+    Top = 278
     Properties.Buttons = <
       item
         Default = True
@@ -195,6 +195,23 @@
     Properties.ReadOnly = True
     TabOrder = 23
     Width = 273
+  end
+  object cxLabel11: TcxLabel
+    Left = 201
+    Top = 5
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+  end
+  object edPaidKind: TcxButtonEdit
+    Left = 201
+    Top = 26
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 25
+    Width = 112
   end
   object ActionList: TActionList
     Left = 296
@@ -304,6 +321,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPaidKindinId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inCorrespondentAccount'
         Value = Null
         Component = edCorrespondentAccount
@@ -328,8 +353,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 48
+    Left = 168
+    Top = 136
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -339,8 +364,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 232
-    Top = 8
+    Left = 112
+    Top = 72
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_BankAccount'
@@ -478,10 +503,25 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 176
-    Top = 88
+    Top = 80
   end
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -508,7 +548,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 288
-    Top = 125
+    Top = 117
   end
   object dsdBankGuides: TdsdGuides
     KeyField = 'Id'
@@ -535,7 +575,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 312
-    Top = 173
+    Top = 161
   end
   object dsdCurrencyGuides: TdsdGuides
     KeyField = 'Id'
@@ -562,11 +602,11 @@
         MultiSelectSeparator = ','
       end>
     Left = 312
-    Top = 229
+    Top = 217
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 176
-    Top = 200
+    Top = 188
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -580,7 +620,7 @@
       end>
     StorageName = 'cxPropertiesStore'
     Left = 248
-    Top = 88
+    Top = 80
   end
   object dsdCorrBankGuides: TdsdGuides
     KeyField = 'Id'
@@ -607,7 +647,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 616
-    Top = 165
+    Top = 153
   end
   object dsdBeneficiarysBankGuides: TdsdGuides
     KeyField = 'Id'
@@ -661,6 +701,36 @@
         MultiSelectSeparator = ','
       end>
     Left = 200
-    Top = 269
+    Top = 257
+  end
+  object GuidesPaidKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 248
+    Top = 28
   end
 end
