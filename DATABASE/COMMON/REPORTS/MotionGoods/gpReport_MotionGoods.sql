@@ -507,7 +507,7 @@ BEGIN
                                               WHEN inIsOperDate_Partion = FALSE AND tmpMIContainer_all.LocationId = zc_Unit_RK() 
                                                    THEN ''
  
-                                              ELSE COALESCE (Object_PartionGoods.ValueData, '')
+                                              ELSE COALESCE (Object_PartionGoods.ValueData, '') || CASE WHEN Object_GoodsKind_complete.ValueData <> '' THEN ' ' || Object_GoodsKind_complete.ValueData ELSE '' END
                                          END :: TVarChar AS PartionGoodsName
  
 
@@ -890,7 +890,7 @@ BEGIN
                                                WHEN inIsOperDate_Partion = FALSE AND tmpMIContainer_all.LocationId = zc_Unit_RK() 
                                                     THEN ''
 
-                                               ELSE COALESCE (Object_PartionGoods.ValueData, '')
+                                               ELSE COALESCE (Object_PartionGoods.ValueData, '') || CASE WHEN Object_GoodsKind_complete.ValueData <> '' THEN ' ' || Object_GoodsKind_complete.ValueData ELSE '' END
                                           END 
   
                                         , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN Object_PartionGoods.ValueData ELSE NULL END
