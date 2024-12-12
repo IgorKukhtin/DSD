@@ -646,6 +646,8 @@ else*/
                       LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                                     ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                                    AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                   -- !!! отключил
+                                                   AND 1=0
 
                       -- Не упаковывать
                       LEFT JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = MovementItem.ObjectId
@@ -1450,7 +1452,8 @@ end if;
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Нар. АССОРТИ 300 г/шт
                                                       )
-                   AND MIBoolean_Calculated.MovementItemId IS NULL
+                   -- !!! отключил
+                   --AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
                  -- сохранили протокол
                  PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
@@ -1463,7 +1466,8 @@ end if;
                                                          AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
                                                          AND MIBoolean_Calculated.ValueData      = FALSE
                        WHERE _tmpMI_Child.AmountNextResult <> 0
-                         AND MIBoolean_Calculated.MovementItemId IS NULL
+                         -- !!! отключил
+                         --AND MIBoolean_Calculated.MovementItemId IS NULL
                       ) AS tmp
                 ;
 
@@ -1479,7 +1483,8 @@ end if;
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Нар. АССОРТИ 300 г/шт
                                                       )
-                   AND MIBoolean_Calculated.MovementItemId IS NULL
+                   -- !!! отключил
+                   --AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
                  -- сохранили протокол
                  PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
@@ -1492,7 +1497,8 @@ end if;
                                                          AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
                                                          AND MIBoolean_Calculated.ValueData      = FALSE
                        WHERE _tmpMI_Child.AmountNextResult <> 0
-                         AND MIBoolean_Calculated.MovementItemId IS NULL
+                         -- !!! отключил
+                         -- AND MIBoolean_Calculated.MovementItemId IS NULL
                       ) AS tmp
                 ;
 
@@ -1716,7 +1722,8 @@ end if;
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Нар. АССОРТИ 300 г/шт
                                                       )
-                   AND MIBoolean_Calculated.MovementItemId IS NULL
+                   -- !!! отключил
+                   --AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
                  -- сохранили протокол
                  PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
@@ -1729,7 +1736,8 @@ end if;
                                                          AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
                                                          AND MIBoolean_Calculated.ValueData      = FALSE
                        WHERE _tmpMI_Child.AmountNextSecondResult <> 0
-                         AND MIBoolean_Calculated.MovementItemId IS NULL
+                         -- !!! отключил
+                         --AND MIBoolean_Calculated.MovementItemId IS NULL
                       ) AS tmp
                 ;
 
@@ -1745,7 +1753,8 @@ end if;
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Нар. АССОРТИ 300 г/шт
                                                       )
-                   AND MIBoolean_Calculated.MovementItemId IS NULL
+                   -- !!! отключил
+                   --AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
                  -- сохранили протокол
                  PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
@@ -1758,7 +1767,8 @@ end if;
                                                          AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
                                                          AND MIBoolean_Calculated.ValueData      = FALSE
                        WHERE _tmpMI_Child.AmountNextSecondResult <> 0
-                         AND MIBoolean_Calculated.MovementItemId IS NULL
+                         -- !!! отключил
+                         --AND MIBoolean_Calculated.MovementItemId IS NULL
                       ) AS tmp
                 ;
 

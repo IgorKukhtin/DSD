@@ -84,7 +84,8 @@ BEGIN
             --, zfCalc_SummWVAT_4 (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0), MovementFloat_VATPercent.ValueData) ::TFloat Summà_WVAT
             --, (zfCalc_SummWVAT_4 (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0),MovementFloat_VATPercent.ValueData) -  (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))) ::TFloat Summà_VAT 
 
-            , MIString_Comment.ValueData      AS Comment
+            --, CASE WHEN vbUserId = 5 THEN LENGTH (MIString_Comment.ValueData) :: TVarChar ELSE MIString_Comment.ValueData END :: TVarChar  AS Comment
+            , LEFT (MIString_Comment.ValueData, 125) :: TVarChar AS Comment
             , ROW_NUMBER() OVER (ORDER BY MovementItem.Id ASC) :: Integer AS Ord
             , MovementItem.isErased           AS isErased
             
@@ -118,6 +119,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = MovementItem.ObjectId
                                   AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+
+-- where vbUserId <> 5 -- or Movement.Id = 6187
+-- or Movement.Id <> 6163
           ;
 
 END;

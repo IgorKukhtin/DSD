@@ -1757,6 +1757,53 @@ object UtilPrintForm: TUtilPrintForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_Income_bySklad: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Income_bySklad
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Income_bySklad
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1089#1082#1083#1072#1076')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1089#1082#1083#1072#1076')'
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Income_Sklad'
+      ReportNameParam.Value = 'PrintMovement_Income_Sklad'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint_ReturnOut: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -2746,8 +2793,8 @@ object UtilPrintForm: TUtilPrintForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 162
-    Top = 322
+    Left = 74
+    Top = 336
   end
   object spGetReportName_ReturnIn: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
@@ -2779,7 +2826,7 @@ object UtilPrintForm: TUtilPrintForm
       end>
     PackSize = 1
     Left = 72
-    Top = 304
+    Top = 320
   end
   object EDI: TEDI
     ConnectionParams.Host.Value = Null
@@ -2797,8 +2844,8 @@ object UtilPrintForm: TUtilPrintForm
     ConnectionParams.Password.ComponentItem = 'Password'
     ConnectionParams.Password.DataType = ftString
     ConnectionParams.Password.MultiSelectSeparator = ','
-    Left = 312
-    Top = 264
+    Left = 304
+    Top = 280
   end
   object spUpdateEdiDesadv: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_Edi'
@@ -2846,7 +2893,7 @@ object UtilPrintForm: TUtilPrintForm
       end>
     PackSize = 1
     Left = 384
-    Top = 296
+    Top = 288
   end
   object spUpdateEdiOrdspr: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_Edi'
@@ -2869,8 +2916,8 @@ object UtilPrintForm: TUtilPrintForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 320
-    Top = 320
+    Left = 288
+    Top = 264
   end
   object spGetDefaultEDI: TdsdStoredProc
     StoredProcName = 'gpGetDefaultEDI'
@@ -3354,8 +3401,8 @@ object UtilPrintForm: TUtilPrintForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 63
-    Top = 368
+    Left = 55
+    Top = 392
   end
   object PrintItemsTwoCDS: TClientDataSet
     Aggregates = <>
@@ -3703,8 +3750,8 @@ object UtilPrintForm: TUtilPrintForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 154
-    Top = 338
+    Left = 45
+    Top = 306
   end
   object spSelectPrintSticker_Ceh: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_WeighingProduction_PrintBarCode'
@@ -3953,7 +4000,31 @@ object UtilPrintForm: TUtilPrintForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 280
+    Left = 256
     Top = 337
+  end
+  object spSelectPrint_Income_bySklad: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_Sklad_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 236
+    Top = 322
   end
 end

@@ -167,6 +167,8 @@ type
     macPrint_TTN_final: TMultiAction;
     spSelectPrint_Income_byPartner: TdsdStoredProc;
     actPrint_Income_byPartner: TdsdPrintAction;
+    spSelectPrint_Income_bySklad: TdsdStoredProc;
+    actPrint_Income_bySklad: TdsdPrintAction;
   private
   end;
 
@@ -190,6 +192,7 @@ type
   function Print_ReportGoodsBalance (StartDate,EndDate:TDateTime; UnitId : Integer; UnitName : String; isGoodsKind, isPartionGoods:Boolean):Boolean;
   function Print_Income_diff (MovementId: Integer):Boolean;
   function Print_Income_Price_diff (MovementId: Integer):Boolean;
+  function Print_Movement_Income_Sklad(MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
   procedure SendEDI_OrdSpr (MovementId: Integer);
@@ -304,6 +307,16 @@ begin
      //
      UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
      UtilPrintForm.actPrint_Income_Price_diff.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Movement_Income_Sklad(MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+     UtilPrintForm.actPrint_Income_bySklad.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_ReturnOut (MovementId: Integer);

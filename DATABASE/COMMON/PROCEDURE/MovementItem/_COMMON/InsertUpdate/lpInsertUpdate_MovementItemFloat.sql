@@ -24,7 +24,7 @@ BEGIN
      END IF;
 
 
-     IF inDescId = zc_MIFloat_SummCardSecondDiff() AND inValueData > 20
+     IF inDescId = zc_MIFloat_SummCardSecondDiff() AND ABS (inValueData) > 20
      THEN
          RAISE EXCEPTION 'Ошибка.Значение для округления = <%> не может быть больше 20.', inValueData;
      END IF;
