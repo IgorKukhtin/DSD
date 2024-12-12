@@ -1380,6 +1380,10 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Bank(), 'zc_ObjectFloat_GoodsNormDiff_ValueGP', 'Норма отклонения ГП, кг' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsNormDiff_ValueGP');
 
 
+
+
+
+
  
 --!!! АПТЕКА
 

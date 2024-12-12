@@ -13,8 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                AccountId Integer, AccountName TVarChar,
                CorrespondentBankId Integer, CorrespondentBankName TVarChar,
                BeneficiarysBankId Integer, BeneficiarysBankName TVarChar,
-               CorrespondentAccount TVarChar, BeneficiarysBankAccount TVarChar, BeneficiarysAccount TVarChar
-
+               CorrespondentAccount TVarChar, BeneficiarysBankAccount TVarChar, BeneficiarysAccount TVarChar,
+               PaidKindId Integer, PaidKindName TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -45,7 +45,10 @@ BEGIN
            , CAST ('' as TVarChar) AS BeneficiarysBankName
            , CAST ('' as TVarChar) AS CorrespondentAccount
            , CAST ('' as TVarChar) AS BeneficiarysBankAccount
-           , CAST ('' as TVarChar) AS BeneficiarysAccount;
+           , CAST ('' as TVarChar) AS BeneficiarysAccount
+           , CAST (0 as Integer)   AS PaidKindId
+           , CAST ('' as TVarChar) AS PaidKindName
+           ;
    ELSE
        RETURN QUERY
        SELECT
@@ -68,7 +71,8 @@ BEGIN
            , OS_BankAccount_CorrespondentAccount.ValueData      AS CorrespondentAccount
            , OS_BankAccount_BeneficiarysBankAccount.ValueData   AS BeneficiarysBankAccount
            , OS_BankAccount_BeneficiarysAccount.ValueData       AS BeneficiarysAccount
-
+           , Object_PaidKind.Id                                 AS PaidKindId
+           , Object_PaidKind.ValueData                          AS PaidKindName
        FROM Object
         LEFT JOIN ObjectLink AS BankAccount_Juridical
                              ON BankAccount_Juridical.ObjectId = Object.Id
@@ -97,6 +101,11 @@ BEGIN
                              ON ObjectLink_BankAccount_Account.ObjectId = Object.Id
                             AND ObjectLink_BankAccount_Account.DescId = zc_ObjectLink_BankAccount_Account()
         LEFT JOIN Object AS Object_Account ON Object_Account.Id = ObjectLink_BankAccount_Account.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_BankAccount_PaidKind
+                             ON ObjectLink_BankAccount_PaidKind.ObjectId = Object.Id
+                            AND ObjectLink_BankAccount_PaidKind.DescId = zc_ObjectLink_BankAccount_PaidKind()
+        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_BankAccount_PaidKind.ChildObjectId
         
         LEFT JOIN ObjectString AS OS_BankAccount_CorrespondentAccount
                                ON OS_BankAccount_CorrespondentAccount.ObjectId = Object.Id
@@ -121,8 +130,9 @@ ALTER FUNCTION gpGet_Object_BankAccount(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 11.12.24         * PaidKind
  10.10.14                                                       *
- 10.06.13          *
+ 10.06.13         *
  05.06.13
 
 */

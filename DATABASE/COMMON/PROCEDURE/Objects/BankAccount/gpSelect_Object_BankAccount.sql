@@ -11,9 +11,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                AccountId Integer, AccountName TVarChar,
                CorrespondentBankId Integer, CorrespondentBankName TVarChar,
                BeneficiarysBankId Integer, BeneficiarysBankName TVarChar,
-               CorrespondentAccount TVarChar, BeneficiarysBankAccount TVarChar, BeneficiarysAccount TVarChar, 
+               CorrespondentAccount TVarChar, BeneficiarysBankAccount TVarChar, BeneficiarysAccount TVarChar,
+               PaidKindId Integer, PaidKindName TVarChar, 
                isIrna Boolean
-               ) AS
+               ) AS                                                                                       
+               
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -40,6 +42,9 @@ $BODY$BEGIN
            , OS_BankAccount_BeneficiarysBankAccount.ValueData   AS BeneficiarysBankAccount
            , OS_BankAccount_BeneficiarysAccount.ValueData       AS BeneficiarysAccount 
 
+           , Object_PaidKind.Id                                 AS PaidKindId
+           , Object_PaidKind.ValueData                          AS PaidKindName
+
            , Object_BankAccount_View.isIrna          :: Boolean AS isIrna
 
      FROM Object_BankAccount_View
@@ -61,6 +66,11 @@ $BODY$BEGIN
                              ON ObjectLink_BankAccount_Account.ObjectId = Object_BankAccount_View.Id
                             AND ObjectLink_BankAccount_Account.DescId = zc_ObjectLink_BankAccount_Account()
         LEFT JOIN Object AS Object_Account ON Object_Account.Id = ObjectLink_BankAccount_Account.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_BankAccount_PaidKind
+                             ON ObjectLink_BankAccount_PaidKind.ObjectId = Object_BankAccount_View.Id
+                            AND ObjectLink_BankAccount_PaidKind.DescId = zc_ObjectLink_BankAccount_PaidKind()
+        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_BankAccount_PaidKind.ChildObjectId
         
         LEFT JOIN ObjectString AS OS_BankAccount_CorrespondentAccount
                                ON OS_BankAccount_CorrespondentAccount.ObjectId = Object_BankAccount_View.Id
@@ -87,7 +97,8 @@ ALTER FUNCTION gpSelect_Object_BankAccount(TVarChar)
   OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------*/                                                                      Имя поля	Значение
+Значение	UA553052990000026006031011656
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.

@@ -78,6 +78,8 @@ type
     bbUpdate_PackOrder: TdxBarButton;
     GoodsSubDate: TcxGridDBColumn;
     isNotDate: TcxGridDBColumn;
+    actOpenUnitPeresortForm: TdsdOpenForm;
+    bbOpenUnitPeresortForm: TdxBarButton;
   private
     { Private declarations }
   public
