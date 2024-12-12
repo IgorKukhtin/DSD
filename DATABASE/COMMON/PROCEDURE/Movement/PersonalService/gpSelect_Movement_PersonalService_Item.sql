@@ -126,7 +126,7 @@ BEGIN
      END IF;
 
      ---
-     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPersonalServiceList_check'))
+     /*IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPersonalServiceList_check'))
      THEN
           -- Оптимизация
           CREATE TEMP TABLE tmpPersonalServiceList_check ON COMMIT DROP AS 
@@ -173,11 +173,57 @@ BEGIN
             WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
               AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin())
            ;
-     END IF;
+     END IF;*/
      
 
      RETURN QUERY
-     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+     WITH 
+        tmpPersonalServiceList_check
+        AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM ObjectLink AS ObjectLink_User_Member
+                 INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
+                                       ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                      AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                 INNER JOIN Object AS Object_MemberPersonalServiceList
+                                   ON Object_MemberPersonalServiceList.Id       = ObjectLink_MemberPersonalServiceList.ObjectId
+                                  AND Object_MemberPersonalServiceList.isErased = FALSE
+                 LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                        AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
+                 LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                      ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                     AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+                 LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                               AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
+                                                                 OR ObjectBoolean.ValueData          = TRUE)
+            WHERE ObjectLink_User_Member.ObjectId = vbUserId
+              AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+           UNION
+            SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM ObjectLink AS ObjectLink_User_Member
+                 INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                       ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                      AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
+                 LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                               AND Object_PersonalServiceList.Id     = ObjectLink_PersonalServiceList_Member.ObjectId
+            WHERE ObjectLink_User_Member.ObjectId = vbUserId
+              AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+           UNION
+            -- Админ и другие видят ВСЕХ
+            SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM Object AS Object_PersonalServiceList
+            WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+              AND (vbIsUserAll = TRUE
+                OR vbUserId = 80373 -- Прохорова С.А.
+                  )
+           UNION
+            -- Админ и другие видят ВСЕХ
+            SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM Object AS Object_PersonalServiceList
+            WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+              AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin())
+           )
+
+, tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
@@ -1305,4 +1351,4 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2015', inEndDate:= '01.02.2015', inJuridicalBasisId:= 0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2024')::TDateTime , inEndDate := ('01.12.2024')::TDateTime , inJuridicalBasisId := 9399 , inPersonalServiceId:= 0, inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
+-- SELECT * FROM gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2024')::TDateTime , inEndDate := ('01.12.2024')::TDateTime , inJuridicalBasisId := 9399 , inPersonalServiceListId:= 0, inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');

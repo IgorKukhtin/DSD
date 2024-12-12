@@ -64,7 +64,12 @@ BEGIN
          WITH -- Курсы валют для расчетов
               tmpCurrencyList_all AS (SELECT Movement.OperDate
                                            , Movement.Id AS MovementId
+                                             -- Категория сайт
+                                           , COALESCE (MLO_SiteTag.ObjectId, 0) AS SiteTagId
                                       FROM Movement
+                                           LEFT JOIN MovementLinkObject AS MLO_SiteTag
+                                                                        ON MLO_SiteTag.MovementId = Movement.Id
+                                                                       AND MLO_SiteTag.DescId     = zc_MovementLinkObject_SiteTag()
                                       WHERE Movement.DescId   = zc_Movement_CurrencyList()
                                         AND Movement.StatusId = zc_Enum_Status_Complete()
                                         -- на один день раньше
@@ -77,8 +82,10 @@ BEGIN
                                        , MovementItem.Amount            AS CurrencyValue
                                        , MIFloat_ParValue.ValueData     AS ParValue
                                        , MILinkObject_PaidKind.ObjectId AS PaidKindId
+                                         -- Категория сайт
+                                       , tmpCurrencyList_all.SiteTagId
                                          -- № п/п
-                                       , ROW_NUMBER() OVER (PARTITION BY MILinkObject_Currency.ObjectId, MILinkObject_PaidKind.ObjectId ORDER BY tmpCurrencyList_all.OperDate DESC) AS Ord
+                                       , ROW_NUMBER() OVER (PARTITION BY MILinkObject_Currency.ObjectId, MILinkObject_PaidKind.ObjectId, tmpCurrencyList_all.SiteTagId ORDER BY tmpCurrencyList_all.OperDate DESC) AS Ord
                                   FROM tmpCurrencyList_all
                                        LEFT JOIN tmpCurrencyMI AS MovementItem ON MovementItem.MovementId = tmpCurrencyList_all.MovementId
                                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -92,6 +99,7 @@ BEGIN
                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                                                         ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                                        AND MILinkObject_PaidKind.DescId         = zc_MILinkObject_PaidKind()
+                                       
                                   WHERE tmpCurrencyList_all.OperDate < inOperDate
                                  )
               --
@@ -108,6 +116,8 @@ BEGIN
                                , ObjectLink_Contract_Juridical.ChildObjectId    AS JuridicalId
                                , MLO_Currency.ObjectId                          AS CurrencyId
                                , ObjectLink_Contract_PaidKind.ChildObjectId     AS PaidKindId
+                                 -- Категория сайт
+                               , COALESCE (MLO_SiteTag.ObjectId, 0)             AS SiteTagId
 
                                , MovementItem.Id                                AS MovementItemId
                                , MovementItem.ObjectId                          AS GoodsId
@@ -175,6 +185,10 @@ BEGIN
                                                              ON MLO_Contract.MovementId = Movement.Id
                                                             AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
                                                             AND (MLO_Contract.ObjectId  = inContractId OR COALESCE (inContractId, 0) = 0)
+                               LEFT JOIN MovementLinkObject AS MLO_SiteTag
+                                                            ON MLO_SiteTag.MovementId = Movement.Id
+                                                           AND MLO_SiteTag.DescId     = zc_MovementLinkObject_SiteTag()
+
                                LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                          ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                                         AND MovementBoolean_PriceWithVAT.DescId     = zc_MovementBoolean_PriceWithVAT()
@@ -221,6 +235,7 @@ BEGIN
 
                                LEFT JOIN tmpCurrencyList ON tmpCurrencyList.CurrencyId = MLO_Currency.ObjectId
                                                         AND tmpCurrencyList.PaidKindId = ObjectLink_Contract_PaidKind.ChildObjectId
+                                                        AND tmpCurrencyList.SiteTagId  = COALESCE (MLO_SiteTag.ObjectId, 0)
                                                         AND tmpCurrencyList.Ord        = 1
 
                           WHERE Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '36 MONTH') AND inOperDate

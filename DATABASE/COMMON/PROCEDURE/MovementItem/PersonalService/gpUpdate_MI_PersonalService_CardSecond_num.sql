@@ -1361,15 +1361,19 @@ END IF;
              -- сохранили свойство <Карта БН (округление) - 2ф>
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondDiff(), _tmpMI.MovementItemId
                                              , 
-                                               CASE WHEN 1=1 THEN
+                                               CASE WHEN 1=0 AND (_tmpMI.SummCard_1 > 0 OR _tmpMI.SummCard_2 > 0 OR _tmpMI.SummCard_3 > 0)
+                                               THEN
+
                                                ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro -- - _tmpMI.SummCard_1
                                              + ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro -- - _tmpMI.SummCard_2
                                              + ROUND (_tmpMI.SummCard_3 / vbKoeff_ro, 0) * vbKoeff_ro -- - _tmpMI.SummCard_3
                                              - _tmpMI.SummCardSecondRecalc
+
                                                ELSE
                                                ROUND (_tmpMI.SummCard_1 / vbKoeff_ro, 0) * vbKoeff_ro - _tmpMI.SummCard_1
                                              + ROUND (_tmpMI.SummCard_2 / vbKoeff_ro, 0) * vbKoeff_ro - _tmpMI.SummCard_2
                                              + ROUND (_tmpMI.SummCard_3 / vbKoeff_ro, 0) * vbKoeff_ro - _tmpMI.SummCard_3
+
                                              END
                                               )
 

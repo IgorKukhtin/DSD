@@ -14,7 +14,7 @@ DECLARE
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользовател€ на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_OH_PriceListItem_zero());
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem()); -- zc_Enum_Process_InsertUpdate_OH_PriceListItem_zero
 
 
    -- если не назначена роль <ѕрайс-лист - изменение в любом прайсе>
