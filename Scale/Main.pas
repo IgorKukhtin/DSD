@@ -347,6 +347,7 @@ type
 
     function Save_Movement_all:Boolean;
     function Print_Movement_afterSave:Boolean;
+    function Print_Movement_Income_afterSave:Boolean;
     function GetParams_MovementDesc(BarCode: String):Boolean;
     function GetParams_Goods (isRetail : Boolean; BarCode : String; isModeSave : Boolean) : Boolean;
     function GetPanelPartnerCaption(execParams:TParams):String;
@@ -595,7 +596,11 @@ begin
           //Print and Create Quality + Transport + Tax
           if (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
           and(ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = FALSE)
-          then Print_Movement_afterSave;
+          then Print_Movement_afterSave
+          else if (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
+               and(ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE)
+               and(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+               then Print_Movement_Income_afterSave;
           //
           // если надо печатать Акт т.к. есть отклонение или цены или кол-ва
           if (ParamsMovement.ParamByName('isFind_diff_inf').AsBoolean=TRUE)
@@ -635,6 +640,20 @@ begin
              actWeighingPartner_ActDiffF.Execute;
      end;
 
+end;
+//------------------------------------------------------------------------------------------------
+function TMainForm.Print_Movement_Income_afterSave:Boolean;
+begin
+     Result:=true;
+     //
+     //Movement
+     if DialogPrintForm.cbPrintMovement.Checked
+     then Result:=Print_Movement_Income_Sklad(ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                            , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                                            , ParamsMovement.ParamByName('MovementId').AsInteger //
+                                            , StrToInt(DialogPrintForm.PrintCountEdit.Text) // myPrintCount
+                                            , DialogPrintForm.cbPrintPreview.Checked        // isPreview
+                                             );
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.Print_Movement_afterSave:Boolean;
