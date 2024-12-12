@@ -562,7 +562,8 @@ BEGIN
 
         LEFT JOIN tmpDateUnloading ON tmpDateUnloading.Id = tmpData.Id
 
-;
+-- where vbUserId <> 5 or tmpData.Id = 6187
+   ;
 
 END;
 $BODY$
