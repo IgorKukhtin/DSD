@@ -83,8 +83,10 @@ BEGIN
    -- выбираем товары согласно статьям
    INSERT INTO _tmpGoods (GoodsId, Value)
         SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
-            , CASE WHEN (Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_1,0) OR Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_1, 0))
+            , CASE -- inInfoMoneyId_1 = 8963 -- Тушенка
+                   WHEN (Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_1,0) OR Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_1, 0))
                         THEN 1
+                   -- inInfoMoneyDestinationId_2 = 8879 -- Мясное сырье
                    WHEN (Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_2,0) OR Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_2, 0))
                         THEN 2
                    ELSE 0
@@ -106,7 +108,9 @@ BEGIN
 
         FROM MovementItemContainer AS MIContainer
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                                -- Тушенка
                                 AND _tmpGoods.Value = 1
+
         WHERE MIContainer.OperDate BETWEEN vbStartDate1 AND vbEndDate
           AND MIContainer.MovementDescId = zc_Movement_Sale()
           AND MIContainer.DescId = zc_MIContainer_Count()
@@ -114,7 +118,8 @@ BEGIN
                , MIContainer.ObjectId_analyzer
                , MIContainer.ObjectExtId_analyzer
                , MIContainer.ObjectIntId_Analyzer
-        HAVING SUM (-1 * MIContainer.Amount ) <> 0
+        --HAVING SUM (-1 * MIContainer.Amount ) <> 0
+
       UNION
         -- Продажи для 2 - 3 месяца
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
@@ -124,7 +129,9 @@ BEGIN
              , SUM (-1 * MIContainer.Amount )     AS Amount
         FROM MovementItemContainer AS MIContainer
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                                -- Мясное сырье
                                 AND _tmpGoods.Value = 2
+
         WHERE MIContainer.OperDate BETWEEN vbStartDate2 AND vbEndDate
           AND MIContainer.MovementDescId = zc_Movement_Sale()
           AND MIContainer.DescId = zc_MIContainer_Count()
@@ -132,8 +139,9 @@ BEGIN
                , MIContainer.ObjectId_analyzer
                , MIContainer.ObjectExtId_analyzer
                , MIContainer.ObjectIntId_Analyzer
-        HAVING SUM (-1 * MIContainer.Amount ) <> 0
+        --HAVING SUM (-1 * MIContainer.Amount ) <> 0
       UNION
+
         -- Продажи для 3 - 6 месяцев - ВСЕ Остальные, кто не 1 и не 2
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
@@ -150,7 +158,8 @@ BEGIN
                , MIContainer.ObjectId_analyzer
                , MIContainer.ObjectExtId_analyzer
                , MIContainer.ObjectIntId_Analyzer
-        HAVING SUM (-1 * MIContainer.Amount ) <> 0;
+        --HAVING SUM (-1 * MIContainer.Amount ) <> 0
+       ;
 
      --!!!!!!!!!!!!!!!!!!!!!
      ANALYZE _tmpMIContainer;
@@ -184,7 +193,7 @@ BEGIN
                                      , _tmpMIContainer.PartnerId
                                      , ContainerLO_Juridical.ObjectId
                                      , ContainerLO_Contract.ObjectId
-                              HAVING SUM (_tmpMIContainer.Amount) <> 0
+                            --HAVING SUM (_tmpMIContainer.Amount) <> 0
                              ) AS tmp
                         ORDER BY tmp.Juridical
                                , tmp.ContractId
@@ -213,12 +222,13 @@ BEGIN
                       , tmpData_all.PartnerId
                       , tmpData_all.Juridical
                       , tmpData_all.ContractId
-              HAVING SUM (tmpData_all.Amount) <> 0
+              --HAVING SUM (tmpData_all.Amount) <> 0
              ) AS tmpData
              LEFT JOIN tmpData_all ON tmpData_all.GoodsId   = tmpData.GoodsId
                                   AND tmpData_all.PartnerId = tmpData.PartnerId
                                   AND tmpData_all.Ord       = 1
-        WHERE tmpData.Amount <> 0;
+        --WHERE tmpData.Amount <> 0
+       ;
 
 
     --!!!!!!!!!!!!!!!!!!!!!
