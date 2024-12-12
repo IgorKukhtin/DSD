@@ -1177,6 +1177,10 @@ BEGIN
                                                                                    WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = TRUE THEN zc_MovementLinkObject_From()
                                                                                    WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = FALSE THEN zc_MovementLinkObject_To()
                                                                               END
+                        LEFT JOIN tmpMLO_By AS MovementLinkObject_By_to
+                                            ON MovementLinkObject_By_to.MovementId = tmpMIContainer_group.MovementId
+                                           AND MovementLinkObject_By_to.DescId     = zc_MovementLinkObject_To()
+                                           AND Movement.DescId = zc_Movement_Loss()
                         LEFT JOIN tmpMLO_By AS MovementLinkObject_PaidKind
                                             ON MovementLinkObject_PaidKind.MovementId = tmpMIContainer_group.MovementId
                                            AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -1224,7 +1228,7 @@ BEGIN
                                                                    AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
                         LEFT JOIN Object AS Object_Location ON Object_Location.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN ObjectLink_Car_Unit.ChildObjectId ELSE tmpMIContainer_group.LocationId END
                         LEFT JOIN Object AS Object_Car ON Object_Car.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN tmpMIContainer_group.LocationId END
-                        LEFT JOIN Object AS Object_By ON Object_By.Id = CASE WHEN CLO_Object_By.ObjectId > 0 THEN CLO_Object_By.ObjectId ELSE MovementLinkObject_By.ObjectId END
+                        LEFT JOIN Object AS Object_By ON Object_By.Id = CASE WHEN CLO_Object_By.ObjectId > 0 THEN CLO_Object_By.ObjectId ELSE COALESCE (MovementLinkObject_By.ObjectId, MovementLinkObject_By_to.ObjectId) END
                         LEFT JOIN ObjectDesc AS ObjectDesc_By ON ObjectDesc_By.Id = Object_By.DescId
                         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
                         LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
