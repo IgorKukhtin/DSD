@@ -385,6 +385,12 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
           'Date')
       end
       item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
