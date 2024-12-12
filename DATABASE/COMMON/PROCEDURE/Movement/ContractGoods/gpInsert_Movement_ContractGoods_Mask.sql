@@ -45,6 +45,8 @@ BEGIN
                                                       , inPrice              := tmp.Price
                                                       , inChangePrice        := tmp.ChangePrice
                                                       , inChangePercent      := tmp.ChangePercent
+                                                      , inCountForAmount     := tmp.CountForAmount
+                                                      , inCountForPrice      := tmp.CountForPrice
                                                       , inComment            := '' :: TVarChar
                                                       , inSession            := inSession
                                                        ) 
