@@ -319,7 +319,35 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
       Width = 233
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Top = 328
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = edStartDate_mov
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = edEndDate_mov
+        Properties.Strings = (
+          'Date')
+      end>
+  end
   inherited ActionList: TActionList
+    Left = 143
+    Top = 343
     object actRefreshIsMovement: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       MoveParams = <>
@@ -511,7 +539,7 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
           Name = 'inOperDate'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'OperDate'
+          ComponentItem = 'OperDate_Movement'
           MultiSelectSeparator = ','
         end
         item
@@ -609,8 +637,8 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
     Top = 192
   end
   inherited BarManager: TdxBarManager
-    Left = 144
-    Top = 208
+    Left = 176
+    Top = 240
     DockControlHeights = (
       0
       0
@@ -680,18 +708,6 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
     Top = 176
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end>
     Left = 464
     Top = 192
   end
@@ -747,6 +763,14 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
         Name = 'EndDate'
         Value = Null
         Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_Movement'
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
