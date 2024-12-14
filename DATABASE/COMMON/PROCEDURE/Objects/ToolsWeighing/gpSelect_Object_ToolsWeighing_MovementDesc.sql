@@ -603,7 +603,10 @@ BEGIN
             , '' :: TVarChar                      AS ReturnKindName
             , 0                                   AS GoodsKindWeighingGroupId
             , 0                                   AS ColorGridValue
-            , CASE WHEN tmp.isReWork        = TRUE
+            , CASE WHEN tmp.isReWork        = TRUE AND inBranchCode BETWEEN 201 AND 203
+                        THEN 'œ≈–≈—Œ–“€'
+
+                   WHEN tmp.isReWork        = TRUE
                         THEN 'œ≈–≈–¿¡Œ“ ¿'
 
                    WHEN tmp.OrderById = 71000

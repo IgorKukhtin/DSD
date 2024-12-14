@@ -119,7 +119,27 @@ END IF;
                           
                                                      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                    )*/
+                                                    )
+     , tmpMovContainer AS (SELECT DISTINCT Movement.*
+                           FROM Movement
+                                INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
+                                                                         AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                                                                         AND MLO_From.ObjectId   = zc_Unit_RK()
+                                INNER JOIN MovementItem  ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId     IN (zc_MI_Master(), zc_MI_Child())
+                                                        AND MovementItem.isErased   = FALSE
+                                                        AND MovementItem.ObjectId   IN (3169    -- 534  Ó‚·‡Ò‡ —/  ” –¿ØÕ—‹ ¿ ‚/„ “Ã ¿¯‡Ì
+                                                                                      , 658379  -- 944  Ó‚·‡Ò‡ —/  ¡–¿”Õÿ¬≈…√—‹ ¿ ‚/¥ “Ã ’≥Ú ÔÓ‰ÛÍÚ
+                                                                                      , 426182  -- 2230  Ó‚·‡Ò‡ —/  «≈–Õ»—“¿ ‚/¥ 370 „/¯Ú “Ã ¿Î‡Ì
+                                                                                      , 2651    -- 173  Ó‚·‡Ò‡ —/  «≈–Õ»—“¿ ‚/¥ “Ã ¿Î‡Ì
+                                                                                      , 7836    -- 275  Ó‚·‡Ò‡ —/  —≈–¬≈À¿“ ‚/¥ “Ã œÂÏ≥ˇ
+                                                                                       )
+
+                           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND Movement.DescId   IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_Inventory(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Sale())
+                          )
+*/
    /*, tmpGoods AS (select GoodsId, GoodsKindId
                   from gpSelect_Object_GoodsByGoodsKind( inSession := '5') AS gpSelect
                   where (GoodsKindName ilike 'Ì‡. 200' or GoodsKindName ilike 'Ì‡. 180' or GoodsKindName ilike 'Ì‡. 150')
