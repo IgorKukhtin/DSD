@@ -28,7 +28,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_PeriodClose(
     IN inCloseDate_store      TDateTime ,     -- Период закрыт до (для кол-во склад)
     IN inSession              TVarChar        -- сессия пользователя
 )
-  RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbInterval Interval;
@@ -83,7 +84,7 @@ BEGIN
 
 
    -- 
-   IF NOT EXISTS (SELECT 1 FROM PeriodClose WHERE Id = ioId AND Name = inName)
+   IF NOT EXISTS (SELECT 1 FROM PeriodClose WHERE Id = ioId AND Name = inName) AND ioId > 0
    THEN
        RAISE EXCEPTION 'Ошибка.Нет Прав изменять название.';
    END IF;

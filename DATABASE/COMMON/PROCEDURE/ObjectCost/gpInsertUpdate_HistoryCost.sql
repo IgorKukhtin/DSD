@@ -3161,7 +3161,7 @@ RAISE INFO ' start INSERT INTO _tmpHistoryCost_PartionCell .<%>', CLOCK_TIMESTAM
 -- return;
          -- для партионного учета
          IF inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
-         AND 1=0
+         AND 1=1
          THEN
  RAISE INFO ' start-1 создание ContainerSumm .<%>', CLOCK_TIMESTAMP();
 
