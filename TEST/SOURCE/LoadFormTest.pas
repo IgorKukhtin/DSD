@@ -3492,6 +3492,11 @@ end;
 
 procedure TLoadFormTest.LoadReportSystemFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Protocol_ChangeStatusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Protocol_ChangeStatusForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Protocol_ChangeStatusDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Protocol_ChangeStatusDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MIProtocolUpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MIProtocolUpdateForm');

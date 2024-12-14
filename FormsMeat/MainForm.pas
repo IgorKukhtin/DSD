@@ -1531,6 +1531,8 @@ type
     miSiteTag: TMenuItem;
     actUnitPeresort: TdsdOpenForm;
     miUnitPeresort: TMenuItem;
+    actReport_Protocol_ChangeStatus: TdsdOpenForm;
+    miReport_Protocol_ChangeStatus: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

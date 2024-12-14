@@ -1556,7 +1556,9 @@ uses
   Report_ContractGoodsMovementDialog in '..\..\Forms\Report\Report_ContractGoodsMovementDialog.pas' {Report_ContractGoodsMovementDialogForm: TParentForm},
   SiteTagEdit in '..\..\Forms\Guides\SiteTagEdit.pas' {SiteTagEditForm: TParentForm},
   SiteTag in '..\..\Forms\Guides\SiteTag.pas' {SiteTagForm: TParentForm},
-  UnitPeresort in '..\..\Forms\Guides\UnitPeresort.pas' {UnitPeresortForm: TParentForm};
+  UnitPeresort in '..\..\Forms\Guides\UnitPeresort.pas' {UnitPeresortForm: TParentForm},
+  Report_Protocol_ChangeStatus in '..\..\Forms\Report\Report_Protocol_ChangeStatus.pas' {Report_Protocol_ChangeStatusForm: TParentForm},
+  Report_Protocol_ChangeStatusDialog in '..\..\Forms\Report\Report_Protocol_ChangeStatusDialog.pas' {Report_Protocol_ChangeStatusDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
