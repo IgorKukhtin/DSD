@@ -64,6 +64,21 @@ perform gpUpdateMI_OrderInternal_Amount_toPACK_NEW(
 else*/
 
 
+IF vbUserId = 5 AND inIsByDay = TRUE
+   AND 1=0
+THEN
+    /*RAISE EXCEPTION 'Ошибка.test ok <%>  <%>  <%> <%> <%>  '
+             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 310035796    AND MIB.DescId = zc_MIBoolean_Calculated())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 310035796   AND MIF.DescId = zc_MIFloat_AmountPack())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 310035796    AND MIF.DescId = zc_MIFloat_AmountPackSecond())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 310035796    AND MIF.DescId = zc_MIFloat_AmountPackNext())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 310035796    AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
+              ;*/
+
+    perform lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(), 310035796, 0);
+end if;
+
+
     -- на сколько дней делаем вид НАРЕЗКА
     vbdaycount_GoodsKind_8333  := 5;
     vbdaycount_GoodsKind_8333_3:= 3;
@@ -1946,16 +1961,16 @@ end if;
               ;
 
 IF vbUserId = 5 AND inIsByDay = TRUE
-   AND 1=0
+   AND 1=1
 THEN
     RAISE EXCEPTION 'Ошибка.test ok <%>  <%>  <%> <%> <%>    <%>   <%>'
-             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 224364726    AND MIB.DescId = zc_MIBoolean_Calculated())
-             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 224364726   AND MIF.DescId = zc_MIFloat_AmountPack())
-             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 224364726    AND MIF.DescId = zc_MIFloat_AmountPackSecond())
-             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 224364726    AND MIF.DescId = zc_MIFloat_AmountPackNext())
-             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 224364726    AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
-             , (SELECT _tmpMI_Child.AmountResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 224364726)
-             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 224364726)
+             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 310035796    AND MIB.DescId = zc_MIBoolean_Calculated())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 310035796   AND MIF.DescId = zc_MIFloat_AmountPack())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 310035796    AND MIF.DescId = zc_MIFloat_AmountPackSecond())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 310035796    AND MIF.DescId = zc_MIFloat_AmountPackNext())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 310035796    AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
+             , (SELECT _tmpMI_Child.AmountResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 310035796)
+             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 310035796)
               ;
 END IF;
 

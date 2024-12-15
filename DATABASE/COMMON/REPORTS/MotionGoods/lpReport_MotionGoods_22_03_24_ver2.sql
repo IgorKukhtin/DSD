@@ -1927,6 +1927,8 @@ end if;
        , tmpErr_replace AS (SELECT DISTINCT tmpMIContainer.AccountId, tmpMIContainer.ContainerId_count
                             FROM tmpMIContainer
                             WHERE tmpMIContainer.AccountId = 9086 -- 20101 Продукция
+                              AND inUserId <> 5
+                            --AND 1=0
                            )
 
          -- Результат

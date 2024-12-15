@@ -19,6 +19,7 @@ BEGIN
      SELECT Movement.OperDate, Movement.DescId INTO vbOperDate, vbMovementDescId FROM Movement WHERE Movement.Id = inMovementId;
 
      -- if inUserId = 5 then return; end if;
+     -- if  inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer then return; end if;
 
      -- Временно захардкодил - !!!только для этого склада!!!
      IF inUnitId = zc_Unit_RK() -- Склад Реализации

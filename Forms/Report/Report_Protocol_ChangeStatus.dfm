@@ -247,7 +247,7 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 179
-      EditValue = 42614d
+      EditValue = 45292d
       Properties.SaveTime = False
       ExplicitLeft = 179
       ExplicitWidth = 80
@@ -256,7 +256,7 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
     inherited deEnd: TcxDateEdit
       Left = 179
       Top = 32
-      EditValue = 42614d
+      EditValue = 45292d
       Properties.SaveTime = False
       ExplicitLeft = 179
       ExplicitTop = 32
@@ -285,7 +285,7 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
     object edStartDate_mov: TcxDateEdit
       Left = 444
       Top = 5
-      EditValue = 42675d
+      EditValue = 45292d
       Properties.ShowTime = False
       TabOrder = 5
       Width = 80
@@ -298,23 +298,23 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
     object edEndDate_mov: TcxDateEdit
       Left = 444
       Top = 32
-      EditValue = 42675d
+      EditValue = 45292d
       Properties.ShowTime = False
       TabOrder = 7
       Width = 80
     end
     object cbisComplete: TcxCheckBox
       Left = 530
-      Top = 5
-      Caption = #1048#1079#1084#1077#1085#1080#1083#1089#1103' '#1089' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1087#1088#1086#1074#1077#1076#1077#1085
+      Top = 32
+      Caption = #1048#1079#1084#1077#1085#1080#1103' '#1089' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1087#1088#1086#1074#1077#1076#1077#1085
       State = cbsChecked
       TabOrder = 8
       Width = 233
     end
     object cbisNotComplete: TcxCheckBox
       Left = 530
-      Top = 32
-      Caption = #1048#1079#1084#1077#1085#1080#1083#1089#1103' '#1089' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+      Top = 5
+      Caption = #1048#1079#1084#1077#1085#1080#1103' '#1089' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
       TabOrder = 9
       Width = 233
     end

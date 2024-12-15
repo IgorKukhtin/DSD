@@ -61,8 +61,8 @@ BEGIN
                               FROM MovementProtocol
                                    INNER JOIN Movement ON Movement.Id = MovementProtocol.MovementId 
                                                       AND Movement.OperDate BETWEEN inStartDate_mov AND inEndDate_mov
-                              WHERE MovementProtocol.OperDate BETWEEN inStartDate_pr AND inEndDate_pr
-                               AND MovementProtocol.UserId <> zc_Enum_Process_Auto_PrimeCost()
+                              WHERE MovementProtocol.OperDate >= inStartDate_pr AND MovementProtocol.OperDate < inEndDate_pr + INTERVAL '1 DAY'
+                                AND MovementProtocol.UserId <> zc_Enum_Process_Auto_PrimeCost()
                               ) AS MovementProtocol
                         )
 
