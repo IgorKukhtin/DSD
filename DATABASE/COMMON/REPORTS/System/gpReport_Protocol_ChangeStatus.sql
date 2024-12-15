@@ -71,17 +71,17 @@ BEGIN
                                                                   , zc_Enum_Process_Auto_PartionDate(), zc_Enum_Process_Auto_PartionClose()
                                                                   --, zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_ReturnIn(), zc_Enum_Process_Auto_Medoc()
                                                                    )
--- and MovementProtocol.MovementId = 29945271 
+-- and MovementProtocol.MovementId = 29897397 
                               ) AS MovementProtocol
                         )	
 
-   , tmpMovProtocol_all AS (SELECT MovementProtocol.UserId
-                                 , MovementProtocol.IsInsert
-                                 , MovementProtocol.OperDate            AS OperDate_Protocol
-                                 , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Статус"]                       /@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS StatusName
+   , tmpMovProtocol_all AS (SELECT tmpMovProtocol.UserId
+                                 , tmpMovProtocol.IsInsert
+                                 , tmpMovProtocol.OperDate_Protocol
+                                 , tmpMovProtocol.StatusName
                                    -- от первого изменения к последним
-                                 , ROW_NUMBER() OVER(PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate ASC)  AS Ord_asc
-                                 , ROW_NUMBER() OVER(PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate DESC) AS Ord_desc
+                                 , ROW_NUMBER() OVER(PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.OperDate_Protocol ASC,  CASE WHEN tmpMovProtocol.StatusName ILIKE 'Проведен' THEN 1 ELSE 0 END ASC)  AS Ord_asc
+                                 , ROW_NUMBER() OVER(PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.OperDate_Protocol DESC, CASE WHEN tmpMovProtocol.StatusName ILIKE 'Проведен' THEN 1 ELSE 0 END DESC) AS Ord_desc
 
                                  , tmpMovProtocol.MovementId
                                  , tmpMovProtocol.StatusId_Movement
@@ -89,19 +89,31 @@ BEGIN
                                  , tmpMovProtocol.Invnumber_Movement
                                  , tmpMovProtocol.DescId_Movement
 
-                            FROM (SELECT DISTINCT tmpMovProtocol.MovementId
-                                                , tmpMovProtocol.StatusId_Movement
-                                                , tmpMovProtocol.OperDate_Movement
-                                                , tmpMovProtocol.Invnumber_Movement
-                                                , tmpMovProtocol.DescId_Movement
-                                  FROM tmpMovProtocol
+                            FROM (SELECT MovementProtocol.UserId
+                                       , MovementProtocol.IsInsert
+                                       , MovementProtocol.OperDate            AS OperDate_Protocol
+                                       , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Статус"]                       /@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS StatusName
+      
+                                       , tmpMovProtocol.MovementId
+                                       , tmpMovProtocol.StatusId_Movement
+                                       , tmpMovProtocol.OperDate_Movement
+                                       , tmpMovProtocol.Invnumber_Movement
+                                       , tmpMovProtocol.DescId_Movement
+      
+                                  FROM (SELECT DISTINCT tmpMovProtocol.MovementId
+                                                      , tmpMovProtocol.StatusId_Movement
+                                                      , tmpMovProtocol.OperDate_Movement
+                                                      , tmpMovProtocol.Invnumber_Movement
+                                                      , tmpMovProtocol.DescId_Movement
+                                        FROM tmpMovProtocol
+                                       ) AS tmpMovProtocol
+                                       JOIN MovementProtocol ON MovementProtocol.MovementId = tmpMovProtocol.MovementId
+                                                            AND MovementProtocol.UserId NOT IN (zc_Enum_Process_Auto_PrimeCost(), zc_Enum_Process_Auto_ReComplete()
+                                                                                              , zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Defroster()
+                                                                                              , zc_Enum_Process_Auto_PartionDate(), zc_Enum_Process_Auto_PartionClose()
+                                                                                              --, zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_ReturnIn(), zc_Enum_Process_Auto_Medoc()
+                                                                                               )
                                  ) AS tmpMovProtocol
-                                 JOIN MovementProtocol ON MovementProtocol.MovementId = tmpMovProtocol.MovementId
-                                                      AND MovementProtocol.UserId NOT IN (zc_Enum_Process_Auto_PrimeCost(), zc_Enum_Process_Auto_ReComplete()
-                                                                                        , zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Defroster()
-                                                                                        , zc_Enum_Process_Auto_PartionDate(), zc_Enum_Process_Auto_PartionClose()
-                                                                                        --, zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_ReturnIn(), zc_Enum_Process_Auto_Medoc()
-                                                                                         )
                            )
 
      -- только статус Проведен
