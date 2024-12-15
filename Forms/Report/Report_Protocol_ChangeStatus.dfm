@@ -555,6 +555,12 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
           Component = MasterCDS
           ComponentItem = 'MovementId'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
