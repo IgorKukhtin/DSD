@@ -6,6 +6,7 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -64
   ExplicitWidth = 1045
   ExplicitHeight = 591
   PixelsPerInch = 96
@@ -163,22 +164,28 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object StatusName_2: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' 2'
+            DataBinding.FieldName = 'StatusName_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object OperDate_Protocol_1: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1086#1090#1086#1082#1086#1083' ('#1089#1090#1072#1090#1091#1089' 1)'
             DataBinding.FieldName = 'OperDate_Protocol_1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 100
           end
-          object UserCode_1: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1086#1083#1100#1079'. ('#1089#1090#1072#1090#1091#1089' 1)'
-            DataBinding.FieldName = 'UserCode_1'
-            Visible = False
+          object OperDate_Protocol_2: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1090#1086#1082#1086#1083' ('#1089#1090#1072#1090#1091#1089' 2)'
+            DataBinding.FieldName = 'OperDate_Protocol_2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 57
+            Width = 100
           end
           object UserName_1: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1090#1072#1090#1091#1089' 1)'
@@ -188,38 +195,6 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
             Options.Editing = False
             Width = 134
           end
-          object StatusName_2: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1091#1089' 2'
-            DataBinding.FieldName = 'StatusName_2'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object MemberName_1: TcxGridDBColumn
-            Caption = #1060#1048#1054' ('#1089#1090#1072#1090#1091#1089' 1)'
-            DataBinding.FieldName = 'MemberName_1'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 136
-          end
-          object OperDate_Protocol_2: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1090#1086#1082#1086#1083' ('#1089#1090#1072#1090#1091#1089' 2)'
-            DataBinding.FieldName = 'OperDate_Protocol_2'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object UserCode_2: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1086#1083#1100#1079'. ('#1089#1090#1072#1090#1091#1089' 2)'
-            DataBinding.FieldName = 'UserCode_2'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 57
-          end
           object UserName_2: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1090#1072#1090#1091#1089' 2)'
             DataBinding.FieldName = 'UserName_2'
@@ -228,9 +203,19 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
             Options.Editing = False
             Width = 110
           end
+          object MemberName_1: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1089#1090#1072#1090#1091#1089' 1)'
+            DataBinding.FieldName = 'MemberName_1'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 136
+          end
           object MemberName_2: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1089#1090#1072#1090#1091#1089' 2)'
             DataBinding.FieldName = 'MemberName_2'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -303,18 +288,18 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
       TabOrder = 7
       Width = 80
     end
-    object cbisComplete: TcxCheckBox
+    object cbIsComplete_yes: TcxCheckBox
       Left = 530
-      Top = 32
-      Caption = #1048#1079#1084#1077#1085#1080#1103' '#1089' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1087#1088#1086#1074#1077#1076#1077#1085
+      Top = 5
+      Caption = #1048#1079#1084#1077#1085#1080#1103' '#1074' '#1089#1090#1072#1090#1091#1089' '#1055#1088#1086#1074#1077#1076#1077#1085
       State = cbsChecked
       TabOrder = 8
       Width = 233
     end
-    object cbisNotComplete: TcxCheckBox
+    object cbIsComplete_from: TcxCheckBox
       Left = 530
-      Top = 5
-      Caption = #1048#1079#1084#1077#1085#1080#1103' '#1089' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+      Top = 32
+      Caption = #1048#1079#1084#1077#1085#1080#1103' '#1089#1086' '#1089#1090#1072#1090#1091#1089#1072' '#1055#1088#1086#1074#1077#1076#1077#1085
       TabOrder = 9
       Width = 233
     end
@@ -406,17 +391,17 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isComplete'
+          Name = 'inIsComplete_yes'
           Value = Null
-          Component = cbisComplete
+          Component = cbIsComplete_yes
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isNotComplete'
+          Name = 'inIsComplete_from'
           Value = Null
-          Component = cbisNotComplete
+          Component = cbIsComplete_from
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -618,17 +603,17 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisComplete'
+        Name = 'inIsComplete_yes'
         Value = True
-        Component = cbisComplete
+        Component = cbIsComplete_yes
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisNotComplete'
+        Name = 'inIsComplete_from'
         Value = False
-        Component = cbisNotComplete
+        Component = cbIsComplete_from
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -712,68 +697,7 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
     Top = 192
   end
   object FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'BranchId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BranchName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UserId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UserName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isDay'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StartDate'
-        Value = Null
-        Component = deStart
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'EndDate'
-        Value = Null
-        Component = deEnd
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperDate_Movement'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     Left = 182
     Top = 184
   end

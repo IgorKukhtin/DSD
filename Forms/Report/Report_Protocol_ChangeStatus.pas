@@ -29,7 +29,6 @@ uses
 
 type
   TReport_Protocol_ChangeStatusForm = class(TAncestorReportForm)
-    UserCode_1: TcxGridDBColumn;
     UserName_1: TcxGridDBColumn;
     MemberName_1: TcxGridDBColumn;
     OperDate_Protocol_1: TcxGridDBColumn;
@@ -53,8 +52,8 @@ type
     edStartDate_mov: TcxDateEdit;
     cxLabel3: TcxLabel;
     edEndDate_mov: TcxDateEdit;
-    cbisComplete: TcxCheckBox;
-    cbisNotComplete: TcxCheckBox;
+    cbIsComplete_yes: TcxCheckBox;
+    cbIsComplete_from: TcxCheckBox;
   private
     { Private declarations }
   public

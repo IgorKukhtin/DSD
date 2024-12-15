@@ -29,12 +29,12 @@ type
     cxLabel2: TcxLabel;
     deEnd: TcxDateEdit;
     PeriodChoice: TPeriodChoice;
-    cbisComplete: TcxCheckBox;
+    cbIsComplete_yes: TcxCheckBox;
     cxLabel3: TcxLabel;
     edEndDate_mov: TcxDateEdit;
     edStartDate_mov: TcxDateEdit;
     cxLabel4: TcxLabel;
-    cbisNotComplete: TcxCheckBox;
+    cbIsComplete_from: TcxCheckBox;
   private
     { Private declarations }
   public

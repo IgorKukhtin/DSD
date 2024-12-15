@@ -3,13 +3,13 @@
 DROP FUNCTION IF EXISTS gpReport_Protocol_ChangeStatus (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Protocol_ChangeStatus(
-    IN inStartDate_pr   Tdatetime,
-    IN inEndDate_pr     Tdatetime,
-    IN inStartDate_mov  Tdatetime,
-    IN inEndDate_mov    Tdatetime,
-    IN inisComplete     Boolean   , -- смена статуса на Проведен
-    IN inisNotComplete  Boolean   , -- смена статуса на НЕ Проведен    
-    IN inSession        TVarChar    -- сессия пользователя
+    IN inStartDate_pr     Tdatetime,
+    IN inEndDate_pr       Tdatetime,
+    IN inStartDate_mov    Tdatetime,
+    IN inEndDate_mov      Tdatetime,
+    IN inIsComplete_yes    Boolean   , -- Измения в статус Проведен
+    IN inIsComplete_from  Boolean   , -- Измения со статуса Проведен
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId          Integer
              , OperDate_Movement   TDateTime
@@ -48,7 +48,8 @@ BEGIN
                              , MovementProtocol.Invnumber_Movement
                              , MovementProtocol.DescId_Movement
                              , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Статус"]                       /@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS StatusName
-                             , ROW_NUMBER() OVER(PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate_Protocol) AS Ord
+                               -- от первого изменения к последним
+                             , ROW_NUMBER() OVER(PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate_Protocol ASC) AS Ord
                         FROM (SELECT MovementProtocol.UserId              AS UserId
                                    , MovementProtocol.IsInsert            AS IsInsert
                                    , MovementProtocol.OperDate            AS OperDate_Protocol
@@ -61,13 +62,61 @@ BEGIN
                               FROM MovementProtocol
                                    INNER JOIN Movement ON Movement.Id = MovementProtocol.MovementId 
                                                       AND Movement.OperDate BETWEEN inStartDate_mov AND inEndDate_mov
+                                                      AND Movement.DescId NOT IN (zc_Movement_Tax(), zc_Movement_TaxCorrective())
+                                                      AND Movement.DescId NOT IN (zc_Movement_RouteMember())
+                                                      
                               WHERE MovementProtocol.OperDate >= inStartDate_pr AND MovementProtocol.OperDate < inEndDate_pr + INTERVAL '1 DAY'
-                                AND MovementProtocol.UserId <> zc_Enum_Process_Auto_PrimeCost()
+                                AND MovementProtocol.UserId NOT IN (zc_Enum_Process_Auto_PrimeCost(), zc_Enum_Process_Auto_ReComplete()
+                                                                  , zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Defroster()
+                                                                  , zc_Enum_Process_Auto_PartionDate(), zc_Enum_Process_Auto_PartionClose()
+                                                                  --, zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_ReturnIn(), zc_Enum_Process_Auto_Medoc()
+                                                                   )
+-- and MovementProtocol.MovementId = 29945271 
                               ) AS MovementProtocol
-                        )
+                        )	
 
---"Проведен"- ""Не проведен""--
-   , tmpData AS (SELECT tmp1.MovementId
+   , tmpMovProtocol_all AS (SELECT MovementProtocol.UserId
+                                 , MovementProtocol.IsInsert
+                                 , MovementProtocol.OperDate            AS OperDate_Protocol
+                                 , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Статус"]                       /@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS StatusName
+                                   -- от первого изменения к последним
+                                 , ROW_NUMBER() OVER(PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate ASC)  AS Ord_asc
+                                 , ROW_NUMBER() OVER(PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate DESC) AS Ord_desc
+
+                                 , tmpMovProtocol.MovementId
+                                 , tmpMovProtocol.StatusId_Movement
+                                 , tmpMovProtocol.OperDate_Movement
+                                 , tmpMovProtocol.Invnumber_Movement
+                                 , tmpMovProtocol.DescId_Movement
+
+                            FROM (SELECT DISTINCT tmpMovProtocol.MovementId
+                                                , tmpMovProtocol.StatusId_Movement
+                                                , tmpMovProtocol.OperDate_Movement
+                                                , tmpMovProtocol.Invnumber_Movement
+                                                , tmpMovProtocol.DescId_Movement
+                                  FROM tmpMovProtocol
+                                 ) AS tmpMovProtocol
+                                 JOIN MovementProtocol ON MovementProtocol.MovementId = tmpMovProtocol.MovementId
+                                                      AND MovementProtocol.UserId NOT IN (zc_Enum_Process_Auto_PrimeCost(), zc_Enum_Process_Auto_ReComplete()
+                                                                                        , zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Defroster()
+                                                                                        , zc_Enum_Process_Auto_PartionDate(), zc_Enum_Process_Auto_PartionClose()
+                                                                                        --, zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_ReturnIn(), zc_Enum_Process_Auto_Medoc()
+                                                                                         )
+                           )
+
+     -- только статус Проведен
+   , tmpMovProtocol_complete AS (SELECT tmpMovProtocol.MovementId
+                                      , tmpMovProtocol.Ord_asc
+                                      , tmpMovProtocol.Ord_desc
+                                        -- от последнего раза в статусе Проведен к предыдущим
+                                      , ROW_NUMBER() OVER (PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.OperDate_Protocol DESC) AS Ord_complete_desc
+                                      , ROW_NUMBER() OVER (PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.OperDate_Protocol ASC)  AS Ord_complete_asc
+                                 FROM tmpMovProtocol_all AS tmpMovProtocol
+                                 WHERE tmpMovProtocol.StatusName ILIKE 'Проведен'
+                                )
+
+   , tmpData AS (-- c Проведенного на любой
+                 SELECT tmp1.MovementId
                       , tmp1.StatusId_Movement
                       , tmp1.OperDate_Movement
                       , tmp1.Invnumber_Movement
@@ -81,31 +130,55 @@ BEGIN
                       , tmp2.UserId            AS UserId_2             --пользователь, статус не проведен
                       , tmp2.OperDate_Protocol AS OperDate_Protocol_2  --дата/воремя - статус не проведен
                  FROM tmpMovProtocol AS tmp1
+                      -- следующий статус
                       LEFT JOIN tmpMovProtocol AS tmp2
                                                ON tmp2.MovementId = tmp1.MovementId
-                                              AND tmp2.Ord - 1 = tmp1.Ord
-                 WHERE tmp1.StatusName = 'Проведен' AND tmp2.StatusName = '"Не проведен"'
-                      AND inisNotComplete = TRUE --c проведенного на непроведенный 
-                      UNION
-                 SELECT tmp1.MovementId
-                      , tmp1.StatusId_Movement
-                      , tmp1.OperDate_Movement
-                      , tmp1.Invnumber_Movement
-                      , tmp1.DescId_Movement
+                                              AND tmp2.Ord        = tmp1.Ord + 1
+                 WHERE tmp1.StatusName ILIKE 'Проведен' AND tmp2.StatusName NOT ILIKE 'Проведен'
+                      -- c Проведенного на любой
+                      AND inIsComplete_from = TRUE
+                      -- здесь период
+                      AND tmp1.OperDate_Protocol >= inStartDate_pr AND tmp1.OperDate_Protocol < inEndDate_pr + INTERVAL '1 DAY'
 
-                      , tmp1.StatusName        AS StatusName_1         --статус не проведен
-                      , tmp1.UserId            AS UserId_1             --пользователь, установивший статус не проведен
-                      , tmp1.OperDate_Protocol AS OperDate_Protocol_1  --дата/воремя - статус не проведен
+                UNION
+                 -- c Любого на Проведенный
+                 SELECT tmp2.MovementId
+                      , tmp2.StatusId_Movement
+                      , tmp2.OperDate_Movement
+                      , tmp2.Invnumber_Movement
+                      , tmp2.DescId_Movement
+
+                      , COALESCE (tmp1.StatusName, tmp1_ord_1.StatusName)               AS StatusName_1         --статус не проведен или...
+                      , COALESCE (tmp1.UserId, tmp1_ord_1.UserId)                       AS UserId_1             --пользователь, установивший статус не проведен или...
+                      , COALESCE (tmp1.OperDate_Protocol, tmp1_ord_1.OperDate_Protocol) AS OperDate_Protocol_1  --дата/воремя - статус не проведен или...
 
                       , tmp2.StatusName        AS StatusName_2         --статус проведен
                       , tmp2.UserId            AS UserId_2             --пользователь, статус проведен
                       , tmp2.OperDate_Protocol AS OperDate_Protocol_2  --дата/воремя - статус проведен            
-                 FROM tmpMovProtocol AS tmp1
-                      LEFT JOIN tmpMovProtocol AS tmp2
-                                               ON tmp2.MovementId = tmp1.MovementId
-                                              AND tmp2.Ord - 1 = tmp1.Ord
-                 WHERE tmp1.StatusName = '"Не проведен"' AND tmp2.StatusName = 'Проведен'
-                 AND inisComplete = TRUE --c непроведенного на проведенный               
+
+                 FROM tmpMovProtocol_all AS tmp2
+                      -- нашли док в этом списке
+                      LEFT JOIN tmpMovProtocol_complete ON tmpMovProtocol_complete.MovementId = tmp2.MovementId
+                                                       AND tmpMovProtocol_complete.Ord_asc    = tmp2.Ord_asc
+                      -- предыдущий раз, когда был проведен
+                      LEFT JOIN tmpMovProtocol_complete AS tmpMovProtocol_complete_old
+                                                        ON tmpMovProtocol_complete_old.MovementId       = tmpMovProtocol_complete.MovementId
+                                                       AND tmpMovProtocol_complete_old.Ord_complete_asc = tmpMovProtocol_complete.Ord_complete_asc - 1
+                      -- следующая запись для tmpMovProtocol_complete_old
+                      LEFT JOIN tmpMovProtocol_all AS tmp1
+                                                   ON tmp1.MovementId = tmp2.MovementId
+                                                  AND tmp1.Ord_asc    = tmpMovProtocol_complete_old.Ord_asc + 1
+                      -- первый протокол
+                      LEFT JOIN tmpMovProtocol_all AS tmp1_ord_1
+                                                   ON tmp1_ord_1.MovementId = tmp2.MovementId
+                                                  AND tmp1_ord_1.Ord_asc    = 1
+                                                  -- если в первый раз стал Проведен
+                                                  AND tmpMovProtocol_complete.Ord_complete_asc = 1
+                 WHERE tmp2.StatusName ILIKE 'Проведен' -- AND tmp1.StatusName NOT ILIKE 'Проведен'
+                  -- c Любого на Проведенный
+                  AND inIsComplete_yes = TRUE
+                  -- здесь период
+                  AND tmp2.OperDate_Protocol >= inStartDate_pr AND tmp2.OperDate_Protocol < inEndDate_pr + INTERVAL '1 DAY'
                 )          
                       
                         
@@ -156,5 +229,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  03.09.15         *
 */
+
 -- тест
- --SELECT * FROM gpReport_Protocol_ChangeStatus ('01.09.2024','01.09.2024', '01.08.2024','01.09.2024',true, true, '5')
+-- SELECT * FROM gpReport_Protocol_ChangeStatus ('01.09.2024','01.09.2024', '01.09.2024','01.09.2024',true, true, '5')

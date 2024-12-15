@@ -30,7 +30,7 @@ inherited Report_Protocol_ChangeStatusDialogForm: TReport_Protocol_ChangeStatusD
   object deStart: TcxDateEdit [3]
     Left = 183
     Top = 8
-    EditValue = 42675d
+    EditValue = 45658d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 80
@@ -43,15 +43,15 @@ inherited Report_Protocol_ChangeStatusDialogForm: TReport_Protocol_ChangeStatusD
   object deEnd: TcxDateEdit [5]
     Left = 183
     Top = 31
-    EditValue = 42675d
+    EditValue = 45658d
     Properties.ShowTime = False
     TabOrder = 5
     Width = 80
   end
-  object cbisComplete: TcxCheckBox [6]
+  object cbIsComplete_yes: TcxCheckBox [6]
     Left = 8
     Top = 108
-    Caption = #1048#1079#1084#1077#1085#1080#1083#1089#1103' '#1089' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1087#1088#1086#1074#1077#1076#1077#1085
+    Caption = #1048#1079#1084#1077#1085#1080#1103' '#1074' '#1089#1090#1072#1090#1091#1089' '#1055#1088#1086#1074#1077#1076#1077#1085
     State = cbsChecked
     TabOrder = 6
     Width = 233
@@ -64,7 +64,7 @@ inherited Report_Protocol_ChangeStatusDialogForm: TReport_Protocol_ChangeStatusD
   object edEndDate_mov: TcxDateEdit [8]
     Left = 183
     Top = 81
-    EditValue = 42675d
+    EditValue = 45658d
     Properties.ShowTime = False
     TabOrder = 8
     Width = 80
@@ -72,7 +72,7 @@ inherited Report_Protocol_ChangeStatusDialogForm: TReport_Protocol_ChangeStatusD
   object edStartDate_mov: TcxDateEdit [9]
     Left = 184
     Top = 58
-    EditValue = 42675d
+    EditValue = 45658d
     Properties.ShowTime = False
     TabOrder = 9
     Width = 80
@@ -82,10 +82,10 @@ inherited Report_Protocol_ChangeStatusDialogForm: TReport_Protocol_ChangeStatusD
     Top = 59
     Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090'):'
   end
-  object cbisNotComplete: TcxCheckBox [11]
+  object cbIsComplete_from: TcxCheckBox [11]
     Left = 8
     Top = 133
-    Caption = #1048#1079#1084#1077#1085#1080#1083#1089#1103' '#1089' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+    Caption = #1048#1079#1084#1077#1085#1080#1103' '#1089#1086' '#1089#1090#1072#1090#1091#1089#1072' '#1055#1088#1086#1074#1077#1076#1077#1085
     State = cbsChecked
     TabOrder = 11
     Width = 233
@@ -97,7 +97,7 @@ inherited Report_Protocol_ChangeStatusDialogForm: TReport_Protocol_ChangeStatusD
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = cbisComplete
+        Component = cbIsComplete_yes
         Properties.Strings = (
           'Checked')
       end
@@ -153,17 +153,17 @@ inherited Report_Protocol_ChangeStatusDialogForm: TReport_Protocol_ChangeStatusD
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isComplete'
+        Name = 'inIsComplete_yes'
         Value = Null
-        Component = cbisComplete
+        Component = cbIsComplete_yes
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isNotComplete'
+        Name = 'inIsComplete_from'
         Value = Null
-        Component = cbisNotComplete
+        Component = cbIsComplete_from
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
