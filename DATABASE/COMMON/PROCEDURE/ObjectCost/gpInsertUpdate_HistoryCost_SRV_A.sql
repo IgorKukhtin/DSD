@@ -249,6 +249,7 @@ end if;
                               GROUP BY tmpContainerS_zavod.GoodsId
                                      , tmpContainerS_zavod.UnitId
                              )
+            -- или Начальный ост и ли есть движение
           , tmpContainer_count_RK AS (SELECT Container_count.Id AS ContainerId
                                       FROM Container AS Container_count
                                            INNER JOIN ContainerLinkObject AS CLO_Unit
@@ -264,7 +265,7 @@ end if;
                                       WHERE Container_count.DescId = zc_Container_Count()
                                         AND ContainerLinkObject_Account.ContainerId IS NULL
                                       GROUP BY Container_count.Id, Container_count.Amount
-                                      HAVING Container_count.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0 -- AS StartSumm
+                                      HAVING Container_count.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
                                           OR 0 <> SUM (CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount <> 0 THEN 1 ELSE 0 END)
                                      )
         -- Результат - Суммы, если есть Остаток или Движение
@@ -312,11 +313,27 @@ end if;
                , Container_Summ.JuridicalId_basis
                , CASE WHEN tmpContainer_Summ_union.InfoMoneyId > 0 THEN tmpContainer_Summ_union.InfoMoneyId ELSE Container_Summ.InfoMoneyId END
                , Container_Summ.InfoMoneyId_Detail
-        HAVING Container_Summ.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0 -- AS StartSumm
+        HAVING Container_Summ.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+            -- или движение Container_Summ
             OR MAX (CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN Container_Summ.Id ELSE 0 END) > 0
+            -- или движение Container_count_RK
             OR MAX (CASE WHEN tmpContainer_count_RK.ContainerId > 0 THEN tmpContainer_count_RK.ContainerId ELSE 0 END) > 0
 
        UNION ALL
+        -- добавили пустые
+        SELECT 0 AS ContainerId, tmpContainer_count_RK.ContainerId AS ContainerId_count, 0 AS AccountId, TRUE AS isZavod
+             , 0 AS UnitId
+             , 0 AS GoodsId
+             , 0 AS GoodsKindId
+             , 0 AS JuridicalId_basis
+             , 0 AS InfoMoneyId
+             , 0 AS InfoMoneyId_Detail
+        FROM tmpContainer_count_RK
+             LEFT JOIN tmpContainerS_zavod AS Container_Summ ON Container_Summ.ParentId = tmpContainer_count_RK.ContainerId
+        WHERE Container_Summ.ParentId IS NULL
+
+       UNION ALL
+        -- филиалы
         SELECT Container_Summ.Id AS ContainerId, Container_Summ.ParentId AS ContainerId_count, Container_Summ.ObjectId AS AccountId, TRUE AS isZavod
              , 0 AS UnitId
              , 0 AS GoodsId
@@ -348,7 +365,7 @@ end if;
           AND Container_Summ.ObjectId <> zc_Enum_Account_110131()
           AND Container_Summ.ObjectId <> zc_Enum_Account_110132()
         GROUP BY Container_Summ.Id, Container_Summ.ParentId, Container_Summ.Amount, Container_Summ.ObjectId
-        HAVING Container_Summ.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0 -- AS StartSumm
+        HAVING Container_Summ.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
             OR MAX (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN Container_Summ.Id ELSE 0 END) > 0
        ;
      -- !!!Оптимизация!!!
@@ -382,7 +399,10 @@ end if;
 
      -- заполняем таблицу Количество и Сумма - ост, приход, расход
        WITH -- только по этому списку - оптимизация
-            tmpList AS (SELECT DISTINCT tmpContainerList.ContainerId FROM tmpContainerList UNION SELECT DISTINCT tmpContainerList.ContainerId_count FROM tmpContainerList)
+            tmpList AS (SELECT DISTINCT tmpContainerList.ContainerId FROM tmpContainerList WHERE tmpContainerList.ContainerId > 0
+                       UNION
+                        SELECT DISTINCT tmpContainerList.ContainerId_count FROM tmpContainerList -- WHERE tmpContainerList.ContainerId > 0
+                       )
           , tmpContainer_zavod AS (SELECT Container.*, COALESCE (Object_Unit.Id, 0) AS UnitId
                                         , CASE WHEN 1 = 1 AND ObjectLink_Unit_HistoryCost.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isHistoryCost_ReturnIn
                                    FROM Container
@@ -837,6 +857,8 @@ end if;
              LEFT JOIN tmpContainerList AS Container_Summ ON Container_Summ.ContainerId_count = tmpContainer.ContainerId
                                                          AND tmpContainer.DescId              = zc_Container_Count()
                                                          -- !!!
+                                                         AND Container_Summ.ContainerId > 0
+                                                         -- !!!
                                                          AND tmpContainerList_partion.ContainerId_count IS NULL
 
              -- если это zc_Container_Summ
@@ -1015,6 +1037,8 @@ RAISE INFO 'end master CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                                                     AND MIContainer_Summ_Out.ParentId    > 0
                                                     AND MIContainer_Summ_Out.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                                     AND COALESCE (MIContainer_Summ_Out.AnalyzerId, 0) <> zc_Enum_AnalyzerId_ProfitLoss()
+               -- !!!
+               WHERE _tmpMaster.ContainerId > 0
               );
          -- !!!Оптимизация!!!
          ANALYZE tmpMIContainer_Summ_Out;
@@ -1033,6 +1057,8 @@ RAISE INFO 'end master CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                                                  , tmpContainerList.InfoMoneyId_Detail
                                             FROM tmpContainerList
                                             WHERE tmpContainerList.isZavod = TRUE
+                                              -- !!!
+                                              AND tmpContainerList.ContainerId > 0
                                            )
                   , MIContainer_Summ_In AS (SELECT MIContainer_Summ_In.Id, tmp.ParentId, MIContainer_Summ_In.MovementId, MIContainer_Summ_In.ContainerId, MIContainer_Summ_In.MovementItemId, MIContainer_Summ_In.WhereObjectId_Analyzer
                                                  , SUM (MIContainer_Summ_In.Amount) AS Amount
@@ -1073,7 +1099,8 @@ RAISE INFO 'end master CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                     , tmpContainerList_partion.ContainerId_count
                --FROM Container
                -- только по этому списку - оптимизация
-               FROM (SELECT DISTINCT tmpContainerList.ContainerId_count AS Id FROM tmpContainerList WHERE tmpContainerList.isZavod = TRUE) AS Container
+               FROM (SELECT DISTINCT tmpContainerList.ContainerId_count AS Id FROM tmpContainerList WHERE tmpContainerList.isZavod = TRUE AND tmpContainerList.ContainerId > 0
+                    ) AS Container
                     LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Account
                                                   ON ContainerLinkObject_Account.ContainerId = Container.Id
                                                  AND ContainerLinkObject_Account.DescId = zc_ContainerLinkObject_Account()
@@ -2232,7 +2259,7 @@ return;
                        , (SELECT _tmpMaster.InfoMoneyId FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1 ORDER BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis LIMIT 1)
                        , (SELECT _tmpMaster.InfoMoneyId_Detail FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1 ORDER BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis LIMIT 1)
                        , (SELECT _tmpMaster.JuridicalId_basis FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1 ORDER BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis LIMIT 1)
---                       , (SELECT COUNT(*) FROM (SELECT _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1) AS tmpSelect)
+                       --, (SELECT COUNT(*) FROM (SELECT _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1) AS tmpSelect)
                         ;
      END IF;
 
@@ -3124,7 +3151,7 @@ RAISE INFO ' start-1 создание ContainerSumm .<%>', CLOCK_TIMESTAMP();
                    , tmpList_goods.GoodsKindId
                    , CLO_PartionGoods.ObjectId                       AS PartionGoodsId
                    , CLO_Asset.ObjectId                              AS AssetId
-              FROM (-- параметры для суммовых Container
+              FROM (-- параметры для суммовых Container - zc_Unit_RK
                     SELECT DISTINCT tmpContainerList_partion.AccountId
                                   , tmpContainerList_partion.UnitId
                                   , tmpContainerList_partion.GoodsId
@@ -3138,9 +3165,15 @@ RAISE INFO ' start-1 создание ContainerSumm .<%>', CLOCK_TIMESTAMP();
                    INNER JOIN Container ON Container.ObjectId = tmpList_goods.GoodsId
                                        AND Container.DescId   = zc_Container_Count()
 
+                   -- !!!ограничили списком
+                   INNER JOIN (SELECT DISTINCT tmpContainerList.ContainerId_count FROM tmpContainerList
+                              ) AS tmpContainerList_check
+                                ON tmpContainerList_check.ContainerId_count = Container.Id
+
                    INNER JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = Container.Id
                                                              AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                                              AND CLO_Unit.ObjectId    = tmpList_goods.UnitId
+
 
                    LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
                                                                  AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
