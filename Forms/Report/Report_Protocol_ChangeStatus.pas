@@ -40,7 +40,6 @@ type
     FormParams: TdsdFormParams;
     Invnumber_Movement: TcxGridDBColumn;
     DescName_Movement: TcxGridDBColumn;
-    StatusName_1: TcxGridDBColumn;
     getMovementForm: TdsdStoredProc;
     actMovementForm: TdsdExecStoredProc;
     actOpenForm: TdsdOpenForm;
@@ -54,6 +53,9 @@ type
     edEndDate_mov: TcxDateEdit;
     cbIsComplete_yes: TcxCheckBox;
     cbIsComplete_from: TcxCheckBox;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocolOpenForm: TdxBarButton;
+    Diff_minute: TcxGridDBColumn;
   private
     { Private declarations }
   public
