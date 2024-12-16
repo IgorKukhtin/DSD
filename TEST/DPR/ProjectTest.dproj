@@ -5459,12 +5459,12 @@
 				<Form>UnitPeresortForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Protocol_ChangeStatus.pas">
-				<Form>Report_Protocol_ChangeStatusForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Protocol_ChangeStatusDialog.pas">
 				<Form>Report_Protocol_ChangeStatusDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Protocol_ChangeStatus.pas">
+				<Form>Report_Protocol_ChangeStatusForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

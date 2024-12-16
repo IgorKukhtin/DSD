@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_Protocol_ChangeStatus(
     IN inEndDate_pr       Tdatetime,
     IN inStartDate_mov    Tdatetime,
     IN inEndDate_mov      Tdatetime,
-    IN inIsComplete_yes    Boolean   , -- Измения в статус Проведен
+    IN inIsComplete_yes   Boolean  , -- Измения в статус Проведен
     IN inIsComplete_from  Boolean   , -- Измения со статуса Проведен
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -16,6 +16,8 @@ RETURNS TABLE (MovementId          Integer
              , Invnumber_Movement  TVarChar
              , DescName_Movement   TVarChar
              , StatusCode_Movement Integer
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , StatusCode_1        Integer
              , StatusName_1        TVarChar
              , OperDate_Protocol_1 TDateTime
              , UserId_1            Integer
@@ -23,6 +25,9 @@ RETURNS TABLE (MovementId          Integer
              , UserName_1          TVarChar
              , MemberId_1          Integer
              , MemberName_1        TVarChar
+             , PositionName_1      TVarChar
+             , UnitName_1          TVarChar
+             , StatusCode_2        Integer
              , StatusName_2        TVarChar
              , OperDate_Protocol_2 TDateTime
              , UserId_2            Integer
@@ -30,6 +35,9 @@ RETURNS TABLE (MovementId          Integer
              , UserName_2          TVarChar
              , MemberId_2          Integer
              , MemberName_2        TVarChar
+             , PositionName_2      TVarChar
+             , UnitName_2          TVarChar
+             , Diff_minute         Integer
               )
 AS
 $BODY$
@@ -47,7 +55,7 @@ BEGIN
                              , MovementProtocol.OperDate_Movement
                              , MovementProtocol.Invnumber_Movement
                              , MovementProtocol.DescId_Movement
-                             , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Статус"]                       /@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS StatusName
+                             , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Статус"]/@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS StatusName
                                -- от первого изменения к последним
                              , ROW_NUMBER() OVER(PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate_Protocol ASC) AS Ord
                         FROM (SELECT MovementProtocol.UserId              AS UserId
@@ -79,6 +87,7 @@ BEGIN
                                  , tmpMovProtocol.IsInsert
                                  , tmpMovProtocol.OperDate_Protocol
                                  , tmpMovProtocol.StatusName
+
                                    -- от первого изменения к последним
                                  , ROW_NUMBER() OVER(PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.OperDate_Protocol ASC,  CASE WHEN tmpMovProtocol.StatusName ILIKE 'Проведен' THEN 1 ELSE 0 END ASC)  AS Ord_asc
                                  , ROW_NUMBER() OVER(PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.OperDate_Protocol DESC, CASE WHEN tmpMovProtocol.StatusName ILIKE 'Проведен' THEN 1 ELSE 0 END DESC) AS Ord_desc
@@ -193,44 +202,92 @@ BEGIN
                   AND tmp2.OperDate_Protocol >= inStartDate_pr AND tmp2.OperDate_Protocol < inEndDate_pr + INTERVAL '1 DAY'
                 )          
                       
-                        
+   , tmpPersonal AS (SELECT View_Personal.MemberId
+                          , MAX (View_Personal.PersonalId) AS PersonalId
+                          , MAX (View_Personal.UnitId)     AS UnitId
+                          , MAX (View_Personal.PositionId) AS PositionId
+                     FROM Object_Personal_View AS View_Personal
+                     GROUP BY View_Personal.MemberId
+                     )
+                      
                       
      SELECT tmpData.MovementId                    AS MovementId
           , tmpData.OperDate_Movement             AS OperDate_Movement
           , tmpData.Invnumber_Movement            AS Invnumber_Movement
           , MovementDesc.ItemName                 AS DescName_Movement
           , Object_Status.ObjectCode              AS StatusCode_Movement
+          , Object_From.Id                        AS FromId
+          , Object_From.ValueData                 AS FromName
+          , Object_To.Id                          AS ToId
+          , Object_To.ValueData                   AS ToName
+
+          , CASE WHEN tmpData.StatusName_1 = 'Проведен'      THEN 2 
+                 WHEN tmpData.StatusName_1 = '"Не проведен"' THEN 1
+                 WHEN tmpData.StatusName_1 = 'Удален'        THEN 3
+            END      ::Integer  AS StatusCode_1
           , tmpData.StatusName_1      ::TVarChar  AS StatusName_1
           , tmpData.OperDate_Protocol_1           AS OperDate_Protocol_1
           , Object_User1.Id                       AS UserId_1
           , Object_User1.ObjectCode               AS UserCode_1
           , Object_User1.ValueData    ::TVarChar  AS UserName_1
           , Object_Member1.Id                     AS MemberId_1 
-          , Object_Member1.ValueData  ::TVarChar  AS MemberName_1 
+          , Object_Member1.ValueData  ::TVarChar  AS MemberName_1
+          , Object_Position1.ValueData ::TVarChar AS PositionName_1 
+          , Object_Unit1.ValueData     ::TVarChar AS UnitName_1
+
+          , CASE WHEN tmpData.StatusName_2 = 'Проведен'      THEN 2 
+                 WHEN tmpData.StatusName_2 = '"Не проведен"' THEN 1
+                 WHEN tmpData.StatusName_2 = 'Удален'        THEN 3
+            END      ::Integer  AS StatusCode_2
           , tmpData.StatusName_2      ::TVarChar  AS StatusName_2
           , tmpData.OperDate_Protocol_2           AS OperDate_Protocol_2
           , Object_User2.Id                       AS UserId_2
           , Object_User2.ObjectCode               AS UserCode_2
           , Object_User2.ValueData    ::TVarChar  AS UserName_2
           , Object_Member2.Id                     AS MemberId_2 
-          , Object_Member2.ValueData  ::TVarChar  AS MemberName_2 
+          , Object_Member2.ValueData  ::TVarChar  AS MemberName_2
+          , Object_Position2.ValueData ::TVarChar AS PositionName_2 
+          , Object_Unit2.ValueData     ::TVarChar AS UnitName_2
+          
+          , (EXTRACT (MINUTE FROM tmpData.OperDate_Protocol_2 - tmpData.OperDate_Protocol_1)
+           + EXTRACT (HOUR  FROM tmpData.OperDate_Protocol_2 - tmpData.OperDate_Protocol_1)*60
+           + EXTRACT (DAY  FROM tmpData.OperDate_Protocol_2 - tmpData.OperDate_Protocol_1)*24*60
+            ) :: Integer AS Diff_minute
     FROM tmpData
         LEFT JOIN Object AS Object_User1 ON Object_User1.Id = tmpData.UserId_1
         LEFT JOIN Object AS Object_User2 ON Object_User2.Id = tmpData.UserId_2
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId_Movement 
         LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.DescId_Movement
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                     ON MovementLinkObject_From.MovementId = tmpData.MovementId
+                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+        LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                     ON MovementLinkObject_To.MovementId = tmpData.MovementId
+                                    AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+        LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
         
         LEFT JOIN ObjectLink AS ObjectLink_User_Member_1
                              ON ObjectLink_User_Member_1.ObjectId = tmpData.UserId_1
                             AND ObjectLink_User_Member_1.DescId = zc_ObjectLink_User_Member()
         LEFT JOIN Object AS Object_Member1 ON Object_Member1.Id = ObjectLink_User_Member_1.ChildObjectId
-
+        LEFT JOIN tmpPersonal AS tmpPersonal_1 ON tmpPersonal_1.MemberId = Object_Member1.Id
+        LEFT JOIN Object AS Object_Position1 ON Object_Position1.Id = tmpPersonal_1.PositionId
+        LEFT JOIN Object AS Object_Unit1 ON Object_Unit1.Id = tmpPersonal_1.UnitId
+        
         LEFT JOIN ObjectLink AS ObjectLink_User_Member_2
                              ON ObjectLink_User_Member_2.ObjectId = tmpData.UserId_2
                             AND ObjectLink_User_Member_2.DescId = zc_ObjectLink_User_Member()
         LEFT JOIN Object AS Object_Member2 ON Object_Member2.Id = ObjectLink_User_Member_2.ChildObjectId
+        LEFT JOIN tmpPersonal AS tmpPersonal_2 ON tmpPersonal_2.MemberId = Object_Member2.Id 
+        LEFT JOIN Object AS Object_Position2 ON Object_Position2.Id = tmpPersonal_2.PositionId
+        LEFT JOIN Object AS Object_Unit2 ON Object_Unit2.Id = tmpPersonal_2.UnitId
     ;
-  
+     
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

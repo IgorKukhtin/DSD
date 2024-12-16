@@ -6,7 +6,6 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -64
   ExplicitWidth = 1045
   ExplicitHeight = 591
   PixelsPerInch = 96
@@ -115,19 +114,19 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
             Properties.Images = dmMain.ImageList
             Properties.Items = <
               item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end
+              item
                 Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
                 ImageIndex = 11
-                Value = '1'
+                Value = 1
               end
               item
                 Description = #1055#1088#1086#1074#1077#1076#1077#1085
                 ImageIndex = 12
-                Value = '2'
-              end
-              item
-                Description = #1059#1076#1072#1083#1077#1085
-                ImageIndex = 13
-                Value = '3'
+                Value = 2
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -157,19 +156,69 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
-          object StatusName_1: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1091#1089' 1'
-            DataBinding.FieldName = 'StatusName_1'
+          object FromName: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086
+            DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 80
           end
-          object StatusName_2: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1091#1089' 2'
-            DataBinding.FieldName = 'StatusName_2'
+          object ToName: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091
+            DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 120
+          end
+          object StatusCode_1: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' 1'
+            DataBinding.FieldName = 'StatusCode_1'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = '1'
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = '2'
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = '3'
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
+          end
+          object StatusCode_2: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' 2'
+            DataBinding.FieldName = 'StatusCode_2'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
           end
           object OperDate_Protocol_1: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1086#1090#1086#1082#1086#1083' ('#1089#1090#1072#1090#1091#1089' 1)'
@@ -212,6 +261,23 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
             Options.Editing = False
             Width = 136
           end
+          object UnitName_1: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1086#1083#1100#1079'. '#1089#1090#1072#1090'.1)'
+            DataBinding.FieldName = 'UnitName_1'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 152
+          end
+          object PositionName_1: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1087#1086#1083#1100#1079'. '#1089#1090#1072#1090'.1)'
+            DataBinding.FieldName = 'PositionName_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 133
+          end
           object MemberName_2: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1089#1090#1072#1090#1091#1089' 2)'
             DataBinding.FieldName = 'MemberName_2'
@@ -220,6 +286,33 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 136
+          end
+          object UnitName_2: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1086#1083#1100#1079'. '#1089#1090#1072#1090'.2)'
+            DataBinding.FieldName = 'UnitName_2'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 152
+          end
+          object PositionName_2: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1087#1086#1083#1100#1079'. '#1089#1090#1072#1090'.2)'
+            DataBinding.FieldName = 'PositionName_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 133
+          end
+          object Diff_minute: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072', '#1084#1080#1085'.'
+            DataBinding.FieldName = 'Diff_minute'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1085#1080#1094#1072' '#1084#1077#1078#1076#1091' '#1044#1072#1090#1072#1084#1080' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1057#1090#1072#1090#1091#1089' 1 '#1080' '#1057#1090#1072#1090#1091#1089' 2'
+            Width = 80
           end
         end
       end
@@ -562,7 +655,36 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 28
-      ShortCut = 13
+    end
+    object MovementProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Invnumber_Movement'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -667,6 +789,14 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -684,6 +814,10 @@ inherited Report_Protocol_ChangeStatusForm: TReport_Protocol_ChangeStatusForm
     end
     object bbOpenDocument: TdxBarButton
       Action = macOpenDocument
+      Category = 0
+    end
+    object bbMovementProtocolOpenForm: TdxBarButton
+      Action = MovementProtocolOpenForm
       Category = 0
     end
   end
