@@ -55,9 +55,10 @@ BEGIN
                              , MovementProtocol.OperDate_Movement
                              , MovementProtocol.Invnumber_Movement
                              , MovementProtocol.DescId_Movement
+                             , MovementProtocol.Id_protocol
                              , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "—татус"]/@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS StatusName
                                -- от первого изменени€ к последним
-                             , ROW_NUMBER() OVER(PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate_Protocol ASC) AS Ord
+                             , ROW_NUMBER() OVER(PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.Id_protocol ASC) AS Ord
                         FROM (SELECT MovementProtocol.UserId              AS UserId
                                    , MovementProtocol.IsInsert            AS IsInsert
                                    , MovementProtocol.OperDate            AS OperDate_Protocol
@@ -67,6 +68,7 @@ BEGIN
                                    , Movement.OperDate                    AS OperDate_Movement
                                    , Movement.Invnumber                   AS Invnumber_Movement
                                    , Movement.DescId                      AS DescId_Movement
+                                   , MovementProtocol.Id                  AS Id_protocol
                               FROM MovementProtocol
                                    INNER JOIN Movement ON Movement.Id = MovementProtocol.MovementId 
                                                       AND Movement.OperDate BETWEEN inStartDate_mov AND inEndDate_mov
@@ -79,28 +81,29 @@ BEGIN
                                                                   , zc_Enum_Process_Auto_PartionDate(), zc_Enum_Process_Auto_PartionClose()
                                                                   --, zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_ReturnIn(), zc_Enum_Process_Auto_Medoc()
                                                                    )
--- and MovementProtocol.MovementId = 29897397 
+ --and MovementProtocol.MovementId = 29945271  --29865871 -- 
                               ) AS MovementProtocol
                         )	
-
-   , tmpMovProtocol_all AS (SELECT tmpMovProtocol.UserId
+  , tmpMovProtocol_all AS (SELECT tmpMovProtocol.UserId
                                  , tmpMovProtocol.IsInsert
                                  , tmpMovProtocol.OperDate_Protocol
                                  , tmpMovProtocol.StatusName
 
                                    -- от первого изменени€ к последним
-                                 , ROW_NUMBER() OVER(PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.OperDate_Protocol ASC,  CASE WHEN tmpMovProtocol.StatusName ILIKE 'ѕроведен' THEN 1 ELSE 0 END ASC)  AS Ord_asc
-                                 , ROW_NUMBER() OVER(PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.OperDate_Protocol DESC, CASE WHEN tmpMovProtocol.StatusName ILIKE 'ѕроведен' THEN 1 ELSE 0 END DESC) AS Ord_desc
+                                 , ROW_NUMBER() OVER(PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.Id_protocol ASC,  CASE WHEN tmpMovProtocol.StatusName ILIKE 'ѕроведен' THEN 1 ELSE 0 END ASC)  AS Ord_asc
+                                 , ROW_NUMBER() OVER(PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.Id_protocol DESC, CASE WHEN tmpMovProtocol.StatusName ILIKE 'ѕроведен' THEN 1 ELSE 0 END DESC) AS Ord_desc
 
                                  , tmpMovProtocol.MovementId
                                  , tmpMovProtocol.StatusId_Movement
                                  , tmpMovProtocol.OperDate_Movement
                                  , tmpMovProtocol.Invnumber_Movement
-                                 , tmpMovProtocol.DescId_Movement
+                                 , tmpMovProtocol.DescId_Movement 
+                                 , tmpMovProtocol.Id_protocol
 
                             FROM (SELECT MovementProtocol.UserId
                                        , MovementProtocol.IsInsert
-                                       , MovementProtocol.OperDate            AS OperDate_Protocol
+                                       , MovementProtocol.OperDate  AS OperDate_Protocol
+                                       , MovementProtocol.Id        AS Id_protocol
                                        , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "—татус"]                       /@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS StatusName
       
                                        , tmpMovProtocol.MovementId
@@ -130,37 +133,47 @@ BEGIN
                                       , tmpMovProtocol.Ord_asc
                                       , tmpMovProtocol.Ord_desc
                                         -- от последнего раза в статусе ѕроведен к предыдущим
-                                      , ROW_NUMBER() OVER (PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.OperDate_Protocol DESC) AS Ord_complete_desc
-                                      , ROW_NUMBER() OVER (PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.OperDate_Protocol ASC)  AS Ord_complete_asc
+                                      , ROW_NUMBER() OVER (PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.Id_protocol DESC) AS Ord_complete_desc
+                                      , ROW_NUMBER() OVER (PARTITION BY tmpMovProtocol.MovementId ORDER BY tmpMovProtocol.Id_protocol ASC)  AS Ord_complete_asc
                                  FROM tmpMovProtocol_all AS tmpMovProtocol
                                  WHERE tmpMovProtocol.StatusName ILIKE 'ѕроведен'
                                 )
 
    , tmpData AS (-- c ѕроведенного на любой
-                 SELECT tmp1.MovementId
-                      , tmp1.StatusId_Movement
-                      , tmp1.OperDate_Movement
-                      , tmp1.Invnumber_Movement
-                      , tmp1.DescId_Movement
+                 SELECT tmp2.MovementId
+                      , tmp2.StatusId_Movement
+                      , tmp2.OperDate_Movement
+                      , tmp2.Invnumber_Movement
+                      , tmp2.DescId_Movement
 
                       , tmp1.StatusName        AS StatusName_1         --статус проведен
-                      , tmp1.UserId            AS UserId_1             --пользователь, утсановивший статус проведен
+                      , tmp1.UserId            AS UserId_1             --пользователь, установивший статус  проведен 
                       , tmp1.OperDate_Protocol AS OperDate_Protocol_1  --дата/ворем€ - статус проведен
 
-                      , tmp2.StatusName        AS StatusName_2         --статус не проведен
-                      , tmp2.UserId            AS UserId_2             --пользователь, статус не проведен
-                      , tmp2.OperDate_Protocol AS OperDate_Protocol_2  --дата/ворем€ - статус не проведен
-                 FROM tmpMovProtocol AS tmp1
-                      -- следующий статус
-                      LEFT JOIN tmpMovProtocol AS tmp2
-                                               ON tmp2.MovementId = tmp1.MovementId
-                                              AND tmp2.Ord        = tmp1.Ord + 1
-                 WHERE tmp1.StatusName ILIKE 'ѕроведен' AND tmp2.StatusName NOT ILIKE 'ѕроведен'
+                      , tmp2.StatusName        AS StatusName_2         --статус проведен
+                      , tmp2.UserId            AS UserId_2             --пользователь, статус не проведен/удален
+                      , tmp2.OperDate_Protocol AS OperDate_Protocol_2  --дата/ворем€ - статус не проведен/удален
+
+                 FROM tmpMovProtocol_all AS tmp1
+                      -- нашли док в этом списке
+                      LEFT JOIN tmpMovProtocol_complete ON tmpMovProtocol_complete.MovementId = tmp1.MovementId
+                                                       AND tmpMovProtocol_complete.Ord_desc   = tmp1.Ord_desc
+                      -- предыдущий раз, когда был проведен
+                      LEFT JOIN tmpMovProtocol_complete AS tmpMovProtocol_complete_old
+                                                        ON tmpMovProtocol_complete_old.MovementId       = tmpMovProtocol_complete.MovementId
+                                                       AND tmpMovProtocol_complete_old.Ord_complete_desc = tmpMovProtocol_complete.Ord_complete_desc - 1
+                      -- следующа€ запись дл€ tmpMovProtocol_complete_old
+                      LEFT JOIN tmpMovProtocol_all AS tmp2
+                                                   ON tmp2.MovementId = tmp1.MovementId
+                                                  AND tmp2.Ord_desc    = tmpMovProtocol_complete_old.Ord_desc + 1
+
+                 WHERE tmp1.StatusName ILIKE 'ѕроведен'
                       -- c ѕроведенного на любой
                       AND inIsComplete_from = TRUE
                       -- здесь период
                       AND tmp1.OperDate_Protocol >= inStartDate_pr AND tmp1.OperDate_Protocol < inEndDate_pr + INTERVAL '1 DAY'
-
+                      --
+                      AND tmp1.StatusName <> tmp2.StatusName
                 UNION
                  -- c Ћюбого на ѕроведенный
                  SELECT tmp2.MovementId
@@ -200,7 +213,9 @@ BEGIN
                   AND inIsComplete_yes = TRUE
                   -- здесь период
                   AND tmp2.OperDate_Protocol >= inStartDate_pr AND tmp2.OperDate_Protocol < inEndDate_pr + INTERVAL '1 DAY'
-                )          
+                  --
+                  AND COALESCE (tmp1.StatusName, tmp1_ord_1.StatusName) <> tmp2.StatusName 
+               )          
                       
    , tmpPersonal AS (SELECT View_Personal.MemberId
                           , MAX (View_Personal.PersonalId) AS PersonalId
