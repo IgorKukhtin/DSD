@@ -493,7 +493,7 @@ BEGIN
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
 
            , CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
---           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.Amount ELSE 0 END) AS TFloat) AS Amount_Sh
+           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.Amount ELSE 0 END) AS TFloat) AS Amount_Sh
 
              -- расчет цены C НДС покупателя , до 4 знаков, для  (с учетом скидки)
            , CASE WHEN vbPriceWithVAT <> TRUE
