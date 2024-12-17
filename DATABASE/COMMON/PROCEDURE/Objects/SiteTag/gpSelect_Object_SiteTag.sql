@@ -11,9 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-   
-    -- проверка прав пользователя на вызов процедуры
-      vbUserId:= lpGetUserBySession (inSession);
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
    
    RETURN QUERY 
    SELECT 
