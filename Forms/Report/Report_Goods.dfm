@@ -1,29 +1,29 @@
 inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
-  ClientHeight = 341
+  ClientHeight = 380
   ClientWidth = 1071
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1087
-  ExplicitHeight = 380
+  ExplicitHeight = 419
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
     Width = 1071
-    Height = 261
+    Height = 300
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1071
     ExplicitHeight = 261
-    ClientRectBottom = 261
+    ClientRectBottom = 300
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
         Width = 1071
-        Height = 261
+        Height = 300
         ExplicitWidth = 1071
         ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1193,7 +1193,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Width = 300
     end
     object cxLabel8: TcxLabel
-      Left = 210
+      Left = 209
       Top = 6
       Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
@@ -1540,6 +1540,42 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 28
     end
+    object actMovementReComplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementReComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementReComplete
+        end>
+      Caption = 'actMovementReComplete'
+      ImageIndex = 66
+    end
+    object macMovementReComplete_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actMovementReComplete
+        end>
+      View = cxGridDBTableView
+      Caption = 'macMovementReComplete_list'
+      ImageIndex = 66
+    end
+    object macMovementReComplete: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macMovementReComplete_list
+        end>
+      QuestionBeforeExecute = #1041#1091#1076#1091#1090' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099', '#1087#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      InfoAfterExecute = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1079#1072#1074#1077#1088#1096#1077#1085#1086
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 66
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1667,6 +1703,18 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementReComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1699,6 +1747,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
     end
     object bbOpenDocument: TdxBarButton
       Action = actOpenDocument
+      Category = 0
+    end
+    object bbMovementReComplete: TdxBarButton
+      Action = macMovementReComplete
       Category = 0
     end
   end
@@ -2009,5 +2061,22 @@ inherited Report_GoodsForm: TReport_GoodsForm
       end>
     Left = 296
     Top = 200
+  end
+  object spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_byReport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 849
+    Top = 202
   end
 end
