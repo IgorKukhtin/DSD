@@ -880,6 +880,7 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       Caption = #1058#1077#1088#1084#1080#1095#1082#1072
       Hint = #1058#1077#1088#1084#1080#1095#1082#1072
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh_Partion: TdsdDataSetRefresh [1]
@@ -1575,16 +1576,12 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         item
           Name = 'GoodsGroupId'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsGroupId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsGroupName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
