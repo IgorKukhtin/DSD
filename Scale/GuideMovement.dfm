@@ -1512,7 +1512,7 @@ object GuideMovementForm: TGuideMovementForm
     object cbIncome_diff: TCheckBox
       Left = 889
       Top = 23
-      Width = 115
+      Width = 111
       Height = 17
       Caption = #1040#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081
       Font.Charset = RUSSIAN_CHARSET
@@ -1526,7 +1526,7 @@ object GuideMovementForm: TGuideMovementForm
     end
     object cbIncome_Price_diff: TCheckBox
       Left = 889
-      Top = 0
+      Top = 3
       Width = 144
       Height = 17
       Caption = #1055#1088#1080#1093#1086#1076' ('#1088#1072#1079#1085#1080#1094#1072' '#1094#1077#1085')'
@@ -1553,6 +1553,21 @@ object GuideMovementForm: TGuideMovementForm
       ParentFont = False
       TabOrder = 14
       OnClick = cbPrintTransport_TotalClick
+    end
+    object cbIncome_sklad: TCheckBox
+      Left = 1006
+      Top = 23
+      Width = 115
+      Height = 17
+      Caption = #1055#1088#1080#1093#1086#1076' ('#1089#1082#1083#1072#1076')'
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 15
+      OnClick = cbIncome_skladClick
     end
   end
   object DS: TDataSource
