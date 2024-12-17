@@ -14,14 +14,15 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_SiteTag());
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_SiteTag());
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- Если код не установлен, определяем его каи последний+1
    inCode:=lfGet_ObjectCode (inCode, zc_Object_SiteTag());
-   
+
    -- проверка прав уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_SiteTag(), inName);
    -- проверка прав уникальности для свойства <Код>
@@ -32,7 +33,7 @@ BEGIN
 
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SiteTag_Comment(), ioId, inComment);
-      
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -44,7 +45,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 02.12.24         *               
+ 02.12.24         *
 */
 
 -- тест
