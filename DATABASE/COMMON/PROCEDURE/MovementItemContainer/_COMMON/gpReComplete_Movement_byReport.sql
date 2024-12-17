@@ -19,8 +19,8 @@ BEGIN
      THEN
          RETURN;
      END IF;
-     
-     
+
+
     /* -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
