@@ -256,6 +256,8 @@ type
     spSelectPrintSklad: TdsdStoredProc;
     actPrintSklad: TdsdPrintAction;
     bbPrintSklad: TdxBarButton;
+    MovementProtocolOpenForm_cost: TdsdOpenForm;
+    bbMovementProtocolOpenForm_cost: TdxBarButton;
   private
   public
   end;
