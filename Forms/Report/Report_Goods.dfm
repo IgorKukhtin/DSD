@@ -15,17 +15,17 @@ inherited Report_GoodsForm: TReport_GoodsForm
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1071
-    ExplicitHeight = 261
+    ExplicitHeight = 300
     ClientRectBottom = 300
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
-      ExplicitHeight = 261
+      ExplicitHeight = 300
       inherited cxGrid: TcxGrid
         Width = 1071
         Height = 300
         ExplicitWidth = 1071
-        ExplicitHeight = 261
+        ExplicitHeight = 300
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -152,6 +152,16 @@ inherited Report_GoodsForm: TReport_GoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOut_weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -283,6 +293,16 @@ inherited Report_GoodsForm: TReport_GoodsForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = ObjectByName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOut_weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
