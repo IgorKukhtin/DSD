@@ -667,11 +667,13 @@ BEGIN
                                    , OperSummPlan1_real TFloat, OperSummPlan2_real TFloat, OperSummPlan3_real TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat
                                    , PricePlan1 TFloat, PricePlan2 TFloat, PricePlan3 TFloat
                                    , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName  TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar) ON COMMIT DROP;
-      INSERT INTO tmpCursor2 ( GoodsId, GoodsKindId, MasterKey, PartionGoodsDate, COde, ReceiptCode, Comment, isMain
-                             , GoodsGroupNameFull, GoodsGroupAnalystName, GoodsTagName, TradeMarkName, GoodsId_in, GoodsCode, GoodsName, GoodsKindId_in, GoodsKindName, GoodsKindId_complete_in, GoodsKindName_complete, MeasureId, MeasureName
-                             , OperCountIn, OperCountIn_Weight, OperSummIn, PriceIn, TaxSumm,  OperCount, OperCount_Weight, OperSumm, Price, OperSummPlan_real, OperCountPlan, OperCountPlan_Weight
-                             , OperSummPlan1_real, OperSummPlan2_real, OperSummPlan3_real, OperSummPlan1, OperSummPlan2, OperSummPlan3, PricePlan1, PricePlan2, PricePlan3
-                             , InfoMoneyGroupName, InfoMoneyDestinationName, InfoMoneyCode, InfoMoneyName)
+      INSERT INTO tmpCursor2 (GoodsId, GoodsKindId, MasterKey, PartionGoodsDate, COde, ReceiptCode, Comment, isMain
+                            , GoodsGroupNameFull, GoodsGroupAnalystName, GoodsTagName, TradeMarkName, GoodsId_in, GoodsCode, GoodsName, GoodsKindId_in, GoodsKindName, GoodsKindId_complete_in, GoodsKindName_complete, MeasureId, MeasureName
+                            , OperCountIn, OperCountIn_Weight, OperSummIn, PriceIn, TaxSumm,  OperCount, OperCount_Weight, OperSumm, Price, OperSummPlan_real, OperCountPlan, OperCountPlan_Weight
+                            , OperSummPlan1_real, OperSummPlan2_real, OperSummPlan3_real, OperSummPlan1, OperSummPlan2, OperSummPlan3, PricePlan1, PricePlan2, PricePlan3
+                            , InfoMoneyGroupName, InfoMoneyDestinationName, InfoMoneyCode, InfoMoneyName
+                            , CuterCount
+                              )
 
 
        SELECT tmpResult.GoodsId
@@ -732,6 +734,8 @@ BEGIN
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
            , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName 
+           
+           , tmpResult_in.CuterCount
            
        FROM tmpResult_out AS tmpResult
 
@@ -946,4 +950,4 @@ END;
 -- тест
 -- SELECT * FROM gpReport_ReceiptProductionOutAnalyze (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inFromId:= 8447, inToId:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsPartionGoods:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpReport_ReceiptProductionOutAnalyze( ('01.09.2020')::TDateTime ,  ('01.09.2020')::TDateTime ,  8447 , 8447 ,  1918 ,  18887 ,  18886 ,  18885 , 18840 , 'False' ,   '5');
---select * from gpReport_ReceiptProductionOutAnalyze(inStartDate := ('16.04.2024')::TDateTime , inEndDate := ('17.04.2024')::TDateTime , inFromId := 8448 , inToId := 8448 , inGoodsGroupId := 0 , inPriceListId_1 := 18887 , inPriceListId_2 := 18886 , inPriceListId_3 := 2515112 , inPriceListId_sale := 18840 , inIsPartionGoods := 'False' ,  inSession := '9457'::TVarChar);
+-- SELECT * FROM gpReport_ReceiptProductionOutAnalyze(inStartDate := ('16.12.2024')::TDateTime , inEndDate := ('17.12.2024')::TDateTime , inFromId := 8448 , inToId := 8448 , inGoodsGroupId := 0 , inPriceListId_1 := 18887 , inPriceListId_2 := 18886 , inPriceListId_3 := 2515112 , inPriceListId_sale := 18840 , inIsPartionGoods := 'False' ,  inSession := '9457'::TVarChar); -- FETCH ALL "<unnamed portal 1>";
