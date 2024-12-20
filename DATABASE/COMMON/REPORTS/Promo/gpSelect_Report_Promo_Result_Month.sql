@@ -345,16 +345,19 @@ BEGIN
  
    -- данные продаж + возвратов, в доакционный период
   , tmpSaleReturn AS (SELECT tmp.Id  AS MovementId_promo
-                           , spSelect.MovementItemId
                            , spSelect.DateMonth
                            , spSelect.GoodsId
-                           , spSelect.GoodsKindId
-                           , spSelect.AmountReal
-                           , spSelect.AmountRetIn
-                           , spSelect.AmountRealWeight
-                           , spSelect.AmountRetInWeight
+                           , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (spSelect.GoodsKindId,0) ELSE 0 END AS GoodsKindId
+                           , SUM (spSelect.AmountReal)        AS AmountReal       
+                           , SUM (spSelect.AmountRetIn)       AS AmountRetIn      
+                           , SUM (spSelect.AmountRealWeight)  AS AmountRealWeight 
+                           , SUM (spSelect.AmountRetInWeight) AS AmountRetInWeight
                       FROM tmpMovement_Promo AS tmp
-                           INNER JOIN lpSelect_Movement_Promo_Auto (inMovementId:= tmp.Id, inUserId:= zfCalc_UserAdmin() :: Integer) AS spSelect ON 1 = 1
+                           INNER JOIN lpSelect_Movement_Promo_Auto (inMovementId:= tmp.Id, inUserId:= zfCalc_UserAdmin() :: Integer) AS spSelect ON 1 = 1 
+                      GROUP BY tmp.Id
+                             , spSelect.DateMonth
+                             , spSelect.GoodsId
+                             , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (spSelect.GoodsKindId,0) ELSE 0 END
                       )
 
                   
