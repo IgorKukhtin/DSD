@@ -366,6 +366,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'OperDatePartner'
+        Value = Null
+        Component = edOperDatePartner
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'GoodsName'
         Value = ''
         Component = edGoodsName

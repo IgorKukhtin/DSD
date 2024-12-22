@@ -49,7 +49,9 @@ RETURNS TABLE(
     ,AmountOut_promo            TFloat    --Кол-во реализация (факт)
     ,AmountOutWeight_promo      TFloat    --Кол-во реализация (факт) Вес
     ,AmountIn_promo             TFloat    --Кол-во возврат (факт)
-    ,AmountInWeight_promo       TFloat    --Кол-во возврат (факт) Вес             
+    ,AmountInWeight_promo       TFloat    --Кол-во возврат (факт) Вес  
+    ,AmountSale_promo           TFloat -- продажа - возврат 
+    ,AmountSaleWeight_promo     TFloat -- продажа - возврат            
     ,AmountOut            TFloat    --Кол-во реализация (факт)
     ,AmountOutWeight      TFloat    --Кол-во реализация (факт) Вес
     ,AmountIn             TFloat    --Кол-во возврат (факт)
@@ -284,10 +286,10 @@ BEGIN
                    , SUM (COALESCE (MI_PromoGoods.AmountOutWeight,0))  AS AmountOutWeight_promo   --Кол-во реализация (факт) Вес
                    , SUM (COALESCE (MI_PromoGoods.AmountIn,0))         AS AmountIn_promo          --Кол-во возврат (факт)
                    , SUM (COALESCE (MI_PromoGoods.AmountInWeight,0))   AS AmountInWeight_promo    --Кол-во возврат (факт) Вес
-                   /*
-                   , SUM (COALESCE (MI_PromoGoods.AmountOut, 0) - COALESCE (MI_PromoGoods.AmountIn, 0))            :: TFloat  AS AmountSale       -- продажа - возврат 
-                   , SUM(COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) :: TFloat  AS AmountSaleWeight -- продажа - возврат 
-                   */
+                  
+                   , SUM (COALESCE (MI_PromoGoods.AmountOut, 0) - COALESCE (MI_PromoGoods.AmountIn, 0))            :: TFloat  AS AmountSale_promo       -- продажа - возврат 
+                   , SUM(COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) :: TFloat  AS AmountSaleWeight_promo -- продажа - возврат 
+                   
                    , SUM (COALESCE (tmpMI_SaleReturn.AmountOut,0))       AS AmountOut
                    , SUM (COALESCE (tmpMI_SaleReturn.AmountOut,0)
                           * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END)  AS AmountOutWeight   --Кол-во реализация (факт) Вес
@@ -343,16 +345,19 @@ BEGIN
  
    -- данные продаж + возвратов, в доакционный период
   , tmpSaleReturn AS (SELECT tmp.Id  AS MovementId_promo
-                           , spSelect.MovementItemId
                            , spSelect.DateMonth
                            , spSelect.GoodsId
-                           , spSelect.GoodsKindId
-                           , spSelect.AmountReal
-                           , spSelect.AmountRetIn
-                           , spSelect.AmountRealWeight
-                           , spSelect.AmountRetInWeight
+                           , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (spSelect.GoodsKindId,0) ELSE 0 END AS GoodsKindId
+                           , SUM (spSelect.AmountReal)        AS AmountReal       
+                           , SUM (spSelect.AmountRetIn)       AS AmountRetIn      
+                           , SUM (spSelect.AmountRealWeight)  AS AmountRealWeight 
+                           , SUM (spSelect.AmountRetInWeight) AS AmountRetInWeight
                       FROM tmpMovement_Promo AS tmp
-                           INNER JOIN lpSelect_Movement_Promo_Auto (inMovementId:= tmp.Id, inUserId:= zfCalc_UserAdmin() :: Integer) AS spSelect ON 1 = 1
+                           INNER JOIN lpSelect_Movement_Promo_Auto (inMovementId:= tmp.Id, inUserId:= zfCalc_UserAdmin() :: Integer) AS spSelect ON 1 = 1 
+                      GROUP BY tmp.Id
+                             , spSelect.DateMonth
+                             , spSelect.GoodsId
+                             , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (spSelect.GoodsKindId,0) ELSE 0 END
                       )
 
                   
@@ -466,6 +471,8 @@ BEGIN
           , MI_PromoGoods.AmountOutWeight_promo      :: TFloat--Кол-во реализация (факт) Вес
           , MI_PromoGoods.AmountIn_promo             :: TFloat--Кол-во возврат (факт)
           , MI_PromoGoods.AmountInWeight_promo       :: TFloat--Кол-во возврат (факт) Вес
+          , MI_PromoGoods.AmountSale_promo          :: TFloat -- продажа - возврат 
+          , MI_PromoGoods.AmountSaleWeight_promo    :: TFloat -- продажа - возврат 
 
           , MI_PromoGoods.AmountOut            :: TFloat--Кол-во реализация (факт)
           , MI_PromoGoods.AmountOutWeight      :: TFloat--Кол-во реализация (факт) Вес

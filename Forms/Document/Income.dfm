@@ -26,7 +26,6 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = -5
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -1416,6 +1415,10 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementProtocolOpenForm_cost'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1597,6 +1600,10 @@ object IncomeForm: TIncomeForm
     end
     object bbPrintSklad: TdxBarButton
       Action = actPrintSklad
+      Category = 0
+    end
+    object bbMovementProtocolOpenForm_cost: TdxBarButton
+      Action = MovementProtocolOpenForm_cost
       Category = 0
     end
   end
@@ -2795,6 +2802,38 @@ object IncomeForm: TIncomeForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object MovementProtocolOpenForm_cost: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetCost
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CostCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = CostCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource
