@@ -25,7 +25,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TReport_ReceiptProductionOutAnalyzeForm = class(TAncestorReportForm)
@@ -117,6 +117,7 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint_fact: TdsdPrintAction;
     bbPrint_fact: TdxBarButton;
+    CuterCount_ch: TcxGridDBColumn;
   private
     { Private declarations }
   public

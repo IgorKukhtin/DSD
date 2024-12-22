@@ -3,6 +3,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
   ClientHeight = 430
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -236
   ExplicitWidth = 1146
   ExplicitHeight = 469
   PixelsPerInch = 96
@@ -687,6 +688,11 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
               Format = ',0.####'
               Kind = skSum
               Column = OperSummPlan_real_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount_ch
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -758,6 +764,11 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
               Format = ',0.####'
               Kind = skSum
               Column = OperSummPlan_real_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount_ch
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsCustomize.ColumnsQuickCustomization = True
@@ -1080,6 +1091,14 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object CuterCount_ch: TcxGridDBColumn
+            Caption = #1050#1091#1090#1090'.'
+            DataBinding.FieldName = 'CuterCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object GoodsId_ch: TcxGridDBColumn
             DataBinding.FieldName = 'GoodsId'

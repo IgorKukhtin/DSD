@@ -165,6 +165,11 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
               Format = ',0.####'
               Kind = skSum
               Column = AmountMain_part_det
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_inf_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -298,6 +303,11 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
               Format = ',0.####'
               Kind = skSum
               Column = AmountMain_part_det
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_inf_calc
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -678,6 +688,17 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
+          object Amount_inf_calc: TcxGridDBColumn
+            Caption = '***'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount_inf_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object RealWeightMsg_inf: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1084#1089#1078')'
             DataBinding.FieldName = 'RealWeightMsg_inf'
@@ -772,12 +793,14 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
     ExplicitHeight = 58
     inherited deStart: TcxDateEdit
       Left = 108
+      EditValue = 45658d
       Properties.SaveTime = False
       ExplicitLeft = 108
     end
     inherited deEnd: TcxDateEdit
       Left = 108
       Top = 29
+      EditValue = 45658d
       Properties.SaveTime = False
       ExplicitLeft = 108
       ExplicitTop = 29

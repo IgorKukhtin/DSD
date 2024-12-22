@@ -88,6 +88,7 @@ type
     bbmacPrintTRM_Group_gr: TdxBarButton;
     cbIsTerm: TcxCheckBox;
     actRefresh_Term: TdsdDataSetRefresh;
+    Amount_inf_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public
