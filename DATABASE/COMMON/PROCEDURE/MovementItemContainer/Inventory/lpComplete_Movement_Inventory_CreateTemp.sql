@@ -14,9 +14,9 @@ BEGIN
      CREATE TEMP TABLE _tmpGoods_Complete_Inventory (GoodsId Integer, GoodsKindId Integer, GoodsKindId_real Integer) ON COMMIT DROP;
 
      -- таблица - количественный остаток
-     CREATE TEMP TABLE _tmpRemainsCount (MovementItemId Integer, ContainerId_Goods Integer, ContainerId_count Integer, GoodsId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, OperCount TFloat, OperCountCount TFloat, OperCount_find TFloat, OperCountCount_find TFloat, OperSumm_item TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemainsCount (MovementItemId Integer, ContainerId_Goods Integer, ContainerId_count Integer, GoodsId Integer, GoodsKindId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, OperCount TFloat, OperCount_add TFloat, OperCount_find TFloat, OperCountCount TFloat, OperCountCount_find TFloat, OperSumm_item TFloat) ON COMMIT DROP;
      -- таблица - суммовой остаток
-     CREATE TEMP TABLE _tmpRemainsSumm (ContainerId_Goods Integer, ContainerId Integer, AccountId Integer, GoodsId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, OperSumm TFloat, InfoMoneyId Integer, InfoMoneyId_Detail Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemainsSumm (ContainerId_Goods Integer, ContainerId Integer, AccountId Integer, GoodsId Integer, GoodsKindId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, OperSumm TFloat, OperSumm_add TFloat, InfoMoneyId Integer, InfoMoneyId_Detail Integer) ON COMMIT DROP;
 
      -- таблица - суммовые элементы документа, !!!без!!! свойств для формирования Аналитик в проводках (если ContainerId=0 тогда возьмем их из _tmpItem)
      CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
