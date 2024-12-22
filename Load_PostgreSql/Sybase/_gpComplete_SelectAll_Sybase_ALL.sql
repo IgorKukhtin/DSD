@@ -763,4 +763,4 @@ create table dba._pgMovementReComlete
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.04.2024', inEndDate:= '30.04.2024', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= 0)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.12.2024', inEndDate:= '31.12.2024', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= 0)
