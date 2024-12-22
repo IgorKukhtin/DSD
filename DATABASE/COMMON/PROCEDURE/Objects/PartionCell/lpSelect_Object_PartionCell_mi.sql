@@ -77,6 +77,11 @@ BEGIN
                                                           AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                                          )
                                                         )
+                                 -- RK
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                           AND MovementLinkObject_To.ObjectId   = zc_Unit_RK()
                                  -- ПЕРЕПАК
                                  LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
                                                            ON MovementBoolean_isRePack.MovementId = Movement.Id

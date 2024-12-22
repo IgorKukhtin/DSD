@@ -99,6 +99,11 @@ BEGIN
                                           INNER JOIN MovementItem ON MovementItem.Id = _tmpPartionCell_mi.MovementItemId
                                                                  AND MovementItem.isErased = FALSE
                                           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                          -- RK
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                       AND MovementLinkObject_To.ObjectId   = zc_Unit_RK()
                                      WHERE inIsShowFree = FALSE
                                         AND (Movement.DescId = zc_Movement_Send()
                                           OR (Movement.DescId   = zc_Movement_WeighingProduction()
@@ -114,6 +119,11 @@ BEGIN
                                           INNER JOIN MovementItem ON MovementItem.Id = _tmpPartionCell_mi.MovementItemId
                                                                  AND MovementItem.isErased = FALSE
                                           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                          -- RK
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                       AND MovementLinkObject_To.ObjectId   = zc_Unit_RK()
                                      WHERE inIsShowFree = TRUE
                                        AND _tmpPartionCell_mi.ObjectId <> zc_PartionCell_RK()
                                         AND (Movement.DescId = zc_Movement_Send()
@@ -146,6 +156,11 @@ BEGIN
                                           JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                      --AND Movement.StatusId = zc_Enum_Status_Complete()
                                                      --AND Movement.DescId   = zc_Movement_Send()
+                                          -- RK
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                       AND MovementLinkObject_To.ObjectId   = zc_Unit_RK()
                                      WHERE ((Movement.DescId   = zc_Movement_Send()
                                          AND Movement.StatusId = zc_Enum_Status_Complete()
                                             )
@@ -173,6 +188,12 @@ BEGIN
                                           JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
                                                        AND Movement.DescId   = zc_Movement_Send()
+                                          -- RK
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                       AND MovementLinkObject_To.ObjectId   = zc_Unit_RK()
+
                                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                           AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
