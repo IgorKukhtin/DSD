@@ -2163,7 +2163,12 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
 IF inBranchId <= 0
 THEN
      -- 1
-     truncate table _tmpMaster_2024_07;
+     IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+     THEN
+         DELETE FROM _tmpMaster_2024_07;
+     ELSE
+         truncate table _tmpMaster_2024_07;
+     END IF;
      INSERT INTO _tmpMaster_2024_07 (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm
                            , AccountId, GoodsId, GoodsKindId, InfoMoneyId, InfoMoneyId_Detail, JuridicalId_basis
                            , isZavod
@@ -2171,21 +2176,36 @@ THEN
         SELECT * FROM _tmpMaster;
 
      -- 2
-     truncate table _tmpContainerList_2024_07;
+     IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+     THEN
+         DELETE FROM _tmpContainerList_2024_07;
+     ELSE
+         truncate table _tmpContainerList_2024_07;
+     END IF;
      INSERT INTO _tmpContainerList_2024_07 (ContainerId, ContainerId_count, AccountId, isZavod,
                                             UnitId, GoodsId, GoodsKindId, JuridicalId_basis, InfoMoneyId, InfoMoneyId_Detail
                                            )
         SELECT * FROM tmpContainerList;
 
      -- 3
-     truncate table _tmpContainerList_partion_2024_07;
+     IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+     THEN
+         DELETE FROM _tmpContainerList_partion_2024_07;
+     ELSE
+         truncate table _tmpContainerList_partion_2024_07;
+     END IF;
      INSERT INTO _tmpContainerList_partion_2024_07 (ContainerId_count, AccountId,
                                             UnitId, GoodsId, GoodsKindId, JuridicalId_basis, InfoMoneyId, InfoMoneyId_Detail
                                            )
         SELECT *FROM tmpContainerList_partion;
 
      -- 4
-     truncate table _tmpChild_2024_07;
+     IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+     THEN
+         DELETE FROM _tmpChild_2024_07;
+     ELSE
+         truncate table _tmpChild_2024_07;
+     END IF;
      INSERT INTO _tmpChild_2024_07 (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount, isExternal, DescId
                               , AccountId, UnitId, GoodsId, GoodsKindId, JuridicalId_basis, InfoMoneyId, InfoMoneyId_Detail
                               , AccountId_master, UnitId_master, GoodsId_master, GoodsKindId_master, JuridicalId_basis_master, InfoMoneyId_master, InfoMoneyId_Detail_master
@@ -2197,7 +2217,12 @@ THEN
 ELSE
 
      -- 1
-     truncate table _tmpMaster_2024_07_b;
+     IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+     THEN
+         DELETE FROM _tmpMaster_2024_07_b;
+     ELSE
+         truncate table _tmpMaster_2024_07_b;
+     END IF;
      INSERT INTO _tmpMaster_2024_07_b (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm
                            , AccountId, GoodsId, GoodsKindId, InfoMoneyId, InfoMoneyId_Detail, JuridicalId_basis
                            , isZavod
@@ -2205,7 +2230,12 @@ ELSE
         SELECT * FROM _tmpMaster;
 
      -- 2
-     truncate table _tmpChild_2024_07_b;
+     IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+     THEN
+         DELETE FROM _tmpChild_2024_07_b;
+     ELSE
+         truncate table _tmpChild_2024_07_b;
+     END IF;
      INSERT INTO _tmpChild_2024_07_b (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount, isExternal, DescId
                               , AccountId, UnitId, GoodsId, GoodsKindId, JuridicalId_basis, InfoMoneyId, InfoMoneyId_Detail
                               , AccountId_master, UnitId_master, GoodsId_master, GoodsKindId_master, JuridicalId_basis_master, InfoMoneyId_master, InfoMoneyId_Detail_master
@@ -2447,6 +2477,7 @@ RAISE INFO ' start-1 1-ая итерация для всех.<%>', CLOCK_TIMESTAMP();
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
            AND _tmpMaster.ContainerId > 0
           ;
+
          UPDATE _tmpMaster SET CalcSumm          = 0
                              , CalcSumm_external = 0
          FROM -- Сумма всех составляющих
@@ -2465,16 +2496,16 @@ RAISE INFO ' start-1 1-ая итерация для всех.<%>', CLOCK_TIMESTAMP();
 
 
 RAISE INFO ' CalcSumm = <%>  <%>  <%> '
-          , (select min (_tmpMaster.CalcSumm) FROM _tmpSumm_calc AS _tmpMaster WHERE _tmpMaster.GoodsId_master = 10087668 and _tmpMaster.GoodsKindId_master = 8348
-               and _tmpMaster.InfoMoneyId_Detail_master = 8913 -- 8906
+          , (select min (_tmpMaster.CalcSumm) FROM _tmpSumm_calc AS _tmpMaster WHERE _tmpMaster.GoodsId_master = 1560410 and _tmpMaster.GoodsKindId_master = 8346
+               and _tmpMaster.InfoMoneyId_Detail_master = 8907 -- 8906
                and _tmpMaster.UnitId_master = zc_Unit_RK()
             )
-          , (select max (_tmpMaster.CalcSumm) FROM _tmpSumm_calc AS _tmpMaster WHERE _tmpMaster.GoodsId_master = 10087668 and _tmpMaster.GoodsKindId_master = 8348
-               and _tmpMaster.InfoMoneyId_Detail_master = 8913 -- 8906
+          , (select max (_tmpMaster.CalcSumm) FROM _tmpSumm_calc AS _tmpMaster WHERE _tmpMaster.GoodsId_master = 1560410 and _tmpMaster.GoodsKindId_master = 8346
+               and _tmpMaster.InfoMoneyId_Detail_master = 8907 -- 8906
                and _tmpMaster.UnitId_master = zc_Unit_RK()
             )
-          , (select sum (_tmpMaster.CalcSumm) FROM _tmpSumm_calc AS _tmpMaster WHERE _tmpMaster.GoodsId_master = 10087668 and _tmpMaster.GoodsKindId_master = 8348
-               and _tmpMaster.InfoMoneyId_Detail_master = 8913 -- 8906
+          , (select sum (_tmpMaster.CalcSumm) FROM _tmpSumm_calc AS _tmpMaster WHERE _tmpMaster.GoodsId_master = 1560410 and _tmpMaster.GoodsKindId_master = 8346
+               and _tmpMaster.InfoMoneyId_Detail_master = 8907 -- 8906
                and _tmpMaster.UnitId_master = zc_Unit_RK()
             )
            ;
@@ -2493,12 +2524,12 @@ RAISE INFO ' start-2 1-ая итерация для всех.<%>', CLOCK_TIMESTAMP();
           ;
 
 RAISE INFO ' CalcSumm = <%>  <%>'
-          , (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 10087668 and _tmpMaster.GoodsKindId = 8348
-               and _tmpMaster.InfoMoneyId_Detail = 8913 -- 8906
+          , (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 1560410 and _tmpMaster.GoodsKindId = 8346
+               and _tmpMaster.InfoMoneyId_Detail = 8907 -- 8906
                and _tmpMaster.UnitId = zc_Unit_RK()
             )
-          , (select _tmpMaster.CalcSumm_external FROM _tmpMaster WHERE _tmpMaster.GoodsId = 10087668 and _tmpMaster.GoodsKindId = 8348
-               and _tmpMaster.InfoMoneyId_Detail = 8913 -- 8906
+          , (select _tmpMaster.CalcSumm_external FROM _tmpMaster WHERE _tmpMaster.GoodsId = 1560410 and _tmpMaster.GoodsKindId = 8346
+               and _tmpMaster.InfoMoneyId_Detail = 8907 -- 8906
                and _tmpMaster.UnitId = zc_Unit_RK()
             )
            ;
@@ -2524,12 +2555,12 @@ RAISE INFO ' start-3 1-ая итерация для всех.<%>', CLOCK_TIMESTAMP();
 RAISE INFO ' end 1-ая итерация для всех.<%>', CLOCK_TIMESTAMP();
 
 RAISE INFO ' CalcSumm = <%>  <%>'
-          , (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 10087668 and _tmpMaster.GoodsKindId = 8348
-               and _tmpMaster.InfoMoneyId_Detail = 8913 -- 8906
+          , (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 1560410 and _tmpMaster.GoodsKindId = 8346
+               and _tmpMaster.InfoMoneyId_Detail = 8907 -- 8906
                and _tmpMaster.UnitId = zc_Unit_RK()
             )
-          , (select _tmpMaster.CalcSumm_external FROM _tmpMaster WHERE _tmpMaster.GoodsId = 10087668 and _tmpMaster.GoodsKindId = 8348
-               and _tmpMaster.InfoMoneyId_Detail = 8913 -- 8906
+          , (select _tmpMaster.CalcSumm_external FROM _tmpMaster WHERE _tmpMaster.GoodsId = 1560410 and _tmpMaster.GoodsKindId = 8346
+               and _tmpMaster.InfoMoneyId_Detail = 8907 -- 8906
                and _tmpMaster.UnitId = zc_Unit_RK()
             )
            ;
@@ -2855,19 +2886,49 @@ RAISE INFO ' CalcSumm = <%>  <%>'
 if vbItearation <= 10
 then
 RAISE INFO ' vbCountDiff = <%> vbItearation = <%> CalcSumm = <%>', vbCountDiff, vbItearation
-, (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 10087668 and _tmpMaster.GoodsKindId = 8348 and _tmpMaster.InfoMoneyId = 8962
-   and _tmpMaster.InfoMoneyId_Detail = 8913 -- 8906
+, (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 1560410 and _tmpMaster.GoodsKindId = 8346 and _tmpMaster.InfoMoneyId = 8962
+   and _tmpMaster.InfoMoneyId_Detail = 8907 -- 8906
    and _tmpMaster.UnitId = zc_Unit_RK())
 ;
+
+RAISE INFO ' CalcSumm = <%>'
+, (select sum (_tmpSumm_calc.CalcSumm) FROM _tmpSumm_calc WHERE _tmpSumm_calc.GoodsId_master = 1560410 and _tmpSumm_calc.GoodsKindId_master = 8346 and _tmpSumm_calc.InfoMoneyId_master = 8962
+   and _tmpSumm_calc.InfoMoneyId_Detail_master = 8907 -- 8906
+   and _tmpSumm_calc.UnitId_master = zc_Unit_RK()
+  )
+;
+
+RAISE INFO ' CalcSumm = <%>'
+, (select sum (_tmpSumm_calc.CalcSumm) FROM _tmpSumm_calc WHERE _tmpSumm_calc.GoodsId_master = 1560410 and _tmpSumm_calc.GoodsKindId_master = 8346 -- and _tmpSumm_calc.InfoMoneyId_master = 8962
+   and _tmpSumm_calc.InfoMoneyId_Detail_master = 8907 -- 8906
+   and _tmpSumm_calc.UnitId_master = zc_Unit_RK()
+  )
+;
+
 end if;
 
 if vbItearation % 10 = 0 AND  vbItearation > 10
 then
 RAISE INFO ' vbCountDiff = <%> vbItearation = <%> CalcSumm = <%>', vbCountDiff, vbItearation
-, (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 10087668 and _tmpMaster.GoodsKindId = 8348 and _tmpMaster.InfoMoneyId = 8962
-   and _tmpMaster.InfoMoneyId_Detail = 8913 -- 8906
+, (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 1560410 and _tmpMaster.GoodsKindId = 8346 and _tmpMaster.InfoMoneyId = 8962
+   and _tmpMaster.InfoMoneyId_Detail = 8907 -- 8906
    and _tmpMaster.UnitId = zc_Unit_RK())
 ;
+
+RAISE INFO ' CalcSumm = <%>'
+, (select sum (_tmpSumm_calc.CalcSumm) FROM _tmpSumm_calc WHERE _tmpSumm_calc.GoodsId_master = 1560410 and _tmpSumm_calc.GoodsKindId_master = 8346 and _tmpSumm_calc.InfoMoneyId_master = 8962
+   and _tmpSumm_calc.InfoMoneyId_Detail_master = 8907 -- 8906
+   and _tmpSumm_calc.UnitId_master = zc_Unit_RK()
+  )
+;
+
+RAISE INFO ' CalcSumm = <%>'
+, (select sum (_tmpSumm_calc.CalcSumm) FROM _tmpSumm_calc WHERE _tmpSumm_calc.GoodsId_master = 1560410 and _tmpSumm_calc.GoodsKindId_master = 8346 -- and _tmpSumm_calc.InfoMoneyId_master = 8962
+   and _tmpSumm_calc.InfoMoneyId_Detail_master = 8907 -- 8906
+   and _tmpSumm_calc.UnitId_master = zc_Unit_RK()
+  )
+;
+
 end if;
 
 
@@ -2885,7 +2946,12 @@ RAISE INFO ' end <%> итерация для всех.<%>', vbItearation, CLOCK_TIMESTAMP();
 IF inBranchId <= 0
 THEN
      -- 1
-     truncate table _tmpMaster_2024_07_;
+     IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+     THEN
+         DELETE FROM _tmpMaster_2024_07_;
+     ELSE
+         truncate table _tmpMaster_2024_07_;
+     END IF;
      INSERT INTO _tmpMaster_2024_07_ (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm
                            , AccountId, GoodsId, GoodsKindId, InfoMoneyId, InfoMoneyId_Detail, JuridicalId_basis
                            , isZavod
@@ -3095,7 +3161,7 @@ RAISE INFO ' start INSERT INTO _tmpHistoryCost_PartionCell .<%>', CLOCK_TIMESTAM
          ELSE vbMONTH_str:= '7';
          END IF;
          -- для теста
-         /*PERFORM gpExecSql ('truncate table _tmpMaster_2024_0' || vbMONTH_str, inSession);
+         /*PERFORM gpExecSql ('\ _tmpMaster_2024_0' || vbMONTH_str, inSession);
          PERFORM gpExecSql ('insert into _tmpMaster_2024_0 (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm
                            , AccountId, GoodsId, GoodsKindId, InfoMoneyId, InfoMoneyId_Detail, JuridicalId_basis
                            , isZavod)' || vbMONTH_str || ' select * from _tmpMaster', inSession);
@@ -3106,7 +3172,13 @@ RAISE INFO ' start INSERT INTO _tmpHistoryCost_PartionCell .<%>', CLOCK_TIMESTAM
                               , AccountId_master, UnitId_master, GoodsId_master, GoodsKindId_master, JuridicalId_basis_master, InfoMoneyId_master, InfoMoneyId_Detail_master)' || vbMONTH_str || ' select * from _tmpChild', inSession);
                               */
          -- для теста
-         PERFORM gpExecSql ('truncate table _tmpHistoryCost_PartionCell_2024_0' || vbMONTH_str, inSession);
+         
+         IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+         THEN
+             PERFORM gpExecSql ('DELETE FROM _tmpHistoryCost_PartionCell_2024_0' || vbMONTH_str, inSession);
+         ELSE
+             PERFORM gpExecSql ('truncate table _tmpHistoryCost_PartionCell_2024_0' || vbMONTH_str, inSession);
+         END IF;
          PERFORM gpExecSql ('insert into _tmpHistoryCost_PartionCell_2024_0' || vbMONTH_str || ' (UnitId, GoodsId, GoodsKindId, InfoMoneyId, InfoMoneyId_Detail
                                                 , StartCount, StartSumm, IncomeCount, IncomeSumm
                                                 , CalcCount, CalcSumm, CalcCount_external, CalcSumm_external
@@ -3118,11 +3190,12 @@ RAISE INFO ' start INSERT INTO _tmpHistoryCost_PartionCell .<%>', CLOCK_TIMESTAM
                                                 , AccountId, isInfoMoney_80401 from _tmpHistoryCost_PartionCell', inSession);
 
 -- return;
+
          -- для партионного учета
          IF inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
          AND 1=1
          THEN
-RAISE INFO ' start-1 создание ContainerSumm .<%>', CLOCK_TIMESTAMP();
+ RAISE INFO ' start-1 создание ContainerSumm .<%>', CLOCK_TIMESTAMP();
 
          -- создание ContainerSumm
          CREATE TEMP TABLE _tmpContainerSumm_Goods_insert (UnitId                 Integer
@@ -3137,8 +3210,8 @@ RAISE INFO ' start-1 создание ContainerSumm .<%>', CLOCK_TIMESTAMP();
                                                          , PartionGoodsId         Integer
                                                          , AssetId                Integer
                                                           ) ON COMMIT DROP;
-         -- создание ContainerSumm
-         INSERT into _tmpContainerSumm_Goods_insert
+         -- создание ContainerSumm - tmpContainerSumm_Goods_insert_2024_07
+         INSERT INTO _tmpContainerSumm_Goods_insert
              -- Результат
               SELECT tmpList_goods.UnitId
                    , tmpList_goods.JuridicalId_basis
@@ -3161,6 +3234,7 @@ RAISE INFO ' start-1 создание ContainerSumm .<%>', CLOCK_TIMESTAMP();
                                   , tmpContainerList_partion.JuridicalId_basis
 
                     FROM tmpContainerList_partion
+                    WHERE tmpContainerList_partion.GoodsKindId > 0
                    ) AS tmpList_goods
                    INNER JOIN Container ON Container.ObjectId = tmpList_goods.GoodsId
                                        AND Container.DescId   = zc_Container_Count()
@@ -3191,7 +3265,7 @@ RAISE INFO ' start-1 создание ContainerSumm .<%>', CLOCK_TIMESTAMP();
                                             , Container.ObjectId                         AS AccountId
                                             , CLO_Unit.ObjectId                          AS UnitId
                                             , CLO_Goods.ObjectId                         AS GoodsId
-                                            , CLO_GoodsKind.ObjectId                     AS GoodsKindId
+                                            , COALESCE (CLO_GoodsKind.ObjectId, 0)       AS GoodsKindId
                                             , CLO_InfoMoney.ObjectId                     AS InfoMoneyId
                                             , CLO_InfoMoneyDetail.ObjectId               AS InfoMoneyId_Detail
                                             , CLO_JuridicalBasis.ObjectId                AS JuridicalId_basis
@@ -3933,7 +4007,7 @@ RAISE INFO ' end all HistoryCost.<%>', CLOCK_TIMESTAMP();
 
 END IF;
 
---    RAISE EXCEPTION 'Ошибка.<ok>';
+    RAISE EXCEPTION 'Ошибка.<ok>';
 
 
 
