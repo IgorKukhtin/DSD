@@ -361,6 +361,7 @@ BEGIN
 
          -- Проверка
          IF COALESCE (inPriceIncome, 0) <= 0 AND vbMovementDescId = zc_Movement_Income()
+            AND 1=0
             AND NOT EXISTS (SELECT 1
                             FROM ObjectLink AS ObjectLink_Goods_InfoMoney
                                  JOIN Object_InfoMoney_View AS View_InfoMoney
@@ -647,7 +648,7 @@ BEGIN
                         
                                      WHERE Movement.OperDate = inOperDate_ReturnOut
                                        AND Movement.DescId   = zc_Movement_Income()
-                                       AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                                     );
 
          -- проверка
