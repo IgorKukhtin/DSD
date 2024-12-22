@@ -30,7 +30,7 @@ BEGIN
 
 
    -- сохранили свойство <Переходящий П/Ф (приход/расход), кг>
-   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNext_out(), tmp.MovementItemId, COALESCE (tmp.AmountNext, 0) ::TFloat)
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNext_out(), tmp.MovementItemId, 1 * COALESCE (tmp.AmountNext, 0) ::TFloat)
    FROM (WITH -- приходы п/ф ГП
               tmpMI_WorkProgress_in
                        AS (SELECT MIContainer.MovementItemId              AS MovementItemId
