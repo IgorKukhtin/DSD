@@ -659,14 +659,16 @@ BEGIN
           OR tmpResult.CuterCount       <> 0;
 
     -- 
-      CREATE TEMP TABLE tmpCursor2 ( GoodsId Integer, GoodsKindId Integer, MasterKey TVarChar, PartionGoodsDate TDateTime, Code Integer, ReceiptCode TVarChar, Comment TVarChar, isMain Boolean
-                                   , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar, GoodsId_in Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId_in Integer, GoodsKindName TVarChar, GoodsKindId_complete_in Integer, GoodsKindName_complete TVarChar,MeasureId Integer, MeasureName TVarChar
-                                   , OperCountIn TFloat, OperCountIn_Weight TFloat, OperSummIn TFloat, PriceIn TFloat, TaxSumm TFloat
-                                   , OperCount TFloat, OperCount_Weight TFloat, OperSumm TFloat, Price TFloat
-                                   , OperSummPlan_real TFloat, OperCountPlan TFloat, OperCountPlan_Weight TFloat
-                                   , OperSummPlan1_real TFloat, OperSummPlan2_real TFloat, OperSummPlan3_real TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat
-                                   , PricePlan1 TFloat, PricePlan2 TFloat, PricePlan3 TFloat
-                                   , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName  TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar) ON COMMIT DROP;
+      CREATE TEMP TABLE tmpCursor2 (GoodsId Integer, GoodsKindId Integer, MasterKey TVarChar, PartionGoodsDate TDateTime, Code Integer, ReceiptCode TVarChar, Comment TVarChar, isMain Boolean
+                                  , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar, GoodsId_in Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId_in Integer, GoodsKindName TVarChar, GoodsKindId_complete_in Integer, GoodsKindName_complete TVarChar,MeasureId Integer, MeasureName TVarChar
+                                  , OperCountIn TFloat, OperCountIn_Weight TFloat, OperSummIn TFloat, PriceIn TFloat, TaxSumm TFloat
+                                  , OperCount TFloat, OperCount_Weight TFloat, OperSumm TFloat, Price TFloat
+                                  , OperSummPlan_real TFloat, OperCountPlan TFloat, OperCountPlan_Weight TFloat
+                                  , OperSummPlan1_real TFloat, OperSummPlan2_real TFloat, OperSummPlan3_real TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat
+                                  , PricePlan1 TFloat, PricePlan2 TFloat, PricePlan3 TFloat
+                                  , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName  TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+                                  , CuterCount TFloat
+                                   ) ON COMMIT DROP;
       INSERT INTO tmpCursor2 (GoodsId, GoodsKindId, MasterKey, PartionGoodsDate, COde, ReceiptCode, Comment, isMain
                             , GoodsGroupNameFull, GoodsGroupAnalystName, GoodsTagName, TradeMarkName, GoodsId_in, GoodsCode, GoodsName, GoodsKindId_in, GoodsKindName, GoodsKindId_complete_in, GoodsKindName_complete, MeasureId, MeasureName
                             , OperCountIn, OperCountIn_Weight, OperSummIn, PriceIn, TaxSumm,  OperCount, OperCount_Weight, OperSumm, Price, OperSummPlan_real, OperCountPlan, OperCountPlan_Weight
@@ -854,8 +856,8 @@ BEGIN
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxSumm_min       ELSE 0 END AS  TaxSumm_min      
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxSumm_max       ELSE 0 END AS  TaxSumm_max      
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_ReWork  ELSE 0 END AS  OperCount_ReWork 
-           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.CuterCount        ELSE 0 END AS  CuterCount
-           , tmpCursor1.CuterCount                                                     AS  CuterCount_inf      -- 
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor2.CuterCount        ELSE 0 END AS  CuterCount
+           , tmpCursor2.CuterCount                                                     AS  CuterCount_inf      -- 
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_gp_plan ELSE 0 END AS  OperCount_gp_plan
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_gp_real ELSE 0 END AS  OperCount_gp_real
            --, CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.LossGP_real       ELSE 0 END AS  LossGP_real      
