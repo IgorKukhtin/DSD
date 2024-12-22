@@ -14,24 +14,20 @@ BEGIN
      --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_());
      vbUserId:= lpGetUserBySession (inSession);
      
+     IF vbUserId <> 5
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет Прав.';
+     END IF;
+     
      
      IF COALESCE (inMovementId,0) = 0
      THEN
-         RETURN;
+         RAISE EXCEPTION 'Ошибка.Документ не выбран.';
      END IF;
+     
 
+     PERFORM gpComplete_All_Sybase (inMovementId, FALSE, inSession);
 
-    /* -- Распроводим Документ
-     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
-                                  , inUserId     := vbUserId);
-
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_Finance_CreateTemp();
-
-     -- проводим Документ
-     PERFORM lpComplete_Movement_BankAccount (inMovementId := inMovementId
-                                            , inUserId     := vbUserId);
-    */
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
