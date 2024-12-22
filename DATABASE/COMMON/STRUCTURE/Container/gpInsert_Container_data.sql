@@ -27,6 +27,7 @@ BEGIN
 
 
      RAISE INFO 'Дата : <%> and IsRecurse: <%> and inIsAll_container: <%> and inSRV_R: <%>' , inStartDate, inIsRecurse, inIsAll_container, inSRV_R;
+     RAISE INFO '<%>', CLOCK_TIMESTAMP();
 
 
 
@@ -37,51 +38,115 @@ BEGIN
 
      IF inSRV_R = TRUE
      THEN
-         -- Результат
-         vbScript:= 'INSERT INTO Container_data (StartDate, VerId
-                                               , Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
-                                               , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
-                                                )
-                        -- Остаток
-                        SELECT ' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime, ' || vbVerId :: TVarChar || '
-                             , Container.Id
-                             , Container.DescId, Container.ObjectId
-                             , Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) AS Amount
-                             , Container.Amount AS Amount_data_real
-                             , Container.ParentId
-                             , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
 
-                        FROM Container
-                             LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
-                                                            AND MovementItemContainer.OperDate    >= ' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime
-                        GROUP BY Container.Id
-                               , Container.DescId, Container.ObjectId
-                               , Container.Amount
-                               , Container.ParentId
-                               , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
-                        HAVING Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) <> 0
-                    ';
+         -- Результат - Остаток на начало
+         CREATE TEMP TABLE _tmpContainer_data (Id               Integer
+                                             , DescId           Integer
+                                             , ObjectId         Integer
+                                             , Amount           TFloat
+                                             , Amount_data_real TFloat
+                                             , ParentId         Integer
+                                             , KeyValue TVarChar, MasterKeyValue BigInt, ChildKeyValue BigInt, WhereObjectId Integer
+                                              ) ON COMMIT DROP;
+
+         -- Результат - Остаток на начало
+         INSERT INTO _tmpContainer_data (Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
+                                       , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
+                                        )
+            -- Результат
+            SELECT tmpData.Id
+                 , tmpData.DescId, tmpData.ObjectId
+                 , tmpData.Amount
+                 , tmpData.Amount_data_real
+                 , tmpData.ParentId
+                 , tmpData.KeyValue, tmpData.MasterKeyValue, tmpData.ChildKeyValue, tmpData.WhereObjectId
+            FROM (WITH tmpData AS (SELECT gpSelect.Id
+                                        , gpSelect.DescId, gpSelect.ObjectId
+                                        , gpSelect.Amount
+                                        , gpSelect.Amount_data_real
+                                        , gpSelect.ParentId
+                                        , gpSelect.KeyValue, gpSelect.MasterKeyValue, gpSelect.ChildKeyValue, gpSelect.WhereObjectId
+                                   -- Выполняется на SRV-r
+                                   FROM dblink('host=192.168.0.228 dbname=project port=5432 user=admin password=vas6ok' :: Text
+                                             , ('SELECT Container.Id
+                                                      , Container.DescId, Container.ObjectId
+                                                      , Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) AS Amount
+                                                      , Container.Amount AS Amount_data_real
+                                                      , Container.ParentId
+                                                      , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+                              
+                                                 FROM Container
+                                                      LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                                                     AND MovementItemContainer.OperDate    >= ' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime
+                                                 GROUP BY Container.Id
+                                                        , Container.DescId, Container.ObjectId
+                                                        , Container.Amount
+                                                        , Container.ParentId
+                                                        , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+                                                 HAVING Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) <> 0'
+                                               ) :: Text
+                                              ) AS gpSelect (Id               Integer
+                                                           , DescId           Integer
+                                                           , ObjectId         Integer
+                                                           , Amount           TFloat
+                                                           , Amount_data_real TFloat
+                                                           , ParentId         Integer
+                                                           , KeyValue TVarChar, MasterKeyValue BigInt, ChildKeyValue BigInt, WhereObjectId Integer
+                                                            )
+                                  )
+                  -- Результат
+                  SELECT *
+                  FROM tmpData
+                 ) AS tmpData
+                ;
 
          -- информативно
-         RAISE INFO  '%',vbScript;
+         RAISE INFO  'end insert - 1 - <%>  <%>', (SELECT COUNT(*) FROM _tmpContainer_data), CLOCK_TIMESTAMP();
+
+
+
+         -- Результат - след период, их удалить
+         CREATE TEMP TABLE _tmpContainer_del (Id Integer) ON COMMIT DROP;
+         -- Результат - след период, их удалить
+         INSERT INTO _tmpContainer_del (Id)
+            -- Результат
+            SELECT tmpData.Id
+            FROM (WITH tmpData AS (SELECT gpSelect.Id
+                                   -- Выполняется на SRV-r
+                                   FROM dblink('host=192.168.0.228 dbname=project port=5432 user=admin password=vas6ok' :: Text
+                                             , ('SELECT Container.Id
+                                                 FROM Container
+                                                      LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                                                     AND MovementItemContainer.OperDate    <' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime
+                                                 WHERE MovementItemContainer.ContainerId IS NULL'
+                                               ) :: Text
+                                              ) AS gpSelect (Id               Integer
+                                                            )
+                                  )
+                  -- Результат
+                  SELECT *
+                  FROM tmpData
+                 ) AS tmpData
+                ;
+
+         -- информативно
+         RAISE INFO  'end insert - 2 - <%>  <%>', (SELECT COUNT(*) FROM _tmpContainer_del), CLOCK_TIMESTAMP();
 
          -- Результат
-         vb1:= (SELECT *
+         /*vb1:= (SELECT *
                 FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
                                    -- Результат
-                                , vbScript));
+                                , vbScript));*/
 
 
          IF inIsAll_container = TRUE
          THEN
              -- Результат
-             vbScript:= 'INSERT INTO Container_data (StartDate, VerId
-                                                   , Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
-                                                   , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
-                                                    )
+             INSERT INTO _tmpContainer_data (Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
+                                           , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
+                                            )
                             -- Остаток
-                            SELECT inStartDate, vbVerId
-                                 , Container.Id
+                            SELECT Container.Id
                                  , Container.DescId, Container.ObjectId
                                  , 0 AS Amount
                                  , Container.Amount AS Amount_data_real
@@ -89,28 +154,48 @@ BEGIN
                                  , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
 
                             FROM Container
-                                 LEFT JOIN Container_data ON Container_data.Id        = Container.Id
-                                                         AND Container_data.StartDate = ' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime
-                                                         AND Container_data.VerId     = ' || vbVerId :: TVarChar || '
-                            WHERE Container_data.Id IS NULL
-                        ';
+                                 LEFT JOIN _tmpContainer_data ON _tmpContainer_data.Id = Container.Id
+                                 --LEFT JOIN _tmpContainer_del  ON _tmpContainer_del.Id  = Container.Id
+                            WHERE _tmpContainer_data.Id IS NULL
+                              --AND _tmpContainer_del.Id IS NULL
+                        ;
 
              -- информативно
-             RAISE INFO  '%',vbScript;
+             -- RAISE INFO  '%',vbScript;
+             RAISE INFO  'end insert - 3 - <%>  <%>', (SELECT COUNT(*) FROM _tmpContainer_data), CLOCK_TIMESTAMP();
 
              -- Результат
-             vb2:= (SELECT *
+             /*vb2:= (SELECT *
                     FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
                                        -- Результат
-                                    , vbScript));
+                                    , vbScript));*/
 
          END IF;
+
+
+         -- Результат - Остаток на начало
+         INSERT INTO Container_data (StartDate, VerId
+                                   , Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
+                                   , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
+                                    )
+            SELECT inStartDate, vbVerId
+                 , tmpData.Id
+                 , tmpData.DescId, tmpData.ObjectId
+                 , tmpData.Amount
+                 , tmpData.Amount_data_real
+                 , tmpData.ParentId
+                 , tmpData.KeyValue, tmpData.MasterKeyValue, tmpData.ChildKeyValue, tmpData.WhereObjectId
+            FROM _tmpContainer_data AS tmpData
+           ;
+
+            RAISE INFO  'end insert - all   <%>', CLOCK_TIMESTAMP();
+
 
      ELSE
          IF inStartDate < '01.01.2023' AND EXISTS (SELECT 1 FROM Container_data WHERE StartDate = DATE_TRUNC ('YEAR', inStartDate) + INTERVAL '1 YEAR')
          THEN
-             -- 
-             vbVerId_olap:= (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = DATE_TRUNC ('YEAR', inStartDate) + INTERVAL '1 YEAR' AND Container_data.VerId > 0);
+             --  считаем от фиксированной даты(!!!не сегодня!!!) - назад
+             vbVerId_olap:= (SELECT MAX (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = DATE_TRUNC ('YEAR', inStartDate) + INTERVAL '1 YEAR' AND Container_data.VerId > 0);
 
              -- Результат
              INSERT INTO Container_data (StartDate, VerId
@@ -219,7 +304,8 @@ SELECT
 FROM
 
 */
-
+-- DELETE FROM Container_data WHERE StartDate = '01.12.2024' AND VerId = 3
 -- тест
 -- SELECT * FROM gpInsert_Container_data (inStartDate:= '01.02.2024', inIsRecurse:= FALSE, inIsAll_container:= TRUE,  inSRV_R:= TRUE,  inSession:= '5')
 -- SELECT * FROM gpInsert_Container_data (inStartDate:= '01.02.2024', inIsRecurse:= FALSE, inIsAll_container:= FALSE, inSRV_R:= FALSE, inSession:= '5')
+-- SELECT * FROM gpInsert_Container_data (inStartDate:= '01.12.2024', inIsRecurse:= FALSE, inIsAll_container:= FALSE, inSRV_R:= FALSE, inSession:= '5')

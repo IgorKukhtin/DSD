@@ -35,7 +35,7 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
 
      RETURN QUERY
-     WITH tmpAll AS (SELECT * FROM Container_data WHERE Container_data.StartDate = inStartDate)
+     WITH tmpAll AS (SELECT * FROM Container_data WHERE Container_data.StartDate = inStartDate AND VerId IN (1,2,3))
       , tmp_list_all AS (SELECT DISTINCT VerId FROM tmpAll)
       , tmp_list AS (SELECT VerId, ROW_NUMBER() OVER (ORDER BY VerId ASC) AS Ord FROM tmp_list_all)
       , tmp_res AS (SELECT tmpAll.Id AS ContainerId
@@ -238,3 +238,4 @@ $BODY$
 -- SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.01.2024', inSession:= '5')
 -- SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.01.2023', inSession:= '5')
 -- SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.01.2022', inSession:= '5')
+-- SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.12.2024', inSession:= '5')
