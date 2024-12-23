@@ -64,8 +64,8 @@ object IncomeJournalForm: TIncomeJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -80
-    ExplicitTop = 73
+    ExplicitLeft = 24
+    ExplicitTop = 281
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -940,6 +940,14 @@ object IncomeJournalForm: TIncomeJournalForm
         item
           Visible = True
           ItemName = 'bbPrint_byPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSelectPrint_reestr'
         end>
     end
     object bbPrintDiff: TdxBarButton
@@ -959,6 +967,10 @@ object IncomeJournalForm: TIncomeJournalForm
     end
     object bbPrintSklad: TdxBarButton
       Action = actPrintSklad
+      Category = 0
+    end
+    object bbSelectPrint_reestr: TdxBarButton
+      Action = actSelectPrint_reestr
       Category = 0
     end
   end
@@ -1618,6 +1630,64 @@ object IncomeJournalForm: TIncomeJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actSelectPrint_reestr: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_reestr
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_reestr
+        end>
+      Caption = #1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
+      Hint = #1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'PaidKindName;OperDate;InvNumber'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Income_Reestr'
+      ReportNameParam.Value = 'PrintMovement_Income_Reestr'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint_byPartner: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -2169,5 +2239,42 @@ object IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 432
     Top = 272
+  end
+  object spSelectPrint_reestr: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_IncomeReestr_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 280
   end
 end

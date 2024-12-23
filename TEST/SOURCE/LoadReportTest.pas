@@ -141,6 +141,10 @@ var
  i : integer;
 begin
 
+
+  LoadReportFromFile('PrintMovement_Income_Reestr', ReportPath + '\Товарный Учет\PrintMovement_Income_Reestr.fr3');
+  exit;
+
   LoadReportFromFile('PrintMovement_Income_Sklad', ReportPath + '\Товарный Учет\PrintMovement_Income_Sklad.fr3');
   exit;
   LoadReportFromFile('PrintMovement_Income_wp_ActDiff', ReportPath + '\Товарный Учет\PrintMovement_Income_wp_ActDiff.fr3');

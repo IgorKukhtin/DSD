@@ -152,6 +152,9 @@ type
     spSelectPrintSklad: TdsdStoredProc;
     actPrintSklad: TdsdPrintAction;
     bbPrintSklad: TdxBarButton;
+    spSelectPrint_reestr: TdsdStoredProc;
+    actSelectPrint_reestr: TdsdPrintAction;
+    bbSelectPrint_reestr: TdxBarButton;
   private
   public
   end;
