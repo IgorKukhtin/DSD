@@ -2271,6 +2271,13 @@ object IncomeJournalForm: TIncomeJournalForm
         ComponentItem = 'ToId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReturnOut'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 744

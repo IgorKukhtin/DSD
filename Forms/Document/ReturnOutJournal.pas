@@ -24,7 +24,7 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  cxButtonEdit, dsdGuides;
+  cxButtonEdit, dsdGuides, dsdCommon;
 
 type
   TReturnOutJournalForm = class(TAncestorJournalForm)
@@ -61,6 +61,11 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spSelectPrint_reestr: TdsdStoredProc;
+    actSelectPrint_reestr: TdsdPrintAction;
+    bbSelectPrint_reestr: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    dxBarSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public

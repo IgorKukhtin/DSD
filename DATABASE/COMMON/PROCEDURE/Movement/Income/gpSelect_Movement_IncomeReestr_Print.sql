@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_IncomeReestr_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeReestr_Print (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeReestr_Print (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeReestr_Print(
     IN inStartDate         TDateTime , -- Дата нач. периода
     IN inEndDate           TDateTime , -- Дата оконч. периода
-    IN inUnitId            Integer  , -- ключ склад
+    IN inUnitId            Integer  , -- ключ склад  
+    IN inisReturnOut       Boolean  , -- печать реестра Возврата если ДА
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -44,14 +46,14 @@ BEGIN
     tmpMovement AS (SELECT Movement.Id
                          , Movement.OperDate
                          , Movement.InvNumber
-                         , MovementLinkObject_To.ObjectId AS ToId
+                         , MovementLinkObject_Unit.ObjectId AS UnitId
                     FROM Movement
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                      ON MovementLinkObject_To.MovementId = Movement.Id
-                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                         INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_To.ObjectId                      
+                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                     AND MovementLinkObject_Unit.DescId = CASE WHEN inisReturnOut = FALSE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END 
+                         INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId                      
                     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                      AND Movement.DescId = zc_Movement_Income()
+                      AND Movement.DescId = CASE WHEN inisReturnOut = FALSE THEN zc_Movement_Income() ELSE zc_Movement_ReturnOut() END 
                       AND Movement.StatusId = zc_Enum_Status_Complete()
                     )
   
@@ -70,6 +72,7 @@ BEGIN
                            FROM MovementLinkObject
                            WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                              AND MovementLinkObject.DescId IN (zc_MovementLinkObject_From()
+                                                             , zc_MovementLinkObject_To()
                                                              , zc_MovementLinkObject_PaidKind()
                                                              )
                          )
@@ -88,9 +91,11 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData       AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData           AS TotalSumm
 
-           , Object_From.ValueData             AS FromName
-           , Object_To.ValueData               AS ToName
-           , Object_PaidKind.ValueData         AS PaidKindName
+           , Object_Partner.ValueData          AS PartnerName
+           , Object_Unit.ValueData             AS UnitName
+           , Object_PaidKind.ValueData         AS PaidKindName   
+           
+           , CASE WHEN inisReturnOut = FALSE THEN 'Реєстр прибуткових накладних' ELSE 'Реєстр накладних повернення' END ::TVarChar AS Top_text
 
        FROM tmpMovement AS Movement
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -117,12 +122,12 @@ BEGIN
                                        ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                       AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_From
-                                            ON MovementLinkObject_From.MovementId = Movement.Id
-                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Partner
+                                            ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                           AND MovementLinkObject_Partner.DescId = CASE WHEN inisReturnOut = FALSE THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_To() END
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
-            LEFT JOIN Object AS Object_To ON Object_To.Id = Movement.ToId
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_PaidKind
                                             ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -140,10 +145,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 14.01.20         *
- 05.06.15         * 
+ 23.12.24         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_IncomeReestr_Print (inStartDate := '01.12.2024', inEndDate:= '02.12.2024', inUnitId:=0, inSession:= '5'); -- FETCH ALL "<unnamed portal 10>";
---select * from gpSelect_Movement_IncomeReestr_Print(inStartDate := ('01.11.2024')::TDateTime , inEndDate := ('07.11.2024')::TDateTime , inUnitId := 8445 ,  inSession := '9457'); FETCH ALL "<unnamed portal 7>";
+--select * from gpSelect_Movement_IncomeReestr_Print(inStartDate := ('01.11.2024')::TDateTime , inEndDate := ('07.11.2024')::TDateTime , inUnitId := 8445 , inisReturnOut:=false, inSession := '9457'); --FETCH ALL "<unnamed portal 7>";

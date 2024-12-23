@@ -4661,7 +4661,8 @@ object IncomeForm: TIncomeForm
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 465
+    Left = 369
+    Top = 8
   end
   object spSelectPrintSticker: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
