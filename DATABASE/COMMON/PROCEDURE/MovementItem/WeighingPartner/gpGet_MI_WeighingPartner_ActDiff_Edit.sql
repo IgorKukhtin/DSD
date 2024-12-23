@@ -31,7 +31,7 @@ BEGIN
      --пробуем найти строку  по ключю MovementId + GoodsId + GoodsKindId
     SELECT MAX (MovementItem.Id) AS Id
          , COUNT (*) AS Count
-  INTO vbId, vbCount
+           INTO vbId, vbCount
     FROM MovementItem
         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -43,13 +43,16 @@ BEGIN
       AND MovementItem.ObjectId = inGoodsId
       AND (COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0))
     ;
-    --если нашли больше 1 строки - ощибка
+
+    -- если нашли больше 1 строки - ошибка
     IF vbCount > 1
     THEN
         RAISE EXCEPTION 'Ошибка.Найдено больше одной строки для редактирования.';
     END IF;          
      
-     RETURN QUERY
+
+    -- Результат
+    RETURN QUERY
         WITH
         tmpMI_Float AS (SELECT MovementItemFloat.*
                         FROM MovementItemFloat
