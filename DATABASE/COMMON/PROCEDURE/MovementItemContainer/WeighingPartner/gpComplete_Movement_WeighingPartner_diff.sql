@@ -81,7 +81,7 @@ BEGIN
 
                                FROM gpSelect_MI_WeighingPartner_diff (inMovementId, FALSE, inSession) AS gpSelect
                               )
-        -- ВСЕ приходы, с одинаковым InvNumberPartner + ContractId + PaidKindId +  для Акта Разногласий
+        -- ВСЕ приходы, с одинаковым InvNumberPartner + ContractId + PaidKindId + для Акта Разногласий
       , tmpMovement AS (SELECT Movement.Id                                  AS MovementId
                              , COALESCE (MF_VATPercent.ValueData, 0)        AS VATPercent
                              , COALESCE (MB_PriceWithVAT.ValueData, FALSE)  AS isPriceWithVAT
@@ -200,19 +200,19 @@ END IF;
          FROM (SELECT 
                       -- Количество Поставщика
                       lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), _tmpItem_income_diff.MovementItemId
-                                                      , CASE WHEN _tmpItem_income_diff.Ord = 1 THEN _tmpItem_income_diff.AmountPartner ELSE 0 END
+                                                      , CASE WHEN _tmpItem_income_diff.Ord = 1 THEN COALESCE (_tmpItem_income_diff.AmountPartner, 0) ELSE 0 END
                                                        )
 
                    ,  -- Количество Поставщика -  по документу Поставщика
                       lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), _tmpItem_income_diff.MovementItemId
-                                                      , CASE WHEN _tmpItem_income_diff.Ord = 1 THEN _tmpItem_income_diff.AmountPartnerSecond ELSE 0 END
+                                                      , CASE WHEN _tmpItem_income_diff.Ord = 1 THEN COALESCE (_tmpItem_income_diff.AmountPartnerSecond, 0) ELSE 0 END
                                                        )
                       -- Цена Поставщика
-                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), _tmpItem_income_diff.MovementItemId, _tmpItem_income_diff.PricePartner)
+                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), _tmpItem_income_diff.MovementItemId, COALESCE (_tmpItem_income_diff.PricePartner, 0))
 
                       -- Цена
                     , CASE WHEN _tmpItem_income_diff.OperPrice <> 0
-                           THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), _tmpItem_income_diff.MovementItemId, _tmpItem_income_diff.OperPrice)
+                           THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), _tmpItem_income_diff.MovementItemId, COALESCE (_tmpItem_income_diff.OperPrice, 0))
                       END AS x4
 
                     , _tmpItem_income_diff.MovementItemId
