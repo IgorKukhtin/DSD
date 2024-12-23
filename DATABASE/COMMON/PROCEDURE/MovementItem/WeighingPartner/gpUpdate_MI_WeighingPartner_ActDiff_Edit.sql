@@ -23,6 +23,11 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPricePartner TFloat;
    DECLARE vbSummPartner TFloat;
+
+   DECLARE vbInvNumberPartner_old TVarChar;
+   DECLARE vbContractId Integer;
+   DECLARE vbPaidKindId Integer;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingPartner());
@@ -41,6 +46,38 @@ BEGIN
          END IF;
      ELSE
          inSummPartner := (inPricePartner * inAmountPartnerSecond);
+     END IF;
+
+
+     IF NOT EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberPartner() AND MS.ValueData = inInvNumberPartner)
+        AND TRIM (inInvNumberPartner) <> ''
+     THEN
+         vbInvNumberPartner_old:= (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberPartner());
+         vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
+         vbPaidKindId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind());
+     
+         -- Все документы  - сохранили свойство <Номер контрагента>
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), Movement.Id, inInvNumberPartner)
+         FROM Movement
+              INNER JOIN MovementString AS MovementString_InvNumberPartner
+                                        ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                       AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                       AND MovementString_InvNumberPartner.ValueData = vbInvNumberPartner_old
+                                       AND vbInvNumberPartner_old <> ''
+    
+              INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                           AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                           AND MovementLinkObject_Contract.ObjectId   = vbContractId
+              INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                            ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                           AND MovementLinkObject_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
+                                           AND MovementLinkObject_PaidKind.ObjectId   = vbPaidKindId
+         WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 DAY' AND vbOperDate + INTERVAL '1 DAY'
+           AND Movement.DescId   IN (zc_Movement_Income(), zc_Movement_WeighingPartner())
+           AND Movement.StatusId = zc_Enum_Status_Complete()
+        ;
+
      END IF;
 
      -- сохранили свойство <Номер контрагента>
