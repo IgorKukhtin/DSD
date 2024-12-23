@@ -1955,6 +1955,11 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var i : Integer;
 begin
   fStartBarCode:= false;
+  //
+  // надо отловить сохранение 2 раза
+  DMMainScaleForm.time_exec_Insert_Scale_MI:=now;
+  DMMainScaleForm.GoodsId_exec_Insert_Scale_MI:=0;
+  //
   //aTest:= false;
   // определили IP
   with TIdIPWatch.Create(nil) do

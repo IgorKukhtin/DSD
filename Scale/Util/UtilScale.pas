@@ -83,6 +83,8 @@ type
     WeightTare5:Double;   // only Scale
     WeightTare6:Double;   // only Scale
 
+    Limit_Second_save_MI:Integer;
+
     isOperDatePartner:Boolean; // only Scale - 301 and 302
 
     UnitId1, UnitId2, UnitId3, UnitId4, UnitId5:Integer;
