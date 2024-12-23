@@ -20,6 +20,7 @@ BEGIN
                      FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession
                                                           ) AS gpGet);
 
+
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
 
@@ -40,6 +41,12 @@ BEGIN
             RAISE EXCEPTION 'Нет прав удалять документ';
      END CASE;
      
+
+IF vbUserId = 5 AND 1=1
+THEN
+    RAISE EXCEPTION 'Ошибка.ok';
+END IF;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

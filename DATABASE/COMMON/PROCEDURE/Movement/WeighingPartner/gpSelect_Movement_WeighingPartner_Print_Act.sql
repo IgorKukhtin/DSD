@@ -121,7 +121,7 @@ BEGIN
          SELECT MIN (Movement.Id), MAX (Movement.Id)
                 INTO vbMovementId_find_min, vbMovementId_find_max
          FROM Movement
-              -- есть такое св-во
+              -- есть такое св-во - Документ поставщика
               INNER JOIN MovementBoolean AS MovementBoolean_DocPartner
                                          ON MovementBoolean_DocPartner.MovementId = Movement.Id
                                         AND MovementBoolean_DocPartner.DescId     = zc_MovementBoolean_DocPartner()

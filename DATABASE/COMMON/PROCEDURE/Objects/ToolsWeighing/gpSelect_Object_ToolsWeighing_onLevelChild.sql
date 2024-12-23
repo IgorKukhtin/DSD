@@ -100,6 +100,9 @@ BEGIN
                                                   WHEN STRPOS (tmp.Name, 'PeriodPartionGoodsDate') > 0
                                                        THEN '100'
                                                        
+                                                  WHEN STRPOS (tmp.Name, 'Limit_Second_save_MI') > 0
+                                                       THEN '0'
+                                                       
                                                   ELSE '1'
                                              END
                                            , inSession) AS Value
@@ -144,6 +147,8 @@ BEGIN
            
 
            UNION SELECT 'DayPrior_PriceReturn'   AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+
+           UNION SELECT 'Limit_Second_save_MI'   AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
            UNION SELECT 'isGoodsComplete'        AS Name
            UNION SELECT 'InfoMoneyId_income'     AS Name WHERE 1=0 AND inIsCeh = FALSE

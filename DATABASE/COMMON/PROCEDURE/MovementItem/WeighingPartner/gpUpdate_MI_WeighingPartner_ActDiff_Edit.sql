@@ -32,11 +32,11 @@ BEGIN
      vbPricePartner := (SELECT MIF.ValueData FROM MovementItemFloat MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_PricePartner());
      vbSummPartner := (SELECT MIF.ValueData FROM MovementItemFloat MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_SummPartner());
 
-     IF COALESCE (vbPricePartner,0) = COALESCE (inPricePartner,0)
+     IF COALESCE (vbPricePartner,0) = COALESCE (inPricePartner,0) OR COALESCE (inPricePartner,0) = 0
      THEN
-         IF COALESCE(inSummPartner,0) <> 0 AND COALESCE(vbSummPartner,0) <> COALESCE(inSummPartner,0) 
+         IF (COALESCE(inSummPartner,0) <> 0 AND COALESCE(vbSummPartner,0) <> COALESCE(inSummPartner,0)) OR COALESCE (inPricePartner,0) = 0
          THEN
-             --пересчитываем цену по сумме
+             -- пересчитываем цену по сумме
              inPricePartner := CASE WHEN COALESCE (inAmountPartnerSecond,0) <> 0 THEN (inSummPartner / inAmountPartnerSecond) ELSE 0 END ::TFloat;
          END IF;
      ELSE
@@ -47,27 +47,35 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), inMovementId, inInvNumberPartner);
      -- сохранили связь с <Дата контрагента>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inMovementId, inOperDatePartner);
-     
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), inId, inAmountPartnerSecond);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), inId, inPricePartner);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPartner(), inId, inSummPartner);
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
-     -- сохранили свойство <Признак "без оплаты">
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPartnerSecond(), inId, inIsAmountPartnerSecond);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_ReturnOut(), inId, inIsReturnOut);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PriceWithVAT(), inId, inisPriceWithVAT);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), inId, inComment);
+
+     IF inId > 0
+     THEN
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), inId, inAmountPartnerSecond);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartner(), inId, inPricePartner);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPartner(), inId, inSummPartner);
+    
+         -- сохранили свойство <Признак "без оплаты">
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPartnerSecond(), inId, inIsAmountPartnerSecond);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_ReturnOut(), inId, inIsReturnOut);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PriceWithVAT(), inId, inisPriceWithVAT);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), inId, inComment);
+
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
+
+     END IF;
+
 
      if vbUserId = 9457 then RAISE EXCEPTION 'Test.Ok. %   %', inPricePartner, inSummPartner; end if;
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
 
 END;
 $BODY$

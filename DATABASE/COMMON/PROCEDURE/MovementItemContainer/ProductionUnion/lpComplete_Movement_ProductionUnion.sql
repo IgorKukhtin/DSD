@@ -2443,22 +2443,35 @@ END IF;
 
      END IF; -- if vbIsPeresort = FALSE AND 1=0
      
-     
-     -- Пересчет только для IsPeresort - переходящий остаток
+
+     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable (inUserId);
+     -- 5.2. ФИНИШ - Обязательно сохраняем Проводки для Отчета
+     PERFORM lpInsertUpdate_MIReport_byTable ();
+
+     -- 5.3. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_ProductionUnion()
+                                , inUserId     := inUserId
+                                 );
+
+
+     -- !!!обязательно ПОСЛЕ проводок!!! - Пересчет только для IsPeresort - переходящий остаток
      IF vbIsPeresort = TRUE AND vbUnitId_From IN (8447, 8448, 8449) -- ЦЕХ ковбасних виробів + ЦЕХ деликатесов + Цех сирокопчених ковбас
-        AND 1=0
+        --AND 1=0
+        AND inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer
      THEN
          PERFORM gpUpdate_MI_ProductionUnion_AmountNext_out (inMovementId:= tmp.MovementId, inSession:= inUserId :: TVarChar)
-         FROM (SELECT DISTINCT Movement.Id AS MovementId
+         FROM (SELECT DISTINCT MIContainer.MovementId
                FROM _tmpItemChild
                     INNER JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                   ON CLO_PartionGoods.ContainerId = _tmpItemChild.ContainerId_count
+                                                   ON CLO_PartionGoods.ContainerId = _tmpItemChild.ContainerId_GoodsFrom
                                                   AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                     INNER JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                              AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
 
                     INNER JOIN MovementItemContainer AS MIContainer
-                                                     ON MIContainer.ContainerId    = _tmpItemChild.ContainerId_count
+                                                     ON MIContainer.ContainerId    = _tmpItemChild.ContainerId_GoodsFrom
                                                     AND MIContainer.DescId         = zc_MIContainer_Count()
                                                     AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                                                     AND MIContainer.IsActive       = TRUE
@@ -2481,18 +2494,6 @@ END IF;
                WHERE MovementBoolean_Peresort.MovementId IS NULL
               ) AS tmp;
      END IF;
-
-
-     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
-     PERFORM lpInsertUpdate_MovementItemContainer_byTable (inUserId);
-     -- 5.2. ФИНИШ - Обязательно сохраняем Проводки для Отчета
-     PERFORM lpInsertUpdate_MIReport_byTable ();
-
-     -- 5.3. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_ProductionUnion()
-                                , inUserId     := inUserId
-                                 );
 
 
 IF inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer) AND 1=0

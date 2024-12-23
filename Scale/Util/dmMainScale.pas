@@ -13,6 +13,8 @@ type
     procedure DataModuleCreate(Sender: TObject);
   private
   public
+    time_exec_Insert_Scale_MI : TDateTime;
+    GoodsId_exec_Insert_Scale_MI : Integer;
     // Scale + ScaleCeh
     function gpSelect_ToolsWeighing_onLevelChild(inBranchCode:Integer;inLevelChild: String): TArrayList;
     function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
@@ -84,7 +86,7 @@ var
   DMMainScaleForm: TDMMainScaleForm;
 
 implementation
-uses Forms,FormStorage,Inifiles,TypInfo,DialogMovementDesc,UtilConst;
+uses Forms,FormStorage,Inifiles,TypInfo,DialogMovementDesc,UtilConst, DateUtils ;
 {$R *.dfm}
 {------------------------------------------------------------------------}
 procedure TDMMainScaleForm.DataModuleCreate(Sender: TObject);
@@ -792,6 +794,31 @@ end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpInsert_Scale_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
 begin
+    // надо отловить сохранение 2 раза
+    if (now < IncSecond( time_exec_Insert_Scale_MI, SettingMain.Limit_Second_save_MI))
+    and(SettingMain.Limit_Second_save_MI > 0)
+    //and(SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 210)
+    and(execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Sale)
+    and(GoodsId_exec_Insert_Scale_MI = execParamsMI.ParamByName('GoodsId').AsInteger)
+    then begin
+        // наверно ошибочное сохранение 2 раза
+        ShowMessage ('ќшибка.ƒублирование взвешивани€.'
+                    +#10+#13
+                    +'¬ес на табло = <'+FloatToStr(execParamsMI.ParamByName('RealWeight').AsFloat)+'>'
+                    +#10+#13
+                    +DateTimeToStr(time_exec_Insert_Scale_MI)
+                    +#10+#13
+                    +DateTimeToStr(now)
+                    );
+        Result:= true;
+        exit;
+    end;
+    //
+    // надо отловить сохранение 2 раза
+    time_exec_Insert_Scale_MI:= now;
+    GoodsId_exec_Insert_Scale_MI:=execParamsMI.ParamByName('GoodsId').AsInteger;
+    //
+    //
     if execParamsMovement.ParamByName('MovementId').AsInteger = 0
     then Result:= gpInsertUpdate_Scale_Movement(execParamsMovement)
     else Result:= true;
@@ -1844,6 +1871,11 @@ begin
   end
   else begin
        SettingMain.Exception_WeightDiff:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'Exception_WeightDiff'));
+       //
+       try SettingMain.Limit_Second_save_MI:=StrToInt(GetArrayList_Value_byName(Default_Array,'Limit_Second_save_MI'))
+       except
+           SettingMain.Limit_Second_save_MI:=0;
+       end;
        //
        SettingMain.WeightTare1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare1'));
        SettingMain.WeightTare2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare2'));

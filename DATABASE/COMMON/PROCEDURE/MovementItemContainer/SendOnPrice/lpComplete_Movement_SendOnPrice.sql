@@ -1,9 +1,9 @@
 -- Function: lpComplete_Movement_SendOnPrice()
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_SendOnPrice_Price (Integer, Integer);
-DROP FUNCTION IF EXISTS lpComplete_Movement_SendOnPrice (Integer, Integer);
+DROP FUNCTION IF EXISTS old-lpComplete_Movement_SendOnPrice_Price (Integer, Integer);
+DROP FUNCTION IF EXISTS old-lpComplete_Movement_SendOnPrice (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_SendOnPrice(
+CREATE OR REPLACE FUNCTION old-lpComplete_Movement_SendOnPrice(
     IN inMovementId        Integer               , -- ключ Документа
     IN inUserId            Integer                 -- Пользователь
 )                              
