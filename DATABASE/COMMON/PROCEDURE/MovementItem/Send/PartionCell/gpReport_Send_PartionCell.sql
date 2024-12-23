@@ -191,6 +191,11 @@ BEGIN
 
      vbIsWeighing:= TRUE; -- vbUserId = 5;
 
+     IF inStartDate + INTERVAL '8 MONTH' < inEndDate
+     THEN 
+         RAISE EXCEPTION 'Ошибка.Начальная дата = <%>.', inStartDate;
+     END IF;
+
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
