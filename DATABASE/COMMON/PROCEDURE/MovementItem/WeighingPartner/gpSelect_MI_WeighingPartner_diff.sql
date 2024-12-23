@@ -1,9 +1,11 @@
 -- Function: gpSelect_MI_WeighingPartner_diff()
 
-DROP FUNCTION IF EXISTS gpSelect_MI_WeighingPartner_diff (Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_MI_WeighingPartner_diff (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_WeighingPartner_diff (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_WeighingPartner_diff(
-    IN inMovementId  Integer      , -- ключ Документа
+    IN inMovementId  Integer      , -- ключ Документа 
+    IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -352,6 +354,7 @@ BEGIN
                            GROUP BY MovementItem.MovementId
                                   , MovementItem.ObjectId
                                   , MovementItem.GoodsKindId
+                                  , CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END
                           ) AS tmpMIList
 
                     UNION ALL
@@ -487,7 +490,7 @@ BEGIN
                                                         ON MovementBoolean_PriceWithVAT.MovementId = MovementItem.MovementId
                            LEFT JOIN tmpMF_VATPercent AS MovementFloat_VATPercent
                                                       ON MovementFloat_VATPercent.MovementId = MovementItem.MovementId
-
+                      WHERE inShowAll = FALSE -- иначе ничего не показываем в этом запросе
                       GROUP BY COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId)
                              , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId, 0)
                              , MIFloat_Price.ValueData
@@ -765,4 +768,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_WeighingPartner_diff (inMovementId:= 29882295, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_WeighingPartner_diff (inMovementId:= 29882295, inShowAll:= false, inIsErased:= TRUE, inSession:= '2')

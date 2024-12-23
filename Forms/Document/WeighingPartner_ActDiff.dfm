@@ -761,6 +761,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -821,6 +829,15 @@
           BeginGroup = True
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True

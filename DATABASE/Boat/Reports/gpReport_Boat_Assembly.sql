@@ -60,11 +60,13 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH
+     -- все лодки  кроме проданных и идаленных
      tmpProduct AS(SELECT gpSelect.*
                    FROM gpSelect_Object_Product (0, FALSE, FALSE, '') AS gpSelect
-                  -- WHERE gpSelect.OperDate_OrderClient BETWEEN inStartDate AND inEndDate
+                  -- WHERE gpSelect.OperDate_OrderClient BETWEEN inStartDate AND inEndDate    
+                  --WHERE gpSelect.MovementId_OrderClient = 5495        --№ док 6463 
                   )
-   -- комплектующие из док заказов
+   -- все комплектующие из док заказов   
    , tmpGoods AS (
                  SELECT
                         MovementItem.DescId                       AS DescId_mi
@@ -77,10 +79,8 @@ BEGIN
                       , COALESCE (MILinkObject_Goods.ObjectId, 0) AS GoodsId
                         -- Комплектующие
                       , MovementItem.ObjectId                     AS ObjectId
-                      , MovementItem.Amount                       AS Amount
-                      --, SUM (COALESCE (MovementItem.Amount,0)) OVER (PARTITION BY MovementItem.ObjectId) AS TotalAmount
-                      , COUNT (*) OVER (PARTITION BY MovementItem.MovementId) AS TotalCount
-                      --, COUNT (*) OVER (PARTITION BY MovementItem.MovementId, MovementItem.DescId) AS TotalCount_mi
+
+                      , zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData) AS Amount
 
                       , ROW_NUMBER () OVER (PARTITION BY MovementItem.ObjectId ORDER BY tmp.NPP_2) AS Ord
                  FROM (SELECT DISTINCT tmpProduct.MovementId_OrderClient AS MovementId
@@ -99,9 +99,12 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                        ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                      LEFT JOIN MovementItemFloat AS MIFloat_ForCount
+                                                  ON MIFloat_ForCount.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
                  )
    , tmpGoods_mi AS (SELECT tmpGoods.MovementId
-                            , tmpGoods.ObjectId
+                          , tmpGoods.ObjectId 
                           , SUM (COALESCE (tmpGoods_2.Amount,0))  AS Amount_total
                      FROM tmpGoods
                          LEFT JOIN tmpGoods AS tmpGoods_2
@@ -111,6 +114,17 @@ BEGIN
                             , tmpGoods.ObjectId
                             , tmpGoods.Amount
                      )
+   , tmpGoods_count AS (SELECT tmp.MovementId
+                             , SUM (tmp.TotalCount)   AS TotalCount
+                        FROM (SELECT tmpGoods.MovementId
+                                   , tmpGoods.ObjectId 
+                                   , 1   AS TotalCount
+                              FROM tmpGoods
+                              GROUP BY tmpGoods.MovementId
+                                   , tmpGoods.ObjectId 
+                              ) AS tmp
+                        GROUP BY tmp.MovementId
+                        )
 
     -- остатки текущие Основной склад - 35139
    , tmpContainer_111 AS (SELECT Container.ObjectId                  AS GoodsId
@@ -214,7 +228,8 @@ BEGIN
     --
    , tmpData AS (SELECT tmpGoods.MovementId
                       , CASE WHEN inisGoods = TRUE THEN tmpGoods.ObjectId ELSE 0 END AS ObjectId
-                      , tmpGoods.TotalCount
+                      --, tmpGoods.TotalCount
+                      , tmpGoods_count.TotalCount
                       , SUM (CASE WHEN tmpGoods.DescId_mi = zc_MI_Child() THEN 1 ELSE 0 END)  AS TotalCount_mi
                       , SUM (CASE WHEN COALESCE (tmpReceiptGoods.isReceiptGoods_group, FALSE) = TRUE AND UnitId_parent_receipt = 38874 THEN 1 ELSE 0 END)  AS TotalCount_13   --38874;12;"Участок изготовление  Стеклопластик ПФ"
                       , SUM (CASE WHEN COALESCE (tmpReceiptGoods.isReceiptGoods_group, FALSE) = TRUE AND UnitId_parent_receipt = 253868 THEN 1 ELSE 0 END) AS TotalCount_14   --253868;13;"Участок сборки Стеклопластик"
@@ -234,7 +249,8 @@ BEGIN
                       , SUM (CASE WHEN COALESCE (tmpSend_17.Amount,0) > 0 THEN 1 ELSE 0 END) AS Count_17
                  FROM tmpGoods
                       LEFT JOIN tmpGoods_mi ON tmpGoods_mi.ObjectId = tmpGoods.ObjectId
-                                           AND tmpGoods_mi.MovementId = tmpGoods.MovementId
+                                           AND tmpGoods_mi.MovementId = tmpGoods.MovementId  
+                      LEFT JOIN tmpGoods_count ON tmpGoods_count.MovementId =  tmpGoods.MovementId
                       -- определить узлы
                       LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = tmpGoods.ObjectId
 
@@ -273,7 +289,7 @@ BEGIN
                                         AND COALESCE (tmpReceiptGoods.isReceiptGoods_group, FALSE) = TRUE AND tmpReceiptGoods.UnitId_parent_receipt = 253225
                  GROUP BY tmpGoods.MovementId
                         , CASE WHEN inisGoods = TRUE THEN tmpGoods.ObjectId ELSE 0 END
-                        , tmpGoods.TotalCount
+                        , tmpGoods_count.TotalCount
                         --, CASE WHEN tmpGoods.DescId_mi = zc_MI_Child () THEN tmpGoods.TotalCount_mi ELSE 0 END
                 )
  --253225 --"Участок UPHOLSTERY"
