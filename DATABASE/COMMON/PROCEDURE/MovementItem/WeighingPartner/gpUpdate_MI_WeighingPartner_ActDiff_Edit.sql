@@ -36,7 +36,7 @@ BEGIN
      THEN
          IF (COALESCE(inSummPartner,0) <> 0 AND COALESCE(vbSummPartner,0) <> COALESCE(inSummPartner,0)) OR COALESCE (inPricePartner,0) = 0
          THEN
-             --пересчитываем цену по сумме
+             -- пересчитываем цену по сумме
              inPricePartner := CASE WHEN COALESCE (inAmountPartnerSecond,0) <> 0 THEN (inSummPartner / inAmountPartnerSecond) ELSE 0 END ::TFloat;
          END IF;
      ELSE
