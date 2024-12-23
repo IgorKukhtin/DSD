@@ -207,7 +207,11 @@ BEGIN
                                                                        )
                                )
         -- Элементы Взвешивание - данные Поставщика
-      , tmpMI_wp AS (SELECT tmpMIList.MovementItemId
+      , tmpMI_wp AS (SELECT -- Если дублируется товар, надо перейти в режим inShowAll = TRUE, тогда можно корректировать 
+                            CASE WHEN MovementItemId_min = tmpMIList.MovementItemId_max THEN tmpMIList.MovementItemId ELSE 0 END AS MovementItemId
+                            --
+                          , tmpMIList.MovementItemId_min 
+                          , tmpMIList.MovementItemId_max
                           , tmpMIList.MovementId
                           , tmpMIList.GoodsId
                           , tmpMIList.GoodsKindId
@@ -259,6 +263,8 @@ BEGIN
                             END AS SummPartnerWVAT
 
                      FROM (SELECT MAX (MovementItem.Id)                         AS MovementItemId
+                                , MIN (MovementItem.Id)                         AS MovementItemId_min
+                                , MAX (MovementItem.Id)                         AS MovementItemId_max
                                 , MovementItem.MovementId                       AS MovementId
                                 , MovementItem.ObjectId                         AS GoodsId
                                 , MovementItem.GoodsKindId                      AS GoodsKindId
@@ -351,6 +357,8 @@ BEGIN
                     UNION ALL
                      SELECT 0 AS MovementItemId
                           , 0 AS MovementId
+                          , 0 AS MovementItemId_min 
+                          , 0 AS MovementItemId_max
                           , COALESCE (MILinkObject_GoodsReal.ObjectId, tmpMI_Income_all.ObjectId)              AS GoodsId
                           , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
 
