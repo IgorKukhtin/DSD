@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_WeighingPartner_diff(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Ord Integer, Id Integer, MovementId Integer, MovementId_WeighingPartner Integer, MovementId_income Integer
+RETURNS TABLE (Ord Integer, Id Integer, Id_check Integer, MovementId Integer, MovementId_WeighingPartner Integer, MovementId_income Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
@@ -587,9 +587,10 @@ BEGIN
                            --AND vbUserId <> 5
                          )
        -- Результат
-       SELECT ROW_NUMBER() OVER (ORDER BY tmpMI_wp.MovementItemId) :: Integer AS Ord
+       SELECT ROW_NUMBER() OVER (ORDER BY tmpMI_wp.MovementItemId_min) :: Integer AS Ord
              -- для 1.Взвешивание - док поставщика
-           , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN 0                                       ELSE tmpMI_wp.MovementItemId END :: Integer  AS Id
+           , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN 0                                       ELSE tmpMI_wp.MovementItemId     END :: Integer  AS Id
+           , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN 0                                       ELSE tmpMI_wp.MovementItemId_min END :: Integer  AS Id_check
              -- для 1.Взвешивание - док поставщика
            , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN 0                                       ELSE tmpMI_wp.MovementId     END :: Integer  AS MovementId
              -- для 2.Взвешивание - док склад
