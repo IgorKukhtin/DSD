@@ -853,6 +853,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbInsertDiffEdit'
+        end
+        item
+          Visible = True
           ItemName = 'bbActDiffEdit'
         end
         item
@@ -1014,6 +1018,11 @@
       Category = 0
       PaintStyle = psCaptionGlyph
     end
+    object bbInsertDiffEdit: TdxBarButton
+      Action = actInsertDiffEdit
+      Category = 0
+      PaintStyle = psCaptionGlyph
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1034,6 +1043,38 @@
     Images = dmMain.ImageList
     Left = 51
     Top = 231
+    object actInsertDiffEdit: TdsdInsertUpdateAction
+      Category = 'Edit'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ImageIndex = 0
+      FormName = 'TWeighingPartner_ActDiffEditForm'
+      FormNameParam.Value = 'TWeighingPartner_ActDiffEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     object actPrint_DiffPartner: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>

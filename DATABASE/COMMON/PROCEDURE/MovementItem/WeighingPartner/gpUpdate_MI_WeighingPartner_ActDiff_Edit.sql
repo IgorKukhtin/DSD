@@ -1,11 +1,14 @@
 -- Function: gpUpdate_MI_WeighingPartner_ActDiff_Edit()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_WeighingPartner_ActDiff_Edit(
     IN inId                         Integer   , -- идентификатор строки
-    IN inMovementId                 Integer   , -- идентификатор документа 
+    IN inMovementId                 Integer   , -- идентификатор документа
+    IN inGoodsId                    Integer   , -- товар
+    IN inGoodsKindId                Integer   , -- вид товара
     IN inInvNumberPartner           TVarChar  , -- Номер  контрагента
     IN inOperDatePartner            TDateTime , -- Дата документа  контрагента
     IN inAmountPartnerSecond        TFloat    , -- Количество Поставщика
@@ -28,6 +31,7 @@ $BODY$
    DECLARE vbContractId Integer;
    DECLARE vbPaidKindId Integer;
 
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingPartner());
@@ -87,9 +91,24 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
+     --IF inId > 0
+     --THEN
 
-     IF inId > 0
-     THEN
+         -- определяется признак Создание/Корректировка
+         vbIsInsert:= COALESCE (inId, 0) = 0;
+
+         IF COALESCE (inId,0) = 0
+         THEN
+             -- сохранили <Элемент документа>
+             inId := lpInsertUpdate_MovementItem (0, zc_MI_Master(), inGoodsId, inMovementId, inAmountPartnerSecond, NULL);
+    
+             -- сохранили свойство <Дата/время создания>
+             PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), inId, CURRENT_TIMESTAMP);
+    
+             -- сохранили связь с <Виды товаров>
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), inId, inGoodsKindId);
+         END IF;
+
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartnerSecond(), inId, inAmountPartnerSecond);
          -- сохранили свойство <>
@@ -107,9 +126,9 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), inId, inComment);
 
          -- сохранили протокол
-         PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
+         PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, vbIsInsert);
 
-     END IF;
+     --END IF;
 
 
      if vbUserId = 9457 then RAISE EXCEPTION 'Test.Ok. %   %', inPricePartner, inSummPartner; end if;
@@ -121,6 +140,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.12.24         *
  17.11.24         *
 */
 

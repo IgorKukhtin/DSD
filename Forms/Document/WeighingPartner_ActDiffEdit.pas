@@ -40,11 +40,13 @@ type
     cbisAmountPartnerSecond: TcxCheckBox;
     cbisPriceWithVAT: TcxCheckBox;
     cxLabel4: TcxLabel;
-    edGoodsName: TcxTextEdit;
-    edGoodsKindName: TcxTextEdit;
     cxLabel5: TcxLabel;
     cxLabel25: TcxLabel;
     edOperDatePartner: TcxDateEdit;
+    edGoods: TcxButtonEdit;
+    GoodsKindGuides: TdsdGuides;
+    edGoodsKind: TcxButtonEdit;
+    GoodsGuides: TdsdGuides;
   private
     { Private declarations }
   public
