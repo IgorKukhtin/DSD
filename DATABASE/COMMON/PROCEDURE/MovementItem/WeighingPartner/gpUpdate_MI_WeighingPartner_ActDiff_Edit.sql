@@ -100,7 +100,7 @@ BEGIN
          IF COALESCE (inId,0) = 0
          THEN
              -- сохранили <Элемент документа>
-             inId := lpInsertUpdate_MovementItem (0, zc_MI_Master(), inGoodsId, inMovementId, inAmountPartnerSecond, NULL);
+             inId := lpInsertUpdate_MovementItem (0, zc_MI_Master(), inGoodsId, inMovementId, 0, NULL);
     
              -- сохранили свойство <Дата/время создания>
              PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), inId, CURRENT_TIMESTAMP);
