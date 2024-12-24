@@ -147,31 +147,17 @@
     Top = 60
     Caption = #1058#1086#1074#1072#1088
   end
-  object edGoodsName: TcxTextEdit [20]
-    Left = 13
-    Top = 79
-    Properties.ReadOnly = True
-    TabOrder = 20
-    Width = 284
-  end
-  object edGoodsKindName: TcxTextEdit [21]
-    Left = 307
-    Top = 79
-    Properties.ReadOnly = True
-    TabOrder = 21
-    Width = 102
-  end
-  object cxLabel5: TcxLabel [22]
+  object cxLabel5: TcxLabel [20]
     Left = 307
     Top = 60
     Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
   end
-  object cxLabel25: TcxLabel [23]
+  object cxLabel25: TcxLabel [21]
     Left = 307
     Top = 8
     Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088'.'
   end
-  object edOperDatePartner: TcxDateEdit [24]
+  object edOperDatePartner: TcxDateEdit [22]
     Left = 307
     Top = 27
     Hint = #1044#1072#1090#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
@@ -180,6 +166,30 @@
     Properties.SaveTime = False
     Properties.ShowTime = False
     ShowHint = True
+    TabOrder = 22
+    Width = 102
+  end
+  object edGoods: TcxButtonEdit [23]
+    Left = 13
+    Top = 79
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 284
+  end
+  object edGoodsKind: TcxButtonEdit [24]
+    Left = 307
+    Top = 79
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
     TabOrder = 24
     Width = 102
   end
@@ -240,6 +250,22 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -373,16 +399,32 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'GoodsName'
         Value = ''
-        Component = edGoodsName
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindId'
+        Value = Null
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKindName'
         Value = ''
-        Component = edGoodsKindName
+        Component = GoodsKindGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -444,5 +486,63 @@
       end>
     Left = 292
     Top = 262
+  end
+  object GoodsKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsKind
+    FormNameParam.Value = 'TGoodsKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 344
+    Top = 75
+  end
+  object GoodsGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoods_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 59
   end
 end

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_MI_WeighingPartner_ActDiff_Edit(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
-             , GoodsName TVarChar, GoodsKindName TVarChar
+             , GoodsId Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar
              , AmountPartnerSecond TFloat
              , PricePartner TFloat
              , SummPartner  TFloat
@@ -83,7 +83,9 @@ BEGIN
              , Movement.OperDate
              , MovementDate_OperDatePartner.ValueData    ::TDateTime AS OperDatePartner
              
+             , Object_Goods.Id                  AS GoodsId
              , ('('||Object_Goods.ObjectCode||') '||Object_Goods.ValueData) ::TVarChar   AS GoodsName
+             , Object_GoodsKind.Id              AS GoodsKindId
              , Object_GoodsKind.ValueData       AS GoodsKindName
 
                -- Количество Поставщика - Документ Поставщика

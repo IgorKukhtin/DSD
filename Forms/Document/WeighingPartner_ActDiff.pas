@@ -169,6 +169,8 @@ type
     actCompleteMovement_: TChangeGuidesStatus;
     dsdExecStoredProc1: TdsdExecStoredProc;
     spStutusComplete: TdsdStoredProc;
+    actInsertDiffEdit: TdsdInsertUpdateAction;
+    bbInsertDiffEdit: TdxBarButton;
   private
   public
   end;
