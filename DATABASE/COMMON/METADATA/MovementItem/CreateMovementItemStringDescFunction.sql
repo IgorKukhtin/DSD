@@ -168,6 +168,10 @@ CREATE OR REPLACE FUNCTION zc_MIString_ItemId() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_ItemId', 'Id строки товара в заказе' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ItemId');
 
+CREATE OR REPLACE FUNCTION zc_MIString_IP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_IP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_IP', 'IP полльзователя' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_IP');
+
 CREATE OR REPLACE FUNCTION zc_MIString_InvNumberWeek1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_InvNumberWeek1', 'Документы за первую неделю' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek1');
