@@ -180,6 +180,7 @@ begin
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
+         Application.CreateForm(TDialogDateReportForm, DialogDateReportForm);
          Application.CreateForm(TDialogMsgForm, DialogMsgForm);
          Application.CreateForm(TDialogIncome_PricePartnerForm, DialogIncome_PricePartnerForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
@@ -232,6 +233,7 @@ begin
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
+         Application.CreateForm(TDialogDateReportForm, DialogDateReportForm);
          Application.CreateForm(TDialogMsgForm, DialogMsgForm);
          Application.CreateForm(TDialogIncome_PricePartnerForm, DialogIncome_PricePartnerForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
