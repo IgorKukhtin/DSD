@@ -289,6 +289,7 @@ type
     PanelTotalSummPartner: TPanel;
     SummPartner_in: TcxGridDBColumn;
     actWeighingPartner_ActDiffF: TdsdInsertUpdateAction;
+    bbPrintReestr: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -336,6 +337,7 @@ type
       AButtonIndex: Integer);
     procedure cbDocInsertClick(Sender: TObject);
     procedure bbUpdatePricePartnerClick(Sender: TObject);
+    procedure bbPrintReestrClick(Sender: TObject);
   private
     //aTest: Boolean;
     Scale_AP: IAPScale;
@@ -382,7 +384,7 @@ implementation
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc
     ,GuideGoods,GuideGoodsPartner,GuideGoodsSticker
     ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuideMovementReturnIn, GuidePartner
-    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, GuideReason, GuideAsset, GuideRetail, DialogDateValue
+    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, GuideReason, GuideAsset, GuideRetail, DialogDateValue, DialogDateReport
     ,IdIPWatch, LookAndFillSettings, DialogMsg, DialogIncome_PricePartner;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -967,6 +969,53 @@ end;
 procedure TMainForm.bbGuideGoodsViewClick(Sender: TObject);
 begin
      GetParams_Goods (FALSE, '', FALSE);
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbPrintReestrClick(Sender: TObject);
+var StartDate, EndDate : TDateTime;
+    MovementDescId,UnitId:Integer;
+begin
+     if ParamsMovement.ParamByName('MovementDescId').asInteger=0
+     then begin
+               ShowMessage('Ошибка.Необходимо выбрать операцию по F2.');
+               exit;
+     end;
+     if  (ParamsMovement.ParamByName('MovementDescId').asInteger <> zc_Movement_Income)
+      and(ParamsMovement.ParamByName('MovementDescId').asInteger <> zc_Movement_ReturnOut)
+     then begin
+               ShowMessage('Ошибка.Для выбранной операции данная функция не предусмотрена.');
+               exit;
+     end;
+     //
+     MovementDescId:= ParamsMovement.ParamByName('MovementDescId').asInteger;
+     if ParamsMovement.ParamByName('MovementDescId').asInteger = zc_Movement_Income
+     then UnitId:= ParamsMovement.ParamByName('ToId').asInteger
+     else UnitId:= ParamsMovement.ParamByName('FromId').asInteger;
+
+     //
+     with DialogDateReportForm do
+     begin
+          if ParamsMovement.ParamByName('MovementDescId').asInteger = zc_Movement_Income
+          then LabelValue.Caption:='Реестр Приход'
+          else LabelValue.Caption:='Реестр Возврат';
+          ActiveControl:=deStart;
+          deStart.Text:= DateToStr(Date);
+          deEnd.Text:= DateToStr(Date);
+          //
+          try
+             cbPartionGoods.Visible:= false;
+             cbGoodsKind.Visible:= false;
+             if not Execute then exit;
+          finally
+                cbPartionGoods.Visible:= true;
+                cbGoodsKind.Visible:= true;
+          end;
+          //
+          StartDate:= StrToDate(deStart.Text);
+          EndDate:= StrToDate(deEnd.Text);
+     end;
+     //
+    Print_Movement_Income_Reestr(StartDate, EndDate, ParamsMovement.ParamByName('MovementDescId').asInteger, UnitId);
 end;
 {------------------------------------------------------------------------}
 function TMainForm.GetParams_Goods (isRetail : Boolean; BarCode : String; isModeSave : Boolean) : Boolean;

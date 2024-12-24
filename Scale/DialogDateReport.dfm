@@ -6,7 +6,7 @@ inherited DialogDateReportForm: TDialogDateReportForm
   Position = poScreenCenter
   OnCreate = FormCreate
   ExplicitWidth = 253
-  ExplicitHeight = 165
+  ExplicitHeight = 169
   PixelsPerInch = 96
   TextHeight = 14
   object LabelValue: TLabel [0]
@@ -23,13 +23,12 @@ inherited DialogDateReportForm: TDialogDateReportForm
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentFont = False
-    ExplicitTop = 8
-    ExplicitWidth = 103
+    ExplicitTop = -2
   end
   inherited bbPanel: TPanel
     Top = 89
     Width = 237
-    ExplicitTop = 49
+    ExplicitTop = 89
     ExplicitWidth = 237
   end
   object PanelDateValue: TPanel
@@ -40,8 +39,6 @@ inherited DialogDateReportForm: TDialogDateReportForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 0
-    ExplicitHeight = 67
     object deStart: TcxDateEdit
       Left = 9
       Top = 23
@@ -53,7 +50,7 @@ inherited DialogDateReportForm: TDialogDateReportForm
       Width = 83
     end
     object cbGoodsKind: TcxCheckBox
-      Left = 119
+      Left = 122
       Top = 50
       Caption = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
       Properties.ReadOnly = False
@@ -61,7 +58,7 @@ inherited DialogDateReportForm: TDialogDateReportForm
       Width = 114
     end
     object cbPartionGoods: TcxCheckBox
-      Left = 7
+      Left = 9
       Top = 50
       Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
       Properties.ReadOnly = False

@@ -882,6 +882,8 @@ begin
        Params.AddParam('inSummPartner', ftFloat, ptInput, execParamsMI.ParamByName('SummPartner').AsFloat);
        Params.AddParam('inIsDocPartner', ftBoolean, ptInput, ParamsMovement.ParamByName('isDocPartner').AsBoolean);
 
+       Params.AddParam('inIP', ftString, ptInput, SettingMain.IP_str);
+
        //try
          Execute;
          execParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;

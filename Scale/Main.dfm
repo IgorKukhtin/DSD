@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = #1069#1082#1089#1087#1077#1076#1080#1094#1080#1103
   ClientHeight = 688
-  ClientWidth = 984
+  ClientWidth = 1084
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -23,19 +23,21 @@ object MainForm: TMainForm
   object GridPanel: TPanel
     Left = 130
     Top = 66
-    Width = 854
+    Width = 954
     Height = 622
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 854
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 854
+      Width = 954
       Height = 33
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitLeft = 1
       object bbDeleteItem: TSpeedButton
         Left = 339
         Top = 2
@@ -644,7 +646,7 @@ object MainForm: TMainForm
       end
       object bbReestrPartnerInTTN: TSpeedButton
         Left = 817
-        Top = 1
+        Top = 2
         Width = 31
         Height = 29
         Action = actReestrPartnerInTTN
@@ -834,15 +836,27 @@ object MainForm: TMainForm
         ShowHint = True
         OnClick = bbUpdatePricePartnerClick
       end
+      object bbPrintReestr: TSpeedButton
+        Left = 857
+        Top = 1
+        Width = 54
+        Height = 29
+        Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072
+        Caption = #1056#1077#1077#1089#1090#1088
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbPrintReestrClick
+      end
     end
     object infoPanelTotalSumm: TPanel
       Left = 0
       Top = 581
-      Width = 854
+      Width = 954
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 854
       object gbRealWeight: TGroupBox
         Left = 249
         Top = 0
@@ -937,7 +951,7 @@ object MainForm: TMainForm
         end
       end
       object gbTotalSumm: TGroupBox
-        Left = 591
+        Left = 691
         Top = 0
         Width = 108
         Height = 41
@@ -950,6 +964,7 @@ object MainForm: TMainForm
         Font.Style = []
         ParentFont = False
         TabOrder = 3
+        ExplicitLeft = 591
         object PanelTotalSumm: TPanel
           Left = 2
           Top = 16
@@ -999,7 +1014,7 @@ object MainForm: TMainForm
         end
       end
       object gbTotalSummPartner: TGroupBox
-        Left = 699
+        Left = 799
         Top = 0
         Width = 155
         Height = 41
@@ -1012,6 +1027,7 @@ object MainForm: TMainForm
         Font.Style = []
         ParentFont = False
         TabOrder = 5
+        ExplicitLeft = 699
         object PanelTotalSummPartner: TPanel
           Left = 2
           Top = 16
@@ -1033,10 +1049,11 @@ object MainForm: TMainForm
     object cxDBGrid: TcxGrid
       Left = 0
       Top = 33
-      Width = 854
+      Width = 954
       Height = 548
       Align = alClient
       TabOrder = 2
+      ExplicitWidth = 854
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -2946,7 +2963,7 @@ object MainForm: TMainForm
   object infoPanel_mastre: TPanel
     Left = 0
     Top = 0
-    Width = 984
+    Width = 1084
     Height = 66
     Align = alTop
     BevelOuter = bvNone
@@ -2957,8 +2974,9 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
+    ExplicitWidth = 984
     object PanelMovement: TPanel
-      Left = 664
+      Left = 764
       Top = 0
       Width = 320
       Height = 28
@@ -2966,11 +2984,12 @@ object MainForm: TMainForm
       BevelOuter = bvNone
       Caption = 'PanelMovement'
       TabOrder = 0
+      ExplicitLeft = 664
     end
     object PanelMovementDesc: TPanel
       Left = 50
       Top = 0
-      Width = 614
+      Width = 714
       Height = 28
       Align = alClient
       BevelOuter = bvNone
@@ -2982,11 +3001,12 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
+      ExplicitWidth = 614
     end
     object infoPanel: TPanel
       Left = 0
       Top = 28
-      Width = 984
+      Width = 1084
       Height = 38
       Align = alBottom
       BevelOuter = bvNone
@@ -2997,19 +3017,21 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 2
+      ExplicitWidth = 984
       object infoPanelPartner: TPanel
         Left = 130
         Top = 0
-        Width = 362
+        Width = 462
         Height = 38
         Align = alClient
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitWidth = 362
         object LabelPartner: TLabel
           Left = 1
           Top = 1
-          Width = 360
+          Width = 460
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -3025,7 +3047,7 @@ object MainForm: TMainForm
         object PanelPartner: TPanel
           Left = 1
           Top = 14
-          Width = 360
+          Width = 460
           Height = 23
           Align = alClient
           Alignment = taLeftJustify
@@ -3038,6 +3060,7 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitWidth = 360
         end
       end
       object infoPanelPriceList: TPanel
@@ -3084,7 +3107,7 @@ object MainForm: TMainForm
         end
       end
       object infoPanelOrderExternal: TPanel
-        Left = 664
+        Left = 764
         Top = 0
         Width = 320
         Height = 38
@@ -3092,6 +3115,7 @@ object MainForm: TMainForm
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitLeft = 664
         object LabelOrderExternal: TLabel
           Left = 1
           Top = 1
@@ -3128,7 +3152,7 @@ object MainForm: TMainForm
         end
       end
       object infoPanelContract: TPanel
-        Left = 492
+        Left = 592
         Top = 0
         Width = 172
         Height = 38
@@ -3136,6 +3160,7 @@ object MainForm: TMainForm
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 3
+        ExplicitLeft = 492
         object LabelContract: TLabel
           Left = 1
           Top = 1
