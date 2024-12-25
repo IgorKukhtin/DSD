@@ -431,6 +431,7 @@ BEGIN
                                          AND MovementItemFloat.DescId = zc_MIFloat_AmountPartner()
                                       )
 
+        -- Документ Приход от Поставщика
       , tmpMI_All AS (SELECT COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId)                  AS GoodsId
                            , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                              -- Кол-во факт
