@@ -42,7 +42,7 @@ BEGIN
      END CASE;
      
 
-IF vbUserId = 5 AND 1=1
+IF vbUserId = 5 AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.ok';
 END IF;

@@ -68,12 +68,14 @@ BEGIN
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem_income_diff (MovementId, MovementItemId, GoodsId, GoodsKindId, AmountPartner, AmountPartnerSecond, PricePartner, OperPrice, Ord)
         WITH -- Док. Взвешивание - данные Поставщика
-             tmpMI_partner AS (SELECT gpSelect.MovementId_income
+             tmpMI_partner AS (SELECT -- для 2.Взвешивание - док склад
+                                      gpSelect.MovementId_income
+                                      --
                                     , gpSelect.GoodsId
                                     , COALESCE (gpSelect.GoodsKindId, 0) AS GoodsKindId
                                       -- Кол-во Поставшик с учетом % скидки кол-во
                                     , gpSelect.Amount_income_calc
-                                      -- Количество Поставщика
+                                      -- Количество Поставщика - информативно
                                     , gpSelect.AmountPartnerSecond
                                       --
                                     , gpSelect.PricePartnerNoVAT
@@ -81,7 +83,7 @@ BEGIN
 
                                FROM gpSelect_MI_WeighingPartner_diff (inMovementId, FALSE, inSession) AS gpSelect
                               )
-        -- ВСЕ приходы, с одинаковым InvNumberPartner + ContractId + PaidKindId + для Акта Разногласий
+        -- ВСЕ приходы факт, с одинаковым InvNumberPartner + ContractId + PaidKindId
       , tmpMovement AS (SELECT Movement.Id                                  AS MovementId
                              , COALESCE (MF_VATPercent.ValueData, 0)        AS VATPercent
                              , COALESCE (MB_PriceWithVAT.ValueData, FALSE)  AS isPriceWithVAT
@@ -110,11 +112,14 @@ BEGIN
                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                        )
 
+     -- Док. Приход - факт
    , tmpMI_income AS (SELECT MovementItem.Id AS MovementItemId
                            , MovementItem.MovementId
                            , COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId)                  AS GoodsId
                            , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                             -- Кол-во склад
                            , MovementItem.Amount
+                             --
                            , tmpMovement.VATPercent
                            , tmpMovement.isPriceWithVAT
                       FROM tmpMovement
@@ -131,14 +136,91 @@ BEGIN
                                                             ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
                      )
+     -- Док. Приход - факт - нашли в какие документы будем распределять
+   , tmpMI_income_find AS (SELECT tmpMI_income.MovementItemId
+                                , tmpMI_income.MovementId
+                                , tmpMI_income.GoodsId
+                                , tmpMI_income.GoodsKindId
+                                  -- Кол-во склад
+                                , tmpMI_income.Amount
+                                  --
+                                , tmpMI_income.VATPercent
+                                , tmpMI_income.isPriceWithVAT
+ 
+                           FROM tmpMI_income
+                                -- документы со скидкой
+                                LEFT JOIN tmpMI_partner AS tmpMI_partner_check
+                                                        ON tmpMI_partner_check.MovementId_income = tmpMI_income.MovementId
+                                                       AND tmpMI_partner_check.GoodsId           = tmpMI_income.GoodsId
+                                                       AND tmpMI_partner_check.GoodsKindId       = tmpMI_income.GoodsKindId
+                           -- без документов со скидкой
+                           WHERE tmpMI_partner_check.MovementId_income IS NULL
+                          )
+
+     -- Док. Взвешивание - данные Поставщика - нашли какие документы будем распределять
+   , tmpMI_partner_find AS (SELECT tmpMI_partner.GoodsId
+                                 , tmpMI_partner.GoodsKindId
+ 
+                                 , MAX (tmpMI_partner.PricePartnerWVAT)  AS PricePartnerWVAT
+                                 , MAX (tmpMI_partner.PricePartnerNoVAT) AS PricePartnerNoVAT
+ 
+                                   -- Кол-во Поставшик с учетом % скидки кол-во
+                                 , SUM (tmpMI_partner.Amount_income_calc)   AS Amount_income_calc
+                                   -- Количество Поставщика - информативно
+                                 , SUM (tmpMI_partner.AmountPartnerSecond)  AS AmountPartnerSecond
+                            FROM tmpMI_partner
+                            --  без документов со скидкой
+                            WHERE tmpMI_partner.MovementId_income = 0
+                            GROUP BY tmpMI_partner.GoodsId
+                                   , tmpMI_partner.GoodsKindId
+                           )
+
+     -- Док. Приход - факт
+   , tmpMI_income_res AS (SELECT tmpMI_income.MovementItemId
+                               , tmpMI_income.MovementId
+                               , tmpMI_income.GoodsId
+                               , tmpMI_income.GoodsKindId
+
+                                 -- Распределили Кол-во Поставшик с учетом % скидки кол-во
+                               , CAST (tmpMI_partner_find.Amount_income_calc  * tmpMI_income.Amount / tmpMI_income_sum.Amount_sum AS NUMERIC (16, 2)) AS Amount_income_calc
+                                 -- Распределили Количество Поставщика - информативно
+                               , CAST (tmpMI_partner_find.AmountPartnerSecond * tmpMI_income.Amount / tmpMI_income_sum.Amount_sum AS NUMERIC (16, 2)) AS AmountPartnerSecond
+                                 --
+                               , tmpMI_income.VATPercent
+                               , tmpMI_income.isPriceWithVAT
+                                 --
+                               , tmpMI_partner_find.PricePartnerWVAT
+                               , tmpMI_partner_find.PricePartnerNoVAT
+
+                                 -- № п/п
+                               , ROW_NUMBER() OVER (PARTITION BY tmpMI_income.GoodsId, tmpMI_income.GoodsKindId ORDER BY tmpMI_income.Amount DESC) AS Ord
+
+                          FROM tmpMI_income_find AS tmpMI_income
+                               -- Док. Приход - факт - Итого для пропорции
+                               INNER JOIN (SELECT tmpMI_income_find.GoodsId
+                                                , tmpMI_income_find.GoodsKindId
+                                                  -- Кол-во склад факт - пропорционально ему распределим Кол-во Поставшик
+                                                , SUM (tmpMI_income_find.Amount)   AS Amount_sum
+                                           FROM tmpMI_income_find
+                                           GROUP BY tmpMI_income_find.GoodsId
+                                                  , tmpMI_income_find.GoodsKindId
+                                          ) AS tmpMI_income_sum
+                                            ON tmpMI_income_sum.GoodsId     = tmpMI_income.GoodsId
+                                           AND tmpMI_income_sum.GoodsKindId = tmpMI_income.GoodsKindId
+
+                               -- Док. Взвешивание - Итого данные Поставщика
+                               INNER JOIN tmpMI_partner_find ON tmpMI_partner_find.GoodsId     = tmpMI_income.GoodsId
+                                                            AND tmpMI_partner_find.GoodsKindId = tmpMI_income.GoodsKindId
+                         )
        -- Результат
        SELECT tmpMI_income.MovementId
             , tmpMI_income.MovementItemId
             , tmpMI_income.GoodsId
             , tmpMI_income.GoodsKindId
+
               -- Кол-во Поставшик с учетом % скидки кол-во
             , tmpMI_partner.Amount_income_calc
-              -- Количество Поставщика
+              -- Количество Поставщика - информативно
             , tmpMI_partner.AmountPartnerSecond
               --
             , CASE WHEN tmpMI_income.isPriceWithVAT = TRUE THEN tmpMI_partner.PricePartnerWVAT ELSE tmpMI_partner.PricePartnerNoVAT END AS PricePartner
@@ -147,13 +229,17 @@ BEGIN
               -- № п/п
             , ROW_NUMBER() OVER (PARTITION BY tmpMI_income.MovementId, tmpMI_income.GoodsId, tmpMI_income.GoodsKindId ORDER BY tmpMI_income.Amount DESC) AS Ord
 
+       -- Док. Взвешивание - данные Поставщика
        FROM tmpMI_partner
+            -- Док. Приход - факт - в него запишем посчитанные кол-ва поставщика
             INNER JOIN tmpMI_income ON tmpMI_income.MovementId  = tmpMI_partner.MovementId_income
                                    AND tmpMI_income.GoodsId     = tmpMI_partner.GoodsId
                                    AND tmpMI_income.GoodsKindId = tmpMI_partner.GoodsKindId
+            -- Спецификации
             LEFT JOIN _tmpContractGoods_diff ON _tmpContractGoods_diff.GoodsId     = tmpMI_partner.GoodsId
                                             AND _tmpContractGoods_diff.GoodsKindId = tmpMI_partner.GoodsKindId
 
+       -- если документы со скидкой
        WHERE tmpMI_partner.MovementId_income > 0
 
       UNION ALL
@@ -161,28 +247,41 @@ BEGIN
             , tmpMI_income.MovementItemId
             , tmpMI_income.GoodsId
             , tmpMI_income.GoodsKindId
-              -- Кол-во Поставшик с учетом % скидки кол-во
-            , tmpMI_partner.Amount_income_calc
-              -- Количество Поставщика
-            , tmpMI_partner.AmountPartnerSecond
+
+              -- Кол-во Поставшик с учетом % скидки кол-во плюс "корректировка округления"
+            , tmpMI_income.Amount_income_calc + CASE WHEN tmpMI_income.ord = 1 THEN COALESCE (tmpMI_partner_find.Amount_income_calc, 0) - COALESCE (tmpMI_income_sum.Amount_income_calc, 0) ELSE 0 END
+              -- Количество Поставщика - информативно
+            , tmpMI_income.AmountPartnerSecond + CASE WHEN tmpMI_income.ord = 1 THEN COALESCE (tmpMI_partner_find.AmountPartnerSecond, 0) - COALESCE (tmpMI_income_sum.AmountPartnerSecond, 0) ELSE 0 END
               --
-            , CASE WHEN tmpMI_income.isPriceWithVAT = TRUE THEN tmpMI_partner.PricePartnerWVAT ELSE tmpMI_partner.PricePartnerNoVAT END AS PricePartner
+            , CASE WHEN tmpMI_income.isPriceWithVAT = TRUE THEN tmpMI_income.PricePartnerWVAT ELSE tmpMI_income.PricePartnerNoVAT END AS PricePartner
               --
             , CASE WHEN tmpMI_income.isPriceWithVAT = TRUE THEN _tmpContractGoods_diff.ValuePrice_addVat ELSE _tmpContractGoods_diff.ValuePrice_notVat END AS OperPrice
               -- № п/п
-            , ROW_NUMBER() OVER (PARTITION BY tmpMI_income.GoodsId, tmpMI_income.GoodsKindId ORDER BY tmpMI_income.Amount DESC) AS Ord
+            , 1 AS Ord
 
-       FROM tmpMI_income
-            INNER JOIN tmpMI_partner ON tmpMI_partner.MovementId_income = 0
-                                    AND tmpMI_partner.GoodsId           = tmpMI_income.GoodsId
-                                    AND tmpMI_partner.GoodsKindId       = tmpMI_income.GoodsKindId
-            LEFT JOIN tmpMI_partner AS tmpMI_partner_check
-                                    ON tmpMI_partner_check.MovementId_income = tmpMI_income.MovementId
-                                   AND tmpMI_partner_check.GoodsId           = tmpMI_income.GoodsId
-                                   AND tmpMI_partner_check.GoodsKindId       = tmpMI_income.GoodsKindId
+       -- Док. Приход - факт
+       FROM tmpMI_income_res AS tmpMI_income
+            -- Итого после распределения
+            LEFT JOIN (SELECT tmpMI_income_res.GoodsId
+                            , tmpMI_income_res.GoodsKindId
+                              -- Распределили Кол-во Поставшик с учетом % скидки кол-во
+                            , SUM (tmpMI_income_res.Amount_income_calc)  AS Amount_income_calc
+                              -- Распределили Количество Поставщика - информативно
+                            , SUM (tmpMI_income_res.AmountPartnerSecond) AS AmountPartnerSecond
+                       FROM tmpMI_income_res
+                       GROUP BY tmpMI_income_res.GoodsId
+                              , tmpMI_income_res.GoodsKindId
+                      ) AS tmpMI_income_sum
+                        ON tmpMI_income_sum.GoodsId     = tmpMI_income.GoodsId
+                       AND tmpMI_income_sum.GoodsKindId = tmpMI_income.GoodsKindId
+
+            -- Док. Взвешивание - Итого данные Поставщика
+            LEFT JOIN tmpMI_partner_find ON tmpMI_partner_find.GoodsId     = tmpMI_income.GoodsId
+                                        AND tmpMI_partner_find.GoodsKindId = tmpMI_income.GoodsKindId
+
+            -- Спецификации
             LEFT JOIN _tmpContractGoods_diff ON _tmpContractGoods_diff.GoodsId     = tmpMI_income.GoodsId
                                             AND _tmpContractGoods_diff.GoodsKindId = tmpMI_income.GoodsKindId
-       WHERE tmpMI_partner_check.MovementId_income IS NULL
       ;
 
 
@@ -288,4 +387,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpComplete_Movement_WeighingPartner_diff (inMovementId:= -1, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpComplete_Movement_WeighingPartner_diff (inMovementId:= 30105796, inSession:= zfCalc_UserAdmin())
