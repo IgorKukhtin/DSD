@@ -594,6 +594,8 @@ type
     bbInsertRecordGGP: TdxBarButton;
     bbInsertRecordGD: TdxBarButton;
     actChoiceGoodsGroupProperty: TOpenChoiceForm;
+    actOpenFormPromo_MI_Detail: TdsdInsertUpdateAction;
+    bbOpenFormPromo_MI_Detail: TdxBarButton;
   private
     { Private declarations }
   public

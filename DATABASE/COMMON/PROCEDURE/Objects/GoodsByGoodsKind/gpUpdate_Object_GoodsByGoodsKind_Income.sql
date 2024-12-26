@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsByGoodsKind_Income(
     IN inGoodsKindIncomeId     Integer  , -- Виды товаров факт приход
     IN inSession               TVarChar 
 )
-RETURNS Integer
+RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
