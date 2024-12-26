@@ -109,9 +109,32 @@ BEGIN
      DELETE FROM _tmpItemSumm_Unit;
 
 
+     -- параметр
+     vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To());
+
+
      -- сначала - замена
      PERFORM lpInsert_MovementItemProtocol (tmpMI.MovementItemId, inUserId, FALSE)
-     FROM (SELECT MovementItem.Id AS MovementItemId
+     FROM (WITH -- пересорт по подразделениям
+                tmpUnitPeresort AS (SELECT Object_GoodsByGoodsKind.Id                 AS GoodsByGoodsKindId
+                                         , ObjectLink_UnitPeresort_Unit.ChildObjectId AS UnitId
+                                    FROM Object AS Object_UnitPeresort
+                                         INNER JOIN ObjectLink AS ObjectLink_UnitPeresort_GoodsByGoodsKind
+                                                               ON ObjectLink_UnitPeresort_GoodsByGoodsKind.ObjectId = Object_UnitPeresort.Id
+                                                              AND ObjectLink_UnitPeresort_GoodsByGoodsKind.DescId   = zc_ObjectLink_UnitPeresort_GoodsByGoodsKind()
+
+                                         INNER JOIN ObjectLink AS ObjectLink_UnitPeresort_Unit
+                                                               ON ObjectLink_UnitPeresort_Unit.ObjectId      = Object_UnitPeresort.Id
+                                                              AND ObjectLink_UnitPeresort_Unit.DescId        = zc_ObjectLink_UnitPeresort_Unit()
+                                                              AND ObjectLink_UnitPeresort_Unit.ChildObjectId > 0
+
+                                         INNER JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id       = ObjectLink_UnitPeresort_GoodsByGoodsKind.ChildObjectId
+                                                                                     AND Object_GoodsByGoodsKind.isErased = FALSE
+                                    WHERE Object_UnitPeresort.DescId = zc_Object_UnitPeresort()
+                                      AND Object_UnitPeresort.isErased = FALSE
+                                   )
+           --
+           SELECT MovementItem.Id AS MovementItemId
                 , lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, ObjectLink_GoodsByGoodsKind_GoodsIncome.ChildObjectId, MovementItem.MovementId, MovementItem.Amount, MovementItem.ParentId)
                 , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), MovementItem.Id, ObjectLink_GoodsByGoodsKind_GoodsKindIncome.ChildObjectId)
 
@@ -149,6 +172,15 @@ BEGIN
                                      ON ObjectLink_GoodsByGoodsKind_GoodsKindIncome.ObjectId = Object_GoodsByGoodsKind.Id
                                     AND ObjectLink_GoodsByGoodsKind_GoodsKindIncome.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindIncome()
 
+
+                -- пересорт по подразделениям
+                LEFT JOIN (SELECT DISTINCT tmpUnitPeresort.GoodsByGoodsKindId FROM tmpUnitPeresort
+                          ) AS tmpUnitPeresort
+                            ON tmpUnitPeresort.GoodsByGoodsKindId = Object_GoodsByGoodsKind.Id
+                LEFT JOIN tmpUnitPeresort AS tmpUnitPeresort_find
+                                          ON tmpUnitPeresort_find.GoodsByGoodsKindId = Object_GoodsByGoodsKind.Id
+                                         AND tmpUnitPeresort_find.UnitId             = vbUnitId
+
            WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.isErased   = FALSE
              AND MovementItem.DescId     = zc_MI_Master()
@@ -157,6 +189,8 @@ BEGIN
              AND (ObjectLink_GoodsByGoodsKind_GoodsIncome.ChildObjectId                   <> MovementItem.ObjectId
                OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindIncome.ChildObjectId, 0) <> COALESCE (MILO_GoodsKind.ObjectId, 0)
                  )
+             -- если пересорт по подразделениям
+             AND (tmpUnitPeresort_find.GoodsByGoodsKindId > 0 OR tmpUnitPeresort.GoodsByGoodsKindId IS NULL)
           ) AS tmpMI
     ;
 

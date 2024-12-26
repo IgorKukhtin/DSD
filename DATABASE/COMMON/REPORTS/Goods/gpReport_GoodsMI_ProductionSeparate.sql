@@ -30,7 +30,7 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar
-             , StorageLineName TVarChar
+             , StorageLineName TVarChar, StorageLineName_in TVarChar
              , Amount TFloat, HeadCount TFloat, Summ TFloat
              , ChildGoodsGroupName TVarChar, ChildGoodsCode Integer,  ChildGoodsName TVarChar
              , ChildGoodsKindName TVarChar
@@ -160,7 +160,8 @@ BEGIN
                            , MIContainer.DescId                              AS MIContainerDescId
                            , MIContainer.isActive                            AS isActive
                            , CASE WHEN inisCalculated = TRUE THEN COALESCE (MIBoolean_Calculated.ValueData, FALSE) ELSE FALSE END  ::Boolean AS isCalculated
-                           , CASE WHEN inIsStorageLine = TRUE THEN MILinkObject_StorageLine.ObjectId ELSE 0 END AS StorageLineId
+                           , CASE WHEN inIsStorageLine = TRUE THEN MILinkObject_StorageLine_in.ObjectId ELSE 0 END  AS StorageLineId_in
+                           , CASE WHEN inIsStorageLine = TRUE THEN MILinkObject_StorageLine_out.ObjectId ELSE 0 END AS StorageLineId_out
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                       FROM tmpMovement
                            JOIN MovementItemContainer AS MIContainer
@@ -171,9 +172,14 @@ BEGIN
                                                       AND MIContainer.DescId = zc_MIContainer_Count()
                                                       AND MIContainer.isActive = FALSE
                                                       
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
-                                                            ON MILinkObject_StorageLine.MovementItemId = MIContainer.MovementItemId
-                                                           AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine_in
+                                                            ON MILinkObject_StorageLine_in.MovementItemId = MIContainer.MovementItemId
+                                                           AND MILinkObject_StorageLine_in.DescId = zc_MILinkObject_StorageLine()
+                                                           AND MIContainer.isActive = TRUE
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine_out
+                                                            ON MILinkObject_StorageLine_out.MovementItemId = MIContainer.MovementItemId
+                                                           AND MILinkObject_StorageLine_out.DescId = zc_MILinkObject_StorageLine()
+                                                           AND MIContainer.isActive = FALSE
 
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MIContainer.MovementItemId
@@ -191,7 +197,8 @@ BEGIN
                              , MIContainer.ObjectId_Analyzer
                              , MIContainer.DescId
                              , MIContainer.isActive
-                             , CASE WHEN inIsStorageLine = TRUE THEN MILinkObject_StorageLine.ObjectId ELSE 0 END
+                             , CASE WHEN inIsStorageLine = TRUE THEN MILinkObject_StorageLine_in.ObjectId  ELSE 0 END
+                             , CASE WHEN inIsStorageLine = TRUE THEN MILinkObject_StorageLine_out.ObjectId ELSE 0 END
                              , CASE WHEN inisCalculated = TRUE THEN COALESCE (MIBoolean_Calculated.ValueData, FALSE) ELSE FALSE END
                              , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
                              , tmpMovement.FromId
@@ -205,7 +212,8 @@ BEGIN
                              , tmpMI_Container.OperDate
                              , tmpMI_Container.PartionGoods
                              , tmpMI_Container.GoodsId 
-                             , tmpMI_Container.StorageLineId
+                             , tmpMI_Container.StorageLineId_in
+                             , tmpMI_Container.StorageLineId_out
                              , tmpMI_Container.GoodsKindId
                              , 0 AS Summ
                              , SUM (tmpMI_Container.Amount) AS Amount
@@ -219,7 +227,8 @@ BEGIN
                              , tmpMI_Container.OperDate
                              , tmpMI_Container.PartionGoods
                              , tmpMI_Container.GoodsId 
-                             , tmpMI_Container.StorageLineId
+                             , tmpMI_Container.StorageLineId_in
+                             , tmpMI_Container.StorageLineId_out
                              , tmpMI_Container.isActive
                              , tmpMI_Container.isCalculated
                              , tmpMI_Container.GoodsKindId
@@ -234,7 +243,8 @@ BEGIN
                        , tmpMI_Container.ToId
                        , tmpMI_Container.PartionGoods
                        , tmpMI_Container.GoodsId 
-                       , tmpMI_Container.StorageLineId
+                       , tmpMI_Container.StorageLineId_in
+                       , tmpMI_Container.StorageLineId_out
                        , tmpMI_Container.GoodsKindId
                        , SUM (tmpMI_Container.Amount)  AS Summ
                        , 0 AS Amount
@@ -249,7 +259,8 @@ BEGIN
                          , tmpMI_Container.OperDate
                          , tmpMI_Container.PartionGoods
                          , tmpMI_Container.GoodsId
-                         , tmpMI_Container.StorageLineId
+                         , tmpMI_Container.StorageLineId_in
+                         , tmpMI_Container.StorageLineId_out
                          , tmpMI_Container.isActive
                          , tmpMI_Container.isCalculated
                          , tmpMI_Container.GoodsKindId
@@ -331,7 +342,8 @@ BEGIN
            , Object_Goods.ValueData                            AS GoodsName
            , Object_GoodsKind.ValueData                        AS GoodsKindName
 
-           , Object_StorageLine.ValueData                      AS StorageLineName
+           , Object_StorageLine_out.ValueData                  AS StorageLineName
+           , Object_StorageLine_in.ValueData                   AS StorageLineName_in
 
            , COALESCE (tmpMI_total.Amount,    COALESCE (tmpMI_totalPartion.Amount,    tmpOperationGroup.Amount))    :: TFloat AS Amount
            , COALESCE (tmpMI_total.HeadCount, COALESCE (tmpMI_totalPartion.HeadCount, tmpOperationGroup.HeadCount)) :: TFloat AS HeadCount
@@ -361,7 +373,8 @@ BEGIN
                  , CASE WHEN inIsPartion = True THEN tmpMI.PartionGoods ELSE '' END                    AS PartionGoods
                  , tmpMI.GoodsId  
                  , tmpMI.GoodsKindId
-                 , tmpMI.StorageLineId
+                 , tmpMI.StorageLineId_in
+                 , tmpMI.StorageLineId_out
                   , ABS (SUM(tmpMI.Summ))        AS Summ
                  , ABS (SUM(tmpMI.Amount))      AS Amount
                  , ABS (SUM(tmpMI.HeadCount))   AS HeadCount
@@ -378,7 +391,8 @@ BEGIN
                         , tmpMI_out.PartionGoods 
                         , tmpMI_out.GoodsId
                         , tmpMI_out.GoodsKindId
-                        , tmpMI_out.StorageLineId    
+                        , tmpMI_out.StorageLineId_out
+                        , tmpMI_in.StorageLineId_in
                         , tmpMI_out.Summ
                         , tmpMI_out.Amount
                         , tmpMI_out.HeadCount
@@ -402,7 +416,9 @@ BEGIN
                         , tmpMI_out_Sum.PartionGoods 
                         , tmpMI_out_Sum.GoodsId
                         , tmpMI_out_Sum.GoodsKindId
-                        , tmpMI_out_Sum.StorageLineId    
+                        , tmpMI_out_Sum.StorageLineId_out
+                        , tmpMI_in_Sum.StorageLineId_in
+
                         , tmpMI_out_Sum.Summ
                         , tmpMI_out_Sum.Amount
                         , 0 AS HeadCount
@@ -428,7 +444,8 @@ BEGIN
                         , tmpMI.GoodsKindId     
                         , tmpMI.ChildGoodsId
                         , tmpMI.ChildGoodsKindId
-                        , tmpMI.StorageLineId
+                        , tmpMI.StorageLineId_in
+                        , tmpMI.StorageLineId_out
                         , tmpMI.isCalculated
             ) AS tmpOperationGroup
 
@@ -442,7 +459,8 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsKind on Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
              LEFT JOIN Object AS Object_GoodsKindChild on Object_GoodsKindChild.Id = tmpOperationGroup.ChildGoodsKindId
 
-             LEFT JOIN Object AS Object_StorageLine on Object_StorageLine.Id = tmpOperationGroup.StorageLineId
+             LEFT JOIN Object AS Object_StorageLine_out ON Object_StorageLine_out.Id = tmpOperationGroup.StorageLineId_out
+             LEFT JOIN Object AS Object_StorageLine_in  ON Object_StorageLine_in.Id  = tmpOperationGroup.StorageLineId_in
 
              LEFT JOIN Object AS Object_From ON Object_From.Id = tmpOperationGroup.FromId
              LEFT JOIN Object AS Object_To ON Object_To.Id = tmpOperationGroup.ToId
@@ -486,5 +504,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_GoodsMI_ProductionSeparate (inStartDate:= '03.06.2016', inEndDate:= '03.06.2016', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());
--- select * from gpReport_GoodsMI_ProductionSeparate (inStartDate := ('13.10.2018')::TDateTime , inEndDate := ('14.10.2018')::TDateTime , inIsMovement := 'true' , inIsPartion := 'true' , inIsStorageLine := 'true' , inisCalculated := 'true', inGoodsGroupId := 0 , inGoodsId := 0 , inChildGoodsGroupId := 0 , inChildGoodsId := 0 , inFromId := 133049  , inToId := 133049  ,  inSession := '5') as tt
---select * from gpReport_GoodsMI_ProductionSeparate(inStartDate := ('17.01.2022')::TDateTime , inEndDate := ('17.01.2022')::TDateTime , inIsMovement := 'False' , inIsPartion := 'False' , inIsStorageLine := 'False' , inisCalculated := 'False' , inGoodsGroupId := 0 , inGoodsId := 5225 , inChildGoodsGroupId := 0 , inChildGoodsId := 0 , inFromId := 0 , inToId := 0 ,  inSession := '9457');
+-- SELECT * FROM gpReport_GoodsMI_ProductionSeparate (inStartDate:= '17.12.2024' , inEndDate:= '17.12.2024', inIsMovement:= False, inIsPartion:= 'False', inIsStorageLine:= False, inisCalculated:= False, inGoodsGroupId:= 0, inGoodsId:= 5225, inChildGoodsGroupId:= 0, inChildGoodsId:= 0, inFromId:= 0, inToId:= 0, inSession:= '9457');

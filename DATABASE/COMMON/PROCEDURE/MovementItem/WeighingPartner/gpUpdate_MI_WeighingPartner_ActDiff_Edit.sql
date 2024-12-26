@@ -3,9 +3,11 @@
 DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, Integer, Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_WeighingPartner_ActDiff_Edit(
     IN inId                         Integer   , -- идентификатор строки
+    IN inId_check                   Integer   , -- идентификатор строки
     IN inMovementId                 Integer   , -- идентификатор документа
     IN inGoodsId                    Integer   , -- товар
     IN inGoodsKindId                Integer   , -- вид товара
