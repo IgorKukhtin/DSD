@@ -32,6 +32,7 @@ $BODY$
    DECLARE vbInvNumberPartner_old TVarChar;
    DECLARE vbContractId Integer;
    DECLARE vbPaidKindId Integer;
+   DECLARE vbOperDate TDateTime;
 
    DECLARE vbIsInsert Boolean;
 BEGIN
@@ -58,6 +59,7 @@ BEGIN
      IF NOT EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberPartner() AND MS.ValueData = inInvNumberPartner)
         AND TRIM (inInvNumberPartner) <> ''
      THEN
+         vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
          vbInvNumberPartner_old:= (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberPartner());
          vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
          vbPaidKindId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind());
