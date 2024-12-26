@@ -1,9 +1,12 @@
 -- Function: gpGet_MI_WeighingPartner_ActDiff_Edit (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_WeighingPartner_ActDiff_Edit (Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_WeighingPartner_ActDiff_Edit(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inId                Integer  , -- 1.Взвешивание - док поставщика
+    IN inId_check          Integer  , -- идентификатор строки
     IN inGoodsId           Integer  ,
     IN inGoodsKindId       Integer  ,
     IN inSession           TVarChar   -- сессия пользователя
@@ -15,41 +18,69 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , SummPartner  TFloat
              , isPriceWithVAT Boolean
              , isAmountPartnerSecond Boolean
-             , isReturnOut Boolean 
+             , isReturnOut Boolean
              , Comment TVarChar
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbId     Integer;
-   DECLARE vbCount  Integer; 
+   DECLARE vbCount  Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_WeighingPartner());
      vbUserId:= lpGetUserBySession (inSession);
 
-     --пробуем найти строку  по ключю MovementId + GoodsId + GoodsKindId
-    SELECT MAX (MovementItem.Id) AS Id
-         , COUNT (*) AS Count
-           INTO vbId, vbCount
-    FROM MovementItem
-        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
-    WHERE MovementItem.MovementId = inMovementId
-      AND MovementItem.DescId = zc_MI_Master()
-      AND MovementItem.isErased = FALSE
-      AND MovementItem.ObjectId = inGoodsId
-      AND (COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0))
-    ;
+     -- Проверка
+     IF inId_check > 0 AND COALESCE (inId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Перейдите в режим "Показать весь список".';
+     END IF;
+
+     IF inId >0
+     THEN
+         -- пробуем найти строку  по ключю MovementId + GoodsId + GoodsKindId
+         SELECT MAX (MovementItem.Id) AS Id
+              , COUNT (*) AS Count
+                INTO vbId, vbCount
+         FROM MovementItem
+              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId     = zc_MI_Master()
+           AND MovementItem.isErased   = FALSE
+           AND MovementItem.ObjectId   = inGoodsId
+           AND MovementItem.Id         = inId
+          ;
+
+     ELSE
+         -- пробуем найти строку  по ключю MovementId + GoodsId + GoodsKindId
+         SELECT MAX (MovementItem.Id) AS Id
+              , COUNT (*) AS Count
+                INTO vbId, vbCount
+         FROM MovementItem
+              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId = zc_MI_Master()
+           AND MovementItem.isErased = FALSE
+           AND MovementItem.ObjectId = inGoodsId
+           AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
+          ;
+
+     END IF;
 
     -- если нашли больше 1 строки - ошибка
     IF vbCount > 1
     THEN
         RAISE EXCEPTION 'Ошибка.Найдено больше одной строки для редактирования.';
-    END IF;          
-     
+    END IF;
+
 
     -- Результат
     RETURN QUERY
@@ -60,7 +91,7 @@ BEGIN
                           AND MovementItemFloat.DescId IN (zc_MIFloat_PricePartner()
                                                          , zc_MIFloat_AmountPartnerSecond()
                                                          , zc_MIFloat_SummPartner())
-                       ) 
+                       )
       , tmpMI_Boolean AS (SELECT MovementItemBoolean.*
                           FROM MovementItemBoolean
                           WHERE MovementItemBoolean.MovementItemId = vbId
@@ -82,14 +113,14 @@ BEGIN
              , MovementString_InvNumberPartner.ValueData  ::TVarChar AS InvNumberPartner
              , Movement.OperDate
              , MovementDate_OperDatePartner.ValueData    ::TDateTime AS OperDatePartner
-             
+
              , Object_Goods.Id                  AS GoodsId
              , ('('||Object_Goods.ObjectCode||') '||Object_Goods.ValueData) ::TVarChar   AS GoodsName
              , Object_GoodsKind.Id              AS GoodsKindId
              , Object_GoodsKind.ValueData       AS GoodsKindName
 
                -- Количество Поставщика - Документ Поставщика
-             , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) ::TFloat AS AmountPartnerSecond 
+             , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) ::TFloat AS AmountPartnerSecond
                --цена поставщика
              ,  COALESCE (MIFloat_PricePartner.ValueData, 0)       ::TFloat AS PricePartner
                -- Сумма Поставщика
@@ -156,4 +187,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_MI_WeighingPartner_ActDiff_Edit(inMovementId := 29849294 , inGoodsId := 11489208 , inGoodsKindId := 8335 ,  inSession := '9457');
+-- select * from gpGet_MI_WeighingPartner_ActDiff_Edit (inMovementId:= 29849294, inId:= 0, inId_check:= 0, inGoodsId := 11489208 , inGoodsKindId := 8335 ,  inSession := '9457');

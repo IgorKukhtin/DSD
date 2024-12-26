@@ -213,21 +213,32 @@
   inherited FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'Id'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'MovementId'
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperDate'
+        Name = 'Id'
         Value = Null
-        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id_check'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -242,6 +253,14 @@
         Value = 42184d
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId_check'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id_check'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -352,6 +371,22 @@
         Value = '0'
         Component = FormParams
         ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId_check'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id_check'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

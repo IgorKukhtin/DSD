@@ -594,7 +594,7 @@ BEGIN
            , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN 0                                       ELSE tmpMI_wp.MovementItemId_min END :: Integer  AS Id_check
              -- для 1.Взвешивание - док поставщика
            , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN 0                                       ELSE tmpMI_wp.MovementId     END :: Integer  AS MovementId
-             -- для 2.Взвешивание - док склад
+             -- для 2.Взвешивание - док Взвешивание для склада
            , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN tmpMI_Income.MovementId_WeighingPartner ELSE 0                       END :: Integer  AS MovementId_WeighingPartner
              -- для 2.Взвешивание - док склад
            , CASE WHEN tmpMI_Income.ChangePercentAmount > 0 OR tmpMI_Income.isReason_1 = TRUE OR tmpMI_Income.isReason_2 = TRUE THEN tmpMI_Income.MovementId_income          ELSE 0                       END :: Integer  AS MovementId_income

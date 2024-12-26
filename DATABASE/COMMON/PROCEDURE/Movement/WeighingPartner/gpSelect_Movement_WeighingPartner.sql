@@ -96,11 +96,13 @@ BEGIN
              , MovementDate_OperDatePartner.ValueData ::TDateTime AS OperDatePartner
 
              , CASE WHEN MovementBoolean_DocPartner.ValueData = FALSE AND zc_Movement_Income() = MovementFloat_MovementDesc.ValueData :: Integer
+                     AND Object_Status.Id = zc_Enum_Status_Complete()
                     THEN 4
                     ELSE Object_Status.ObjectCode
                END :: Integer AS StatusCode
 
              , CASE WHEN MovementBoolean_DocPartner.ValueData = FALSE AND zc_Movement_Income() = MovementFloat_MovementDesc.ValueData :: Integer
+                     AND Object_Status.Id = zc_Enum_Status_Complete()
                     THEN 'Не проведен'
                     ELSE Object_Status.ValueData
                END :: TVarChar AS StatusName

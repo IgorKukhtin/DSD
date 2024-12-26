@@ -1062,13 +1062,23 @@
           MultiSelectSeparator = ','
         end
         item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id_check'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'GoodsId'
-          Value = Null
+          Value = 0
           MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsKindId'
-          Value = Null
+          Value = 0
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1845,6 +1855,20 @@
           MultiSelectSeparator = ','
         end
         item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id_check'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id_check'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'GoodsId'
           Value = False
           Component = MasterCDS
@@ -2576,10 +2600,34 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inId_check'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id_check'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId_WeighingPartner'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_WeighingPartner'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
