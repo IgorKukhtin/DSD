@@ -3943,6 +3943,9 @@ end;
 
 procedure TLoadFormTest.LoadPromoFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromo_MI_DetailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromo_MI_DetailForm');
   {
    TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoice_byPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoice_byPromoForm');
