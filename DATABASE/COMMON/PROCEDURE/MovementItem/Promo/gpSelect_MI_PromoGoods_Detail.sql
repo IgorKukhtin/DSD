@@ -71,15 +71,15 @@ BEGIN
              , MIDate_OperDate.ValueData    ::TDateTime  AS OperDate
              , MovementItem.isErased                     AS isErased
         FROM tmpMI_Detail AS MovementItem
-             LEFT JOIN MovementItemFloat AS MIFloat_AmountIn
-                                         ON MIFloat_AmountIn.MovementItemId = MovementItem.Id 
-                                        AND MIFloat_AmountIn.DescId = zc_MIFloat_AmountIn()
-             LEFT JOIN MovementItemFloat AS MIFloat_AmountReal
-                                         ON MIFloat_AmountReal.MovementItemId = MovementItem.Id 
-                                        AND MIFloat_AmountReal.DescId = zc_MIFloat_AmountReal()
-             LEFT JOIN MovementItemDate AS MIDate_OperDate
-                                        ON MIDate_OperDate.MovementItemId = MovementItem.Id 
-                                       AND MIDate_OperDate.DescId = zc_MIDate_OperDate() 
+             LEFT JOIN tmpMIFloat AS MIFloat_AmountIn
+                                  ON MIFloat_AmountIn.MovementItemId = MovementItem.Id 
+                                 AND MIFloat_AmountIn.DescId = zc_MIFloat_AmountIn()
+             LEFT JOIN tmpMIFloat AS MIFloat_AmountReal
+                                  ON MIFloat_AmountReal.MovementItemId = MovementItem.Id 
+                                 AND MIFloat_AmountReal.DescId = zc_MIFloat_AmountReal()
+             LEFT JOIN tmpMIDate AS MIDate_OperDate
+                                 ON MIDate_OperDate.MovementItemId = MovementItem.Id 
+                                AND MIDate_OperDate.DescId = zc_MIDate_OperDate() 
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
                                              
@@ -97,9 +97,8 @@ BEGIN
                                          ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
                                         AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
-        WHERE MovementItem.DescId = zc_MI_Master()
-          AND MovementItem.MovementId = inMovementId
-          AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
+       
+        ;
 
 END;
 $BODY$

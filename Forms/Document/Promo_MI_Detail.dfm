@@ -16,12 +16,14 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
     ClientRectBottom = 337
     ClientRectRight = 983
     inherited tsMain: TcxTabSheet
-      Caption = #1056#1077#1079#1077#1088#1074
+      Caption = #1060#1072#1082#1090
       ExplicitWidth = 983
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 983
         Height = 313
+        ExplicitLeft = 3
+        ExplicitTop = -3
         ExplicitWidth = 983
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -962,6 +964,22 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
         end>
       isShowModal = False
     end
+    object actInsertUpdate_MI_Promo_Detail: TdsdExecStoredProc
+      Category = 'Update_MI_Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MI_Promo_Detail
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MI_Promo_Detail
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      ImageIndex = 35
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1034,6 +1052,14 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
         item
           Visible = True
           ItemName = 'bbReport_GoodsMotion'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_MI_Promo_Detail'
         end
         item
           Visible = True
@@ -1120,6 +1146,10 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
     end
     object bbReport_GoodsMotion: TdxBarButton
       Action = actReport_GoodsMotion
+      Category = 0
+    end
+    object bbInsertUpdate_MI_Promo_Detail: TdxBarButton
+      Action = actInsertUpdate_MI_Promo_Detail
       Category = 0
     end
   end
@@ -2194,5 +2224,22 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
       end>
     Left = 412
     Top = 24
+  end
+  object spInsertUpdate_MI_Promo_Detail: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Promo_Detail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 560
+    Top = 347
   end
 end

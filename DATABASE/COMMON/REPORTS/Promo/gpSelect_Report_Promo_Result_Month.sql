@@ -135,6 +135,7 @@ BEGIN
                             AND (  (Movement_Promo.isPromo = TRUE AND inIsPromo = TRUE) 
                                 OR (COALESCE (Movement_Promo.isPromo, FALSE) = FALSE AND inIsTender = TRUE)
                                 OR (inIsPromo = FALSE AND inIsTender = FALSE)
+                                OR inMovementId > 0
                                 )
                           ) 
 

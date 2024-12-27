@@ -596,6 +596,9 @@ type
     actChoiceGoodsGroupProperty: TOpenChoiceForm;
     actOpenFormPromo_MI_Detail: TdsdInsertUpdateAction;
     bbOpenFormPromo_MI_Detail: TdxBarButton;
+    spInsertUpdate_MI_Promo_Detail: TdsdStoredProc;
+    actInsertUpdate_MI_Promo_Detail: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

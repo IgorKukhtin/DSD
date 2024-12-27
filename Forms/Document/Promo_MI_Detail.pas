@@ -94,6 +94,9 @@ type
     GuidesPromoStateKind: TdsdGuides;
     GuidesPaidKind: TdsdGuides;
     GuidesPromoKind: TdsdGuides;
+    spInsertUpdate_MI_Promo_Detail: TdsdStoredProc;
+    actInsertUpdate_MI_Promo_Detail: TdsdExecStoredProc;
+    bbInsertUpdate_MI_Promo_Detail: TdxBarButton;
   private
     { Private declarations }
   public
