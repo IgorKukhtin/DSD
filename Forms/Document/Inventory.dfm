@@ -52,6 +52,11 @@ inherited InventoryForm: TInventoryForm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
+            end
+            item
               Format = ',0.####'
               Kind = skSum
               Column = Amount
@@ -75,11 +80,6 @@ inherited InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_pr
-            end
-            item
-              Format = 'C'#1090#1088#1086#1082': ,0'
-              Kind = skCount
-              Column = GoodsName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
