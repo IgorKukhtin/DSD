@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingPartner(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime, StatusId Integer, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementId_Order Integer, InvNumberOrder TVarChar
@@ -69,6 +69,7 @@ BEGIN
              , MovementString_InvNumberPartner.ValueData ::TVarChar AS InvNumberPartner
              , Movement.OperDate 
              , MovementDate_OperDatePartner.ValueData ::TDateTime AS OperDatePartner
+             , Object_Status.Id                  AS StatusId
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
 

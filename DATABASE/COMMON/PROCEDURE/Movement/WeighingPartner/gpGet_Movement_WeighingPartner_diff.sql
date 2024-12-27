@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , UserId Integer, UserName TVarChar
-             , isDocPartner Boolean 
+             , isDocPartner Boolean
              , isDiff Boolean
              , Comment TVarChar
               )
@@ -30,7 +30,7 @@ $BODY$
    DECLARE vbContractId Integer;
    DECLARE vbPaidKindId Integer;
    DECLARE vbInvNumberPartner TVarChar;
-   DECLARE vbOperDate TDateTime; 
+   DECLARE vbOperDate TDateTime;
    DECLARE vbisDiff Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -88,12 +88,12 @@ BEGIN
      END IF;
 
      -- возвращаем для печати акта иннфу о наличии отклонений
-     IF EXISTS (SELECT 1 
+     IF EXISTS (SELECT 1
                 FROM gpSelect_MI_WeighingPartner_diff(inMovementId, 'False' ,  inSession := inSession) AS tmp
                 WHERE COALESCE (tmp.Price_diff,0) <> 0 OR COALESCE (tmp.Amount_diff,0) <> 0)
      THEN
          vbisDiff := TRUE;
-     ELSE 
+     ELSE
          vbisDiff := FALSE;
      END IF;
 
@@ -120,7 +120,11 @@ BEGIN
              , gpGet.Comment
         FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession
                                             ) AS gpGet
-             LEFT JOIN tmpStatus ON tmpStatus.Id = CASE WHEN gpGet.isDocPartner_real = TRUE THEN zc_Enum_Status_Complete() ELSE zc_Enum_Status_UnComplete() END;
+             LEFT JOIN tmpStatus ON tmpStatus.Id = CASE WHEN gpGet.StatusId = zc_Enum_Status_Erased() THEN zc_Enum_Status_Erased()
+                                                        WHEN gpGet.isDocPartner_real = TRUE THEN zc_Enum_Status_Complete()
+                                                        ELSE zc_Enum_Status_UnComplete()
+                                                   END
+                                                  ;
 
 END;
 $BODY$
@@ -133,5 +137,5 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpGet_Movement_WeighingPartner_diff (inMovementId:= 29882177, inSession:= zfCalc_UserAdmin())
+--
+-- SELECT * FROM gpGet_Movement_WeighingPartner_diff (inMovementId:= 30105796, inSession:= zfCalc_UserAdmin())
