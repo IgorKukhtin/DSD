@@ -96,6 +96,12 @@ type
     CountDayPromo: TcxGridDBColumn;
     CountDaySale: TcxGridDBColumn;
     CountDayOperDate: TcxGridDBColumn;
+    isDetail: TcxGridDBColumn;
+    actOpenFormPromo_MI_Detail: TdsdInsertUpdateAction;
+    actInsertUpdate_MI_Promo_Detail: TdsdExecStoredProc;
+    bbOpenFormPromo_MI_Detail: TdxBarButton;
+    bbInsertUpdate_MI_Promo_Detail: TdxBarButton;
+    spInsertUpdate_MI_Promo_Detail: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -111,6 +111,15 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderHint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
             Width = 84
           end
+          object isDetail: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090' '#1092#1072#1082#1090' '#1087#1086' '#1084#1077#1089'.'
+            DataBinding.FieldName = 'isDetail'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1092#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+            Options.Editing = False
+            Width = 55
+          end
           object Checked: TcxGridDBColumn
             Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
             DataBinding.FieldName = 'Checked'
@@ -410,10 +419,10 @@ inherited PromoJournalForm: TPromoJournalForm
     ExplicitWidth = 1084
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
-      EditValue = 43831d
+      EditValue = 45658d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 43831d
+      EditValue = 45658d
     end
     inherited cxLabel2: TcxLabel
       Left = 198
@@ -939,6 +948,62 @@ inherited PromoJournalForm: TPromoJournalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    object actOpenFormPromo_MI_Detail: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      ImageIndex = 24
+      FormName = 'TPromo_MI_DetailForm'
+      FormNameParam.Value = 'TPromo_MI_DetailForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actInsertUpdate_MI_Promo_Detail: TdsdExecStoredProc
+      Category = 'Update_MI_Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MI_Promo_Detail
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MI_Promo_Detail
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      ImageIndex = 38
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -949,7 +1014,7 @@ inherited PromoJournalForm: TPromoJournalForm
     Top = 131
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Promo'
+    StoredProcName = 'spInsertUpdate_MI_Promo_Detail'
     Params = <
       item
         Name = 'inStartDate'
@@ -1076,6 +1141,22 @@ inherited PromoJournalForm: TPromoJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormPromo_MI_Detail'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_MI_Promo_Detail'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton1'
         end
         item
@@ -1120,6 +1201,14 @@ inherited PromoJournalForm: TPromoJournalForm
     end
     object bbAllPartner: TdxBarButton
       Action = actAllPartner
+      Category = 0
+    end
+    object bbOpenFormPromo_MI_Detail: TdxBarButton
+      Action = actOpenFormPromo_MI_Detail
+      Category = 0
+    end
+    object bbInsertUpdate_MI_Promo_Detail: TdxBarButton
+      Action = actInsertUpdate_MI_Promo_Detail
       Category = 0
     end
   end
@@ -1373,5 +1462,22 @@ inherited PromoJournalForm: TPromoJournalForm
     PackSize = 1
     Left = 704
     Top = 227
+  end
+  object spInsertUpdate_MI_Promo_Detail: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Promo_Detail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 512
+    Top = 315
   end
 end

@@ -22,8 +22,6 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
       inherited cxGrid: TcxGrid
         Width = 983
         Height = 313
-        ExplicitLeft = 3
-        ExplicitTop = -3
         ExplicitWidth = 983
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -978,7 +976,7 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
         end>
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
-      ImageIndex = 35
+      ImageIndex = 38
     end
   end
   inherited MasterDS: TDataSource
