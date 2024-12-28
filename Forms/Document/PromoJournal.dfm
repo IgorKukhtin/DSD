@@ -1014,7 +1014,7 @@ inherited PromoJournalForm: TPromoJournalForm
     Top = 131
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'spInsertUpdate_MI_Promo_Detail'
+    StoredProcName = 'gpSelect_Movement_Promo'
     Params = <
       item
         Name = 'inStartDate'
