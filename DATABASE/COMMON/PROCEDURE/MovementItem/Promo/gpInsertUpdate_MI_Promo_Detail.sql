@@ -1,0 +1,95 @@
+-- Function: gpInsertUpdate_MI_Promo_Detail()
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Promo_Detail (Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Promo_Detail(
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inSession               TVarChar     -- сессия пользователя
+)
+RETURNS VOID
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Promo_Data());
+
+
+     -- данные по документам Данные Sale / Order / ReturnIn где установлен признак "акция"
+     CREATE TEMP TABLE _tmpReport (GoodsId Integer, OperDate TDateTime, Amount TFloat, AmountIn TFloat, AmountReal TFloat) ON COMMIT DROP;
+
+     -- Данные Sale / ReturnIn
+     INSERT INTO _tmpReport (GoodsId, OperDate, Amount, AmountIn, AmountReal)
+        SELECT spReport.GoodsId
+             , spReport.Month_Partner         AS OperDate
+             , spReport.AmountOutWeight       AS Amount
+             , spReport.AmountInWeight        AS AmountIn
+             , spReport.AmountRealWeight_calc AS AmountReal
+        FROM gpSelect_Report_Promo_Result_Month (inStartDate   := CURRENT_DATE ::TDateTime 
+                                               , inEndDate     := CURRENT_DATE ::TDateTime
+                                               , inIsPromo     := False
+                                               , inIsTender    := False
+                                               , inisGoodsKind := False
+                                               , inUnitId      := 0 
+                                               , inRetailId    := 0 
+                                               , inMovementId  := inMovementId
+                                               , inJuridicalId := 0 
+                                               , inSession     := inSession) AS spReport
+        ;
+
+     -- Результат - 
+     PERFORM lpInsertUpdate_MI_PromoGoods_Detail (ioId         := COALESCE (tmp.Id,0)         ::Integer
+                                                , inParentId   := COALESCE (tmp.ParentId,0)   ::Integer
+                                                , inMovementId := inMovementId                ::Integer
+                                                , inGoodsId    := tmp.GoodsId                 ::Integer
+                                                , inAmount     := COALESCE (tmp.Amount,0)     ::TFloat
+                                                , inAmountIn   := COALESCE (tmp.AmountIn,0)   ::TFloat
+                                                , inAmountReal := COALESCE (tmp.AmountReal,0) ::TFloat
+                                                , inOperDate   := tmp.OperDate                ::TDateTime
+                                                , inUserId     := vbUserId                    ::Integer
+                                                 )
+     FROM (WITH tmpMI_Master AS (SELECT MovementItem.*
+                                 FROM MovementItem
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId = zc_MI_Master()
+                                   AND MovementItem.isErased = FALSE
+                                 )
+              , tmpMI_Detail AS (SELECT MovementItem.*
+                                      , MIDate_OperDate.ValueData    ::TDateTime  AS OperDate
+                                 FROM MovementItem
+                                   LEFT JOIN MovementItemDate AS MIDate_OperDate
+                                                              ON MIDate_OperDate.MovementItemId = MovementItem.Id 
+                                                             AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId = zc_MI_Detail()
+                                   AND MovementItem.isErased = FALSE
+                                 )
+
+           -- Результат
+           SELECT COALESCE (tmpMI_Detail.Id,0)        AS Id
+                , tmpMI_Master.Id                     AS ParentId
+                , _tmpReport.GoodsId                  AS GoodsId
+                , COALESCE (_tmpReport.Amount, 0)     AS Amount
+                , COALESCE (_tmpReport.AmountIn, 0)   AS AmountIn
+                , COALESCE (_tmpReport.AmountReal, 0) AS AmountReal
+                , _tmpReport.OperDate ::TDateTime     AS OperDate
+           FROM tmpMI_Master
+                LEFT JOIN _tmpReport ON _tmpReport.GoodsId = tmpMI_Master.ObjectId
+                LEFT JOIN tmpMI_Detail ON tmpMI_Detail.ParentId = tmpMI_Master.Id
+                                      AND tmpMI_Detail.OperDate = _tmpReport.OperDate
+                                
+          ) AS tmp
+    ;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.12.24         *
+*/
+
+-- тест
+-- 26423 от 01,10,2024
