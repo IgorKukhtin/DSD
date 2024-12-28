@@ -165,7 +165,7 @@ BEGIN
                               GROUP BY tmpMovement_PromoPartner.ParentId
                               )
 
-           , tmpMI_Detail AS (SELECT DISTINCT tmpMovement.Id
+           , tmpMI_Detail AS (SELECT DISTINCT tmpMovement.Id AS MovementId
                               FROM tmpMovement
                                    INNER JOIN MovementItem AS MI_Detail
                                                            ON MI_Detail.MovementId = tmpMovement.Id
@@ -462,4 +462,4 @@ $BODY$
  13.10.15                                                                        *
 */
 
--- SELECT * FROM gpSelect_Movement_Promo (inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inIsErased:= FALSE, inPeriodForOperDate:=TRUE, inIsAllPartner:= False, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Promo (inStartDate:= '01.11.2024', inEndDate:= '30.11.2024', inIsErased:= FALSE, inPeriodForOperDate:=TRUE, inIsAllPartner:= False, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
