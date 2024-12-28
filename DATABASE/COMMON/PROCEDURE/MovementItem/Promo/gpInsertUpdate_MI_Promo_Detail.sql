@@ -15,8 +15,14 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Promo_Data());
 
 
-     -- данные по документам Данные Sale / Order / ReturnIn где установлен признак "акция"
-     CREATE TEMP TABLE _tmpReport (GoodsId Integer, OperDate TDateTime, Amount TFloat, AmountIn TFloat, AmountReal TFloat) ON COMMIT DROP;
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpReport')
+     THEN
+         DELETE FROM _tmpReport;
+     ELSE
+         -- данные по документам Данные Sale / Order / ReturnIn где установлен признак "акция"
+         CREATE TEMP TABLE _tmpReport (GoodsId Integer, OperDate TDateTime, Amount TFloat, AmountIn TFloat, AmountReal TFloat) ON COMMIT DROP;
+     END IF;
+
 
      -- Данные Sale / ReturnIn
      INSERT INTO _tmpReport (GoodsId, OperDate, Amount, AmountIn, AmountReal)
@@ -25,19 +31,19 @@ BEGIN
              , spReport.AmountOutWeight       AS Amount
              , spReport.AmountInWeight        AS AmountIn
              , spReport.AmountRealWeight_calc AS AmountReal
-        FROM gpSelect_Report_Promo_Result_Month (inStartDate   := CURRENT_DATE ::TDateTime 
+        FROM gpSelect_Report_Promo_Result_Month (inStartDate   := CURRENT_DATE ::TDateTime
                                                , inEndDate     := CURRENT_DATE ::TDateTime
                                                , inIsPromo     := False
                                                , inIsTender    := False
                                                , inisGoodsKind := False
-                                               , inUnitId      := 0 
-                                               , inRetailId    := 0 
+                                               , inUnitId      := 0
+                                               , inRetailId    := 0
                                                , inMovementId  := inMovementId
-                                               , inJuridicalId := 0 
+                                               , inJuridicalId := 0
                                                , inSession     := inSession) AS spReport
         ;
 
-     -- Результат - 
+     -- Результат -
      PERFORM lpInsertUpdate_MI_PromoGoods_Detail (ioId         := COALESCE (tmp.Id,0)         ::Integer
                                                 , inParentId   := COALESCE (tmp.ParentId,0)   ::Integer
                                                 , inMovementId := inMovementId                ::Integer
@@ -58,7 +64,7 @@ BEGIN
                                       , MIDate_OperDate.ValueData    ::TDateTime  AS OperDate
                                  FROM MovementItem
                                    LEFT JOIN MovementItemDate AS MIDate_OperDate
-                                                              ON MIDate_OperDate.MovementItemId = MovementItem.Id 
+                                                              ON MIDate_OperDate.MovementItemId = MovementItem.Id
                                                              AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Detail()
@@ -77,7 +83,7 @@ BEGIN
                 LEFT JOIN _tmpReport ON _tmpReport.GoodsId = tmpMI_Master.ObjectId
                 LEFT JOIN tmpMI_Detail ON tmpMI_Detail.ParentId = tmpMI_Master.Id
                                       AND tmpMI_Detail.OperDate = _tmpReport.OperDate
-                                
+
           ) AS tmp
     ;
 

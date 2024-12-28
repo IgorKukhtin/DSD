@@ -73,6 +73,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , Color_PromoStateKind Integer
              , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
+             , isDetail   Boolean
              , InsertName TVarChar
              , InsertDate TDateTime
               )
@@ -164,6 +165,13 @@ BEGIN
                               GROUP BY tmpMovement_PromoPartner.ParentId
                               )
 
+           , tmpMI_Detail AS (SELECT DISTINCT tmpMovement.Id
+                              FROM tmpMovement
+                                   INNER JOIN MovementItem AS MI_Detail
+                                                           ON MI_Detail.MovementId = tmpMovement.Id
+                                                          AND MI_Detail.DescId     = zc_MI_Detail()
+                                                          AND MI_Detail.isErased   = FALSE
+                             )
            , tmpMI_Child AS (SELECT MI_Child.MovementId
                                   , Object_ChangePercent.ValueData  AS ChangePercentName
                              FROM tmpMovement
@@ -291,6 +299,8 @@ BEGIN
 */
              , tmpSign.strSign
              , tmpSign.strSignNo
+             
+             , CASE WHEN MI_Detail.MovementId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isDetail
 
              , Object_User.ValueData                  AS InsertName
              , MovementDate_Insert.ValueData          AS InsertDate
@@ -416,6 +426,7 @@ BEGIN
                                                 
 
              LEFT JOIN tmpMI_Child AS MI_Child ON MI_Child.MovementId = Movement_Promo.Id
+             LEFT JOIN tmpMI_Detail AS MI_Detail ON MI_Detail.MovementId = Movement_Promo.Id
 
              LEFT JOIN tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
 

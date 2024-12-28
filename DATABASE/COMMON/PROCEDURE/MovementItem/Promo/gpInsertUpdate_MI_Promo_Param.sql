@@ -158,6 +158,9 @@ BEGIN
            WHERE tmpData_notFind.GoodsId IS NULL
           ) AS tmp
     ;
+    
+    -- Пересчет
+    PERFORM gpInsertUpdate_MI_Promo_Detail (inMovementId:= inMovementId, inSession:= inSession);
 
 
 END;
