@@ -1111,7 +1111,7 @@ BEGIN
                                               END) <> 0
                                  )
              -- Остаток, кол-во
-           , tmpContainer AS (SELECT tmpContainerList.Id       AS ContainerId_Goods
+           , tmpContainer_all AS (SELECT tmpContainerList.Id       AS ContainerId_Goods
                                        , tmpContainerList.ObjectId AS GoodsId
                                          -- Остаток
                                        , tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperCount
@@ -1145,33 +1145,83 @@ BEGIN
                                  )
 
                -- Остаток - ПАРТИИ МИНУС, кол-во
-             /*, tmpContainer_minus AS (SELECT tmpContainer_all.ContainerId_Goods
+             , tmpContainer_minus AS (SELECT tmpContainer_all.ContainerId_Goods
                                            , tmpContainer_all.GoodsId
                                            , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
                                              -- Остаток
-                                           , -1 * tmpContainer_all.OperCount AS OperCount
+                                           , -1 * (tmpContainer_all.OperCount + tmpContainer_all.OperCount_add) AS OperCount
                                       FROM tmpContainer_all
                                            LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                                          ON CLO_GoodsKind.ContainerId = tmpContainer_all.ContainerId_Goods
                                                                         AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-                                      WHERE tmpContainer_all.OperCount < 0
+                                      WHERE (tmpContainer_all.OperCount + tmpContainer_all.OperCount_add) < 0
                                         AND vbIsLastOnMonth_RK = TRUE
                                      )
            , tmpContainer_add AS (SELECT tmpContainer_all.ContainerId_Goods
                                        , tmpContainer_all.GoodsId
-                                       , COALESCE (CLO_GoodsKind.ObjectId, 0)               AS GoodsKindId
+                                       , COALESCE (CLO_GoodsKind.ObjectId, 0)                  AS GoodsKindId
+                                       , COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
+                                       , COALESCE (CLO_PartionGoods.ObjectId, 0)               AS PartionGoodsId
+
+                                         -- Кол-во - для него будет подбор партий
+                                       , tmpContainer_minus.OperCount_minus
+
                                          -- Остаток
-                                       , tmpContainer_all.OperCount
+                                       , tmpContainer_all.OperCount + tmpContainer_all.OperCount_add AS OperCount_plus
                                          -- накопительно
-                                       , SUM (tmpContainer_all.OperCount) OVER (PARTITION BY tmpContainer_all.GoodsId, COALESCE (CLO_GoodsKind.ObjectId, 0) ORDER BY Movement.OperDate DESC) AS Ord
+                                       , SUM (tmpContainer_all.OperCount + tmpContainer_all.OperCount_add)
+                                             OVER (PARTITION BY tmpContainer_all.GoodsId, COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                                   ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) ASC
+                                                          , tmpContainer_all.ContainerId_Goods ASC
+                                                  ) AS AmountSUM
+
+                                         -- !!!Надо отловить ПОСЛЕДНИЙ!!!
+                                       , ROW_NUMBER() OVER (PARTITION BY tmpContainer_all.GoodsId, COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                                            ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) DESC
+                                                                   , tmpContainer_all.ContainerId_Goods DESC
+                                                           ) AS Ord
 
                                   FROM tmpContainer_all
                                        LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                                      ON CLO_GoodsKind.ContainerId = tmpContainer_all.ContainerId_Goods
                                                                     AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-                                  WHERE tmpContainer_all.OperCount >= 0
+                                       LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                     ON CLO_PartionGoods.ContainerId = tmpContainer_all.ContainerId_Goods
+                                                                    AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                       LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                                               AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+
+                                       -- для минуса - подбор партий
+                                       LEFT JOIN (SELECT tmpContainer_minus.GoodsId
+                                                       , tmpContainer_minus.GoodsKindId
+                                                         -- Остаток
+                                                       , SUM (tmpContainer_minus.OperCount) AS OperCount_minus
+                                                  FROM tmpContainer_minus
+                                                  GROUP BY tmpContainer_minus.GoodsId
+                                                         , tmpContainer_minus.GoodsKindId
+                                                 ) AS tmpContainer_minus
+                                                   ON tmpContainer_minus.GoodsId     = tmpContainer_all.GoodsId
+                                                  AND tmpContainer_minus.GoodsKindId = COALESCE (CLO_GoodsKind.ObjectId, 0)
+
+                                  WHERE (tmpContainer_all.OperCount + tmpContainer_all.OperCount_add) >= 0
                                     AND vbIsLastOnMonth_RK = TRUE
-                                 )*/
+                                 )
+      -- итого кол-во разбили по партиям
+    , tmpContainer_partion AS (SELECT DD.ContainerId_Goods
+                                    , DD.GoodsId
+                                    , DD.GoodsKindId
+                                    , DD.PartionGoodsDate
+                                    , DD.PartionGoodsId
+                                    , CASE WHEN DD.OperCount_minus - DD.AmountSUM > 0 AND DD.Ord <> 1 --!!!- изменилась сортировка НАОБОРОТ!!!
+                                                -- отдали все
+                                                THEN DD.OperCount_plus
+                                           -- все что осталось
+                                           ELSE DD.OperCount_minus - DD.AmountSUM + DD.OperCount_plus
+                                      END AS Amount
+                               FROM (SELECT * FROM tmpContainer_add) AS DD
+                               WHERE DD.OperCount_minus - (DD.AmountSUM - DD.OperCount_plus) > 0
+                              )
+
         -- Результат
         SELECT COALESCE (tmpMI_find.MovementItemId, 0)            AS MovementItemId
              , tmpContainer.ContainerId_Goods                     AS ContainerId_Goods
@@ -1182,7 +1232,15 @@ BEGIN
              , COALESCE (ObjectLink_InfoMoneyDestination.ChildObjectId, 0)
 
                -- Остаток
-             , tmpContainer.OperCount                             AS OperCount
+             , CASE WHEN tmpContainer.OperCount < 0 AND tmpContainer_partion_find.Amount = tmpContainer_minus.OperCount_minus
+                         -- увеличили отрицательный остаток
+                         THEN 0
+
+                    WHEN tmpContainer_partion.Amount > 0
+                         -- уменьшили остаток
+                         THEN tmpContainer.OperCount - tmpContainer_partion.Amount
+                    ELSE tmpContainer.OperCount
+               END AS OperCount
                -- здесь только движение до конца месяца
              , tmpContainer.OperCount_add                         AS OperCount_add
                -- здесь ABS движение до конца месяца
@@ -1196,10 +1254,37 @@ BEGIN
                --
              , COALESCE (tmpMI_find.OperSumm_item, 0)             AS OperSumm_item
 
-        FROM tmpContainer
+        FROM tmpContainer_all AS tmpContainer
              LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                            ON CLO_GoodsKind.ContainerId = tmpContainer.ContainerId_Goods
                                           AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+
+             -- итого сколько подобрали партий
+             LEFT JOIN (SELECT tmpContainer_partion.GoodsId, tmpContainer_partion.GoodsKindId, SUM (tmpContainer_partion.Amount) AS Amount
+                        FROM tmpContainer_partion
+                        GROUP BY tmpContainer_partion.GoodsId, tmpContainer_partion.GoodsKindId
+                       ) AS tmpContainer_partion_find
+                         ON tmpContainer_partion_find.GoodsId     = tmpContainer.GoodsId
+                        AND tmpContainer_partion_find.GoodsKindId = COALESCE (CLO_GoodsKind.ObjectId, 0)
+
+             -- итого сколько надо было подобрать партий
+             LEFT JOIN (SELECT tmpContainer_minus.GoodsId
+                             , tmpContainer_minus.GoodsKindId
+                               -- Остаток
+                             , SUM (tmpContainer_minus.OperCount) AS OperCount_minus
+                        FROM tmpContainer_minus
+                        GROUP BY tmpContainer_minus.GoodsId
+                               , tmpContainer_minus.GoodsKindId
+                       ) AS tmpContainer_minus
+                         ON tmpContainer_minus.GoodsId     = tmpContainer.GoodsId
+                        AND tmpContainer_minus.GoodsKindId = COALESCE (CLO_GoodsKind.ObjectId, 0)
+
+             -- партии, которые надо уменьшить
+             LEFT JOIN tmpContainer_partion ON tmpContainer_partion.ContainerId_Goods = tmpContainer.ContainerId_Goods
+                                           -- на всякий случай проверка - если подобрали ровно столько сколько нужно
+                                           AND tmpContainer_partion_find.Amount = tmpContainer_minus.OperCount_minus
+
+             -- батоны
              LEFT JOIN (SELECT tmpContainer_count.ContainerId_Goods, tmpContainer_count.GoodsId
                               , MIN (tmpContainer_count.ContainerId_count) AS ContainerId_count
                               , SUM (tmpContainer_count.OperCount) AS OperCount
@@ -1210,6 +1295,7 @@ BEGIN
                        ) AS tmpContainer_count
                          ON tmpContainer_count.ContainerId_Goods = tmpContainer.ContainerId_Goods
 
+             -- нашли ОДИН MovementItemId для ContainerId_Goods
              LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.ContainerId_Goods, MAX (_tmpItem.OperSumm) AS OperSumm_item
                         FROM _tmpItem
                         GROUP BY _tmpItem.ContainerId_Goods
@@ -1249,7 +1335,7 @@ BEGIN
               FROM tmpContainer_count
               GROUP BY tmpContainer_count.ContainerId_Goods, tmpContainer_count.GoodsId
              ) AS tmpContainer_count
-             LEFT JOIN tmpContainer ON tmpContainer.ContainerId_Goods = tmpContainer_count.ContainerId_Goods
+             LEFT JOIN tmpContainer_all AS tmpContainer ON tmpContainer.ContainerId_Goods = tmpContainer_count.ContainerId_Goods
              LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.ContainerId_Goods, MAX (_tmpItem.OperSumm) AS OperSumm_item
                         FROM _tmpItem
                         GROUP BY _tmpItem.ContainerId_Goods
