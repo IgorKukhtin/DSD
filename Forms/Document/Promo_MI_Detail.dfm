@@ -40,6 +40,31 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountInWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetInWeight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -55,12 +80,37 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountRetIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
               Column = AmountReal
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountInWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetInWeight
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -126,7 +176,57 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 59
           end
-          object Amount: TcxGridDBColumn [6]
+          object AmountWeight: TcxGridDBColumn [6]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090'), '#1074#1077#1089
+            DataBinding.FieldName = 'AmountWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
+          object AmountInWeight: TcxGridDBColumn [7]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090'), '#1074#1077#1089
+            DataBinding.FieldName = 'AmountInWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
+          end
+          object AmountRealWeight: TcxGridDBColumn [8]
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076', '#1074#1077#1089
+            DataBinding.FieldName = 'AmountRealWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1074#1077#1089' ('#1080#1090#1086#1075#1086')'
+            Options.Editing = False
+            Width = 104
+          end
+          object AmountRetInWeight: TcxGridDBColumn [9]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076', '#1074#1077#1089
+            DataBinding.FieldName = 'AmountRetInWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' '#1074' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1074#1077#1089
+            Options.Editing = False
+            Width = 104
+          end
+          object Amount: TcxGridDBColumn [10]
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -138,7 +238,7 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 94
           end
-          object AmountIn: TcxGridDBColumn [7]
+          object AmountIn: TcxGridDBColumn [11]
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -149,15 +249,27 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 104
           end
-          object AmountReal: TcxGridDBColumn [8]
-            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076', '#1082#1075
+          object AmountReal: TcxGridDBColumn [12]
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountReal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075' ('#1080#1090#1086#1075#1086')'
+            HeaderHint = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076' ('#1080#1090#1086#1075#1086')'
+            Options.Editing = False
+            Width = 104
+          end
+          object AmountRetIn: TcxGridDBColumn [13]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'AmountRetIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' '#1074' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
             Options.Editing = False
             Width = 104
           end
@@ -1815,11 +1927,6 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
     Top = 296
   end
   inherited GuidesFiller: TGuidesFiller
-    GuidesList = <
-      item
-      end
-      item
-      end>
     Left = 264
     Top = 344
   end
@@ -1829,45 +1936,7 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
         Control = edInvNumber
       end
       item
-      end
-      item
         Control = edOperDate
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end>
     Left = 256
     Top = 273

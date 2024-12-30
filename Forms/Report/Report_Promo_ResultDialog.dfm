@@ -3,7 +3,7 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
   ClientHeight = 280
   ClientWidth = 432
   ExplicitWidth = 438
-  ExplicitHeight = 308
+  ExplicitHeight = 309
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -132,7 +132,7 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
     Params = <
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -140,7 +140,7 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

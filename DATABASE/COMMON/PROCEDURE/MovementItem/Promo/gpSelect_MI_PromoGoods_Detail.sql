@@ -17,8 +17,13 @@ RETURNS TABLE (
       , TradeMarkName       TVarChar --Торговая марка
       , GoodsWeight         TFloat -- вес товара
       , Amount              TFloat -- Кол-во реализация (факт)
-      , AmountIn            TFloat -- Кол-во возврат (факт)
+      , AmountIn            TFloat -- Кол-во возврат (факт)  
+      , AmountWeight        TFloat
+      , AmountInWeight      TFloat
       , AmountReal          TFloat -- Объем продаж в аналогичный период, кг (итого
+      , AmountRetIn         TFloat -- Кол-во возврат в аналогичный период, кг
+      , AmountRealWeight    TFloat -- Объем продаж в аналогичный период, кг (итого
+      , AmountRetInWeight   TFloat -- Кол-во возврат в аналогичный период, кг
       , OperDate            TDateTime  -- месяц
       , isErased            Boolean  --удален
 )
@@ -44,6 +49,7 @@ BEGIN
                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Detail.Id FROM tmpMI_Detail)
                          AND MovementItemFloat.DescId IN (zc_MIFloat_AmountIn()
                                                         , zc_MIFloat_AmountReal()
+                                                        , zc_MIFloat_AmountRetIn()
                                                         )
                        )
                              
@@ -67,7 +73,13 @@ BEGIN
 
              , MovementItem.Amount          ::TFloat     AS Amount
              , MIFloat_AmountIn.ValueData   ::TFloat     AS AmountIn
+             , (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END)         ::TFloat AS AmountWeight
+             , (MIFloat_AmountIn.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END)  ::TFloat AS AmountInWeight
+             
              , MIFloat_AmountReal.ValueData ::TFloat     AS AmountReal
+             , MIFloat_AmountRetIn.ValueData::TFloat     AS AmountRetIn
+             , (MIFloat_AmountReal.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) ::TFloat     AS AmountRealWeight
+             , (MIFloat_AmountRetIn.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END)::TFloat     AS AmountRetInWeight
              , MIDate_OperDate.ValueData    ::TDateTime  AS OperDate
              , MovementItem.isErased                     AS isErased
         FROM tmpMI_Detail AS MovementItem
@@ -77,6 +89,10 @@ BEGIN
              LEFT JOIN tmpMIFloat AS MIFloat_AmountReal
                                   ON MIFloat_AmountReal.MovementItemId = MovementItem.Id 
                                  AND MIFloat_AmountReal.DescId = zc_MIFloat_AmountReal()
+             LEFT JOIN tmpMIFloat AS MIFloat_AmountRetIn
+                                  ON MIFloat_AmountRetIn.MovementItemId = MovementItem.Id 
+                                 AND MIFloat_AmountRetIn.DescId = zc_MIFloat_AmountRetIn()
+
              LEFT JOIN tmpMIDate AS MIDate_OperDate
                                  ON MIDate_OperDate.MovementItemId = MovementItem.Id 
                                 AND MIDate_OperDate.DescId = zc_MIDate_OperDate() 

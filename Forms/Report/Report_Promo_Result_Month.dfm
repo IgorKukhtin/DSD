@@ -856,14 +856,14 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
       Width = 144
     end
     object cbTender: TcxCheckBox
-      Left = 368
+      Left = 360
       Top = 32
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1058#1077#1085#1076#1077#1088#1099
       TabOrder = 7
       Width = 161
     end
     object cbGoodsKind: TcxCheckBox
-      Left = 544
+      Left = 527
       Top = 32
       Caption = #1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072
       TabOrder = 8
@@ -885,6 +885,13 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
       Properties.ReadOnly = True
       TabOrder = 10
       Width = 241
+    end
+    object cbReal: TcxCheckBox
+      Left = 704
+      Top = 32
+      Caption = #1060#1040#1050#1058
+      TabOrder = 11
+      Width = 55
     end
   end
   object cxLabel3: TcxLabel [2]
@@ -1264,6 +1271,14 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisReal'
+        Value = Null
+        Component = cbReal
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
@@ -1540,8 +1555,8 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 692
-    Top = 16
+    Left = 588
+    Top = 8
   end
   object GuidesMovementPromo: TdsdGuides
     KeyField = 'Id'
@@ -1667,7 +1682,7 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 729
-    Top = 17
+    Left = 929
+    Top = 41
   end
 end
