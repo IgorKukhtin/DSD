@@ -2,26 +2,26 @@
   ActiveControl = edOperDate
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 707
-  ClientWidth = 1354
-  ExplicitWidth = 1370
+  ClientWidth = 1579
+  ExplicitWidth = 1595
   ExplicitHeight = 746
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
-    Width = 1354
+    Width = 1579
     Height = 568
     ExplicitTop = 139
     ExplicitWidth = 1354
     ExplicitHeight = 568
     ClientRectBottom = 568
-    ClientRectRight = 1354
+    ClientRectRight = 1579
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 1354
       ExplicitHeight = 544
       inherited cxGrid: TcxGrid
-        Width = 1354
+        Width = 1579
         Height = 179
         ExplicitWidth = 1354
         ExplicitHeight = 179
@@ -779,41 +779,46 @@
       object Panel1: TPanel
         Left = 0
         Top = 187
-        Width = 1354
+        Width = 1579
         Height = 173
         Align = alBottom
         TabOrder = 1
+        ExplicitWidth = 1354
         object cxSplitter1: TcxSplitter
-          Left = 471
+          Left = 696
           Top = 1
           Width = 8
           Height = 171
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl2
+          ExplicitLeft = 471
         end
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
-          Width = 470
+          Width = 695
           Height = 171
           Align = alClient
           TabOrder = 1
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
+          ExplicitWidth = 470
           ClientRectBottom = 171
-          ClientRectRight = 470
+          ClientRectRight = 695
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
+            ExplicitWidth = 470
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
-              Width = 470
+              Width = 695
               Height = 147
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
+              ExplicitWidth = 470
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -965,7 +970,7 @@
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
-              Width = 470
+              Width = 695
               Height = 147
               Align = alClient
               TabOrder = 0
@@ -1063,7 +1068,7 @@
           end
         end
         object cxPageControl2: TcxPageControl
-          Left = 479
+          Left = 704
           Top = 1
           Width = 256
           Height = 171
@@ -1071,6 +1076,7 @@
           TabOrder = 2
           Properties.ActivePage = tsConditionPromo
           Properties.CustomButtons.Buttons = <>
+          ExplicitLeft = 479
           ClientRectBottom = 171
           ClientRectRight = 256
           ClientRectTop = 24
@@ -1152,7 +1158,7 @@
           end
         end
         object cxPageControl3: TcxPageControl
-          Left = 743
+          Left = 968
           Top = 1
           Width = 265
           Height = 171
@@ -1160,6 +1166,7 @@
           TabOrder = 3
           Properties.ActivePage = tsAdvertising
           Properties.CustomButtons.Buttons = <>
+          ExplicitLeft = 743
           ClientRectBottom = 171
           ClientRectRight = 265
           ClientRectTop = 24
@@ -1242,25 +1249,27 @@
           end
         end
         object cxSplitter3: TcxSplitter
-          Left = 735
+          Left = 960
           Top = 1
           Width = 8
           Height = 171
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl3
+          ExplicitLeft = 735
         end
         object cxSplitter5: TcxSplitter
-          Left = 1008
+          Left = 1233
           Top = 1
           Width = 8
           Height = 171
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl4
+          ExplicitLeft = 1008
         end
         object cxPageControl4: TcxPageControl
-          Left = 1016
+          Left = 1241
           Top = 1
           Width = 337
           Height = 171
@@ -1268,6 +1277,7 @@
           TabOrder = 6
           Properties.ActivePage = cxTabSheetInfoMoney
           Properties.CustomButtons.Buttons = <>
+          ExplicitLeft = 1016
           ClientRectBottom = 171
           ClientRectRight = 337
           ClientRectTop = 24
@@ -1346,29 +1356,32 @@
       object cxSplitter4: TcxSplitter
         Left = 0
         Top = 179
-        Width = 1354
+        Width = 1579
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
+        ExplicitWidth = 1354
       end
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 360
-        Width = 1354
+        Width = 1579
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridPromoStateKind
+        ExplicitWidth = 1354
       end
       object cxGridPromoStateKind: TcxGrid
         Left = 0
         Top = 368
-        Width = 1354
+        Width = 1579
         Height = 176
         Align = alBottom
         PopupMenu = PromoStateKindPopupMenu
         TabOrder = 4
+        ExplicitWidth = 1354
         object cxGridDBTableViewPromoStateKind: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PromoStateKindDS
@@ -1467,7 +1480,7 @@
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
-        Width = 1354
+        Width = 1579
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -1807,7 +1820,7 @@
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
-        Width = 1354
+        Width = 1579
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -2133,7 +2146,7 @@
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1354
+        Width = 1579
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -2226,7 +2239,7 @@
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
-        Width = 1354
+        Width = 1579
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -2375,7 +2388,7 @@
       object GridPromoInvoice: TcxGrid
         Left = 0
         Top = 0
-        Width = 1354
+        Width = 1579
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -2568,7 +2581,7 @@
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
-        Width = 1354
+        Width = 1579
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -3149,7 +3162,7 @@
       object cxGridPlanMaster: TcxGrid
         Left = 0
         Top = 0
-        Width = 1354
+        Width = 1579
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -3347,7 +3360,7 @@
       object cxGridPlanChild: TcxGrid
         Left = 0
         Top = 0
-        Width = 1354
+        Width = 1579
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -3655,7 +3668,7 @@
     end
   end
   inherited DataPanel: TPanel
-    Width = 1354
+    Width = 1579
     Height = 113
     TabOrder = 3
     ExplicitWidth = 1354
@@ -3706,12 +3719,12 @@
       Width = 170
     end
     object cxLabel4: TcxLabel
-      Left = 380
+      Left = 579
       Top = 4
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103' '
     end
     object edPromoKind: TcxButtonEdit
-      Left = 380
+      Left = 579
       Top = 18
       Properties.Buttons = <
         item
@@ -3720,7 +3733,7 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 4
-      Width = 97
+      Width = 121
     end
     object cxLabel11: TcxLabel
       Left = 788
@@ -3888,7 +3901,7 @@
       Width = 178
     end
     object edUnit: TcxButtonEdit
-      Left = 579
+      Left = 1351
       Top = 18
       Properties.Buttons = <
         item
@@ -3900,7 +3913,7 @@
       Width = 202
     end
     object cxLabel17: TcxLabel
-      Left = 579
+      Left = 1351
       Top = 4
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
@@ -3986,7 +3999,7 @@
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 42
-      Width = 66
+      Width = 58
     end
     object cxLabel24: TcxLabel
       Left = 810
@@ -4006,12 +4019,12 @@
       Width = 103
     end
     object cxLabel27: TcxLabel
-      Left = 485
+      Left = 706
       Top = 4
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 486
+      Left = 707
       Top = 18
       Properties.Buttons = <
         item
@@ -4020,7 +4033,7 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 46
-      Width = 72
+      Width = 74
     end
     object cbCost: TcxCheckBox
       Left = 1019
@@ -4029,6 +4042,19 @@
       Caption = #1047#1072#1090#1088#1072#1090#1099' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 47
       Width = 113
+    end
+    object cxLabel28: TcxLabel
+      Left = 380
+      Top = 4
+      Caption = #1055#1086' '#1076#1072#1090#1077
+    end
+    object cbOperDateOrder_text: TcxTextEdit
+      Left = 380
+      Top = 18
+      Properties.MaxLength = 255
+      Properties.ReadOnly = True
+      TabOrder = 49
+      Width = 178
     end
   end
   object deMonthPromo: TcxDateEdit [2]
@@ -7868,6 +7894,13 @@
         Component = cbCost
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateOrder_text'
+        Value = Null
+        Component = cbOperDateOrder_text
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 264
@@ -8512,8 +8545,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 412
-    Top = 24
+    Left = 612
+    Top = 8
   end
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
@@ -8603,7 +8636,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 676
+    Left = 1436
+    Top = 8
   end
   object spSelect_Movement_PromoPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoPartner'
@@ -11421,7 +11455,7 @@
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 512
+    Left = 720
     Top = 16
   end
   object InfoMoneyDS: TDataSource
