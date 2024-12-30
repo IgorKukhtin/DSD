@@ -273,6 +273,35 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 104
           end
+          object DateStart_pr: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'DateStart_pr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1053#1072#1095'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 100
+          end
+          object DateEnd_pr: TcxGridDBColumn
+            Caption = #1050#1086#1085#1077#1095#1085'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'DateEnd_pr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1050#1086#1085#1077#1095#1085'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 100
+          end
+          object AmountDays: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1087#1077#1088#1080#1086#1076#1072
+            DataBinding.FieldName = 'AmountDays'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end

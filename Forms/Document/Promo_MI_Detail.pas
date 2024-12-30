@@ -97,6 +97,9 @@ type
     spInsertUpdate_MI_Promo_Detail: TdsdStoredProc;
     actInsertUpdate_MI_Promo_Detail: TdsdExecStoredProc;
     bbInsertUpdate_MI_Promo_Detail: TdxBarButton;
+    DateStart_pr: TcxGridDBColumn;
+    DateEnd_pr: TcxGridDBColumn;
+    AmountDays: TcxGridDBColumn;
   private
     { Private declarations }
   public
