@@ -270,7 +270,8 @@ BEGIN
 if vbUserId = 5 AND 1=0
 then
     RAISE EXCEPTION 'Ошибка.<%>   %', vbOperDate
-    , (select COALESCE (lfObjectHistory_PriceListItem_kind.ValuePrice, lfObjectHistory_PriceListItem.ValuePrice, 0)
+--    , (select COALESCE (lfObjectHistory_PriceListItem_kind.ValuePrice, lfObjectHistory_PriceListItem.ValuePrice, 0)
+    , (select MIFloat_PromoMovement.ValueData
     
          FROM MovementItem
           LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
@@ -292,8 +293,8 @@ then
                 AND COALESCE (lfObjectHistory_PriceListItem_kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
      WHERE MovementItem.MovementId = inMovementId
        -- !!! без акций !!!
-       AND COALESCE (MIFloat_PromoMovement.ValueData, 0) = 0
-       and MovementItem.Id = 256809205 
+       -- AND COALESCE (MIFloat_PromoMovement.ValueData, 0) = 0
+       and MovementItem.Id = 311558848  
        )
 
 ;
