@@ -37,11 +37,20 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPriceListId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbStatusId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Inventory());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     --
+     vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+     --
+     vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
+
+     --
      vbPriceListId := COALESCE ((SELECT MovementLinkObject_PriceList.ObjectId
                                  FROM MovementLinkObject AS MovementLinkObject_PriceList
                                  WHERE MovementLinkObject_PriceList.MovementId = inMovementId
@@ -394,11 +403,30 @@ BEGIN
 
      ELSE
 
+         CREATE TEMP TABLE _tmpMI_all ON COMMIT DROP AS 
+            SELECT MovementItem.*
+            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmp
+                 INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                        AND MovementItem.DescId     = zc_MI_Master()
+                                        AND MovementItem.isErased   = tmp.isErased
+             ;
+         ANALYZE _tmpMI_all;
+
+
+         CREATE TEMP TABLE tmpMIF_all ON COMMIT DROP AS 
+            SELECT MovementItemFloat.*
+            FROM MovementItemFloat
+            WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT _tmpMI_all.Id FROM _tmpMI_all)
+           ;
+
+    -- RAISE EXCEPTION 'Ошибка.<%>  <%>', (select count(*) from _tmpMI_all), (select count(*) from tmpMIF_all);
+
+
      RETURN QUERY
        WITH tmpPrice AS (SELECT lfObjectHistory_PriceListItem.GoodsId
                               , lfObjectHistory_PriceListItem.GoodsKindId
                               , lfObjectHistory_PriceListItem.ValuePrice AS Price
-                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= CASE WHEN vbUserId = 5 THEN -1 WHEN vbUnitId = zc_Unit_RK() AND vbStatusId = zc_Enum_Status_UnComplete() THEN -1 ELSE zc_PriceList_Basis() END, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
                               AS lfObjectHistory_PriceListItem
                          WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                         )
@@ -408,7 +436,7 @@ BEGIN
           , tmpPricePR AS (SELECT lfObjectHistory_PriceListItem.GoodsId
                                 , lfObjectHistory_PriceListItem.GoodsKindId
                                 , lfObjectHistory_PriceListItem.ValuePrice AS Price
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) )
+                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= CASE WHEN vbUserId = 5 THEN -1 WHEN vbUnitId = zc_Unit_RK() AND vbStatusId = zc_Enum_Status_UnComplete() THEN -1 ELSE vbPriceListId END, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) )
                                 AS lfObjectHistory_PriceListItem
                            WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                           )
@@ -419,21 +447,17 @@ BEGIN
                              WHERE MIContainer.MovementId = inMovementId  
                                AND MIContainer.MovementDescId = zc_Movement_Inventory()
                                AND MIContainer.DescId = zc_MIContainer_Count()
-                             GROUP BY  MIContainer.MovementItemId
+                               AND (vbUnitId <> zc_Unit_RK() OR vbStatusId <> zc_Enum_Status_UnComplete())
+                               AND vbUserId <> 5
+                             GROUP BY MIContainer.MovementItemId
                              )
-           , tmpMI_all AS (SELECT MovementItem.*
-                           FROM MovementItem
-                           WHERE MovementItem.MovementId = inMovementId
-                             AND MovementItem.DescId     = zc_MI_Master()
-                             AND MovementItem.isErased   IN (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE)
+           , tmpMI_all AS (SELECT _tmpMI_all.*
+                           FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmp
+                                INNER JOIN _tmpMI_all ON _tmpMI_all.isErased = tmp.isErased
                           )
          , tmpMILO_all AS (SELECT MovementItemLinkObject.*
                            FROM MovementItemLinkObject
                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
-                          )
-          , tmpMIF_all AS (SELECT MovementItemFloat.*
-                           FROM MovementItemFloat
-                           WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
                           )
   , tmpMIF_ContainerId AS (SELECT tmpMIF_all.MovementItemId, tmpMIF_all.ValueData :: Integer AS ContainerId
                            FROM tmpMIF_all
