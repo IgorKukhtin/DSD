@@ -599,6 +599,8 @@ type
     spInsertUpdate_MI_Promo_Detail: TdsdStoredProc;
     actInsertUpdate_MI_Promo_Detail: TdsdExecStoredProc;
     bb: TdxBarButton;
+    cxLabel28: TcxLabel;
+    cbOperDateOrder_text: TcxTextEdit;
   private
     { Private declarations }
   public

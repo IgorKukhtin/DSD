@@ -52,7 +52,9 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , isTaxPromo_Condition  Boolean     -- схема % компенсации
              , isPromoStateKind   Boolean      -- Приоритет для состояния
              , strSign          TVarChar    -- ФИО пользователей. - есть эл. подпись
-             , strSignNo        TVarChar    -- ФИО пользователей. - ожидается эл. подпись
+             , strSignNo        TVarChar    -- ФИО пользователей. - ожидается эл. подпись 
+             
+             , OperDateOrder_text TVarChar
              )
 AS
 $BODY$
@@ -141,6 +143,29 @@ BEGIN
         ;
     ELSE
         RETURN QUERY
+        WITH
+        tmpOperDateOrder AS (SELECT STRING_AGG (DISTINCT CASE WHEN COALESCE (ObjectBoolean_OperDateOrder.ValueData, FALSE ) = TRUE THEN  'Заявка' ELSE 'Отгрузка' END , ';') AS OperDateOrder_text
+                             FROM Movement AS Movement_Promo 
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                              ON MovementLinkObject_Partner.MovementId = Movement_Promo.Id
+                                                             AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+
+                                 LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                            ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_Partner.ObjectId
+                                                           AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+                                 LEFT OUTER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                            ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId)
+                                                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
+                                                         ON ObjectBoolean_OperDateOrder.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                                        AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder()
+
+                             WHERE Movement_Promo.DescId = zc_Movement_PromoPartner()
+                               AND Movement_Promo.ParentId = inMovementId
+                             ) 
+
         SELECT
             Movement_Promo.Id                 --Идентификатор
           , Movement_Promo.InvNumber          --Номер документа
@@ -186,10 +211,13 @@ BEGIN
           , Movement_Promo.isPromoStateKind :: Boolean AS isPromoStateKind  -- Приоритет для состояния
 
           , tmpSign.strSign
-          , tmpSign.strSignNo             
+          , tmpSign.strSignNo  
+          
+          , tmpOperDateOrder.OperDateOrder_text ::TVarChar           
         FROM Movement_Promo_View AS Movement_Promo
              LEFT JOIN lpSelect_MI_Sign (inMovementId:= Movement_Promo.Id ) AS tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
              LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = tmpSign.SignInternalId
+             LEFT JOIN tmpOperDateOrder ON 1 = 1
         WHERE Movement_Promo.Id =  inMovementId
         LIMIT 1;
 
@@ -213,3 +241,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_Movement_Promo (inMovementId:= 1, inOperDate:= '30.11.2015', inMask:= False, inSession:= zfCalc_UserAdmin())
+--select * from gpGet_Movement_Promo(inMovementId := 29044450 , inOperDate := ('01.11.2024')::TDateTime , inMask := 'False' ,  inSession := '9457');

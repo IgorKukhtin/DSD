@@ -20,22 +20,24 @@ BEGIN
          DELETE FROM _tmpReport;
      ELSE
          -- данные по документам Данные Sale / Order / ReturnIn где установлен признак "акция"
-         CREATE TEMP TABLE _tmpReport (GoodsId Integer, OperDate TDateTime, Amount TFloat, AmountIn TFloat, AmountReal TFloat) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpReport (GoodsId Integer, OperDate TDateTime, Amount TFloat, AmountIn TFloat, AmountReal TFloat, AmountRetIn TFloat) ON COMMIT DROP;
      END IF;
 
 
      -- Данные Sale / ReturnIn
-     INSERT INTO _tmpReport (GoodsId, OperDate, Amount, AmountIn, AmountReal)
+     INSERT INTO _tmpReport (GoodsId, OperDate, Amount, AmountIn, AmountReal, AmountRetIn)
         SELECT spReport.GoodsId
-             , spReport.Month_Partner         AS OperDate
-             , spReport.AmountOutWeight       AS Amount
-             , spReport.AmountInWeight        AS AmountIn
-             , spReport.AmountRealWeight_calc AS AmountReal
+             , spReport.Month_Partner    AS OperDate
+             , spReport.AmountOut        AS Amount
+             , spReport.AmountIn         AS AmountIn
+             , spReport.AmountReal_calc  AS AmountReal
+             , spReport.AmountRetIn_calc AS AmountRetIn
         FROM gpSelect_Report_Promo_Result_Month (inStartDate   := CURRENT_DATE ::TDateTime
                                                , inEndDate     := CURRENT_DATE ::TDateTime
                                                , inIsPromo     := False
                                                , inIsTender    := False
                                                , inisGoodsKind := False
+                                               , inisReal      := True
                                                , inUnitId      := 0
                                                , inRetailId    := 0
                                                , inMovementId  := inMovementId
@@ -44,15 +46,16 @@ BEGIN
         ;
 
      -- Результат -
-     PERFORM lpInsertUpdate_MI_PromoGoods_Detail (ioId         := COALESCE (tmp.Id,0)         ::Integer
-                                                , inParentId   := COALESCE (tmp.ParentId,0)   ::Integer
-                                                , inMovementId := inMovementId                ::Integer
-                                                , inGoodsId    := tmp.GoodsId                 ::Integer
-                                                , inAmount     := COALESCE (tmp.Amount,0)     ::TFloat
-                                                , inAmountIn   := COALESCE (tmp.AmountIn,0)   ::TFloat
-                                                , inAmountReal := COALESCE (tmp.AmountReal,0) ::TFloat
-                                                , inOperDate   := tmp.OperDate                ::TDateTime
-                                                , inUserId     := vbUserId                    ::Integer
+     PERFORM lpInsertUpdate_MI_PromoGoods_Detail (ioId          := COALESCE (tmp.Id,0)          ::Integer
+                                                , inParentId    := COALESCE (tmp.ParentId,0)    ::Integer
+                                                , inMovementId  := inMovementId                 ::Integer
+                                                , inGoodsId     := tmp.GoodsId                  ::Integer
+                                                , inAmount      := COALESCE (tmp.Amount,0)      ::TFloat
+                                                , inAmountIn    := COALESCE (tmp.AmountIn,0)    ::TFloat
+                                                , inAmountReal  := COALESCE (tmp.AmountReal,0)  ::TFloat
+                                                , inAmountRetIn := COALESCE (tmp.AmountRetIn,0) ::TFloat
+                                                , inOperDate    := tmp.OperDate                 ::TDateTime
+                                                , inUserId      := vbUserId                     ::Integer
                                                  )
      FROM (WITH tmpMI_Master AS (SELECT MovementItem.*
                                  FROM MovementItem
@@ -72,13 +75,14 @@ BEGIN
                                  )
 
            -- Результат
-           SELECT COALESCE (tmpMI_Detail.Id,0)        AS Id
-                , tmpMI_Master.Id                     AS ParentId
-                , _tmpReport.GoodsId                  AS GoodsId
-                , COALESCE (_tmpReport.Amount, 0)     AS Amount
-                , COALESCE (_tmpReport.AmountIn, 0)   AS AmountIn
-                , COALESCE (_tmpReport.AmountReal, 0) AS AmountReal
-                , _tmpReport.OperDate ::TDateTime     AS OperDate
+           SELECT COALESCE (tmpMI_Detail.Id,0)         AS Id
+                , tmpMI_Master.Id                      AS ParentId
+                , _tmpReport.GoodsId                   AS GoodsId
+                , COALESCE (_tmpReport.Amount, 0)      AS Amount
+                , COALESCE (_tmpReport.AmountIn, 0)    AS AmountIn
+                , COALESCE (_tmpReport.AmountReal, 0)  AS AmountReal
+                , COALESCE (_tmpReport.AmountRetIn, 0) AS AmountRetIn
+                , _tmpReport.OperDate ::TDateTime      AS OperDate
            FROM tmpMI_Master
                 LEFT JOIN _tmpReport ON _tmpReport.GoodsId = tmpMI_Master.ObjectId
                 LEFT JOIN tmpMI_Detail ON tmpMI_Detail.ParentId = tmpMI_Master.Id

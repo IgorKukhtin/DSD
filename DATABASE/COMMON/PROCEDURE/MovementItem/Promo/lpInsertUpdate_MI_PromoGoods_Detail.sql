@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MI_PromoGoods_Detail()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_PromoGoods_Detail (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_PromoGoods_Detail (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_PromoGoods_Detail(
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_PromoGoods_Detail(
     IN inAmount                TFloat    , -- 
     IN inAmountIn              TFloat    , -- 
     IN inAmountReal            TFloat    , -- ќбъем продаж в аналогичный период, кг
+    IN inAmountRetIn           TFloat    , --
     IN inOperDate              TDateTime  , --мес€ц
     IN inUserId                Integer     -- пользователь
 )
@@ -31,6 +33,9 @@ BEGIN
 
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReal(), ioId, inAmountReal);
+
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRetIn(), ioId, inAmountRetIn);
 
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OperDate(), ioId, inOperDate);

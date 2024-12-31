@@ -95,6 +95,7 @@ type
     ceJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
     Month_Partner: TcxGridDBColumn;
+    cbReal: TcxCheckBox;
   private
     { Private declarations }
   public
