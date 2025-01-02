@@ -36,6 +36,21 @@ BEGIN
            WHERE Movement.OperDate BETWEEN inStartDate AND CURRENT_DATE - INTERVAL '1 DAY'
              AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Sale(), zc_Movement_OrderExternal())
              AND Movement.StatusId = zc_Enum_Status_Complete()
+             AND 1=1
+
+          UNION
+           SELECT DISTINCT
+                  Movement.Id :: Integer AS MovementId
+           FROM Movement
+                INNER JOIN MovementDate AS MovementDate_StartSale
+                                        ON MovementDate_StartSale.MovementId = Movement.Id
+                                       AND MovementDate_StartSale.ValueData  BETWEEN inStartDate AND inEndDate
+                                       AND MovementDate_StartSale.DescId     = zc_MovementDate_StartSale()
+       
+           WHERE Movement.DescId IN (zc_Movement_Promo())
+             AND Movement.StatusId = zc_Enum_Status_Complete()
+             AND 1=0
+
           ) AS tmp
           LEFT JOIN Movement ON Movement.Id = tmp.MovementId
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -60,4 +75,4 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM gpComplete_SelectAll_Sybase_Promo_Auto (inStartDate:= '01.06.2017', inEndDate:= '30.06.2017')
--- SELECT * FROM gpComplete_SelectAll_Sybase_Promo_Auto (inStartDate:= '01.04.2023', inEndDate:= '30.04.2023')
+-- SELECT * FROM gpComplete_SelectAll_Sybase_Promo_Auto (inStartDate:= '01.11.2024', inEndDate:= '30.11.2024')
