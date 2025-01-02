@@ -20,13 +20,28 @@ BEGIN
          DELETE FROM _tmpReport;
      ELSE
          -- данные по документам Данные Sale / Order / ReturnIn где установлен признак "акция"
-         CREATE TEMP TABLE _tmpReport (GoodsId Integer, OperDate TDateTime, Amount TFloat, AmountIn TFloat, AmountReal TFloat, AmountRetIn TFloat) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpReport (GoodsId Integer, GoodsKindId Integer, OperDate TDateTime, Amount TFloat, AmountIn TFloat, AmountReal TFloat, AmountRetIn TFloat) ON COMMIT DROP;
      END IF;
 
+    --удалить уже сохраненные строки, (  на случай неправильного расчета ) 
+    PERFORM lpSetErased_MovementItem (inMovementItemId:= tmp.Id, inUserId:= vbUserId)
+    FROM (SELECT MovementItem.Id
+               , ROW_NUMBER () OVER (PARTITION BY MovementItem.ParentId, MIDate_OperDate.ValueData ORDER by MovementItem.Id) AS ord
+          FROM MovementItem
+            LEFT JOIN MovementItemDate AS MIDate_OperDate
+                                       ON MIDate_OperDate.MovementItemId = MovementItem.Id
+                                      AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
+          WHERE MovementItem.MovementId = inMovementId
+            AND MovementItem.DescId = zc_MI_Detail()
+            AND MovementItem.isErased = FALSE
+           ) AS tmp
+    WHERE tmp.Ord > 1;
+    
 
      -- Данные Sale / ReturnIn
-     INSERT INTO _tmpReport (GoodsId, OperDate, Amount, AmountIn, AmountReal, AmountRetIn)
+     INSERT INTO _tmpReport (GoodsId, GoodsKindId, OperDate, Amount, AmountIn, AmountReal, AmountRetIn)
         SELECT spReport.GoodsId
+             , spReport.GoodsKindId
              , spReport.Month_Partner    AS OperDate
              , spReport.AmountOut        AS Amount
              , spReport.AmountIn         AS AmountIn
@@ -58,7 +73,12 @@ BEGIN
                                                 , inUserId      := vbUserId                     ::Integer
                                                  )
      FROM (WITH tmpMI_Master AS (SELECT MovementItem.*
+                                      , COALESCE (MILinkObject_GoodsKind.ObjectId,0) AS GoodsKindId
                                  FROM MovementItem
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                      --LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND MovementItem.isErased = FALSE
@@ -77,14 +97,29 @@ BEGIN
            -- Результат
            SELECT COALESCE (tmpMI_Detail.Id,0)         AS Id
                 , tmpMI_Master.Id                      AS ParentId
-                , _tmpReport.GoodsId                   AS GoodsId
+                , tmpMI_Master.ObjectId                AS GoodsId
                 , COALESCE (_tmpReport.Amount, 0)      AS Amount
                 , COALESCE (_tmpReport.AmountIn, 0)    AS AmountIn
                 , COALESCE (_tmpReport.AmountReal, 0)  AS AmountReal
                 , COALESCE (_tmpReport.AmountRetIn, 0) AS AmountRetIn
                 , _tmpReport.OperDate ::TDateTime      AS OperDate
            FROM tmpMI_Master
+                --привязка по виду товара
                 LEFT JOIN _tmpReport ON _tmpReport.GoodsId = tmpMI_Master.ObjectId
+                                    AND _tmpReport.GoodsKindId = tmpMI_Master.GoodsKindId
+                                    AND tmpMI_Master.GoodsKindId <> 0
+                LEFT JOIN (SELECT _tmpReport.GoodsId
+                                , _tmpReport.OperDate
+                                , SUM (COALESCE (Amount,0))      AS Amount
+                                , SUM (COALESCE (AmountIn,0))    AS AmountIn
+                                , SUM (COALESCE (AmountReal,0))  AS AmountReal
+                                , SUM (COALESCE (AmountRetIn,0)) AS AmountRetIn  
+                           FROM  _tmpReport
+                           GROUP BY _tmpReport.GoodsId
+                                  , _tmpReport.OperDate 
+                          ) AS _tmpReport_2
+                            ON _tmpReport_2.GoodsId = tmpMI_Master.ObjectId
+                           AND COALESCE (tmpMI_Master.GoodsKindId,0) = 0
                 LEFT JOIN tmpMI_Detail ON tmpMI_Detail.ParentId = tmpMI_Master.Id
                                       AND tmpMI_Detail.OperDate = _tmpReport.OperDate
 

@@ -37,6 +37,7 @@ RETURNS TABLE(
     ,MeasureName          TVarChar  --единица измерения
     ,TradeMarkName        TVarChar  --Торговая марка
     ,GoodsGroupNameFull   TVarChar -- группа товара
+    ,GoodsKindId          Integer  --
     ,GoodsKindName          TVarChar --Наименование обьекта <Вид товара>
     ,GoodsKindCompleteName  TVarChar --Наименование обьекта <Вид товара(примечание)>
 
@@ -510,6 +511,7 @@ BEGIN
           , MI_PromoGoods.Measure
           , MI_PromoGoods.TradeMark
           , MI_PromoGoods.GoodsGroupNameFull
+          , COALESCE (MI_PromoGoods.GoodsKindId,0) ::Integer AS GoodsKindId
           , MI_PromoGoods.GoodsKindName
           , MI_PromoGoods.GoodsKindCompleteName
 
