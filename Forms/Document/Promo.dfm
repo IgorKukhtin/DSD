@@ -12,18 +12,18 @@
     Width = 1579
     Height = 568
     ExplicitTop = 139
-    ExplicitWidth = 1354
+    ExplicitWidth = 1579
     ExplicitHeight = 568
     ClientRectBottom = 568
     ClientRectRight = 1579
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
-      ExplicitWidth = 1354
+      ExplicitWidth = 1579
       ExplicitHeight = 544
       inherited cxGrid: TcxGrid
         Width = 1579
         Height = 179
-        ExplicitWidth = 1354
+        ExplicitWidth = 1579
         ExplicitHeight = 179
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -783,7 +783,6 @@
         Height = 173
         Align = alBottom
         TabOrder = 1
-        ExplicitWidth = 1354
         object cxSplitter1: TcxSplitter
           Left = 696
           Top = 1
@@ -792,7 +791,6 @@
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl2
-          ExplicitLeft = 471
         end
         object cxPageControl1: TcxPageControl
           Left = 1
@@ -803,13 +801,11 @@
           TabOrder = 1
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
-          ExplicitWidth = 470
           ClientRectBottom = 171
           ClientRectRight = 695
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
-            ExplicitWidth = 470
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
@@ -818,7 +814,6 @@
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
-              ExplicitWidth = 470
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -967,6 +962,9 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1076,7 +1074,6 @@
           TabOrder = 2
           Properties.ActivePage = tsConditionPromo
           Properties.CustomButtons.Buttons = <>
-          ExplicitLeft = 479
           ClientRectBottom = 171
           ClientRectRight = 256
           ClientRectTop = 24
@@ -1166,7 +1163,6 @@
           TabOrder = 3
           Properties.ActivePage = tsAdvertising
           Properties.CustomButtons.Buttons = <>
-          ExplicitLeft = 743
           ClientRectBottom = 171
           ClientRectRight = 265
           ClientRectTop = 24
@@ -1256,7 +1252,6 @@
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl3
-          ExplicitLeft = 735
         end
         object cxSplitter5: TcxSplitter
           Left = 1233
@@ -1266,7 +1261,6 @@
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl4
-          ExplicitLeft = 1008
         end
         object cxPageControl4: TcxPageControl
           Left = 1241
@@ -1277,7 +1271,6 @@
           TabOrder = 6
           Properties.ActivePage = cxTabSheetInfoMoney
           Properties.CustomButtons.Buttons = <>
-          ExplicitLeft = 1016
           ClientRectBottom = 171
           ClientRectRight = 337
           ClientRectTop = 24
@@ -1361,7 +1354,6 @@
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitWidth = 1354
       end
       object cxSplitter2: TcxSplitter
         Left = 0
@@ -1371,7 +1363,6 @@
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridPromoStateKind
-        ExplicitWidth = 1354
       end
       object cxGridPromoStateKind: TcxGrid
         Left = 0
@@ -1381,7 +1372,6 @@
         Align = alBottom
         PopupMenu = PromoStateKindPopupMenu
         TabOrder = 4
-        ExplicitWidth = 1354
         object cxGridDBTableViewPromoStateKind: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PromoStateKindDS
@@ -1477,6 +1467,9 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = '2.1.'#1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1817,6 +1810,9 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = '2.2.'#1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -2143,6 +2139,9 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2236,6 +2235,9 @@
     object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2385,6 +2387,9 @@
     object cxTabSheetPromoInvoice: TcxTabSheet
       Caption = '4.'#1057#1095#1077#1090#1072' '#1076#1083#1103' '#1072#1082#1094#1080#1080
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridPromoInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -2578,6 +2583,9 @@
     object cxTabSheetStat: TcxTabSheet
       Caption = '5.1.'#1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1088#1086#1076#1072#1078
       ImageIndex = 5
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -3159,6 +3167,9 @@
     object cxTabSheetPlanSale: TcxTabSheet
       Caption = '5.2.'#1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1040#1082#1094#1080#1103
       ImageIndex = 7
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanMaster: TcxGrid
         Left = 0
         Top = 0
@@ -3357,6 +3368,9 @@
     object cxTabSheetPlanProd: TcxTabSheet
       Caption = '5.3.'#1055#1083#1072#1085' '#1087#1088'-'#1074#1072' '#1076#1083#1103' '#1040#1082#1094#1080#1080
       ImageIndex = 8
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanChild: TcxGrid
         Left = 0
         Top = 0
@@ -3671,7 +3685,7 @@
     Width = 1579
     Height = 113
     TabOrder = 3
-    ExplicitWidth = 1354
+    ExplicitWidth = 1579
     ExplicitHeight = 113
     inherited edInvNumber: TcxTextEdit
       Left = 8
