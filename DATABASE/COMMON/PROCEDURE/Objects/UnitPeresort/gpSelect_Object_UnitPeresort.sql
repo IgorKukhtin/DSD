@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_UnitPeresort(
     IN inIsShowAll           Boolean,
     IN inSession             TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (GoodsByGoodsKindId Integer
+RETURNS TABLE (Id Integer,
+             , GoodsByGoodsKindId Integer
              , GoodsId  Integer
              , GoodsCode Integer
              , GoodsName  TVarChar
@@ -78,7 +79,8 @@ BEGIN
                            
                            )
 
-     SELECT Object_GoodsByGoodsKind.Id  AS GoodsByGoodsKindId
+     SELECT COALESCE (Object_UnitPeresort.Id,0) ::Integer AS Id
+          , Object_GoodsByGoodsKind.Id  AS GoodsByGoodsKindId
           , Object_GoodsByGoodsKind.GoodsId
           , Object_GoodsByGoodsKind.GoodsCode
           , Object_GoodsByGoodsKind.GoodsName
