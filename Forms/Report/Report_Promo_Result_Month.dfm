@@ -87,6 +87,21 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRetInWeight_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -153,6 +168,21 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRetInWeight_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -601,7 +631,7 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1076#1072#1078#1080' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
             Options.Editing = False
-            Width = 76
+            Width = 94
           end
           object AmountSaleWeight: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1080' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
@@ -613,7 +643,7 @@ inherited Report_Promo_Result_MonthForm: TReport_Promo_Result_MonthForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1076#1072#1078#1080' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
             Options.Editing = False
-            Width = 76
+            Width = 97
           end
           object AmountSale_promo: TcxGridDBColumn
             Caption = '***'#1048#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086' '#1055#1088#1086#1076#1072#1078#1080' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
