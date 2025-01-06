@@ -37,7 +37,7 @@ BEGIN
 
 
      -- определяется документ Инвентаризация, т.к. надо её учесть + распределить "Ковбаси сирокопчені"
-     vbMovementId_inv:= (SELECT Movement.Id
+     vbMovementId_inv:= (SELECT DISTINCT Movement.Id
                          FROM (SELECT Movement.Id
                                FROM Movement
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -62,6 +62,11 @@ BEGIN
                               UNION
                                SELECT Movement.Id
                                FROM Movement
+                                    LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupExc
+                                                              ON MovementBoolean_GoodsGroupExc.MovementId = Movement.Id
+                                                             AND MovementBoolean_GoodsGroupExc.DescId     = zc_MovementBoolean_GoodsGroupExc()
+                                                             AND MovementBoolean_GoodsGroupExc.ValueData  = TRUE
+                                    
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -82,6 +87,8 @@ BEGIN
                                  AND (EXTRACT (MONTH FROM Movement.OperDate) < EXTRACT (MONTH FROM CURRENT_DATE)
                                    OR EXTRACT (YEAR FROM Movement.OperDate)  < EXTRACT (YEAR FROM CURRENT_DATE)
                                      )
+                                 -- без этого св-ва
+                                 AND MovementBoolean_GoodsGroupExc.MovementId IS NULL
                               ) AS Movement
                                --LIMIT 1
                         );
