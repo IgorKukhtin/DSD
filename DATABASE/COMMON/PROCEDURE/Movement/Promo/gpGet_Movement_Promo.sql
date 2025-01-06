@@ -137,6 +137,7 @@ BEGIN
           , CAST (FALSE AS Boolean)                           AS isPromoStateKind  -- Приоритет для состояния
           , NULL::TVarChar                                    AS strSign
           , NULL::TVarChar                                    AS strSignNo
+          , NULL::TVarChar                                    AS OperDateOrder_text 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
             LEFT OUTER JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
             LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = vbSignInternalId

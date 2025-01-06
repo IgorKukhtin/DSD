@@ -57,7 +57,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     UnitsDS: TDataSource;
     UnitsCDS: TClientDataSet;
-    cxGridContractCondition: TcxGrid;
+    cxGridUnit: TcxGrid;
     cxGridDBTableViewUnit: TcxGridDBTableView;
     GoodsName: TcxGridDBColumn;
     UnitCode: TcxGridDBColumn;

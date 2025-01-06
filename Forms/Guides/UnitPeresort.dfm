@@ -21,12 +21,13 @@ object UnitPeresortForm: TUnitPeresortForm
     Left = 0
     Top = 26
     Width = 888
-    Height = 233
+    Height = 241
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 233
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -155,11 +156,11 @@ object UnitPeresortForm: TUnitPeresortForm
       GridView = cxGridDBTableView
     end
   end
-  object cxGridContractCondition: TcxGrid
+  object cxGridUnit: TcxGrid
     Left = 0
-    Top = 264
+    Top = 272
     Width = 888
-    Height = 172
+    Height = 164
     Align = alBottom
     TabOrder = 5
     LookAndFeel.Kind = lfStandard
@@ -220,11 +221,12 @@ object UnitPeresortForm: TUnitPeresortForm
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 259
+    Top = 267
     Width = 888
     Height = 5
     AlignSplitter = salBottom
-    Control = cxGrid
+    Control = cxGridUnit
+    ExplicitTop = 265
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -520,8 +522,8 @@ object UnitPeresortForm: TUnitPeresortForm
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' ('#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072')'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' ('#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072')'
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -532,7 +534,7 @@ object UnitPeresortForm: TUnitPeresortForm
           Name = 'Id'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Id'
+          ComponentItem = 'GoodsByGoodsKindId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -540,7 +542,7 @@ object UnitPeresortForm: TUnitPeresortForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Name'
+          ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -699,7 +701,7 @@ object UnitPeresortForm: TUnitPeresortForm
           Name = 'TextValue'
           Value = Null
           Component = UnitsCDS
-          ComponentItem = 'LabMarkName'
+          ComponentItem = 'UnitName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -955,8 +957,6 @@ object UnitPeresortForm: TUnitPeresortForm
       item
         Name = 'inGoodsByGoodsKindId'
         Value = '0'
-        Component = ClientDataSet
-        ComponentItem = 'GoodsByGoodsKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

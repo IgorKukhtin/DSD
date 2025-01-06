@@ -182,7 +182,6 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1345,7 +1344,7 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
+        DataSummaryItemIndex = 1
       end>
     Left = 742
     Top = 241
