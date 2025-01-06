@@ -25,7 +25,7 @@ BEGIN
 
     --удалить уже сохраненные строки, (  на случай неправильного расчета ) 
     PERFORM lpSetErased_MovementItem (inMovementItemId:= tmp.Id, inUserId:= vbUserId)
-    FROM (SELECT MovementItem.Id
+    FROM (SELECT MovementItem.Id, MIDate_OperDate.ValueData AS OperDate
                , ROW_NUMBER () OVER (PARTITION BY MovementItem.ParentId, MIDate_OperDate.ValueData ORDER by MovementItem.Id) AS ord
           FROM MovementItem
             LEFT JOIN MovementItemDate AS MIDate_OperDate
@@ -35,7 +35,7 @@ BEGIN
             AND MovementItem.DescId = zc_MI_Detail()
             AND MovementItem.isErased = FALSE
            ) AS tmp
-    WHERE tmp.Ord > 1;
+    WHERE tmp.Ord > 1 OR tmp.OperDate IS NULL;
     
 
      -- Данные Sale / ReturnIn
@@ -98,11 +98,11 @@ BEGIN
            SELECT COALESCE (tmpMI_Detail.Id,0)         AS Id
                 , tmpMI_Master.Id                      AS ParentId
                 , tmpMI_Master.ObjectId                AS GoodsId
-                , COALESCE (_tmpReport.Amount, 0)      AS Amount
-                , COALESCE (_tmpReport.AmountIn, 0)    AS AmountIn
-                , COALESCE (_tmpReport.AmountReal, 0)  AS AmountReal
-                , COALESCE (_tmpReport.AmountRetIn, 0) AS AmountRetIn
-                , _tmpReport.OperDate ::TDateTime      AS OperDate
+                , COALESCE (_tmpReport.Amount, _tmpReport_2.Amount,0)               AS Amount
+                , COALESCE (_tmpReport.AmountIn, _tmpReport_2.AmountIn, 0)          AS AmountIn
+                , COALESCE (_tmpReport.AmountReal, _tmpReport_2.AmountReal, 0)      AS AmountReal
+                , COALESCE (_tmpReport.AmountRetIn, _tmpReport_2.AmountRetIn, 0)    AS AmountRetIn
+                , COALESCE (_tmpReport.OperDate, _tmpReport_2.OperDate) ::TDateTime AS OperDate
            FROM tmpMI_Master
                 --привязка по виду товара
                 LEFT JOIN _tmpReport ON _tmpReport.GoodsId = tmpMI_Master.ObjectId
@@ -121,7 +121,7 @@ BEGIN
                             ON _tmpReport_2.GoodsId = tmpMI_Master.ObjectId
                            AND COALESCE (tmpMI_Master.GoodsKindId,0) = 0
                 LEFT JOIN tmpMI_Detail ON tmpMI_Detail.ParentId = tmpMI_Master.Id
-                                      AND tmpMI_Detail.OperDate = _tmpReport.OperDate
+                                      AND tmpMI_Detail.OperDate = COALESCE (_tmpReport.OperDate, _tmpReport_2.OperDate)
 
           ) AS tmp
     ;

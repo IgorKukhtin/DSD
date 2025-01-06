@@ -107,6 +107,8 @@ BEGIN
      END IF;
 
 
+    -- inMovementId := 29288400;
+
     -- Результат
     RETURN QUERY
     WITH
