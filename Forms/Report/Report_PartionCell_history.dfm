@@ -30,11 +30,21 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
-      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = ord
+        end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = ord
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
