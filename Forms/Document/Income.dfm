@@ -897,9 +897,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -2971,6 +2968,14 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outPriceNoVat'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceNoVat'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMIId_Invoice'
         Value = Null
         Component = MasterCDS
@@ -4152,6 +4157,14 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPriceNoVat'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceNoVat'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
