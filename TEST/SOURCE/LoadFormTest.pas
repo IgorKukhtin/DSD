@@ -1099,6 +1099,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
+  exit;
   //
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));

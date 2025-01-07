@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_old TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat, AmountPartner TFloat, AmountPartnerSecond TFloat, AmountPacker TFloat, Amount_unit TFloat, Amount_diff TFloat
-             , Price TFloat, PricePartner TFloat, CountForPrice TFloat, LiveWeight TFloat, HeadCount TFloat
+             , Price TFloat, PriceNoVAT TFloat, PricePartner TFloat, CountForPrice TFloat, LiveWeight TFloat, HeadCount TFloat
              , PartionGoods TVarChar, PartNumber TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, AssetId  Integer, AssetName  TVarChar
              , StorageId Integer, StorageName TVarChar
@@ -34,6 +34,9 @@ $BODY$
   DECLARE vbUnitId Integer;
   DECLARE vbPriceListId Integer;
   DECLARE vbJuridicalId_From Integer;
+
+  DECLARE vbVATPercent TFloat;
+  DECLARE vbPriceWithVAT Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Income());
@@ -58,6 +61,22 @@ BEGIN
                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                            );
 
+     -- параметры из документа
+     SELECT COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
+          , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
+          
+            INTO vbPriceWithVAT, vbVATPercent
+     FROM Movement
+          LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+          LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                  ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                 AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+     WHERE Movement.Id = inMovementId;
+     
+     
+     
      -- Результат
      IF inShowAll = TRUE
                 AND COALESCE (vbPriceListId, 0) = 0
@@ -247,7 +266,14 @@ BEGIN
            , CAST (NULL AS TFloat) AS Amount_unit
            , CAST (NULL AS TFloat) AS Amount_diff
 
-           , COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)  AS Price
+           , COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)  ::TFloat AS Price
+
+           -- расчет цены без НДС, до 4 знаков
+           , CASE WHEN vbPriceWithVAT = TRUE
+                  THEN CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) - COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
+                  ELSE COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
+             END    ::TFloat    AS PriceNoVAT
+
            , 0      :: TFloat   AS PricePartner
            , 1      :: TFloat   AS CountForPrice
 
@@ -358,7 +384,15 @@ BEGIN
            , CAST (MovementItem.Amount + COALESCE (MIFloat_AmountPacker.ValueData, 0) AS TFloat) AS Amount_unit
            , CAST (MovementItem.Amount - COALESCE (MIFloat_AmountPartner.ValueData, 0) AS TFloat) AS Amount_diff
 
-           , tmpMI.Price          ::TFloat   
+           , tmpMI.Price          ::TFloat
+
+             -- расчет цены без НДС, до 4 знаков
+           , (CASE WHEN vbPriceWithVAT = TRUE
+                  THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
+                  ELSE tmpMI.Price
+             END  / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END )
+             ::TFloat AS PriceNoVAT
+   
            , tmpMI.PricePartner   ::TFloat
            , tmpMI.CountForPrice  ::TFloat
 
@@ -660,7 +694,14 @@ BEGIN
            , CAST (NULL AS TFloat) AS Amount_diff
 
            , COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)  AS Price   
-           , 0 ::TFloat AS PricePartner
+
+             -- расчет цены без НДС, до 4 знаков
+           , (CASE WHEN vbPriceWithVAT = TRUE
+                  THEN CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) - COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
+                  ELSE COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
+             END)    ::TFloat    AS PriceNoVAT
+
+           , 0      ::TFloat    AS PricePartner
            , 1      :: TFloat   AS CountForPrice
 
            , CAST (NULL AS TFloat) AS LiveWeight
@@ -769,6 +810,14 @@ BEGIN
            , CAST (MovementItem.Amount - COALESCE (MIFloat_AmountPartner.ValueData, 0) AS TFloat) AS Amount_diff
 
            , tmpMI.Price          ::TFloat 
+
+             -- расчет цены без НДС, до 4 знаков
+           , (CASE WHEN vbPriceWithVAT = TRUE
+                  THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
+                  ELSE tmpMI.Price
+             END  / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END)
+             ::TFloat AS PriceNoVAT
+
            , tmpMI.PricePartner   ::TFloat
            , tmpMI.CountForPrice  ::TFloat
 
@@ -1016,6 +1065,14 @@ BEGIN
            , CAST (tmpMI_Goods.Amount - tmpMI_Goods.AmountPartner AS TFloat) AS Amount_diff
 
            , tmpMI_Goods.Price         :: TFloat  
+
+             -- расчет цены без НДС, до 4 знаков
+           , (CASE WHEN vbPriceWithVAT = TRUE
+                  THEN CAST (tmpMI_Goods.Price - tmpMI_Goods.Price * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
+                  ELSE tmpMI_Goods.Price
+             END  / CASE WHEN tmpMI_Goods.CountForPrice <> 0 THEN tmpMI_Goods.CountForPrice ELSE 1 END)
+            ::TFloat AS PriceNoVAT
+
            , tmpMI_Goods.PricePartner  :: TFloat
            , tmpMI_Goods.CountForPrice :: TFloat AS CountForPrice
 
@@ -1135,3 +1192,4 @@ $BODY$
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inInvoiceId:= 0, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= FALSE, inInvoiceId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 22151383, inShowAll:= FALSE, inInvoiceId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+--select * from gpSelect_MovementItem_Income (inMovementId := 30180935 , inInvoiceId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '9457');

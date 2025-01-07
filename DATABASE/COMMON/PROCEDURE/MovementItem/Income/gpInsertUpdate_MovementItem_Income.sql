@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     IN inAmountPacker        TFloat    , -- Количество у заготовителя
     IN inIsCalcAmountPartner Boolean   , -- Признак - будет ли расчитано <Количество у контрагента>
     IN inPrice               TFloat    , -- Цена
+   OUT outPriceNoVat         TFloat    , -- Цена без НДС
     IN inMIId_Invoice        TFloat    , -- элемент документа Cчет
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
@@ -28,6 +29,9 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbVATPercent   TFloat;
+   DECLARE vbPriceWithVAT Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
@@ -67,7 +71,29 @@ BEGIN
      outAmountSumm := CASE WHEN ioCountForPrice > 0
                                 THEN CAST (ioAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
                            ELSE CAST (ioAmountPartner * inPrice AS NUMERIC (16, 2))
-                      END;
+                      END; 
+                             
+     
+     -- параметры из документа
+     SELECT COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
+          , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
+          
+            INTO vbPriceWithVAT, vbVATPercent
+     FROM Movement
+          LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+          LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                  ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                 AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+     WHERE Movement.Id = inMovementId;
+
+     -- расчет цены без НДС, до 4 знаков
+     outPriceNoVat := (CASE WHEN vbPriceWithVAT = TRUE
+                            THEN CAST (inPrice - inPrice * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
+                            ELSE inPrice
+                       END  / CASE WHEN ioCountForPrice <> 0 THEN ioCountForPrice ELSE 1 END)
+                       ::TFloat;
 
 END;
 $BODY$
@@ -76,6 +102,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.01.25         *
  27.06.23         *
  21.07.16         *
  29.06.15                                        * add inIsCalcAmountPartner
