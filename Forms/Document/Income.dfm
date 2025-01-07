@@ -698,6 +698,17 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object PriceNoVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceNoVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object PricePartner: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1055#1086#1089#1090'.'
             DataBinding.FieldName = 'PricePartner'
@@ -886,6 +897,9 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
