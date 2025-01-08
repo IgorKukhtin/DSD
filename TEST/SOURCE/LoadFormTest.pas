@@ -2578,13 +2578,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ContractGoodsMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ContractGoodsMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ContractGoodsMovementDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ContractGoodsMovementDialogForm');
   exit;
-
+  {
  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_Sale_TotalSumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_Sale_TotalSumForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_Sale_TotalSumDialogForm'));

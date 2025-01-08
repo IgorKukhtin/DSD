@@ -26,56 +26,6 @@ inherited Report_ContractGoodsMovementForm: TReport_ContractGoodsMovementForm
         ExplicitWidth = 1174
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
@@ -84,7 +34,7 @@ inherited Report_ContractGoodsMovementForm: TReport_ContractGoodsMovementForm
           Styles.Footer = nil
           Styles.Header = nil
           object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
+            Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1089'...'
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
