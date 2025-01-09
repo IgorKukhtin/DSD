@@ -13,7 +13,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
@@ -41,7 +42,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inStartDate           TDateTime , -- дата прайса
     --IN inDate_BUH            TDateTime , -- Дата до которой действует Название товара(бухг.)
     IN inValuePrice          TFloat    , -- значение цены   
-    IN inisHeadCount         Boolean   , -- Проверка Количество голов
+    IN inisHeadCount         Boolean   , -- Проверка Количество голов 
+    IN inisPartionDate       Boolean   , -- Учет по дате партии
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -174,6 +176,8 @@ BEGIN
 
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_HeadCount(), ioId, inisHeadCount);
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_PartionDate(), ioId, inisPartionDate);
 
    
    IF inValuePrice <> 0 AND inPriceListId <> 0
@@ -202,6 +206,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.01.25         * inisPartionDate
  12.11.24         * inisHeadCount
  18.10.24         * inComment
  22.08.24         *

@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar , ShortName TVarChar
              , PriceListId Integer, PriceListName TVarChar, StartDate TDateTime, ValuePrice TFloat
              , Comment TVarChar 
              , isHeadCount Boolean
+             , isPartionDate Boolean
               )
 AS
 $BODY$
@@ -97,6 +98,7 @@ BEGIN
            , CAST (0 as TFloat)            AS ValuePrice
            , NULL              ::TVarChar  AS Comment
            , FALSE             ::Boolean   AS isHeadCount
+           , FALSE             ::Boolean   AS isPartionDate
       
        ;
    ELSE
@@ -156,6 +158,7 @@ BEGIN
            , ObjectString_Goods_Comment.ValueData ::TVarChar AS Comment
 
            , COALESCE (ObjectBoolean_Goods_HeadCount.ValueData, FALSE)  :: Boolean AS isHeadCount
+           , COALESCE (ObjectBoolean_Goods_PartionDate.ValueData, FALSE):: Boolean AS isPartionDate
        FROM Object AS Object_Goods
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -212,6 +215,10 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_HeadCount
                                   ON ObjectBoolean_Goods_HeadCount.ObjectId = Object_Goods.Id 
                                  AND ObjectBoolean_Goods_HeadCount.DescId = zc_ObjectBoolean_Goods_HeadCount()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_PartionDate
+                                  ON ObjectBoolean_Goods_PartionDate.ObjectId = Object_Goods.Id 
+                                 AND ObjectBoolean_Goods_PartionDate.DescId = zc_ObjectBoolean_Goods_PartionDate()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 

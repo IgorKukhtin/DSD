@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar, Name
              , isIrna Boolean
              , isAsset Boolean
              , isHeadCount Boolean
+             , isPartionDate Boolean
              , isErased Boolean
              , Comment TVarChar
               )
@@ -130,7 +131,8 @@ BEGIN
 
             , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)       :: Boolean AS isIrna
             , COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE)      :: Boolean AS isAsset
-            , COALESCE (ObjectBoolean_Goods_HeadCount.ValueData, FALSE)  :: Boolean AS isHeadCount
+            , COALESCE (ObjectBoolean_Goods_HeadCount.ValueData, FALSE)  :: Boolean AS isHeadCount 
+            , COALESCE (ObjectBoolean_Goods_PartionDate.ValueData, FALSE):: Boolean AS isPartionDate
 
             , Object_Goods.isErased       AS isErased
             
@@ -254,6 +256,10 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_HeadCount
                                      ON ObjectBoolean_Goods_HeadCount.ObjectId = Object_Goods.Id 
                                     AND ObjectBoolean_Goods_HeadCount.DescId = zc_ObjectBoolean_Goods_HeadCount()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_PartionDate
+                                     ON ObjectBoolean_Goods_PartionDate.ObjectId = Object_Goods.Id 
+                                    AND ObjectBoolean_Goods_PartionDate.DescId = zc_ObjectBoolean_Goods_PartionDate()
 
              LEFT JOIN ObjectDate AS ObjectDate_BUH
                                   ON ObjectDate_BUH.ObjectId = Object_Goods.Id
@@ -381,6 +387,7 @@ BEGIN
             , FALSE                           AS isIrna
             , FALSE                           AS isAsset
             , FALSE                           AS isHeadCount
+            , FALSE                           AS isPartionDate
             , FALSE                           AS isErased
             , NULL                ::TVarChar AS Comment
       ;
@@ -394,6 +401,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 09.01.25         * isPartionDate
  12.11.24         *
  18.10.24         * Comment
  22.08.24         *

@@ -99,6 +99,7 @@ type
     cxLabel23: TcxLabel;
     ceComment: TcxTextEdit;
     cbHeadCount: TcxCheckBox;
+    cbisPartionDate: TcxCheckBox;
   private
     { Private declarations }
   public

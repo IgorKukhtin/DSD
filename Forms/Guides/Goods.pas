@@ -186,6 +186,7 @@ type
     bbStartLoad_Direct: TdxBarButton;
     Comment: TcxGridDBColumn;
     isHeadCount: TcxGridDBColumn;
+    isPartionDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

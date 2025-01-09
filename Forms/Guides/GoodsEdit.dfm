@@ -407,13 +407,23 @@
   end
   object cbHeadCount: TcxCheckBox
     Left = 40
-    Top = 335
+    Top = 319
     Hint = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
     Caption = #1055#1088#1086#1074#1077#1088#1082#1072' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074'>'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 50
     Width = 194
+  end
+  object cbisPartionDate: TcxCheckBox
+    Left = 40
+    Top = 345
+    Hint = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
+    Caption = #1059#1095#1077#1090' '#1087#1086' '#1076#1072#1090#1077' '#1087#1072#1088#1090#1080#1080
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 51
+    Width = 134
   end
   object ActionList: TActionList
     Left = 304
@@ -638,8 +648,11 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisPartionDate'
         Value = Null
-        ParamType = ptUnknown
+        Component = cbisPartionDate
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -945,6 +958,13 @@
         Name = 'isHeadCount'
         Value = Null
         Component = cbHeadCount
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartionDate'
+        Value = Null
+        Component = cbisPartionDate
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
