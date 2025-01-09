@@ -101,7 +101,7 @@ BEGIN
 
 
      -- временно пока ошибка
-     IF vbUserId NOT IN (5, 9457 ) AND inIsReal = FALSE
+     IF vbUserId NOT IN (5, 9457) AND inIsReal = FALSE AND 1=0
      THEN
          inIsReal = TRUE;
      END IF;
