@@ -49,11 +49,21 @@ inherited Report_ContractGoodsMovementForm: TReport_ContractGoodsMovementForm
             Width = 69
           end
           object EndBeginDate: TcxGridDBColumn
-            Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'...'
+            Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'... ('#1080#1085#1092#1086#1088#1084'. '#1080#1079' '#1076#1086#1082')'
             DataBinding.FieldName = 'EndBeginDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'... ('#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')'
+            HeaderHint = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'... ('#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103') '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+            Options.Editing = False
+            Width = 80
+          end
+          object EndBeginDate_calc: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'...'
+            DataBinding.FieldName = 'EndBeginDate_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'... ('#1088#1072#1089#1095#1077#1090')'
             Options.Editing = False
             Width = 80
           end
