@@ -18,7 +18,7 @@ $BODY$
    DECLARE vbMovementId_begin Integer;
    DECLARE vbMovementDescId   Integer;
    DECLARE vbUnitId           Integer;
-
+   
    DECLARE vbId_tmp Integer;
    DECLARE vbGoodsId_ReWork Integer;
    DECLARE vbDocumentKindId Integer;
@@ -31,6 +31,9 @@ $BODY$
    DECLARE vbIsUpak_UnComplete Boolean;
    DECLARE vbIsCloseInventory  Boolean;
    DECLARE vbIsRePack          Boolean;
+
+   DECLARE vbOperDate_invent TDateTime;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement_all());
@@ -402,7 +405,7 @@ BEGIN
                                 ORDER BY Movement.Id DESC
                                 LIMIT 1
                                )
-                             , DATE (inOperDate)
+                             , zfConvert_DateToString (inOperDate)
                               ;
            END IF;
 
@@ -447,32 +450,38 @@ BEGIN
      IF vbMovementDescId = zc_Movement_Inventory()
      THEN
            -- Проверка
+           vbOperDate_invent:= (SELECT CASE WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId IN (8447) -- ЦЕХ колбасный
+                                                 THEN inOperDate
+                                            WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
+                                                 THEN inOperDate
+                                            ELSE inOperDate - INTERVAL '1 DAY'
+                                       END
+                                FROM MovementLinkObject AS MovementLinkObject_From
+                                WHERE MovementLinkObject_From.MovementId = inMovementId
+                                  AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                               );
+           -- Проверка
            IF 1 <              (SELECT COUNT (*)
-                                FROM Movement
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
-                                                                   ON MovementLinkObject_From_find.MovementId = inMovementId
-                                                                  AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To_find
-                                                                   ON MovementLinkObject_To_find.MovementId = inMovementId
-                                                                  AND MovementLinkObject_To_find.DescId = zc_MovementLinkObject_To()
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                  AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
-                                WHERE Movement.DescId = zc_Movement_Inventory()
-                                  AND Movement.OperDate = CASE WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
-                                                                    THEN inOperDate
-                                                               ELSE inOperDate - INTERVAL '1 DAY'
-                                                          END
-                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                FROM (WITH tmpFind AS (SELECT MLO.ObjectId AS FromId
+                                                       FROM MovementLinkObject AS MLO
+                                                       WHERE MLO.MovementId = inMovementId
+                                                         AND MLO.DescId     = zc_MovementLinkObject_From()
+                                                      )
+                                      --
+                                      SELECT Movement.Id
+                                      FROM Movement
+                                           INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                        AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                           INNER JOIN tmpFind ON tmpFind.FromId = MovementLinkObject_From.ObjectId
+                                      WHERE Movement.DescId   = zc_Movement_Inventory()
+                                        AND Movement.OperDate = vbOperDate_invent
+                                        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                     ) AS tmp
                                )
            THEN
                RAISE EXCEPTION 'Ошибка.За <%> найдены два документа Инвентаризации № <%> и № <%>. А должен быть только один.'
-                             , zfConvert_DateToString (inOperDate - INTERVAL '1 DAY')
+                             , zfConvert_DateToString (vbOperDate_invent)
                              , (SELECT Movement.InvNumber
                                 FROM Movement
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
@@ -490,10 +499,7 @@ BEGIN
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                                   AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
                                 WHERE Movement.DescId = zc_Movement_Inventory()
-                                  AND Movement.OperDate = CASE WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
-                                                                    THEN inOperDate
-                                                               ELSE inOperDate - INTERVAL '1 DAY'
-                                                          END
+                                  AND Movement.OperDate = vbOperDate_invent
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                                 ORDER BY Movement.Id ASC
                                 LIMIT 1
@@ -515,10 +521,7 @@ BEGIN
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                                   AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
                                 WHERE Movement.DescId = zc_Movement_Inventory()
-                                  AND Movement.OperDate = CASE WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
-                                                                    THEN inOperDate
-                                                               ELSE inOperDate - INTERVAL '1 DAY'
-                                                          END
+                                  AND Movement.OperDate = vbOperDate_invent
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                                 ORDER BY Movement.Id DESC
                                 LIMIT 1
@@ -528,27 +531,22 @@ BEGIN
 
            -- поиск существующего документа <Инвентаризация> по ВСЕМ параметрам
            vbMovementId_find:= (SELECT Movement.Id
-                                FROM Movement
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
-                                                                   ON MovementLinkObject_From_find.MovementId = inMovementId
-                                                                  AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To_find
-                                                                   ON MovementLinkObject_To_find.MovementId = inMovementId
-                                                                  AND MovementLinkObject_To_find.DescId = zc_MovementLinkObject_To()
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                  AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
-                                WHERE Movement.DescId = zc_Movement_Inventory()
-                                  AND Movement.OperDate = CASE WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
-                                                                    THEN inOperDate
-                                                               ELSE inOperDate - INTERVAL '1 DAY'
-                                                          END
-                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                FROM (WITH tmpFind AS (SELECT MLO.ObjectId AS FromId
+                                                       FROM MovementLinkObject AS MLO
+                                                       WHERE MLO.MovementId = inMovementId
+                                                         AND MLO.DescId     = zc_MovementLinkObject_From()
+                                                      )
+                                      --
+                                      SELECT Movement.Id
+                                      FROM Movement
+                                           INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                        AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                           INNER JOIN tmpFind ON tmpFind.FromId = MovementLinkObject_From.ObjectId
+                                      WHERE Movement.DescId   = zc_Movement_Inventory()
+                                        AND Movement.OperDate = vbOperDate_invent
+                                        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                     ) AS Movement
                                );
      END IF;
 
@@ -623,7 +621,9 @@ BEGIN
                                                THEN lpInsertUpdate_Movement_Inventory
                                                    (ioId                    := 0
                                                   , inInvNumber             := CAST (NEXTVAL ('movement_Inventory_seq') AS TVarChar)
-                                                  , inOperDate              := CASE WHEN inBranchCode = 102 AND FromId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
+                                                  , inOperDate              := CASE WHEN inBranchCode = 102 AND FromId IN (8447) -- ЦЕХ колбасный
+                                                                                         THEN inOperDate
+                                                                                    WHEN inBranchCode = 102 AND FromId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
                                                                                          THEN inOperDate
                                                                                     ELSE inOperDate - INTERVAL '1 DAY'
                                                                                END
@@ -1487,10 +1487,7 @@ BEGIN
                                                        AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
                       WHERE Movement.Id <> vbMovementId_begin
                         AND Movement.DescId = zc_Movement_Inventory()
-                        AND Movement.OperDate = CASE WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
-                                                          THEN inOperDate
-                                                     ELSE inOperDate - INTERVAL '1 DAY'
-                                                END
+                        AND Movement.OperDate = vbOperDate_invent
                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                     )
           THEN
@@ -1506,16 +1503,10 @@ BEGIN
                                                        AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
                       WHERE Movement.Id <> vbMovementId_begin
                         AND Movement.DescId = zc_Movement_Inventory()
-                        AND Movement.OperDate = CASE WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
-                                                          THEN inOperDate
-                                                     ELSE inOperDate - INTERVAL '1 DAY'
-                                                END
+                        AND Movement.OperDate = vbOperDate_invent
                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                     )
-                  , zfConvert_DateToString (CASE WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
-                                                      THEN inOperDate
-                                                 ELSE inOperDate - INTERVAL '1 DAY'
-                                            END);
+                  , zfConvert_DateToString (vbOperDate_invent);
           END IF;
 
           -- !!!Проверка что элемент один!!!

@@ -22,8 +22,9 @@ BEGIN
      END IF;
 
      -- Проводим Документ
-     PERFORM lpComplete_Movement_ContractGoods (inMovementId     := inMovementId
-                                           , inUserId         := vbUserId);
+     PERFORM gpComplete_Movement_ContractGoods (inMovementId     := inMovementId
+                                              , inSession        := inSession
+                                               );
 
 END;
 $BODY$

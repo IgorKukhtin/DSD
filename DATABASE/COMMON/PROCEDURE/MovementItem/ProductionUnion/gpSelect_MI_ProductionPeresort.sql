@@ -101,12 +101,13 @@ BEGIN
                                   LEFT JOIN Object AS Object_GoodsKindChild ON Object_GoodsKindChild.Id = MILinkObject_GoodsKindChild.ObjectId                                  
                             )
             , tmpEtiketka AS (SELECT MovementItemChild.ParentId
-                                   , STRING_AGG (MovementItemChild.GoodsChildCode ::TVarChar, ';') AS GoodsChildCode
-                                   , STRING_AGG (MovementItemChild.GoodsChildName ::TVarChar, ';') AS GoodsChildName
-                                   , STRING_AGG (MovementItemChild.GoodsKindChildName ::TVarChar, ';') AS GoodsKindChildName
+                                   , STRING_AGG (DISTINCT MovementItemChild.GoodsChildCode ::TVarChar, ';') AS GoodsChildCode
+                                   , STRING_AGG (DISTINCT MovementItemChild.GoodsChildName ::TVarChar, ';') AS GoodsChildName
+                                   , STRING_AGG (DISTINCT MovementItemChild.GoodsKindChildName ::TVarChar, ';') AS GoodsKindChildName
                                    , SUM (COALESCE (MovementItemChild.Amount,0))        AS Amount
                               FROM tmpMIChild AS MovementItemChild
                               WHERE MovementItemChild.isEtiketka_child = TRUE
+                                AND MovementItemChild.Amount <> 0
                               GROUP BY MovementItemChild.ParentId
                               )
 , tmpMIString AS (
@@ -473,12 +474,13 @@ BEGIN
                                   LEFT JOIN Object AS Object_GoodsKindChild ON Object_GoodsKindChild.Id = MILinkObject_GoodsKindChild.ObjectId                                  
                             )
             , tmpEtiketka AS (SELECT MovementItemChild.ParentId
-                                   , STRING_AGG (MovementItemChild.GoodsChildCode::TVarChar, ';') AS GoodsChildCode
-                                   , STRING_AGG (MovementItemChild.GoodsChildName::TVarChar, ';') AS GoodsChildName
-                                   , STRING_AGG (MovementItemChild.GoodsKindChildName::TVarChar, ';') AS GoodsKindChildName
+                                   , STRING_AGG (DISTINCT MovementItemChild.GoodsChildCode::TVarChar, ';') AS GoodsChildCode
+                                   , STRING_AGG (DISTINCT MovementItemChild.GoodsChildName::TVarChar, ';') AS GoodsChildName
+                                   , STRING_AGG (DISTINCT MovementItemChild.GoodsKindChildName::TVarChar, ';') AS GoodsKindChildName
                                    , SUM (COALESCE (MovementItemChild.Amount,0))        AS Amount
                               FROM tmpMIChild AS MovementItemChild
                               WHERE MovementItemChild.isEtiketka_child = TRUE
+                                AND MovementItemChild.Amount <> 0
                               GROUP BY MovementItemChild.ParentId
                               )
 , tmpMIString AS (
