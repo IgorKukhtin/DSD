@@ -1719,13 +1719,17 @@ end if;
 
                                                     WHEN _tmpItem.isPartionDate_From = TRUE
                                                      AND _tmpItem.PartionGoodsDate_From <> zc_DateEnd()
-                                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
-                                                                                           , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
+                                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                                                           , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                                                           , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
+                                                                                            )
                                                         THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate_From
                                                                                              , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
                                                                                               )
-                                                    WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
-                                                                                           , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
+                                                    WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                                                           , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                                                           , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
+                                                                                            )
                                                         THEN 0
 
                                                     WHEN (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
@@ -1952,13 +1956,17 @@ end if;
 
                                                     WHEN _tmpItem.isPartionDate_To = TRUE
                                                      AND _tmpItem.PartionGoodsDate_To <> zc_DateEnd()
-                                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
-                                                                                           , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
+                                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                                                           , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                                                           , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
+                                                                                            )
                                                         THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate_To
                                                                                              , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
                                                                                               )
-                                                    WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
-                                                                                           , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
+                                                    WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                                                           , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                                                           , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
+                                                                                            )
                                                         THEN 0
 
                                                     WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
@@ -2000,6 +2008,7 @@ end if;
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
