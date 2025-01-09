@@ -26,6 +26,12 @@ inherited Report_ContractGoodsMovementForm: TReport_ContractGoodsMovementForm
         ExplicitWidth = 1174
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName
+            end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil

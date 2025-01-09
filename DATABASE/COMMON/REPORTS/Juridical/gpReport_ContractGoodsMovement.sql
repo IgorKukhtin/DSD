@@ -209,7 +209,7 @@ BEGIN
        , tmpRez AS (SELECT *
                     FROM (SELECT tmpData.* 
                                , COALESCE (tmpData_next.OperDate- interval '1 day', zc_DateEnd()) AS OperDate_next
-                               , ROW_NUMBER() OVER (PARTITION BY tmpData.OperDate, tmpData.JuridicalId, tmpData.ContractId, tmpData.GoodsId, tmpData.GoodsKindId  ORDER BY tmpData_next.OperDate ASC) AS Ord
+                               , ROW_NUMBER() OVER (PARTITION BY tmpData.Id, tmpData.MovementItemId, tmpData.OperDate, tmpData.JuridicalId, tmpData.ContractId, tmpData.GoodsId, tmpData.GoodsKindId  ORDER BY tmpData_next.OperDate ASC) AS Ord
                           FROM tmpData 
                               LEFT JOIN tmpData AS tmpData_next
                                                 ON tmpData_next.OperDate > tmpData.OperDate
