@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_ContractGoodsMovement(
     IN inContractId         Integer   , --
     IN inSession            TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate TDateTime, EndBeginDate_calc TDateTime
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , StartDate_Contract TDateTime
              , ContractKindName TVarChar
@@ -165,33 +165,69 @@ BEGIN
                                WHERE Object_InfoMoney_View.InfoMoneyId IN (SELECT DISTINCT tmpContract_View.InfoMoneyId FROM tmpContract_View)
                                )
 
-        , tmpContract_param AS (SELECT tmp.ContractId
-                                     , Object_Personal.Id          AS PersonalId
-                                     , Object_Personal.ObjectCode  AS PersonalCode
-                                     , Object_Personal.ValueData   AS PersonalName
-                                     , Object_PersonalTrade.Id          AS PersonalTradeId
-                                     , Object_PersonalTrade.ObjectCode  AS PersonalTradeCode
-                                     , Object_PersonalTrade.ValueData   AS PersonalTradeName
-                                FROM (SELECT DISTINCT tmpMovement.ContractId FROM tmpMovement) AS tmp
-                                     LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
-                                                          ON ObjectLink_Contract_Personal.ObjectId = tmp.ContractId
-                                                         AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-                                     LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId               
+       , tmpContract_param AS (SELECT tmp.ContractId
+                                    , Object_Personal.Id          AS PersonalId
+                                    , Object_Personal.ObjectCode  AS PersonalCode
+                                    , Object_Personal.ValueData   AS PersonalName
+                                    , Object_PersonalTrade.Id          AS PersonalTradeId
+                                    , Object_PersonalTrade.ObjectCode  AS PersonalTradeCode
+                                    , Object_PersonalTrade.ValueData   AS PersonalTradeName
+                               FROM (SELECT DISTINCT tmpMovement.ContractId FROM tmpMovement) AS tmp
+                                    LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                         ON ObjectLink_Contract_Personal.ObjectId = tmp.ContractId
+                                                        AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                                    LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId               
+ 
+                                    LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
+                                                         ON ObjectLink_Contract_PersonalTrade.ObjectId = tmp.ContractId 
+                                                        AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+                                    LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Contract_PersonalTrade.ChildObjectId 
+                               )
+        --связываем документы со строками
+       , tmpData AS (SELECT Movement.Id                         AS Id
+                          , Movement.InvNumber                  AS InvNumber
+                          , Movement.OperDate ::TDateTime       AS OperDate
+                          , MovementDate_EndBegin.ValueData     AS EndBeginDate
+                          , Movement.ContractId
+                          , Movement.JuridicalId
+                          --
+                          , MovementItem.Id                     AS MovementItemId
+                          , MovementItem.ObjectId               AS GoodsId
+                          , COALESCE (MILinkObject_GoodsKind.ObjectId,0) AS GoodsKindId
+                     FROM tmpMovement AS Movement
 
-                                     LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
-                                                          ON ObjectLink_Contract_PersonalTrade.ObjectId = tmp.ContractId 
-                                                         AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
-                                     LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Contract_PersonalTrade.ChildObjectId 
-                                )
+                          LEFT JOIN tmpMovementDate AS MovementDate_EndBegin
+                                                    ON MovementDate_EndBegin.MovementId = Movement.Id
+                                                   AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
 
-
+                          INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+                          LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
+                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                    )
+        --получаем дату следующего документа, до которой действует теущий, по ключу Юр.лицо + договор+товар+вид товара
+       , tmpRez AS (SELECT *
+                    FROM (SELECT tmpData.* 
+                               , COALESCE (tmpData_next.OperDate- interval '1 day', zc_DateEnd()) AS OperDate_next
+                               , ROW_NUMBER() OVER (PARTITION BY tmpData.Id, tmpData.MovementItemId, tmpData.OperDate, tmpData.JuridicalId, tmpData.ContractId, tmpData.GoodsId, tmpData.GoodsKindId  ORDER BY tmpData_next.OperDate ASC) AS Ord
+                          FROM tmpData 
+                              LEFT JOIN tmpData AS tmpData_next
+                                                ON tmpData_next.OperDate > tmpData.OperDate
+                                               AND tmpData_next.GoodsId = tmpData.GoodsId
+                                               AND tmpData_next.ContractId = tmpData.ContractId
+                                               AND tmpData_next.GoodsKindId = tmpData.GoodsKindId
+                                               AND tmpData_next.JuridicalId = tmpData.JuridicalId
+                         ) AS tmp
+                    WHERE tmp.Ord = 1
+                    )
 
 
        SELECT
              Movement.Id                         AS Id
            , Movement.InvNumber                  AS InvNumber
-           , Movement.OperDate ::TDateTime       AS OperDate
-           , MovementDate_EndBegin.ValueData     AS EndBeginDate
+           , Movement.OperDate      ::TDateTime  AS OperDate
+           , Movement.EndBeginDate  ::TDateTime  AS EndBeginDate
+           , Movement.OperDate_next ::TDateTime  AS EndBeginDate_calc
 
            , View_Contract.ContractId            AS ContractId
            , View_Contract.ContractCode          AS ContractCode
@@ -245,16 +281,17 @@ BEGIN
            , COALESCE (MIBoolean_BonusNo.ValueData, FALSE) ::Boolean AS isBonusNo 
 
            
-       FROM tmpMovement AS Movement
+       FROM tmpRez AS Movement
             LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Movement.ContractId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Movement.JuridicalId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
             LEFT JOIN tmpInfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
             LEFT JOIN tmpContract_param ON tmpContract_param.ContractId = Movement.ContractId
 
-            LEFT JOIN tmpMovementDate AS MovementDate_EndBegin
+           /* LEFT JOIN tmpMovementDate AS MovementDate_EndBegin
                                       ON MovementDate_EndBegin.MovementId = Movement.Id
-                                     AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
+                                     AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()  
+           */
 
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
                                          ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -277,39 +314,40 @@ BEGIN
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MovementLinkObject_Currency.ObjectId
  
             ---       
-            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+           -- INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
             
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-            LEFT JOIN tmpGoods_param ON tmpGoods_param.GoodsId = MovementItem.ObjectId
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Movement.GoodsId --MovementItem.ObjectId
+            LEFT JOIN tmpGoods_param ON tmpGoods_param.GoodsId = Movement.GoodsId --MovementItem.ObjectId
 
-            LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
+           /* LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
+            */
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Movement.GoodsKindId
 
             LEFT JOIN tmpMI_Float AS MIFloat_Price
-                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                  ON MIFloat_Price.MovementItemId = Movement.MovementItemId --MovementItem.Id
                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
             LEFT JOIN tmpMI_Float AS MIFloat_ChangePrice
-                                  ON MIFloat_ChangePrice.MovementItemId = MovementItem.Id
+                                  ON MIFloat_ChangePrice.MovementItemId = Movement.MovementItemId --
                                  AND MIFloat_ChangePrice.DescId = zc_MIFloat_ChangePrice()
             LEFT JOIN tmpMI_Float AS MIFloat_ChangePercent
-                                  ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                  ON MIFloat_ChangePercent.MovementItemId = Movement.MovementItemId --
                                  AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
             LEFT JOIN tmpMI_Float AS MIFloat_CountForAmount
-                                  ON MIFloat_CountForAmount.MovementItemId = MovementItem.Id
+                                  ON MIFloat_CountForAmount.MovementItemId = Movement.MovementItemId --
                                  AND MIFloat_CountForAmount.DescId = zc_MIFloat_CountForAmount()
             LEFT JOIN tmpMI_Float AS MIFloat_CountForPrice
-                                  ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                  ON MIFloat_CountForPrice.MovementItemId = Movement.MovementItemId --
                                  AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
             LEFT JOIN tmpMI_String AS MIString_Comment
-                                   ON MIString_Comment.MovementItemId = MovementItem.Id
+                                   ON MIString_Comment.MovementItemId = Movement.MovementItemId --
                                   AND MIString_Comment.DescId = zc_MIString_Comment()
  
             LEFT JOIN tmpMI_Boolean AS MIBoolean_BonusNo
-                                    ON MIBoolean_BonusNo.MovementItemId = MovementItem.Id
+                                    ON MIBoolean_BonusNo.MovementItemId = Movement.MovementItemId --
                                    AND MIBoolean_BonusNo.DescId = zc_MIBoolean_BonusNo()
 
    

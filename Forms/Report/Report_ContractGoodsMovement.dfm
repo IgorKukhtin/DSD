@@ -26,55 +26,11 @@ inherited Report_ContractGoodsMovementForm: TReport_ContractGoodsMovementForm
         ExplicitWidth = 1174
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -84,7 +40,7 @@ inherited Report_ContractGoodsMovementForm: TReport_ContractGoodsMovementForm
           Styles.Footer = nil
           Styles.Header = nil
           object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
+            Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1089'...'
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -99,11 +55,21 @@ inherited Report_ContractGoodsMovementForm: TReport_ContractGoodsMovementForm
             Width = 69
           end
           object EndBeginDate: TcxGridDBColumn
-            Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'...'
+            Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'... ('#1080#1085#1092#1086#1088#1084'. '#1080#1079' '#1076#1086#1082')'
             DataBinding.FieldName = 'EndBeginDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'... ('#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')'
+            HeaderHint = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'... ('#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103') '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+            Options.Editing = False
+            Width = 80
+          end
+          object EndBeginDate_calc: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'...'
+            DataBinding.FieldName = 'EndBeginDate_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'... ('#1088#1072#1089#1095#1077#1090')'
             Options.Editing = False
             Width = 80
           end
