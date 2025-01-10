@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
              , ContractStateKindId Integer
              , ContractStateKindCode Integer
              , ContractStateKindName TVarChar
-             , ContractTagId Integer, ContractTagName TVarChar
+             , ContractTagId Integer, ContractTagName TVarChar 
+             , PaidKindId Integer, PaidKindName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
              , SiteTagId Integer, SiteTagName TVarChar
@@ -69,6 +70,8 @@ BEGIN
              , CAST ('' AS TVarChar) AS ContractStateKindName
              , 0                     AS ContractTagId
              , CAST ('' AS TVarChar) AS ContractTagName
+             , 0                     AS PaidKindId
+             , CAST ('' AS TVarChar) AS PaidKindName
              
              , 0                                                AS JuridicalId
              , CAST ('' AS TVarChar) 	                        AS JuridicalName
@@ -116,6 +119,8 @@ BEGIN
            , View_Contract.ContractStateKindName
            , View_Contract.ContractTagId
            , View_Contract.ContractTagName
+           , View_Contract.PaidKindId
+           , Object_PaidKind.ValueData ::TVarChar AS PaidKindName
 
            , Object_Juridical.Id                    AS JuridicalId
            , Object_Juridical.ValueData             AS JuridicalName
@@ -161,7 +166,8 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId 
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                  ON ObjectLink_Contract_Juridical.ObjectId = MovementLinkObject_Contract.ObjectId
@@ -206,6 +212,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.01.25         * PaidKind
  02.12.24         * SiteTag
  15.11.24         *
  08.11.23         *

@@ -109,6 +109,9 @@ type
     cxLabel13: TcxLabel;
     edSiteTag: TcxButtonEdit;
     GuidesSiteTag: TdsdGuides;
+    cxLabel16: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    GuidesPaidKind: TdsdGuides;
   private
     { Private declarations }
   public
