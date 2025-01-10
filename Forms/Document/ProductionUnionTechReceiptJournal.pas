@@ -225,6 +225,10 @@ type
     bbPrintCEH_Group: TdxBarButton;
     spPrint_TaxExitUpdate_term: TdsdStoredProc;
     spPrint_TaxExitUpdate_grid_term: TdsdStoredProc;
+    spUpdate_isWeightMain: TdsdStoredProc;
+    actUpdate_isWeightMain: TdsdUpdateDataSet;
+    macUpdate_isWeightMain: TMultiAction;
+    bbUpdate_isWeightMain: TdxBarButton;
   private
     { Private declarations }
   public
