@@ -12,7 +12,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_HistoryCost(
     IN inSession         TVarChar    -- сессия пользователя
 )
 --  RETURNS VOID
-  RETURNS TABLE (vbItearation Integer, vbCountDiff Integer, Price TFloat, PriceNext TFloat, Price_external TFloat, PriceNext_external TFloat, FromContainerId Integer, ContainerId Integer, isInfoMoney_80401 Boolean, CalcSummCurrent TFloat, CalcSummNext TFloat, CalcSummCurrent_external TFloat, CalcSummNext_external TFloat, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat, UnitId Integer, UnitName TVarChar)
+  RETURNS TABLE (vbItearation Integer, vbCountDiff Integer, Price TFloat, PriceNext TFloat, Price_external TFloat, PriceNext_external TFloat, FromContainerId Integer
+               , ContainerId Integer
+               , GoodsId Integer, GoodsKindId Integer, InfoMoneyId Integer, InfoMoneyId_Detail Integer, AccountId Integer, JuridicalId_basis Integer
+               , isInfoMoney_80401 Boolean
+               , CalcSummCurrent TFloat, CalcSummNext TFloat, CalcSummCurrent_external TFloat, CalcSummNext_external TFloat
+               , StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat
+               , calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat
+               , OutCount TFloat, OutSumm TFloat
+               , UnitId Integer, UnitName TVarChar
+                )
 --  RETURNS TABLE (ContainerId Integer, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, OutCount TFloat, OutSumm TFloat)
 --  RETURNS TABLE (MasterContainerId Integer, ContainerId Integer, OperCount TFloat)
 AS
@@ -26,6 +35,8 @@ $BODY$
    DECLARE vbItearationCount_err Integer;
    DECLARE vbOperDate_StartBegin TDateTime;
 
+   DECLARE vbIsBranch_Itearation Boolean;
+
    DECLARE vbExec_str TVarChar;
    DECLARE vbMONTH_str TVarChar;
 BEGIN
@@ -38,6 +49,12 @@ BEGIN
      -- IF inBranchId IN (0) THEN RETURN; END IF;
 
      --if inItearationCount > 1 then inItearationCount:= 0;  END IF;
+
+
+     --
+     vbIsBranch_Itearation:= FALSE;
+     vbIsBranch_Itearation:= TRUE;
+
 
 RAISE INFO ' start all .<%>', CLOCK_TIMESTAMP();
 
@@ -249,7 +266,7 @@ end if;
                               GROUP BY tmpContainerS_zavod.GoodsId
                                      , tmpContainerS_zavod.UnitId
                              )
-            -- или Начальный ост и ли есть движение
+            -- или Начальный ост или есть движение
           , tmpContainer_count_RK AS (SELECT Container_count.Id AS ContainerId
                                       FROM Container AS Container_count
                                            INNER JOIN ContainerLinkObject AS CLO_Unit
@@ -370,6 +387,8 @@ end if;
        ;
      -- !!!Оптимизация!!!
      ANALYZE tmpContainerList;
+
+-- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from  tmpContainerList where tmpContainerList.ContainerId_count = 9388811);
 
      -- группировка ПАРТИЙ - на складах ГП + zc_Unit_RK - 2024.08
      CREATE TEMP TABLE tmpContainerList_partion ON COMMIT DROP AS
@@ -1012,7 +1031,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
 
 RAISE INFO 'end master CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
 
-     IF inBranchId = 0 -- OR 1 = 1
+     IF inBranchId = 0 OR vbIsBranch_Itearation = TRUE -- OR 1 = 1
      THEN
          -- !!!1.1. Оптимизация!!!
          CREATE TEMP TABLE tmpMIContainer_Summ_Out ON COMMIT DROP
@@ -1056,7 +1075,8 @@ RAISE INFO 'end master CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                                                  , tmpContainerList.InfoMoneyId
                                                  , tmpContainerList.InfoMoneyId_Detail
                                             FROM tmpContainerList
-                                            WHERE tmpContainerList.isZavod = TRUE
+                                            -- не фИЛИАЛ + или надо для фИЛИАЛА
+                                            WHERE (tmpContainerList.isZavod = TRUE OR vbIsBranch_Itearation = TRUE)
                                               -- !!!
                                               AND tmpContainerList.ContainerId > 0
                                            )
@@ -1099,7 +1119,11 @@ RAISE INFO 'end master CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                     , tmpContainerList_partion.ContainerId_count
                --FROM Container
                -- только по этому списку - оптимизация
-               FROM (SELECT DISTINCT tmpContainerList.ContainerId_count AS Id FROM tmpContainerList WHERE tmpContainerList.isZavod = TRUE AND tmpContainerList.ContainerId > 0
+               FROM (SELECT DISTINCT tmpContainerList.ContainerId_count AS Id
+                     FROM tmpContainerList
+                     -- не фИЛИАЛ + или надо для фИЛИАЛА
+                     WHERE (tmpContainerList.isZavod = TRUE OR vbIsBranch_Itearation = TRUE)
+                       AND tmpContainerList.ContainerId > 0
                     ) AS Container
                     LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Account
                                                   ON ContainerLinkObject_Account.ContainerId = Container.Id
@@ -1110,8 +1134,8 @@ RAISE INFO 'end master CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
 
                --WHERE Container.DescId = zc_Container_Count() AND
                WHERE ContainerLinkObject_Account.ContainerId IS NULL
-                 -- не фИЛИАЛ
-                 AND _tmpContainer_branch.ContainerId IS NULL
+                 -- не фИЛИАЛ + или надо для фИЛИАЛА
+                 AND (_tmpContainer_branch.ContainerId IS NULL OR vbIsBranch_Itearation = TRUE)
               );
          -- !!!Оптимизация!!!
          ANALYZE tmpContainer_count;
@@ -1314,7 +1338,8 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                               , AccountId, UnitId, GoodsId, GoodsKindId, JuridicalId_basis, InfoMoneyId, InfoMoneyId_Detail
                               , AccountId_master, UnitId_master, GoodsId_master, GoodsKindId_master, JuridicalId_basis_master, InfoMoneyId_master, InfoMoneyId_Detail_master
                                )
-            WITH MIContainer_Summ_Out AS (SELECT tmpMIContainer_Summ_Out.Id, tmpMIContainer_Summ_Out.MovementId, tmpMIContainer_Summ_Out.MovementItemId
+            WITH MIContainer_Summ_Out AS (SELECT DISTINCT /*tmpMIContainer_Summ_Out.Id, */
+                                                 tmpMIContainer_Summ_Out.MovementId, tmpMIContainer_Summ_Out.MovementItemId
                                                , tmpMIContainer_Summ_Out.ParentId, tmpMIContainer_Summ_Out.ContainerId
                                                  -- есть всегда
                                                , tmpMIContainer_Summ_Out.AccountId
@@ -1357,7 +1382,43 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                                          , MIContainer_Summ_Out.MovementItemId
                                          , MIContainer_Summ_Out.ContainerId
                                  )
-                , tmpRes AS (-- 1.1.
+                , MIContainer_Count_Out_SendOnPrice
+                             AS (SELECT MIContainer_Count_Out.ParentId, MIContainer_Count_Out.MovementId, MIContainer_Count_Out.MovementDescId, MIContainer_Count_Out.OperDate
+                                      , MIContainer_Count_Out.MovementItemId
+                                        -- в этом разница
+                                      , MAX (MIContainer_Count_Out.ContainerId) AS ContainerId
+                                        --
+                                      , MIContainer_Count_Out.WhereObjectId_Analyzer
+                                        -- в этом разница
+                                      , SUM (MIContainer_Count_Out.Amount) AS Amount
+                                        -- есть НЕ всегда
+                                      , MIContainer_Count_Out.AccountId
+                                      , MIContainer_Count_Out.UnitId
+                                      , MIContainer_Count_Out.GoodsId
+                                      , MIContainer_Count_Out.GoodsKindId
+                                      , MIContainer_Count_Out.JuridicalId_basis
+                                      , MIContainer_Count_Out.InfoMoneyId
+                                      , MIContainer_Count_Out.InfoMoneyId_Detail
+                                        -- в этом разница
+                                      , MAX (MIContainer_Count_Out.ContainerId_count) AS ContainerId_count
+                                 FROM MIContainer_Count_Out
+                                 -- в этом разница
+                                 WHERE MIContainer_Count_Out.MovementDescId = zc_Movement_SendOnPrice()
+                                 --
+                                 GROUP BY MIContainer_Count_Out.ParentId, MIContainer_Count_Out.MovementId, MIContainer_Count_Out.MovementDescId, MIContainer_Count_Out.OperDate
+                                        , MIContainer_Count_Out.MovementItemId
+                                        , MIContainer_Count_Out.WhereObjectId_Analyzer
+                                          -- есть НЕ всегда
+                                        , MIContainer_Count_Out.AccountId
+                                        , MIContainer_Count_Out.UnitId
+                                        , MIContainer_Count_Out.GoodsId
+                                        , MIContainer_Count_Out.GoodsKindId
+                                        , MIContainer_Count_Out.JuridicalId_basis
+                                        , MIContainer_Count_Out.InfoMoneyId
+                                        , MIContainer_Count_Out.InfoMoneyId_Detail
+                                )
+
+                , tmpRes AS (-- 1.1. = zc_Movement_Send
                              SELECT CASE WHEN MIContainer_Count_In.ContainerId_count IS NULL
                                               -- нет партий в приходе
                                               THEN COALESCE (MIContainer_Summ_In.ContainerId, 0)
@@ -1486,7 +1547,6 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                                   --LEFT JOIN tmpContainerList_partion ON tmpContainerList_partion.ContainerId_count = MIContainer_Count_Out.ContainerId
 
                                   JOIN MIContainer_Summ_Out ON MIContainer_Summ_Out.MovementId          = MIContainer_Count_Out.MovementId
-                                                           AND MIContainer_Summ_Out.MovementItemId      = MIContainer_Count_Out.MovementItemId
                                                            AND MIContainer_Summ_Out.MovementItemId      = MIContainer_Count_Out.MovementItemId
                                                            AND (MIContainer_Summ_Out.InfoMoneyId_Detail = MIContainer_Count_Out.InfoMoneyId_Detail
                                                              OR MIContainer_Count_Out.ContainerId_count IS NULL
@@ -1638,7 +1698,288 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                                      END
 
                             UNION ALL
-                             -- 1.2.
+                             -- 1.2. = zc_Movement_SendOnPrice
+                             SELECT CASE WHEN MIContainer_Count_In.ContainerId_count IS NULL
+                                              -- нет партий в приходе
+                                              THEN COALESCE (MIContainer_Summ_In.ContainerId, 0)
+                                         ELSE 0
+                                    END AS MasterContainerId
+
+                                  , CASE WHEN MIContainer_Count_Out.ContainerId_count IS NULL
+                                              -- нет партий в расходе
+                                              THEN COALESCE (MIContainer_Summ_Out.ContainerId, 0)
+                                         ELSE 0
+                                    END AS ContainerId
+
+                                  , CASE WHEN MIContainer_Count_In.ContainerId_count IS NULL
+                                              -- нет партий в приходе
+                                              THEN COALESCE (MIContainer_Count_In.ContainerId, 0)
+                                         ELSE 0
+                                    END AS MasterContainerId_Count
+
+                                  , CASE WHEN MIContainer_Count_Out.ContainerId_count IS NULL
+                                              -- нет партий в расходе
+                                              THEN COALESCE (MIContainer_Count_Out.ContainerId, 0)
+                                         ELSE 0
+                                    END AS ContainerId_Count
+
+                                  , SUM (CASE WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
+                                                  THEN COALESCE (1 * MIContainer_Count_In.Amount, 0)
+                                              WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_ProductionUnion())
+                                                  THEN COALESCE (-1 * MIContainer_Count_Out.Amount, 0)
+                                              ELSE 0
+                                         END) AS OperCount
+
+                                  , CASE WHEN MIContainer_Count_Out.WhereObjectId_Analyzer = MIContainer_Summ_In.WhereObjectId_Analyzer THEN FALSE ELSE TRUE END AS isExternal
+                                  , 0 AS MovementDescId
+                               -- , MIContainer_Count_Out.MovementDescId
+
+                                    --
+                                    -- расход
+                                  , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                              -- партии в расходе
+                                              THEN MIContainer_Count_Out.AccountId
+                                         ELSE 0
+                                    END AS AccountId
+
+                                  , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                              -- партии в расходе
+                                              THEN MIContainer_Count_Out.UnitId
+                                         ELSE 0
+                                    END AS UnitId
+
+                                  , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                              -- партии в расходе
+                                              THEN MIContainer_Count_Out.GoodsId
+                                         ELSE 0
+                                    END AS GoodsId
+
+                                  , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                              -- партии в расходе
+                                              THEN MIContainer_Count_Out.GoodsKindId
+                                         ELSE 0
+                                    END AS GoodsKindId
+
+                                  , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                              -- партии в расходе
+                                              THEN MIContainer_Count_Out.JuridicalId_basis
+                                         ELSE 0
+                                    END AS JuridicalId_basis
+
+                                  , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                              -- партии в расходе
+                                              THEN MIContainer_Count_Out.InfoMoneyId
+                                         ELSE 0
+                                    END AS InfoMoneyId
+
+                                  , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                              -- партии в расходе
+                                              THEN MIContainer_Count_Out.InfoMoneyId_Detail
+                                         ELSE 0
+                                    END AS InfoMoneyId_Detail
+
+                                    --
+                                    -- приход
+                                  , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                              -- партии в приходе
+                                              THEN MIContainer_Count_In.AccountId
+                                         ELSE 0
+                                    END AS AccountId_master
+
+                                  , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                              -- партии в приходе
+                                              THEN MIContainer_Count_In.UnitId
+                                         ELSE 0
+                                    END AS UnitId_master
+
+                                  , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                              -- партии в приходе
+                                              THEN MIContainer_Count_In.GoodsId
+                                         ELSE 0
+                                    END AS GoodsId_master
+
+                                  , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                              -- партии в приходе
+                                              THEN MIContainer_Count_In.GoodsKindId
+                                         ELSE 0
+                                    END AS GoodsKindId_master
+
+                                  , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                              -- партии в приходе
+                                              THEN MIContainer_Count_In.JuridicalId_basis
+                                         ELSE 0
+                                    END AS JuridicalId_basis_master
+
+                                  , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                              -- партии в приходе
+                                              THEN MIContainer_Count_In.InfoMoneyId
+                                         ELSE 0
+                                    END AS InfoMoneyId_master
+
+                                  , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                              -- партии в приходе
+                                              THEN MIContainer_Count_In.InfoMoneyId_Detail
+                                         ELSE 0
+                                    END AS InfoMoneyId_Detail_master
+
+                             -- !!! в этом разница !!!
+                             FROM MIContainer_Count_Out_SendOnPrice AS MIContainer_Count_Out
+                                  -- партии в расходе
+                                  --LEFT JOIN tmpContainerList_partion ON tmpContainerList_partion.ContainerId_count = MIContainer_Count_Out.ContainerId
+
+                                  JOIN MIContainer_Summ_Out ON MIContainer_Summ_Out.MovementId          = MIContainer_Count_Out.MovementId
+                                                           AND MIContainer_Summ_Out.MovementItemId      = MIContainer_Count_Out.MovementItemId
+                                                           AND (MIContainer_Summ_Out.InfoMoneyId_Detail = MIContainer_Count_Out.InfoMoneyId_Detail
+                                                             OR MIContainer_Count_Out.ContainerId_count IS NULL
+                                                               )
+                                  -- лишняя проверка???
+                                  JOIN Container AS Container_Summ_Out ON Container_Summ_Out.Id       = MIContainer_Summ_Out.ContainerId
+                                                                      AND Container_Summ_Out.ParentId = MIContainer_Count_Out.ContainerId
+
+                                  JOIN MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
+                                  JOIN Container AS Container_Summ_In ON Container_Summ_In.Id       = MIContainer_Summ_In.ContainerId
+
+                                  JOIN MIContainer_Count_In ON MIContainer_Count_In.MovementItemId      = MIContainer_Summ_In.MovementItemId
+                                                           AND MIContainer_Count_In.ContainerId         = Container_Summ_In.ParentId
+                                                           AND (MIContainer_Count_In.InfoMoneyId_Detail = MIContainer_Summ_In.InfoMoneyId_Detail
+                                                             OR MIContainer_Count_In.ContainerId_count  IS NULL
+                                                               )
+                                                           -- !!! в этом разница !!!
+                                                           AND MIContainer_Count_In.Id             = MIContainer_Count_Out.ParentId
+                                  -- партии в приходе
+                                  -- LEFT JOIN tmpContainerList_partion AS tmpContainerList_partion_master ON tmpContainerList_partion_master.ContainerId_count = MIContainer_Count_In.ContainerId
+
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                                               ON MovementLinkObject_User.MovementId = MIContainer_Count_Out.MovementId
+                                                              AND MovementLinkObject_User.DescId     = zc_MovementLinkObject_User()
+                                                              AND MovementLinkObject_User.ObjectId   = zc_Enum_Process_Auto_Defroster()
+
+                             WHERE MovementLinkObject_User.MovementId IS NULL
+                               -- !!! в этом разница !!!
+                               AND MIContainer_Count_Out.MovementDescId = zc_Movement_SendOnPrice()
+                                    -- нет партий в расходе
+                               AND (MIContainer_Count_Out.ContainerId_count IS NULL
+                                    -- нет партий в приходе
+                                 OR MIContainer_Count_In.ContainerId_count IS NULL
+                                   )
+                             GROUP BY CASE WHEN MIContainer_Count_In.ContainerId_count IS NULL
+                                               -- нет партий в приходе
+                                               THEN COALESCE (MIContainer_Summ_In.ContainerId, 0)
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_Out.ContainerId_count IS NULL
+                                               -- нет партий в расходе
+                                               THEN COALESCE (MIContainer_Summ_Out.ContainerId, 0)
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_In.ContainerId_count IS NULL
+                                               -- нет партий в приходе
+                                               THEN COALESCE (MIContainer_Count_In.ContainerId, 0)
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_Out.ContainerId_count IS NULL
+                                               -- нет партий в расходе
+                                               THEN COALESCE (MIContainer_Count_Out.ContainerId, 0)
+                                          ELSE 0
+                                     END
+
+                                    , MIContainer_Count_Out.WhereObjectId_Analyzer
+                                    , MIContainer_Summ_In.WhereObjectId_Analyzer
+                                    -- , MIContainer_Count_Out.MovementDescId
+
+                                     --
+                                     -- расход
+                                   , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                               -- партии в расходе
+                                               THEN MIContainer_Count_Out.AccountId
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                               -- партии в расходе
+                                               THEN MIContainer_Count_Out.UnitId
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                               -- партии в расходе
+                                               THEN MIContainer_Count_Out.GoodsId
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                               -- партии в расходе
+                                               THEN MIContainer_Count_Out.GoodsKindId
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                               -- партии в расходе
+                                               THEN MIContainer_Count_Out.JuridicalId_basis
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                               -- партии в расходе
+                                               THEN MIContainer_Count_Out.InfoMoneyId
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_Out.ContainerId_count > 0
+                                               -- партии в расходе
+                                               THEN MIContainer_Count_Out.InfoMoneyId_Detail
+                                          ELSE 0
+                                     END
+
+                                     --
+                                     -- приход
+                                   , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                               -- партии в приходе
+                                               THEN MIContainer_Count_In.AccountId
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                               -- партии в приходе
+                                               THEN MIContainer_Count_In.UnitId
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                               -- партии в приходе
+                                               THEN MIContainer_Count_In.GoodsId
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                               -- партии в приходе
+                                               THEN MIContainer_Count_In.GoodsKindId
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                               -- партии в приходе
+                                               THEN MIContainer_Count_In.JuridicalId_basis
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                               -- партии в приходе
+                                               THEN MIContainer_Count_In.InfoMoneyId
+                                          ELSE 0
+                                     END
+
+                                   , CASE WHEN MIContainer_Count_In.ContainerId_count > 0
+                                               -- партии в приходе
+                                               THEN MIContainer_Count_In.InfoMoneyId_Detail
+                                          ELSE 0
+                                     END
+
+                            UNION ALL
+                             -- 1.3. <> zc_Movement_Send, zc_Movement_SendOnPrice
                              SELECT CASE WHEN MIContainer_Count_In.ContainerId_count IS NULL
                                               -- нет партий в приходе
                                               THEN COALESCE (MIContainer_Summ_In.ContainerId, 0)
@@ -1805,7 +2146,7 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                                                                AND MIContainer_Count_In.ContainerId_count IS NULL
                              WHERE MovementLinkObject_User.MovementId IS NULL
                                -- !!! в этом разница !!!
-                               AND MIContainer_Count_Out.MovementDescId <> zc_Movement_Send()
+                               AND MIContainer_Count_Out.MovementDescId NOT IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
                                     -- нет партий в расходе
                                AND (MIContainer_Count_Out.ContainerId_count IS NULL
                                     -- нет партий в приходе
@@ -1928,7 +2269,7 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                                      END
 
                             UNION ALL
-                             -- 2.1. партии в приходе - есть, партии в расходе - есть
+                             -- 2.1. партии в приходе - есть, партии в расходе - есть = zc_Movement_Send, zc_Movement_SendOnPrice
                              SELECT 0 AS MasterContainerId
                                   , 0 AS ContainerId
                                   , 0 AS MasterContainerId_Count
@@ -1981,7 +2322,7 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
 
                              WHERE MovementLinkObject_User.MovementId IS NULL
                                -- !!! в этом разница !!!
-                               AND MIContainer_Count_Out.MovementDescId = zc_Movement_Send()
+                               AND MIContainer_Count_Out.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
 
                              GROUP BY MIContainer_Count_Out.WhereObjectId_Analyzer
                                     , MIContainer_Count_In.WhereObjectId_Analyzer
@@ -2004,7 +2345,7 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
                                     , MIContainer_Count_In.InfoMoneyId_Detail
 
                             UNION ALL
-                             -- 2.2. партии в приходе - есть, партии в расходе - есть
+                             -- 2.2. партии в приходе - есть, партии в расходе - есть <> zc_Movement_Send, zc_Movement_SendOnPrice
                              SELECT 0 AS MasterContainerId
                                   , 0 AS ContainerId
                                   , 0 AS MasterContainerId_Count
@@ -2063,7 +2404,7 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
 
                              WHERE MovementLinkObject_User.MovementId IS NULL
                                -- !!! в этом разница !!!
-                               AND MIContainer_Count_Out.MovementDescId <> zc_Movement_Send()
+                               AND MIContainer_Count_Out.MovementDescId NOT IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
 
                              GROUP BY MIContainer_Count_Out.WhereObjectId_Analyzer
                                     , MIContainer_Count_In.WhereObjectId_Analyzer
@@ -2154,6 +2495,7 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
             -- запомнили время начала Следующего действия
             vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
+
      END IF; -- if inBranchId = 0 and INSERT INTO _tmpChild
 
 
@@ -2216,31 +2558,36 @@ THEN
 
 ELSE
 
-     -- 1
-     IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+     IF vbIsBranch_Itearation = TRUE
      THEN
-         DELETE FROM _tmpMaster_2024_07_b;
-     ELSE
-         truncate table _tmpMaster_2024_07_b;
-     END IF;
-     INSERT INTO _tmpMaster_2024_07_b (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm
-                           , AccountId, GoodsId, GoodsKindId, InfoMoneyId, InfoMoneyId_Detail, JuridicalId_basis
-                           , isZavod
-                            )
-        SELECT * FROM _tmpMaster;
 
-     -- 2
-     IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
-     THEN
-         DELETE FROM _tmpChild_2024_07_b;
-     ELSE
-         truncate table _tmpChild_2024_07_b;
+         -- 1
+         IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+         THEN
+             DELETE FROM _tmpMaster_2024_07_b;
+         ELSE
+             truncate table _tmpMaster_2024_07_b;
+         END IF;
+         INSERT INTO _tmpMaster_2024_07_b (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm
+                               , AccountId, GoodsId, GoodsKindId, InfoMoneyId, InfoMoneyId_Detail, JuridicalId_basis
+                               , isZavod
+                                )
+            SELECT * FROM _tmpMaster;
+
+         -- 2
+         IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+         THEN
+             DELETE FROM _tmpChild_2024_07_b;
+         ELSE
+             truncate table _tmpChild_2024_07_b;
+         END IF;
+         INSERT INTO _tmpChild_2024_07_b (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount, isExternal, DescId
+                                  , AccountId, UnitId, GoodsId, GoodsKindId, JuridicalId_basis, InfoMoneyId, InfoMoneyId_Detail
+                                  , AccountId_master, UnitId_master, GoodsId_master, GoodsKindId_master, JuridicalId_basis_master, InfoMoneyId_master, InfoMoneyId_Detail_master
+                                )
+            SELECT * FROM _tmpChild;
+
      END IF;
-     INSERT INTO _tmpChild_2024_07_b (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount, isExternal, DescId
-                              , AccountId, UnitId, GoodsId, GoodsKindId, JuridicalId_basis, InfoMoneyId, InfoMoneyId_Detail
-                              , AccountId_master, UnitId_master, GoodsId_master, GoodsKindId_master, JuridicalId_basis_master, InfoMoneyId_master, InfoMoneyId_Detail_master
-                            )
-        SELECT * FROM _tmpChild;
 
 END IF;
 
@@ -2365,6 +2712,10 @@ RAISE INFO ' start-1 1-ая итерация для всех.<%>', CLOCK_TIMESTAMP();
          -- !!!Оптимизация!!!
          ANALYZE _tmpPrice_calc;
 
+RAISE INFO ' end-1 1-ая итерация для всех.<%>  OperPrice = <%>', CLOCK_TIMESTAMP()
+, (select _tmpPrice_calc.OperPrice FROM _tmpPrice_calc WHERE _tmpPrice_calc.ContainerId = 2019143)
+;
+
 
          -- Расчет суммы всех составляющих
          CREATE TEMP TABLE _tmpSumm_calc ON COMMIT DROP
@@ -2469,6 +2820,12 @@ RAISE INFO ' start-1 1-ая итерация для всех.<%>', CLOCK_TIMESTAMP();
          ANALYZE _tmpSumm_calc;
 
 
+RAISE INFO ' end-2 1-ая итерация для всех.<%>  CalcSumm = <%> + <%>', CLOCK_TIMESTAMP()
+, (select _tmpSumm_calc.CalcSumm FROM _tmpSumm_calc WHERE _tmpSumm_calc.ContainerId = 2019143)
+, (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 2019143)
+;
+
+
          -- !!!обнулили!!!
          UPDATE _tmpMaster SET CalcSumm          = 0
                              , CalcSumm_external = 0
@@ -2477,6 +2834,7 @@ RAISE INFO ' start-1 1-ая итерация для всех.<%>', CLOCK_TIMESTAMP();
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
            AND _tmpMaster.ContainerId > 0
           ;
+
          UPDATE _tmpMaster SET CalcSumm          = 0
                              , CalcSumm_external = 0
          FROM -- Сумма всех составляющих
@@ -2884,20 +3242,24 @@ RAISE INFO ' CalcSumm = <%>  <%>'
 
 if vbItearation <= 10
 then
-RAISE INFO ' vbCountDiff = <%> vbItearation = <%> CalcSumm = <%>', vbCountDiff, vbItearation
-, (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 10087668 and _tmpMaster.GoodsKindId = 8348 and _tmpMaster.InfoMoneyId = 8962
-   and _tmpMaster.InfoMoneyId_Detail = 8913 -- 8906
+RAISE INFO ' vbCountDiff = <%> vbItearation = <%> CalcSumm = <%> + <%>', vbCountDiff, vbItearation
+, (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 2019143)
+, (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 1560410 and _tmpMaster.GoodsKindId = 8346 and _tmpMaster.InfoMoneyId = 8962
+   and _tmpMaster.InfoMoneyId_Detail = 8907 -- 8906
    and _tmpMaster.UnitId = zc_Unit_RK())
 ;
+
 end if;
 
 if vbItearation % 10 = 0 AND  vbItearation > 10
 then
-RAISE INFO ' vbCountDiff = <%> vbItearation = <%> CalcSumm = <%>', vbCountDiff, vbItearation
-, (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 10087668 and _tmpMaster.GoodsKindId = 8348 and _tmpMaster.InfoMoneyId = 8962
-   and _tmpMaster.InfoMoneyId_Detail = 8913 -- 8906
+RAISE INFO ' vbCountDiff = <%> vbItearation = <%> CalcSumm = <%> + <%>', vbCountDiff, vbItearation
+, (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 2019143)
+, (select _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.GoodsId = 1560410 and _tmpMaster.GoodsKindId = 8346 and _tmpMaster.InfoMoneyId = 8962
+   and _tmpMaster.InfoMoneyId_Detail = 8907 -- 8906
    and _tmpMaster.UnitId = zc_Unit_RK())
 ;
+
 end if;
 
 
@@ -3002,6 +3364,16 @@ END IF;
          vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
 
+         -- Расчет - для селект - ФИЛИАЛЫ
+         CREATE TEMP TABLE _tmpHistoryCost_insert ON COMMIT DROP
+           AS (SELECT _tmpMaster.ContainerId
+               FROM _tmpMaster
+               WHERE _tmpMaster.ContainerId IN (SELECT _tmpContainer_branch.ContainerId FROM _tmpContainer_branch)
+              );
+         -- !!!Оптимизация!!!
+         ANALYZE _tmpHistoryCost_insert;
+
+
          -- Сохраняем что насчитали - !!!для 1-ого Филиала!!!
          INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
             /*WITH tmpErr AS (SELECT Container.*
@@ -3055,7 +3427,8 @@ END IF;
                                                   INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpUnit_branch.UnitId
                                                                                 AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
                                             );*/
-     ELSE
+     ELSE -- IF inBranchId > 0
+
 
          -- запомнили время начала Следующего действия
          vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
@@ -3141,7 +3514,7 @@ RAISE INFO ' start INSERT INTO _tmpHistoryCost_PartionCell .<%>', CLOCK_TIMESTAM
                               , AccountId_master, UnitId_master, GoodsId_master, GoodsKindId_master, JuridicalId_basis_master, InfoMoneyId_master, InfoMoneyId_Detail_master)' || vbMONTH_str || ' select * from _tmpChild', inSession);
                               */
          -- для теста
-         
+
          IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
          THEN
              PERFORM gpExecSql ('DELETE FROM _tmpHistoryCost_PartionCell_2024_0' || vbMONTH_str, inSession);
@@ -3159,6 +3532,7 @@ RAISE INFO ' start INSERT INTO _tmpHistoryCost_PartionCell .<%>', CLOCK_TIMESTAM
                                                 , AccountId, isInfoMoney_80401 from _tmpHistoryCost_PartionCell', inSession);
 
 -- return;
+
          -- для партионного учета
          IF inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
          AND 1=1
@@ -3203,6 +3577,7 @@ RAISE INFO ' start INSERT INTO _tmpHistoryCost_PartionCell .<%>', CLOCK_TIMESTAM
 
                     FROM tmpContainerList_partion
                     WHERE tmpContainerList_partion.GoodsKindId > 0
+                       OR tmpContainerList_partion.InfoMoneyId = 8963 -- 30102 Тушенка
                    ) AS tmpList_goods
                    INNER JOIN Container ON Container.ObjectId = tmpList_goods.GoodsId
                                        AND Container.DescId   = zc_Container_Count()
@@ -3267,6 +3642,17 @@ RAISE INFO ' start INSERT INTO _tmpHistoryCost_PartionCell .<%>', CLOCK_TIMESTAM
               WHERE COALESCE (CLO_GoodsKind.ObjectId, 0)  = COALESCE (tmpList_goods.GoodsKindId, 0)
                 AND tmpList_check.ContainerId IS NULL
              ;
+
+              IF EXTRACT (HOUR FROM CLOCK_TIMESTAMP()) < 8
+              THEN
+                  DELETE FROM _tmpContainerSumm_Goods_insert_2024_07;
+              ELSE
+                  truncate table _tmpContainerSumm_Goods_insert_2024_07;
+              END IF;
+
+              --
+              INSERT INTO _tmpContainerSumm_Goods_insert_2024_07 SELECT * FROM _tmpContainerSumm_Goods_insert;
+
 
 RAISE INFO ' start-2 создание ContainerSumm .<%>', CLOCK_TIMESTAMP();
               -- сквозное создание ContainerSumm
@@ -3499,7 +3885,10 @@ RAISE INFO ' start-2 insert .<%>', CLOCK_TIMESTAMP();
                  JOIN Container ON Container.ObjectId = _tmpMaster.AccountId
                                AND Container.DescId   = zc_Container_Summ()
                                -- только этот список
-                               AND Container.ParentId IN (SELECT DISTINCT tmpContainerList_partion.ContainerId_count FROM tmpContainerList_partion)
+                               AND Container.ParentId IN (SELECT DISTINCT tmpContainerList_partion.ContainerId_count FROM tmpContainerList_partion
+                                                         UNION
+                                                          SELECT DISTINCT _tmpContainerSumm_Goods_insert.ContainerId_Goods FROM _tmpContainerSumm_Goods_insert
+                                                         )
 
 
                  INNER JOIN ContainerLinkObject AS CLO_Goods
@@ -3535,7 +3924,7 @@ RAISE INFO ' start-2 insert .<%>', CLOCK_TIMESTAMP();
               AND inStartDate    >= lfGet_Object_Unit_PartionDate_isPartionCell()
              ;
 
-     END IF;
+     END IF; -- else IF inBranchId > 0
 
 
 RAISE INFO ' end INSERT INTO HistoryCost .<%>', CLOCK_TIMESTAMP();
@@ -3630,50 +4019,23 @@ RAISE INFO ' end INSERT INTO HistoryCost .<%>', CLOCK_TIMESTAMP();
          PERFORM gpExecSql ('truncate table _tmpHistoryCost_PartionCell_2024_0' || vbMONTH_str, inSession);
          PERFORM gpExecSql ('insert into _tmpHistoryCost_PartionCell_2024_0' || vbMONTH_str || ' select * from _tmpHistoryCost_PartionCell', inSession);*/
 
+
+     ELSE
+
+         -- Расчет - для селект - ФИЛИАЛЫ
+         CREATE TEMP TABLE _tmpHistoryCost_insert ON COMMIT DROP
+           AS (SELECT _tmpMaster.ContainerId
+               FROM _tmpMaster
+              );
+         -- !!!Оптимизация!!!
+         ANALYZE _tmpHistoryCost_insert;
+
      END IF; -- if inInsert > 0
 
-     IF inInsert <> 12345 AND 1=0 THEN -- 12345 - для Load_PostgreSql
+
+     IF inInsert <> 12345 THEN -- 12345 - для Load_PostgreSql
      -- tmp - test
      RETURN QUERY
-            WITH tmpChild_find AS (SELECT DISTINCT tmpContainer_count.ContainerId
-                                   FROM tmpContainer_count
-                                        INNER JOIN ContainerLinkObject AS CLO_Unit
-                                                                       ON CLO_Unit.ContainerId = tmpContainer_count.ContainerId
-                                                                      AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
-                                                                      AND CLO_Unit.ObjectId    = zc_Unit_RK()
-                                        INNER JOIN MovementItemContainer AS MIContainer_Count
-                                                                         ON MIContainer_Count.OperDate BETWEEN inStartDate AND inEndDate
-                                                                        AND MIContainer_Count.ContainerId  = tmpContainer_count.ContainerId
-                                                                        AND MIContainer_Count.DescId       = zc_MIContainer_Count()
-                                                                      --AND MIContainer_Count.isActive     = TRUE
-                                   WHERE inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
-                                  )
-
-          , tmpMaster_find AS (SELECT DISTINCT _tmpMaster.ContainerId FROM _tmpMaster
-                               WHERE inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
-                              UNION
-                               SELECT DISTINCT _tmpChild.ContainerId FROM _tmpChild
-                               WHERE inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
-                              UNION
-                               SELECT DISTINCT Container.Id
-                               FROM _tmpChild
-                                    JOIN Container ON Container.ParentId = _tmpChild.ContainerId_Count
-                                                  AND Container.DescId   = zc_Container_Summ()
-                               WHERE inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
-                              UNION
-                               SELECT DISTINCT Container.Id
-                               FROM _tmpChild
-                                    JOIN Container ON Container.ParentId = _tmpChild.MasterContainerId_Count
-                                                  AND Container.DescId   = zc_Container_Summ()
-                               WHERE inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
-                              UNION
-                               SELECT DISTINCT Container.Id
-                               FROM tmpChild_find
-                                    JOIN Container ON Container.ParentId = tmpChild_find.ContainerId
-                                                  AND Container.DescId   = zc_Container_Summ()
-                               WHERE inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
-                              )
-        -- Результат
         SELECT vbItearation, vbCountDiff
              , CAST (CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                                THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
@@ -3719,6 +4081,8 @@ RAISE INFO ' end INSERT INTO HistoryCost .<%>', CLOCK_TIMESTAMP();
 
              , _tmpSumm.FromContainerId
              , _tmpMaster.ContainerId
+             , _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.AccountId, _tmpMaster.JuridicalId_basis
+
              , _tmpMaster.isInfoMoney_80401
              , _tmpMaster.CalcSumm          AS CalcSummCurrent,          CAST (COALESCE (_tmpSumm.CalcSumm, 0)          AS TFloat) AS CalcSummNext
              , _tmpMaster.CalcSumm_external AS CalcSummCurrent_external, CAST (COALESCE (_tmpSumm.CalcSumm_external, 0) AS TFloat) AS CalcSummNext_external
@@ -3759,6 +4123,8 @@ RAISE INFO ' end INSERT INTO HistoryCost .<%>', CLOCK_TIMESTAMP();
                                  ELSE 0
                             END AS OperPrice_external*/
                      FROM _tmpMaster
+                     WHERE _tmpMaster.ContainerId > 0
+                       AND _tmpMaster.ContainerId IN (SELECT DISTINCT _tmpHistoryCost_insert.ContainerId FROM _tmpHistoryCost_insert)
                     ) AS _tmpPrice
                     JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId
                                   -- Отбрасываем в том случае если сам в себя
@@ -3768,11 +4134,11 @@ RAISE INFO ' end INSERT INTO HistoryCost .<%>', CLOCK_TIMESTAMP();
               ) AS _tmpSumm ON _tmpMaster.ContainerId = _tmpSumm.ContainerId
               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = _tmpMaster.UnitId
 
-         WHERE (_tmpMaster.UnitId <> zc_Unit_RK()
-             OR inStartDate       < lfGet_Object_Unit_PartionDate_isPartionCell()
-               )
+         WHERE _tmpMaster.ContainerId > 0
+           AND _tmpMaster.ContainerId IN (SELECT DISTINCT _tmpHistoryCost_insert.ContainerId FROM _tmpHistoryCost_insert)
 
        UNION ALL
+         -- 2. для партионного учета - Розподільчий комплекс
         SELECT vbItearation, vbCountDiff
              , CAST (CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                                THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
@@ -3784,16 +4150,7 @@ RAISE INFO ' end INSERT INTO HistoryCost .<%>', CLOCK_TIMESTAMP();
                                THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
                           ELSE 0
                      END AS TFloat) AS Price
-             , CAST (CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
-                               THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
-                                              THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + CASE WHEN _tmpSumm.CalcSumm <> 0 THEN _tmpSumm.CalcSumm ELSE _tmpMaster.CalcSumm END) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
-                                         ELSE  0
-                                    END
-                          WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + CASE WHEN _tmpSumm.CalcSumm <> 0 THEN _tmpSumm.CalcSumm ELSE _tmpMaster.CalcSumm END) > 0)
-                             OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + CASE WHEN _tmpSumm.CalcSumm <> 0 THEN _tmpSumm.CalcSumm ELSE _tmpMaster.CalcSumm END) < 0))
-                               THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + CASE WHEN _tmpSumm.CalcSumm <> 0 THEN _tmpSumm.CalcSumm ELSE _tmpMaster.CalcSumm END) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
-                          ELSE 0
-                     END AS TFloat) AS PriceNext
+             , 0 :: TFloat AS PriceNext
 
              , CAST (CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                                THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
@@ -3805,136 +4162,23 @@ RAISE INFO ' end INSERT INTO HistoryCost .<%>', CLOCK_TIMESTAMP();
                                THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount_external)
                           ELSE 0
                      END AS TFloat) AS Price_external
-             , CAST (CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
-                               THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
-                                              THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + CASE WHEN _tmpSumm.CalcSumm_external <> 0 THEN _tmpSumm.CalcSumm_external ELSE _tmpMaster.CalcSumm_external END)
-                                                 / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
-                                         ELSE  0
-                                    END
-                          WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + CASE WHEN _tmpSumm.CalcSumm_external <> 0 THEN _tmpSumm.CalcSumm_external ELSE _tmpMaster.CalcSumm_external END) > 0)
-                             OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + CASE WHEN _tmpSumm.CalcSumm_external <> 0 THEN _tmpSumm.CalcSumm_external ELSE _tmpMaster.CalcSumm_external END) < 0))
-                               THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + CASE WHEN _tmpSumm.CalcSumm_external <> 0 THEN _tmpSumm.CalcSumm_external ELSE _tmpMaster.CalcSumm_external END) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount_external)
-                          ELSE 0
-                     END AS TFloat) AS PriceNext_external
+             , 0 :: TFloat AS PriceNext_external
 
-             , _tmpSumm.FromContainerId
-             , Container.Id AS ContainerId
+             , 0 :: Integer AS FromContainerId
+             , 0 :: Integer AS ContainerId
+             , _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.AccountId, _tmpMaster.JuridicalId_basis
              , _tmpMaster.isInfoMoney_80401
-             , _tmpMaster.CalcSumm          AS CalcSummCurrent,          CAST (COALESCE (_tmpSumm.CalcSumm, 0)          AS TFloat) AS CalcSummNext
-             , _tmpMaster.CalcSumm_external AS CalcSummCurrent_external, CAST (COALESCE (_tmpSumm.CalcSumm_external, 0) AS TFloat) AS CalcSummNext_external
+             , _tmpMaster.CalcSumm          AS CalcSummCurrent,          0 :: TFloat AS CalcSummNext
+             , _tmpMaster.CalcSumm_external AS CalcSummCurrent_external, 0 :: TFloat AS CalcSummNext_external
              , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpMaster.CalcCount_external, _tmpMaster.CalcSumm_external, _tmpMaster.OutCount, _tmpMaster.OutSumm
-             , Object_Unit.Id        AS UnitId
+             , _tmpMaster.UnitId
              , Object_Unit.ValueData AS UnitName
 
          FROM _tmpHistoryCost_PartionCell AS _tmpMaster
-              JOIN Container ON Container.ObjectId = _tmpMaster.AccountId
-                            AND Container.DescId   = zc_Container_Summ()
-              -- !!!ограничение!!!
-              JOIN tmpMaster_find ON tmpMaster_find.ContainerId = Container.Id
+              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = _tmpMaster.UnitId
 
-
-              INNER JOIN ContainerLinkObject AS CLO_Goods
-                                             ON CLO_Goods.ContainerId = Container.Id
-                                            AND CLO_Goods.DescId      = zc_ContainerLinkObject_Goods()
-                                            AND CLO_Goods.ObjectId    = _tmpMaster.GoodsId
-              INNER JOIN ContainerLinkObject AS CLO_Unit
-                                             ON CLO_Unit.ContainerId = Container.Id
-                                            AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
-                                            -- !!! Розподільчий комплекс
-                                            AND CLO_Unit.ObjectId    = _tmpMaster.UnitId
-
-              LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                            ON CLO_GoodsKind.ContainerId = Container.Id
-                                           AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-              LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                                            ON CLO_InfoMoney.ContainerId = Container.Id
-                                           AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
-              LEFT JOIN ContainerLinkObject AS CLO_InfoMoneyDetail
-                                            ON CLO_InfoMoneyDetail.ContainerId = Container.Id
-                                           AND CLO_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
-
-
-              LEFT JOIN (SELECT CLO_Goods.ObjectId                         AS GoodsId
-                              , COALESCE (CLO_GoodsKind.ObjectId, 0)       AS GoodsKindId
-                              , COALESCE (CLO_InfoMoney.ObjectId, 0)       AS InfoMoneyId
-                              , COALESCE (CLO_InfoMoneyDetail.ObjectId, 0) AS InfoMoneyId_Detail
-                              , _tmpMaster.FromContainerId                 AS FromContainerId
-                              , SUM (_tmpMaster.CalcSumm)                  AS CalcSumm
-                              , SUM (_tmpMaster.CalcSumm_external)         AS CalcSumm_external
-                         FROM
-                              -- Расчет суммы всех составляющих
-                             (SELECT _tmpChild.MasterContainerId AS ContainerId
-               --                    , _tmpChild.ContainerId AS FromContainerId
-                                   , 0 AS FromContainerId
-                                   , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
-                                   , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice ELSE 0 END) AS TFloat) AS CalcSumm_external
-                                   -- , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice_external ELSE 0 END) AS TFloat) AS CalcSumm_external
-
-                              FROM
-                                   -- Расчет цены
-                                   (SELECT _tmpMaster.ContainerId
-                                         , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
-                                                     THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
-                                                                    THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
-                                                               ELSE  0
-                                                          END
-                                                WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
-                                                   OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
-                                                     THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
-                                                ELSE 0
-                                           END AS OperPrice
-                                         /*, CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
-                                                     THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
-                                                                    THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
-                                                               ELSE  0
-                                                          END
-                                                WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) > 0)
-                                                   OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
-                                                     THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
-                                                ELSE 0
-                                           END AS OperPrice_external*/
-                                    FROM _tmpMaster
-                                    -- Розподільчий комплекс
-                                    WHERE _tmpMaster.UnitId = zc_Unit_RK()
-                                      AND inStartDate       >= lfGet_Object_Unit_PartionDate_isPartionCell()
-                                   ) AS _tmpPrice
-                                   JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId
-                                                 -- Отбрасываем в том случае если сам в себя
-                                                 -- AND _tmpChild.MasterContainerId <> _tmpChild.ContainerId
-                              GROUP BY _tmpChild.MasterContainerId
-               --                      , _tmpChild.ContainerId
-                             ) AS _tmpMaster
-
-                             LEFT JOIN Container ON Container.Id = _tmpMaster.ContainerId
-                             LEFT JOIN ContainerLinkObject AS CLO_Goods
-                                                           ON CLO_Goods.ContainerId = _tmpMaster.ContainerId
-                                                          AND CLO_Goods.DescId      = zc_ContainerLinkObject_Goods()
-                             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                           ON CLO_GoodsKind.ContainerId = _tmpMaster.ContainerId
-                                                          AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-                             LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                                                           ON CLO_InfoMoney.ContainerId = _tmpMaster.ContainerId
-                                                          AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
-                             LEFT JOIN ContainerLinkObject AS CLO_InfoMoneyDetail
-                                                           ON CLO_InfoMoneyDetail.ContainerId = _tmpMaster.ContainerId
-                                                          AND CLO_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
-                         GROUP BY CLO_Goods.ObjectId
-                                , COALESCE (CLO_GoodsKind.ObjectId, 0)
-                                , COALESCE (CLO_InfoMoney.ObjectId, 0)
-                                , COALESCE (CLO_InfoMoneyDetail.ObjectId, 0)
-                                , _tmpMaster.FromContainerId
-
-                        ) AS _tmpSumm ON _tmpSumm.GoodsId            = _tmpMaster.GoodsId
-                                     AND _tmpSumm.GoodsKindId        = _tmpMaster.GoodsKindId
-                                     AND _tmpSumm.InfoMoneyId        = _tmpMaster.InfoMoneyId
-                                     AND _tmpSumm.InfoMoneyId_Detail = _tmpMaster.InfoMoneyId_Detail
-
-              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = zc_Unit_RK()
-
-            WHERE _tmpMaster.GoodsKindId        = COALESCE (CLO_GoodsKind.ObjectId, 0)
-              AND _tmpMaster.InfoMoneyId        = COALESCE (CLO_InfoMoney.ObjectId, 0)
-              AND _tmpMaster.InfoMoneyId_Detail = COALESCE (CLO_InfoMoneyDetail.ObjectId, 0)
         ;
+
 
      END IF; -- if inInsert <> 12345
 
@@ -4121,3 +4365,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2022', inEndDate:= '28.02.2022', inBranchId:= 0, inItearationCount:= 200, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (3705946, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.07.2024', inEndDate:= '31.07.2024', inBranchId:= 0, inItearationCount:= 100, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (4504111)
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2024', inEndDate:= '30.11.2024', inBranchId:= 3080683 , inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (4200836)
