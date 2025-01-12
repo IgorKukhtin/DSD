@@ -53,7 +53,7 @@ BEGIN
 
      --
      vbIsBranch_Itearation:= FALSE;
-     vbIsBranch_Itearation:= TRUE;
+     -- vbIsBranch_Itearation:= TRUE;
 
 
 RAISE INFO ' start all .<%>', CLOCK_TIMESTAMP();
@@ -201,6 +201,7 @@ end if;
 
      -- !!!Оптимизация!!!
      ANALYZE _tmpContainer_branch;
+
 
      -- Суммы, если есть Остаток или Движение - 2024.08
      CREATE TEMP TABLE tmpContainerList ON COMMIT DROP AS
@@ -388,7 +389,10 @@ end if;
      -- !!!Оптимизация!!!
      ANALYZE tmpContainerList;
 
--- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from  tmpContainerList where tmpContainerList.ContainerId_count = 9388811);
+RAISE INFO '_end tmpContainerList on ContainerId_count = .<%>  <%>'
+, (select count(*) from tmpContainerList WHERE tmpContainerList.ContainerId_count = 5043563)
+, (select count(*) from tmpContainerList WHERE tmpContainerList.ContainerId_count = 8651068)
+;
 
      -- группировка ПАРТИЙ - на складах ГП + zc_Unit_RK - 2024.08
      CREATE TEMP TABLE tmpContainerList_partion ON COMMIT DROP AS
