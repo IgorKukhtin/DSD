@@ -6,8 +6,8 @@ object dmData: TdmData
     ConnectionName = 'alan_shluz'
     Params.Strings = (
       'DriverID=PG'
-      'Password=vas6ok'
-      'User_Name=admin'
+      'Password=sqoII5szOnrcZxJVF1BL'
+      'User_Name=project'
       'Server=project-vds.vds.colocall.com'
       'Database=project')
     Left = 64

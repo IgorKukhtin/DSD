@@ -225,7 +225,7 @@ object DumpRestoreForm: TDumpRestoreForm
     Width = 120
     Height = 24
     TabOrder = 15
-    Text = 'vas6ok'
+    Text = 'sqoII5szOnrcZxJVF1BL'
   end
   object edPswRestore: TEdit
     Left = 681
@@ -234,7 +234,7 @@ object DumpRestoreForm: TDumpRestoreForm
     Height = 24
     Enabled = False
     TabOrder = 16
-    Text = 'vas6ok'
+    Text = 'sqoII5szOnrcZxJVF1BL'
   end
   object edPortDump: TEdit
     Left = 291

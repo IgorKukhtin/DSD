@@ -20,7 +20,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Datasnap.DBClient, cxCurrencyEdit;
+  Datasnap.DBClient, cxCurrencyEdit, dsdCommon;
 
 type
    TReplServerItem = record
@@ -402,8 +402,8 @@ begin
  {    with childZConnection do begin
         Connected:=false;
         HostName:= EditCountLinkObject.Text;  // integer-srv.alan.dp.ua
-        User    := EditCountDateObject.Text;  //'admin';
-        Password:= EditCountFloatObject.Text; //'vas6ok';
+        User    := EditCountDateObject.Text;  //'project';
+        Password:= EditCountFloatObject.Text; //'sqoII5szOnrcZxJVF1BL';
         Port    := StrToInt(EditCountStringObject.Text); //5432;
         DataBase:= EditCountBooleanObject.Text; // 'project';
         //
@@ -795,8 +795,8 @@ begin
         if not Assigned (ArrayReplServer) then
         begin
             HostName:= 'integer-srv.alan.dp.ua';
-            User    := 'admin';
-            Password:= 'vas6ok';
+            User    := 'project';
+            Password:= 'sqoII5szOnrcZxJVF1BL';
             Port    := 5432;
             DataBase:= 'project';
         end
