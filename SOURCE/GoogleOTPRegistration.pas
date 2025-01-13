@@ -64,17 +64,15 @@ begin
    IdHTTP.Request.CustomHeaders.FoldLines := False;
 
    sl := TStringList.Create;
-   sl.Add('chs=200x200');
-   sl.Add('cht=qr');
-   sl.Add('chld=M');
-   sl.Add('chl=otpauth://totp/' + FProjectName + ':' + FUserName + '?secret=' + FGoogleSecret +
+   sl.Add('size=200x200');
+   sl.Add('data=otpauth://totp/' + FProjectName + ':' + FUserName + '?secret=' + FGoogleSecret +
                      '&issuer=' + FProjectName);
 
    tmpStream := TMemoryStream.Create;
    Graphic := TGraphicClass(TWICImage).Create;
    try
      try
-       IdHTTP.POST('https://chart.apis.google.com/chart', sl, tmpStream);
+       IdHTTP.POST('https://api.qrserver.com/v1/create-qr-code/', sl, tmpStream);
        tmpStream.Seek(0, soFromBeginning);
        Graphic.LoadFromStream(tmpStream);
        cxImage.Picture.Graphic := Graphic;
