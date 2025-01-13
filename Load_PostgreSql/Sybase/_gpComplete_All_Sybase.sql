@@ -45,7 +45,9 @@ BEGIN
 
    --IF vbMovementDescId NOT IN (zc_Movement_ReturnIn()) THEN RETURN; END IF;
 
-    -- IF vbOperDate >= '28.11.2024' AND vbMovementDescId not IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss()) THEN RETURN; END IF;
+   --IF vbMovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) 
+   --   OR NOT EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (zc_Unit_RK()))
+   --THEN RETURN; END IF;
 
    --IF vbMovementDescId IN (zc_Movement_Inventory()) THEN RETURN; END IF;
    --IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 18 AND vbMovementDescId IN (zc_Movement_Inventory()) THEN RETURN; END IF;

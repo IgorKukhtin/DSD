@@ -18,6 +18,8 @@ $BODY$
   DECLARE vbIsReturnIn Boolean;
 BEGIN
 
+    --inIsBefoHistoryCost:= FALSE;
+    --inGroupId:= 0;
 
 IF inIsBefoHistoryCost = TRUE
 THEN
