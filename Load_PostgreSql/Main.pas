@@ -21,7 +21,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   Vcl.ActnList, dsdAction, IdTCPConnection, IdTCPClient
-  , IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders, IdCTypes;
+  , IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders, IdCTypes, dsdCommon;
 
 type
   TCustomIdHTTP = class(TIdHTTP)
@@ -1723,8 +1723,8 @@ begin
             Connected:=false;
             HostName:='192.168.0.194';
             //HostName:='localhost';
-            User:='admin';
-            Password:='vas6ok';
+            User:='project';
+            Password:='sqoII5szOnrcZxJVF1BL';
             Database:='project_24012023';
             Port:=5432;
             Connected:=true;
@@ -1741,8 +1741,8 @@ begin
             Connected:=false;
             //HostName:='192.168.0.194';
             HostName:='localhost';
-            User:='admin';
-            Password:='vas6ok';
+            User:='project';
+            Password:='sqoII5szOnrcZxJVF1BL';
             Database:='project_24012023';
             Port:=5432;
             Connected:=true;
@@ -1759,8 +1759,8 @@ begin
             Connected:=false;
             HostName:='integer-srv-a.alan.dp.ua';
             //HostName:='192.168.0.219';
-            User:='admin';
-            Password:='vas6ok';
+            User:='project';
+            Password:='sqoII5szOnrcZxJVF1BL';
             Database:='project';
             Connected:=true;
             //
@@ -1776,8 +1776,8 @@ begin
             Connected:=false;
             HostName:='integer-srv.alan.dp.ua';
             //HostName:='192.168.0.219';
-            User:='admin';
-            Password:='vas6ok';
+            User:='project';
+            Password:='sqoII5szOnrcZxJVF1BL';
             Database:='project';
             Connected:=true;
             //
@@ -1792,8 +1792,8 @@ begin
          with toZConnection do begin
             Connected:=false;
             HostName:='integer-srv-r.alan.dp.ua';
-            User:='admin';
-            Password:='vas6ok';
+            User:='project';
+            Password:='sqoII5szOnrcZxJVF1BL';
             Database:='project';
             Connected:=true;
             //
@@ -1808,8 +1808,8 @@ begin
          with toZConnection do begin
             Connected:=false;
             HostName:='192.168.0.194';
-            User:='admin';
-            Password:='vas6ok';
+            User:='project';
+            Password:='sqoII5szOnrcZxJVF1BL';
             Database:='project_master';
             Connected:=true;
             //
@@ -2793,8 +2793,8 @@ begin
           Connected:=false;
         //HostName:='integer-srv.alan.dp.ua';
           HostName:='192.168.0.219';
-          User:='admin';
-          Password:='vas6ok';
+            User:='project';
+            Password:='sqoII5szOnrcZxJVF1BL';
           Database:='project';
           Connected:=true;
        end
@@ -2802,8 +2802,8 @@ begin
        with ZConnection_test do begin
           Connected:=false;
           HostName:='project-vds.vds.colocall.com';
-          User:='admin';
-          Password:='vas6ok';
+            User:='project';
+            Password:='sqoII5szOnrcZxJVF1BL';
           Database:='pod_test_ok';
           Connected:=true;
        end;

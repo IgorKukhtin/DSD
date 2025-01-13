@@ -2653,7 +2653,7 @@ object MainForm: TMainForm
     DesignConnection = True
     HostName = '192.168.0.194'
     Port = 0
-    Password = 'vas6ok'
+    Password = 'sqoII5szOnrcZxJVF1BL'
     Protocol = 'postgresql-9'
     Left = 40
     Top = 328
@@ -2733,7 +2733,7 @@ object MainForm: TMainForm
     HostName = '192.168.0.194'
     Port = 0
     User = 'admin'
-    Password = 'vas6ok'
+    Password = 'sqoII5szOnrcZxJVF1BL'
     Protocol = 'postgresql-9'
     Left = 40
     Top = 272
@@ -2746,7 +2746,7 @@ object MainForm: TMainForm
     Port = 0
     Database = 'pod_test'
     User = 'admin'
-    Password = 'vas6ok'
+    Password = 'sqoII5szOnrcZxJVF1BL'
     Protocol = 'postgresql-9'
     Left = 472
     Top = 360
