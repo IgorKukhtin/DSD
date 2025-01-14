@@ -24,14 +24,14 @@ BEGIN
   --
   vb1:=
   (SELECT * 
-  FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+  FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
   , 'DELETE FROM SoldTable WHERE OperDate BETWEEN ''01.03.2023'' AND ''31.03.2023'''
   )); 
 
 
   vb2:=
   (SELECT * 
-  FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+  FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
 , '  INSERT INTO SoldTable (OperDate
                        , AccountId
                        , BranchId, JuridicalGroupId, JuridicalId, PartnerId, InfoMoneyId, PaidKindId, PaidKindId_bonus, RetailId, RetailReportId
@@ -882,7 +882,7 @@ BEGIN
 
   vb3:=
   (SELECT * 
-  FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+  FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
   , 'UPDATE SoldTable SET               -- Прибыль (только реализ)
                          Sale_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0)
                                        -- Прибыль с учетом бонусов (только реализ)
