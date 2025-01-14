@@ -427,8 +427,10 @@ BEGIN
            , CASE WHEN COALESCE (tmpTransportGoods.CarTrailerName, '') = '' THEN 'немає' ELSE tmpTransportGoods.CarTrailerName END ::TVarChar AS CarTrailerName
            , tmpTransportGoods.CarTrailerModelName
            , tmpTransportGoods.PersonalDriverName
+           , CASE WHEN COALESCE (ObjectString_PersonalDriver_INN.ValueData,'') <> '' THEN '('||ObjectString_PersonalDriver_INN.ValueData||')' ELSE '' END ::TVarChar AS INN_PersonalDriver
            , COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData) :: TVarChar AS DriverCertificate
-           , CASE WHEN TRIM (COALESCE (tmpTransportGoods.MemberName1, '')) = '' THEN tmpTransportGoods.PersonalDriverName ELSE tmpTransportGoods.MemberName1 END :: TVarChar AS MemberName1
+           , ('(водій) '||CASE WHEN TRIM (COALESCE (tmpTransportGoods.MemberName1, '')) = '' THEN tmpTransportGoods.PersonalDriverName ELSE tmpTransportGoods.MemberName1 END) :: TVarChar AS MemberName1
+           , CASE WHEN COALESCE (ObjectString_Member1_INN.ValueData,'') <> '' THEN '('||ObjectString_Member1_INN.ValueData||')' ELSE '' END               ::TVarChar AS INN_Member1
            , tmpTransportGoods.MemberName2
            , tmpTransportGoods.MemberName3
            , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn() THEN 'Комірник ' ||tmpTransportGoods.MemberName4 ELSE tmpTransportGoods.MemberName7 END AS MemberName4  -- 4 и 7 меняем местами для возврата
@@ -642,6 +644,23 @@ BEGIN
 
             -- LEFT JOIN tmpCar_param ON tmpCar_param.CarId = tmpTransportGoods.CarId AND 1=0
             -- LEFT JOIN tmpCar_param AS tmpCarTrailer_param ON tmpCarTrailer_param.CarId = tmpTransportGoods.CarTrailerId AND 1=0
+            --ИНН для водителя
+            LEFT JOIN ObjectLink AS OL_PersonalDriver_Member
+                                 ON OL_PersonalDriver_Member.objectid = tmpTransportGoods.PersonalDriverId 
+                                AND OL_PersonalDriver_Member.descid = zc_objectlink_personal_member()  
+
+            LEFT JOIN ObjectString AS ObjectString_PersonalDriver_INN
+                                   ON ObjectString_PersonalDriver_INN.ObjectId = OL_PersonalDriver_Member.ChildObjectId
+                                  AND ObjectString_PersonalDriver_INN.DescId = zc_ObjectString_Member_INN()
+            --ИНН для "отримав водій/експедитор"
+            LEFT JOIN ObjectLink AS OL_Member1_Member
+                                 ON OL_Member1_Member.objectid = CASE WHEN COALESCE (tmpTransportGoods.MemberId1,0) = 0 THEN tmpTransportGoods.PersonalDriverId ELSE tmpTransportGoods.MemberId1 END
+                                AND OL_Member1_Member.descid = zc_objectlink_personal_member()  
+
+            LEFT JOIN ObjectString AS ObjectString_Member1_INN
+                                   ON ObjectString_Member1_INN.ObjectId = OL_Member1_Member.ChildObjectId
+                                  AND ObjectString_Member1_INN.DescId = zc_ObjectString_Member_INN()
+
 
        WHERE Movement.Id = inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -821,8 +840,8 @@ BEGIN
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / 1
                  + COALESCE (tmpMI.Box_Weight, 0) / 1
                    ) AS TFloat) AS TotalWeight_BruttoKg
-
-
+             --температурный режим - 0-6
+           , 'від 0 до 6' ::TVarChar AS Temperatura_Text
        FROM tmpMI
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
