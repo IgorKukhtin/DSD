@@ -19,7 +19,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
+  {$IFDEF VER340}, REST.Types, REST.Client, REST.Response.Adapter{$ENDIF};
 
 type
   TGoogleOTPRegistrationForm = class(TForm)
@@ -54,36 +55,93 @@ begin
 end;
 
 procedure TGoogleOTPRegistrationForm.FormShow(Sender: TObject);
-  var tmpStream: TMemoryStream;  Graphic: TGraphic;
-      sl: TStringList;
+  var
+{$IFDEF VER340}
+    FRESTClient: TRESTClient;
+    FRESTResponse: TRESTResponse;
+    FRESTRequest: TRESTRequest;
+    tmpStream: TMemoryStream;  Graphic: TGraphic;
+{$ELSE}
+    tmpStream: TMemoryStream;  Graphic: TGraphic;
+    sl: TStringList;
+{$ENDIF}
 begin
-   IdHTTP.Request.Clear;
-   IdHTTP.Request.CustomHeaders.Clear;
-   IdHTTP.Request.ContentType := 'application/x-www-form-urlencoded';
-   IdHTTP.Request.ContentEncoding := 'utf-8';
-   IdHTTP.Request.CustomHeaders.FoldLines := False;
 
-   sl := TStringList.Create;
-   sl.Add('size=200x200');
-   sl.Add('data=otpauth://totp/' + FProjectName + ':' + FUserName + '?secret=' + FGoogleSecret +
-                     '&issuer=' + FProjectName);
+{$IFDEF VER340}
+  FRESTClient := TRESTClient.Create('');
+  FRESTResponse := TRESTResponse.Create(Nil);
+  FRESTRequest := TRESTRequest.Create(Nil);
+  FRESTRequest.Client := FRESTClient;
+  FRESTRequest.Response := FRESTResponse;
+  try
+    FRESTClient.BaseURL := 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/' +
+      FProjectName + ':' + FUserName + '?secret=' + FGoogleSecret + '%26issuer=' + FProjectName;
+    FRESTClient.ContentType := 'application/x-www-form-urlencoded';
 
-   tmpStream := TMemoryStream.Create;
-   Graphic := TGraphicClass(TWICImage).Create;
-   try
-     try
-       IdHTTP.POST('https://api.qrserver.com/v1/create-qr-code/', sl, tmpStream);
-       tmpStream.Seek(0, soFromBeginning);
-       Graphic.LoadFromStream(tmpStream);
-       cxImage.Picture.Graphic := Graphic;
-     except
-     end;
-   finally
-     tmpStream.Free;
-     Graphic.Free;
-     sl.Free;
-   end;
+    FRESTRequest.ClearBody;
+    FRESTRequest.Method := TRESTRequestMethod.rmPOST;
+    FRESTRequest.Resource := '';
+    // required parameters
+    FRESTRequest.Params.Clear;
 
+    try
+      FRESTRequest.Execute;
+    except
+    end;
+
+    if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'image/png') then
+    begin
+
+      tmpStream := TMemoryStream.Create;
+      Graphic := TGraphicClass(TWICImage).Create;
+      try
+        try
+          tmpStream.WriteBuffer(FRESTResponse.RawBytes[0], Length(FRESTResponse.RawBytes));
+          tmpStream.Seek(0, soFromBeginning);
+          Graphic.LoadFromStream(tmpStream);
+          cxImage.Picture.Graphic := Graphic;
+        except
+        end;
+      finally
+        tmpStream.Free;
+        Graphic.Free;
+      end;
+    end;
+
+  finally
+    FRESTResponse.Free;
+    FRESTRequest.Free;
+    FRESTClient.Free;
+  end;
+{$ELSE}
+
+  IdHTTP.Request.Clear;
+  IdHTTP.Request.CustomHeaders.Clear;
+  IdHTTP.Request.ContentType := 'application/x-www-form-urlencoded';
+  IdHTTP.Request.ContentEncoding := 'utf-8';
+  IdHTTP.Request.CustomHeaders.FoldLines := False;
+
+  sl := TStringList.Create;
+  sl.Add('size=200x200');
+  sl.Add('data=otpauth://totp/' + FProjectName + ':' + FUserName + '?secret=' + FGoogleSecret +
+                    '&issuer=' + FProjectName);
+
+  tmpStream := TMemoryStream.Create;
+  Graphic := TGraphicClass(TWICImage).Create;
+  try
+    try
+      IdHTTP.POST('https://api.qrserver.com/v1/create-qr-code/', sl, tmpStream);
+     tmpStream.Seek(0, soFromBeginning);
+      Graphic.LoadFromStream(tmpStream);
+      cxImage.Picture.Graphic := Graphic;
+    except
+    end;
+  finally
+    tmpStream.Free;
+    Graphic.Free;
+    sl.Free;
+  end;
+{$ENDIF}
 end;
 
 end.
