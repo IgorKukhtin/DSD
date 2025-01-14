@@ -35,7 +35,7 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
 
      RETURN QUERY
-     WITH tmpAll AS (SELECT * FROM Container_data WHERE Container_data.StartDate = inStartDate AND VerId IN (1,2,3))
+     WITH tmpAll AS (SELECT * FROM Container_data WHERE Container_data.StartDate = inStartDate AND VerId IN (1,2,3,4,5))
       , tmp_list_all AS (SELECT DISTINCT VerId FROM tmpAll)
       , tmp_list AS (SELECT VerId, ROW_NUMBER() OVER (ORDER BY VerId ASC) AS Ord FROM tmp_list_all)
       , tmp_res AS (SELECT tmpAll.Id AS ContainerId
@@ -98,7 +98,7 @@ BEGIN
            OR (tmp_res.Amount_1 <> tmp_res.Amount_5 AND tmp_res.Ord_5 > 0)
 
        UNION ALL
-        SELECT tmp_list.VerId AS ContainerId
+        SELECT (-1 * tmp_list.VerId) :: Integer AS ContainerId
                -- 1
              , SUM (tmpAll.Amount)           :: TFloat
              , SUM (tmpAll.Amount_data_real) :: TFloat
@@ -126,7 +126,7 @@ BEGIN
         GROUP BY tmp_list.VerId
 
        UNION ALL
-        SELECT tmp_list.VerId AS ContainerId
+        SELECT (-1 * tmp_list.VerId) :: Integer AS ContainerId
                -- 1
              , 0 :: TFloat
              , 0 :: TFloat
@@ -154,7 +154,7 @@ BEGIN
         GROUP BY tmp_list.VerId
 
        UNION ALL
-        SELECT tmp_list.VerId AS ContainerId
+        SELECT (-1 * tmp_list.VerId) :: Integer AS ContainerId
                -- 1
              , 0 :: TFloat
              , 0 :: TFloat
@@ -239,3 +239,14 @@ $BODY$
 -- SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.01.2023', inSession:= '5')
 -- SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.01.2022', inSession:= '5')
 -- SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.12.2024', inSession:= '5')
+WITH tmp AS (SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.12.2024', inSession:= '5'))
+   , rem AS (select tmp.ContainerId, Container.Amount,  Container.Amount - coalesce (sum (coalesce (MovementItemContainer.Amount, 0)), 0) as calcAmount
+             from tmp
+                  left join Container on Container.Id = tmp.ContainerId
+                  left join MovementItemContainer on MovementItemContainer.ContainerId = tmp.ContainerId
+                                                 and OperDate >= '01.12.2024'
+             group by tmp.ContainerId, Container.Amount
+            )
+select tmp.ContainerId, rem.Amount, rem.calcAmount, tmp.*
+from tmp
+     left join rem on rem.ContainerId = tmp.ContainerId
