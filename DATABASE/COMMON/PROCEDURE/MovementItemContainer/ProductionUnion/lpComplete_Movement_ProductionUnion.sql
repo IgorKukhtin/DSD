@@ -1591,6 +1591,15 @@ end if;
                                                         THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItemChild.PartionGoodsDate
                                                                                              , inGoodsKindId_complete := _tmpItemChild.GoodsKindId_complete
                                                                                               )
+                                                    -- Основное сырье (тоже ПФ-ГП)
+                                                    WHEN vbIsPartionDate_Unit_From = TRUE
+                                                     AND _tmpItemChild.PartionGoodsDate <> zc_DateEnd()
+                                                     AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
+                                                     -- + Учет по дате партии - для док Произ-смешивание(расход)
+                                                     AND EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = _tmpItemChild.GoodsId AND OB.DescId = zc_ObjectBoolean_Goods_PartionDate() AND OB.ValueData = TRUE)
+                                                        THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItemChild.PartionGoodsDate
+                                                                                             , inGoodsKindId_complete := _tmpItemChild.GoodsKindId_complete
+                                                                                              )
                                                     -- Производство ПФ-ГП
                                                     WHEN vbIsPartionDate_Unit_From = TRUE
                                                      AND _tmpItemChild.PartionGoodsDate <> zc_DateEnd()

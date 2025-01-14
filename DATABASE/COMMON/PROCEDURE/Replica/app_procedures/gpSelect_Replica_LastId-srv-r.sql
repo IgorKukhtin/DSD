@@ -128,7 +128,7 @@ BEGIN
                                            , gpSelect.Query
                                            , gpSelect.State
                                            , gpSelect.Query_start
-                                      FROM dblink('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok' :: Text
+                                      FROM dblink('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL' :: Text
                                                 , (' SELECT pId, Waiting, UseName, Query, State, Query_start'
                                                 || ' FROM gpSelect_pg_stat_activity()') :: Text
                                                  ) AS gpSelect (pId         Bigint

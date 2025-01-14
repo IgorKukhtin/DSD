@@ -34,7 +34,7 @@ BEGIN
 
 
      -- сохранили список по всем документам за соответствующий <Месяц начислений>
-     INSERT INTO _tmpMovement_Recalc (MovementId, StatusId, PersonalServiceListId, PaidKindId, ServiceDate, isRecalc)
+     INSERT INTO _tmpMovement_Recalc (MovementId, StatusId, PersonalServiceListId, PaidKindId, ServiceDate, isRecalc, isRecalc_next)
         SELECT Movement.Id AS MovementId
              , Movement.StatusId
              , COALESCE (MovementLinkObject_PersonalServiceList.ObjectId, 0)       AS PersonalServiceListId
@@ -55,6 +55,12 @@ BEGIN
                          THEN TRUE
                     ELSE FALSE
                END AS isRecalc
+               
+               -- для Відомість 4.Лікарняні за рахунок ПФ
+             , CASE WHEN MovementFloat_TotalSummCard.ValueData         <> 0
+                         THEN TRUE
+                    ELSE FALSE
+               END AS isRecalc_next
 
         FROM MovementDate AS MovementDate_ServiceDate
              INNER JOIN MovementDate AS MovementDate_ServiceDate_find
@@ -216,7 +222,7 @@ BEGIN
           -- Все документы в которые будем переносить сумму SummCardRecalc + SummCardSecondRecalc + SummAvCardSecondRecalc + SummNalogRecalc + SummNalogRetRecalc + SummChildRecalc + SummMinusExtRecalc + SummAddOthRecalc + SummFineOthRecalc + SummHospOthRecalc + SummCompensationRecalc (здесь нет документов в которых сумма "останется")
         , tmpMovement_to AS (SELECT MovementId, PersonalServiceListId, StatusId
                              FROM _tmpMovement_Recalc
-                             WHERE PaidKindId <> zc_Enum_PaidKind_FirstForm()
+                             WHERE PaidKindId <> zc_Enum_PaidKind_FirstForm() OR isRecalc_next = TRUE
                                AND EXISTS (SELECT 1 FROM tmpMI_from))
 
             -- Все элементы по которым будем искать куда переносить сумму SummCardRecalc + SummCardSecondRecalc + SummAvCardSecondRecalc + SummNalogRecalc + SummNalogRetRecalc + SummChildRecalc + SummMinusExtRecalc + SummAddOthRecalc + SummFineOthRecalc + SummHospOthRecalc + SummCompensationRecalc

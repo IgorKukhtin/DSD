@@ -29,7 +29,7 @@ BEGIN
          DELETE FROM _tmpMI_Recalc;
      ELSE
          -- таблица - по документам, для lpComplete_Movement_PersonalService_Recalc
-         CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer, PersonalServiceListId Integer, PaidKindId Integer, ServiceDate TDateTime, isRecalc Boolean) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer, PersonalServiceListId Integer, PaidKindId Integer, ServiceDate TDateTime, isRecalc Boolean, isRecalc_next Boolean) ON COMMIT DROP;
          -- таблица - по элементам, для lpComplete_Movement_PersonalService_Recalc
          CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer
                                         , MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer
