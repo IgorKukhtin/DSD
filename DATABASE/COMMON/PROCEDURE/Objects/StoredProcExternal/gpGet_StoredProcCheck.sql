@@ -72,7 +72,7 @@ BEGIN
       ELSE
           -- данные SRV-A 
           vbLastId_srv:= (WITH tmp_settings AS (SELECT gpSelect.Value :: Bigint AS LastId_srv
-                                                FROM dblink('host=192.168.0.213 dbname=project_a port=5432 user=admin password=vas6ok' :: Text
+                                                FROM dblink('host=192.168.0.213 dbname=project_a port=5432 user=project password=sqoII5szOnrcZxJVF1BL' :: Text
                                                           , (' SELECT Value'
                                                           || ' FROM _replica.settings WHERE Id = 2') :: Text
                                                            ) AS gpSelect (Value     TVarChar
