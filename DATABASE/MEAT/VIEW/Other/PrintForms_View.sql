@@ -1033,10 +1033,30 @@ AS
              zc_Movement_TransportGoods()
            , CAST ('TransportGoods' AS TVarChar)
            , CAST ('01.10.2021' AS TDateTime)
-           , CAST ('01.01.2200' AS TDateTime)
+           , CAST ('02.01.2025' AS TDateTime)
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TTN_43233918' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('41201250', '42599711', '41200660', '42465240', '34465801', '45293717', '42668161', '41360805', '43233918', '33259493'
+                                      , '44588869' -- Бунар
+                                      , '44608319' -- ОЛІВІЯ ТРЕНД
+                                      , '45041508'
+                                      , '45142498' -- на нового клиента Хотей 43233918
+                                      , '44915740' -- Нове юр.лице Корвус
+                                       )
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+      -- Печать ТТН для ОКПО c 03.01.2025
+      SELECT
+             zc_Movement_TransportGoods()
+           , CAST ('TransportGoods' AS TVarChar)
+           , CAST ('03.01.2025' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TTN_43233918_03012025' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('41201250', '42599711', '41200660', '42465240', '34465801', '45293717', '42668161', '41360805', '43233918', '33259493'
