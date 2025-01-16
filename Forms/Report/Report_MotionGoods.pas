@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox;
+  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox, dsdCommon;
 
 type
   TReport_MotionGoodsForm = class(TParentForm)

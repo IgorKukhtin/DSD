@@ -248,9 +248,9 @@ BEGIN
                              )
 
      , tmpCar_param AS (SELECT tmp.CarId
-                             , CASE WHEN COALESCE (ObjectFloat_Length.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Length.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Length
-                             , CASE WHEN COALESCE (ObjectFloat_Width.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Width.ValueData AS NUMERIC (16,0))   ::TVarChar END :: TVarChar  AS Width 
-                             , CASE WHEN COALESCE (ObjectFloat_Height.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Height.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Height
+                             , CASE WHEN COALESCE (ObjectFloat_Length.ValueData,0) = 0 THEN '0' ELSE CAST (ObjectFloat_Length.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Length
+                             , CASE WHEN COALESCE (ObjectFloat_Width.ValueData,0) = 0 THEN '0' ELSE CAST (ObjectFloat_Width.ValueData AS NUMERIC (16,0))   ::TVarChar END :: TVarChar  AS Width 
+                             , CASE WHEN COALESCE (ObjectFloat_Height.ValueData,0) = 0 THEN '0' ELSE CAST (ObjectFloat_Height.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Height
                              , COALESCE (ObjectFloat_Weight.ValueData, 0) AS Weight
                              , COALESCE (ObjectFloat_Year.ValueData, 0)   AS Year
                              , ObjectString_VIN.ValueData                 AS VIN
@@ -460,9 +460,9 @@ BEGIN
         --, tmpCar_param.Length :: TVarChar  AS Length
         --, tmpCar_param.Width  :: TVarChar  AS Width 
         --, tmpCar_param.Height :: TVarChar  AS Height
-          , (select tmpCar_param.Length from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS Length
-          , (select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS Width 
-          , (select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS Height
+          , (select tmpCar_param.Length from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: Integer  AS Length
+          , (select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: Integer  AS Width 
+          , (select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: Integer  AS Height
 
           --вага авто в кг
           , CASE WHEN COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId), 0)

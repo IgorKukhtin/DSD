@@ -13,16 +13,21 @@ RETURNS void AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
+   DECLARE vbUnitId_from Integer;
+   DECLARE vbUnitId_to Integer;
    DECLARE vbKoef Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
 
      -- определяем нужно добавлять или минусовать кол-во из накладной перемещения
-     vbKoef := (CASE WHEN inIsAdd = True THEN 1 ELSE -1 END);
+     vbKoef := (CASE WHEN inIsAdd = TRUE THEN 1 ELSE -1 END);
      
      -- определяем
      vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+     -- определяем
+     vbUnitId_from:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Send AND MLO.DescId = zc_MovementLinkObject_From());
+     vbUnitId_to:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Send AND MLO.DescId = zc_MovementLinkObject_To());
      
      -- сохранили
      PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                 := COALESCE (tmp.MovementItemId, 0)
@@ -60,7 +65,14 @@ BEGIN
                 , (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI_Send.Amount, 0)) :: TFloat  AS Amount
 
            FROM (SELECT MovementItem.ObjectId                                    AS GoodsId
-                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)            AS GoodsKindId
+                        -- 
+                      , CASE WHEN vbUnitId_from IN (8445)     -- Склад МИНУСОВКА 
+                              AND vbUnitId_to   IN (8447)  -- ЦЕХ ковбасних виробів
+                              AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = zc_GoodsKind_Basis()
+                             THEN 8338 -- морож.
+                         ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                        END AS GoodsKindId
+                        -- 
                       , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
                       , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
                       , SUM (MovementItem.Amount) * vbKoef                       AS Amount
