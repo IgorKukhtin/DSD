@@ -17,6 +17,10 @@ BEGIN
 
    -- проверка прав пользовател€ на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_MemberPersonalServiceList());
+   IF COALESCE (inId,0) = -1
+   THEN
+        RAISE EXCEPTION 'ќшибка.Ёлемент не сохранен.';
+   END IF;
 
    IF COALESCE (inId, 0) = 0
    THEN
