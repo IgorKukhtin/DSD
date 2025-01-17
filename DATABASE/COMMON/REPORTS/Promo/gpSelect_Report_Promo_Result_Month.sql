@@ -616,6 +616,7 @@ BEGIN
                                     AND COALESCE (tmpSaleReturn.GoodsKindId,0) = COALESCE (MI_PromoGoods.GoodsKindId,0)
                                     AND tmpSaleReturn.DateMonth = MI_PromoGoods.Month_Partner
                                     AND inIsReal = TRUE
+        WHERE COALESCE (MI_PromoGoods.AmountOut,0) <> 0
         ;
 END;
 $BODY$
@@ -624,6 +625,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.01.25         *
  21.11.24         *
 */
 
