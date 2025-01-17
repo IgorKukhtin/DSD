@@ -202,7 +202,6 @@ BEGIN
                   GROUP BY MovementItem.ParentId
                          , MovementItem.MovementId
                          , MIDate_OperDate.ValueData
-
                      )
 
    --док продаж и возвратов по акциям
@@ -616,7 +615,9 @@ BEGIN
                                     AND COALESCE (tmpSaleReturn.GoodsKindId,0) = COALESCE (MI_PromoGoods.GoodsKindId,0)
                                     AND tmpSaleReturn.DateMonth = MI_PromoGoods.Month_Partner
                                     AND inIsReal = TRUE
-        WHERE COALESCE (MI_PromoGoods.AmountOut,0) <> 0
+        WHERE COALESCE (MI_PromoGoods.AmountOut,0) <> 0 
+           OR (MI_PromoGoods.Month_Partner >= DATE_TRUNC ('MONTH', Movement_Promo.StartSale) 
+           AND MI_PromoGoods.Month_Partner <= Movement_Promo.EndSale)
         ;
 END;
 $BODY$
