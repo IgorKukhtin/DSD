@@ -1,23 +1,23 @@
 inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 420
-  ClientWidth = 1030
-  ExplicitWidth = 1046
+  ClientWidth = 1071
+  ExplicitWidth = 1087
   ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1030
+    Width = 1071
     Height = 394
     ExplicitWidth = 1030
     ExplicitHeight = 394
     ClientRectBottom = 394
-    ClientRectRight = 1030
+    ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1030
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
-        Width = 1030
+        Width = 1071
         Height = 394
         ExplicitWidth = 1030
         ExplicitHeight = 394
@@ -961,6 +961,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 80
           end
+          object isEtiketka: TcxGridDBColumn
+            Caption = #1057#1093'. '#1089' '#1101#1090#1080#1082'. '#1087#1088#1080' '#1087#1077#1088#1077#1089#1086#1088#1090'.'
+            DataBinding.FieldName = 'isEtiketka'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1093#1077#1084#1072' '#1089' '#1101#1090#1080#1082#1077#1090#1082#1086#1081' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1086#1088#1090#1077
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -1651,6 +1660,22 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         end>
       isShowModal = True
     end
+    object actUpdate_isEtiketka: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_isEtiketka
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isEtiketka
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1057#1093#1077#1084#1072' '#1089' '#1101#1090#1080#1082#1077#1090#1082#1086#1081' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1086#1088#1090#1077'" ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1057#1093#1077#1084#1072' '#1089' '#1101#1090#1080#1082#1077#1090#1082#1086#1081' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1086#1088#1090#1077'" ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 76
+      RefreshOnTabSetChanges = True
+    end
     object actOpenUnitPeresortForm: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
@@ -1871,6 +1896,18 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_isEtiketka'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad'
         end
         item
@@ -1956,6 +1993,10 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
     end
     object bbOpenUnitPeresortForm: TdxBarButton
       Action = actOpenUnitPeresortForm
+      Category = 0
+    end
+    object bbUpdate_isEtiketka: TdxBarButton
+      Action = actUpdate_isEtiketka
       Category = 0
     end
   end
@@ -2443,5 +2484,47 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
     PackSize = 1
     Left = 504
     Top = 264
+  end
+  object spUpdate_isEtiketka: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_isEtiketka'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEtiketka'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isEtiketka'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 336
+    Top = 272
   end
 end

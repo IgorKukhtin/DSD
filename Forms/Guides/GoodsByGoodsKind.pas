@@ -80,6 +80,10 @@ type
     isNotDate: TcxGridDBColumn;
     actOpenUnitPeresortForm: TdsdOpenForm;
     bbOpenUnitPeresortForm: TdxBarButton;
+    isEtiketka: TcxGridDBColumn;
+    spUpdate_isEtiketka: TdsdStoredProc;
+    actUpdate_isEtiketka: TdsdDataSetRefresh;
+    bbUpdate_isEtiketka: TdxBarButton;
   private
     { Private declarations }
   public
