@@ -92,6 +92,14 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             Options.Editing = False
             Width = 40
           end
+          object isRePack: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1087#1072#1082
+            DataBinding.FieldName = 'isRePack'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'

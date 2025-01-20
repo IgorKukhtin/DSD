@@ -104,6 +104,7 @@ type
     isPartionCell_min: TcxGridDBColumn;
     Color_NormInDays: TcxGridDBColumn;
     Marker_NormInDays: TcxGridDBColumn;
+    isRePack: TcxGridDBColumn;
   private
     { Private declarations }
   public
