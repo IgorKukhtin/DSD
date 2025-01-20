@@ -19,6 +19,10 @@ BEGIN
    -- проверка прав пользовател€ на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_MemberSheetWorkTime());
 
+   IF COALESCE (inId,0) = -1
+   THEN
+        RAISE EXCEPTION 'ќшибка.Ёлемент не сохранен.';
+   END IF;
 
    -- проверка
    IF COALESCE (inPersonalServiceListId, 0) = 0 AND COALESCE (ioIsAll, FALSE) = FALSE

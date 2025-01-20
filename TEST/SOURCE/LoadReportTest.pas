@@ -135,7 +135,6 @@ begin
 
 end;
 
-
 procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
