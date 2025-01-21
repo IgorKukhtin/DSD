@@ -204,22 +204,25 @@ $BODY$
 
    DECLARE vbIsSummIn Boolean;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
-    vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
      
      -- !!!замена!!!
-     inisPartionCell:= inIsOperDate_Partion;
+     IF inIsInfoMoney = TRUE THEN inIsOperDate_Partion:= TRUE; END IF;
 
-    -- !!!определяется!!!
-    vbIsSummIn:= -- Отчеты руководитель сырья
-                 NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647)
-                 -- Ограничение просмотра с/с
-             AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)
-            ;
+     -- !!!замена!!!
+     inisPartionCell:= inIsOperDate_Partion;
+     
+     -- !!!определяется!!!
+     vbIsSummIn:= -- Отчеты руководитель сырья
+                  NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647)
+                  -- Ограничение просмотра с/с
+              AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)
+             ;
 
     -- таблица -
     CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
@@ -1212,8 +1215,8 @@ BEGIN
         , View_InfoMoneyDetail.InfoMoneyName            AS InfoMoneyName_Detail
         , View_InfoMoneyDetail.InfoMoneyName_all        AS InfoMoneyName_all_Detail
 
-        , tmpMIContainer_group.ContainerId              AS ContainerId_Summ
-        , tmpMIContainer_group.ContainerId_count        AS ContainerId_count
+        , CASE WHEN tmpMIContainer_group.ContainerId > 0       THEN tmpMIContainer_group.ContainerId       ELSE tmpMIContainer_group.ContainerId_count_max END :: Integer AS ContainerId_Summ
+        , CASE WHEN tmpMIContainer_group.ContainerId_count > 0 THEN tmpMIContainer_group.ContainerId_count ELSE tmpMIContainer_group.ContainerId_begin_max END :: Integer AS ContainerId_count
 
         , tmpMIContainer_group.ContainerId_count_max :: Integer
         , tmpMIContainer_group.ContainerId_begin_max :: Integer
