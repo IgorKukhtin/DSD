@@ -109,7 +109,7 @@ RETURNS TABLE (AccountId Integer
              , CountSendOut_byCount       TFloat
              , CountSendOnPriceIn_byCount  TFloat
              , CountSendOnPriceOut_byCount TFloat
-             
+
               )
 AS
 $BODY$
@@ -132,46 +132,82 @@ BEGIN
     END IF;
 
 
-    -- ускорение - ОЛАП + Только просмотр Аудитор + Просмотр СБ
+    -- ускорение - ОЛАП + Голота К.О. + Только просмотр Аудитор + Просмотр СБ
     vb_IsContainer_OLAP:= inEndDate < '01.01.2024' AND (inUserId IN (5, 6604558)
                                                      OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (10597056, 447972))
-                                                       );
+                                                       )
+                                                   --AND inUserId <> 5
+                                                  ;
 
-    -- 01.01.2021
-    IF vb_IsContainer_OLAP = TRUE AND inEndDate < '01.01.2021'
-       AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.01.2021' AND Container_data.VerId > 0)
+    -- ускорение - ОЛАП + Голота К.О. + Только просмотр Аудитор + Просмотр СБ
+    IF vb_IsContainer_OLAP = FALSE AND 1=1
     THEN
-        vbStartDate_olap:= '01.01.2021';
-        -- 
-        vbVerId_olap:= (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
+        vb_IsContainer_OLAP:= inEndDate <= '31.12.2024' AND (inUserId IN (5, 6604558)
+                                                          OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (10597056, 447972))
+                                                            )
+                                                      --AND inUserId <> 5
+                                                       ;
+    END IF;
 
-    -- 01.01.2022
-    ELSEIF vb_IsContainer_OLAP = TRUE AND inEndDate < '01.01.2022'
-       AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.01.2022' AND Container_data.VerId > 0)
+
+    IF 1=0
     THEN
-        vbStartDate_olap:= '01.01.2022';
-        -- 
-        vbVerId_olap:= (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
-
-    -- 01.01.2023
-    ELSEIF vb_IsContainer_OLAP = TRUE AND inEndDate < '01.01.2023'
-       AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.01.2023' AND Container_data.VerId > 0)
-    THEN
-        vbStartDate_olap:= '01.01.2023';
-        -- 
-        vbVerId_olap:= (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
-
-    -- 01.01.2024
-    ELSEIF vb_IsContainer_OLAP = TRUE AND inEndDate < '01.01.2024'
-       AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.01.2024' AND Container_data.VerId > 0)
-    THEN
-        vbStartDate_olap:= '01.01.2024';
-        -- 
-        vbVerId_olap:= (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
-
-    ELSE
         vb_IsContainer_OLAP:= FALSE;
+    ELSE
+        -- 01.01.2021
+        IF vb_IsContainer_OLAP = TRUE AND inEndDate < '01.01.2021'
+           AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.01.2021' AND Container_data.VerId > 0)
+        THEN
+            vbStartDate_olap:= '01.01.2021';
+            --
+            vbVerId_olap:= (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
 
+        -- 01.01.2022
+        ELSEIF vb_IsContainer_OLAP = TRUE AND inEndDate < '01.01.2022'
+           AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.01.2022' AND Container_data.VerId > 0)
+        THEN
+            vbStartDate_olap:= '01.01.2022';
+            --
+            vbVerId_olap:= (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
+
+        -- 01.01.2023
+        ELSEIF vb_IsContainer_OLAP = TRUE AND inEndDate < '01.01.2023'
+           AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.01.2023' AND Container_data.VerId > 0)
+        THEN
+            vbStartDate_olap:= '01.01.2023';
+            --
+            vbVerId_olap:= (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
+
+        -- 01.01.2024
+        ELSEIF vb_IsContainer_OLAP = TRUE AND inEndDate < '01.01.2024'
+           AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.01.2024' AND Container_data.VerId > 0)
+        THEN
+            vbStartDate_olap:= '01.01.2024';
+            --
+            vbVerId_olap:= (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
+
+        -- 01.12.2024
+        ELSEIF vb_IsContainer_OLAP = TRUE AND inEndDate <= '30.11.2024'
+           AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.12.2024' AND Container_data.VerId > 0)
+           AND COALESCE (inGoodsId, 0) = 0
+        THEN
+            vbStartDate_olap:= '01.12.2024';
+            --
+            vbVerId_olap:= 2; -- (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
+
+        -- 01.12.2024
+        ELSEIF vb_IsContainer_OLAP = TRUE AND inEndDate <= '31.12.2024'
+           AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.01.2025' AND Container_data.VerId = 3)
+           AND COALESCE (inGoodsId, 0) = 0
+        THEN
+            vbStartDate_olap:= '01.01.2025';
+            --
+            vbVerId_olap:= 3; -- (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
+
+        ELSE
+            vb_IsContainer_OLAP:= FALSE;
+
+        END IF;
     END IF;
 
 
@@ -194,7 +230,7 @@ BEGIN
             INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
                SELECT Object.Id AS LocationId
                     , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit()
-                           WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
+                           WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car()
                            WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
                       END AS DescId
                     , tmpDesc.ContainerDescId
@@ -224,12 +260,12 @@ BEGIN
         -- группа подразделений или подразделение или место учета (МО, Авто)
         IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
         THEN
-            INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)     
+            INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
                SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
                     , zc_ContainerLinkObject_Unit()       AS DescId
                     , tmpDesc.ContainerDescId
                FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
-                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId 
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId
                          --UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE inUserId = zfCalc_UserAdmin() :: Integer
                                ) AS tmpDesc ON 1 = 1
               ;
@@ -238,8 +274,8 @@ BEGIN
             THEN
                 INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
                    SELECT Object.Id AS LocationId
-                        , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit() 
-                               WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
+                        , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit()
+                               WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car()
                                WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
                           END AS DescId
                         , tmpDesc.ContainerDescId
@@ -289,7 +325,7 @@ BEGIN
         inIsInfoMoney:= FALSE;
     END IF;
 
-                
+
     -- таблица -
     --CREATE TEMP TABLE _tmpListContainer (LocationId Integer, ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, GoodsId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
     --CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, CarId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
@@ -300,14 +336,45 @@ BEGIN
      ELSE
          CREATE TEMP TABLE _tmpListContainer (LocationId Integer, ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, GoodsId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
     END IF;
-    
+
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainer'))
      THEN
          DELETE FROM _tmpContainer;
      ELSE
         CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerDescId_count Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, CarId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
     END IF;
-       
+
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmp_Container_data'))
+     THEN
+         DELETE FROM tmp_Container_data;
+     ELSE
+         -- подключили !!!OLAP!!!
+         CREATE TEMP TABLE tmp_Container_data (StartDate             TDateTime ,
+                                               VerId                 Integer ,
+                                               Id                    SERIAL ,
+                                               DescId                INTEGER ,
+                                               ObjectId              Integer ,
+                                               Amount                TFloat  ,
+                                               Amount_data_real      TFloat  ,
+                                               ParentId              Integer ,
+     
+                                               KeyValue              TVarChar,
+                                               MasterKeyValue        BigInt,
+                                               ChildKeyValue         BigInt,
+                                               WhereObjectId         Integer
+                                              ) ON COMMIT DROP;
+    END IF;
+
+    -- подключили !!!OLAP!!!
+    IF vb_IsContainer_OLAP = TRUE
+    THEN
+        -- подключили !!!OLAP!!!
+        INSERT INTO tmp_Container_data SELECT * FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId = vbVerId_olap;
+        --
+        ANALYZE tmp_Container_data;
+
+    END IF;
 
 
     -- группа товаров или товар или все товары из проводок
@@ -317,7 +384,7 @@ BEGIN
              tmpGoods_os AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (9354099) AS lfSelect) -- МНМА + ОС
            , tmpGoods AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect WHERE vbIsAssetTo = FALSE
                          UNION ALL
-                         -- если отбор по группе ОС 
+                         -- если отбор по группе ОС
                           SELECT ObjectLink_Asset_AssetGroup.ObjectId AS GoodsId
                           FROM ObjectLink AS ObjectLink_Asset_AssetGroup
                           WHERE ObjectLink_Asset_AssetGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
@@ -374,11 +441,13 @@ BEGIN
                 LEFT JOIN Container ON Container.Id     = ContainerLinkObject.ContainerId
                                    AND Container.DescId = _tmpLocation.ContainerDescId
                 -- подключили !!!OLAP!!!
-                LEFT JOIN Container_data ON Container_data.Id        = Container.Id
-                                        -- подключили !!!OLAP!!!
-                                        AND Container_data.StartDate = vbStartDate_olap
-                                        AND Container_data.VerId     = vbVerId_olap
-                                        AND vb_IsContainer_OLAP      = TRUE
+                LEFT JOIN tmp_Container_data AS Container_data
+                -- LEFT JOIN Container_data
+                                             ON Container_data.Id        = Container.Id
+                                            -- подключили !!!OLAP!!!
+                                            AND Container_data.StartDate = vbStartDate_olap
+                                            AND Container_data.VerId     = vbVerId_olap
+                                            AND vb_IsContainer_OLAP      = TRUE
 
                 -- ограничили Товаром
                 INNER JOIN tmpGoods ON tmpGoods.GoodsId = CASE WHEN _tmpLocation.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
@@ -397,7 +466,7 @@ BEGIN
                 LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = ContainerLinkObject.ContainerId
                                                                  AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                 LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
-                
+
                 LEFT JOIN tmpGoods_os ON tmpGoods_os.GoodsId = tmpGoods.GoodsId
 
            WHERE (
@@ -472,11 +541,13 @@ BEGIN
                      INNER JOIN Container ON Container.Id     = tmpContainer.ContainerId
                                          AND Container.DescId = _tmpLocation.ContainerDescId
                      -- подключили !!!OLAP!!!
-                     LEFT JOIN Container_data ON Container_data.Id        = Container.Id
-                                             -- подключили !!!OLAP!!!
-                                             AND Container_data.StartDate = vbStartDate_olap
-                                             AND Container_data.VerId     = vbVerId_olap
-                                             AND vb_IsContainer_OLAP      = TRUE
+                     LEFT JOIN tmp_Container_data AS Container_data
+                     --LEFT JOIN Container_data
+                                                  ON Container_data.Id        = Container.Id
+                                                 -- подключили !!!OLAP!!!
+                                                 AND Container_data.StartDate = vbStartDate_olap
+                                                 AND Container_data.VerId     = vbVerId_olap
+                                                 AND vb_IsContainer_OLAP      = TRUE
 
                      LEFT JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
                      LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
@@ -552,11 +623,13 @@ BEGIN
                      INNER JOIN Container ON Container.Id = ContainerLinkObject.ContainerId
                                          AND Container.DescId = _tmpLocation.ContainerDescId
                      -- подключили !!!OLAP!!!
-                     LEFT JOIN Container_data ON Container_data.Id        = Container.Id
-                                             -- подключили !!!OLAP!!!
-                                             AND Container_data.StartDate = vbStartDate_olap
-                                             AND Container_data.VerId     = vbVerId_olap
-                                             AND vb_IsContainer_OLAP      = TRUE
+                     LEFT JOIN tmp_Container_data AS Container_data
+                     --LEFT JOIN Container_data
+                                                  ON Container_data.Id        = Container.Id
+                                                  -- подключили !!!OLAP!!!
+                                                  AND Container_data.StartDate = vbStartDate_olap
+                                                  AND Container_data.VerId     = vbVerId_olap
+                                                  AND vb_IsContainer_OLAP      = TRUE
 
                      LEFT JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
                      LEFT JOIN ContainerLinkObject AS CLO_Goods ON CLO_Goods.ContainerId = ContainerLinkObject.ContainerId
@@ -665,7 +738,7 @@ end if;
                                            AND _tmpListContainer_check.GoodsId   = _tmpListContainer.GoodsId
           WHERE _tmpListContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
             AND _tmpListContainer.AccountId > 0
-          
+
          ) AS _tmpListContainer_find
     WHERE _tmpListContainer.GoodsId = _tmpListContainer_find.GoodsId
       AND _tmpListContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
@@ -718,7 +791,7 @@ end if;
 
     -- Результат
     RETURN QUERY
-          WITH 
+          WITH
              tmpPriceList_Basis AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
                                          , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                          , ObjectHistory_PriceListItem.StartDate
@@ -752,8 +825,8 @@ end if;
                                        , _tmpContainer.ContainerDescId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
---                                       , MAX (_tmpContainer.ContainerId_count)AS ContainerId_count_max
-                                       , MAX (case when MIContainer.MovementDescId = zc_Movement_Sale() then MIContainer.MovementId else 0 end)AS ContainerId_count_max
+                                       , MAX (_tmpContainer.ContainerId_count)AS ContainerId_count_max
+--                                     , MAX (case when MIContainer.MovementDescId = zc_Movement_Sale() then MIContainer.MovementId else 0 end)AS ContainerId_count_max
                                        , MAX (_tmpContainer.ContainerId_begin) AS ContainerId_begin_max
 
                                        , _tmpContainer.LocationId
@@ -818,7 +891,7 @@ end if;
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                     AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossCount_20200() -- Кол-во, списание при реализации/перемещении по цене
-                                                    -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
+                                                    -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 --
                                                     AND MIContainer.isActive = TRUE
                                                         THEN MIContainer.Amount
                                                    ELSE 0
@@ -837,12 +910,12 @@ end if;
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS CountSendOnPrice_40200
-                                              
+
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                     AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossCount_20200() -- Кол-во, списание при реализации/перемещении по цене
-                                                    -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
+                                                    -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 --
                                                     AND MIContainer.isActive = FALSE
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
@@ -1014,14 +1087,14 @@ end if;
                                                    AND MovementBoolean_HistoryCost.ValueData = TRUE
                                                    AND _tmpContainer.AccountGroupId = zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
-                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
+                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 --
                                                        THEN MIContainer.Amount
                                                   WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND MIContainer.isActive = TRUE
                                                    AND _tmpContainer.AccountGroupId <> zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
-                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
+                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 --
                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
                                                        THEN MIContainer.Amount
                                                   ELSE 0
@@ -1041,13 +1114,13 @@ end if;
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS SummSendOnPrice_40200
-                                                                                          
+
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE
                                                    AND _tmpContainer.AccountGroupId = zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
-                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
+                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 --
                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
                                                        THEN -1 * MIContainer.Amount
                                                   WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
@@ -1055,7 +1128,7 @@ end if;
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND MIContainer.isActive = FALSE
                                                    AND _tmpContainer.AccountGroupId <> zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
-                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
+                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 --
                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
@@ -1172,7 +1245,7 @@ end if;
                                                   ELSE 0
                                              END) AS SummInventory
 
-                                       , SUM (COALESCE (tmpPriceList_Basis_gk.ValuePrice, tmpPriceList_Basis.ValuePrice) *                              
+                                       , SUM (COALESCE (tmpPriceList_Basis_gk.ValuePrice, tmpPriceList_Basis.ValuePrice) *
                                               CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
                                                     AND MIContainer.MovementDescId = zc_Movement_Inventory()
                                                         THEN MIContainer.Amount
@@ -1666,7 +1739,7 @@ end if;
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) <> 0  -- AS SummSendOnPrice_40200
-                                             
+
                                          -- ***REMAINS***
                                       OR SUM (MIContainer.Amount) <> 0 -- AS RemainsStart
                                   --остатки
@@ -1730,7 +1803,7 @@ end if;
 
                                        , 0 AS SummSendOnPriceIn
                                        , 0 AS SummSendOnPrice_10500
-                                       , 0 AS SummSendOnPrice_40200                                       
+                                       , 0 AS SummSendOnPrice_40200
                                        , 0 AS SummSendOnPriceOut
                                        , 0 AS SummSendOnPriceOut_10900
 
@@ -1755,7 +1828,7 @@ end if;
 
                                        , 0 AS SummProductionIn
                                        , 0 AS SummProductionOut
-                                       
+
                                          -- ***REMAINS***
                                        , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
                                        , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsEnd
@@ -1792,7 +1865,7 @@ end if;
                                   HAVING _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
 
                                  UNION ALL
-                                  -- CountCount      
+                                  -- CountCount
                                   SELECT _tmpContainer.ContainerDescId
                                        , _tmpContainer.ContainerDescId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
@@ -1852,7 +1925,7 @@ end if;
 
                                        , 0 AS SummSendOnPriceIn
                                        , 0 AS SummSendOnPrice_10500
-                                       , 0 AS SummSendOnPrice_40200                                       
+                                       , 0 AS SummSendOnPrice_40200
                                        , 0 AS SummSendOnPriceOut
                                        , 0 AS SummSendOnPriceOut_10900
 
@@ -1877,7 +1950,7 @@ end if;
 
                                        , 0 AS SummProductionIn
                                        , 0 AS SummProductionOut
-                                       
+
                                          -- ***REMAINS***
                                        , 0 AS  RemainsStart
                                        , 0 AS  RemainsEnd
@@ -1894,7 +1967,7 @@ end if;
                                   FROM _tmpContainer
                                         INNER JOIN Container ON Container.ParentId = _tmpContainer.ContainerId_begin
                                                             AND Container.DescId = zc_Container_CountCount()
-                                        LEFT JOIN MovementItemContainer AS MIContainer 
+                                        LEFT JOIN MovementItemContainer AS MIContainer
                                                                         ON MIContainer.ContainerId = Container.Id
                                                                        AND MIContainer.DescId = zc_MIContainer_CountCount()
                                                                        AND MIContainer.OperDate >= inStartDate
@@ -1927,7 +2000,7 @@ end if;
        , tmpErr_replace AS (SELECT DISTINCT tmpMIContainer.AccountId, tmpMIContainer.ContainerId_count
                             FROM tmpMIContainer
                             WHERE tmpMIContainer.AccountId = 9086 -- 20101 Продукция
-                              AND inUserId <> 5
+                            --AND inUserId <> 5
                             --AND 1=0
                            )
 
@@ -1964,7 +2037,7 @@ end if;
 
               , SUM (tmpMIContainer_all.CountSendOnPrice_10500)    :: TFloat AS CountSendOnPrice_10500
               , SUM (tmpMIContainer_all.CountSendOnPrice_40200)    :: TFloat AS CountSendOnPrice_40200
-              
+
               , SUM (tmpMIContainer_all.CountSale)               :: TFloat AS CountSale
               , SUM (tmpMIContainer_all.CountSale_10500)         :: TFloat AS CountSale_10500
               , SUM (tmpMIContainer_all.CountSale_40208)         :: TFloat AS CountSale_40208
@@ -2016,12 +2089,12 @@ end if;
               , SUM (tmpMIContainer_all.SummProductionOut)       :: TFloat AS SummProductionOut
 
                --  CountCount
-              , SUM (tmpMIContainer_all.CountStart_byCount)          :: TFloat AS  CountStart_byCount        
-              , SUM (tmpMIContainer_all.CountEnd_byCount)            :: TFloat AS  CountEnd_byCount          
-              , SUM (tmpMIContainer_all.CountIncome_byCount)         :: TFloat AS  CountIncome_byCount      
-              , SUM (tmpMIContainer_all.CountReturnOut_byCount)      :: TFloat AS  CountReturnOut_byCount    
-              , SUM (tmpMIContainer_all.CountSendIn_byCount)         :: TFloat AS  CountSendIn_byCount       
-              , SUM (tmpMIContainer_all.CountSendOut_byCount)        :: TFloat AS  CountSendOut_byCount      
+              , SUM (tmpMIContainer_all.CountStart_byCount)          :: TFloat AS  CountStart_byCount
+              , SUM (tmpMIContainer_all.CountEnd_byCount)            :: TFloat AS  CountEnd_byCount
+              , SUM (tmpMIContainer_all.CountIncome_byCount)         :: TFloat AS  CountIncome_byCount
+              , SUM (tmpMIContainer_all.CountReturnOut_byCount)      :: TFloat AS  CountReturnOut_byCount
+              , SUM (tmpMIContainer_all.CountSendIn_byCount)         :: TFloat AS  CountSendIn_byCount
+              , SUM (tmpMIContainer_all.CountSendOut_byCount)        :: TFloat AS  CountSendOut_byCount
               , SUM (tmpMIContainer_all.CountSendOnPriceIn_byCount)  :: TFloat AS  CountSendOnPriceIn_byCount
               , SUM (tmpMIContainer_all.CountSendOnPriceOut_byCount) :: TFloat AS  CountSendOnPriceOut_byCount
 
@@ -2040,7 +2113,7 @@ end if;
                 , tmpMIContainer_all.AssetToId
                 , tmpMIContainer_all.LocationId_by
       ;
-      
+
       --DROP TABLE _tmpListContainer;
       --DROP TABLE _tmpcontainer;
 END;

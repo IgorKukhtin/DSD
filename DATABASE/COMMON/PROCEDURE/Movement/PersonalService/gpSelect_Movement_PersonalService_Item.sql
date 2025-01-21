@@ -298,7 +298,7 @@ BEGIN
         , tmpMovement AS (SELECT Movement.Id
                                , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                                , MovementDate_ServiceDate.ValueData              AS ServiceDate
-                               , lpInsertFind_Object_ServiceDate (MovementDate_ServiceDate.ValueData) AS ServiceDateId
+                               , lpInsertFind_Object_ServiceDate_read (MovementDate_ServiceDate.ValueData) AS ServiceDateId
                           FROM tmpStatus
                                INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                   AND Movement.DescId = zc_Movement_PersonalService()
@@ -324,7 +324,7 @@ BEGIN
                           SELECT MovementDate_ServiceDate.MovementId             AS Id
                                , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                                , MovementDate_ServiceDate.ValueData              AS ServiceDate
-                               , lpInsertFind_Object_ServiceDate (MovementDate_ServiceDate.ValueData) AS ServiceDateId
+                               , lpInsertFind_Object_ServiceDate_read (MovementDate_ServiceDate.ValueData) AS ServiceDateId
                           FROM MovementDate AS MovementDate_ServiceDate
                                JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
                                             AND Movement.DescId = zc_Movement_PersonalService()
@@ -348,7 +348,7 @@ BEGIN
                           SELECT Movement.Id
                                , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                                , MovementDate_ServiceDate.ValueData              AS ServiceDate
-                               , lpInsertFind_Object_ServiceDate (MovementDate_ServiceDate.ValueData) AS ServiceDateId
+                               , lpInsertFind_Object_ServiceDate_read (MovementDate_ServiceDate.ValueData) AS ServiceDateId
                           FROM tmpStatus
                                INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                   AND Movement.DescId = zc_Movement_PersonalService()

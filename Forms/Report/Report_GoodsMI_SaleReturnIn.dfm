@@ -4,6 +4,7 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -468
   ExplicitWidth = 1378
   ExplicitHeight = 459
   PixelsPerInch = 96
@@ -1672,6 +1673,9 @@
           StoredProc = spSelect
         end>
       ShortCut = 0
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      ExportType = cxegExportToXlsx
     end
     object actPrint_byPartner: TdsdPrintAction
       Category = 'DSDLib'

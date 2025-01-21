@@ -186,6 +186,9 @@ $BODY$
 
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Movement_PersonalService_Item',inSession:= zfCalc_UserAdmin()); -- +
 
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_TransportFuel',inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Transport_ProfitLoss',inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Transport_ProfitLossPartner',inSession:= zfCalc_UserAdmin()); -- +
 
 -- --!!! SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsBalance',                 inSession:= zfCalc_UserAdmin()); -- + !!!
 
