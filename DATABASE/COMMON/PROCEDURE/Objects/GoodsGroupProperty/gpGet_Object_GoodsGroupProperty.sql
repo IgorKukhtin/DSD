@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsGroupProperty(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ParentId Integer, ParentName TVarChar
+             , QualityINN TVarChar
             ) AS
 $BODY$
 BEGIN
@@ -24,6 +25,7 @@ BEGIN
            , CAST ('' AS TVarChar)  AS Name 
            , CAST (0 as Integer)    AS ParentId
            , CAST ('' AS TVarChar)  AS ParentName
+           , CAST ('' AS TVarChar)  AS QualityINN
            ;
    ELSE
        RETURN QUERY 
@@ -33,11 +35,16 @@ BEGIN
            , Object.ValueData  AS Name
            , Object_Parent.Id        ::Integer  AS ParentId
            , Object_Parent.ValueData ::TVarChar AS ParentName
+           , ObjectString_QualityINN.ValueData ::TVarChar AS QualityINN
        FROM Object
         LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
                              ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object.Id
                             AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_QualityINN
+                               ON ObjectString_QualityINN.ObjectId = Object.Id
+                              And ObjectString_QualityINN.DescId = zc_ObjectString_GoodsGroupProperty_QualityINN()
        WHERE Object.Id = inId;
    END IF; 
   

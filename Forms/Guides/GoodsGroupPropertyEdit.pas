@@ -19,7 +19,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdGuides, cxMaskEdit, cxButtonEdit;
+  dsdGuides, cxMaskEdit, cxButtonEdit, dsdCommon;
 
 type
   TGoodsGroupPropertyEditForm = class(TParentForm)
@@ -41,6 +41,8 @@ type
     cxLabel3: TcxLabel;
     edParent: TcxButtonEdit;
     GuidesParent: TdsdGuides;
+    edQualityINN: TcxTextEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

@@ -2,8 +2,8 @@ object GoodsGroupPropertyParentEditForm: TGoodsGroupPropertyParentEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088'>'
-  ClientHeight = 174
-  ClientWidth = 295
+  ClientHeight = 195
+  ClientWidth = 292
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@ object GoodsGroupPropertyParentEditForm: TGoodsGroupPropertyParentEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 137
+    Left = 40
+    Top = 160
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object GoodsGroupPropertyParentEditForm: TGoodsGroupPropertyParentEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 137
+    Left = 184
+    Top = 160
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -57,6 +57,23 @@ object GoodsGroupPropertyParentEditForm: TGoodsGroupPropertyParentEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 102
+    Hint = #1030#1076#1077#1085#1090#1080#1092#1110#1082#1072#1094#1110#1081#1085#1080#1081' '#1085#1086#1084#1077#1088' '#1090#1074#1072#1088#1080#1085#1080' '#1074#1110#1076' '#1103#1082#1086#1111' '#1086#1090#1088#1080#1084#1072#1085#1086' '#1089#1080#1088#1086#1074#1080#1085#1091
+    Caption = #1030#1076#1077#1085#1090'. '#1085#1086#1084#1077#1088' '#1090#1074#1072#1088#1080#1085#1080' '#1074#1110#1076' '#1103#1082#1086#1111' '#1086#1090#1088#1080#1084'. '#1089#1080#1088#1086#1074#1080#1085#1091
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edQualityINN: TcxTextEdit
+    Left = 10
+    Top = 123
+    Hint = #1030#1076#1077#1085#1090#1080#1092#1110#1082#1072#1094#1110#1081#1085#1080#1081' '#1085#1086#1084#1077#1088' '#1090#1074#1072#1088#1080#1085#1080' '#1074#1110#1076' '#1103#1082#1086#1111' '#1086#1090#1088#1080#1084#1072#1085#1086' '#1089#1080#1088#1086#1074#1080#1085#1091
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 7
     Width = 273
   end
   object ActionList: TActionList
@@ -124,10 +141,18 @@ object GoodsGroupPropertyParentEditForm: TGoodsGroupPropertyParentEditForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inQualityINN'
+        Value = Null
+        Component = edQualityINN
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 128
-    Top = 104
+    Left = 127
+    Top = 127
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -165,6 +190,13 @@ object GoodsGroupPropertyParentEditForm: TGoodsGroupPropertyParentEditForm
         Component = edName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'QualityINN'
+        Value = Null
+        Component = edQualityINN
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 88
@@ -182,8 +214,8 @@ object GoodsGroupPropertyParentEditForm: TGoodsGroupPropertyParentEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 216
-    Top = 88
+    Left = 215
+    Top = 111
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 224

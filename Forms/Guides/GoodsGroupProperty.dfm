@@ -3,7 +3,7 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088'>'
   ClientHeight = 311
-  ClientWidth = 651
+  ClientWidth = 689
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 651
+    Width = 689
     Height = 285
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 651
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,7 +52,7 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 48
+        Width = 58
       end
       object ParentName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
@@ -59,7 +60,7 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1059#1088#1086#1074#1077#1085#1100' 1'
         Options.Editing = False
-        Width = 199
+        Width = 206
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -67,7 +68,16 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1059#1088#1086#1074#1077#1085#1100' 2'
         Options.Editing = False
-        Width = 208
+        Width = 239
+      end
+      object QualityINN: TcxGridDBColumn
+        Caption = #1030#1076#1077#1085#1090#1080#1092#1110#1082#1072#1094#1110#1081#1085#1080#1081' '#1085#1086#1084#1077#1088' '#1090#1074#1072#1088#1080#1085#1080
+        DataBinding.FieldName = 'QualityINN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1030#1076#1077#1085#1090#1080#1092#1110#1082#1072#1094#1110#1081#1085#1080#1081' '#1085#1086#1084#1077#1088' '#1090#1074#1072#1088#1080#1085#1080' '#1074#1110#1076' '#1103#1082#1086#1111' '#1086#1090#1088#1080#1084#1072#1085#1086' '#1089#1080#1088#1086#1074#1080#1085#1091
+        Options.Editing = False
+        Width = 134
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

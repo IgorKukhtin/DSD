@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsGroupProperty(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ParentId Integer, ParentName TVarChar
+             , QualityINN TVarChar
              , isErased boolean) AS
 $BODY$BEGIN
    
@@ -19,13 +20,19 @@ $BODY$BEGIN
         , Object.ObjectCode AS Code
         , Object.ValueData  AS Name  
         , Object_Parent.Id        ::Integer  AS ParentId
-        , Object_Parent.ValueData ::TVarChar AS ParentName
+        , Object_Parent.ValueData ::TVarChar AS ParentName 
+        , ObjectString_QualityINN.ValueData ::TVarChar AS QualityINN
         , Object.isErased   AS isErased
    FROM Object
         INNER JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
                               ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object.Id
                              AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_QualityINN
+                               ON ObjectString_QualityINN.ObjectId = Object.Id
+                              And ObjectString_QualityINN.DescId = zc_ObjectString_GoodsGroupProperty_QualityINN()
+
    WHERE Object.DescId = zc_Object_GoodsGroupProperty()
      AND COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId,0) <> 0   
   UNION
@@ -34,7 +41,8 @@ $BODY$BEGIN
         , 0        AS Code
         , '”ƒ¿À»“‹' ::TVarChar AS Name  
         , 0        ::Integer  AS ParentId
-        , '' ::TVarChar AS ParentName
+        , '' ::TVarChar AS ParentName  
+        , '' ::TVarChar AS QualityINN
         , FALSE         AS isErased
    ;
   
@@ -48,6 +56,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.01.25         *
  19.12.23         *
 
 */

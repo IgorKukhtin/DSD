@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_GoodsGroupProperty()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroupProperty(Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroupProperty(Integer, Integer, TVarChar, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroupProperty(
  INOUT ioId               Integer   ,     -- ключ объекта <> 
     IN inCode             Integer   ,     -- Код объекта  
     IN inName             TVarChar  ,     -- Название объекта 
-    IN inParentId         Integer   ,     -- Группа 
+    IN inParentId         Integer   ,     -- Группа
+    IN inQualityINN       TVarChar  ,     -- Ідентифікаційний номер тварини від якої отримано сировину  
     IN inSession          TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -34,6 +36,8 @@ BEGIN
          
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsGroupProperty_Parent(), ioId, inParentId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsGroupProperty_QualityINN(), ioId, inQualityINN);
       
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -46,6 +50,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.01.25         *
  19.12.23         *
 */
 
