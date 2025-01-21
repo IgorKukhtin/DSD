@@ -5,7 +5,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -246,9 +246,6 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         end>
       Caption = 'actInsertUnion'
     end
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TProductionSeparateForm'
-    end
     object actUpdateUnion: TdsdInsertUpdateAction [4]
       Category = 'Union'
       MoveParams = <>
@@ -288,6 +285,9 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TProductionSeparateForm'
+    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TProductionSeparateForm'
       GuiParams = <
@@ -312,6 +312,57 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    object actPrint_4001: TdsdPrintAction [23]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001)'
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001)'
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001)'
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001)'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -674,6 +725,10 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_4001'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -701,9 +756,6 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
-    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
@@ -714,6 +766,10 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     end
     object bbUnionDoc: TdxBarButton
       Action = macUnionDoc
+      Category = 0
+    end
+    object bbPrint_4001: TdxBarButton
+      Action = actPrint_4001
       Category = 0
     end
   end

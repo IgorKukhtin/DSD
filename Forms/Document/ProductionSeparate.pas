@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox;
+  cxCheckBox, dsdCommon;
 
 type
   TProductionSeparateForm = class(TAncestorDocumentMCForm)
@@ -71,6 +71,8 @@ type
     chSummIn_hist: TcxGridDBColumn;
     actGridChildToExcel: TdsdGridToExcel;
     dxBarButton1: TdxBarButton;
+    actPrint_4001: TdsdPrintAction;
+    bbPrint_4001: TdxBarButton;
   private
     { Private declarations }
   public
