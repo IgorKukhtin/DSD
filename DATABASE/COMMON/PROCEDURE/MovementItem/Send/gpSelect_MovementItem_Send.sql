@@ -49,7 +49,8 @@ BEGIN
 
 
      -- Результат
-     IF inShowAll THEN
+     IF inShowAll = TRUE
+     THEN
 
      -- Результат такой
      RETURN QUERY
@@ -614,7 +615,7 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
-           , COALESCE (tmpMIContainer.PartionDate, tmpMI_Goods.PartionGoodsDate) :: TDateTime AS PartionGoodsDate
+           , COALESCE (tmpMIContainer.PartionDate, tmpMI_Goods.PartionGoodsDate, ObjectDate_Value.ValueData) :: TDateTime AS PartionGoodsDate
            , tmpMI_Goods.Amount                 AS Amount
            , tmpMI_Goods.Count                  AS Count
            , tmpMI_Goods.HeadCount              AS HeadCount
@@ -661,6 +662,9 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Goods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpMI_Goods.GoodsKindId_Complete
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI_Goods.PartionGoodsId
+            LEFT JOIN ObjectDate AS ObjectDate_Value
+                                 ON ObjectDate_Value.ObjectId = Object_PartionGoods.Id
+                                AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Goods.GoodsId
