@@ -563,6 +563,9 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
       end>
   end
   inherited ActionList: TActionList
+    inherited actGridToExcel: TdsdGridToExcel
+      ExportType = cxegExportToXlsx
+    end
     object actPrint1: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>

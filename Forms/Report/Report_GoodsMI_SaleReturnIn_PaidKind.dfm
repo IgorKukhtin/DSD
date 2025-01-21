@@ -4,9 +4,9 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -392
+  ExplicitLeft = -468
   ExplicitWidth = 1378
-  ExplicitHeight = 450
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -25,8 +25,6 @@
       inherited cxGrid: TcxGrid
         Width = 1362
         Height = 308
-        ExplicitLeft = 3
-        ExplicitTop = 7
         ExplicitWidth = 1362
         ExplicitHeight = 308
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1592,6 +1590,9 @@
           StoredProc = spSelect
         end>
       ShortCut = 0
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      ExportType = cxegExportToXlsx
     end
     object actPrint_byPartner: TdsdPrintAction
       Category = 'DSDLib'
