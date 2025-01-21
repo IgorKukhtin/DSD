@@ -892,6 +892,10 @@ BEGIN
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / 1
                  + COALESCE (tmpMI.Box_Weight, 0) / 1
                    ) AS TFloat) AS TotalWeight_BruttoKg
+            --температурный режим - 0-6
+           , 'від 0 до 6' ::TVarChar AS Temperatura_Text
+           , ObjectString_QualityINN.ValueData   :: TVarChar AS QualityINN
+           , Object_GoodsGroupProperty.ValueData :: TVarChar AS GoodsGroupPropertyName
        FROM tmpMI
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -922,6 +926,28 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectFloat_WeightTotal.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+
+          --  для получения ИНН тварини 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                               ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+
+          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
+                                          ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                         AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_30200())
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                               ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = tmpMI.GoodsId
+                              AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+                              AND COALESCE (View_InfoMoney.InfoMoneyId,0) <> 0                                                                
+                              --пока отключаем до заполнения справочников
+                              AND 1 = 0
+          LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId   
+
+          LEFT JOIN ObjectString AS ObjectString_QualityINN
+                                 ON ObjectString_QualityINN.ObjectId = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+                                And ObjectString_QualityINN.DescId = zc_ObjectString_GoodsGroupProperty_QualityINN()
+          --
        WHERE tmpMI.AmountPartner <> 0
          AND tmpMI.Price <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
@@ -978,6 +1004,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.01.25         *
  21.11.24         * 
 */
 -- тест
