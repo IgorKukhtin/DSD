@@ -140,7 +140,7 @@ BEGIN
 
                           || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_HistoryCost), '0') <> '0'
                                        THEN ' Р.С/С = <' || COALESCE ((SELECT Res FROM tmpProcess_HistoryCost), '0') || '>'
-                                  ELSE ''
+                                ELSE ''
                                 --ELSE ' Расчет С/С = < 1 >'
                              END
                           -- || ' Расчет С/С = <1>'
