@@ -143,7 +143,7 @@ BEGIN
         -- Реальная таблица
         vbScript:= 'TRUNCATE TABLE _tmpWord_Split_to_promo';
         vb1:= (SELECT *
-               FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+               FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
                                   -- Результат
                                , vbScript));
 
@@ -151,7 +151,7 @@ BEGIN
         vbScript:= 'INSERT INTO _tmpWord_Split_to_promo (Ord, Word, WordList) SELECT Ord, Word, WordList FROM zfSelect_Word_Split (inSep:= '','', inIsPromo:= TRUE, inUserId:= ' || vbUserId :: TVarChar || ') AS zfSelect';
         -- Результат
         vb1:= (SELECT *
-               FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+               FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
                                   -- Результат
                                , vbScript));
         --
