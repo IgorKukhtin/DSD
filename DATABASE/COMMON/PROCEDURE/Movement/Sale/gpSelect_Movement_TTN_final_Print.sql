@@ -892,8 +892,10 @@ BEGIN
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / 1
                  + COALESCE (tmpMI.Box_Weight, 0) / 1
                    ) AS TFloat) AS TotalWeight_BruttoKg
+
             --температурный режим - 0-6
            , 'від 0 до 6' ::TVarChar AS Temperatura_Text
+
            , ObjectString_QualityINN.ValueData   :: TVarChar AS QualityINN
            , Object_GoodsGroupProperty.ValueData :: TVarChar AS GoodsGroupPropertyName
        FROM tmpMI
