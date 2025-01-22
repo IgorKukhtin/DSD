@@ -884,14 +884,14 @@ BEGIN
 
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
                                           ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                         AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_30200())
 
+          -- Аналитический классификатор 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
                                ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = tmpMI.GoodsId
                               AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
-                              AND COALESCE (View_InfoMoney.InfoMoneyId,0) <> 0                                                                
-                              --пока отключаем до заполнения справочников
-                              AND 1 = 0
+                              AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_30200())
+                              -- пока отключаем до заполнения справочников
+                              -- AND 1 = 0
           LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId   
 
           LEFT JOIN ObjectString AS ObjectString_QualityINN
