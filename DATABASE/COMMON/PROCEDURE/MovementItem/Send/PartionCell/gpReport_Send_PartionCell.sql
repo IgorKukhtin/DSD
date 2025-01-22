@@ -192,7 +192,7 @@ BEGIN
      vbIsWeighing:= TRUE; -- vbUserId = 5;
 
      IF inStartDate + INTERVAL '8 MONTH' < inEndDate
-     THEN 
+     THEN
          RAISE EXCEPTION 'Ошибка.Начальная дата = <%>.', inStartDate;
      END IF;
 
@@ -268,6 +268,8 @@ BEGIN
                                      )
             ;
           --
+          -- ANALYZE _tmpPartionCell;
+
      END LOOP; -- финиш цикла по курсору
      CLOSE curPartionCell; -- закрыли курсор
 
@@ -1275,10 +1277,10 @@ BEGIN
                                                     AND (tmpData_PartionCell.PartionCellId_num  = tmpData_MI.PartionCellId -- ***
                                                       OR tmpData_MI.PartionCellId = 0
                                                       OR inIsCell = FALSE
-                                                        )      
+                                                        )
               )
 
-        --ячейки отбора               
+        --ячейки отбора
       , tmpChoiceCell AS (SELECT tmp.*
                                , LEFT (tmp.Name, 1)::TVarChar AS CellName_shot
                                , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId ORDER BY tmp.Code) AS Ord
@@ -1521,7 +1523,7 @@ BEGIN
         , tmpChoiceCell.Code          ::Integer  AS ChoiceCellCode
         , tmpChoiceCell.Name          ::TVarChar AS ChoiceCellName
         , tmpChoiceCell.CellName_shot ::TVarChar AS ChoiceCellName_shot
-        
+
         , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN FALSE WHEN tmpResult.Ord = 1 AND tmpChoiceCell_mi.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isChoiceCell_mi
         , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN NULL  WHEN tmpResult.Ord = 1 THEN tmpChoiceCell_mi.PartionGoodsDate_next ELSE NULL END ::TDateTime AS PartionGoodsDate_next
         , tmpChoiceCell_mi.InsertDate_ChoiceCell_mi
@@ -1535,7 +1537,7 @@ BEGIN
         LEFT JOIN tmpChoiceCell_mi ON tmpChoiceCell_mi.GoodsId = tmpResult.GoodsId
                                   AND COALESCE (tmpChoiceCell_mi.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
                                   AND tmpChoiceCell.Ord = 1
-                               
+
 
         ;
 
@@ -1588,8 +1590,42 @@ BEGIN
                                      )
             ;
           --
+          ANALYZE _tmpPartionCell;
+
      END LOOP; -- финиш цикла по курсору
      CLOSE curPartionCell; -- закрыли курсор
+
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI_Date'))
+     THEN
+         DELETE FROM _tmpMI_Date;
+     ELSE
+         CREATE TEMP TABLE _tmpMI_Date (MovementItemId Integer, DescId Integer, ValueData TDateTime) ON COMMIT DROP;
+    END IF;
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMILO_GoodsKind'))
+     THEN
+         DELETE FROM _tmpMILO_GoodsKind;
+     ELSE
+         CREATE TEMP TABLE _tmpMILO_GoodsKind (MovementItemId Integer, DescId Integer, ObjectId Integer) ON COMMIT DROP;
+    END IF;
+    
+    --
+    INSERT INTO _tmpMI_Date (MovementItemId, DescId, ValueData)
+       SELECT MD.MovementItemId, MD.DescId, MD.ValueData
+       FROM MovementItemDate AS MD
+       WHERE MD.MovementItemId IN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell)
+         AND MD.DescId = zc_MIDate_PartionGoods()
+      ;
+    --
+    ANALYZE _tmpMI_Date;
+    --
+    INSERT INTO _tmpMILO_GoodsKind (MovementItemId, DescId, ObjectId)
+       SELECT MILO.MovementItemId, MILO.DescId, MILO.ObjectId
+       FROM MovementItemLinkObject AS MILO
+       WHERE MILO.MovementItemId IN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell)
+         AND MILO.DescId = zc_MILinkObject_GoodsKind()
+      ;
+    ANALYZE _tmpMILO_GoodsKind;
 
 
      -- Результат
@@ -1603,17 +1639,18 @@ BEGIN
                     FROM lfSelect_Object_Goods_byGoodsGroup (1979) AS lfSelect
                    )
 
-     , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
-                           , COALESCE (CLO_GoodsKind.ObjectId, zc_GoodsKind_Basis())        AS GoodsKindId
+ , tmpRemains_all AS (SELECT Container.ObjectId                                                 AS GoodsId
+                           , COALESCE (CLO_GoodsKind.ObjectId, zc_GoodsKind_Basis())            AS GoodsKindId
                            , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
-                           , SUM (COALESCE (Container.Amount,0))         AS Amount
+                           , MIN (COALESCE (ObjectLink_PartionCell.ChildObjectId, 0))           AS PartionCellId
+                           , SUM (COALESCE (Container.Amount,0))                                AS Amount
                       FROM ContainerLinkObject AS CLO_Unit
-                           INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND COALESCE (Container.Amount,0) <> 0
+                           INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
-                           LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                         ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
-                                                        AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-                                                        AND CLO_GoodsKind.ObjectId    > 0
+                           INNER JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                          ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
+                                                         AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                                         AND CLO_GoodsKind.ObjectId    > 0
                            LEFT JOIN ContainerLinkObject AS CLO_Account
                                                          ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                         AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
@@ -1626,6 +1663,9 @@ BEGIN
                             LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
                                                  ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                 AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+                            LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                                                 ON ObjectLink_PartionCell.ObjectId      = CLO_PartionGoods.ObjectId
+                                                AND ObjectLink_PartionCell.DescId        = zc_ObjectLink_PartionGoods_PartionCell()
 
                       WHERE CLO_Unit.ObjectId = inUnitId
                         AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -1633,7 +1673,54 @@ BEGIN
                       GROUP BY Container.ObjectId
                            , COALESCE (CLO_GoodsKind.ObjectId, zc_GoodsKind_Basis())
                            , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart())
-                      HAVING SUM (COALESCE (Container.Amount,0)) > 0
+                      HAVING SUM (COALESCE (Container.Amount,0)) <> 0
+                     )
+, tmpRemains_plus AS (SELECT tmpRemains_all.GoodsId
+                           , tmpRemains_all.GoodsKindId
+                           , tmpRemains_all.PartionGoodsDate
+                           , tmpRemains_all.PartionCellId
+                           , tmpRemains_all.Amount
+                             -- накопительно
+                           , SUM (tmpRemains_all.Amount)  OVER (PARTITION BY tmpRemains_all.GoodsId, tmpRemains_all.GoodsKindId ORDER BY CASE WHEN tmpRemains_all.PartionCellId = zc_PartionCell_RK() THEN 0 ELSE 1 END ASC, tmpRemains_all.PartionGoodsDate ASC) AS Amount_sum
+                      FROM tmpRemains_all
+                      WHERE tmpRemains_all.Amount > 0
+                     )
+       --
+     , tmpRemains AS (SELECT tmpRemains_plus.GoodsId
+                           , tmpRemains_plus.GoodsKindId
+                           , tmpRemains_plus.PartionGoodsDate
+                             -- 
+                           , CASE -- если минусов все еще больше
+                                  WHEN tmpRemains_plus.Amount_sum <= COALESCE (tmpRemains_minus.Amount, 0)
+                                       -- минусуем остаток полностью
+                                       THEN 0
+                                  -- если плюс уже больше
+                                  WHEN tmpRemains_plus.Amount_sum - tmpRemains_plus.Amount >= COALESCE (tmpRemains_minus.Amount, 0)
+                                       -- оставляем остаток полностью
+                                       THEN tmpRemains_plus.Amount
+                                  -- иначе разница
+                                  ELSE tmpRemains_plus.Amount_sum - COALESCE (tmpRemains_minus.Amount, 0)
+
+                             END AS Amount
+
+                      FROM tmpRemains_plus
+                           -- отрицательный остаток
+                           LEFT JOIN (SELECT tmpRemains_all.GoodsId
+                                           , tmpRemains_all.GoodsKindId
+                                           , -1 * SUM (tmpRemains_all.Amount) AS Amount
+                                      FROM tmpRemains_all
+                                      WHERE tmpRemains_all.Amount < 0
+                                      GROUP BY tmpRemains_all.GoodsId
+                                             , tmpRemains_all.GoodsKindId
+                                     ) AS tmpRemains_minus
+                                       ON tmpRemains_minus.GoodsId     = tmpRemains_plus.GoodsId
+                                      AND tmpRemains_minus.GoodsKindId = tmpRemains_plus.GoodsKindId
+                      WHERE CASE WHEN tmpRemains_plus.Amount_sum <= COALESCE (tmpRemains_minus.Amount, 0)
+                                      THEN 0
+                                 WHEN tmpRemains_plus.Amount_sum - tmpRemains_plus.Amount >= COALESCE (tmpRemains_minus.Amount, 0)
+                                      THEN tmpRemains_plus.Amount
+                                 ELSE tmpRemains_plus.Amount_sum - COALESCE (tmpRemains_minus.Amount, 0)
+                            END > 0
                      )
 
 
@@ -1823,21 +1910,22 @@ BEGIN
 
                                                                                                          END
                               )
-     , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
-                             FROM MovementItemLinkObject
+     /*, tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
+                             FROM _tmpMILO_GoodsKind AS MovementItemLinkObject
                              WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                                AND MovementItemLinkObject.DescId IN (zc_MILinkObject_GoodsKind())
                              )
      , tmpMI_Date AS (SELECT *
-                      FROM MovementItemDate
+                      FROM _tmpMI_Date AS MovementItemDate
                       WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                         AND MovementItemDate.DescId = zc_MIDate_PartionGoods()
-                      )
+                      )*/
 
        -- расчет кол-во - мастер
      , tmpData_MI AS (SELECT CASE WHEN inIsMovement = TRUE THEN Movement.Id ELSE 0 END                       AS MovementId        -- ***
                            , CASE WHEN inIsMovement = TRUE THEN Movement.InvNumber ELSE '' END               AS InvNumber
                            , CASE WHEN inIsMovement = TRUE THEN Movement.OperDate ELSE NULL END              AS OperDate
+                           , MAX (CASE WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE THEN 1 ELSE 0 END) AS isRePack_Value
                            , MIN (Movement.OperDate)                                                         AS OperDate_min
                            , MAX (Movement.OperDate)                                                         AS OperDate_max
                            , CASE WHEN inIsMovement = TRUE THEN Movement.FromId ELSE 0 END                   AS FromId
@@ -1883,28 +1971,33 @@ BEGIN
                            -- по ячейкам
                            LEFT JOIN tmpMILO_PC AS tmpMILO_PartionCell ON tmpMILO_PartionCell.MovementItemId = MovementItem.MovementItemId
                                                                       AND inIsCell = TRUE
-                          LEFT JOIN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell
-                                     -- Без отбор
-                                     WHERE _tmpPartionCell.ObjectId <> zc_PartionCell_RK()
-                                       AND _tmpPartionCell.ObjectId <> zc_PartionCell_Err()
-                                    ) AS _tmpPartionCell
-                                      ON _tmpPartionCell.MovementItemId = MovementItem.MovementItemId
-                          LEFT JOIN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell
-                                     -- только отбор
-                                     WHERE _tmpPartionCell.ObjectId IN (zc_PartionCell_RK()
-                                                                      , zc_PartionCell_Err()
-                                                                       )
-                                    ) AS _tmpPartionCell_RK
-                                      ON _tmpPartionCell_RK.MovementItemId = MovementItem.MovementItemId
+                           LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                                     ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                                    AND MovementBoolean_isRePack.DescId     = zc_MovementBoolean_isRePack()
 
-                           LEFT JOIN tmpMI_Date AS MIDate_PartionGoods
-                                                ON MIDate_PartionGoods.MovementItemId = MovementItem.MovementItemId
-                                               AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
+                           LEFT JOIN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell
+                                      -- Без отбор
+                                      WHERE _tmpPartionCell.ObjectId <> zc_PartionCell_RK()
+                                        AND _tmpPartionCell.ObjectId <> zc_PartionCell_Err()
+                                     ) AS _tmpPartionCell
+                                       ON _tmpPartionCell.MovementItemId = MovementItem.MovementItemId
+                           LEFT JOIN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell
+                                      -- только отбор
+                                      WHERE _tmpPartionCell.ObjectId IN (zc_PartionCell_RK()
+                                                                       , zc_PartionCell_Err()
+                                                                        )
+                                     ) AS _tmpPartionCell_RK
+                                       ON _tmpPartionCell_RK.MovementItemId = MovementItem.MovementItemId
 
-                           LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                           LEFT JOIN _tmpMI_Date AS MIDate_PartionGoods
+                                                 ON MIDate_PartionGoods.MovementItemId = MovementItem.MovementItemId
+                                                AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
+
+                           LEFT JOIN _tmpMILO_GoodsKind AS MILinkObject_GoodsKind
                                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.MovementItemId
                                                        AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
                       GROUP BY CASE WHEN inIsMovement = TRUE THEN Movement.Id ELSE 0 END
                              , CASE WHEN inIsMovement = TRUE THEN Movement.InvNumber ELSE '' END
                              , CASE WHEN inIsMovement = TRUE THEN Movement.OperDate ELSE NULL END
@@ -1966,13 +2059,13 @@ BEGIN
                               FROM tmpMovement AS Movement
                                    INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 
-                                   LEFT JOIN tmpMI_Date AS MIDate_PartionGoods
-                                                        ON MIDate_PartionGoods.MovementItemId = MovementItem.MovementItemId
-                                                       AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
+                                   LEFT JOIN _tmpMI_Date AS MIDate_PartionGoods
+                                                         ON MIDate_PartionGoods.MovementItemId = MovementItem.MovementItemId
+                                                        AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
 
-                                   LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
-                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.MovementItemId
-                                                              AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                   LEFT JOIN _tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.MovementItemId
+                                                               AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                                    -- Только заполненные ячейки
                                    INNER JOIN tmpMILO_PartionCell AS MILinkObject_PartionCell
                                                                   ON MILinkObject_PartionCell.MovementItemId = MovementItem.MovementItemId
@@ -1989,6 +2082,8 @@ BEGIN
                                , tmpData_list.DescId_milo
                                , tmpData_list.PartionCellId
                        )
+
+    , tmpObjectFloat_Level AS (SELECT * FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_PartionCell_Level() AND ObjectFloat.ValueData > 0)
       -- Только заполненные ячейки - № п/п
     , tmpData_PartionCell_All AS (SELECT tmpData_PartionCell_All_All.MovementId        -- ***
                            , tmpData_PartionCell_All_All.ToId              -- ***
@@ -2017,15 +2112,19 @@ BEGIN
 
                                                 ORDER BY CASE WHEN COALESCE (tmpData_PartionCell_All_All.PartionCellId, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err()) THEN 1 ELSE 0 END
                                                        , COALESCE (tmpData_PartionCell_All_All.DescId_milo, 0)
-                                                       , COALESCE (ObjectFloat_Level.ValueData, 0)
+                                                       , COALESCE (ObjectFloat_Level.ValueData, ObjectFloat_Level_2.ValueData, 0)
                                                        , COALESCE (Object_PartionCell_real.ObjectCode, Object_PartionCell.ObjectCode, 0)
                                                ) AS Ord
                       FROM tmpData_PartionCell_All_All
                            LEFT JOIN Object AS Object_PartionCell      ON Object_PartionCell.Id      = tmpData_PartionCell_All_All.PartionCellId
                            LEFT JOIN Object AS Object_PartionCell_real ON Object_PartionCell_real.Id = tmpData_PartionCell_All_All.PartionCellId_real
-                           LEFT JOIN ObjectFloat AS ObjectFloat_Level
-                                                 ON ObjectFloat_Level.ObjectId = COALESCE (Object_PartionCell_real.Id, Object_PartionCell.Id)
-                                                AND ObjectFloat_Level.DescId   = zc_ObjectFloat_PartionCell_Level()
+                           LEFT JOIN tmpObjectFloat_Level AS ObjectFloat_Level
+                                                          ON ObjectFloat_Level.ObjectId = Object_PartionCell_real.Id
+                                                         AND ObjectFloat_Level.DescId   = zc_ObjectFloat_PartionCell_Level()
+                           LEFT JOIN tmpObjectFloat_Level AS ObjectFloat_Level_2
+                                                          ON ObjectFloat_Level_2.ObjectId = Object_PartionCell.Id
+                                                         AND ObjectFloat_Level_2.DescId   = zc_ObjectFloat_PartionCell_Level()
+                                                         AND ObjectFloat_Level.ObjectId IS NULL
                      )
       -- Развернули по ячейкам - горизонтально
     , tmpData_PartionCell AS (SELECT tmpData_PartionCell_All.MovementId
@@ -2175,6 +2274,7 @@ BEGIN
                     , tmpData_MI.OperDate     :: TDateTime
                     , tmpData_MI.OperDate_min :: TDateTime
                     , tmpData_MI.OperDate_max :: TDateTime
+                    , CASE WHEN tmpData_MI.isRePack_Value = 1 THEN TRUE ELSE FALSE END :: Boolean AS isRePack
                     , MovementDate_Insert.ValueData AS InsertDate
                     , Object_Insert.ValueData       AS InsertName
                     , Object_From.Id                AS FromId
@@ -2457,7 +2557,7 @@ BEGIN
         , tmpResult.OperDate_min
         , tmpResult.OperDate_max
         , '' :: TVarChar AS ItemName
-        , FALSE :: Boolean AS isRePack
+        , tmpResult.isRePack
         , tmpResult.InsertDate
         , tmpResult.InsertName
         , tmpResult.FromId
@@ -2647,9 +2747,9 @@ BEGIN
         , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
 
         --ячейки отбора
-        , 0     ::Integer  AS NPP_ChoiceCell     
+        , 0     ::Integer  AS NPP_ChoiceCell
         , NULL  ::Integer  AS ChoiceCellCode
-        , NULL  ::TVarChar AS ChoiceCellName     
+        , NULL  ::TVarChar AS ChoiceCellName
         , NULL  ::TVarChar AS ChoiceCellName_shot
 
         , isChoiceCell_mi :: Boolean   AS isChoiceCell_mi
@@ -2686,4 +2786,4 @@ zc_ObjectFloat_OrderType_TermProduction
 
 */
 
--- select * from gpReport_Send_PartionCell (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inUnitId:= 8459, inIsMovement:= FALSE, inIsCell:= FALSE, inIsShowAll:= FALSE, inSession := '9457') --where GoodsCode = 41;
+-- SELECT * FROM gpReport_Send_PartionCell (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inUnitId:= 8459, inIsMovement:= FALSE, inIsCell:= FALSE, inIsShowAll:= FALSE, inSession := '9457') --where GoodsCode = 41;
