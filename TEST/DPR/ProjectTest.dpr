@@ -1559,7 +1559,9 @@ uses
   UnitPeresort in '..\..\Forms\Guides\UnitPeresort.pas' {UnitPeresortForm: TParentForm},
   Report_Protocol_ChangeStatusDialog in '..\..\Forms\Report\Report_Protocol_ChangeStatusDialog.pas' {Report_Protocol_ChangeStatusDialogForm: TParentForm},
   Report_Protocol_ChangeStatus in '..\..\Forms\Report\Report_Protocol_ChangeStatus.pas' {Report_Protocol_ChangeStatusForm: TParentForm},
-  Promo_MI_Detail in '..\..\Forms\Document\Promo_MI_Detail.pas' {Promo_MI_DetailForm: TParentForm};
+  Promo_MI_Detail in '..\..\Forms\Document\Promo_MI_Detail.pas' {Promo_MI_DetailForm: TParentForm},
+  Report_Container_dataDialog in '..\..\Forms\Report\Report_Container_dataDialog.pas' {Report_Container_dataDialogForm: TParentForm},
+  Report_Container_data in '..\..\Forms\Report\Report_Container_data.pas' {Report_Container_dataForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

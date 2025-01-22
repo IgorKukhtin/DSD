@@ -1533,6 +1533,9 @@ type
     miUnitPeresort: TMenuItem;
     actReport_Protocol_ChangeStatus: TdsdOpenForm;
     miReport_Protocol_ChangeStatus: TMenuItem;
+    actReport_Container_data: TdsdOpenForm;
+    miReport_Container_data: TMenuItem;
+    N256: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
