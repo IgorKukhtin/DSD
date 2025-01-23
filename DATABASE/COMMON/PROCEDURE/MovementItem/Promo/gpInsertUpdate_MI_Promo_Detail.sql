@@ -41,7 +41,7 @@ BEGIN
      -- Данные Sale / ReturnIn
      INSERT INTO _tmpReport (GoodsId, GoodsKindId, OperDate, Amount, AmountIn, AmountReal, AmountRetIn)
         SELECT spReport.GoodsId
-             , spReport.GoodsKindId
+             , CASE WHEN spReport.GoodsKindId > 0 THEN spReport.GoodsKindId ELSE spReport.GoodsKindCompleteId END AS GoodsKindId
              , spReport.Month_Partner    AS OperDate
              , spReport.AmountOut        AS Amount
              , spReport.AmountIn         AS AmountIn
@@ -73,12 +73,20 @@ BEGIN
                                                 , inUserId      := vbUserId                     ::Integer
                                                  )
      FROM (WITH tmpMI_Master AS (SELECT MovementItem.*
-                                      , COALESCE (MILinkObject_GoodsKind.ObjectId,0) AS GoodsKindId
+                                      , CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId,0) > 0 
+                                             THEN COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+                                             ELSE COALESCE (MILinkObject_GoodsKindComplete.ObjectId,0)
+                                        END   AS GoodsKindId
                                  FROM MovementItem
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                       --LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                                       ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                      --LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILinkObject_GoodsKindComplete.ObjectId
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND MovementItem.isErased = FALSE
