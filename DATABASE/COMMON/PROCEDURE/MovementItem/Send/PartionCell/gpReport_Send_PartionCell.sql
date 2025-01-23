@@ -820,7 +820,7 @@ BEGIN
                                                                        , CASE WHEN inIsCell = TRUE THEN tmpData_PartionCell_All_All.Ord_all       ELSE 0 END
 
                                                             ORDER BY CASE WHEN tmpData_PartionCell_All_All.PartionGoodsDate = zc_DateStart() THEN 1 ELSE 0 END
-                                                                   , CASE WHEN COALESCE (tmpData_PartionCell_All_All.PartionCellId, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err()) THEN 1 ELSE 0 END
+                                                                 --, CASE WHEN COALESCE (tmpData_PartionCell_All_All.PartionCellId, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err()) THEN 1 ELSE 0 END
                                                                    , COALESCE (tmpData_PartionCell_All_All.DescId_milo, 0)
                                                                    , COALESCE (ObjectFloat_Level.ValueData, 0)
                                                                    , COALESCE (Object_PartionCell_real.ObjectCode, Object_PartionCell.ObjectCode, 0)
@@ -1476,7 +1476,30 @@ BEGIN
                     -- если отличаетс€ от даты документа
                     THEN tmpResult.Color_PartionGoodsDate
 
-               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK())
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1
+                AND (tmpResult.PartionCellId_1  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_2  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_3  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_4  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_5  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_6  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_7  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_8  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_9  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_10 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_11 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_12 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_13 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_14 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_15 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_16 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_17 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_18 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_19 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_20 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_21 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_22 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                    )
                     -- если надо подсветить
                     THEN zc_Color_Yelow()
 
@@ -1492,7 +1515,30 @@ BEGIN
                WHEN tmpResult.NormInDays_tax <= 70
                     THEN zc_Color_Orange() -- zc_Color_Aqua()
 
-               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK())
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1
+                AND (tmpResult.PartionCellId_1  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_2  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_3  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_4  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_5  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_6  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_7  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_8  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_9  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_10 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_11 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_12 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_13 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_14 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_15 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_16 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_17 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_18 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_19 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_20 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_21 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_22 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                    )
                     -- если надо подсветить
                     THEN zc_Color_Yelow()
 
@@ -1516,7 +1562,33 @@ BEGIN
           -- є п/п дл€ сн€ти€
         , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord
           -- подсвечиваем строчку
-        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
+        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1
+                AND (tmpResult.PartionCellId_1  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_2  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_3  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_4  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_5  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_6  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_7  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_8  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_9  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_10 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_11 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_12 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_13 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_14 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_15 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_16 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_17 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_18 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_19 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_20 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_21 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_22 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                    )
+                    THEN zc_Color_Yelow()
+                    ELSE zc_Color_White()
+          END ::Integer AS ColorFon_ord
 
           -- ћесто отбора
         , tmpChoiceCell.Code          ::Integer  AS NPP_ChoiceCell
@@ -2110,8 +2182,8 @@ BEGIN
                                                            , CASE WHEN inIsCell = TRUE THEN tmpData_PartionCell_All_All.PartionCellId ELSE 0 END --если по €чейкам то все €чейки выводим отдельной строкой
                                                            , CASE WHEN inIsCell = TRUE THEN tmpData_PartionCell_All_All.Ord_all       ELSE 0 END
 
-                                                ORDER BY CASE WHEN COALESCE (tmpData_PartionCell_All_All.PartionCellId, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err()) THEN 1 ELSE 0 END
-                                                       , COALESCE (tmpData_PartionCell_All_All.DescId_milo, 0)
+                                                ORDER BY -- CASE WHEN COALESCE (tmpData_PartionCell_All_All.PartionCellId, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err()) THEN 1 ELSE 0 END
+                                                         COALESCE (tmpData_PartionCell_All_All.DescId_milo, 0)
                                                        , COALESCE (ObjectFloat_Level.ValueData, ObjectFloat_Level_2.ValueData, 0)
                                                        , COALESCE (Object_PartionCell_real.ObjectCode, Object_PartionCell.ObjectCode, 0)
                                                ) AS Ord
@@ -2707,7 +2779,31 @@ BEGIN
           -- цвет дл€ ѕарти€ дата
         , CASE WHEN tmpResult.Color_PartionGoodsDate <> zc_Color_White()
                     THEN tmpResult.Color_PartionGoodsDate
-               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())  THEN zc_Color_Yelow()
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1
+                AND (tmpResult.PartionCellId_1  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_2  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_3  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_4  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_5  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_6  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_7  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_8  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_9  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_10 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_11 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_12 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_13 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_14 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_15 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_16 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_17 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_18 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_19 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_20 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_21 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_22 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                    )
+                    THEN zc_Color_Yelow()
                ELSE tmpResult.Color_PartionGoodsDate
           END :: Integer AS Color_PartionGoodsDate
 
@@ -2720,9 +2816,32 @@ BEGIN
                 AND tmpResult.PartionGoodsDate > zc_DateStart()
                     THEN zc_Color_Orange() -- zc_Color_Aqua()
 
-               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
-              --AND tmpResult.PartionGoodsDate > zc_DateStart()
                     -- если надо подсветить
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1
+              --AND tmpResult.PartionGoodsDate > zc_DateStart()
+                AND (tmpResult.PartionCellId_1  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_2  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_3  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_4  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_5  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_6  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_7  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_8  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_9  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_10 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_11 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_12 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_13 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_14 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_15 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_16 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_17 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_18 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_19 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_20 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_21 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_22 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                    )
                     THEN zc_Color_Yelow()
 
                ELSE zc_Color_White()
@@ -2744,7 +2863,33 @@ BEGIN
 
         , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord
 
-        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
+        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1
+                AND (tmpResult.PartionCellId_1  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_2  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_3  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_4  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_5  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_6  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_7  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_8  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_9  NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_10 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_11 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_12 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_13 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_14 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_15 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_16 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_17 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_18 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_19 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_20 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_21 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                  OR tmpResult.PartionCellId_22 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+                    )
+                    THEN zc_Color_Yelow()
+                    ELSE zc_Color_White()
+          END ::Integer AS ColorFon_ord
 
         --€чейки отбора
         , 0     ::Integer  AS NPP_ChoiceCell
