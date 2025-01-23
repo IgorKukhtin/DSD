@@ -825,6 +825,16 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_1)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_1:= (SELECT MIF.ValueData :: Integer
+                                       FROM _tmpItem_PartionCell
+                                            INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                               AND MIF.DescId = zc_MIFloat_PartionCell_real_1()
+                                       ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                       LIMIT 1
+                                      );
+
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -839,6 +849,18 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_1:= outPartionCellId_1 > 0;
+
+             --
+             IF COALESCE (outPartionCellId_1, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_1()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_1_new > 0
@@ -902,6 +924,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_2(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_2)
                  FROM _tmpItem_PartionCell 
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_2:= (SELECT MIF.ValueData :: Integer
+                                       FROM _tmpItem_PartionCell
+                                            INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                               AND MIF.DescId = zc_MIFloat_PartionCell_real_2()
+                                       ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                       LIMIT 1
+                                      );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -916,6 +947,18 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_2:= outPartionCellId_2 > 0;
+
+             --
+             IF COALESCE (outPartionCellId_2, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_2()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_2_new > 0
@@ -961,6 +1004,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_3(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_3)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_3:= (SELECT MIF.ValueData :: Integer
+                                       FROM _tmpItem_PartionCell
+                                            INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                               AND MIF.DescId = zc_MIFloat_PartionCell_real_3()
+                                       ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                       LIMIT 1
+                                      );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -975,6 +1027,18 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_3:= outPartionCellId_3 > 0;
+
+             --
+             IF COALESCE (outPartionCellId_3, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_3()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_3_new > 0
@@ -1020,6 +1084,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_4(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_4)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_4:= (SELECT MIF.ValueData :: Integer
+                                       FROM _tmpItem_PartionCell
+                                            INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                               AND MIF.DescId = zc_MIFloat_PartionCell_real_4()
+                                       ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                       LIMIT 1
+                                      );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1034,6 +1107,18 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_4:= outPartionCellId_4 > 0;
+
+             --
+             IF COALESCE (outPartionCellId_4, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_4()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_4_new > 0
@@ -1079,6 +1164,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_5(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_5)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_5:= (SELECT MIF.ValueData :: Integer
+                                       FROM _tmpItem_PartionCell
+                                            INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                               AND MIF.DescId = zc_MIFloat_PartionCell_real_5()
+                                       ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                       LIMIT 1
+                                      );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1093,6 +1187,18 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_5:= outPartionCellId_5 > 0;
+
+             --
+             IF COALESCE (outPartionCellId_5, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_5()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_5_new > 0
@@ -1139,6 +1245,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_6)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_6:= (SELECT MIF.ValueData :: Integer
+                                       FROM _tmpItem_PartionCell
+                                            INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                               AND MIF.DescId = zc_MIFloat_PartionCell_real_6()
+                                       ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                       LIMIT 1
+                                      );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1153,6 +1268,18 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_6:= outPartionCellId_6 > 0;
+
+             --
+             IF COALESCE (outPartionCellId_6, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_6()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_6_new > 0
@@ -1199,6 +1326,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_7)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_7:= (SELECT MIF.ValueData :: Integer
+                                       FROM _tmpItem_PartionCell
+                                            INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                               AND MIF.DescId = zc_MIFloat_PartionCell_real_7()
+                                       ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                       LIMIT 1
+                                      );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1213,6 +1349,18 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_7:= outPartionCellId_7 > 0;
+
+             --
+             IF COALESCE (outPartionCellId_7, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_7()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_7_new > 0
@@ -1259,6 +1407,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_8)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_8:= (SELECT MIF.ValueData :: Integer
+                                       FROM _tmpItem_PartionCell
+                                            INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                               AND MIF.DescId = zc_MIFloat_PartionCell_real_8()
+                                       ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                       LIMIT 1
+                                      );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1273,6 +1430,18 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_8:= outPartionCellId_8 > 0;
+
+             --
+             IF COALESCE (outPartionCellId_8, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_8()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_8_new > 0
@@ -1319,6 +1488,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_9)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_9:= (SELECT MIF.ValueData :: Integer
+                                       FROM _tmpItem_PartionCell
+                                            INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                               AND MIF.DescId = zc_MIFloat_PartionCell_real_9()
+                                       ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                       LIMIT 1
+                                      );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1333,6 +1511,18 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_9:= outPartionCellId_9 > 0;
+
+             --
+             IF COALESCE (outPartionCellId_9, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_9()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_9_new > 0
@@ -1379,6 +1569,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_10)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_10:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_10()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1393,6 +1592,18 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_10:= outPartionCellId_10 > 0;
+
+             --
+             IF COALESCE (outPartionCellId_10, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_10()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_10_new > 0
@@ -1439,6 +1650,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_11)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_11:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_11()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1453,6 +1673,18 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_11:= outPartionCellId_11 > 0;
+
+             --
+             IF COALESCE (outPartionCellId_11, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_11()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_11_new > 0
@@ -1499,6 +1731,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_12)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_12:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_12()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1513,6 +1754,17 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_12:= outPartionCellId_12 > 0;
+
+             IF COALESCE (outPartionCellId_12, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_12()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_12_new > 0
@@ -1558,6 +1810,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_13(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_13)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_13:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_13()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1572,6 +1833,17 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_13:= outPartionCellId_13 > 0;
+
+             IF COALESCE (outPartionCellId_13, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_13()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_13_new > 0
@@ -1617,6 +1889,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_14(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_14)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_14:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_14()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1631,6 +1912,17 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_14:= outPartionCellId_14 > 0;
+
+             IF COALESCE (outPartionCellId_14, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_14()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_14_new > 0
@@ -1676,6 +1968,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_15(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_15)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_15:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_15()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1690,6 +1991,17 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_15:= outPartionCellId_15 > 0;
+
+             IF COALESCE (outPartionCellId_15, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_15()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_15_new > 0
@@ -1735,6 +2047,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_16(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_16)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_16:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_16()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1749,6 +2070,17 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_16:= outPartionCellId_16 > 0;
+
+             IF COALESCE (outPartionCellId_16, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_16()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_16_new > 0
@@ -1794,6 +2126,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_17(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_17)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_17:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_17()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1808,6 +2149,17 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_17:= outPartionCellId_17 > 0;
+
+             IF COALESCE (outPartionCellId_17, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_17()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_17_new > 0
@@ -1853,6 +2205,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_18(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_18)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_18:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_18()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1867,6 +2228,17 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_18:= outPartionCellId_18 > 0;
+
+             IF COALESCE (outPartionCellId_18, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_18()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_18_new > 0
@@ -1912,6 +2284,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_19(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_19)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_19:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_19()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1926,6 +2307,17 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_19:= outPartionCellId_19 > 0;
+
+             IF COALESCE (outPartionCellId_19, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_18()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_19_new > 0
@@ -1971,6 +2363,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_20(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_20)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_20:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_20()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -1985,6 +2386,17 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_20:= outPartionCellId_20 > 0;
+
+             IF COALESCE (outPartionCellId_20, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_20()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_20_new > 0
@@ -2030,6 +2442,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_21(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_21)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_21:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_21()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -2044,6 +2465,17 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_21:= outPartionCellId_21 > 0;
+
+             IF COALESCE (outPartionCellId_21, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_21()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_21_new > 0
@@ -2089,6 +2521,15 @@ BEGIN
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_22(), _tmpItem_PartionCell.MovementItemId, outPartionCellId_22)
                  FROM _tmpItem_PartionCell
                 ;
+             ELSE
+                 -- нашли предыдущую
+                 outPartionCellId_22:= (SELECT MIF.ValueData :: Integer
+                                        FROM _tmpItem_PartionCell
+                                             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                                AND MIF.DescId = zc_MIFloat_PartionCell_real_22()
+                                        ORDER BY CASE WHEN MIF.ValueData IN (zc_PartionCell_RK(), 0) THEN 1 ELSE 0 END
+                                        LIMIT 1
+                                       );
              END IF;
 
              -- 3.привязали ячейку - виртуальную
@@ -2103,6 +2544,17 @@ BEGIN
 
              -- 4.2. вернули
              outIsClose_22:= outPartionCellId_22 > 0;
+
+             IF COALESCE (outPartionCellId_22, 0) = 0 AND 1=1
+                AND NOT EXISTS (SELECT 1
+                                FROM _tmpItem_PartionCell
+                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
+                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_22()
+                                                                              AND MILO.ObjectId > 0
+                               )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_22_new > 0
