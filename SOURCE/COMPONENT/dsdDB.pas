@@ -1230,7 +1230,6 @@ begin
            else RttiValue := VarToStr(FValue);
          end;
          FRttiProperty.SetValue(Component,RttiValue);
-         FRttiProperty.Free;
        End;
      End;
      if Component is TCustomGuides then
