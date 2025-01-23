@@ -37,7 +37,8 @@ RETURNS TABLE(
     ,MeasureName          TVarChar  --единица измерения
     ,TradeMarkName        TVarChar  --Торговая марка
     ,GoodsGroupNameFull   TVarChar -- группа товара
-    ,GoodsKindId          Integer  --
+    ,GoodsKindId          Integer  --   
+    ,GoodsKindCompleteId  Integer  --
     ,GoodsKindName          TVarChar --Наименование обьекта <Вид товара>
     ,GoodsKindCompleteName  TVarChar --Наименование обьекта <Вид товара(примечание)>
 
@@ -318,8 +319,10 @@ BEGIN
 
                    , MI_PromoGoods.GoodsWeight -- Вес
                    , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (MI_PromoGoods.GoodsKindId,0) ELSE 0 END AS GoodsKindId
-                   , STRING_AGG (MI_PromoGoods.GoodsKindName, '; ')         ::TVarChar AS GoodsKindName       --Наименование обьекта <Вид товара>
-                   , STRING_AGG (MI_PromoGoods.GoodsKindCompleteName, '; ') ::TVarChar AS GoodsKindCompleteName
+                   , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) ELSE 0 END AS GoodsKindCompleteId 
+                   
+                   , STRING_AGG (DISTINCT MI_PromoGoods.GoodsKindName, '; ')         ::TVarChar AS GoodsKindName       --Наименование обьекта <Вид товара>
+                   , STRING_AGG (DISTINCT MI_PromoGoods.GoodsKindCompleteName, '; ') ::TVarChar AS GoodsKindCompleteName
 
                    , AVG (MI_PromoGoods.Amount) AS Amount              --% скидки на товар
                    , SUM (MI_PromoGoods.AmountReal) AS AmountReal          --Объем продаж в аналогичный период, кг
@@ -377,8 +380,8 @@ BEGIN
                    LEFT JOIN tmpMI_SaleReturn ON tmpMI_SaleReturn.MovementId_promo = MI_PromoGoods.MovementId
                                              AND tmpMI_SaleReturn.GoodsId = MI_PromoGoods.GoodsId
                                              AND tmpMI_SaleReturn.Month_Partner = tmpDate_list.OperDate --
-                                             AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  COALESCE (MI_PromoGoods.GoodsKindId,0)
-                                                  OR COALESCE (MI_PromoGoods.GoodsKindId,0) = 0)                                      -- COALESCE (MI_PromoGoods.GoodsKindCompleteId,0)
+                                             AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  CASE WHEN COALESCE (MI_PromoGoods.GoodsKindId,0) > 0 THEN COALESCE (MI_PromoGoods.GoodsKindId,0) ELSE COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) END
+                                                  OR CASE WHEN COALESCE (MI_PromoGoods.GoodsKindId,0) > 0 THEN COALESCE (MI_PromoGoods.GoodsKindId,0) ELSE COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) END = 0)                                           -- COALESCE (MI_PromoGoods.GoodsKindCompleteId,0)
                                              AND inIsReal = TRUE
 
                    LEFT JOIN tmpMI_Detail ON tmpMI_Detail.MovementId = MI_PromoGoods.MovementId
@@ -405,6 +408,7 @@ BEGIN
                      , MI_PromoGoods.PriceSale
                      , MI_PromoGoods.GoodsWeight
                      , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (MI_PromoGoods.GoodsKindId,0) ELSE 0 END
+                     , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) ELSE 0 END
                      , CASE WHEN inIsGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindName ELSE '' END
                      , CASE WHEN inIsGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindCompleteName ELSE '' END
                      , ObjectString_Goods_GoodsGroupFull.ValueData
@@ -524,7 +528,8 @@ BEGIN
           , MI_PromoGoods.Measure
           , MI_PromoGoods.TradeMark
           , MI_PromoGoods.GoodsGroupNameFull
-          , COALESCE (MI_PromoGoods.GoodsKindId,0) ::Integer AS GoodsKindId
+          , COALESCE (MI_PromoGoods.GoodsKindId,0)         ::Integer AS GoodsKindId
+          , COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) ::Integer AS GoodsKindCompleteId
           , MI_PromoGoods.GoodsKindName
           , MI_PromoGoods.GoodsKindCompleteName
 
@@ -624,7 +629,7 @@ BEGIN
 
              LEFT JOIN tmpSaleReturn ON tmpSaleReturn.MovementId_promo = Movement_Promo.Id
                                     AND tmpSaleReturn.GoodsId = MI_PromoGoods.GoodsId
-                                    AND COALESCE (tmpSaleReturn.GoodsKindId,0) = COALESCE (MI_PromoGoods.GoodsKindId,0)
+                                    AND COALESCE (tmpSaleReturn.GoodsKindId,0) = CASE WHEN COALESCE (MI_PromoGoods.GoodsKindId,0) > 0 THEN COALESCE (MI_PromoGoods.GoodsKindId,0) ELSE COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) END
                                     AND tmpSaleReturn.DateMonth = MI_PromoGoods.Month_Partner
                                     AND inIsReal = TRUE
         WHERE COALESCE (MI_PromoGoods.AmountOut,0) <> 0 
