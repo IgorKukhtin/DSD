@@ -675,7 +675,27 @@ BEGIN
                                           -- с таким Признаком
                                           WHERE tmpItem_child_all.isEtiketka  = TRUE
                                          )
-                         -- Master - нар. 180 + нар. 200
+                    -- дополнительно - Схема Этикетка
+                  , tmpGoods_Etiketka AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId       AS GoodsId
+                                               , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId   AS GoodsKindId
+                                          FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                               LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                                    ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                   AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                               INNER JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                                           AND Object_GoodsByGoodsKind.isErased = FALSE
+                                               
+                                               INNER JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Etiketka
+                                                                        ON ObjectBoolean_GoodsByGoodsKind_Etiketka.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                       AND ObjectBoolean_GoodsByGoodsKind_Etiketka.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Etiketka()
+                                                                       -- с таким Признаком
+                                                                       AND ObjectBoolean_GoodsByGoodsKind_Etiketka.ValueData = TRUE
+                                               
+                                          WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                            AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId > 0
+
+                                         )
+                         -- Master - нар. 200 + Сhild нар. 180
                        , tmpItem_master_all AS (SELECT DISTINCT
                                                        _tmpItem_pr.MovementItemId
                                                      , _tmpItem_pr.OperCount
@@ -687,6 +707,17 @@ BEGIN
                                                                            AND tmpItem_child_all.GoodsKindId = 7462698 -- нар. 180
                                                 -- еще условие
                                                 WHERE _tmpItem_pr.GoodsKindId = 6899005 -- нар. 200
+
+                                               UNION
+                                                -- еще Схема Этикетка
+                                                SELECT DISTINCT
+                                                       _tmpItem_pr.MovementItemId
+                                                     , _tmpItem_pr.OperCount
+                                                     , _tmpItem_pr.GoodsId
+                                                     , _tmpItem_pr.GoodsKindId
+                                                FROM _tmpItem_pr
+                                                     JOIN tmpGoods_Etiketka ON tmpGoods_Etiketka.GoodsId     = _tmpItem_pr.GoodsId
+                                                                           AND tmpGoods_Etiketka.GoodsKindId = _tmpItem_pr.GoodsKindId
                                                )
                       -- Поиск Receipt для Master
                     , tmpReceiptChild AS (SELECT Object_Receipt.Id AS ReceiptId
