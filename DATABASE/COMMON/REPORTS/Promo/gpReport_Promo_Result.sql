@@ -73,6 +73,8 @@ RETURNS TABLE(
     ,AdvertisingName      TBlob     -- * рекламн.поддержка
     ,Comment              TVarChar  --примечание
     ,CommentMain          TVarChar  --
+    , Days_Sale  Integer               --длительность дней отгрузки по акц. ценам
+    , Days_Real  Integer               --длительность дней аналогичный период
     )
 AS
 $BODY$
@@ -380,6 +382,9 @@ BEGIN
 
           , ''                                :: TVarChar  AS Comment                -- Примечание
           , ''                                :: TVarChar  AS CommentMain            -- Примечание
+
+          , (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1)         ::Integer AS Days_Sale
+          , (EXTRACT (DAY from Movement_Promo.OperDateEnd - Movement_Promo.OperDateStart) + 1) ::Integer AS Days_Real
         FROM tmpMovement AS Movement_Promo
              LEFT JOIN tmpVAT ON tmpVAT.PriceListId = Movement_Promo.PriceListId
              LEFT JOIN tmpMI AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id

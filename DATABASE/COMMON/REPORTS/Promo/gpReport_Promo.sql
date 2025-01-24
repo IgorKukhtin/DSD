@@ -103,8 +103,10 @@ RETURNS TABLE(
     , ContractCondition         TFloat --бонус сети сумма
     , PriceWithVAT_calc              TFloat -- цена с ндс с учетом скидки
     , SummaProfit_fact          TFloat --прибыль факт
-    , SummaProfit_plan          TFloat --прибыль план
-
+    , SummaProfit_plan          TFloat --прибыль план 
+    
+    , Days_Sale  Integer               --длительность дней отгрузки по акц. ценам
+    , Days_Real  Integer               --длительность дней аналогичный период
 
     )
 AS
@@ -228,7 +230,9 @@ BEGIN
                               , MovementDate_EndPromo.ValueData             AS EndPromo           --Дата окончания акции
                               , Movement_Promo.StartSale                    AS StartSale          --Дата начала отгрузки по акционной цене
                               , Movement_Promo.EndSale                      AS EndSale            --Дата окончания отгрузки по акционной цене
-                              , MovementDate_EndReturn.ValueData            AS EndReturn          --Дата окончания возвратов по акционной цене
+                              , MovementDate_EndReturn.ValueData            AS EndReturn          --Дата окончания возвратов по акционной цене  
+                              , MovementDate_OperDateStart.ValueData        AS OperDateStart      --Дата начала расч. продаж до акции
+                              , MovementDate_OperDateEnd.ValueData          AS OperDateEnd        --Дата окончания расч. продаж до акции
                               , DATE_TRUNC ('MONTH', MovementDate_Month.ValueData) :: TDateTime AS MonthPromo         -- месяц акции
                               , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
                               , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
@@ -267,7 +271,6 @@ BEGIN
                                                      ON MovementDate_EndPromo.MovementId =  Movement_Promo.Id
                                                     AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
 
-
                              LEFT JOIN MovementDate AS MovementDate_EndReturn
                                                     ON MovementDate_EndReturn.MovementId = Movement_Promo.Id
                                                    AND MovementDate_EndReturn.DescId = zc_MovementDate_EndReturn()
@@ -279,6 +282,13 @@ BEGIN
                              LEFT JOIN MovementDate AS MovementDate_CheckDate
                                                     ON MovementDate_CheckDate.MovementId = Movement_Promo.Id
                                                    AND MovementDate_CheckDate.DescId = zc_MovementDate_Check()
+
+                             LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                                    ON MovementDate_OperDateStart.MovementId = Movement_Promo.Id
+                                                   AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+                             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                                    ON MovementDate_OperDateEnd.MovementId = Movement_Promo.Id
+                                                   AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
                              LEFT JOIN MovementFloat AS MovementFloat_CostPromo
                                                      ON MovementFloat_CostPromo.MovementId = Movement_Promo.Id
@@ -788,7 +798,9 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           , MI_PromoGoods.PriceWithVAT_calc        ::TFloat                     -- цена с ндс с учетом скидки
           , MI_PromoGoods.SummaProfit_fact         ::TFloat                     --прибыль факт
           , MI_PromoGoods.SummaProfit_plan         ::TFloat                     --прибыль план
-                                    
+          
+          , (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1)         ::Integer AS Days_Sale
+          , (EXTRACT (DAY from Movement_Promo.OperDateEnd - Movement_Promo.OperDateStart) + 1) ::Integer AS Days_Real                        
         FROM
             tmpMovement_Promo AS Movement_Promo
             LEFT OUTER JOIN tmpMI_PromoGoods AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
@@ -804,6 +816,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 24.01.25         *
  07.11.17         *
  25.07.17         *
  01.12.15                                                          *

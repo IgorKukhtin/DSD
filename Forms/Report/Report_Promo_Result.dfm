@@ -518,6 +518,23 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Options.Editing = False
             Width = 76
           end
+          object Days_Sale: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1086' '#1072#1082#1094'. '#1094#1077#1085#1072#1084
+            DataBinding.FieldName = 'Days_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Days_Real: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'Days_Real'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1085#1077#1081' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1080' '#1089' '#1053#1044#1057', '#1075#1088#1085
             DataBinding.FieldName = 'Price'
