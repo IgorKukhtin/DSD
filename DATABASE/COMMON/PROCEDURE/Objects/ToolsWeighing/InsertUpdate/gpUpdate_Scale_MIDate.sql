@@ -19,16 +19,16 @@ BEGIN
 
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemDate (MovementItemDateDesc.Id, inMovementItemId, inValueData)
+     PERFORM lpInsertUpdate_MovementItemDate (MovementItemDateDesc.Id, CASE WHEN inMovementItemId < 0 THEN -1 * inMovementItemId ELSE inMovementItemId END, CASE WHEN inMovementItemId < 0 THEN NULL ELSE inValueData END)
      FROM (SELECT inDescCode AS DescCode WHERE TRIM (inDescCode) <> '') AS tmp
           LEFT JOIN MovementItemDateDesc ON MovementItemDateDesc.Code = tmp.DescCode;
 
 
      -- сохранили свойство <Дата/время>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), inMovementItemId, CURRENT_TIMESTAMP);
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), CASE WHEN inMovementItemId < 0 THEN -1 * inMovementItemId ELSE inMovementItemId END, CURRENT_TIMESTAMP);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
+     PERFORM lpInsert_MovementItemProtocol (CASE WHEN inMovementItemId < 0 THEN -1 * inMovementItemId ELSE inMovementItemId END, vbUserId, FALSE);
 
 
 END;
