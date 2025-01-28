@@ -75,8 +75,20 @@ BEGIN
      -- Дата в зависимости от смены
      vbOperDate:= gpGet_Scale_OperDate (inIsCeh:= FALSE, inBranchCode:= 1, inSession:= inSession);
 
+     -- Проверка
+     IF 1 < (SELECT COUNT(*) FROM Movement WHERE Movement.DescId = zc_Movement_ChoiceCell() AND Movement.OperDate = vbOperDate AND Movement.StatusId <> zc_Enum_Status_Erased())
+     THEN
+         --
+         RAISE EXCEPTION 'Ошибка.Найдено несколько документов <%> за <%>.Лишний можно удалить.'
+                       , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_ChoiceCell())
+                       , vbOperDate
+                        ;
+     END IF;
+
+
      -- пробуем найти документ
      vbMovementId:= (SELECT Movement.Id FROM Movement WHERE Movement.DescId = zc_Movement_ChoiceCell() AND Movement.OperDate = vbOperDate AND Movement.StatusId <> zc_Enum_Status_Erased());
+
 
      IF COALESCE (vbMovementId,0) = 0
      THEN
@@ -144,6 +156,11 @@ BEGIN
                 AND Object_ChoiceCell.Id     = vbChoiceCellId
              ) AS tmp
     ;
+
+IF vbUserId = 5 AND 1=1
+THEN
+    RAISE EXCEPTION 'Ошибка.OK';
+END IF;
 
 END;
 $BODY$
