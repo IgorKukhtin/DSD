@@ -86,7 +86,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 67
           end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
@@ -1796,6 +1796,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRePack'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isRePack'
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

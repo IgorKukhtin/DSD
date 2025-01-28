@@ -84,6 +84,7 @@ type
     GuidesUnit: TdsdGuides;
     cbisDetail: TcxCheckBox;
     actRefreshDetail: TdsdDataSetRefresh;
+    cbIsRePack: TcxCheckBox;
   private
     { Private declarations }
   public
