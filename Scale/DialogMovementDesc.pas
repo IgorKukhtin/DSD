@@ -114,6 +114,7 @@ begin
            ParamsMovement.ParamByName('DocumentKindName').asString         := CDS.FieldByName('DocumentKindName').asString;
            ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean         := CDS.FieldByName('isSendOnPriceIn').asBoolean;
            ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean      := CDS.FieldByName('isPartionGoodsDate').asBoolean;
+           ParamsMovement.ParamByName('isPartionDate_save').asBoolean      := CDS.FieldByName('isPartionDate_save').asBoolean;
            ParamsMovement.ParamByName('isStorageLine').asBoolean           := CDS.FieldByName('isStorageLine').asBoolean;
            ParamsMovement.ParamByName('isArticleLoss').asBoolean           := CDS.FieldByName('isArticleLoss').asBoolean;
            ParamsMovement.ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;
@@ -424,6 +425,7 @@ begin
           ParamByName('DocumentKindName').asString         := CDS.FieldByName('DocumentKindName').asString;
           ParamByName('isSendOnPriceIn').asBoolean         := CDS.FieldByName('isSendOnPriceIn').asBoolean;
           ParamByName('isPartionGoodsDate').asBoolean      := CDS.FieldByName('isPartionGoodsDate').asBoolean;
+          ParamByName('isPartionDate_save').asBoolean      := CDS.FieldByName('isPartionDate_save').asBoolean;
           ParamByName('isStorageLine').asBoolean           := CDS.FieldByName('isStorageLine').asBoolean;
           ParamByName('isArticleLoss').asBoolean           := CDS.FieldByName('isArticleLoss').asBoolean;
           ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;

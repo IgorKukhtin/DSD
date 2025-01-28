@@ -28,7 +28,6 @@ object MainForm: TMainForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 854
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -37,7 +36,6 @@ object MainForm: TMainForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitLeft = 1
       object bbDeleteItem: TSpeedButton
         Left = 339
         Top = 2
@@ -856,7 +854,6 @@ object MainForm: TMainForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 854
       object gbRealWeight: TGroupBox
         Left = 249
         Top = 0
@@ -964,7 +961,6 @@ object MainForm: TMainForm
         Font.Style = []
         ParentFont = False
         TabOrder = 3
-        ExplicitLeft = 591
         object PanelTotalSumm: TPanel
           Left = 2
           Top = 16
@@ -1027,7 +1023,6 @@ object MainForm: TMainForm
         Font.Style = []
         ParentFont = False
         TabOrder = 5
-        ExplicitLeft = 699
         object PanelTotalSummPartner: TPanel
           Left = 2
           Top = 16
@@ -1053,7 +1048,6 @@ object MainForm: TMainForm
       Height = 548
       Align = alClient
       TabOrder = 2
-      ExplicitWidth = 854
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -1821,7 +1815,7 @@ object MainForm: TMainForm
     end
     object infoPanel_Scale: TPanel
       Left = 0
-      Top = 309
+      Top = 332
       Width = 130
       Height = 29
       Align = alTop
@@ -1863,7 +1857,7 @@ object MainForm: TMainForm
     end
     object rgScale: TRadioGroup
       Left = 0
-      Top = 239
+      Top = 262
       Width = 130
       Height = 70
       Align = alTop
@@ -1873,7 +1867,7 @@ object MainForm: TMainForm
     end
     object PanelCountPack: TPanel
       Left = 0
-      Top = 338
+      Top = 361
       Width = 130
       Height = 39
       Align = alTop
@@ -1902,7 +1896,7 @@ object MainForm: TMainForm
     end
     object HeadCountPanel: TPanel
       Left = 0
-      Top = 431
+      Top = 454
       Width = 130
       Height = 39
       Align = alTop
@@ -1931,7 +1925,7 @@ object MainForm: TMainForm
     end
     object PanelPartionGoods: TPanel
       Left = 0
-      Top = 157
+      Top = 180
       Width = 130
       Height = 43
       Align = alTop
@@ -1971,7 +1965,7 @@ object MainForm: TMainForm
     end
     object PanelBox: TPanel
       Left = 0
-      Top = 377
+      Top = 400
       Width = 130
       Height = 54
       Align = alTop
@@ -2103,7 +2097,7 @@ object MainForm: TMainForm
     end
     object TransportPanel: TPanel
       Left = 0
-      Top = 599
+      Top = 622
       Width = 130
       Height = 211
       Align = alTop
@@ -2364,7 +2358,7 @@ object MainForm: TMainForm
     end
     object rgLanguage: TRadioGroup
       Left = 0
-      Top = 200
+      Top = 223
       Width = 130
       Height = 39
       Align = alTop
@@ -2373,7 +2367,7 @@ object MainForm: TMainForm
     end
     object infoSubjectDocPanel: TPanel
       Left = 0
-      Top = 513
+      Top = 536
       Width = 130
       Height = 43
       Align = alTop
@@ -2430,7 +2424,7 @@ object MainForm: TMainForm
     end
     object infoReasonPanel: TPanel
       Left = 0
-      Top = 470
+      Top = 493
       Width = 130
       Height = 43
       Align = alTop
@@ -2487,7 +2481,7 @@ object MainForm: TMainForm
     end
     object infoReReturnInPanel: TPanel
       Left = 0
-      Top = 556
+      Top = 579
       Width = 130
       Height = 43
       Align = alTop
@@ -2588,7 +2582,7 @@ object MainForm: TMainForm
       Left = 0
       Top = 117
       Width = 130
-      Height = 40
+      Height = 63
       Align = alTop
       BevelInner = bvRaised
       BevelOuter = bvNone
@@ -2606,7 +2600,8 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 62
+        ExplicitLeft = -2
+        ExplicitTop = -1
       end
       object PartionDateEdit: TcxDateEdit
         Left = 4
@@ -2624,6 +2619,20 @@ object MainForm: TMainForm
         Style.IsFontAssigned = True
         TabOrder = 0
         Width = 120
+      end
+      object cbPartionDate_save: TCheckBox
+        Left = 4
+        Top = 41
+        Width = 124
+        Height = 17
+        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1055#1072#1088#1090#1080#1102
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 1
       end
     end
   end
@@ -2974,7 +2983,6 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
-    ExplicitWidth = 984
     object PanelMovement: TPanel
       Left = 764
       Top = 0
@@ -2984,7 +2992,6 @@ object MainForm: TMainForm
       BevelOuter = bvNone
       Caption = 'PanelMovement'
       TabOrder = 0
-      ExplicitLeft = 664
     end
     object PanelMovementDesc: TPanel
       Left = 50
@@ -3001,7 +3008,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
-      ExplicitWidth = 614
     end
     object infoPanel: TPanel
       Left = 0
@@ -3017,7 +3023,6 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 2
-      ExplicitWidth = 984
       object infoPanelPartner: TPanel
         Left = 130
         Top = 0
@@ -3027,7 +3032,6 @@ object MainForm: TMainForm
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 362
         object LabelPartner: TLabel
           Left = 1
           Top = 1
@@ -3060,7 +3064,6 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 360
         end
       end
       object infoPanelPriceList: TPanel
@@ -3115,7 +3118,6 @@ object MainForm: TMainForm
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitLeft = 664
         object LabelOrderExternal: TLabel
           Left = 1
           Top = 1
@@ -3160,7 +3162,6 @@ object MainForm: TMainForm
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 3
-        ExplicitLeft = 492
         object LabelContract: TLabel
           Left = 1
           Top = 1

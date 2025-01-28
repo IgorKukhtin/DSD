@@ -408,7 +408,8 @@ begin
      ParamAdd(Params,'CountTax',ftInteger);       //Налоговая
 
      ParamAdd(Params,'isSendOnPriceIn',ftBoolean);
-     ParamAdd(Params,'isPartionGoodsDate',ftBoolean);
+     ParamAdd(Params,'isPartionGoodsDate',ftBoolean); // Scale + ScaleCeh - для приемки с производства + расходы с РК - показываем контрол с датой для определения партии
+     ParamAdd(Params,'isPartionDate_save',ftBoolean); // Scale + ScaleCeh - для приемки с производства + расходы с РК - показываем выбор сохранять да/нет
      ParamAdd(Params,'isStorageLine',ftBoolean);
      ParamAdd(Params,'isArticleLoss',ftBoolean);
      ParamAdd(Params,'isLockStartWeighing',ftBoolean);
@@ -631,7 +632,10 @@ begin
      ParamAdd(Params,'BoxCount',ftFloat);            //
      ParamAdd(Params,'BoxCode',ftInteger);           //
      ParamAdd(Params,'PartionGoods',ftString);       //
-     ParamAdd(Params,'PartionGoodsDate',ftDateTime); //
+
+     ParamAdd(Params,'PartionGoodsDate',ftDateTime);  // Дата партия
+     ParamAdd(Params,'isPartionDate_save',ftBoolean); // выбрали сохранять Дату партия да/нет
+
      ParamAdd(Params,'isBarCode',ftBoolean);         //
      ParamAdd(Params,'MovementId_Promo',ftInteger);  //
      ParamAdd(Params,'CountTare1',ftFloat);          // Количество тары вида1
