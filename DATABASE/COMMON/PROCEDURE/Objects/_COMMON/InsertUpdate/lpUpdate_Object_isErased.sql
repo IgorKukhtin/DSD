@@ -22,6 +22,12 @@ BEGIN
                            ;
    END IF;
 
+   -- проверка
+   IF COALESCE (inObjectId, 0) <= 0
+   THEN
+       RAISE EXCEPTION 'ќшибка.Ёлемент не найден.';
+   END IF;
+
 
    -- изменили
    UPDATE Object SET isErased = NOT isErased WHERE Id = inObjectId  RETURNING DescId, isErased INTO vbDescId, vbIsErased;

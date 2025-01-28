@@ -29,7 +29,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
 
      -- проверка
-     IF COALESCE (ioId, 0) = 0
+     IF COALESCE (ioId, 0) <= 0
      THEN
          RAISE EXCEPTION 'ќшибка.Ёлемент не найден.';
      END IF;

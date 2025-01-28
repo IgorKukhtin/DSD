@@ -28,7 +28,9 @@ RETURNS TABLE (Number              Integer
              , MovementDescName_next   TVarChar
              , OrderById           Integer
              , isSendOnPriceIn     Boolean
-             , isPartionGoodsDate  Boolean -- Scale + ScaleCeh - для приемки с производства - показываем контрол с датой для определения партии
+             , isPartionGoodsDate  Boolean -- Scale + ScaleCeh - для приемки с производства + расходы с РК - показываем контрол с датой для определения партии
+             , isPartionDate_save  Boolean -- Scale + ScaleCeh - для приемки с производства + расходы с РК - показываем выбор сохранять да/нет
+
              , isStorageLine       Boolean -- ScaleCeh - будет проверка на ввод <Линия пр-ва> - для каждого взвешивания
              , isArticleLoss       Boolean -- ScaleCeh - проверка на установку <Статья списания>
              , isTransport_link    Boolean -- Scale - проверка <Штрих код Путевой лист>
@@ -100,6 +102,7 @@ BEGIN
                                        , OrderById                Integer
                                        , isSendOnPriceIn          Boolean
                                        , isPartionGoodsDate       Boolean
+                                       , isPartionDate_save       Boolean
                                        , isStorageLine            Boolean
                                        , isArticleLoss            Boolean
                                        , isTransport_link         Boolean
@@ -129,7 +132,7 @@ BEGIN
     -- формирование
     INSERT INTO _tmpToolsWeighing (Number, MovementDescId, MovementDescId_next, FromId, ToId, FromId_next, ToId_next
                                  , PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn
-                                 , isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isInvNumberPartner, isDocPartner, isPersonalGroup, isOrderInternal
+                                 , isPartionGoodsDate, isPartionDate_save, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isInvNumberPartner, isDocPartner, isPersonalGroup, isOrderInternal
                                  , isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, isListInventory, isAsset
                                  , isPartionCell, isReReturnIn, isCloseInventory, isCalc_Sh, isRePack
                                  , isOperCountPartner, isOperPricePartner, isReturnOut_Date, isCalc_PriceVat
@@ -185,6 +188,7 @@ BEGIN
               END AS isSendOnPriceIn
 
             , CASE WHEN tmp.isPartionGoodsDate  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPartionGoodsDate
+            , CASE WHEN tmp.isPartionDate_save  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPartionDate_save
             , CASE WHEN tmp.isStorageLine       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isStorageLine
             , CASE WHEN tmp.isArticleLoss       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isArticleLoss
             , CASE WHEN tmp.isTransport_link    ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
@@ -236,7 +240,10 @@ BEGIN
                         , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'DocumentKindId',     '0',                                                         inSession) ELSE '0'     END AS DocumentKindId
                         , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isProductionIn',     'TRUE',                                                      inSession) ELSE ''      END AS isProductionIn
                         , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isLockStartWeighing', CASE WHEN inBranchCode >= 201 THEN 'FALSE' ELSE 'TRUE' END, inSession) ELSE ''      END AS isLockStartWeighing
+
                         , CASE WHEN /*inIsCeh = TRUE AND*/ vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END          || tmp.Number, 'isPartionGoodsDate', 'FALSE',                                                     inSession) ELSE ''      END AS isPartionGoodsDate
+                        , CASE WHEN /*inIsCeh = TRUE AND*/ vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END          || tmp.Number, 'isPartionDate_save', 'FALSE',                                                     inSession) ELSE ''      END AS isPartionDate_save
+
                         , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isStorageLine',      'FALSE',                                                     inSession) ELSE ''      END AS isStorageLine
                         , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                                                     inSession)              END AS isTransport_link
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSubjectDoc',       'FALSE',                                                     inSession)              END AS isSubjectDoc
@@ -511,6 +518,7 @@ BEGIN
            , (_tmpToolsWeighing.OrderById + _tmpToolsWeighing.Number) :: Integer AS OrderById
            , _tmpToolsWeighing.isSendOnPriceIn
            , _tmpToolsWeighing.isPartionGoodsDate
+           , _tmpToolsWeighing.isPartionDate_save
            , _tmpToolsWeighing.isStorageLine
            , _tmpToolsWeighing.isArticleLoss
            , _tmpToolsWeighing.isTransport_link
@@ -642,6 +650,7 @@ BEGIN
             , tmp.OrderById                       AS OrderById
             , tmp.isSendOnPriceIn
             , FALSE AS isPartionGoodsDate
+            , FALSE AS isPartionDate_save
             , FALSE AS isStorageLine
             , FALSE AS isArticleLoss
             , FALSE AS isTransport_link

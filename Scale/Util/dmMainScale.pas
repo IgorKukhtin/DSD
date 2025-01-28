@@ -539,10 +539,16 @@ begin
     with spSelect do begin
        StoredProcName:= 'gpUpdate_Scale_MIDate';
        OutputType:=otResult;
+       //
+       if GetIndexParams(execParams, 'isPartionDate_save') > 0 then
+         if execParams.ParamByName('isPartionDate_save').AsBoolean = FALSE
+         then execParams.ParamByName('inMovementItemId').AsInteger:= -1 * abs (execParams.ParamByName('inMovementItemId').AsInteger);
+       //
        Params.Clear;
        Params.AddParam('inMovementItemId', ftInteger, ptInput, execParams.ParamByName('inMovementItemId').AsInteger);
        Params.AddParam('inDescCode', ftString, ptInput, execParams.ParamByName('inDescCode').AsString);
        Params.AddParam('inValueData', ftDateTime, ptInput, execParams.ParamByName('inValueData').AsDateTime);
+       execParams.ParamByName('inMovementItemId').AsInteger:= abs(execParams.ParamByName('inMovementItemId').AsInteger);
        //try
          Execute;
        {except
@@ -834,8 +840,10 @@ begin
        Params.AddParam('inGoodsKindId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId').AsInteger);
 
        Params.AddParam('inPartionGoodsDate', ftDateTime, ptInput, execParamsMI.ParamByName('PartionGoodsDate').AsDateTime);
-       Params.AddParam('inIsPartionGoodsDate', ftBoolean, ptInput, execParamsMovement.ParamByName('isPartionGoodsDate').asBoolean);
-
+       Params.AddParam('inIsPartionGoodsDate', ftBoolean, ptInput
+                     , (execParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE)
+                    and(execParamsMI.ParamByName('isPartionDate_save').AsBoolean       = TRUE)
+                      );
        Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
        Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('ChangePercentAmount').AsFloat);
        Params.AddParam('inCountTare', ftFloat, ptInput, execParamsMI.ParamByName('CountTare').AsFloat);
@@ -1928,6 +1936,7 @@ begin
                         execParamsMovement.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                         execParamsMovement.ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
                         execParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
+                        execParamsMovement.ParamByName('isPartionDate_save').asBoolean:= CDS.FieldByName('isPartionDate_save').asBoolean;
                         execParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
                         execParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
                         execParamsMovement.ParamByName('isComment').asBoolean:= CDS.FieldByName('isComment').asBoolean;
@@ -1976,6 +1985,7 @@ begin
                         ParamsMovement.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                         ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
                         ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
+                        ParamsMovement.ParamByName('isPartionDate_save').asBoolean:= CDS.FieldByName('isPartionDate_save').asBoolean;
                         ParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
                         ParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
                         ParamsMovement.ParamByName('isComment').asBoolean:= CDS.FieldByName('isComment').asBoolean;

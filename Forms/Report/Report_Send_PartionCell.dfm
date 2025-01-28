@@ -4,7 +4,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -646
   ExplicitWidth = 1556
   ExplicitHeight = 447
   PixelsPerInch = 96
@@ -1744,7 +1743,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           Name = 'PartionGoodsDate'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartionGoodsDate'
+          ComponentItem = 'PartionGoodsDate_real_real'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','

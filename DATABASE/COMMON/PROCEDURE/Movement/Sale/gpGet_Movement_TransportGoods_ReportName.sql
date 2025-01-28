@@ -51,7 +51,7 @@ BEGIN
 
      --Результат
        SELECT CASE WHEN 1=1 /*COALESCE (vbPlaceOf,'') <> '' AND COALESCE (vbLength,0) <> 0*/
-                   THEN COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_TTN')
+                   THEN COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_TTN_03012025')
                    ELSE 'PrintMovement_TTN'
               END :: TVarChar
               INTO vbPrintFormName

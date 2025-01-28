@@ -19,6 +19,13 @@ BEGIN
    vbDescId:= (SELECT Object.DescId FROM Object WHERE Object.Id = inObjectId);
 
 
+   -- проверка
+   IF COALESCE (inObjectId, 0) <= 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Элемент не найден.';
+   END IF;
+
+
    IF vbUserId IN (5, 9457) AND 1=1
    THEN 
        RAISE EXCEPTION 'Ошибка.%Нет прав удалять = <%>.'

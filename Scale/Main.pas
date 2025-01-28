@@ -290,6 +290,7 @@ type
     SummPartner_in: TcxGridDBColumn;
     actWeighingPartner_ActDiffF: TdsdInsertUpdateAction;
     bbPrintReestr: TSpeedButton;
+    cbPartionDate_save: TCheckBox;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -418,6 +419,9 @@ begin
      EditHeadCount.Text:='';
      EditBarCode.Text:='';
      EditBoxCount.Text:=GetArrayList_Value_byName(Default_Array,'BoxCount');
+     //
+     if (cbPartionDate_save.Visible) and (PanelPartionDate.Visible) then cbPartionDate_save.Checked:= false;
+     //
      myActiveControl;
 end;
 //------------------------------------------------------------------------------------------------
@@ -1153,6 +1157,17 @@ begin
 
 
      //
+     if ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = true
+     then
+         if ParamsMovement.ParamByName('isPartionDate_save').AsBoolean = TRUE
+         then ParamsMI.ParamByName('isPartionDate_save').AsBoolean:=cbPartionDate_save.Checked
+         //иначе сохраняем всегда
+         else ParamsMI.ParamByName('isPartionDate_save').AsBoolean:=true
+     //иначе тоже всегда
+     else ParamsMI.ParamByName('isPartionDate_save').AsBoolean:=true;
+
+
+     //
      ParamsMI.ParamByName('RealWeight_Get').AsFloat:=fGetScale_CurrentWeight;
      try ParamsMI.ParamByName('Count').AsFloat:=StrToFloat(EditCountPack.Text);except ParamsMI.ParamByName('Count').AsFloat:=0;end;
      try ParamsMI.ParamByName('HeadCount').AsFloat:=StrToFloat(EditHeadCount.Text);except ParamsMI.ParamByName('HeadCount').AsFloat:=0;end;
@@ -1312,12 +1327,17 @@ begin
      if (SettingMain.isPartionDate = TRUE) or (ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE)
      then
          with DialogDateValueForm do
-         begin
+         try
               LabelDateValue.Caption:='Партия ДАТА';
               ActiveControl:=DateValueEdit;
               try
+                  cbPartionDate_save.Visible:= (Self.cbPartionDate_save.Visible)and(Self.PanelPartionDate.Visible);
+                  cbPartionDate_save.Checked:= TRUE;
+                  //
                   if ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE
-                  then DateValueEdit.Text:=DateToStr(CDS.FieldByName('PartionGoodsDate').AsDateTime)
+                  then if CDS.FieldByName('PartionGoodsDate').AsDateTime < StrToDate('01.01.2000')
+                       then DateValueEdit.Text:=DateToStr(Date)
+                       else DateValueEdit.Text:=DateToStr(CDS.FieldByName('PartionGoodsDate').AsDateTime)
                   else DateValueEdit.Text:=DateToStr(StrToDate(CDS.FieldByName('PartionGoods').AsString));
               except
                    DateValueEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime-1);
@@ -1328,12 +1348,17 @@ begin
               if ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE
               then begin
                    ParamAddValue(execParams,'inValueData',ftDateTime,StrToDate(DateValueEdit.Text));
+                   if (cbPartionDate_save.Visible) and (not cbPartionDate_save.Checked)
+                   then
+                       ParamAddValue(execParams,'isPartionDate_save',ftBoolean,FALSE);
                    DMMainScaleForm.gpUpdate_Scale_MIDate(execParams);
               end
               else begin
                    ParamAddValue(execParams,'inValueData',ftString,DateValueEdit.Text);
                    DMMainScaleForm.gpUpdate_Scale_MIString(execParams);
               end;
+         finally
+              cbPartionDate_save.Visible:= false;
          end
       else
          with DialogStringValueForm do
@@ -2318,6 +2343,9 @@ begin
        then begin
            cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible:= TRUE;
            PanelPartionDate.Visible:= TRUE;
+           cbPartionDate_save.Visible:= ParamsMovement.ParamByName('isPartionDate_save').AsBoolean = TRUE;
+           if not cbPartionDate_save.Visible then PanelPartionDate.Height:=40;
+
            bbSetPartionGoods.Visible:= TRUE;
            bbChangePartionGoods.Visible:= TRUE;
            bbChangePartionGoods.Glyph:= bbSetPartionGoods.Glyph;

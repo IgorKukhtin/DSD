@@ -237,8 +237,9 @@ BEGIN
              WHERE inIsPartnerDate = FALSE
                AND (tmpBranchJuridical.UnitId = MovementLinkObject_From.ObjectId OR COALESCE (tmpBranchJuridical.UnitId, 0) = 0
                  OR tmpRoleAccessKey.AccessKeyId > 0
+               --OR inPartnerId > 0
                    )
-               AND (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0)
+               AND (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0) -- OR inPartnerId > 0
 
             UNION ALL
              SELECT MovementDate_OperDatePartner.MovementId AS Id
@@ -267,8 +268,9 @@ BEGIN
 
                AND (tmpBranchJuridical.UnitId = MovementLinkObject_From.ObjectId OR COALESCE (tmpBranchJuridical.UnitId, 0) = 0
                  OR tmpRoleAccessKey.AccessKeyId > 0
+               --OR inPartnerId > 0
                    )
-               AND (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0)
+               AND (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0) --  OR inPartnerId > 0
 
             /*UNION ALL
             --Заявка на возврат тары

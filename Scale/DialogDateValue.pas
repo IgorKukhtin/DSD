@@ -26,6 +26,7 @@ type
     PanelDateValue: TPanel;
     LabelDateValue: TLabel;
     DateValueEdit: TcxDateEdit;
+    cbPartionDate_save: TCheckBox;
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
