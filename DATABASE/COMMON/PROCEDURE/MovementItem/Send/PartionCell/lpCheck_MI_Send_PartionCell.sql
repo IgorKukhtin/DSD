@@ -84,6 +84,11 @@ BEGIN
                                                        ON MILO_GoodsKind.MovementItemId = MILO.MovementItemId
                                                       AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
             
+                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                    ON MovementLinkObject_To.MovementId = Movement.Id
+                                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                   AND MovementLinkObject_To.ObjectId   IN (zc_Unit_RK())
+
                  WHERE MILO.DescId   IN (zc_MILinkObject_PartionCell_1(), zc_MILinkObject_PartionCell_2(), zc_MILinkObject_PartionCell_3(), zc_MILinkObject_PartionCell_4(), zc_MILinkObject_PartionCell_5()
                                        , zc_MILinkObject_PartionCell_6(), zc_MILinkObject_PartionCell_7(), zc_MILinkObject_PartionCell_8(), zc_MILinkObject_PartionCell_9(), zc_MILinkObject_PartionCell_10()
                                        , zc_MILinkObject_PartionCell_11(), zc_MILinkObject_PartionCell_12(), zc_MILinkObject_PartionCell_13(), zc_MILinkObject_PartionCell_14(), zc_MILinkObject_PartionCell_15()

@@ -25,6 +25,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , PartionGoodsDate TDateTime
+             , PartionGoodsDate_real_real TDateTime
              , DescId_milo_num Integer
              , PartionCellId_num Integer
 
@@ -609,10 +610,11 @@ BEGIN
                              -- ***Дата партии
                            , CASE WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE -- AND vbUserId = 5
                                        THEN zc_DateStart()
-                                  --WHEN vbUserId = 5
-                                  --     THEN MIDate_PartionGoods.ValueData
                                   ELSE COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
                              END :: TDateTime AS PartionGoodsDate
+
+                             -- ***Дата партии
+                           , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) :: TDateTime AS PartionGoodsDate_real_real
 
                              -- кол-во
                            , SUM (MovementItem.Amount / CASE WHEN inIsCell = TRUE AND tmpMILO_PC_count.CountCell > 0 THEN tmpMILO_PC_count.CountCell ELSE 1 END) AS Amount
@@ -663,12 +665,9 @@ BEGIN
                              , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
                              , CASE WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE -- AND vbUserId = 5
                                          THEN  zc_DateStart()
-                                    --WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE
-                                    --     THEN COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) -- zc_DateStart()
-                                    --WHEN vbUserId = 5
-                                    --     THEN MIDate_PartionGoods.ValueData
                                     ELSE COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
                                END
+                             , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
 
                              , COALESCE (tmpMILO_PartionCell.ObjectId, 0)
                      )
@@ -1021,6 +1020,7 @@ BEGIN
                          , Object_GoodsKind.Id                        AS GoodsKindId
                          , Object_GoodsKind.ValueData                 AS GoodsKindName
                          , CASE WHEN tmpData_MI.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpData_MI.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
+                         , tmpData_MI.PartionGoodsDate_real_real
                          , tmpData_MI.PartionGoodsDate AS PartionGoodsDate_real
 
                          , COALESCE (tmpData_PartionCell.DescId_milo_num, 0)      AS DescId_milo_num
@@ -1319,6 +1319,7 @@ BEGIN
         , (tmpResult.GoodsKindName || CASE WHEN vbUserId = 5 AND 1=0 THEN ' *' || COALESCE (tmpResult.CountCell, 0) :: TVarChar ELSE '' END) :: TVarChar AS GoodsKindName
           --
         , tmpResult.PartionGoodsDate
+        , tmpResult.PartionGoodsDate_real_real
           --
         , tmpResult.DescId_milo_num :: Integer
         , tmpResult.PartionCellId_num
@@ -2642,6 +2643,7 @@ BEGIN
         , tmpResult.GoodsGroupNameFull, tmpResult.GoodsGroupName, tmpResult.MeasureName
         , tmpResult.GoodsKindId , tmpResult.GoodsKindName
         , tmpResult.PartionGoodsDate
+        , tmpResult.PartionGoodsDate AS PartionGoodsDate_real_real
           --
         , CASE WHEN inIsCell = TRUE THEN -1 ELSE 0 END :: Integer AS DescId_milo_num
           -- 23
