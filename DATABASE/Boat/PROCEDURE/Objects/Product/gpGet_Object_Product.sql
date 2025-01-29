@@ -199,7 +199,9 @@ BEGIN
                              , COALESCE (spSelect.NPP,0)       ::TFloat AS NPP
                              , COALESCE (spSelect.SummReal, 0) ::TFloat AS SummReal
                              , spSelect.SummTax                         AS SummTax
+                               -- ***Total LP - ИТОГО с учетом всех % скидок, без Транспорта, Сумма продажи без НДС
                              , COALESCE (spSelect.Basis_summ, 0)        AS TotalSumm
+
                         FROM gpGet_Movement_OrderClient (inMovementId_OrderClient, CURRENT_DATE, inSession) AS spSelect
                        )
 
@@ -316,7 +318,7 @@ BEGIN
          , tmpOrderClient.NPP         :: TFloat    AS NPP_OrderClient
 
            -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-         , (zfCalc_Summ_NoVAT (tmpOrderClient.TotalSumm, tmpOrderClient.VATPercent)
+         , (tmpOrderClient.TotalSumm
             -- минус откорректированная скидка
           - COALESCE (tmpOrderClient.SummTax, 0)
             -- плюс Транспорт
@@ -325,21 +327,28 @@ BEGIN
            ) :: TFloat AS TotalSummMVAT
 
            -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-         , (tmpOrderClient.TotalSumm
+         , (zfCalc_SummWVAT (
+            tmpOrderClient.TotalSumm
             -- минус откорректированная скидка
-          - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
+          - tmpOrderClient.SummTax
             -- плюс Транспорт
-          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
-          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm, tmpOrderClient.VATPercent)
+          + tmpOrderClient.TransportSumm_load
+          + tmpOrderClient.TransportSumm
+            -- плюс НДС
+          , tmpOrderClient.VATPercent)
            ) :: TFloat AS TotalSummPVAT
 
            -- ИТОГО НДС
-         , zfCalc_Summ_VAT (tmpOrderClient.TotalSumm
+         , zfCalc_Summ_VAT (zfCalc_SummWVAT (
+                            tmpOrderClient.TotalSumm
                             -- минус откорректированная скидка
-                          - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
+                          - tmpOrderClient.SummTax
                             -- плюс Транспорт
-                          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
-                          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm, tmpOrderClient.VATPercent)
+                          + tmpOrderClient.TransportSumm_load
+                          + tmpOrderClient.TransportSumm
+                            -- плюс НДС
+                          , tmpOrderClient.VATPercent)
+                            -- а теперь расчет НДС
                           , tmpOrderClient.VATPercent
                            )  :: TFloat AS TotalSummVAT
 
@@ -348,9 +357,13 @@ BEGIN
          , tmpOrderClient.TransportSumm       :: TFloat AS TransportSumm  
          
          , COALESCE (tmpOrderClient.SummDiscount_total, 0) :: TFloat AS SummDiscount_total
+          -- ***Total LP - ИТОГО с учетом всех % скидок, без Транспорта, Сумма продажи без НДС
          , COALESCE (tmpOrderClient.TotalSumm, 0)          :: TFloat AS Basis_summ   
+          -- *Total LP (Basis + Opt) - ИТОГО БЕЗ учета скидки и Транспорта, Сумма продажи без НДС
          , COALESCE (tmpOrderClient.Basis_summ_orig, 0)    :: TFloat AS Basis_summ_orig
+           -- ИТОГО Сумма продажи без НДС - без Скидки (Basis) 
          , COALESCE (tmpOrderClient.Basis_summ1_orig, 0)   :: TFloat AS Basis_summ1_orig
+           -- ИТОГО Сумма продажи без НДС - без Скидки (options)
          , COALESCE (tmpOrderClient.Basis_summ2_orig, 0)   :: TFloat AS Basis_summ2_orig
          ---, (COALESCE (tmpOrderClient.TotalSumm,0) - COALESCE (tmpOrderClient.SummTax,0) ) ::TFloat AS SummReal 
 
@@ -385,12 +398,15 @@ BEGIN
            -- итого остаток к оплате по всем счетам
          , (COALESCE (tmpInvoice.AmountIn, 0) - COALESCE (tmpBankAccount.AmountIn,0))              ::TFloat AS AmountIn_rem
            -- итого остаток к оплате за лодку
-         , (COALESCE (tmpOrderClient.TotalSumm,0)
+         , (zfCalc_SummWVAT (
+            COALESCE (tmpOrderClient.TotalSumm,0)
             -- минус откорректированная скидка
-          - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
+          - tmpOrderClient.SummTax
             -- плюс Транспорт
-          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
-          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm, tmpOrderClient.VATPercent)
+          + tmpOrderClient.TransportSumm_load
+          + tmpOrderClient.TransportSumm
+            -- плюс НДС
+          , tmpOrderClient.VATPercent)
             -- оплата
           - COALESCE (tmpBankAccount.AmountIn,0)
            ) ::TFloat AS AmountIn_remAll
@@ -401,18 +417,21 @@ BEGIN
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_load_calc(), tmpOrderClient.MovementId, tmpOrderClient.TransportSumm_load)::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_calc(), tmpOrderClient.MovementId, tmpOrderClient.TransportSumm)::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent_calc(), tmpOrderClient.MovementId, COALESCE (tmpOrderClient.VATPercent, 0) )::integer
-         , lpInsertUpdate_MovementFloat (zc_MovementFloat_Basis_summ_transport_calc(), tmpOrderClient.MovementId, (zfCalc_Summ_NoVAT (tmpOrderClient.TotalSumm, tmpOrderClient.VATPercent)
-                                                                                                                     -- минус откорректированная скидка
-                                                                                                                   - COALESCE (tmpOrderClient.SummTax, 0)
-                                                                                                                     -- плюс Транспорт
-                                                                                                                   + COALESCE (tmpOrderClient.TransportSumm_load, 0)+ COALESCE (tmpOrderClient.TransportSumm, 0)
-                                                                                                                    ))    ::integer
-         , lpInsertUpdate_MovementFloat (zc_MovementFloat_BasisWVAT_summ_transport_calc(), tmpOrderClient.MovementId, (tmpOrderClient.TotalSumm
-                                                                                                                        -- минус откорректированная скидка
-                                                                                                                      - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
-                                                                                                                        -- плюс Транспорт
-                                                                                                                      + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
-                                                                                                                      + zfCalc_SummWVAT (tmpOrderClient.TransportSumm, tmpOrderClient.VATPercent)
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_Basis_summ_transport_calc(), tmpOrderClient.MovementId, (tmpOrderClient.TotalSumm
+                                                                                                                   -- минус откорректированная скидка
+                                                                                                                 - COALESCE (tmpOrderClient.SummTax, 0)
+                                                                                                                   -- плюс Транспорт
+                                                                                                                 + COALESCE (tmpOrderClient.TransportSumm_load, 0)+ COALESCE (tmpOrderClient.TransportSumm, 0)
+                                                                                                                  ))    ::integer
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_BasisWVAT_summ_transport_calc(), tmpOrderClient.MovementId, (zfCalc_SummWVAT (
+                                                                                                                       tmpOrderClient.TotalSumm
+                                                                                                                       -- минус откорректированная скидка
+                                                                                                                     - tmpOrderClient.SummTax
+                                                                                                                       -- плюс Транспорт
+                                                                                                                     + tmpOrderClient.TransportSumm_load
+                                                                                                                     + tmpOrderClient.TransportSumm
+                                                                                                                       -- плюс НДС
+                                                                                                                     , tmpOrderClient.VATPercent)
                                                                                                                        ))::integer
          , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isVat_calc(), tmpOrderClient.MovementId, FALSE)  ::integer
  

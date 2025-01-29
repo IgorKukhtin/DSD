@@ -1,4 +1,4 @@
--- Function: gpGet_Movement_OrderClient()
+ -- Function: gpGet_Movement_OrderClient()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_OrderClient (Integer, TDateTime, TVarChar);
 
@@ -160,6 +160,8 @@ BEGIN
                  , CAST (0 as integer) AS t4
                  , CAST (0 as integer) AS t5
                  , CAST (0 as integer) AS t6
+                 , CAST (0 as integer) AS t7
+
               FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                    LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                          ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
