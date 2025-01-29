@@ -2,14 +2,16 @@
 
 DROP FUNCTION IF EXISTS gpReport_PartionCell_history (TDateTime, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_PartionCell_history (TDateTime, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_PartionCell_history (TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_PartionCell_history (TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_PartionCell_history (TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_PartionCell_history (
     IN inPartionGoodsDate         TDateTime ,
     IN inGoodsId                  Integer   ,
     IN inGoodsKindId              Integer   ,
     IN inUnitId                   Integer   ,
-    IN inisDetail                 Boolean   , -- отображать  по строкам
+    IN inisDetail                 Boolean   , -- отображать  по строкам  
+    IN inIsRePack                 Boolean   , -- Перепак  Да / Нет
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate_old TDateTime, OperDate_new TDateTime
@@ -49,11 +51,16 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                                            -- AND MovementItem.MovementId = 28742039
                      INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                         AND Movement.DescId = zc_Movement_Send()
-                                      --  AND Movement.Id = 28742039
+                                      --  AND Movement.Id = 28742039 
+
                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                  ON MovementLinkObject_To.MovementId = Movement.Id
-                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                 AND MovementLinkObject_To.ObjectId = inUnitId
+                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                  AND MovementLinkObject_To.ObjectId = inUnitId
+
+                     LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                               ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                              AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
 
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -61,6 +68,7 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                 WHERE MovementItemDate.ValueData = inPartionGoodsDate --'2024-07-15'
                   AND MovementItemDate.DescId = zc_MIDate_PartionGoods()
                   AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0)
+                  AND COALESCE (MovementBoolean_isRePack.ValueData, FALSE) = inIsRePack
               UNION
                 -- запрос по док. Перемещения - партия  = дата документа
                 SELECT MovementItem.Id
@@ -69,6 +77,10 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                   AND MovementLinkObject_To.ObjectId = inUnitId
+
+                     LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                               ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                              AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
 
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.DescId = zc_MI_Master()
@@ -82,6 +94,7 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                   AND Movement.OperDate = inPartionGoodsDate
                   AND Movement.StatusId = zc_Enum_Status_Complete()
                   AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0)
+                  AND COALESCE (MovementBoolean_isRePack.ValueData, FALSE) = inIsRePack
               UNION
                 --запрос по партиям из проводок
                 SELECT DISTINCT MIContainer.MovementItemId AS Id
@@ -100,10 +113,16 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                      INNER JOIN Movement ON Movement.Id = MIContainer.MovementId
                                         AND Movement.DescId = zc_Movement_Send()
                                       --  AND Movement.Id = 28742039
+
+                     LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                               ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                              AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
+
                 WHERE --ObjectDate_Value.ObjectId = Object_PartionGoods.Id
                       ObjectDate_Value.ValueData = inPartionGoodsDate  --'2024-07-15'
                   AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                   AND COALESCE (CLO_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0)
+                  AND COALESCE (MovementBoolean_isRePack.ValueData, FALSE) = inIsRePack
               ) AS tmp
          )
 
@@ -284,6 +303,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.01.25         * inIsRePack
  18.07.24         *
 */
 
@@ -291,4 +311,4 @@ $BODY$
 --select * from gpReport_PartionCell_history(inPartionGoodsDate := ('16.07.2024')::TDateTime , inGoodsId := 2116 , inGoodsKindId := 8346 ,  inSession := '9457');
 --
 --select * from gpReport_PartionCell_history(inPartionGoodsDate := ('17.07.2024')::TDateTime , inGoodsId := 2116 , inGoodsKindId := 8346 , inUnitId:= zc_Unit_RK(), inisDetail:= FALSE, inSession := '9457');
---select * from gpReport_PartionCell_history(inPartionGoodsDate := ('19.07.2024')::TDateTime , inGoodsId := 2116 , inGoodsKindId := 8346 , inUnitId := 8459 , inisDetail:= FALSE,  inSession := '9457');
+--select * from gpReport_PartionCell_history(inPartionGoodsDate := ('17.07.2024')::TDateTime , inGoodsId := 2116 , inGoodsKindId := 8346 , inUnitId := 8459 , inisDetail:= FALSE, inIsRePack:=FALSE, inSession := '9457');

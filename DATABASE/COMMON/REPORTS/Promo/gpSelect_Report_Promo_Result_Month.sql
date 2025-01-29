@@ -557,10 +557,10 @@ BEGIN
           , MI_PromoGoods.AmountSale          :: TFloat -- продажа - возврат
           , MI_PromoGoods.AmountSaleWeight    :: TFloat -- продажа - возврат
 
-          , CAST (CASE WHEN COALESCE (tmpSaleReturn.AmountRealWeight,0) = 0 AND MI_PromoGoods.AmountSaleWeight > 0
+          , CAST (CASE WHEN COALESCE (tmpSaleReturn.AmountRealWeight, MI_PromoGoods.AmountRealWeight_calc, 0) = 0 AND MI_PromoGoods.AmountSaleWeight > 0
                             THEN 100
-                       WHEN COALESCE (tmpSaleReturn.AmountRealWeight, 0) <> 0
-                            THEN (MI_PromoGoods.AmountSaleWeight / tmpSaleReturn.AmountRealWeight - 1) *100
+                       WHEN COALESCE (tmpSaleReturn.AmountRealWeight, MI_PromoGoods.AmountRealWeight_calc, 0) <> 0
+                            THEN (MI_PromoGoods.AmountSaleWeight / COALESCE (tmpSaleReturn.AmountRealWeight, MI_PromoGoods.AmountRealWeight_calc, 0)) *100
                        WHEN MI_PromoGoods.AmountSaleWeight < 0
                             THEN -100
                        ELSE 0

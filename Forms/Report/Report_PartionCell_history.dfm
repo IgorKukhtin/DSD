@@ -280,6 +280,15 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
       TabOrder = 10
       Width = 111
     end
+    object cbIsRePack: TcxCheckBox
+      Left = 690
+      Top = 41
+      Hint = #1055#1077#1088#1077#1087#1072#1082
+      Caption = #1055#1077#1088#1077#1087#1072#1082' ('#1044#1072' / '#1053#1077#1090')'
+      Properties.ReadOnly = False
+      TabOrder = 11
+      Width = 127
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -644,6 +653,14 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRePack'
+        Value = Null
+        Component = cbIsRePack
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -805,6 +822,14 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsRePack'
+        Value = Null
+        Component = cbIsRePack
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
