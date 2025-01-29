@@ -8623,8 +8623,12 @@ begin
   FIdHTTP.Request.CustomHeaders.Clear;
   FIdHTTP.Request.CustomHeaders.FoldLines := False;
 
+  //FIdHTTP.Request.Connection := 'keep-alive';
+  //FIdHTTP.Request.BasicAuthentication := True;
+
   try
     S := FIdHTTP.Get(TIdURI.URLEncode(FURL.Value + FOrder.Value));
+    //S := FIdHTTP.Get(FURL.Value + FOrder.Value);
     if FIdHTTP.ResponseCode = 200 then
     begin
 
