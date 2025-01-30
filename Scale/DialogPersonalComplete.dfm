@@ -9,7 +9,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   ExplicitWidth = 522
-  ExplicitHeight = 401
+  ExplicitHeight = 405
   PixelsPerInch = 96
   TextHeight = 14
   inherited bbPanel: TPanel
@@ -768,7 +768,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         TabOrder = 0
         object EditPersonalStickCode1: TcxCurrencyEdit
           Tag = 11
-          Left = 5
+          Left = 6
           Top = 14
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
