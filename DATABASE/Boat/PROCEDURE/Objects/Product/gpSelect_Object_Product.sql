@@ -102,7 +102,7 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
 
                -- ИТОГО Сумма Скидка № 1 (Basis) - без НДС
              , SummDiscount1      TFloat
-               -- -- ИТОГО Сумма Скидка № 2 (Basis) - без НДС
+               -- ИТОГО Сумма Скидка № 2 (Basis) - без НДС
              , SummDiscount2      TFloat
 
                -- ИТОГО Сумма Скидка № 1 (options) - без НДС
