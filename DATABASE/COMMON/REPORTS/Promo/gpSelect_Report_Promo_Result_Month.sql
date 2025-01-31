@@ -108,7 +108,7 @@ BEGIN
      END IF;
 
 
-    -- inMovementId := 29288400;
+   -- inMovementId := 24701865; --23542302;  --24701865;  --29288400;
 
     -- Результат
     RETURN QUERY
@@ -287,6 +287,9 @@ BEGIN
 
     --данные по товарам док. акций
   , tmpMI_1 AS (SELECT MI_PromoGoods.*
+                     , CASE WHEN MI_PromoGoods.GoodsKindId > 0 THEN MI_PromoGoods.GoodsKindId ELSE MI_PromoGoods.GoodsKindCompleteId END AS GoodsKindId_find
+                      --  № п/п
+                     , ROW_NUMBER() OVER (PARTITION BY MI_PromoGoods.MovementId, MI_PromoGoods.GoodsId ORDER BY MI_PromoGoods.Amount DESC) AS Ord
                 FROM (SELECT DISTINCT tmpMovement_Promo.Id AS Id FROM tmpMovement_Promo) AS Movement_Promo
                    LEFT JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
                                                           ON MI_PromoGoods.MovementId = Movement_Promo.Id
@@ -304,7 +307,17 @@ BEGIN
                                             WHERE ObjectString.ObjectId IN (SELECT DISTINCT tmpMI_1.GoodsId FROM tmpMI_1)
                                               AND ObjectString.DescId = zc_ObjectString_Goods_GroupNameFull()
                                            )
-  , tmpMI AS (SELECT
+  --
+  , tmpData_notFind AS (SELECT DISTINCT tmpMI_SaleReturn.GoodsId
+                        FROM tmpMI_SaleReturn
+                             LEFT JOIN tmpMI_1 AS tmpData_promo
+                                               ON tmpData_promo.GoodsId     = tmpMI_SaleReturn.GoodsId
+                                              AND tmpData_promo.GoodsKindId = tmpMI_SaleReturn.GoodsKindId
+                        WHERE tmpData_promo.GoodsId IS NULL
+                       )
+
+  , tmpMI AS (-- если в продажах есть "другие" виды упаковки
+               SELECT
                      MI_PromoGoods.MovementId          --ИД документа <Акция>
                    , MI_PromoGoods.GoodsId             --Ид объекта  <товар>
                    , MI_PromoGoods.GoodsCode           --код объекта  <товар>
@@ -376,13 +389,15 @@ BEGIN
                    --подвязываем все периоды продажи  
                    LEFT JOIN tmpMI_1 AS MI_PromoGoods ON MI_PromoGoods.MovementId = tmpDate_list.Id
                    
+                   JOIN tmpData_notFind ON tmpData_notFind.GoodsId = MI_PromoGoods.GoodsId
+                   
                    --показываем только товары проданные за период и факт продажи возврата и менсяц по дате покупателя.
                    LEFT JOIN tmpMI_SaleReturn ON tmpMI_SaleReturn.MovementId_promo = MI_PromoGoods.MovementId
                                              AND tmpMI_SaleReturn.GoodsId = MI_PromoGoods.GoodsId
                                              AND tmpMI_SaleReturn.Month_Partner = tmpDate_list.OperDate --
-                                             AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  CASE WHEN COALESCE (MI_PromoGoods.GoodsKindId,0) > 0 THEN COALESCE (MI_PromoGoods.GoodsKindId,0) ELSE COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) END
-                                                  OR CASE WHEN COALESCE (MI_PromoGoods.GoodsKindId,0) > 0 THEN COALESCE (MI_PromoGoods.GoodsKindId,0) ELSE COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) END = 0)                                           -- COALESCE (MI_PromoGoods.GoodsKindCompleteId,0)
-                                             AND inIsReal = TRUE
+                                            -- AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  COALESCE (MI_PromoGoods.GoodsKindId_find,0)
+                                            --      OR COALESCE (MI_PromoGoods.GoodsKindId_find,0) = 0)
+                                            -- AND inIsReal = TRUE 
 
                    LEFT JOIN tmpMI_Detail ON tmpMI_Detail.MovementId = MI_PromoGoods.MovementId
                                                      AND tmpMI_Detail.ParentId = MI_PromoGoods.Id
@@ -396,6 +411,7 @@ BEGIN
                    LEFT JOIN tmpObjectString_Goods_GroupNameFull AS ObjectString_Goods_GoodsGroupFull
                                           ON ObjectString_Goods_GoodsGroupFull.ObjectId = MI_PromoGoods.GoodsId
                                          AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+              WHERE MI_PromoGoods.Ord = 1 AND inIsReal = TRUE
               GROUP BY MI_PromoGoods.MovementId
                      , MI_PromoGoods.GoodsId
                      , MI_PromoGoods.GoodsCode
@@ -412,7 +428,120 @@ BEGIN
                      , CASE WHEN inIsGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindName ELSE '' END
                      , CASE WHEN inIsGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindCompleteName ELSE '' END
                      , ObjectString_Goods_GoodsGroupFull.ValueData
-                     --, COALESCE (tmpMI_SaleReturn.Month_Partner, tmpMI_Detail.OperDate)
+                     , tmpDate_list.OperDate
+          UNION ALL 
+              -- если в продажах "такие же" виды упаковки
+              SELECT
+                     MI_PromoGoods.MovementId          --ИД документа <Акция>
+                   , MI_PromoGoods.GoodsId             --Ид объекта  <товар>
+                   , MI_PromoGoods.GoodsCode           --код объекта  <товар>
+                   , MI_PromoGoods.GoodsName           --наименование объекта <товар>
+                   , MI_PromoGoods.Measure             --Единица измерения
+                   , MI_PromoGoods.MeasureId             --Единица измерения
+                   , MI_PromoGoods.TradeMark           --Торговая марка
+
+                   , MI_PromoGoods.Price               --Цена в прайсе
+                   , MI_PromoGoods.PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
+                   , MI_PromoGoods.PriceSale           --Цена на полке
+
+                   , MI_PromoGoods.GoodsWeight -- Вес
+                   , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (MI_PromoGoods.GoodsKindId,0) ELSE 0 END AS GoodsKindId
+                   , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) ELSE 0 END AS GoodsKindCompleteId 
+                   
+                   , STRING_AGG (DISTINCT MI_PromoGoods.GoodsKindName, '; ')         ::TVarChar AS GoodsKindName       --Наименование обьекта <Вид товара>
+                   , STRING_AGG (DISTINCT MI_PromoGoods.GoodsKindCompleteName, '; ') ::TVarChar AS GoodsKindCompleteName
+
+                   , AVG (MI_PromoGoods.Amount) AS Amount              --% скидки на товар
+                   , SUM (MI_PromoGoods.AmountReal) AS AmountReal          --Объем продаж в аналогичный период, кг
+                   , SUM (MI_PromoGoods.AmountRealWeight) AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
+
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMin,0))       AS AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMinWeight,0)) AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMax,0))       AS AmountPlanMax       --Максимум планируемого объема продаж на акционный период (в кг)
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMaxWeight,0)) AS AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
+                    --информативно для проверки
+                   , SUM (COALESCE (MI_PromoGoods.AmountOut,0))        AS AmountOut_promo         --Кол-во реализация (факт)
+                   , SUM (COALESCE (MI_PromoGoods.AmountOutWeight,0))  AS AmountOutWeight_promo   --Кол-во реализация (факт) Вес
+                   , SUM (COALESCE (MI_PromoGoods.AmountIn,0))         AS AmountIn_promo          --Кол-во возврат (факт)
+                   , SUM (COALESCE (MI_PromoGoods.AmountInWeight,0))   AS AmountInWeight_promo    --Кол-во возврат (факт) Вес
+
+                   , SUM (COALESCE (MI_PromoGoods.AmountOut, 0) - COALESCE (MI_PromoGoods.AmountIn, 0))            :: TFloat  AS AmountSale_promo       -- продажа - возврат
+                   , SUM(COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) :: TFloat  AS AmountSaleWeight_promo -- продажа - возврат
+
+                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut, tmpMI_Detail.Amount, 0))       AS AmountOut
+                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut, tmpMI_Detail.Amount, 0)
+                                   * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END
+                                   )  AS AmountOutWeight   --Кол-во реализация (факт) Вес
+                   , SUM (COALESCE (tmpMI_SaleReturn.AmountIn, tmpMI_Detail.AmountIn, 0))         AS AmountIn          --Кол-во возврат (факт)
+                   , SUM (COALESCE (tmpMI_SaleReturn.AmountIn, tmpMI_Detail.AmountIn,0)
+                          * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END)   AS AmountInWeight    --Кол-во возврат (факт) Вес
+
+                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut, tmpMI_Detail.Amount, 0) - COALESCE (tmpMI_SaleReturn.AmountIn, tmpMI_Detail.AmountIn, 0))            :: TFloat  AS AmountSale       -- продажа - возврат
+                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut, tmpMI_Detail.Amount, 0) * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END
+                        - COALESCE (tmpMI_SaleReturn.AmountIn, tmpMI_Detail.AmountIn, 0) * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END
+                         ) :: TFloat  AS AmountSaleWeight -- продажа - возврат
+
+                   , tmpDate_list.OperDate                                                                        ::TDateTime AS Month_Partner
+                   ----
+                   , SUM(COALESCE (MI_PromoGoods.Price, 0) - COALESCE (MI_PromoGoods.PriceWithVAT,0))              :: TFloat  AS Price_Diff
+
+                   , AVG (COALESCE (MI_PromoGoods.MainDiscount,0))                                                 ::TFloat   AS MainDiscount
+                   , MAX (MIFloat_PriceIn1.ValueData)                                                              ::TFloat   AS PriceIn1               --себестоимость факт,  за кг
+                   , MAX (MI_PromoGoods.ContractCondition)                                                         ::TFloat   AS ContractCondition      -- Бонус сети, %
+                   , ObjectString_Goods_GoodsGroupFull.ValueData                                                              AS GoodsGroupNameFull
+
+                   -- продажа за аналогичный период
+                   , SUM (COALESCE (tmpMI_Detail.AmountReal,0))       ::TFloat AS AmountReal_calc
+                   , SUM (COALESCE (tmpMI_Detail.AmountReal,0)
+                           * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END)       ::TFloat AS AmountRealWeight_calc
+                   -- возврат за аналогичный период
+                   , SUM (COALESCE (tmpMI_Detail.AmountRetIn,0))      ::TFloat AS AmountRetIn_calc
+                   , SUM (COALESCE (tmpMI_Detail.AmountRetIn,0)
+                           * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END)       ::TFloat AS AmountRetInWeight_calc
+
+              FROM tmpDate_list
+                   --подвязываем все периоды продажи  
+                   LEFT JOIN tmpMI_1 AS MI_PromoGoods ON MI_PromoGoods.MovementId = tmpDate_list.Id
+                   
+                   LEFT JOIN tmpData_notFind ON tmpData_notFind.GoodsId = MI_PromoGoods.GoodsId
+                   
+                   --показываем только товары проданные за период и факт продажи возврата и менсяц по дате покупателя.
+                   LEFT JOIN tmpMI_SaleReturn ON tmpMI_SaleReturn.MovementId_promo = MI_PromoGoods.MovementId
+                                             AND tmpMI_SaleReturn.GoodsId = MI_PromoGoods.GoodsId
+                                             AND tmpMI_SaleReturn.Month_Partner = tmpDate_list.OperDate
+                                             AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  COALESCE (MI_PromoGoods.GoodsKindId_find,0)
+                                                  OR COALESCE (MI_PromoGoods.GoodsKindId_find,0) = 0)
+                                             AND inIsReal = TRUE 
+
+                   LEFT JOIN tmpMI_Detail ON tmpMI_Detail.MovementId = MI_PromoGoods.MovementId
+                                                     AND tmpMI_Detail.ParentId = MI_PromoGoods.Id
+                                                     AND tmpMI_Detail.OperDate = tmpDate_list.OperDate --
+                                                     AND inIsReal = FALSE
+                   
+                   LEFT JOIN tmpMIFloat_PriceIn1 AS MIFloat_PriceIn1
+                                                 ON MIFloat_PriceIn1.MovementItemId = MI_PromoGoods.Id
+                                                AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
+
+                   LEFT JOIN tmpObjectString_Goods_GroupNameFull AS ObjectString_Goods_GoodsGroupFull
+                                          ON ObjectString_Goods_GoodsGroupFull.ObjectId = MI_PromoGoods.GoodsId
+                                         AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+              WHERE tmpData_notFind.GoodsId IS NULL OR inIsReal = FALSE
+              GROUP BY MI_PromoGoods.MovementId
+                     , MI_PromoGoods.GoodsId
+                     , MI_PromoGoods.GoodsCode
+                     , MI_PromoGoods.GoodsName
+                     , MI_PromoGoods.Measure
+                     , MI_PromoGoods.MeasureId
+                     , MI_PromoGoods.TradeMark
+                     , MI_PromoGoods.Price
+                     , MI_PromoGoods.PriceWithVAT
+                     , MI_PromoGoods.PriceSale
+                     , MI_PromoGoods.GoodsWeight
+                     , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (MI_PromoGoods.GoodsKindId,0) ELSE 0 END
+                     , CASE WHEN inIsGoodsKind = FALSE THEN COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) ELSE 0 END
+                     , CASE WHEN inIsGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindName ELSE '' END
+                     , CASE WHEN inIsGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindCompleteName ELSE '' END
+                     , ObjectString_Goods_GoodsGroupFull.ValueData
                      , tmpDate_list.OperDate
               )
 
