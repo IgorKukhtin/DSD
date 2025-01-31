@@ -1,6 +1,5 @@
 -- Function: gpReport_GoodsMI_InventoryDetail ()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_InventoryDetail (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_InventoryDetail (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_InventoryDetail (
@@ -186,7 +185,7 @@ BEGIN
                                  , MIContainer.DescId
                              )
 
-    , tmpContainer_find AS (SELECT MAX (tmpContainerAll.MovementItemId) AS MovementItemId
+  , tmpContainer_find AS (SELECT MAX (tmpContainerAll.MovementItemId) AS MovementItemId
                                  , tmpContainerAll.MovementId
                                  , tmpContainerAll.GoodsId
                                  , tmpContainerAll.GoodsKindId
@@ -213,7 +212,7 @@ BEGIN
                   AND MovementItem.isErased = FALSE
                ) 
 
-  , tmpMI_all AS (SELECT COALESCE (tmpContainer_find.MovementItemId, MovementItem.Id) AS Id
+  , tmpMI_all AS (SELECT MovementItem.Id AS Id  -- COALESCE (tmpContainer_find.MovementItemId, MovementItem.Id) AS Id
                        , MovementItem.MovementId
                        , MovementItem.ObjectId
                        , MovementItem.Amount
@@ -254,6 +253,30 @@ BEGIN
                        , MovementItem.isErased
                ) 
 
+    , tmpMI_notFound AS (SELECT MovementItem.*
+                         FROM  tmpMI AS MovementItem
+                              LEFT JOIN tmpContainerAll AS MIContainer
+                                                        ON MovementItem.MovementId = MIContainer.MovementId
+                                                       AND MovementItem.Id = MIContainer.MovementItemId
+                                                       AND MovementItem.DescId = zc_MI_Master()
+                                                       AND MovementItem.isErased = FALSE
+                                                       AND MIContainer.DescId = zc_MIContainer_Count()
+                         WHERE MIContainer.MovementId IS NULL 
+                           AND COALESCE (MovementItem.Amount,0) <> 0
+                           )
+                           
+     , tmpMILO_GoodsKind AS (SELECT *
+                             FROM MovementItemLinkObject
+                             WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_notFound.Id FROM tmpMI_notFound) 
+                               AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                             )                          
+
+     , tmpMLO_Unit AS (SELECT *
+                           FROM MovementLinkObject
+                           WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMI_notFound.MovementId FROM tmpMI_notFound) 
+                             AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
+                           )
+
     , tmpContainer AS (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
                             , COALESCE (MIContainer.AnalyzerId, 0) AS AnalyzerId
                             , MIContainer.UnitId                   AS UnitId
@@ -287,6 +310,39 @@ BEGIN
                               , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.GoodsKindId END
                               , COALESCE (MIContainer.AccountId, 0)
                               , CASE WHEN inisPartion = TRUE THEN MIContainer.MovementId ELSE 0 END 
+                     UNION ALL
+                       SELECT  0 AS ContainerId
+                         , 0 AS AnalyzerId
+                         , MovementLinkObject_From.ObjectId            AS UnitId
+                         , MovementItem.ObjectId                 AS GoodsId
+                         , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MILinkObject_GoodsKind.ObjectId END AS GoodsKindId
+                         , 0  AS AccountId
+                         , CASE WHEN inisPartion = TRUE THEN MovementItem.MovementId ELSE 0 END AS MovementId
+ 
+                         , 0  AS AmountIn
+                         , 0  AS AmountOut 
+                         , 0  AS Amount                                                     
+                         , 0  AS SummIn
+                         , 0  AS SummOut
+                         , 0  AS Summ
+                         
+                         , SUM (MovementItem.Amount)  AS Amount_mi
+                         --, SUM (COALESCE (ContaineMIContainerr.Amount,0))   AS Remains 
+                         --, tmpRemains.     AS Remains
+                    FROM  tmpMI_notFound AS MovementItem
+                            LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
+                                                      
+                            LEFT JOIN tmpMLO_Unit AS MovementLinkObject_From
+                                                  ON MovementLinkObject_From.MovementId = MovementItem.MovementId
+                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                   
+ --where  MovementItem.Id = 311463661
+                    GROUP BY MovementLinkObject_From.ObjectId 
+                         , MovementItem.ObjectId 
+                         , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MILinkObject_GoodsKind.ObjectId END 
+                         , CASE WHEN inisPartion = TRUE THEN MovementItem.MovementId ELSE 0 END
                      )
 
    --
@@ -488,3 +544,6 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_GoodsMI_InventoryDetail (inStartDate:= '30.11.2023', inEndDate:= '30.11.2023', inUnitId:= 8444, inGoodsGroupId:= 1940, inPriceListId := 0, inisPartion:= true, inSession:= zfCalc_UserAdmin()) --8417
+
+--  SELECT * FROM gpReport_GoodsMI_InventoryDetail (inStartDate:= '26.12.2024', inEndDate:= '26.12.2024', inUnitId:= 8459, inGoodsGroupId:= 1832, inPriceListId := 0, inisPartion:= true, inSession:= zfCalc_UserAdmin()) --8417
+-- where GoodsCode = 2380
