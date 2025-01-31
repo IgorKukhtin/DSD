@@ -66,6 +66,11 @@ type
     Name_search: TcxGridDBColumn;
     BoxCount: TcxGridDBColumn;
     ColorFon: TcxGridDBColumn;
+    mactGet: TMultiAction;
+    spGet_: TdsdStoredProc;
+    acUpdate_: TdsdInsertUpdateAction;
+    actGet_1: TdsdDataSetRefresh;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

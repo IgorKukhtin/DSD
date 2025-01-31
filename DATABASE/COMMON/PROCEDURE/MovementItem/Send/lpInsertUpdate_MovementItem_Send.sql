@@ -94,6 +94,7 @@ BEGIN
                                                             , zc_Enum_InfoMoney_20901() -- Ирна
                                                              )
                          )
+              AND inUserId <> 5
          THEN
                   RAISE EXCEPTION 'Ошибка.Для товара <%>% указан неверный вид = <%>.% %'
                                  , lfGet_Object_ValueData (inGoodsId)

@@ -408,7 +408,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), inMovementId, vbStartDate);
 
 
-     CREATE TEMP TABLE _tmpData (GoodsId Integer, GoodsKindId Integer
+     CREATE TEMP TABLE _tmpData (ReceiptId Integer, GoodsId Integer, GoodsKindId Integer
                                , Price3_cost TFloat, PriceSale TFloat, Price_cost TFloat, Price_cost_tax TFloat
                                , Price3_cost_all TFloat, PriceSale_all TFloat, Price_cost_all TFloat, Price_cost_tax_all TFloat
                                , OperCount_sale TFloat, SummIn_sale TFloat
@@ -610,12 +610,14 @@ BEGIN
                             , tmpMI.GoodsId
                             , tmpMI.GoodsKindId
                     )
-     INSERT INTO _tmpData (GoodsId, GoodsKindId
+
+       INSERT INTO _tmpData (ReceiptId, GoodsId, GoodsKindId
                          , Price3_cost, PriceSale, Price_cost, Price_cost_tax
                          , Price3_cost_all, PriceSale_all, Price_cost_all, Price_cost_tax_all
                          , OperCount_sale, SummIn_sale
                          , Ord)
-       SELECT tmp.GoodsId
+       SELECT tmp.ReceiptId
+            , tmp.GoodsId
             , tmp.GoodsKindId
               -- 1.1. цена затраты - старая схема - от затрат в рецептуре
             , tmp.Price3_cost
@@ -645,7 +647,8 @@ BEGIN
               -- № п/п
             , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId) AS Ord
 
-       FROM (SELECT tmpAll.GoodsId
+       FROM (SELECT MAX (tmpAll.ReceiptId) AS ReceiptId
+                  , tmpAll.GoodsId
                   , tmpAll.GoodsKindId
                   , SUM (tmpAll.OperCount_sale) AS OperCount_sale
                   , SUM (tmpAll.SummIn_sale)    AS SummIn_sale
@@ -675,6 +678,17 @@ BEGIN
                                   ON ObjectLink_Goods_InfoMoney.ObjectId = tmp.GoodsId
                                  AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
       ;
+
+/*  IF vbUserId IN (5) 
+
+    THEN
+        RAISE EXCEPTION 'Проверка. <%>   <%>   <%>'
+        , (select max (_tmpData.Price3_cost) from _tmpData)
+        , (select max (_tmpData.Price3_cost_all) from _tmpData)
+        , (select distinct (_tmpData.ReceiptId) from _tmpData)
+        
+        ;
+end if;*/
 
         -- сохраняем полученную с/с
       --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), MovementItem.Id, COALESCE (_tmpData.Price_cost,0) ::TFloat ) -- факт
@@ -794,7 +808,7 @@ BEGIN
             )
             -- 1.3. затраты - новая схема
           , CHR (13)
-          , (SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (MIF.ValueData), ' ; ')
+          , /*(SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (MIF.ValueData), ' ; ')
              FROM (SELECT MIF.ValueData
                    FROM MovementItem
                         LEFT JOIN MovementItemFloat AS MIF
@@ -809,7 +823,36 @@ BEGIN
                    ORDER BY MovementItem.ObjectId, MILO_GoodsKind.ObjectId, MovementItem.Id
                    --LIMIT 1
                   ) AS MIF
-            )
+            )*/
+            (WITH tmpMI AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsId, MILO_GoodsKind.ObjectId AS GoodsKindId
+                            FROM MovementItem
+                                 INNER JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                                   ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                                                  AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                                                  AND MILO_GoodsKind.ObjectId       > 0
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId = zc_MI_Master()
+                              AND MovementItem.isErased = FALSE
+                           )
+             SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (Value), ' ; ')
+             FROM 
+                  (SELECT _tmpData.GoodsId, _tmpData.GoodsKindId, _tmpData.Price_cost_tax AS Value
+                   FROM _tmpData
+                        INNER JOIN tmpMI ON tmpMI.GoodsId     = _tmpData.GoodsId
+                                        AND tmpMI.GoodsKindId = _tmpData.GoodsKindId
+                                        AND _tmpData.PriceSale > 0
+                  UNION
+                   SELECT DISTINCT _tmpData.GoodsId, _tmpData_find.GoodsKindId, _tmpData_find.Price_cost_tax_all AS Value
+                   FROM tmpMI
+                        LEFT JOIN _tmpData ON _tmpData.GoodsId      = tmpMI.GoodsId
+                                          AND _tmpData.GoodsKindId  = tmpMI.GoodsKindId
+                                          AND _tmpData.PriceSale    > 0
+                                          AND tmpMI.GoodsKindId     > 0
+                        LEFT JOIN _tmpData AS _tmpData_find ON _tmpData_find.GoodsId = tmpMI.GoodsId
+                   WHERE _tmpData.GoodsId IS NULL
+                   ORDER BY 1, 2
+                  ) AS _tmpData
+           )
 
             -- 2.
           , CHR (13)

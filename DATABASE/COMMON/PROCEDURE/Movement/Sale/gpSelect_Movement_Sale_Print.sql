@@ -1421,6 +1421,9 @@ END IF;
                     END AS Price
 
                   , MIFloat_CountForPrice.ValueData AS CountForPrice
+
+                  , MIDate_PartionGoods.ValueData   AS PartionGoodsDate
+
                   , SUM (MovementItem.Amount) AS Amount
                   , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
@@ -1459,6 +1462,11 @@ END IF;
                                               ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                              AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
 
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                             ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                            AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                            AND vbDescId = zc_Movement_Loss()
+
                   LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
                                        ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
                                       AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -1490,6 +1498,7 @@ END IF;
                       END
                     , MIFloat_CountForPrice.ValueData
                     , MIFloat_ChangePercent.ValueData
+                    , MIDate_PartionGoods.ValueData
                     , ObjectLink_GoodsGroup.ChildObjectId
             )
       , tmpGoods AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
@@ -1563,6 +1572,8 @@ END IF;
                    ELSE Object_Goods.ValueData
               END
            || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+           || CASE WHEN vbDescId = zc_Movement_Loss() AND tmpMI.PartionGoodsDate > zc_DateStart() THEN ' ~' || zfConvert_DateToString (tmpMI.PartionGoodsDate) ELSE '' END
+
              ) :: TVarChar AS GoodsName
 
            , (CASE WHEN tmpObject_GoodsPropertyValue.Name            <> '' THEN tmpObject_GoodsPropertyValue.Name
@@ -1573,7 +1584,9 @@ END IF;
                    WHEN COALESCE (tmpMI_Tax.isName_new, FALSE)      = TRUE THEN Object_Goods.ValueData
                    WHEN ObjectString_Goods_BUH.ValueData             <> '' THEN ObjectString_Goods_BUH.ValueData
                    ELSE Object_Goods.ValueData
-              END) :: TVarChar AS GoodsName_two
+              END
+           || CASE WHEN vbDescId = zc_Movement_Loss() AND tmpMI.PartionGoodsDate > zc_DateStart() THEN ' ~' || zfConvert_DateToString (tmpMI.PartionGoodsDate) ELSE '' END
+             ) :: TVarChar AS GoodsName_two
 
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName

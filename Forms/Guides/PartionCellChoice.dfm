@@ -220,6 +220,14 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -262,6 +270,10 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactGet
       Category = 0
     end
   end
@@ -422,6 +434,60 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object mactGet: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_1
+        end
+        item
+          Action = acUpdate_
+        end>
+      Caption = 'test'
+    end
+    object acUpdate_: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TPartionCellEditForm'
+      FormNameParam.Value = 'TPartionCellEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      isNotExecuteDialog = True
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actGet_1: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_
+      StoredProcList = <
+        item
+          StoredProc = spGet_
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionCellChoice'
@@ -508,5 +574,30 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
     CheckBoxList = <>
     Left = 400
     Top = 184
+  end
+  object spGet_: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_PartionCell_guide'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = False
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExec'
+        Value = Null
+        Component = acUpdate_
+        ComponentItem = 'Enabled'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 216
+    Top = 288
   end
 end

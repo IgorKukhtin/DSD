@@ -8,7 +8,17 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
   cxContainer, cxEdit, dxSkinsCore, dxSkinsDefaultPainters, cxTextEdit,
   cxCurrencyEdit, cxMaskEdit, cxButtonEdit, Vcl.Menus, dsdDB, Vcl.ActnList,
-  dsdAction, cxPropertiesStore, dsdAddOn, cxButtons,DB;
+  dsdAction, cxPropertiesStore, dsdAddOn, cxButtons,DB, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TDialogPersonalCompleteForm = class(TAncestorDialogScaleForm)
@@ -529,7 +539,9 @@ begin
                         if execParams.ParamByName('PersonalId').AsInteger>1
                         then ShowMessage('Ошибка.У сотрудника с кодом <'+IntToStr(PersonalCode)+'> нельзя определить <Должность>.'+#10+#13+'Попробуйте выбрать его из <Справочника>.')
                         else ShowMessage('Ошибка.Не найден сотрудник с кодом <'+IntToStr(PersonalCode)+'>.');
-                        ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=0;
+                        if idx = '11'
+                        then ParamsPersonalComplete_local.ParamByName('PersonalId'+idx2+'_Stick').AsInteger:=0
+                        else ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=0;
                         //
                         fStartWrite:=true;
                         if idx = '1'  then begin EditPersonalName1.Text:='';      PanelPositionName1.Caption:='';
