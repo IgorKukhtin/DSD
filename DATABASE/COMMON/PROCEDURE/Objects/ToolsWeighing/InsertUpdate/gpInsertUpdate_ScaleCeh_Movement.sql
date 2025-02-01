@@ -38,6 +38,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     
+     -- определили Дату
+     inOperDate:= (SELECT gpGet_Scale_OperDate (inIsCeh       := TRUE
+                                              , inBranchCode  := inBranchCode
+                                              , inSession     := inSession
+                                               ));
 
      -- определили <Тип документа>
      vbDocumentKindId:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
