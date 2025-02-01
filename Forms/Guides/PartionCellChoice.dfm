@@ -453,8 +453,8 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPartionCellEditForm'
-      FormNameParam.Value = 'TPartionCellEditForm'
+      FormName = 'TPartionCellCheckEditForm'
+      FormNameParam.Value = 'TPartionCellCheckEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
