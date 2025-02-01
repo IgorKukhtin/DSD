@@ -480,6 +480,7 @@ begin
        Params.AddParam('inPartnerId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('calcPartnerId').AsInteger);
        Params.AddParam('inContractId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('ContractId').AsInteger);
        Params.AddParam('inInvNumberPartner', ftString, ptInputOutput, execParamsMovement.ParamByName('InvNumberPartner').AsString);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //try
          Execute;
          Result:=DataSet.FieldByName('isOk').asBoolean;
@@ -1941,6 +1942,7 @@ begin
                         execParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
                         execParamsMovement.ParamByName('isComment').asBoolean:= CDS.FieldByName('isComment').asBoolean;
                         execParamsMovement.ParamByName('isInvNumberPartner').asBoolean:= CDS.FieldByName('isInvNumberPartner').asBoolean;
+                        execParamsMovement.ParamByName('isInvNumberPartner_check').asBoolean:= CDS.FieldByName('isInvNumberPartner_check').asBoolean;
                         execParamsMovement.ParamByName('isDocPartner').asBoolean:= CDS.FieldByName('isDocPartner').asBoolean;
                         execParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         execParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;
@@ -1990,6 +1992,7 @@ begin
                         ParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
                         ParamsMovement.ParamByName('isComment').asBoolean:= CDS.FieldByName('isComment').asBoolean;
                         ParamsMovement.ParamByName('isInvNumberPartner').asBoolean:= CDS.FieldByName('isInvNumberPartner').asBoolean;
+                        ParamsMovement.ParamByName('isInvNumberPartner_check').asBoolean:= CDS.FieldByName('isInvNumberPartner_check').asBoolean;
                         ParamsMovement.ParamByName('isDocPartner').asBoolean:= CDS.FieldByName('isDocPartner').asBoolean;
                         ParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         ParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;

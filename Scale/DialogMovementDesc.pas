@@ -121,6 +121,7 @@ begin
            ParamsMovement.ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
            ParamsMovement.ParamByName('isComment').asBoolean               := CDS.FieldByName('isComment').asBoolean;
            ParamsMovement.ParamByName('isInvNumberPartner').asBoolean      := CDS.FieldByName('isInvNumberPartner').asBoolean;
+           ParamsMovement.ParamByName('isInvNumberPartner_check').asBoolean:= CDS.FieldByName('isInvNumberPartner_check').asBoolean;
            ParamsMovement.ParamByName('isDocPartner').asBoolean            := CDS.FieldByName('isDocPartner').asBoolean;
            ParamsMovement.ParamByName('isPersonalGroup').asBoolean         := CDS.FieldByName('isPersonalGroup').asBoolean;
            ParamsMovement.ParamByName('isSticker_Ceh').asBoolean           := CDS.FieldByName('isSticker_Ceh').asBoolean;
@@ -432,6 +433,7 @@ begin
           ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
           ParamByName('isComment').asBoolean               := CDS.FieldByName('isComment').asBoolean;
           ParamByName('isInvNumberPartner').asBoolean      := CDS.FieldByName('isInvNumberPartner').asBoolean;
+          ParamByName('isInvNumberPartner_check').asBoolean:= CDS.FieldByName('isInvNumberPartner_check').asBoolean;
           ParamByName('isDocPartner').asBoolean            := CDS.FieldByName('isDocPartner').asBoolean;
 
           ParamByName('isPersonalGroup').asBoolean         := CDS.FieldByName('isPersonalGroup').asBoolean;
