@@ -1562,7 +1562,8 @@ uses
   Promo_MI_Detail in '..\..\Forms\Document\Promo_MI_Detail.pas' {Promo_MI_DetailForm: TParentForm},
   Report_Container_dataDialog in '..\..\Forms\Report\Report_Container_dataDialog.pas' {Report_Container_dataDialogForm: TParentForm},
   Report_Container_data in '..\..\Forms\Report\Report_Container_data.pas' {Report_Container_dataForm: TParentForm},
-  BankAccountJournal_srv_r in '..\..\Forms\Document\BankAccountJournal_srv_r.pas' {BankAccountJournal_srv_rForm: TParentForm};
+  BankAccountJournal_srv_r in '..\..\Forms\Document\BankAccountJournal_srv_r.pas' {BankAccountJournal_srv_rForm: TParentForm},
+  PartionCellCheckEdit in '..\..\Forms\Guides\PartionCellCheckEdit.pas' {PartionCellCheckEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

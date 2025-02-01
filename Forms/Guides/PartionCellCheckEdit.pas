@@ -37,24 +37,8 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
-    ceLevel: TcxCurrencyEdit;
-    ceLength: TcxCurrencyEdit;
     ceComment: TcxTextEdit;
     cxLabel9: TcxLabel;
-    cxLabel8: TcxLabel;
-    ceWidth: TcxCurrencyEdit;
-    cxLabel10: TcxLabel;
-    ceHeight: TcxCurrencyEdit;
-    cxLabel11: TcxLabel;
-    ceBoxCount: TcxCurrencyEdit;
-    ceRowBoxCount: TcxCurrencyEdit;
-    cxLabel12: TcxLabel;
-    cxLabel13: TcxLabel;
-    ceRowWidth: TcxCurrencyEdit;
-    ceRowHeight: TcxCurrencyEdit;
-    cxLabel14: TcxLabel;
   private
     { Private declarations }
   public

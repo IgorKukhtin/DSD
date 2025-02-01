@@ -2206,6 +2206,13 @@ end;
 
 procedure TLoadFormTest.LoadPartionCellFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellCheckEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCellCheckEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCellChoiceForm');
+
+exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellForm');
@@ -2222,6 +2229,10 @@ begin
 
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellMovementForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TPartionCellMovementForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellCheckEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCellCheckEditForm');
+
 end;
 
 procedure TLoadFormTest.LoadReestrKindFormTest;

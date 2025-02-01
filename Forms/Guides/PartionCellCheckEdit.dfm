@@ -1,7 +1,7 @@
 object PartionCellCheckEditForm: TPartionCellCheckEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')>'
+  Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1074#1099#1073#1086#1088'  <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
   ClientHeight = 290
   ClientWidth = 427
   Color = clBtnFace
@@ -20,7 +20,7 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
     Left = 111
     Top = 30
     TabOrder = 0
-    Width = 296
+    Width = 194
   end
   object cxLabel1: TcxLabel
     Left = 130
@@ -29,7 +29,7 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
   end
   object cxButton1: TcxButton
     Left = 107
-    Top = 248
+    Top = 160
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
   end
   object cxButton2: TcxButton
     Left = 251
-    Top = 248
+    Top = 160
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,146 +60,20 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
     TabOrder = 5
     Width = 94
   end
-  object cxLabel3: TcxLabel
-    Left = 10
-    Top = 63
-    Hint = #1059#1088#1086#1074#1077#1085#1100' '#1089#1090#1077#1083#1072#1078#1072
-    Caption = #1059#1088#1086#1074#1077#1085#1100
-  end
-  object cxLabel4: TcxLabel
-    Left = 111
-    Top = 63
-    Caption = #1044#1083#1080#1085#1072' '#1103#1095'., '#1084#1084
-  end
-  object ceLevel: TcxCurrencyEdit
-    Left = 10
-    Top = 83
-    Hint = #1059#1088#1086#1074#1077#1085#1100' '#1089#1090#1077#1083#1072#1078#1072
-    ParentShowHint = False
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.UseDisplayFormatWhenEditing = True
-    ShowHint = True
-    TabOrder = 8
-    Width = 94
-  end
-  object ceLength: TcxCurrencyEdit
-    Left = 111
-    Top = 83
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.UseDisplayFormatWhenEditing = True
-    TabOrder = 9
-    Width = 94
-  end
   object ceComment: TcxTextEdit
-    Left = 10
-    Top = 191
-    TabOrder = 10
+    Left = 8
+    Top = 103
+    TabOrder = 6
     Width = 397
   end
   object cxLabel9: TcxLabel
-    Left = 10
-    Top = 168
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-  end
-  object cxLabel8: TcxLabel
-    Left = 212
-    Top = 63
-    Caption = #1064#1080#1088#1080#1085#1072' '#1103#1095'., '#1084#1084
-  end
-  object ceWidth: TcxCurrencyEdit
-    Left = 212
-    Top = 83
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.UseDisplayFormatWhenEditing = True
-    TabOrder = 13
-    Width = 94
-  end
-  object cxLabel10: TcxLabel
-    Left = 313
-    Top = 63
-    Caption = #1042#1099#1089#1086#1090#1072' '#1103#1095'., '#1084#1084
-  end
-  object ceHeight: TcxCurrencyEdit
-    Left = 312
-    Top = 86
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.UseDisplayFormatWhenEditing = True
-    TabOrder = 15
-    Width = 94
-  end
-  object cxLabel11: TcxLabel
-    Left = 10
-    Top = 116
-    Hint = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
-    Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097'. '#1045'2'
-  end
-  object ceBoxCount: TcxCurrencyEdit
-    Left = 10
-    Top = 136
-    Hint = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
-    ParentShowHint = False
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.UseDisplayFormatWhenEditing = True
-    ShowHint = True
-    TabOrder = 17
-    Width = 94
-  end
-  object ceRowBoxCount: TcxCurrencyEdit
-    Left = 111
-    Top = 136
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.UseDisplayFormatWhenEditing = True
-    TabOrder = 18
-    Width = 94
-  end
-  object cxLabel12: TcxLabel
-    Left = 111
-    Top = 116
-    Caption = #1050#1086#1083'. '#1103#1097'. '#1074' '#1088#1103#1076#1091
-  end
-  object cxLabel13: TcxLabel
-    Left = 212
-    Top = 116
-    Caption = #1056#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
-  end
-  object ceRowWidth: TcxCurrencyEdit
-    Left = 212
-    Top = 136
-    Hint = #1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
-    ParentShowHint = False
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.UseDisplayFormatWhenEditing = True
-    ShowHint = True
-    TabOrder = 21
-    Width = 94
-  end
-  object ceRowHeight: TcxCurrencyEdit
-    Left = 313
-    Top = 136
-    Hint = #1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
-    ParentShowHint = False
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.UseDisplayFormatWhenEditing = True
-    ShowHint = True
-    TabOrder = 22
-    Width = 94
-  end
-  object cxLabel14: TcxLabel
-    Left = 313
-    Top = 116
-    Caption = #1056#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+    Left = 8
+    Top = 80
+    Caption = #1055#1072#1088#1086#1083#1100
   end
   object ActionList: TActionList
     Left = 208
-    Top = 224
+    Top = 136
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -260,7 +134,6 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       item
         Name = 'inLevel'
         Value = Null
-        Component = ceLevel
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -268,7 +141,6 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       item
         Name = 'inLength'
         Value = Null
-        Component = ceLength
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -276,7 +148,6 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       item
         Name = 'inWidth'
         Value = Null
-        Component = ceWidth
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -284,7 +155,6 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       item
         Name = 'inHeight'
         Value = Null
-        Component = ceHeight
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -292,7 +162,6 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       item
         Name = 'inBoxCount'
         Value = Null
-        Component = ceBoxCount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -300,7 +169,6 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       item
         Name = 'inRowBoxCount'
         Value = Null
-        Component = ceRowBoxCount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -308,7 +176,6 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       item
         Name = 'inRowWidth'
         Value = Null
-        Component = ceRowWidth
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -316,7 +183,6 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       item
         Name = 'inRowHeight'
         Value = Null
-        Component = ceRowHeight
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -331,7 +197,7 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       end>
     PackSize = 1
     Left = 344
-    Top = 206
+    Top = 118
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -377,66 +243,10 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
         Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Level'
-        Value = Null
-        Component = ceLevel
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Length'
-        Value = Null
-        Component = ceLength
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Width'
-        Value = Null
-        Component = ceWidth
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Height'
-        Value = Null
-        Component = ceHeight
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BoxCount'
-        Value = Null
-        Component = ceBoxCount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'RowBoxCount'
-        Value = Null
-        Component = ceRowBoxCount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'RowWidth'
-        Value = Null
-        Component = ceRowWidth
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'RowHeight'
-        Value = Null
-        Component = ceRowHeight
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 144
-    Top = 224
+    Top = 136
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -455,6 +265,6 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 24
-    Top = 222
+    Top = 134
   end
 end
