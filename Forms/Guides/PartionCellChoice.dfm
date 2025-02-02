@@ -13,7 +13,7 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -265,7 +265,7 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
       ShowCaption = False
     end
     object bbChoice: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
     object bbShowAll: TdxBarButton
@@ -273,7 +273,7 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
       Category = 0
     end
     object dxBarButton1: TdxBarButton
-      Action = mactGet
+      Action = mactGetForm
       Category = 0
     end
   end
@@ -374,7 +374,7 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -434,25 +434,23 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object mactGet: TMultiAction
+    object mactGetForm: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actGet_1
+          Action = actGet_ExecForm
         end
         item
-          Action = acUpdate_
+          Action = actExecForm
         end>
       Caption = 'test'
     end
-    object acUpdate_: TdsdInsertUpdateAction
+    object actExecForm: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
+      Caption = 'actExecForm'
+      Hint = 'actExecForm'
       FormName = 'TPartionCellCheckEditForm'
       FormNameParam.Value = 'TPartionCellCheckEditForm'
       FormNameParam.DataType = ftString
@@ -466,27 +464,21 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
       isNotExecuteDialog = True
       ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actGet_1: TdsdDataSetRefresh
+    object actGet_ExecForm: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_
+      StoredProc = spGet_ExecForm
       StoredProcList = <
         item
-          StoredProc = spGet_
+          StoredProc = spGet_ExecForm
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
+      Caption = 'actGet_ExecForm'
     end
   end
   object spSelect: TdsdStoredProc
@@ -534,11 +526,11 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item
@@ -570,34 +562,34 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
       item
         Column = Name_search
       end>
-    ActionNumber1 = dsdChoiceGuides
+    ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 400
     Top = 184
   end
-  object spGet_: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_PartionCell_guide'
+  object spGet_ExecForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_PartionCell_guide_edit'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
         Name = 'inId'
-        Value = False
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outExec'
-        Value = Null
-        Component = acUpdate_
+        Name = 'outExecForm'
+        Value = ''
+        Component = actExecForm
         ComponentItem = 'Enabled'
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 216
+    Left = 120
     Top = 288
   end
 end

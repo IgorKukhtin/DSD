@@ -2,7 +2,7 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
   Left = 0
   Top = 0
   Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1074#1099#1073#1086#1088'  <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
-  ClientHeight = 290
+  ClientHeight = 168
   ClientWidth = 427
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12,39 +12,40 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = dsdDataSetRefresh
-  AddOnFormData.Params = dsdFormParams
+  AddOnFormData.RefreshAction = actGet
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 111
     Top = 30
-    TabOrder = 0
-    Width = 194
+    Properties.ReadOnly = True
+    TabOrder = 1
+    Width = 258
   end
   object cxLabel1: TcxLabel
-    Left = 130
+    Left = 111
     Top = 12
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 107
-    Top = 160
+    Left = 91
+    Top = 120
     Width = 75
     Height = 25
-    Action = dsdInsertUpdateGuides
+    Action = actGet_check
     Default = True
-    TabOrder = 2
+    TabOrder = 3
   end
   object cxButton2: TcxButton
-    Left = 251
-    Top = 160
+    Left = 235
+    Top = 120
     Width = 75
     Height = 25
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 3
+    TabOrder = 4
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -57,26 +58,29 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 5
+    Properties.ReadOnly = True
+    TabOrder = 6
     Width = 94
   end
-  object ceComment: TcxTextEdit
-    Left = 8
-    Top = 103
-    TabOrder = 6
-    Width = 397
+  object cePSW: TcxTextEdit
+    Left = 111
+    Top = 63
+    Properties.PasswordChar = '*'
+    TabOrder = 0
+    Width = 258
   end
   object cxLabel9: TcxLabel
-    Left = 8
-    Top = 80
+    Left = 63
+    Top = 64
     Caption = #1055#1072#1088#1086#1083#1100
   end
   object ActionList: TActionList
-    Left = 208
-    Top = 136
-    object dsdDataSetRefresh: TdsdDataSetRefresh
+    Left = 192
+    Top = 96
+    object actGet: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGet
       StoredProcList = <
         item
@@ -84,17 +88,16 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+    object actGet_check: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
+      StoredProc = spGet_check
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate
+          StoredProc = spGet_check
         end>
       Caption = 'Ok'
     end
@@ -103,112 +106,56 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       PostDataSetBeforeExecute = False
     end
   end
-  object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_PartionCell'
+  object spGet_check: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_PartionCell_check'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsLock_record'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ioIsLock_record'
+        DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCode'
-        Value = 0.000000000000000000
-        Component = edCode
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inName'
+        Name = 'inPSW'
         Value = ''
-        Component = edName
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inLevel'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inLength'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inWidth'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inHeight'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBoxCount'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inRowBoxCount'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inRowWidth'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inRowHeight'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = ceComment
+        Component = cePSW
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
-    Top = 118
+    Top = 102
   end
-  object dsdFormParams: TdsdFormParams
+  object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsLock_record'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 24
+    Left = 344
+    Top = 8
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_PartionCell'
@@ -216,9 +163,9 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -234,19 +181,26 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
-        DataType = ftUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Comment'
+        Name = 'PSW'
         Value = Null
-        Component = ceComment
+        Component = cePSW
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isLock_record'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ioIsLock_record'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 144
-    Top = 136
+    Left = 128
+    Top = 96
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -260,11 +214,11 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 400
-    Top = 70
+    Left = 336
+    Top = 62
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 24
-    Top = 134
+    Top = 94
   end
 end

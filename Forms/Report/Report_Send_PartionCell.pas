@@ -131,6 +131,13 @@ type
     actChoiceCell_Print: TdsdPrintAction;
     bbChoiceCell_Print: TdxBarButton;
     InsertDate_ChoiceCell_mi: TcxGridDBColumn;
+    actExecForm: TdsdInsertUpdateAction;
+    actGet_ExecForm: TdsdExecStoredProc;
+    spGet_ExecForm: TdsdStoredProc;
+    mactUpdateMainDS: TMultiAction;
+    isLock_record: TcxGridDBColumn;
+    actGet_ExecForm_next: TdsdExecStoredProc;
+    spGet: TdsdStoredProc;
   private
     { Private declarations }
   public

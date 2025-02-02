@@ -1409,6 +1409,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             VisibleForCustomization = False
             Width = 55
           end
+          object isLock_record: TcxGridDBColumn
+            DataBinding.FieldName = 'isLock_record'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
         end
       end
     end
@@ -2340,6 +2348,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Category = 'DSDLib'
       MoveParams = <>
       AfterAction = macPrint_New
+      BeforeAction = mactUpdateMainDS
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_MI_Send_byReport
       StoredProcList = <
@@ -2530,6 +2539,61 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Continue.DataType = ftBoolean
       Continue.MultiSelectSeparator = ','
     end
+    object mactUpdateMainDS: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_ExecForm
+        end
+        item
+          Action = actExecForm
+        end
+        item
+          Action = actGet_ExecForm_next
+        end>
+      Caption = 'mactUpdateMainDS'
+    end
+    object actGet_ExecForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_ExecForm
+      StoredProcList = <
+        item
+          StoredProc = spGet_ExecForm
+        end>
+      Caption = 'actGet_ExecForm'
+    end
+    object actExecForm: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecForm'
+      Hint = 'actExecForm'
+      FormName = 'TPartionCellCheckEditForm'
+      FormNameParam.Value = 'TPartionCellCheckEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 11237418
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ioIsLock_record'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isLock_record'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      isNotExecuteDialog = True
+      ActionType = acUpdate
+      IdFieldName = 'Id'
+    end
     object macPrint_New: TMultiAction
       Category = 'Print'
       MoveParams = <>
@@ -2641,6 +2705,17 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actGet_ExecForm_next: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
+      Caption = 'actGet_ExecForm_next'
     end
   end
   inherited MasterDS: TDataSource
@@ -3756,10 +3831,19 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outisPrint'
+        Name = 'inIsLock_record'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isLock_record'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsPrint'
         Value = Null
         Component = FormParams
-        ComponentItem = 'outisPrint'
+        ComponentItem = 'outIsPrint'
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -4044,5 +4128,427 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     PackSize = 1
     Left = 432
     Top = 304
+  end
+  object spGet_ExecForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_PartionCell_mi_edit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPartionCellId_1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_5'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_6'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_7'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_8'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_8'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_9'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_9'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_10'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_10'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_11'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_11'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_12'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_12'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_13'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_13'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_14'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_14'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_15'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_15'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_16'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_16'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_17'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_17'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_18'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_18'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_19'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_19'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_20'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_20'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_21'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_21'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_22'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_22'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_3'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_4'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_5'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_6'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_7'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_8'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_8'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_9'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_9'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_10'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_10'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_11'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_11'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_12'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_12'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_13'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_13'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_14'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_14'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_15'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_15'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_16'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_16'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_17'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_17'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_18'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_18'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_19'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_19'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_20'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_20'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_21'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_21'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellName_22'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_22'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExecForm'
+        Value = Null
+        Component = actExecForm
+        ComponentItem = 'Enabled'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsLock_record'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isLock_record'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 200
+    Top = 328
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_PartionCell'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isLock_record'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isLock_record'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 16
   end
 end

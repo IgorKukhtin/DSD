@@ -54,7 +54,7 @@ type
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     Status: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
@@ -66,11 +66,11 @@ type
     Name_search: TcxGridDBColumn;
     BoxCount: TcxGridDBColumn;
     ColorFon: TcxGridDBColumn;
-    mactGet: TMultiAction;
-    spGet_: TdsdStoredProc;
-    acUpdate_: TdsdInsertUpdateAction;
-    actGet_1: TdsdDataSetRefresh;
+    mactGetForm: TMultiAction;
+    actExecForm: TdsdInsertUpdateAction;
     dxBarButton1: TdxBarButton;
+    spGet_ExecForm: TdsdStoredProc;
+    actGet_ExecForm: TdsdExecStoredProc;
   private
     { Private declarations }
   public

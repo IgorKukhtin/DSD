@@ -27,17 +27,17 @@ type
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
-    spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
+    spGet_check: TdsdStoredProc;
+    FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    actGet: TdsdDataSetRefresh;
+    actGet_check: TdsdInsertUpdateGuides;
     dsdFormClose: TdsdFormClose;
     cxLabel2: TcxLabel;
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    ceComment: TcxTextEdit;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cePSW: TcxTextEdit;
     cxLabel9: TcxLabel;
   private
     { Private declarations }
