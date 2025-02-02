@@ -406,6 +406,8 @@ begin
        GuideGoodsForm.cbAmountPartnerSecond.Checked:= false;
      end;
      //
+     cbPartionDate_save.Checked:= false;
+     //
      {EditBarCodeTransport.Text:='';
      PanelInvNumberTransport.Caption:='';
      PanelPersonalDriver.Caption:='';
@@ -420,7 +422,8 @@ begin
      EditBarCode.Text:='';
      EditBoxCount.Text:=GetArrayList_Value_byName(Default_Array,'BoxCount');
      //
-     if (cbPartionDate_save.Visible) and (PanelPartionDate.Visible) then cbPartionDate_save.Checked:= false;
+     if (cbPartionDate_save.Visible) and (PanelPartionDate.Visible) and (ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_ReturnIn)
+     then cbPartionDate_save.Checked:= false;
      //
      myActiveControl;
 end;
@@ -1048,23 +1051,37 @@ begin
           else
             ParamsMI.ParamByName('inPartionGoodsDate').AsDateTime:= Date;
      end;
+
      // сначала определить Номер док у контрагента
-     if (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE) and (ParamsMovement.ParamByName('InvNumberPartner').AsString = '')
+     if (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE)
+    and (ParamsMovement.ParamByName('InvNumberPartner').AsString = '')
+     // если проверка док. поставшика
+    and (ParamsMovement.ParamByName('isInvNumberPartner_check').AsBoolean = TRUE)
+     // если НЕ док. поставшика
     and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
      then pSetInvNumberPartner;
 
-     if (ParamsMovement.ParamByName('InvNumberPartner').AsString = '') and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true)
+     if (ParamsMovement.ParamByName('InvNumberPartner').AsString = '')
+     // если нужен док. поставшика
+    and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE)
+     // если проверка док. поставшика
+    and (ParamsMovement.ParamByName('isInvNumberPartner_check').AsBoolean = TRUE)
+     // если НЕ док. поставшика
     and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
      then begin
-          PanelMovementDesc.Caption:='Ошибка.Не определен <Документ поставщика №>';
+          PanelMovementDesc.Caption:='Ошибка.Не определен <№ Документа поставщика>';
           exit;
      end;
      // если надо проверить что док приход от поставщика уже сформирован
-     if (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE) and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
+     if (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE)
+     // если проверка док. поставшика
+    and (ParamsMovement.ParamByName('isInvNumberPartner_check').AsBoolean = TRUE)
+     // если НЕ док. поставшика
+    and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
      then
           if not DMMainScaleForm.gpGet_Scale_Movement_checkInvNumberPartner(ParamsMovement)
           then begin
-                  ShowMessage('Ошибка.Необходимо сначала сформировать Документ Поставщика.');
+                  ShowMessage('Ошибка.Необходимо сначала сформировать № Документа Поставщика.');
                   ParamsMovement.ParamByName('InvNumberPartner').AsString:='';
                   WriteParamsMovement;
                   exit;

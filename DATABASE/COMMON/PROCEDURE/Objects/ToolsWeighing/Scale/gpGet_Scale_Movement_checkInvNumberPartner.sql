@@ -1,12 +1,14 @@
 -- Function: gpGet_Scale_Movement_checkInvNumberPartner()
 
-DROP FUNCTION IF EXISTS gpGet_Scale_Movement_checkInvNumberPartner (Integer, Integer, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Scale_Movement_checkInvNumberPartner (Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_Movement_checkInvNumberPartner (Integer, Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_Movement_checkInvNumberPartner(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPartnerId           Integer   , -- 
     IN inContractId          Integer   , -- 
     IN inInvNumberPartner    TVarChar  , -- сессия пользователя
+    IN inBranchCode          Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (isOk        Boolean
@@ -31,7 +33,8 @@ BEGIN
      vbOperDate:= COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), CURRENT_DATE);
 
 
-     IF EXISTS (SELECT Movement.Id
+     IF inBranchCode IN (301, 302, 303)
+     OR EXISTS (SELECT Movement.Id
                 FROM Movement
                      INNER JOIN MovementBoolean AS MovementBoolean_DocPartner
                                                 ON MovementBoolean_DocPartner.MovementId = Movement.Id
@@ -76,4 +79,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Movement_checkInvNumberPartner (inMovementId:= 0, inPartnerId:= 0, inContractId:= 1, inInvNumberPartner:= '123', inSession:= '5')
+-- SELECT * FROM gpGet_Scale_Movement_checkInvNumberPartner (inMovementId:= 0, inPartnerId:= 0, inContractId:= 1, inInvNumberPartner:= '123', 1, inSession:= '5')

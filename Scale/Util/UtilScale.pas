@@ -366,6 +366,7 @@ begin
      ParamAdd(Params,'isSubjectDoc',ftBoolean);
      ParamAdd(Params,'isComment',ftBoolean);
      ParamAdd(Params,'isInvNumberPartner',ftBoolean);
+     ParamAdd(Params,'isInvNumberPartner_check',ftBoolean);
      ParamAdd(Params,'isDocPartner',ftBoolean);
      //ParamAdd(Params,'MovementId_DocPartner',ftInteger);
 

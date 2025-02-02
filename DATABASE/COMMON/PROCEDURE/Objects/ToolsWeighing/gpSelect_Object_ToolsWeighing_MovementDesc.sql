@@ -23,38 +23,39 @@ RETURNS TABLE (Number              Integer
              , ReasonId            Integer, ReasonCode       Integer, ReasonName       TVarChar, ReturnKindName TVarChar
              , GoodsKindWeighingGroupId Integer
              , ColorGridValue      Integer
-             , MovementDescName        TVarChar
-             , MovementDescName_master TVarChar
-             , MovementDescName_next   TVarChar
-             , OrderById           Integer
-             , isSendOnPriceIn     Boolean
-             , isPartionGoodsDate  Boolean -- Scale + ScaleCeh - для приемки с производства + расходы с РК - показываем контрол с датой для определения партии
-             , isPartionDate_save  Boolean -- Scale + ScaleCeh - для приемки с производства + расходы с РК - показываем выбор сохранять да/нет
-
-             , isStorageLine       Boolean -- ScaleCeh - будет проверка на ввод <Линия пр-ва> - для каждого взвешивания
-             , isArticleLoss       Boolean -- ScaleCeh - проверка на установку <Статья списания>
-             , isTransport_link    Boolean -- Scale - проверка <Штрих код Путевой лист>
-             , isSubjectDoc        Boolean -- Scale + ScaleCeh - будет проверка на ввод <Основание Возврат>
-             , isComment           Boolean -- Scale + ScaleCeh - будет диалог для
-             , isInvNumberPartner  Boolean -- 
-             , isDocPartner        Boolean -- Документ поставщика
-             , isPersonalGroup     Boolean -- ScaleCeh - будет проверка на ввод <№ бригады>
-             , isOrderInternal     Boolean -- ScaleCeh - проверка для операции - разрешается только через заявку
-             , isSticker_Ceh       Boolean -- ScaleCeh - при взвешивании в данной операции - сразу печатается Стикер на термопринтере
-             , isSticker_KVK       Boolean -- ScaleCeh - при взвешивании в данной операции - сразу печатается Стикер-KVK на термопринтере
-             , isLockStartWeighing Boolean --
-             , isKVK               Boolean -- ScaleCeh - будет KVK
-             , isListInventory     Boolean -- Scale + ScaleCeh - инвентаризация только для списка
-             , isAsset             Boolean -- Scale + ScaleCeh - открыть справочник ОС
-             , isPartionCell       Boolean -- Scale + ScaleCeh - открыть справочник PartionCell
-             , isReReturnIn        Boolean -- Scale - открыть журнал документов Возврат от покупателя
-             , isCloseInventory    Boolean
-             , isCalc_Sh           Boolean
-             , isRePack            Boolean -- 
-             , isOperCountPartner  Boolean -- Кол-во контрагента
-             , isOperPricePartner  Boolean -- Цена контрагента
-             , isReturnOut_Date    Boolean -- Дата для цены возврат поставщику 
-             , isCalc_PriceVat     Boolean -- Расчет цены с НДС или без
+             , MovementDescName          TVarChar
+             , MovementDescName_master   TVarChar
+             , MovementDescName_next     TVarChar
+             , OrderById                 Integer
+             , isSendOnPriceIn           Boolean
+             , isPartionGoodsDate        Boolean -- Scale + ScaleCeh - для приемки с производства + расходы с РК - показываем контрол с датой для определения партии
+             , isPartionDate_save        Boolean -- Scale + ScaleCeh - для приемки с производства + расходы с РК - показываем выбор сохранять да/нет
+                                         
+             , isStorageLine             Boolean -- ScaleCeh - будет проверка на ввод <Линия пр-ва> - для каждого взвешивания
+             , isArticleLoss             Boolean -- ScaleCeh - проверка на установку <Статья списания>
+             , isTransport_link          Boolean -- Scale - проверка <Штрих код Путевой лист>
+             , isSubjectDoc              Boolean -- Scale + ScaleCeh - будет проверка на ввод <Основание Возврат>
+             , isComment                 Boolean -- Scale + ScaleCeh - будет диалог для
+             , isInvNumberPartner        Boolean -- 
+             , isInvNumberPartner_check  Boolean -- 
+             , isDocPartner              Boolean -- Документ поставщика
+             , isPersonalGroup           Boolean -- ScaleCeh - будет проверка на ввод <№ бригады>
+             , isOrderInternal           Boolean -- ScaleCeh - проверка для операции - разрешается только через заявку
+             , isSticker_Ceh             Boolean -- ScaleCeh - при взвешивании в данной операции - сразу печатается Стикер на термопринтере
+             , isSticker_KVK             Boolean -- ScaleCeh - при взвешивании в данной операции - сразу печатается Стикер-KVK на термопринтере
+             , isLockStartWeighing       Boolean --
+             , isKVK                     Boolean -- ScaleCeh - будет KVK
+             , isListInventory           Boolean -- Scale + ScaleCeh - инвентаризация только для списка
+             , isAsset                   Boolean -- Scale + ScaleCeh - открыть справочник ОС
+             , isPartionCell             Boolean -- Scale + ScaleCeh - открыть справочник PartionCell
+             , isReReturnIn              Boolean -- Scale - открыть журнал документов Возврат от покупателя
+             , isCloseInventory          Boolean
+             , isCalc_Sh                 Boolean
+             , isRePack                  Boolean -- 
+             , isOperCountPartner        Boolean -- Кол-во контрагента
+             , isOperPricePartner        Boolean -- Цена контрагента
+             , isReturnOut_Date          Boolean -- Дата для цены возврат поставщику 
+             , isCalc_PriceVat           Boolean -- Расчет цены с НДС или без
                )
 AS
 $BODY$
@@ -109,6 +110,7 @@ BEGIN
                                        , isSubjectDoc             Boolean
                                        , isComment                Boolean
                                        , isInvNumberPartner       Boolean
+                                       , isInvNumberPartner_check Boolean
                                        , isDocPartner             Boolean
                                        , isPersonalGroup          Boolean
                                        , isOrderInternal          Boolean
@@ -132,7 +134,7 @@ BEGIN
     -- формирование
     INSERT INTO _tmpToolsWeighing (Number, MovementDescId, MovementDescId_next, FromId, ToId, FromId_next, ToId_next
                                  , PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn
-                                 , isPartionGoodsDate, isPartionDate_save, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isInvNumberPartner, isDocPartner, isPersonalGroup, isOrderInternal
+                                 , isPartionGoodsDate, isPartionDate_save, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isInvNumberPartner, isInvNumberPartner_check, isDocPartner, isPersonalGroup, isOrderInternal
                                  , isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, isListInventory, isAsset
                                  , isPartionCell, isReReturnIn, isCloseInventory, isCalc_Sh, isRePack
                                  , isOperCountPartner, isOperPricePartner, isReturnOut_Date, isCalc_PriceVat
@@ -187,32 +189,33 @@ BEGIN
                    ELSE FALSE -- для филиала - расход с него
               END AS isSendOnPriceIn
 
-            , CASE WHEN tmp.isPartionGoodsDate  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPartionGoodsDate
-            , CASE WHEN tmp.isPartionDate_save  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPartionDate_save
-            , CASE WHEN tmp.isStorageLine       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isStorageLine
-            , CASE WHEN tmp.isArticleLoss       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isArticleLoss
-            , CASE WHEN tmp.isTransport_link    ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
-            , CASE WHEN tmp.isSubjectDoc        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSubjectDoc
-            , CASE WHEN tmp.isComment           ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isComment
-            , CASE WHEN tmp.isInvNumberPartner  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isInvNumberPartner
-            , CASE WHEN tmp.isDocPartner        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isDocPartner
-            , CASE WHEN tmp.isPersonalGroup     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPersonalGroup
-            , CASE WHEN tmp.isOrderInternal     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOrderInternal
-            , CASE WHEN tmp.isSticker_Ceh       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSticker_Ceh
-            , CASE WHEN tmp.isSticker_KVK       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSticker_KVK
-            , CASE WHEN tmp.isLockStartWeighing ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isLockStartWeighing
-            , CASE WHEN tmp.isKVK               ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isKVK
-            , CASE WHEN tmp.isListInventory     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isListInventory
-            , CASE WHEN tmp.isAsset             ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isAsset
-            , CASE WHEN tmp.isPartionCell       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPartionCell
-            , CASE WHEN tmp.isReReturnIn        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isReReturnIn
-            , CASE WHEN tmp.isCloseInventory    ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isCloseInventory
-            , CASE WHEN tmp.isCalc_Sh           ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isCalc_Sh
-            , CASE WHEN tmp.isRePack            ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isRePack
-            , CASE WHEN tmp.isOperCountPartner  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOperCountPartner
-            , CASE WHEN tmp.isOperPricePartner  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOperPricePartner
-            , CASE WHEN tmp.isReturnOut_Date    ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isReturnOut_Date
-            , CASE WHEN tmp.isCalc_PriceVat     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isCalc_PriceVat
+            , CASE WHEN tmp.isPartionGoodsDate        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPartionGoodsDate
+            , CASE WHEN tmp.isPartionDate_save        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPartionDate_save
+            , CASE WHEN tmp.isStorageLine             ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isStorageLine
+            , CASE WHEN tmp.isArticleLoss             ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isArticleLoss
+            , CASE WHEN tmp.isTransport_link          ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
+            , CASE WHEN tmp.isSubjectDoc              ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSubjectDoc
+            , CASE WHEN tmp.isComment                 ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isComment
+            , CASE WHEN tmp.isInvNumberPartner        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isInvNumberPartner
+            , CASE WHEN tmp.isInvNumberPartner_check  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isInvNumberPartner_check
+            , CASE WHEN tmp.isDocPartner              ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isDocPartner
+            , CASE WHEN tmp.isPersonalGroup           ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPersonalGroup
+            , CASE WHEN tmp.isOrderInternal           ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOrderInternal
+            , CASE WHEN tmp.isSticker_Ceh             ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSticker_Ceh
+            , CASE WHEN tmp.isSticker_KVK             ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSticker_KVK
+            , CASE WHEN tmp.isLockStartWeighing       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isLockStartWeighing
+            , CASE WHEN tmp.isKVK                     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isKVK
+            , CASE WHEN tmp.isListInventory           ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isListInventory
+            , CASE WHEN tmp.isAsset                   ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isAsset
+            , CASE WHEN tmp.isPartionCell             ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPartionCell
+            , CASE WHEN tmp.isReReturnIn              ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isReReturnIn
+            , CASE WHEN tmp.isCloseInventory          ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isCloseInventory
+            , CASE WHEN tmp.isCalc_Sh                 ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isCalc_Sh
+            , CASE WHEN tmp.isRePack                  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isRePack
+            , CASE WHEN tmp.isOperCountPartner        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOperCountPartner
+            , CASE WHEN tmp.isOperPricePartner        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOperPricePartner
+            , CASE WHEN tmp.isReturnOut_Date          ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isReturnOut_Date
+            , CASE WHEN tmp.isCalc_PriceVat           ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isCalc_PriceVat
 
             , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar) AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
                         THEN 'после Шприцевания' -- 'Упаковка'
@@ -248,8 +251,10 @@ BEGIN
                         , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                                                     inSession)              END AS isTransport_link
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSubjectDoc',       'FALSE',                                                     inSession)              END AS isSubjectDoc
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isComment',          'FALSE',                                                     inSession)              END AS isComment
-                        , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isInvNumberPartner', 'FALSE',                                                     inSession)              END AS isInvNumberPartner
-                        , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isDocPartner',       'FALSE',                                                     inSession)              END AS isDocPartner
+
+                        , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isInvNumberPartner',       'FALSE',                                               inSession)              END AS isInvNumberPartner
+                        , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isInvNumberPartner_check', 'TRUE',                                                inSession)              END AS isInvNumberPartner_check
+                        , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isDocPartner',             'FALSE',                                               inSession)              END AS isDocPartner
 
                         , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isPersonalGroup',    'FALSE',                                                     inSession)              END AS isPersonalGroup
                         , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isOrderInternal',    'FALSE',                                                     inSession)              END AS isOrderInternal
@@ -525,6 +530,7 @@ BEGIN
            , _tmpToolsWeighing.isSubjectDoc
            , _tmpToolsWeighing.isComment
            , _tmpToolsWeighing.isInvNumberPartner
+           , _tmpToolsWeighing.isInvNumberPartner_check
            , _tmpToolsWeighing.isDocPartner
 
            , _tmpToolsWeighing.isPersonalGroup
@@ -657,6 +663,7 @@ BEGIN
             , FALSE AS isSubjectDoc
             , FALSE AS isComment
             , FALSE AS isInvNumberPartner
+            , FALSE AS isInvNumberPartner_check
             , FALSE AS isDocPartner
             , FALSE AS isPersonalGroup
             , FALSE AS isOrderInternal
