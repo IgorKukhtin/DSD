@@ -131,6 +131,8 @@ type
     actChoiceCell_Print: TdsdPrintAction;
     bbChoiceCell_Print: TdxBarButton;
     InsertDate_ChoiceCell_mi: TcxGridDBColumn;
+    actOpenReport_PartionCell_GoodsHistory: TdsdOpenForm;
+    bbOpenReport_PartionCell_GoodsHistory: TdxBarButton;
   private
     { Private declarations }
   public

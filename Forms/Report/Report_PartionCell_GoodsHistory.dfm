@@ -1,9 +1,9 @@
-object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
+object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
   Left = 0
   Top = 0
-  Caption = #1048#1089#1090#1086#1088#1080#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' <'#1071#1095#1077#1077#1082' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
+  Caption = #1048#1089#1090#1086#1088#1080#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' <'#1071#1095#1077#1077#1082' '#1093#1088#1072#1085#1077#1085#1080#1103' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 376
-  ClientWidth = 845
+  ClientWidth = 743
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,12 +21,13 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 97
-    Width = 845
+    Width = 743
     Height = 279
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 830
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -73,48 +74,54 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object PartionCellCode_old: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1103#1095#1077#1081#1082#1080' ('#1076#1086')'
-        DataBinding.FieldName = 'PartionCellCode_old'
-        Visible = False
+      object GoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1076' '#1103#1095#1077#1081#1082#1080' ('#1076#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1081')'
+        HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
         Width = 80
       end
-      object PartionCellName_old: TcxGridDBColumn
-        Caption = #1071#1095#1077#1081#1082#1072' ('#1076#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1081')'
-        DataBinding.FieldName = 'PartionCellName_old'
+      object GoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object PartionCellCode_new: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1103#1095#1077#1081#1082#1080' ('#1087#1086#1089#1083#1077')'
-        DataBinding.FieldName = 'PartionCellCode_new'
+      object UserName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'UserName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1076' ('#1087#1086#1089#1083#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1081')'
-        Width = 80
+        Width = 132
       end
-      object PartionCellName_new: TcxGridDBColumn
-        Caption = #1071#1095#1077#1081#1082#1072' ('#1087#1086#1089#1083#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1081')'
-        DataBinding.FieldName = 'PartionCellName_new'
+      object PartionGoodsDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'PartionGoodsDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 180
+        Options.Editing = False
+        Width = 107
       end
-      object UserName_new: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
-        DataBinding.FieldName = 'UserName_new'
+      object InvNumber_full: TcxGridDBColumn
+        Caption = #8470' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+        DataBinding.FieldName = 'InvNumber_full'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object OperDate_new: TcxGridDBColumn
+      object MovementItemId: TcxGridDBColumn
+        Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1090#1088#1086#1082#1080
+        DataBinding.FieldName = 'MovementItemId'
+        Visible = False
+        Width = 80
+      end
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' '#1087#1088#1086#1090#1086#1082#1086#1083' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
-        DataBinding.FieldName = 'OperDate_new'
+        DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -127,50 +134,8 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
+        VisibleForCustomization = False
         Width = 80
-      end
-      object ColorFon: TcxGridDBColumn
-        DataBinding.FieldName = 'ColorFon'
-        Visible = False
-        VisibleForCustomization = False
-        Width = 70
-      end
-      object MovementItemId: TcxGridDBColumn
-        Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1090#1088#1086#1082#1080
-        DataBinding.FieldName = 'MovementItemId'
-        Visible = False
-        Width = 80
-      end
-      object UserName_old: TcxGridDBColumn
-        Caption = '1. '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' (old)'
-        DataBinding.FieldName = 'UserName_old'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        VisibleForCustomization = False
-        Width = 132
-      end
-      object OperDate_old: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' '#1087#1088#1086#1090#1086#1082#1086#1083' (old)'
-        DataBinding.FieldName = 'OperDate_old'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 145
-      end
-      object Amount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'Amount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 82
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -180,13 +145,14 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 845
+    Width = 743
     Height = 71
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 830
     object lbSearchName: TcxLabel
-      Left = 5
-      Top = 43
+      Left = 659
+      Top = 33
       Caption = #1055#1086#1080#1089#1082' '#1071#1095#1077#1081#1082#1080':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -195,24 +161,26 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
+      Visible = False
     end
     object edSearchName: TcxTextEdit
-      Left = 109
-      Top = 43
+      Left = 659
+      Top = 50
       TabOrder = 1
+      Visible = False
       DesignSize = (
-        200
+        125
         21)
-      Width = 200
+      Width = 125
     end
     object cxLabel7: TcxLabel
-      Left = 12
-      Top = 14
-      Caption = #1058#1086#1074#1072#1088':'
+      Left = 218
+      Top = 7
+      Caption = #1071#1095#1077#1081#1082#1072':'
     end
-    object edGoods: TcxButtonEdit
-      Left = 50
-      Top = 13
+    object edPartionCell: TcxButtonEdit
+      Left = 269
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -220,16 +188,16 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 260
+      Width = 120
     end
-    object cxLabel11: TcxLabel
-      Left = 316
-      Top = 14
-      Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072':'
+    object cxLabel8: TcxLabel
+      Left = 401
+      Top = 8
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
     end
-    object edGoodsKind: TcxButtonEdit
-      Left = 380
-      Top = 13
+    object edUnit: TcxButtonEdit
+      Left = 523
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -237,62 +205,59 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 114
-    end
-    object cxLabel1: TcxLabel
-      Left = 500
-      Top = 14
-      Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080':'
-    end
-    object dePartionGoodsDate: TcxDateEdit
-      Left = 578
-      Top = 13
-      EditValue = 42005d
-      Properties.ReadOnly = True
-      Properties.ShowTime = False
-      TabOrder = 7
-      Width = 82
-    end
-    object cxLabel8: TcxLabel
-      Left = 321
-      Top = 44
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
-    end
-    object edUnit: TcxButtonEdit
-      Left = 450
-      Top = 43
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 9
-      Width = 210
+      Width = 192
     end
     object cbisDetail: TcxCheckBox
-      Left = 690
-      Top = 14
+      Left = 218
+      Top = 34
       Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       Action = actRefreshDetail
       Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       Properties.ReadOnly = False
-      TabOrder = 10
-      Width = 111
+      TabOrder = 6
+      Width = 100
     end
     object cbIsRePack: TcxCheckBox
-      Left = 690
-      Top = 41
+      Left = 335
+      Top = 34
       Hint = #1055#1077#1088#1077#1087#1072#1082
       Caption = #1055#1077#1088#1077#1087#1072#1082' ('#1044#1072' / '#1053#1077#1090')'
       Properties.ReadOnly = False
-      TabOrder = 11
+      TabOrder = 7
       Width = 127
+    end
+    object cxLabel1: TcxLabel
+      Left = 10
+      Top = 6
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object deStart: TcxDateEdit
+      Left = 121
+      Top = 5
+      EditValue = 44197d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 9
+      Width = 85
+    end
+    object cxLabel2: TcxLabel
+      Left = 10
+      Top = 35
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object deEnd: TcxDateEdit
+      Left = 121
+      Top = 34
+      EditValue = 44197d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 11
+      Width = 85
     end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 8
+    Left = 24
     Top = 256
   end
   object ClientDataSet: TClientDataSet
@@ -313,8 +278,8 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 128
+    Left = 240
+    Top = 256
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -607,7 +572,7 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_PartionCell_history'
+    StoredProcName = 'gpReport_PartionCell_GoodsHistory'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -615,25 +580,25 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
       end>
     Params = <
       item
-        Name = 'inPartionGoodsDate'
+        Name = 'inStartDate'
         Value = False
-        Component = dePartionGoodsDate
+        Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inEndDate'
         Value = Null
-        Component = GuidesGoods
-        ComponentItem = 'Key'
+        Component = deEnd
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsKindId'
+        Name = 'inPartionCellId'
         Value = Null
-        Component = GuidesGoodsKind
+        Component = GuidesPartionCell
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -706,11 +671,7 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <
-      item
-        BackGroundValueColumn = ColorFon
-        ColorValueList = <>
-      end>
+    ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
@@ -733,9 +694,9 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
     Left = 400
     Top = 184
   end
-  object GuidesGoods: TdsdGuides
+  object GuidesPartionCell: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edGoods
+    LookupControl = edPartionCell
     DisableGuidesOpen = True
     FormNameParam.Value = 'TGoodsFuel_ObjectForm'
     FormNameParam.DataType = ftString
@@ -746,7 +707,7 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesGoods
+        Component = GuidesPartionCell
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -755,54 +716,29 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesGoods
+        Component = GuidesPartionCell
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 144
+    Left = 296
     Top = 3
   end
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'PartionGoodsDate'
-        Value = 42005d
-        Component = dePartionGoodsDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsId'
+        Name = 'PartionCellId'
         Value = ''
-        Component = GuidesGoods
+        Component = GuidesPartionCell
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsName'
+        Name = 'PartionCellName'
         Value = ''
-        Component = GuidesGoods
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsKindId'
-        Value = ''
-        Component = GuidesGoodsKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsKindName'
-        Value = ''
-        Component = GuidesGoodsKind
+        Component = GuidesPartionCell
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -836,36 +772,6 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
     Left = 536
     Top = 128
   end
-  object GuidesGoodsKind: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edGoodsKind
-    DisableGuidesOpen = True
-    FormNameParam.Value = 'TGoodsKindForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsKindForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesGoodsKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesGoodsKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 528
-    Top = 195
-  end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
@@ -893,7 +799,7 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 392
+    Left = 600
     Top = 8
   end
 end

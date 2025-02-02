@@ -1562,7 +1562,9 @@ uses
   Promo_MI_Detail in '..\..\Forms\Document\Promo_MI_Detail.pas' {Promo_MI_DetailForm: TParentForm},
   Report_Container_dataDialog in '..\..\Forms\Report\Report_Container_dataDialog.pas' {Report_Container_dataDialogForm: TParentForm},
   Report_Container_data in '..\..\Forms\Report\Report_Container_data.pas' {Report_Container_dataForm: TParentForm},
-  BankAccountJournal_srv_r in '..\..\Forms\Document\BankAccountJournal_srv_r.pas' {BankAccountJournal_srv_rForm: TParentForm};
+  BankAccountJournal_srv_r in '..\..\Forms\Document\BankAccountJournal_srv_r.pas' {BankAccountJournal_srv_rForm: TParentForm},
+  CashJournal_srv_r in '..\..\Forms\Document\CashJournal_srv_r.pas' {CashJournal_srv_rForm: TParentForm},
+  Report_PartionCell_GoodsHistory in '..\..\Forms\Report\Report_PartionCell_GoodsHistory.pas' {Report_PartionCell_GoodsHistoryForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
