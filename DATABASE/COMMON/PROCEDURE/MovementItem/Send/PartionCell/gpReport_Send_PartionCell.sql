@@ -179,6 +179,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , isChoiceCell_mi          Boolean
              , PartionGoodsDate_next    TDateTime
              , InsertDate_ChoiceCell_mi TDateTime
+
+             , isLock_record Boolean
               )
 AS
 $BODY$
@@ -1601,6 +1603,8 @@ BEGIN
         , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN NULL  WHEN tmpResult.Ord = 1 THEN tmpChoiceCell_mi.PartionGoodsDate_next ELSE NULL END ::TDateTime AS PartionGoodsDate_next
         , tmpChoiceCell_mi.InsertDate_ChoiceCell_mi
 
+        , FALSE :: Boolean AS isLock_record
+
    FROM tmpResult
         -- нашли Место отбора
         LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId = tmpResult.GoodsId
@@ -2902,6 +2906,8 @@ BEGIN
         , isChoiceCell_mi :: Boolean   AS isChoiceCell_mi
         , NULL            :: TDateTime AS PartionGoodsDate_next
         , NULL            :: TDateTime AS InsertDate_ChoiceCell_mi
+
+        , FALSE :: Boolean AS isLock_record
 
    FROM tmpResult
   ;

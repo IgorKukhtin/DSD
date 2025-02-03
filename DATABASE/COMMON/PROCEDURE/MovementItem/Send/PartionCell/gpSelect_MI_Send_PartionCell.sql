@@ -152,6 +152,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartionCellName_real_21    TVarChar
              , PartionCellName_real_22    TVarChar
              
+             , isLock_record Boolean
              , isErased Boolean
               )
 AS
@@ -319,6 +320,7 @@ BEGIN
            , (/*Object_PartionCell_real_1.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_real_21.ValueData)::TVarChar AS PartionCellName_real_21
            , (/*Object_PartionCell_real_1.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_real_22.ValueData)::TVarChar AS PartionCellName_real_22
 
+           , FALSE :: Boolean AS isLock_record
            , MovementItem.isErased                 AS isErased
            
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased

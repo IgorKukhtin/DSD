@@ -852,12 +852,12 @@ BEGIN
 
              --
              IF COALESCE (outPartionCellId_1, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
+                /*AND NOT EXISTS (SELECT 1
                                 FROM _tmpItem_PartionCell
                                      INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
                                                                               AND MILO.DescId = zc_MILinkObject_PartionCell_1()
                                                                               AND MILO.ObjectId > 0
-                               )
+                               )*/
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -865,13 +865,6 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_1_new > 0
      THEN
-             -- проверка
-             /*IF COALESCE (inPartionCellId_1, 0) = 0
-                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
-             THEN
-                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-1.';
-             END IF;*/
-
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_1_new)
              FROM (-- все
@@ -950,12 +943,12 @@ BEGIN
 
              --
              IF COALESCE (outPartionCellId_2, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
+                /*AND NOT EXISTS (SELECT 1
                                 FROM _tmpItem_PartionCell
                                      INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
                                                                               AND MILO.DescId = zc_MILinkObject_PartionCell_2()
                                                                               AND MILO.ObjectId > 0
-                               )
+                               )*/
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1030,12 +1023,12 @@ BEGIN
 
              --
              IF COALESCE (outPartionCellId_3, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
+                /*AND NOT EXISTS (SELECT 1
                                 FROM _tmpItem_PartionCell
                                      INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
                                                                               AND MILO.DescId = zc_MILinkObject_PartionCell_3()
                                                                               AND MILO.ObjectId > 0
-                               )
+                               )*/
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1110,12 +1103,12 @@ BEGIN
 
              --
              IF COALESCE (outPartionCellId_4, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
+                /*AND NOT EXISTS (SELECT 1
                                 FROM _tmpItem_PartionCell
                                      INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
                                                                               AND MILO.DescId = zc_MILinkObject_PartionCell_4()
                                                                               AND MILO.ObjectId > 0
-                               )
+                               )*/
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1190,12 +1183,12 @@ BEGIN
 
              --
              IF COALESCE (outPartionCellId_5, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
+                /*AND NOT EXISTS (SELECT 1
                                 FROM _tmpItem_PartionCell
                                      INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
                                                                               AND MILO.DescId = zc_MILinkObject_PartionCell_5()
                                                                               AND MILO.ObjectId > 0
-                               )
+                               )*/
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1271,12 +1264,12 @@ BEGIN
 
              --
              IF COALESCE (outPartionCellId_6, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
+                /*AND NOT EXISTS (SELECT 1
                                 FROM _tmpItem_PartionCell
                                      INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
                                                                               AND MILO.DescId = zc_MILinkObject_PartionCell_6()
                                                                               AND MILO.ObjectId > 0
-                               )
+                               )*/
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1352,12 +1345,12 @@ BEGIN
 
              --
              IF COALESCE (outPartionCellId_7, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
+                /*AND NOT EXISTS (SELECT 1
                                 FROM _tmpItem_PartionCell
                                      INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
                                                                               AND MILO.DescId = zc_MILinkObject_PartionCell_7()
                                                                               AND MILO.ObjectId > 0
-                               )
+                               )*/
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1433,12 +1426,12 @@ BEGIN
 
              --
              IF COALESCE (outPartionCellId_8, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
+                /*AND NOT EXISTS (SELECT 1
                                 FROM _tmpItem_PartionCell
                                      INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
                                                                               AND MILO.DescId = zc_MILinkObject_PartionCell_8()
                                                                               AND MILO.ObjectId > 0
-                               )
+                               )*/
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1514,12 +1507,12 @@ BEGIN
 
              --
              IF COALESCE (outPartionCellId_9, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
+                /*AND NOT EXISTS (SELECT 1
                                 FROM _tmpItem_PartionCell
                                      INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
                                                                               AND MILO.DescId = zc_MILinkObject_PartionCell_9()
                                                                               AND MILO.ObjectId > 0
-                               )
+                               )*/
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1595,12 +1588,6 @@ BEGIN
 
              --
              IF COALESCE (outPartionCellId_10, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_10()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1676,12 +1663,6 @@ BEGIN
 
              --
              IF COALESCE (outPartionCellId_11, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_11()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1756,12 +1737,6 @@ BEGIN
              outIsClose_12:= outPartionCellId_12 > 0;
 
              IF COALESCE (outPartionCellId_12, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_12()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1835,12 +1810,6 @@ BEGIN
              outIsClose_13:= outPartionCellId_13 > 0;
 
              IF COALESCE (outPartionCellId_13, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_13()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1914,12 +1883,6 @@ BEGIN
              outIsClose_14:= outPartionCellId_14 > 0;
 
              IF COALESCE (outPartionCellId_14, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_14()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -1993,12 +1956,6 @@ BEGIN
              outIsClose_15:= outPartionCellId_15 > 0;
 
              IF COALESCE (outPartionCellId_15, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_15()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -2072,12 +2029,6 @@ BEGIN
              outIsClose_16:= outPartionCellId_16 > 0;
 
              IF COALESCE (outPartionCellId_16, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_16()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -2151,12 +2102,6 @@ BEGIN
              outIsClose_17:= outPartionCellId_17 > 0;
 
              IF COALESCE (outPartionCellId_17, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_17()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -2230,12 +2175,6 @@ BEGIN
              outIsClose_18:= outPartionCellId_18 > 0;
 
              IF COALESCE (outPartionCellId_18, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_18()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -2309,12 +2248,6 @@ BEGIN
              outIsClose_19:= outPartionCellId_19 > 0;
 
              IF COALESCE (outPartionCellId_19, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_18()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -2388,12 +2321,6 @@ BEGIN
              outIsClose_20:= outPartionCellId_20 > 0;
 
              IF COALESCE (outPartionCellId_20, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_20()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -2467,12 +2394,6 @@ BEGIN
              outIsClose_21:= outPartionCellId_21 > 0;
 
              IF COALESCE (outPartionCellId_21, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_21()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
@@ -2546,12 +2467,6 @@ BEGIN
              outIsClose_22:= outPartionCellId_22 > 0;
 
              IF COALESCE (outPartionCellId_22, 0) = 0 AND 1=1
-                AND NOT EXISTS (SELECT 1
-                                FROM _tmpItem_PartionCell
-                                     INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = _tmpItem_PartionCell.MovementItemId
-                                                                              AND MILO.DescId = zc_MILinkObject_PartionCell_22()
-                                                                              AND MILO.ObjectId > 0
-                               )
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;

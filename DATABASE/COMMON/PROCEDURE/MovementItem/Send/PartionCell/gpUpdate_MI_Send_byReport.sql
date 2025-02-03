@@ -38,14 +38,14 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime,
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                  , TVarChar
                                                   );*/
-                                                  
+
 DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime, Boolean
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , Integer, Integer, Boolean
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
-                                                 , TVarChar
+                                                 , Boolean, TVarChar
                                                   );
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
@@ -95,9 +95,9 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellName_7     TVarChar,
  INOUT ioPartionCellName_8     TVarChar,
  INOUT ioPartionCellName_9     TVarChar,
- INOUT ioPartionCellName_10    TVarChar,  
- INOUT ioPartionCellName_11    TVarChar,  
- INOUT ioPartionCellName_12    TVarChar,  
+ INOUT ioPartionCellName_10    TVarChar,
+ INOUT ioPartionCellName_11    TVarChar,
+ INOUT ioPartionCellName_12    TVarChar,
  INOUT ioPartionCellName_13     TVarChar,
  INOUT ioPartionCellName_14     TVarChar,
  INOUT ioPartionCellName_15     TVarChar,
@@ -108,6 +108,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellName_20     TVarChar,
  INOUT ioPartionCellName_21     TVarChar,
  INOUT ioPartionCellName_22     TVarChar,
+    IN inIsLock_record          Boolean,
 
    OUT outIsPrint              Boolean,
     IN inSession               TVarChar  -- сессия пользователя
@@ -213,6 +214,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     IF inIsLock_record = TRUE
+     THEN
+         RAISE EXCEPTION 'Ошибка.%Нет прав устанавливать ячейку <%>.', CHR (13), lfGet_Object_ValueData_sh(zc_PartionCell_Err());
+     END IF;
 
 
      IF vbUserId <> 5
@@ -345,7 +352,7 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <22>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
          END IF;
      END IF;
-  
+
 
      -- обнуляем последнюю измененную ячейку
      outPartionCellId_last := NULL ::Integer;
@@ -386,7 +393,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      THEN
          RAISE EXCEPTION 'Ошибка.Для <Перепак.> нет прав заполнять.';
      END IF;
-     
+
 
      --  1
      IF ioPartionCellName_1 ILIKE '%отбор%' OR TRIM (ioPartionCellName_1) = '0'
@@ -1442,8 +1449,8 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      END IF;
 
 
-     -- Роль - Переброска любой ячейки в отбор
-     IF inOrd > 1 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11056843)
+     -- Роль - Все права для изменений ячейки хранения
+     IF inOrd > 1 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11278315)
         AND zc_PartionCell_RK() IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5
                                   , vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10
                                   , vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15
@@ -1521,7 +1528,86 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      THEN vbPartionCellId_22:= NULL; END IF;
 
 
-     -- Проверка - ячейку Ошибка нельзя менять
+     -- Проверка - ячейку-Реал на ячейку-Реал менять нельзя
+     IF ((ioPartionCellId_1  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_1,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_1  <> vbPartionCellId_1)
+      OR (ioPartionCellId_2  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_2,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_2  <> vbPartionCellId_2)
+      OR (ioPartionCellId_3  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_3,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_3  <> vbPartionCellId_3)
+      OR (ioPartionCellId_4  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_4,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_4  <> vbPartionCellId_4)
+      OR (ioPartionCellId_5  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_5,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_5  <> vbPartionCellId_5)
+      OR (ioPartionCellId_6  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_6,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_6  <> vbPartionCellId_6)
+      OR (ioPartionCellId_7  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_7,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_7  <> vbPartionCellId_7)
+      OR (ioPartionCellId_8  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_8,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_8  <> vbPartionCellId_8)
+      OR (ioPartionCellId_9  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_9,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_9  <> vbPartionCellId_9)
+      OR (ioPartionCellId_10 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_10, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_10 <> vbPartionCellId_10)
+      OR (ioPartionCellId_11 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_11, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_11 <> vbPartionCellId_11)
+      OR (ioPartionCellId_12 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_12, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_12 <> vbPartionCellId_12)
+      OR (ioPartionCellId_13 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_13, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_13 <> vbPartionCellId_13)
+      OR (ioPartionCellId_14 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_14, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_14 <> vbPartionCellId_14)
+      OR (ioPartionCellId_15 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_15, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_15 <> vbPartionCellId_15)
+      OR (ioPartionCellId_16 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_16, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_16 <> vbPartionCellId_16)
+      OR (ioPartionCellId_17 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_17, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_17 <> vbPartionCellId_17)
+      OR (ioPartionCellId_18 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_18, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_18 <> vbPartionCellId_18)
+      OR (ioPartionCellId_19 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_19, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_19 <> vbPartionCellId_19)
+      OR (ioPartionCellId_20 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_20, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_20 <> vbPartionCellId_20)
+      OR (ioPartionCellId_21 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_21, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_21 <> vbPartionCellId_21)
+      OR (ioPartionCellId_22 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_22, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_22 <> vbPartionCellId_22)
+       )
+     -- Роль - Все права для изменений ячейки хранения
+     AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11278315)
+     --AND vbUserId <> 5
+     THEN
+         -- замена ячейки с Ошибки
+         RAISE EXCEPTION 'Ошибка.Нет прав заменять ячейку <%> на ячейку <%>.'
+                       , lfGet_Object_ValueData_sh ((SELECT CASE WHEN ioPartionCellId_1  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_1,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_1  <> vbPartionCellId_1  THEN ioPartionCellId_1
+                                                                 WHEN ioPartionCellId_2  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_2,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_2  <> vbPartionCellId_2  THEN ioPartionCellId_2
+                                                                 WHEN ioPartionCellId_3  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_3,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_3  <> vbPartionCellId_3  THEN ioPartionCellId_3
+                                                                 WHEN ioPartionCellId_4  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_4,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_4  <> vbPartionCellId_4  THEN ioPartionCellId_4
+                                                                 WHEN ioPartionCellId_5  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_5,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_5  <> vbPartionCellId_5  THEN ioPartionCellId_5
+                                                                 WHEN ioPartionCellId_6  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_6,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_6  <> vbPartionCellId_6  THEN ioPartionCellId_6
+                                                                 WHEN ioPartionCellId_7  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_7,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_7  <> vbPartionCellId_7  THEN ioPartionCellId_7
+                                                                 WHEN ioPartionCellId_8  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_8,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_8  <> vbPartionCellId_8  THEN ioPartionCellId_8
+                                                                 WHEN ioPartionCellId_9  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_9,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_9  <> vbPartionCellId_9  THEN ioPartionCellId_9
+                                                                 WHEN ioPartionCellId_10 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_10, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_10 <> vbPartionCellId_10 THEN ioPartionCellId_10
+                                                                 WHEN ioPartionCellId_11 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_11, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_11 <> vbPartionCellId_11 THEN ioPartionCellId_11
+                                                                 WHEN ioPartionCellId_12 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_12, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_12 <> vbPartionCellId_12 THEN ioPartionCellId_12
+                                                                 WHEN ioPartionCellId_13 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_13, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_13 <> vbPartionCellId_13 THEN ioPartionCellId_13
+                                                                 WHEN ioPartionCellId_14 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_14, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_14 <> vbPartionCellId_14 THEN ioPartionCellId_14
+                                                                 WHEN ioPartionCellId_15 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_15, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_15 <> vbPartionCellId_15 THEN ioPartionCellId_15
+                                                                 WHEN ioPartionCellId_16 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_16, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_16 <> vbPartionCellId_16 THEN ioPartionCellId_16
+                                                                 WHEN ioPartionCellId_17 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_17, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_17 <> vbPartionCellId_17 THEN ioPartionCellId_17
+                                                                 WHEN ioPartionCellId_18 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_18, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_18 <> vbPartionCellId_18 THEN ioPartionCellId_18
+                                                                 WHEN ioPartionCellId_19 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_19, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_19 <> vbPartionCellId_19 THEN ioPartionCellId_19
+                                                                 WHEN ioPartionCellId_20 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_20, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_20 <> vbPartionCellId_20 THEN ioPartionCellId_20
+                                                                 WHEN ioPartionCellId_21 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_21, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_21 <> vbPartionCellId_21 THEN ioPartionCellId_21
+                                                                 WHEN ioPartionCellId_22 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_22, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_22 <> vbPartionCellId_22 THEN ioPartionCellId_22
+                                                            END))
+                       , lfGet_Object_ValueData_sh ((SELECT CASE WHEN ioPartionCellId_1  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_1,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_1  <> vbPartionCellId_1  THEN vbPartionCellId_1
+                                                                 WHEN ioPartionCellId_2  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_2,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_2  <> vbPartionCellId_2  THEN vbPartionCellId_2
+                                                                 WHEN ioPartionCellId_3  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_3,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_3  <> vbPartionCellId_3  THEN vbPartionCellId_3
+                                                                 WHEN ioPartionCellId_4  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_4,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_4  <> vbPartionCellId_4  THEN vbPartionCellId_4
+                                                                 WHEN ioPartionCellId_5  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_5,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_5  <> vbPartionCellId_5  THEN vbPartionCellId_5
+                                                                 WHEN ioPartionCellId_6  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_6,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_6  <> vbPartionCellId_6  THEN vbPartionCellId_6
+                                                                 WHEN ioPartionCellId_7  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_7,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_7  <> vbPartionCellId_7  THEN vbPartionCellId_7
+                                                                 WHEN ioPartionCellId_8  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_8,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_8  <> vbPartionCellId_8  THEN vbPartionCellId_8
+                                                                 WHEN ioPartionCellId_9  NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_9,  0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_9  <> vbPartionCellId_9  THEN vbPartionCellId_9
+                                                                 WHEN ioPartionCellId_10 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_10, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_10 <> vbPartionCellId_10 THEN vbPartionCellId_10
+                                                                 WHEN ioPartionCellId_11 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_11, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_11 <> vbPartionCellId_11 THEN vbPartionCellId_11
+                                                                 WHEN ioPartionCellId_12 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_12, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_12 <> vbPartionCellId_12 THEN vbPartionCellId_12
+                                                                 WHEN ioPartionCellId_13 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_13, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_13 <> vbPartionCellId_13 THEN vbPartionCellId_13
+                                                                 WHEN ioPartionCellId_14 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_14, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_14 <> vbPartionCellId_14 THEN vbPartionCellId_14
+                                                                 WHEN ioPartionCellId_15 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_15, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_15 <> vbPartionCellId_15 THEN vbPartionCellId_15
+                                                                 WHEN ioPartionCellId_16 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_16, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_16 <> vbPartionCellId_16 THEN vbPartionCellId_16
+                                                                 WHEN ioPartionCellId_17 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_17, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_17 <> vbPartionCellId_17 THEN vbPartionCellId_17
+                                                                 WHEN ioPartionCellId_18 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_18, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_18 <> vbPartionCellId_18 THEN vbPartionCellId_18
+                                                                 WHEN ioPartionCellId_19 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_19, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_19 <> vbPartionCellId_19 THEN vbPartionCellId_19
+                                                                 WHEN ioPartionCellId_20 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_20, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_20 <> vbPartionCellId_20 THEN vbPartionCellId_20
+                                                                 WHEN ioPartionCellId_21 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_21, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_21 <> vbPartionCellId_21 THEN vbPartionCellId_21
+                                                                 WHEN ioPartionCellId_22 NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND COALESCE (vbPartionCellId_22, 0) NOT IN (0, zc_PartionCell_Err(), zc_PartionCell_RK()) AND ioPartionCellId_22 <> vbPartionCellId_22 THEN vbPartionCellId_22
+                                                            END))
+                        ;
+     END IF;
+
+     -- Проверка - ячейку с Ошибки нельзя менять
      IF ((ioPartionCellId_1  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_1,  0) <> zc_PartionCell_Err())
       OR (ioPartionCellId_2  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_2,  0) <> zc_PartionCell_Err())
       OR (ioPartionCellId_3  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_3,  0) <> zc_PartionCell_Err())
@@ -1549,11 +1635,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11278315)
      AND vbUserId <> 5
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав заменять ячейку <%>.', lfGet_Object_ValueData_sh(zc_PartionCell_Err());
+         -- замена ячейки с Ошибки
+         RAISE EXCEPTION 'Ошибка.Нет прав заменять ячейку <%>.', lfGet_Object_ValueData_sh (zc_PartionCell_Err());
      END IF;
 
 
-     -- Проверка - ячейку на Ошибка нельзя менять
+     -- Проверка - ячейку на Ошибку нельзя менять
      IF ((ioPartionCellId_1  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_1,  0) = zc_PartionCell_Err())
       OR (ioPartionCellId_2  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_2,  0) = zc_PartionCell_Err())
       OR (ioPartionCellId_3  <> zc_PartionCell_Err() AND COALESCE (vbPartionCellId_3,  0) = zc_PartionCell_Err())
@@ -1579,13 +1666,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
        )
      -- Роль - Все права для изменений ячейки хранения
      AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11278315)
-     -- Роль - Переброска ячейки в ошибку
+     -- Роль - Разрешено замена ячейки НА Ошибку
      AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11539212)
      --
      AND vbUserId <> 5
      AND 1=1
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав заменять на ячейку <%>.', lfGet_Object_ValueData_sh(zc_PartionCell_Err());
+         -- замена ячейки на Ошибку
+         RAISE EXCEPTION 'Ошибка.Нет прав заменять на ячейку <%>.', lfGet_Object_ValueData_sh (zc_PartionCell_Err());
      END IF;
 
      -- 1. Проверка - для ячейки может быть только одна партия
@@ -2255,8 +2343,8 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
                            , CHR (13), CHR (13)
                             ;
          END IF;
-         
-         
+
+
          -- 1. обнулили
          IF COALESCE (vbPartionCellId_1, 0) = 0
          THEN
@@ -2293,10 +2381,16 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), inMovementItemId, vbPartionCellId_1);
              -- закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), inMovementItemId, TRUE);
-             --
+             -- вернули
              vbIsClose_1:= vbPartionCellId_old_1 > 0;
 
-             --записываем последнюю измененную ячейку
+             --
+             IF COALESCE (vbPartionCellId_old_1, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
+             -- записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_1 ::Integer;
 
          ELSE
@@ -2350,6 +2444,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_2(), inMovementItemId, TRUE);
              --
              vbIsClose_2:= vbPartionCellId_old_2 > 0;
+
+             --
+             IF COALESCE (vbPartionCellId_old_2, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_2 ::Integer;
@@ -2405,6 +2505,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              --
              vbIsClose_3:= vbPartionCellId_old_3 > 0;
 
+             --
+             IF COALESCE (vbPartionCellId_old_3, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_3 ::Integer;
          ELSE
@@ -2458,6 +2564,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_4(), inMovementItemId, TRUE);
              --
              vbIsClose_4:= vbPartionCellId_old_4 > 0;
+
+             --
+             IF COALESCE (vbPartionCellId_old_4, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_4 ::Integer;
@@ -2513,6 +2625,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              --
              vbIsClose_5:= vbPartionCellId_old_5 > 0;
 
+             --
+             IF COALESCE (vbPartionCellId_old_5, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_5 ::Integer;
          ELSE
@@ -2565,6 +2683,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_6(), inMovementItemId, TRUE);
              --
              vbIsClose_6:= vbPartionCellId_old_6 > 0;
+
+             --
+             IF COALESCE (vbPartionCellId_old_6, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_6 ::Integer;
@@ -2620,6 +2744,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              --
              vbIsClose_7:= vbPartionCellId_old_7 > 0;
 
+             --
+             IF COALESCE (vbPartionCellId_old_7, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_7 ::Integer;
          ELSE
@@ -2673,6 +2803,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_8(), inMovementItemId, TRUE);
              --
              vbIsClose_8:= vbPartionCellId_old_8 > 0;
+
+             --
+             IF COALESCE (vbPartionCellId_old_8, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_8 ::Integer;
@@ -2728,6 +2864,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              --
              vbIsClose_9:= vbPartionCellId_old_9 > 0;
 
+             --
+             IF COALESCE (vbPartionCellId_old_9, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_9 ::Integer;
          ELSE
@@ -2782,6 +2924,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              --
              vbIsClose_10:= vbPartionCellId_old_10 > 0;
 
+             --
+             IF COALESCE (vbPartionCellId_old_10, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_10 ::Integer;
          ELSE
@@ -2835,6 +2983,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_11(), inMovementItemId, TRUE);
              --
              vbIsClose_11:= vbPartionCellId_old_11 > 0;
+
+             --
+             IF COALESCE (vbPartionCellId_old_11, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_11 ::Integer;
@@ -2900,6 +3054,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              -- 3.3.открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_12(), inMovementItemId, FALSE);
 
+             --
+             IF COALESCE (vbPartionCellId_old_12, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_12 ::Integer;
          END IF;
@@ -2953,6 +3113,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              -- 3.3.открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_13(), inMovementItemId, FALSE);
 
+             --
+             IF COALESCE (vbPartionCellId_old_13, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_13 ::Integer;
          END IF;
@@ -2995,6 +3161,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_14(), inMovementItemId, TRUE);
              --
              vbIsClose_14:= vbPartionCellId_old_14 > 0;
+
+             --
+             IF COALESCE (vbPartionCellId_old_14, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_14 ::Integer;
@@ -3049,6 +3221,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              --
              vbIsClose_15:= vbPartionCellId_old_15 > 0;
 
+             --
+             IF COALESCE (vbPartionCellId_old_15, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_15 ::Integer;
          ELSE
@@ -3102,6 +3280,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              --
              vbIsClose_16:= vbPartionCellId_old_16 > 0;
 
+             --
+             IF COALESCE (vbPartionCellId_old_16, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_16 ::Integer;
          ELSE
@@ -3154,6 +3338,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_17(), inMovementItemId, TRUE);
              --
              vbIsClose_17:= vbPartionCellId_old_17 > 0;
+
+             --
+             IF COALESCE (vbPartionCellId_old_17, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_17 ::Integer;
@@ -3218,6 +3408,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              -- 3.3.открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_18(), inMovementItemId, FALSE);
 
+             --
+             IF COALESCE (vbPartionCellId_old_18, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_18 ::Integer;
          END IF;
@@ -3270,6 +3466,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_19(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_19(), inMovementItemId, FALSE);
+
+             --
+             IF COALESCE (vbPartionCellId_old_19, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_19 ::Integer;
@@ -3324,6 +3526,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              -- 3.3.открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_20(), inMovementItemId, FALSE);
 
+             --
+             IF COALESCE (vbPartionCellId_old_20, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_20 ::Integer;
          END IF;
@@ -3377,6 +3585,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              -- 3.3.открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_21(), inMovementItemId, FALSE);
 
+             --
+             IF COALESCE (vbPartionCellId_old_21, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_21 ::Integer;
          END IF;
@@ -3429,6 +3643,12 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_22(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_22(), inMovementItemId, FALSE);
+
+             --
+             IF COALESCE (vbPartionCellId_old_22, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
 
              --записываем последнюю измененную ячейку
              outPartionCellId_last := vbPartionCellId_22 ::Integer;
@@ -3515,28 +3735,28 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      END IF;
 
      --outPartionCellId_last := COALESCE (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, 0);
-     IF     COALESCE(ioPartionCellId_1,0) <> COALESCE (vbPartionCellId_1, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_1, 0); 
-     ELSEIF COALESCE(ioPartionCellId_2,0) <> COALESCE (vbPartionCellId_2, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_2, 0); 
-     ELSEIF COALESCE(ioPartionCellId_3,0) <> COALESCE (vbPartionCellId_3, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_3, 0); 
-     ELSEIF COALESCE(ioPartionCellId_4,0) <> COALESCE (vbPartionCellId_4, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_4, 0); 
-     ELSEIF COALESCE(ioPartionCellId_5,0) <> COALESCE (vbPartionCellId_5, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_5, 0); 
-     ELSEIF COALESCE(ioPartionCellId_6,0) <> COALESCE (vbPartionCellId_6, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_6, 0); 
-     ELSEIF COALESCE(ioPartionCellId_7,0) <> COALESCE (vbPartionCellId_7, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_7, 0); 
-     ELSEIF COALESCE(ioPartionCellId_8,0) <> COALESCE (vbPartionCellId_8, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_8, 0); 
-     ELSEIF COALESCE(ioPartionCellId_9,0) <> COALESCE (vbPartionCellId_9, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_9, 0); 
-     ELSEIF COALESCE(ioPartionCellId_10,0)<> COALESCE (vbPartionCellId_10, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_10, 0); 
-     ELSEIF COALESCE(ioPartionCellId_11,0)<> COALESCE (vbPartionCellId_11, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_11, 0); 
-     ELSEIF COALESCE(ioPartionCellId_12,0)<> COALESCE (vbPartionCellId_12, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_12, 0); 
-     ELSEIF COALESCE(ioPartionCellId_13,0)<> COALESCE (vbPartionCellId_13, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_13, 0); 
-     ELSEIF COALESCE(ioPartionCellId_14,0)<> COALESCE (vbPartionCellId_14, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_14, 0); 
-     ELSEIF COALESCE(ioPartionCellId_15,0)<> COALESCE (vbPartionCellId_15, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_15, 0); 
-     ELSEIF COALESCE(ioPartionCellId_16,0)<> COALESCE (vbPartionCellId_16, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_16, 0); 
-     ELSEIF COALESCE(ioPartionCellId_17,0)<> COALESCE (vbPartionCellId_17, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_17, 0); 
-     ELSEIF COALESCE(ioPartionCellId_18,0)<> COALESCE (vbPartionCellId_18, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_18, 0); 
-     ELSEIF COALESCE(ioPartionCellId_19,0)<> COALESCE (vbPartionCellId_19, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_19, 0); 
-     ELSEIF COALESCE(ioPartionCellId_20,0)<> COALESCE (vbPartionCellId_20, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_20, 0); 
-     ELSEIF COALESCE(ioPartionCellId_21,0)<> COALESCE (vbPartionCellId_21, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_21, 0); 
-     ELSEIF COALESCE(ioPartionCellId_22,0)<> COALESCE (vbPartionCellId_22, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_22, 0); 
+     IF     COALESCE(ioPartionCellId_1,0) <> COALESCE (vbPartionCellId_1, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_1, 0);
+     ELSEIF COALESCE(ioPartionCellId_2,0) <> COALESCE (vbPartionCellId_2, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_2, 0);
+     ELSEIF COALESCE(ioPartionCellId_3,0) <> COALESCE (vbPartionCellId_3, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_3, 0);
+     ELSEIF COALESCE(ioPartionCellId_4,0) <> COALESCE (vbPartionCellId_4, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_4, 0);
+     ELSEIF COALESCE(ioPartionCellId_5,0) <> COALESCE (vbPartionCellId_5, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_5, 0);
+     ELSEIF COALESCE(ioPartionCellId_6,0) <> COALESCE (vbPartionCellId_6, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_6, 0);
+     ELSEIF COALESCE(ioPartionCellId_7,0) <> COALESCE (vbPartionCellId_7, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_7, 0);
+     ELSEIF COALESCE(ioPartionCellId_8,0) <> COALESCE (vbPartionCellId_8, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_8, 0);
+     ELSEIF COALESCE(ioPartionCellId_9,0) <> COALESCE (vbPartionCellId_9, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_9, 0);
+     ELSEIF COALESCE(ioPartionCellId_10,0)<> COALESCE (vbPartionCellId_10, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_10, 0);
+     ELSEIF COALESCE(ioPartionCellId_11,0)<> COALESCE (vbPartionCellId_11, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_11, 0);
+     ELSEIF COALESCE(ioPartionCellId_12,0)<> COALESCE (vbPartionCellId_12, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_12, 0);
+     ELSEIF COALESCE(ioPartionCellId_13,0)<> COALESCE (vbPartionCellId_13, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_13, 0);
+     ELSEIF COALESCE(ioPartionCellId_14,0)<> COALESCE (vbPartionCellId_14, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_14, 0);
+     ELSEIF COALESCE(ioPartionCellId_15,0)<> COALESCE (vbPartionCellId_15, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_15, 0);
+     ELSEIF COALESCE(ioPartionCellId_16,0)<> COALESCE (vbPartionCellId_16, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_16, 0);
+     ELSEIF COALESCE(ioPartionCellId_17,0)<> COALESCE (vbPartionCellId_17, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_17, 0);
+     ELSEIF COALESCE(ioPartionCellId_18,0)<> COALESCE (vbPartionCellId_18, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_18, 0);
+     ELSEIF COALESCE(ioPartionCellId_19,0)<> COALESCE (vbPartionCellId_19, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_19, 0);
+     ELSEIF COALESCE(ioPartionCellId_20,0)<> COALESCE (vbPartionCellId_20, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_20, 0);
+     ELSEIF COALESCE(ioPartionCellId_21,0)<> COALESCE (vbPartionCellId_21, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_21, 0);
+     ELSEIF COALESCE(ioPartionCellId_22,0)<> COALESCE (vbPartionCellId_22, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_22, 0);
      END IF;
 
 
@@ -3572,7 +3792,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
                  -- сохранили свойство <>
                , lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), lpSelect.MovementItemId, CURRENT_TIMESTAMP)
 
-         FROM -- Места отбора для хранения 
+         FROM -- Места отбора для хранения
               (SELECT lpSelect.MovementItemId
                FROM lpSelect_Movement_ChoiceCell_mi (vbUserId) AS lpSelect
                WHERE lpSelect.GoodsId     = inGoodsId
