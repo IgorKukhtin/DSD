@@ -10,8 +10,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Level TFloat, Length TFloat, Width TFloat, Height TFloat
              , BoxCount TFloat, RowBoxCount TFloat, RowWidth TFloat, RowHeight TFloat
              , Comment TVarChar
+             , PSW TVarChar, isLock_record Boolean
              ) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PartionCell());
@@ -32,6 +34,8 @@ $BODY$BEGIN
            , CAST (NULL as TFLOAT)  AS RowWidth   
            , CAST (NULL as TFLOAT)  AS RowHeight
            , CAST (NULL as TVarChar) AS Comment  
+           , CAST ('' AS TVarChar)  AS PSW
+           , FALSE :: Boolean       AS isLock_record
       ;
    ELSE
        RETURN QUERY
@@ -48,6 +52,9 @@ $BODY$BEGIN
            , ObjectFloat_RowWidth.ValueData     ::TFloat  AS RowWidth
            , ObjectFloat_RowHeight.ValueData    ::TFloat  AS RowHeight    
            , ObjectString_Comment.ValueData     ::TVarChar AS Comment
+           , CAST ('' AS TVarChar)  AS PSW
+           , FALSE :: Boolean       AS isLock_record
+
        FROM Object
         LEFT JOIN ObjectString AS ObjectString_Comment
                                ON ObjectString_Comment.ObjectId = Object.Id
@@ -89,9 +96,7 @@ $BODY$BEGIN
    END IF;
 
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
