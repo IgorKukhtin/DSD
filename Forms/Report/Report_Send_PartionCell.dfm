@@ -1470,7 +1470,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     object cbMovement: TcxCheckBox
       Left = 765
       Top = 3
-      Action = actRefreshPartion
+      Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       Properties.ReadOnly = False
       TabOrder = 6
       Width = 103
@@ -1724,6 +1725,79 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actOpenReport_PartionCell_GoodsHistory: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1080' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1080' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084
+      ImageIndex = 24
+      FormName = 'TReport_PartionCell_GoodsHistoryForm'
+      FormNameParam.Name = 'TReport_PartionCell_historyForm'
+      FormNameParam.Value = 'TReport_PartionCell_GoodsHistoryForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionCellId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionCellId_1'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionCellName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionCellName_1'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRePack'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isRePack'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actGetForm: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2845,6 +2919,10 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReport_PartionCell_GoodsHistory'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2928,6 +3006,10 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
     object bbChoiceCell_Print: TdxBarButton
       Action = actChoiceCell_Print
+      Category = 0
+    end
+    object bbOpenReport_PartionCell_GoodsHistory: TdxBarButton
+      Action = actOpenReport_PartionCell_GoodsHistory
       Category = 0
     end
   end

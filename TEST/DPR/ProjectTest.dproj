@@ -5483,8 +5483,12 @@
 				<Form>BankAccountJournal_srv_rForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\PartionCellCheckEdit.pas">
-				<Form>PartionCellCheckEditForm</Form>
+			<DCCReference Include="..\..\Forms\Document\CashJournal_srv_r.pas">
+				<Form>CashJournal_srv_rForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_PartionCell_GoodsHistory.pas">
+				<Form>Report_PartionCell_GoodsHistoryForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

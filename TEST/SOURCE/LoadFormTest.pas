@@ -407,7 +407,9 @@ end;
 
 procedure TLoadFormTest.LoadCashFormTest;
 begin
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournal_srv_rForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashJournal_srv_rForm');
+  exit;
   {TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationBonusForm');
 
@@ -2620,9 +2622,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateForm');
   exit;
   }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_GoodsHistoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_GoodsHistoryForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellForm'));

@@ -1538,6 +1538,8 @@ type
     N256: TMenuItem;
     actBankAccountJournal_srv_r: TdsdOpenForm;
     moBankAccountJournal_srv_r: TMenuItem;
+    actCashOperation_srv_r: TdsdOpenForm;
+    miCashOperation_srv_r: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

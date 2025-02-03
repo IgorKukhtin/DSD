@@ -138,6 +138,8 @@ type
     isLock_record: TcxGridDBColumn;
     actGet_ExecForm_next: TdsdExecStoredProc;
     spGet: TdsdStoredProc;
+    actOpenReport_PartionCell_GoodsHistory: TdsdOpenForm;
+    bbOpenReport_PartionCell_GoodsHistory: TdxBarButton;
   private
     { Private declarations }
   public
