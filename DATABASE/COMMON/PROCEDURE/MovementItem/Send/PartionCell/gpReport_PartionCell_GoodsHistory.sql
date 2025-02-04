@@ -17,7 +17,7 @@ RETURNS TABLE (OperDate TDateTime
              , InvNumber_full TVarChar
              , UserName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindName  TVarChar
+             , GoodsKindId Integer, GoodsKindName  TVarChar
              , PartionGoodsDate TDateTime
              , CellNum Integer
              , Ord Integer
@@ -30,7 +30,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      vbPartionCellName = (SELECT Object.ValueData FROM Object WHERE Object.Id = inPartionCellId );
-
+ 
      RETURN QUERY
      WITH
       tmpMI AS (SELECT MovementItem.Id
@@ -50,7 +50,7 @@ BEGIN
                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                  AND MovementLinkObject_To.ObjectId = inUnitId
+                                                  AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0)
 
                      LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
                                                ON MovementBoolean_isRePack.MovementId = Movement.Id
@@ -60,7 +60,7 @@ BEGIN
                                                 ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
-               WHERE MILinkObject_PartionCell_1.ObjectId  = inPartionCellId   ---11347398 --10456344 --"R-1-4-2"
+               WHERE MILinkObject_PartionCell_1.ObjectId  = inPartionCellId               --11347398 --10456344 --"R-1-4-2"
                  AND MILinkObject_PartionCell_1.DescId IN (zc_MILinkObject_PartionCell_1()
                                                           ,zc_MILinkObject_PartionCell_2()
                                                           ,zc_MILinkObject_PartionCell_3()
@@ -236,12 +236,14 @@ BEGIN
                   , tmpCell.GoodsId
                   , Object_Goods.ObjectCode ::Integer AS GoodsCode
                   , tmpCell.GoodsName     ::TVarChar
+                  , Object_GoodsKind.Id   ::Integer AS GoodsKindId
                   , tmpCell.GoodsKindName ::TVarChar
                   , tmpCell.PartionGoodsDate ::TDateTime
                   , tmpCell.CellNum       ::Integer
                   , ROW_NUMBER() OVER (ORDER BY tmpCell.OperDate ASC) ::Integer   AS Ord
     FROM tmpCell
          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpCell.GoodsId
+         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.ValueData = tmpCell.GoodsKindName
          LEFT JOIN Object AS Object_User ON Object_User.Id = tmpCell.UserId
          LEFT JOIN tmpMI ON tmpMI.Id = tmpCell.MovementItemId
     WHERE tmpCell.PartionCellName = vbPartionCellName

@@ -27,7 +27,6 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 830
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -89,6 +88,14 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
+      object GoodsKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076
+        DataBinding.FieldName = 'GoodsKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object UserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'UserName'
@@ -149,7 +156,6 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
     Height = 71
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 830
     object lbSearchName: TcxLabel
       Left = 659
       Top = 33
@@ -234,7 +240,7 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
     object deStart: TcxDateEdit
       Left = 121
       Top = 5
-      EditValue = 44197d
+      EditValue = 45658d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 9
@@ -248,7 +254,7 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
     object deEnd: TcxDateEdit
       Left = 121
       Top = 34
-      EditValue = 44197d
+      EditValue = 45658d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 11
@@ -275,6 +281,16 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -339,6 +355,10 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReport_PartionCell_history'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -393,16 +413,14 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
       Category = 0
     end
     object bbOpenReport_PartionCell_history: TdxBarButton
-      Caption = 'New Item'
+      Action = actOpenReport_PartionCell_history
       Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 304
-    Top = 112
+    Left = 296
+    Top = 120
     object actRefreshDetail: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -570,6 +588,88 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actOpenReport_PartionCell_history: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1103' '#1087#1086' '#1087#1072#1088#1090#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1103' '#1087#1086' '#1087#1072#1088#1090#1080#1080
+      ImageIndex = 26
+      FormName = 'TReport_PartionCell_historyForm'
+      FormNameParam.Value = 'TReport_PartionCell_historyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'PartionGoodsDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartionGoodsDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRePack'
+          Value = Null
+          Component = cbIsRePack
+          ComponentItem = 'isRePack'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_PartionCell_GoodsHistory'
@@ -697,11 +797,10 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
   object GuidesPartionCell: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartionCell
-    DisableGuidesOpen = True
-    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.Value = 'TPartionCellChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsFuel_ObjectForm'
+    FormName = 'TPartionCellChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

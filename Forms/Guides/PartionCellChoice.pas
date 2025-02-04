@@ -71,6 +71,8 @@ type
     dxBarButton1: TdxBarButton;
     spGet_ExecForm: TdsdStoredProc;
     actGet_ExecForm: TdsdExecStoredProc;
+    actOpenReport_PartionCell_GoodsHistory: TdsdOpenForm;
+    bbOpenReport_PartionCell_GoodsHistory: TdxBarButton;
   private
     { Private declarations }
   public
