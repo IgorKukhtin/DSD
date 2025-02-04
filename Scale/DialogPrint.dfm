@@ -35,7 +35,7 @@ inherited DialogPrintForm: TDialogPrintForm
       ExplicitHeight = 27
     end
     object btnSaveAll: TBitBtn
-      Left = 93
+      Left = 92
       Top = 9
       Width = 118
       Height = 27
@@ -253,7 +253,7 @@ inherited DialogPrintForm: TDialogPrintForm
     object LabelDateValue: TLabel
       Left = 0
       Top = 0
-      Width = 101
+      Width = 301
       Height = 14
       Align = alTop
       Alignment = taCenter
@@ -264,6 +264,7 @@ inherited DialogPrintForm: TDialogPrintForm
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitWidth = 101
     end
     object DateValueEdit: TcxDateEdit
       Left = 102

@@ -91,11 +91,20 @@ begin
      InvNumberPartnerEdit.Text:= ParamsMovement.ParamByName('InvNumberPartner').AsString;
      CommentEdit.Text:='';
      PanelComment.Visible:= (SettingMain.isCeh = FALSE) and (ParamsMovement.ParamByName('isComment').AsBoolean = true) and (ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Loss);
-     PanelDiscountAmountPartner.Visible:= (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
-                                      and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true)
+
+     PanelDiscountAmountPartner.Visible:= // если НЕ док. поставшика
+                                          (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
+                                      // если нужен док. поставшика
+                                      and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE)
+                                      // если проверка док. поставшика
+                                      and (ParamsMovement.ParamByName('isInvNumberPartner_check').AsBoolean = TRUE)
                                      ;
-     btnSaveAll.Visible:= (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
-                      and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = true)
+     btnSaveAll.Visible:= // если НЕ док. поставшика
+                          (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
+                      // если нужен док. поставшика
+                      and (ParamsMovement.ParamByName('isInvNumberPartner').AsBoolean = TRUE)
+                      // если проверка док. поставшика
+                      and (ParamsMovement.ParamByName('isInvNumberPartner_check').AsBoolean = TRUE)
                      ;
      if btnSaveAll.Visible then
      begin
@@ -169,7 +178,9 @@ begin
      then str_pok_post:='поставщика'
      else str_pok_post:='покупателя';
 
+     // если ЭТО док. поставшика
      if (ParamsMovement.ParamByName('isDocPartner').AsBoolean = TRUE)
+        // еи НЕ заполнили
         and (trim(InvNumberPartnerEdit.Text) = '')
      then begin
                ShowMessage('Ошибка.Необходимо заполнить Документ Поставщика №.');

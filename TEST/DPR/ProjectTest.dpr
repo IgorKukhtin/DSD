@@ -1564,7 +1564,7 @@ uses
   Report_Container_data in '..\..\Forms\Report\Report_Container_data.pas' {Report_Container_dataForm: TParentForm},
   BankAccountJournal_srv_r in '..\..\Forms\Document\BankAccountJournal_srv_r.pas' {BankAccountJournal_srv_rForm: TParentForm},
   CashJournal_srv_r in '..\..\Forms\Document\CashJournal_srv_r.pas' {CashJournal_srv_rForm: TParentForm},
-  Report_PartionCell_GoodsHistory in '..\..\Forms\Report\Report_PartionCell_GoodsHistory.pas' {Report_PartionCell_GoodsHistoryForm: TParentForm};z
+  Report_PartionCell_GoodsHistory in '..\..\Forms\Report\Report_PartionCell_GoodsHistory.pas' {Report_PartionCell_GoodsHistoryForm: TParentForm},
   PartionCellCheckEdit in '..\..\Forms\Guides\PartionCellCheckEdit.pas' {PartionCellCheckEditForm: TParentForm};
 
 
