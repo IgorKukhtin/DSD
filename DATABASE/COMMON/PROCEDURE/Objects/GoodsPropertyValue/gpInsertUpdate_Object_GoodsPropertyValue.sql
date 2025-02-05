@@ -61,7 +61,7 @@ $BODY$
              , 126856 -- йнркермне лъян(ЯБ2+ЯБ3)
               )
    THEN 
-        PERFORM lpDelete_Object (ioId, inSession);
+        PERFORM _lp_Delete_Object (ioId, inSession);
         RETURN;
    END IF;
 
