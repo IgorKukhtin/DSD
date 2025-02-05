@@ -1579,10 +1579,12 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Properties.Strings = (
           'Checked')
       end>
-    Left = 680
-    Top = 368
+    Left = 528
+    Top = 328
   end
   inherited ActionList: TActionList
+    Left = 79
+    Top = 271
     object actRefreshCell: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       MoveParams = <>
@@ -1729,8 +1731,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     object actOpenReport_PartionCell_GoodsHistory: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1080' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1080' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1103' '#1087#1086' '#1103#1095#1077#1081#1082#1077' '#1093#1088#1072#1085#1077#1085#1080#1103
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1103' '#1087#1086' '#1103#1095#1077#1081#1082#1077' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 24
       FormName = 'TReport_PartionCell_GoodsHistoryForm'
       FormNameParam.Name = 'TReport_PartionCell_historyForm'
@@ -1813,8 +1815,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     object actOpenReport_PartionCell_history: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1080
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1080
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1103' '#1087#1086' '#1087#1072#1088#1090#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1103' '#1087#1086' '#1087#1072#1088#1090#1080#1080
       ImageIndex = 26
       FormName = 'TReport_PartionCell_historyForm'
       FormNameParam.Value = 'TReport_PartionCell_historyForm'
@@ -1825,7 +1827,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           Name = 'PartionGoodsDate'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartionGoodsDate_real_real'
+          ComponentItem = 'PartionGoodsDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3302,6 +3304,9 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       end>
     Left = 368
     Top = 240
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 128
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 170

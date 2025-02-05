@@ -82,6 +82,7 @@ type
     deStart: TcxDateEdit;
     cxLabel2: TcxLabel;
     deEnd: TcxDateEdit;
+    actOpenReport_PartionCell_history: TdsdOpenForm;
   private
     { Private declarations }
   public

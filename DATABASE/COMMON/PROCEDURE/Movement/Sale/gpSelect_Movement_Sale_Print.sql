@@ -700,9 +700,17 @@ END IF;
                   WHEN COALESCE (OH_JuridicalDetails_To.Name,'') <> ''
                    AND OH_JuridicalDetails_To.JuridicalId <> 9840136 -- Укрзалізниця АТ
                        THEN (OH_JuridicalDetails_To.Name ||' '|| ObjectString_ToAddress.ValueData)
--- Object_Juridical_curr
+             -- Object_Juridical_curr
                   ELSE COALESCE (Object_Partner.ValueData, Object_To.ValueData)
-             END ::TVarChar AS ToName
+             END ::TVarChar AS ToName  
+             
+           , (CASE WHEN COALESCE (OH_JuridicalDetails_To.Name,'') <> ''
+                        THEN OH_JuridicalDetails_To.Name ||' '
+                        ELSE Object_Juridical.ValueData||' '
+              END
+              || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
+              || CASE WHEN View_Partner_Address.ProvinceName  <> '' THEN View_Partner_Address.ProvinceName || ' р-н, '  ELSE '' END
+              || ObjectString_ToAddress.ValueData)  ::TVarChar AS ToName_full
 
            , Object_PaidKind.ValueData         		AS PaidKindName
            , View_Contract.InvNumber        		AS ContractName

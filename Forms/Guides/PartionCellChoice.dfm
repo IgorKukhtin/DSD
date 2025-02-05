@@ -211,6 +211,10 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReport_PartionCell_GoodsHistory'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -274,6 +278,10 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
     end
     object dxBarButton1: TdxBarButton
       Action = mactGetForm
+      Category = 0
+    end
+    object bbOpenReport_PartionCell_GoodsHistory: TdxBarButton
+      Action = actOpenReport_PartionCell_GoodsHistory
       Category = 0
     end
   end
@@ -479,6 +487,74 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
           StoredProc = spGet_ExecForm
         end>
       Caption = 'actGet_ExecForm'
+    end
+    object actOpenReport_PartionCell_GoodsHistory: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1103' '#1087#1086' '#1103#1095#1077#1081#1082#1077' '#1093#1088#1072#1085#1077#1085#1080#1103
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1048#1089#1090#1086#1088#1080#1103' '#1087#1086' '#1103#1095#1077#1081#1082#1077' '#1093#1088#1072#1085#1077#1085#1080#1103
+      ImageIndex = 24
+      FormName = 'TReport_PartionCell_GoodsHistoryForm'
+      FormNameParam.Name = 'TReport_PartionCell_historyForm'
+      FormNameParam.Value = 'TReport_PartionCell_GoodsHistoryForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 45474d
+          DataType = ftDateTime
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 45474d
+          DataType = ftDateTime
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionCellId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionCellName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRePack'
+          Value = False
+          ComponentItem = 'isRePack'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spSelect: TdsdStoredProc
