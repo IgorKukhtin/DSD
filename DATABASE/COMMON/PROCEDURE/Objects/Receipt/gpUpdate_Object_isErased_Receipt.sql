@@ -15,7 +15,7 @@ BEGIN
 
    -- изменили
    PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);
-   -- !!!!!! PERFORM lpDelete_Object (inObjectId, inSession) ;
+   -- !!!!!! PERFORM lp_Delete_Object (inObjectId, inSession) ;
 
 END;
 $BODY$

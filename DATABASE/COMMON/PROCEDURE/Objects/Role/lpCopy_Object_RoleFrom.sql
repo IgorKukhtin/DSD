@@ -92,20 +92,20 @@ $BODY$
 
    -- !!!!DELETE ROLE!!! у ПОЛЬЗОВАТЕЛЯ
    select tmp.*
-        , lpDelete_Object (userroleid, '5') 
+        , lp Delete_Object (userroleid, '5') 
    from gpSelect_Object_UserRole (zfCalc_UserAdmin()) as tmp
     where tmp.UserId = 81238 -- Вергуленко В.И.
 
 
    -- !!!!DELETE "пустой" ACTION!!! у РОЛИ
    select tmp.*
-        , lpDelete_Object (RoleActionId, '5') 
+        , lp Delete_Object (RoleActionId, '5') 
    FROM gpSelect_Object_RoleAction ('') AS tmp
    WHERE tmp.roleId = 442930 -- Накладные полный доступ ГП - Вергуленко В.И.
      AND tmp.Id = 257508     -- это "Action1"
 
    -- !!!!DELETE "задвоенные" ACTION!!! у РОЛИ
-   select lpDelete_Object (Id_del, '5') 
+   select lp Delete_Object (Id_del, '5') 
    from (select max (RoleActionId) as Id_del
          FROM gpSelect_Object_RoleAction ('') AS tmp
          WHERE tmp.roleId = 442930 -- Накладные полный доступ ГП - Вергуленко В.И.
@@ -116,13 +116,13 @@ $BODY$
 
    -- !!!!DELETE "пустой" Process!!! у РОЛИ
    select tmp.*
-        , lpDelete_Object (RoleProcessId, '5') 
+        , lp Delete_Object (RoleProcessId, '5') 
    FROM gpSelect_Object_RoleProcess ('') AS tmp
    WHERE tmp.roleId = 442930 -- Накладные полный доступ ГП - Вергуленко В.И.
      AND tmp.Id = zc_Enum_Process_Null() -- это "zc_Enum_Process_Null"
 
    -- !!!!DELETE "задвоенные" Process!!! у РОЛИ
-   select lpDelete_Object (Id_del, '5') 
+   select lp Delete_Object (Id_del, '5') 
    from (select max (RoleProcessId) as Id_del
          FROM gpSelect_Object_RoleProcess ('') AS tmp
          WHERE tmp.roleId = 442930 -- Накладные полный доступ ГП - Вергуленко В.И.

@@ -14,7 +14,7 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_SignInternal());
 
    -- изменили
-   PERFORM lpDelete_Object (inObjectId, inSession) ;
+   PERFORM lp_Delete_Object (inObjectId, inSession) ;
 
 END;
 $BODY$

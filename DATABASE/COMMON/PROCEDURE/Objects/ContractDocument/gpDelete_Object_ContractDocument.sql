@@ -1,26 +1,32 @@
--- Function: lpDelete_Object(integer, tvarchar)
+-- Function: gpDelete_Object_ContractDocument(integer, tvarchar)
 
 DROP FUNCTION IF EXISTS gpDelete_Object_ContractDocument(integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpDelete_Object_ContractDocument(
      IN inId integer, 
      IN inSession tvarchar)
-RETURNS void AS
+RETURNS VOID
+AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+   -- НЕТ проверки прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
 
-  -- т.к. в lpDelete_Object заблокировал
-  -- DELETE FROM ObjectLink WHERE ChildObjectId = inId;
-  -- т.к. в lpDelete_Object заблокировал
-  DELETE FROM ObjectBLOB WHERE ObjectId = inId;
+   -- т.к. в lp Delete_Object заблокировал
+   -- DELETE FROM ObjectLink WHERE ChildObjectId = inId;
+   -- т.к. в lp Delete_Object заблокировал
 
-  PERFORM lpDelete_Object(inId, inSession);
+   -- DELETE FROM ObjectBLOB WHERE ObjectId = inId;
+   -- PERFORM lp Delete_Object(inId, inSession);
+   
+   -- изменили
+   PERFORM lpUpdate_Object_isErased (inObjectId:= inId, inUserId:= vbUserId);
+  
 
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpDelete_Object_ContractDocument(integer, tvarchar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

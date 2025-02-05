@@ -209,8 +209,9 @@ BEGIN
                                  END                                                       AS GoodsKindId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
-                               , SUM (CASE WHEN MovementLinkObject_To.ObjectId   = vbToId THEN MovementItem.Amount ELSE 0 END) AS Amount
-                               , SUM (CASE WHEN MovementLinkObject_From.ObjectId = vbToId THEN MovementItem.Amount ELSE 0 END) AS Amount_ret
+                               , SUM (CASE WHEN MovementLinkObject_To.ObjectId   = vbToId THEN COALESCE (MIFloat_AmountPartner.ValueData, MovementItem.Amount) ELSE 0 END) AS Amount
+                               , SUM (CASE WHEN MovementLinkObject_From.ObjectId = vbToId THEN COALESCE (MIFloat_AmountPartner.ValueData, MovementItem.Amount) ELSE 0 END) AS Amount_ret
+                               , COUNT(*) AS myC
                           FROM (SELECT Movement.Id AS MovementId
                                 FROM MovementLinkMovement AS MLM_Order
                                     INNER JOIN Movement ON Movement.Id = MLM_Order.MovementId
@@ -240,6 +241,10 @@ BEGIN
                                 INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
+                                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+
                                 LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                            ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                           AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -367,6 +372,7 @@ BEGIN
                                , COALESCE (tmpWeighing.Amount_ret, 0)                            AS Amount_Weighing_ret
                                , COALESCE (tmpMI.Amount, 0)                                      AS Amount
                                , COALESCE (tmpMI.Amount_ret, 0)                                  AS Amount_ret
+                               , tmpWeighing.myC
                            FROM tmpWeighing
                                 FULL JOIN tmpMI ON tmpMI.GoodsId          =  tmpWeighing.GoodsId
                                                AND tmpMI.GoodsKindId      =  tmpWeighing.GoodsKindId
@@ -383,6 +389,7 @@ BEGIN
                                , COALESCE (tmpResult_1.Amount_ret, 0)                            AS Amount_ret
                                , COALESCE (tmpMIOrder.Amount, 0)                                 AS Amount_Order
                                , COALESCE (tmpMIOrder.AmountSecond, 0)                           AS AmountSecond_Order
+                               , tmpResult_1.myC
                            FROM tmpResult_1
                                 FULL JOIN tmpMIOrder ON tmpMIOrder.GoodsId          =  tmpResult_1.GoodsId
                                                     AND tmpMIOrder.GoodsKindId      =  tmpResult_1.GoodsKindId
@@ -522,6 +529,8 @@ BEGIN
                          , SUM (tmpResult.AmountSecond_Order)                                                                                              :: TFloat AS AmountSecond_Order
                          , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.AmountSecond_Order ELSE 0 END)                                :: TFloat AS AmountSecond_Order_Sh
                          , SUM (tmpResult.AmountSecond_Order * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountSecond_Order_Weight
+                         
+                         , SUM (tmpResult.myC) AS myC
       
       
                    FROM tmpResult
