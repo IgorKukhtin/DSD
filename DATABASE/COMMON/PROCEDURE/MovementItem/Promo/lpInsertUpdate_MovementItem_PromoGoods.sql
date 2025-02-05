@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inGoodsId               Integer   , -- Товары
     IN inAmount                TFloat    , -- % скидки на товар
-    IN inPrice                 TFloat    , -- Цена в прайсе учетом скидки 
+    IN inPrice                 TFloat    , -- Цена в прайсе учетом скидки
     IN inOperPriceList         TFloat    , -- Цена в прайсе
     IN inPriceSale             TFloat    , -- Цена на полке
     IN inPriceWithOutVAT       TFloat    , -- Цена отгрузки без учета НДС, с учетом скидки, грн
@@ -26,10 +26,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
     IN inTaxRetIn              TFloat    , -- % возврата
     IN inAmountMarket          TFloat    , --Кол-во факт (маркет бюджет)
     IN inSummOutMarket         TFloat    , --Сумма факт кредит(маркет бюджет)
-    IN inSummInMarket          TFloat    , --Сумма факт дебет(маркет бюджет) 
+    IN inSummInMarket          TFloat    , --Сумма факт дебет(маркет бюджет)
     IN inGoodsKindId           Integer   , --ИД обьекта <Вид товара>
-    IN inGoodsKindCompleteId   Integer   , --ИД обьекта <Вид товара (примечание)>  
-    IN inTradeMarkId                    Integer,  --Торговая марка 
+    IN inGoodsKindCompleteId   Integer   , --ИД обьекта <Вид товара (примечание)>
+    IN inTradeMarkId                    Integer,  --Торговая марка
     IN inGoodsGroupPropertyId           Integer,
     IN inGoodsGroupDirectionId          Integer,
     IN inComment               TVarChar  , --Комментарий
@@ -41,9 +41,10 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
     -- Проверили
-    IF inGoodsKindId <> 0 AND 1=0
+    IF COALESCE (inGoodsKindId, 0) = 0 AND 1=1
     THEN
-        RAISE EXCEPTION 'Ошибка. Необходимо заполнить колонку Вид (примечание), а значение вид товара = <%> должно быть пустым.', lfGet_Object_ValueData (inGoodsKindId);
+        -- RAISE EXCEPTION 'Ошибка. Необходимо заполнить колонку Вид (примечание), а значение вид товара = <%> должно быть пустым.', lfGet_Object_ValueData (inGoodsKindId);
+        RAISE EXCEPTION 'Ошибка.Необходимо заполнить колонку вид товара.';
     END IF;
 
 
@@ -52,7 +53,7 @@ BEGIN
 
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL, inUserId);
-    
+
     -- сохранили <цена в прайсе> без учета % скидки (договор)
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, COALESCE(inOperPriceList,0));
 
@@ -61,25 +62,25 @@ BEGIN
 
     -- сохранили <цена на полке>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, COALESCE(inPriceSale,0));
-    
+
     -- сохранили <Цена отгрузки без учета НДС, с учетом скидки, грн>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithOutVAT(), ioId, COALESCE(inPriceWithOutVAT,0));
-    
+
     -- сохранили <Цена отгрузки с учетом НДС, с учетом скидки, грн>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithVAT(), ioId, COALESCE(inPriceWithVAT,0));
-    
+
     -- сохранили <Цена Тендер без учета НДС, с учетом скидки, грн>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTender(), ioId, COALESCE(inPriceTender,0));
-    
+
     -- сохранили <CountForPrice>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
-        
+
     -- !!теперь будет расчет!!! сохранили <Объем продаж в аналогичный период, кг>
     -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReal(), ioId, COALESCE(inAmountReal,0));
-    
+
     -- сохранили <Минимум планируемого объема продаж на акционный период (в кг)>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMin(), ioId, COALESCE(inAmountPlanMin,0));
-    
+
     -- сохранили <Максимум планируемого объема продаж на акционный период (в кг)>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMax(), ioId, COALESCE(inAmountPlanMax,0));
 
@@ -97,14 +98,14 @@ BEGIN
 
     --если товар выбран для inGoodsGroupPropertyId, inGoodsGroupDirectionId, inTradeMarkId - сохраняем знач. NULL
     --  а показываем свойства товара
-    
+
     -- сохранили связь с <Вид товара>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_TradeMark(), ioId, CASE WHEN COALESCE (inGoodsId,0) = 0 THEN inTradeMarkId ELSE NULL END ::Integer);
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsGroupProperty(), ioId, CASE WHEN COALESCE (inGoodsId,0) = 0 THEN inGoodsGroupPropertyId ELSE NULL END ::Integer);
     -- сохранили связь с <Вид товара>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsGroupDirection(), ioId, CASE WHEN COALESCE (inGoodsId,0) = 0 THEN inGoodsGroupDirectionId ELSE NULL END ::Integer);
-    
+
     -- сохранили <Комментарий>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
@@ -115,7 +116,7 @@ BEGIN
       AND MovementItem.ObjectId = inGoodsId;
 
     -- сохранили протокол
-    IF inUserId > 0 THEN 
+    IF inUserId > 0 THEN
       PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
     ELSE
       PERFORM lpInsert_MovementItemProtocol (ioId, zc_Enum_Process_Auto_ReComplete(), vbIsInsert);
