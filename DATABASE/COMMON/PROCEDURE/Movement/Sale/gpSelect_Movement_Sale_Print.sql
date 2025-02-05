@@ -708,9 +708,11 @@ END IF;
                         THEN OH_JuridicalDetails_To.Name ||' '
                         ELSE Object_Juridical.ValueData||' '
               END
-              || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
-              || CASE WHEN View_Partner_Address.ProvinceName  <> '' THEN View_Partner_Address.ProvinceName || ' р-н, '  ELSE '' END
-              || ObjectString_ToAddress.ValueData)  ::TVarChar AS ToName_full
+              || ' ' || COALESCE (ObjectString_Partner_ShortName.ValueData, '')
+              || CASE WHEN View_Partner_Address.RegionName    <> '' THEN ' ' || View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
+              || CASE WHEN View_Partner_Address.ProvinceName  <> '' THEN ' ' || View_Partner_Address.ProvinceName || ' р-н, '  ELSE '' END
+              || ' ' || ObjectString_ToAddress.ValueData
+             )  ::TVarChar AS ToName_full
 
            , Object_PaidKind.ValueData         		AS PaidKindName
            , View_Contract.InvNumber        		AS ContractName
