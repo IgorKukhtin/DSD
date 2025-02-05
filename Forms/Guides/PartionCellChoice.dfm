@@ -533,15 +533,13 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
         end
         item
           Name = 'UnitId'
-          Value = ''
-          ComponentItem = 'Key'
+          Value = '8459'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
-          Value = ''
-          ComponentItem = 'TextValue'
+          Value = #1056#1086#1079#1087#1086#1076#1110#1083#1100#1095#1080#1081' '#1082#1086#1084#1087#1083#1077#1082#1089
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
