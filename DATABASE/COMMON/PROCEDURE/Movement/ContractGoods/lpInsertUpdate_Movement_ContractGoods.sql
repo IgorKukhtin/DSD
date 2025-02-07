@@ -46,6 +46,7 @@ BEGIN
      -- находим предыдущий документ,ему устанавливаем дату окончани€ EndBeginDate  = inOperDate-1 день
      vbMovementId_old:= (SELECT tmp.Id
                          FROM (SELECT Movement.Id
+                                      -- ѕо убыванию, нужен первый предыдущий
                                     , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC) AS Ord
                                FROM Movement
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -63,8 +64,9 @@ BEGIN
      
      -- пробуем найти следующий док.
      SELECT tmp.Id, tmp.OperDate
-    INTO vbMovementId_next, vbOperDate_next
+            INTO vbMovementId_next, vbOperDate_next
      FROM (SELECT Movement.Id, Movement.OperDate
+                  -- ѕо возрастанию, нужен первый следующий
                 , ROW_NUMBER() OVER (ORDER BY Movement.OperDate ASC) AS Ord
            FROM Movement
                INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -79,7 +81,8 @@ BEGIN
      WHERE tmp.Ord = 1
      LIMIT 1;
 
-     outEndBeginDate := (CASE WHEN COALESCE (vbMovementId_next,0) > 0 THEN vbOperDate_next - INTERVAL '1 DAY' ELSE zc_DateEnd() END);
+     -- конечна€ дата у текущего документа
+     outEndBeginDate := (CASE WHEN vbMovementId_next > 0 THEN vbOperDate_next - INTERVAL '1 DAY' ELSE zc_DateEnd() END);
 
      -- определ€ем признак —оздание/ орректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
