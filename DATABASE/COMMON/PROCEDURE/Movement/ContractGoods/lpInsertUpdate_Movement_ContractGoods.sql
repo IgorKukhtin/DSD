@@ -53,6 +53,10 @@ BEGIN
                                                                   ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                                  AND MovementLinkObject_Contract.ObjectId = inContractId
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_Currency
+                                                                  ON MovementLinkObject_Currency.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_Currency.DescId = zc_MovementLinkObject_Currency()
+                                                                 AND MovementLinkObject_Currency.ObjectId = inCurrencyId
                                WHERE Movement.DescId = zc_Movement_ContractGoods()
                                   AND Movement.OperDate < inOperDate
                                   AND Movement.StatusId <> zc_Enum_Status_Erased()  --zc_Enum_Status_Complete() 
@@ -73,6 +77,10 @@ BEGIN
                                              ON MovementLinkObject_Contract.MovementId = Movement.Id
                                             AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                             AND MovementLinkObject_Contract.ObjectId = inContractId
+               INNER JOIN MovementLinkObject AS MovementLinkObject_Currency
+                                             ON MovementLinkObject_Currency.MovementId = Movement.Id
+                                            AND MovementLinkObject_Currency.DescId = zc_MovementLinkObject_Currency()
+                                            AND MovementLinkObject_Currency.ObjectId = inCurrencyId
            WHERE Movement.DescId = zc_Movement_ContractGoods()
               AND Movement.OperDate > inOperDate
               AND Movement.StatusId <> zc_Enum_Status_Erased()--zc_Enum_Status_Complete()
@@ -119,7 +127,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
 
-
      IF vbIsInsert = TRUE
      THEN
          -- сохранили свойство <Дата создания>
@@ -152,6 +159,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.02.25         *
  02.12.24         *
  15.11.24         *
  29.11.23         *
@@ -163,4 +171,3 @@ $BODY$
 
 -- тест
 -- 
-
