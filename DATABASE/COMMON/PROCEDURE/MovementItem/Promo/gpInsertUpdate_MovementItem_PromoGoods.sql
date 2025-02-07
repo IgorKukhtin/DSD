@@ -65,7 +65,8 @@ BEGIN
 
     -- !!!замена!!! - новая схема
     IF EXISTS (SELECT 1 FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_Insert() AND MovementDate.ValueData >= '25.09.2023')
-       OR vbUserId = 5
+       -- OR vbUserId = 5
+       AND COALESCE (ioGoodsKindId, 0) = 0
     THEN
         ioGoodsKindId:= ioGoodsKindCompleteId;
     END IF;
