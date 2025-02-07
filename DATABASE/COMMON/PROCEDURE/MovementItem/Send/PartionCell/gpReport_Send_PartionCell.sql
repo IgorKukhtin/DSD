@@ -171,7 +171,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , Ord Integer
              , ColorFon_ord Integer
 
-             , NPP_ChoiceCell      Integer
+             , NPP_ChoiceCell      Integer 
+             , ChoiceCellId        Integer
              , ChoiceCellCode      Integer
              , ChoiceCellName      TVarChar
              , ChoiceCellName_shot TVarChar
@@ -1595,6 +1596,7 @@ BEGIN
 
           -- Место отбора
         , tmpChoiceCell.Code          ::Integer  AS NPP_ChoiceCell
+        , tmpChoiceCell.Id            ::Integer  AS ChoiceCellId
         , tmpChoiceCell.Code          ::Integer  AS ChoiceCellCode
         , tmpChoiceCell.Name          ::TVarChar AS ChoiceCellName
         , tmpChoiceCell.CellName_shot ::TVarChar AS ChoiceCellName_shot
@@ -2898,7 +2900,8 @@ BEGIN
           END ::Integer AS ColorFon_ord
 
         --ячейки отбора
-        , 0     ::Integer  AS NPP_ChoiceCell
+        , 0     ::Integer  AS NPP_ChoiceCell 
+        , 0     ::Integer  AS ChoiceCellId
         , NULL  ::Integer  AS ChoiceCellCode
         , NULL  ::TVarChar AS ChoiceCellName
         , NULL  ::TVarChar AS ChoiceCellName_shot

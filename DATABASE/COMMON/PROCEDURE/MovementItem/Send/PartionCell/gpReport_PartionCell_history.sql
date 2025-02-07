@@ -47,7 +47,8 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                 FROM MovementItemDate
                      INNER JOIN MovementItem ON MovementItem.Id = MovementItemDate.MovementItemId
                                             AND MovementItem.DescId = zc_MI_Master()
-                                            AND MovementItem.isErased = FALSE
+                                            AND MovementItem.isErased = FALSE 
+                                            AND MovementItem.ObjectId = inGoodsId
                                            -- AND MovementItem.MovementId = 28742039
                      INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                         AND Movement.DescId = zc_Movement_Send()
@@ -67,7 +68,7 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                 WHERE MovementItemDate.ValueData = inPartionGoodsDate --'2024-07-15'
                   AND MovementItemDate.DescId = zc_MIDate_PartionGoods()
-                  AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0)
+                  AND (COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0) OR inGoodsKindId = 0)
                   AND COALESCE (MovementBoolean_isRePack.ValueData, FALSE) = inIsRePack
               UNION
                 -- запрос по док. Перемещения - партия  = дата документа
@@ -93,37 +94,47 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                 WHERE Movement.DescId = zc_Movement_Send()
                   AND Movement.OperDate = inPartionGoodsDate
                   AND Movement.StatusId = zc_Enum_Status_Complete()
-                  AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0)
+                  AND (COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0) OR inGoodsKindId = 0)
                   AND COALESCE (MovementBoolean_isRePack.ValueData, FALSE) = inIsRePack
               UNION
                 --запрос по партиям из проводок
-                SELECT DISTINCT MIContainer.MovementItemId AS Id
-                FROM ObjectDate AS ObjectDate_Value
-                     INNER JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                    ON CLO_PartionGoods.ObjectId = ObjectDate_Value.ObjectId --CLO_PartionGoods.ContainerId = MIContainer.ContainerId
-                                                   AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
-                     INNER JOIN MovementItemContainer AS MIContainer
-                                                      ON MIContainer.ContainerId = CLO_PartionGoods.ContainerId
-                                                     AND MIContainer.DescId = zc_MIContainer_Count()
-                                                     AND MIContainer.ObjectId_Analyzer = inGoodsId
-                                                     AND MIContainer.WhereObjectId_analyzer = inUnitId
-                     LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                   ON CLO_GoodsKind.ContainerId = CLO_PartionGoods.ContainerId
-                                                  AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                     INNER JOIN Movement ON Movement.Id = MIContainer.MovementId
-                                        AND Movement.DescId = zc_Movement_Send()
-                                      --  AND Movement.Id = 28742039
-
-                     LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
-                                               ON MovementBoolean_isRePack.MovementId = Movement.Id
-                                              AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
-
-                WHERE --ObjectDate_Value.ObjectId = Object_PartionGoods.Id
-                      ObjectDate_Value.ValueData = inPartionGoodsDate  --'2024-07-15'
-                  AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
-                  AND COALESCE (CLO_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0)
-                  AND COALESCE (MovementBoolean_isRePack.ValueData, FALSE) = inIsRePack
-              ) AS tmp
+                SELECT DISTINCT tmp.Id
+                FROM (WITH
+                      tmpContainer AS (SELECT DISTINCT MIContainer.MovementItemId         AS Id
+                                                     , MIContainer.ObjectId_Analyzer      AS GoodsId
+                                                     , MIContainer.WhereObjectId_analyzer AS UnitId 
+                                       FROM ObjectDate AS ObjectDate_Value
+                                            INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                           ON CLO_PartionGoods.ObjectId = ObjectDate_Value.ObjectId --CLO_PartionGoods.ContainerId = MIContainer.ContainerId
+                                                                          AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                            INNER JOIN MovementItemContainer AS MIContainer
+                                                                             ON MIContainer.ContainerId = CLO_PartionGoods.ContainerId
+                                                                            AND MIContainer.DescId = zc_MIContainer_Count()
+                                                                            --AND MIContainer.ObjectId_Analyzer = inGoodsId
+                                                                            --AND MIContainer.WhereObjectId_analyzer = inUnitId
+                                            LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                          ON CLO_GoodsKind.ContainerId = CLO_PartionGoods.ContainerId
+                                                                         AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                            INNER JOIN Movement ON Movement.Id = MIContainer.MovementId
+                                                               AND Movement.DescId = zc_Movement_Send()
+                                                             --  AND Movement.Id = 28742039
+                       
+                                            LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                                                      ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                                                     AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
+                       
+                                       WHERE --ObjectDate_Value.ObjectId = Object_PartionGoods.Id
+                                             ObjectDate_Value.ValueData = inPartionGoodsDate  --'2024-07-15'
+                                         AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                                         AND (COALESCE (CLO_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0) OR inGoodsKindId = 0)
+                                         AND COALESCE (MovementBoolean_isRePack.ValueData, FALSE) = inIsRePack
+                                       ) 
+                    SELECT DISTINCT tmpContainer.Id 
+                    FROM tmpContainer
+                    WHERE tmpContainer.GoodsId = inGoodsId -- 607266
+                      AND tmpContainer.UnitId = inUnitId   -- 8459
+                    ) AS tmp
+                ) AS tmp 
          )
 
       , tmpProtocol_All AS (SELECT *
@@ -311,4 +322,4 @@ $BODY$
 --select * from gpReport_PartionCell_history(inPartionGoodsDate := ('16.07.2024')::TDateTime , inGoodsId := 2116 , inGoodsKindId := 8346 ,  inSession := '9457');
 --
 --select * from gpReport_PartionCell_history(inPartionGoodsDate := ('17.07.2024')::TDateTime , inGoodsId := 2116 , inGoodsKindId := 8346 , inUnitId:= zc_Unit_RK(), inisDetail:= FALSE, inSession := '9457');
---select * from gpReport_PartionCell_history(inPartionGoodsDate := ('17.07.2024')::TDateTime , inGoodsId := 2116 , inGoodsKindId := 8346 , inUnitId := 8459 , inisDetail:= FALSE, inIsRePack:=FALSE, inSession := '9457');
+--select * from gpReport_PartionCell_history(inPartionGoodsDate := ('24.12.2024')::TDateTime , inGoodsId := 607266 , inGoodsKindId :=0 , inUnitId := 8459 , inisDetail:= FALSE, inIsRePack:=FALSE, inSession := '9457');

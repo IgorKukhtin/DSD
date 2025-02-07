@@ -120,10 +120,13 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object MovementItemId: TcxGridDBColumn
-        Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1090#1088#1086#1082#1080
-        DataBinding.FieldName = 'MovementItemId'
+      object PartionCellCode_new: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1103#1095#1077#1081#1082#1080' ('#1087#1086#1089#1083#1077')'
+        DataBinding.FieldName = 'PartionCellCode_new'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' ('#1087#1086#1089#1083#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1081')'
         Width = 80
       end
       object OperDate: TcxGridDBColumn
@@ -133,6 +136,35 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 200
+      end
+      object PartionCellName_new: TcxGridDBColumn
+        Caption = #1071#1095#1077#1081#1082#1072' ('#1087#1086#1089#1083#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1081')'
+        DataBinding.FieldName = 'PartionCellName_new'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 180
+      end
+      object OperDate_new: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' '#1087#1088#1086#1090#1086#1082#1086#1083'  ('#1082#1086#1088#1088'.) '#1087#1086#1089#1083#1077
+        DataBinding.FieldName = 'OperDate_new'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 128
+      end
+      object UserName_new: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.) '#1087#1086#1089#1083#1077
+        DataBinding.FieldName = 'UserName_new'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 150
+      end
+      object MovementItemId: TcxGridDBColumn
+        Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1090#1088#1086#1082#1080
+        DataBinding.FieldName = 'MovementItemId'
+        Visible = False
+        Width = 80
       end
       object Name_search: TcxGridDBColumn
         Caption = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
