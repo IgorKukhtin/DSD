@@ -105,7 +105,7 @@ END IF;
                           SELECT tmp_2.Id AS ContainerId
                           FROM tmp_2
                           )
-                          
+*/                          
      , tmpMovContainer AS (SELECT DISTINCT Movement.Id AS MovementId
                                                      FROM Movement
                                                           --INNER JOIN MovementItem  ON MovementItem.MovementId = Movement.Id
@@ -114,9 +114,8 @@ END IF;
                                                           INNER JOIN MovementItemContainer  ON MovementItemContainer.MovementId = Movement.Id
                                                                                            AND MovementItemContainer.ContainerId IN
 (
-109688,
-714008,
-5043563
+200197,
+6477731
 --SELECT DISTINCT tmp_new.ContainerId FROM tmp_new
 )
                           -- !!!
@@ -126,7 +125,7 @@ END IF;
                                                      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
                                                     )
-     , tmpMovContainer AS (SELECT DISTINCT Movement.*
+  /*   , tmpMovContainer AS (SELECT DISTINCT Movement.*
                            FROM Movement
                                 INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                                          AND MLO_From.DescId     = zc_MovementLinkObject_From()
@@ -203,14 +202,14 @@ END IF;
                       AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Production()
                       and MovementLinkMovement.MovementId > 0 */
 
-          -- INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = Movement.Id
+          INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = Movement.Id
 
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
 --      AND Movement.DescId IN (zc_Movement_Loss())
 --      AND Movement.DescId IN (zc_Movement_Send())
 --        AND Movement.DescId IN (zc_Movement_SendOnPrice())
 --      AND Movement.DescId IN (zc_Movement_Sale())
-      AND Movement.DescId IN (zc_Movement_Inventory(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Sale())
+--      AND Movement.DescId IN (zc_Movement_Inventory(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Sale())
        -- AND Movement.DescId IN (zc_Movement_Inventory())
        -- AND Movement.DescId IN (zc_Movement_ReturnIn())
 --      AND Movement.DescId IN (zc_Movement_ProductionUnion())
