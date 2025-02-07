@@ -10,8 +10,8 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
       , Object_Partner.ObjectCode              AS PartnerCode             --Покупатель для акции
       , Object_Partner.ValueData               AS PartnerName             --Покупатель для акции
       , Object_Partner.DescId                  AS PartnerDescId           --Тип Покупатель для акции
-      , ObjectDesc_Partner.ItemName            AS PartnerDescName         --Тип Покупатель для акции
-      , Object_Juridical.ValueData             AS Juridical_Name
+      , ObjectDesc_partner.ItemName            AS PartnerDescName         --Тип Покупатель для акции
+      , COALESCE (Object_Juridical.ValueData, CASE WHEN Object_Partner.DescId = zc_Object_Juridical() THEN Object_Partner.ValueData END) :: TVarChar AS Juridical_Name
       , Object_Retail.ValueData                AS Retail_Name
       , CASE WHEN Movement_Promo.StatusId = zc_Enum_Status_Erased()
                   THEN TRUE
@@ -34,6 +34,7 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
                                      ON MovementLinkObject_Partner.MovementId = Movement_Promo.Id
                                     AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
         LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+        LEFT JOIN ObjectDesc ObjectDesc_partner ON ObjectDesc_partner.id = object_partner.descid
 
         LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                    ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id

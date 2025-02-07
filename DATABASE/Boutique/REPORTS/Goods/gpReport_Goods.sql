@@ -1,6 +1,6 @@
 -- Function: gpReport_Goods ()
 
-DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+ DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate        TDateTime ,
@@ -334,8 +334,8 @@ BEGIN
                 END AS TFloat) AS OperPrice
 
         , CAST (tmpMIContainer_group.AmountStart AS TFloat) AS AmountStart
-        , CAST (CASE WHEN tmpMIContainer_group.isClient = FALSE THEN tmpMIContainer_group.AmountIn ELSE 0 END AS TFloat)   AS AmountIn
-        , CAST (CASE WHEN tmpMIContainer_group.isClient = FALSE THEN tmpMIContainer_group.AmountOut ELSE 0 END AS TFloat)  AS AmountOut
+        , CAST (CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN tmpMIContainer_group.AmountIn  WHEN tmpMIContainer_group.isClient = FALSE THEN tmpMIContainer_group.AmountIn ELSE 0 END AS TFloat)   AS AmountIn
+        , CAST (CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN tmpMIContainer_group.AmountOut WHEN tmpMIContainer_group.isClient = FALSE THEN tmpMIContainer_group.AmountOut ELSE 0 END AS TFloat)  AS AmountOut
         --товар по покупателям
         , CAST (CASE WHEN tmpMIContainer_group.isClient = TRUE THEN tmpMIContainer_group.AmountIn ELSE 0 END AS TFloat)    AS AmountIn_cl
         , CAST (CASE WHEN tmpMIContainer_group.isClient = TRUE THEN tmpMIContainer_group.AmountOut ELSE 0 END AS TFloat)   AS AmountOut_cl

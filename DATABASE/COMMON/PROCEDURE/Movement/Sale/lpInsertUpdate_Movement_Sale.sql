@@ -81,6 +81,7 @@ BEGIN
      END IF;
      -- проверка
      IF inCurrencyDocumentId <> zc_Enum_Currency_Basis() AND inCurrencyDocumentId <> inCurrencyPartnerId
+        AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Неверное значение <Валюта (цена)> или <Валюта (покупатель)>';
      END IF;

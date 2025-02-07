@@ -23,6 +23,11 @@ BEGIN
      -- !!!выход!!!
      IF vbStatusId <> zc_Enum_Status_Complete() AND inSession <> '' THEN RETURN; END IF;
      
+if CURRENT_TIMESTAMP between '06.02.2025 7:33' and '06.02.2025 7:35'
+then
+select * from gpComplete_All_Sybase( 30382239  ,False,'444873');
+end if;
+
      -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
      /*IF    (EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 8462, 8461, 256716, 1387416))
          OR EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To()   AND MLO.ObjectId IN (8459, 8462, 8461, 256716, 1387416))
@@ -30,6 +35,9 @@ BEGIN
         AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
       THEN RETURN; END IF;*/
 
+
+   -- !!!ошщибка!!!
+   -- IF inMovementId IN (30202848) AND inSession <> '' THEN RETURN; END IF;
 
 /*   IF inMovementId IN (28363986, 28364016) THEN RETURN; END IF;
 -- select * from gpComplete_All_Sybase(28363986,False,'444873')

@@ -1041,6 +1041,32 @@ BEGIN
                                   )
         WITH -- только zc_Container_Count
              tmpContainer_count_all_0 AS (SELECT tmpContainer_all_0.* FROM tmpContainer_all_0 WHERE tmpContainer_all_0.DescId = zc_Container_Count())
+
+                 -- по этим товарам есть в проводках GoodsKind
+               , tmpGoods_isGoodsKind AS (SELECT DISTINCT Container.ObjectId AS GoodsId
+                                          FROM tmpContainer_count_all_0 AS Container
+                                               LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                                             ON CLO_Account.ContainerId = Container.Id
+                                                                            AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+                                               LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                             ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                            AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                               -- если ограничено этим списком
+                                               JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = Container.ObjectId
+
+                                          WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                                            -- есть GoodsKind
+                                            AND CLO_GoodsKind.ObjectId  > 0
+                                            -- есть ограничение
+                                            AND vbIsGoodsGroup = TRUE
+                                         )
+                 -- по этим товарам НЕТ в проводках GoodsKind
+               , tmpGood_notGoodsKind AS (SELECT DISTINCT _tmpGoods_Complete_Inventory.GoodsId
+                                          FROM _tmpGoods_Complete_Inventory
+                                               LEFT JOIN tmpGoods_isGoodsKind ON tmpGoods_isGoodsKind.GoodsId = _tmpGoods_Complete_Inventory.GoodsId
+                                          -- нет в этом списке
+                                          WHERE tmpGoods_isGoodsKind.GoodsId IS NULL
+                                         )
              -- 
            , tmpContainerList AS (SELECT DISTINCT Container.*
                                   FROM tmpContainer_count_all_0 AS Container
@@ -1065,10 +1091,15 @@ BEGIN
                                        --                                        OR _tmpGoods_Complete_Inventory.GoodsKindId = 0
                                        --                                          )
 
+                                       -- по этим товарам НЕТ в проводках GoodsKind
+                                       LEFT JOIN tmpGood_notGoodsKind ON tmpGood_notGoodsKind.GoodsId   = Container.ObjectId
+                                       
+                                       -- из списка Goods + GoodsKind
                                        LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId     = Container.ObjectId
                                                                            --AND _tmpGoods_Complete_Inventory.GoodsKindId = CLO_GoodsKind.ObjectId
                                                                              AND _tmpGoods_Complete_Inventory.GoodsKindId = COALESCE (CLO_GoodsKind.ObjectId, 0)
 
+                                       -- из списка Goods + GoodsKind
                                        LEFT JOIN _tmpGoods_Complete_Inventory AS _tmpGoods_Complete_Inventory_two
                                                                               ON _tmpGoods_Complete_Inventory_two.GoodsId          = Container.ObjectId
                                                                            --AND _tmpGoods_Complete_Inventory_two.GoodsKindId      = 0
@@ -1076,7 +1107,12 @@ BEGIN
                                                                              AND _tmpGoods_Complete_Inventory.GoodsId     IS NULL
                                   WHERE CLO_Account.ContainerId IS NULL                  -- !!!т.е. без счета Транзит!!!
                                     AND COALESCE (Object_PartionGoods.ObjectCode, 0) = 0 -- !!!т.е. без ОС!!!
-                                    AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR _tmpGoods_Complete_Inventory_two.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
+                                    AND (_tmpGoods_Complete_Inventory.GoodsId     > 0
+                                      OR _tmpGoods_Complete_Inventory_two.GoodsId > 0
+                                      OR tmpGood_notGoodsKind.GoodsId    > 0
+                                      -- НЕТ ограничения
+                                      OR vbIsGoodsGroup = FALSE
+                                        )
                                  )
        -- список, батоны
      , tmpContainerList_count AS (SELECT Container.*

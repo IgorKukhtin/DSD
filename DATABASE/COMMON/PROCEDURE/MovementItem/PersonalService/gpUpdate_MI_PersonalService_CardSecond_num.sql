@@ -31,7 +31,7 @@ $BODY$
 
    DECLARE vbBankId_const_1  Integer;
    DECLARE vbBankId_const_2  Integer;
-   
+
    DECLARE vbKoeff_ro TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -41,7 +41,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка. Документ не сохранен';
      END IF;
-     
+
      -- !!!
      vbKoeff_ro:= 20;
 
@@ -73,13 +73,13 @@ END IF;
                                    AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                                 );
 
-     -- определяем <Ведомость> - Аванс, из неё может быть заполнение данных 
-     vbPersonalServiceListId_avance:= (SELECT OL_PersonalServiceList_Avance_F2.ChildObjectId 
+     -- определяем <Ведомость> - Аванс, из неё может быть заполнение данных
+     vbPersonalServiceListId_avance:= (SELECT OL_PersonalServiceList_Avance_F2.ChildObjectId
                                        FROM ObjectLink AS OL_PersonalServiceList_Avance_F2
                                        WHERE OL_PersonalServiceList_Avance_F2.ObjectId = vbPersonalServiceListId
                                          AND OL_PersonalServiceList_Avance_F2.DescId     = zc_ObjectLink_PersonalServiceList_Avance_F2()
                                       );
-     -- определяем документ - Аванс, из него может быть заполнение данных 
+     -- определяем документ - Аванс, из него может быть заполнение данных
      vbMovementId_avance:= (SELECT Movement.Id
                             FROM Movement
                                  INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
@@ -185,7 +185,10 @@ END IF;
 
 
              -- ограничение - 1
-           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 1
+           , CASE WHEN 1=1
+                       THEN 39999
+
+                  WHEN MovementFloat_BankSecond_num.ValueData = 1
                        THEN 0 -- ObjectFloat_BankSecond_SummMax.ValueData
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 1 AND COALESCE (vbMovementId_avance, 0) = 0
@@ -198,7 +201,10 @@ END IF;
 
 
              -- ограничение - 2
-           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 2
+           , CASE WHEN 1=1
+                       THEN 39999
+
+                  WHEN MovementFloat_BankSecond_num.ValueData = 2
                        THEN 0 -- ObjectFloat_BankSecond_SummMax.ValueData
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 2 AND COALESCE (vbMovementId_avance, 0) = 0
@@ -210,7 +216,10 @@ END IF;
              END AS SummMax_2
 
              -- ограничение - 3
-           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 3
+           , CASE WHEN 1=1
+                       THEN 39999
+
+                  WHEN MovementFloat_BankSecond_num.ValueData = 3
                        THEN 0 -- ObjectFloat_BankSecond_SummMax.ValueData
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 3 AND COALESCE (vbMovementId_avance, 0) = 0
@@ -848,6 +857,31 @@ END IF;
 
                                 GROUP BY ObjectLink_Personal_Member.ChildObjectId
                                )
+
+         -- ВСЕ Відомість карточки БН ... +  Банк 2  ПФ + Банк 2 Аванс
+       , tmpSummCard_avance AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                                     , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)) AS SummCard
+                                FROM Movement
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                     LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
+                                                                 ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_SummCardRecalc.DescId         = zc_MIFloat_SummCardRecalc()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecondRecalc
+                                                                 ON MIFloat_SummAvCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_SummAvCardSecondRecalc.DescId         = zc_MIFloat_SummAvCardSecondRecalc()
+                                     LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                          ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+
+
+                                WHERE Movement.Operdate BETWEEN vbStartDate AND vbEndDate
+                                  AND Movement.DescId   = zc_Movement_PersonalService()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                GROUP BY ObjectLink_Personal_Member.ChildObjectId
+                               )
+
        -- результат - SummCardSecondRecalc
      , tmpData_SummCardSecondRecalc
                  AS (SELECT tmpListPersonal.MovementItemId
@@ -899,18 +933,25 @@ END IF;
                             -- ограничение - для 1
                           , vbSummMax_1 - CASE WHEN vbBankId_num_2 = 1 THEN COALESCE (tmpSummCard_otp.SummCard, 0)
                                                ELSE 0
-                                          END AS Sum_max_1
+                                          END
+                                        - COALESCE (tmpSummCard_avance.SummCard, 0)
+                            AS Sum_max_1
                             -- ограничение - для 2
                           , vbSummMax_2 - CASE WHEN vbBankId_num_2 = 2 THEN COALESCE (tmpSummCard_otp.SummCard, 0)
                                                ELSE 0
-                                          END  AS Sum_max_2
+                                          END
+                                        - COALESCE (tmpSummCard_avance.SummCard, 0)
+                            AS Sum_max_2
                             -- ограничение - для 3
                           , vbSummMax_3 - CASE WHEN vbBankId_num_2 = 3 THEN COALESCE (tmpSummCard_otp.SummCard, 0)
                                                ELSE 0
-                                          END  AS Sum_max_3
+                                          END
+                                        - COALESCE (tmpSummCard_avance.SummCard, 0)
+                            AS Sum_max_3
 
                      FROM tmpListPersonal
-                          LEFT JOIN tmpSummCard_otp ON tmpSummCard_otp.MemberId = tmpListPersonal.MemberId
+                          LEFT JOIN tmpSummCard_otp    ON tmpSummCard_otp.MemberId    = tmpListPersonal.MemberId
+                          LEFT JOIN tmpSummCard_avance ON tmpSummCard_avance.MemberId = tmpListPersonal.MemberId
 
                           LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId            = tmpListPersonal.PersonalId
                                                   AND tmpMIContainer.UnitId                = tmpListPersonal.UnitId
@@ -979,7 +1020,7 @@ END IF;
                           , vbSummMax_2 AS Sum_max_2
                             -- ограничение - для 3
                           , vbSummMax_3 AS Sum_max_3
-                          
+
                      FROM MovementItem
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -999,7 +1040,7 @@ END IF;
                           LEFT JOIN MovementItemFloat AS MIF_SummAvanceRecalc
                                                       ON MIF_SummAvanceRecalc.MovementItemId = MovementItem.Id
                                                      AND MIF_SummAvanceRecalc.DescId         = zc_MIFloat_SummAvanceRecalc()
-         
+
                           INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                 ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                                AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
@@ -1011,7 +1052,7 @@ END IF;
                        AND MovementItem.isErased   = FALSE
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MIF_SummAvanceRecalc.ValueData > 0
-         
+
                     )
        -- результат
      , tmpMI_res AS (SELECT tmpData.MovementItemId
@@ -1053,8 +1094,12 @@ END IF;
                           , tmpData.SummCard_1
                             -- сумма для второго места
                           , tmpData.SummCard_2
+
                             -- сумма для третьего места
-                          , CASE -- есть условие и Мин и Макс
+                          , CASE -- если уже распределили
+                                 WHEN tmpData.SummCard_1 > 0 OR tmpData.SummCard_2 > 0
+                                      THEN 0
+                                 -- есть условие и Мин и Макс
                                  WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
                                       THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
 
@@ -1082,7 +1127,10 @@ END IF;
                     (SELECT tmpData.*
 
                             -- сумма для второго места
-                          , CASE -- есть условие и Мин и Макс
+                          , CASE -- если уже распределили
+                                 WHEN tmpData.SummCard_1 > 0
+                                      THEN 0
+                                 -- есть условие и Мин и Макс
                                  WHEN tmpData.BankId_2 > 0 AND tmpData.Sum_max_2 > 0 AND tmpData.Sum_min_2 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1
                                  THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 > tmpData.Sum_max_2 THEN tmpData.Sum_max_2 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 END
 
@@ -1103,7 +1151,12 @@ END IF;
                             -- сумма для первого места
                           , CASE -- есть условие и Мин и Макс
                                  WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_max_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData_check.SummCardSecondRecalc_check, 1)
-                                 THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) > tmpData.Sum_max_1 THEN tmpData.Sum_max_1 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) END
+                                 THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) > tmpData.Sum_max_1
+                                                -- только сумма макс
+                                                THEN tmpData.Sum_max_1
+                                           ELSE -- вся сумма
+                                                ROUND (tmpData.SummCardSecondRecalc, 1)
+                                      END
 
                                  -- есть только Мин
                                  WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData_check.SummCardSecondRecalc_check, 1)
@@ -1131,7 +1184,7 @@ END IF;
                           WHERE tmpMI_res.Sum_max_1 > 0
                           GROUP BY tmpMI_res.MemberId, tmpMI_res.Sum_max_1
                           HAVING tmpMI_res.Sum_max_1 < SUM (tmpMI_res.SummCard_1)
-       
+
                          UNION ALL
                           SELECT
                                  tmpMI_res.MemberId
@@ -1141,7 +1194,7 @@ END IF;
                           WHERE tmpMI_res.Sum_max_2 > 0
                           GROUP BY tmpMI_res.MemberId, tmpMI_res.Sum_max_2
                           HAVING tmpMI_res.Sum_max_2 < SUM (tmpMI_res.SummCard_2)
-       
+
                          UNION ALL
                           SELECT
                                  tmpMI_res.MemberId
@@ -1360,7 +1413,7 @@ END IF;
 
              -- сохранили свойство <Карта БН (округление) - 2ф>
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondDiff(), _tmpMI.MovementItemId
-                                             , 
+                                             ,
                                                CASE WHEN 1=0 AND (_tmpMI.SummCard_1 > 0 OR _tmpMI.SummCard_2 > 0 OR _tmpMI.SummCard_3 > 0)
                                                THEN
 

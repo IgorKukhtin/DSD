@@ -35,7 +35,7 @@ BEGIN
           , MI_PromoPartner.ObjectId               AS PartnerId       --ИД объекта <партнер>
           , Object_Partner.ObjectCode::Integer     AS Code            --код объекта  <Партнер>
           , Object_Partner.ValueData               AS Name            --наименование объекта <Партнер>
-          , Object_Juridical.ValueData             AS JuridicalName   --Наименование объекта <Юр. лицо>
+          , COALESCE (Object_Juridical.ValueData, CASE WHEN Object_Partner.DescId = zc_Object_Juridical() THEN Object_Partner.ValueData END) :: TVarChar AS JuridicalName   --Наименование объекта <Юр. лицо>
           , Object_Retail.Id                       AS RetailId      --Наименование объекта <Торговая сеть>
           , Object_Retail.ValueData                AS RetailName      --Наименование объекта <Торговая сеть>
           , Object_Area.ValueData                  AS AreaName        --Наименование объекта <Регион>
