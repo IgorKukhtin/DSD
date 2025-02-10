@@ -23,7 +23,7 @@ BEGIN
      -- !!!выход!!!
      IF vbStatusId <> zc_Enum_Status_Complete() AND inSession <> '' THEN RETURN; END IF;
      
-if CURRENT_TIMESTAMP between '06.02.2025 7:33' and '06.02.2025 7:35'
+if CURRENT_TIMESTAMP between '10.02.2025 7:33' and '10.02.2025 7:35'
 then
 select * from gpComplete_All_Sybase( 30382239  ,False,'444873');
 end if;

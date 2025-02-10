@@ -22,7 +22,7 @@ BEGIN
      THEN 
          -- проверка - свойство должно быть установлено
          IF TRIM (COALESCE (inName, '')) = '' THEN
-            RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
+            RAISE EXCEPTION 'Ошибка.Не установлено значение <Name>.';
          END IF;
          -- поиск
          ioId:= (SELECT Id FROM Object WHERE ValueData = inName AND DescId = zc_Object_ReportExternal());

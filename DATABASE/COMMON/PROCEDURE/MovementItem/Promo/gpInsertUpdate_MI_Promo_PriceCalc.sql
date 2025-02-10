@@ -409,8 +409,9 @@ BEGIN
 
 
      CREATE TEMP TABLE _tmpData (ReceiptId Integer, GoodsId Integer, GoodsKindId Integer
-                               , Price3_cost TFloat, PriceSale TFloat, Price_cost TFloat, Price_cost_tax TFloat
-                               , Price3_cost_all TFloat, PriceSale_all TFloat, Price_cost_all TFloat, Price_cost_tax_all TFloat
+                               , Price3_cost_real TFloat, Price3_cost TFloat, PriceSale TFloat, Price_cost TFloat, Price_cost_tax TFloat
+                               , Price3_cost_all_real TFloat, Price3_cost_all TFloat, PriceSale_all TFloat, Price_cost_all TFloat, Price_cost_tax_all TFloat
+                               , Price1_plan TFloat, ReceiptId_plan Integer
                                , OperCount_sale TFloat, SummIn_sale TFloat
                                , Ord Integer
                                 ) ON COMMIT DROP;
@@ -419,14 +420,20 @@ BEGIN
                           WHERE DescId = zc_Object_AnalyzerId()
                          )
 
-        , tmpGoods AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsId
-                       FROM MovementItem
-                       WHERE MovementItem.MovementId = inMovementId
-                         AND MovementItem.DescId = zc_MI_Master()
-                         AND MovementItem.isErased = FALSE
-                       )
+        , tmpMI AS (SELECT DISTINCT
+                           MovementItem.ObjectId AS GoodsId
+                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                    FROM MovementItem
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                   )
+        , tmpGoods AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
 
-        -- ВСЕ рецептуры
+          -- ВСЕ рецептуры
         , tmpChildReceiptTable AS (SELECT lpSelect.ReceiptId_from, lpSelect.ReceiptId, lpSelect.GoodsId_in, lpSelect.GoodsKindId_in, lpSelect.Amount_in
                                         , lpSelect.ReceiptChildId, lpSelect.GoodsId_out, lpSelect.GoodsKindId_out, lpSelect.Amount_out, lpSelect.isStart, lpSelect.isCost
                                         , COALESCE(PriceList3.Price, PriceList3_test.Price, 0) AS Price3
@@ -590,7 +597,7 @@ BEGIN
                                 , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3 ELSE 0 END) AS Summ3_cost
                            FROM tmpChildReceiptTable
                            WHERE tmpChildReceiptTable.ReceiptId_from = 0
-                           GROUP BY  tmpChildReceiptTable.ReceiptId
+                           GROUP BY tmpChildReceiptTable.ReceiptId
                           ) AS tmp
                           LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                ON ObjectLink_Receipt_Goods.ObjectId = tmp.ReceiptId
@@ -609,37 +616,141 @@ BEGIN
                      GROUP BY tmp.ReceiptId
                             , tmpMI.GoodsId
                             , tmpMI.GoodsKindId
+
+                    UNION ALL
+                     -- факт список из Акции
+                     SELECT DISTINCT
+                            tmpReceipt.ReceiptId
+                          , tmpMI.GoodsId
+                          , tmpMI.GoodsKindId
+                            --
+                          , 0 AS OperCount_sale
+                          , 0 AS SummIn_sale
+                          , 0 AS Summ3_cost
+                     FROM tmpMI
+                          LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpMI.GoodsId
+                                              AND tmpReceipt.GoodsKindId = tmpMI.GoodsKindId
+                     -- если установлен GoodsKind
+                     WHERE tmpMI.GoodsKindId > 0
                     )
 
+          -- цена с/с  план - новая схема по прайсу 47-ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)
+        , tmpPrice1_plan AS (SELECT tmpReceipt.GoodsId, tmpReceipt.GoodsKindId, tmpReceipt.ReceiptId
+                                  , SUM (CAST (_calcChildReceiptTable.Amount_out * COALESCE (PriceList1_gk.Price, PriceList1.Price, 0) / _calcChildReceiptTable.Amount_in AS NUMERIC (16,2))) AS Price_47
+                             FROM tmpReceipt
+
+                                  INNER JOIN tmpChildReceiptTable AS _calcChildReceiptTable
+                                                                  ON _calcChildReceiptTable.ReceiptId = tmpReceipt.ReceiptId
+                                                                   -- без затрат
+                                                                   AND _calcChildReceiptTable.isCost = FALSE
+                                                                   -- без этого
+                                                                   AND _calcChildReceiptTable.ReceiptId_from = 0
+
+                                  /*INNER JOIN _calcChildReceiptTable ON _calcChildReceiptTable.ReceiptId = tmpReceipt.ReceiptId
+                                                                   -- без затрат
+                                                                   AND _calcChildReceiptTable.isCost = FALSE
+                                                                   -- без этого
+                                                                   AND _calcChildReceiptTable.ReceiptId_from = 0*/
+
+                                  LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1_gk ON PriceList1_gk.PriceListId = 18886 -- inPriceListId_1
+                                                                                             AND PriceList1_gk.GoodsId     = _calcChildReceiptTable.GoodsId_out
+                                                                                             AND PriceList1_gk.GoodsKindId = _calcChildReceiptTable.GoodsKindId_out
+                                                                                             AND CURRENT_DATE >= PriceList1_gk.StartDate AND CURRENT_DATE < PriceList1_gk.EndDate
+
+                                  LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1 ON PriceList1.PriceListId = 18886 -- inPriceListId_1
+                                                                                          AND PriceList1.GoodsId     = _calcChildReceiptTable.GoodsId_out
+                                                                                          AND PriceList1.GoodsKindId = 0
+                                                                                          AND CURRENT_DATE >= PriceList1.StartDate AND CURRENT_DATE < PriceList1.EndDate
+                                                                                          AND PriceList1_gk.GoodsId IS NULL
+
+                             GROUP BY tmpReceipt.GoodsId, tmpReceipt.GoodsKindId, tmpReceipt.ReceiptId
+                            )
+
        INSERT INTO _tmpData (ReceiptId, GoodsId, GoodsKindId
-                         , Price3_cost, PriceSale, Price_cost, Price_cost_tax
-                         , Price3_cost_all, PriceSale_all, Price_cost_all, Price_cost_tax_all
-                         , OperCount_sale, SummIn_sale
-                         , Ord)
+                           , Price3_cost_real, Price3_cost, PriceSale, Price_cost, Price_cost_tax
+                           , Price3_cost_all_real, Price3_cost_all, PriceSale_all, Price_cost_all, Price_cost_tax_all
+                           , Price1_plan, ReceiptId_plan
+                           , OperCount_sale, SummIn_sale
+                           , Ord
+                            )
        SELECT tmp.ReceiptId
             , tmp.GoodsId
             , tmp.GoodsKindId
+
+              -- 1.0. цена затраты - старая схема - от затрат в рецептуре
+            , tmp.Price3_cost AS Price3_cost_real
+
               -- 1.1. цена затраты - старая схема - от затрат в рецептуре
             , tmp.Price3_cost
+              -- + ПРАЙС-ПЛАН РАСХОДЫ НА ТРУД
+            + COALESCE (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Goods_Weight.ValueData <> 0
+                                 -- для шт пересчитываем цену из кг
+                                  THEN ObjectFloat_Goods_Weight.ValueData * PriceList3.Price
+                             ELSE PriceList3.Price
+                        END
+                      , 0)
+
               -- 1.2. цена с/с
             , CASE WHEN tmp.OperCount_sale <> 0 THEN CAST (tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END AS PriceSale
-              -- 1.3. цена с/с + затраты - старая схема
-            , COALESCE (tmp.Price3_cost,0) + COALESCE (CASE WHEN tmp.OperCount_sale <> 0 THEN CAST ( tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END,0) AS Price_cost
+
+              -- 1.3. цена с/с
+            , COALESCE (tmp.Price3_cost,0)
+              -- + затраты - старая схема
+            + COALESCE (CASE WHEN tmp.OperCount_sale <> 0 THEN CAST ( tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END,0)
+              -- + ПРАЙС-ПЛАН РАСХОДЫ НА ТРУД
+            + COALESCE (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Goods_Weight.ValueData <> 0
+                                  -- для шт пересчитываем цену из кг
+                                  THEN ObjectFloat_Goods_Weight.ValueData * PriceList3.Price
+                             ELSE PriceList3.Price
+                        END
+                      , 0)
+              AS Price_cost
+
               -- 1.41. цена затраты - новая схема - от факт с/с
             , CASE WHEN tmp.OperCount_sale <> 0 THEN CAST (tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END
             * CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30102() THEN 0.3 ELSE 0.5 END
               AS Price_cost_tax
 
+
+
+              -- 2.0. цена затраты - старая схема - от затрат в рецептуре
+            , tmp_all.Price3_cost AS Price3_cost_all_real
+
               -- 2.1. цена затраты - старая схема - от затрат в рецептуре
-            , tmp_all.Price3_cost AS Price3_cost_all
+            , tmp_all.Price3_cost
+              -- + ПРАЙС-ПЛАН РАСХОДЫ НА ТРУД
+            + COALESCE (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Goods_Weight.ValueData <> 0
+                                  -- для шт пересчитываем цену из кг
+                                  THEN ObjectFloat_Goods_Weight.ValueData * PriceList3.Price
+                             ELSE PriceList3.Price
+                        END
+                      , 0)
+              AS Price3_cost_all
+
               -- 2.2. цена с/с
             , CASE WHEN tmp_all.OperCount_sale <> 0 THEN CAST (tmp_all.SummIn_sale / tmp_all.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END AS PriceSale_all
-              -- 2.3. цена с/с + затраты - старая схема
-            , COALESCE (tmp_all.Price3_cost,0) + COALESCE (CASE WHEN tmp_all.OperCount_sale <> 0 THEN CAST ( tmp_all.SummIn_sale / tmp_all.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END,0) AS Price_cost_all
+              -- 2.3. цена с/с
+            , COALESCE (tmp_all.Price3_cost,0)
+              -- + затраты - старая схема
+            + COALESCE (CASE WHEN tmp_all.OperCount_sale <> 0 THEN CAST ( tmp_all.SummIn_sale / tmp_all.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END,0)
+              -- + ПРАЙС-ПЛАН РАСХОДЫ НА ТРУД
+            + COALESCE (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Goods_Weight.ValueData <> 0
+                                  -- для шт пересчитываем цену из кг
+                                  THEN ObjectFloat_Goods_Weight.ValueData * PriceList3.Price
+                             ELSE PriceList3.Price
+                        END
+                      , 0)
+              AS Price_cost_all
+
               -- 2.4. цена затраты - новая схема - от факт с/с
             , CASE WHEN tmp_all.OperCount_sale <> 0 THEN CAST (tmp_all.SummIn_sale / tmp_all.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END
             * CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30102() THEN 0.3 ELSE 0.5 END
               AS Price_cost_tax_all
+
+
+             -- 3. цена с/с  план - новая схема по прайсу 47-ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)
+            , tmpPrice1_plan.Price_47  AS Price1_plan
+            , tmpPrice1_plan.ReceiptId AS ReceiptId_plan
 
             , tmp.OperCount_sale
             , tmp.SummIn_sale
@@ -677,16 +788,34 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ObjectId = tmp.GoodsId
                                  AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                               ON ObjectLink_Goods_Measure.ObjectId = tmp.GoodsId
+                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
+                                      ON ObjectFloat_Goods_Weight.ObjectId = tmp.GoodsId
+                                     AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+          -- 1497 - ПРАЙС-ПЛАН РАСХОДЫ НА ТРУД
+          LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3 ON PriceList3.PriceListId = 11812271
+                                                                  AND PriceList3.GoodsId     = tmp.GoodsId
+                                                                  AND PriceList3.GoodsKindId = tmp.GoodsKindId
+                                                                --AND vbEndDate >= PriceList3.StartDate AND vbEndDate < PriceList3.EndDate
+                                                                  AND CASE WHEN vbEndDate < '01.01.2025' THEN '01.01.2025' ELSE vbEndDate END >= PriceList3.StartDate
+                                                                  AND CASE WHEN vbEndDate < '01.01.2025' THEN '01.01.2025' ELSE vbEndDate END < PriceList3.EndDate
+
+          -- цена с/с  план - новая схема по прайсу 47-ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)
+          LEFT JOIN tmpPrice1_plan ON tmpPrice1_plan.GoodsId     = tmp.GoodsId
+                                  AND tmpPrice1_plan.GoodsKindId = tmp.GoodsKindId
       ;
 
-/*  IF vbUserId IN (5) 
+/*  IF vbUserId IN (5)
 
     THEN
         RAISE EXCEPTION 'Проверка. <%>   <%>   <%>'
         , (select max (_tmpData.Price3_cost) from _tmpData)
         , (select max (_tmpData.Price3_cost_all) from _tmpData)
         , (select distinct (_tmpData.ReceiptId) from _tmpData)
-        
+
         ;
 end if;*/
 
@@ -700,21 +829,41 @@ end if;*/
                                                -- COALESCE (_tmpData_all.Price_cost_tax_all, _tmpData.Price_cost_tax, 0)
 
                                                -- затраты - !!!СТАРАЯ СХЕМА - товар "расходы..."!!!
-                                               COALESCE (_tmpData_all.Price3_cost_all, _tmpData.Price3_cost, 0)
+                                               CASE WHEN _tmpData.PriceSale > 0
+                                                         THEN COALESCE (_tmpData.Price3_cost, 0)
+                                                    ELSE COALESCE (_tmpData_all.Price3_cost_all, 0)
+                                               END
 
                                                -- факт с/с
-                                             + COALESCE (_tmpData_all.PriceSale_all, _tmpData.PriceSale, 0)
+                                             + CASE WHEN _tmpData.PriceSale > 0
+                                                         THEN _tmpData.PriceSale
+                                                    ELSE COALESCE (_tmpData_all.PriceSale_all, 0)
+                                               END
                                               )
-             -- план  = факт с/с * 110 % + затраты
+             -- план  = план ИЛИ факт с/с * 110 % + затраты
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), MovementItem.Id
                                              , -- затраты - !!!НОВАЯ СХЕМА - 50% от с/с!!!
                                                --COALESCE (_tmpData_all.Price_cost_tax_all, _tmpData.Price_cost_tax, 0)
 
+case when vbUserId = 5 AND 1=0 then COALESCE (_tmpData.Price1_plan, 0)
+else
                                                -- затраты - !!!СТАРАЯ СХЕМА - товар "расходы..."!!!
-                                               COALESCE (_tmpData_all.Price3_cost_all, _tmpData.Price3_cost, 0)
+                                               CASE WHEN _tmpData.PriceSale > 0
+                                                         THEN COALESCE (_tmpData.Price3_cost, 0)
+                                                    ELSE COALESCE (_tmpData_all.Price3_cost_all, 0)
+                                               END
 
-                                               -- факт с/с * 110 %
-                                             + CAST (COALESCE (_tmpData_all.PriceSale_all, _tmpData.PriceSale,0) * 1.1 AS NUMERIC (16, 2))
+                                               -- план с/с - Новая схема
+                                             + CASE WHEN _tmpData.Price1_plan > 0 AND vbUserId = 5 THEN _tmpData.Price1_plan
+
+                                                    ELSE -- факт с/с * 110 %
+                                                         CAST (1.1 * CASE WHEN _tmpData.PriceSale > 0
+                                                                              THEN _tmpData.PriceSale
+                                                                          ELSE COALESCE (_tmpData_all.PriceSale_all, 0)
+                                                                     END
+                                                               AS NUMERIC (16, 2))
+                                               END
+end
                                               )
 
              -- !!!затраты - новая схема - 50% от с/с!!!
@@ -727,17 +876,18 @@ end if;*/
           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                           AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+
           -- цены с учетом GoodsKindId
           LEFT JOIN _tmpData ON _tmpData.GoodsId     = MovementItem.ObjectId
                             AND _tmpData.GoodsKindId = MILinkObject_GoodsKind.ObjectId
-                            AND _tmpData.PriceSale > 0
+                            -- AND _tmpData.PriceSale > 0
                             AND MILinkObject_GoodsKind.ObjectId > 0
           -- цены БЕЗ учета GoodsKindId
           LEFT JOIN _tmpData AS _tmpData_all
                              ON _tmpData_all.GoodsId = MovementItem.ObjectId
                             AND _tmpData_all.Ord     = 1
                             -- если не нашли с учетом GoodsKindId
-                            AND _tmpData.GoodsId     IS NULL
+                            -- AND _tmpData.GoodsId     IS NULL
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId = zc_MI_Master()
        AND MovementItem.isErased = FALSE
@@ -755,8 +905,9 @@ end if;*/
 
     IF vbUserId IN (5, 6604558) -- Голота К.О.
        -- AND vbUserId <> 5
+       AND 1=1
     THEN
-        RAISE EXCEPTION 'Проверка.% условие %: <%>  % факт: <%> % план: <%> % затраты(новая схема): <%> % период расчет с/с: <%>  -  <%>  % цена с/с: <%> % цена затраты(старая схема): <%> % цена с/с + затраты(старая схема): <%> % виды упак.: <%> % Продажи: <%> % Средняя с/с: <%>'
+        RAISE EXCEPTION 'Проверка.% условие %: <%>  % факт: <%> % план: <%> % затраты(новая схема): <%> % период расчет с/с: <%>  -  <%>  % цена с/с: <%> % цена затраты(старая схема): <%> % цена прайс_1497: <%> % цена с/с + затраты(старая схема): <%> % виды упак.: <%> % Продажи: <%> % Средняя с/с: <%> % План с/с = <%>% Рецептура для план с/с = <%>'
             -- 1.0. условие %
           , CHR (13)
           , '%'
@@ -770,7 +921,7 @@ end if;*/
                AND MovementItem.isErased = FALSE
              --ORDER BY MovementItem.Id LIMIT 1
             )
-            -- 1.1.  факт
+            -- 1.1.  факт c/c - с учетом затрат
           , CHR (13)
           , (SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (MIF.ValueData), ' ; ')
              FROM (SELECT MIF.ValueData
@@ -788,7 +939,7 @@ end if;*/
                    --LIMIT 1
                   ) AS MIF
             )
-            -- 1.2. план
+            -- 1.2. план c/c - с учетом затрат
           , CHR (13)
           , (SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (MIF.ValueData), ' ; ')
              FROM (SELECT MIF.ValueData
@@ -806,7 +957,7 @@ end if;*/
                    --LIMIT 1
                   ) AS MIF
             )
-            -- 1.3. затраты - новая схема
+            -- 1.3. затраты - новая схема - не используется
           , CHR (13)
           , /*(SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (MIF.ValueData), ' ; ')
              FROM (SELECT MIF.ValueData
@@ -835,7 +986,7 @@ end if;*/
                               AND MovementItem.isErased = FALSE
                            )
              SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (Value), ' ; ')
-             FROM 
+             FROM
                   (SELECT _tmpData.GoodsId, _tmpData.GoodsKindId, _tmpData.Price_cost_tax AS Value
                    FROM _tmpData
                         INNER JOIN tmpMI ON tmpMI.GoodsId     = _tmpData.GoodsId
@@ -859,6 +1010,7 @@ end if;*/
           , zfConvert_DateToString (vbStartDate)
           , zfConvert_DateToString (vbEndDate)
 
+             -- 3.1. цена с/с
           , CHR (13)
           , (WITH tmpMI AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsId, MILO_GoodsKind.ObjectId AS GoodsKindId
                             FROM MovementItem
@@ -878,7 +1030,7 @@ end if;*/
                                         AND tmpMI.GoodsKindId = _tmpData.GoodsKindId
                                         AND _tmpData.PriceSale > 0
                   UNION
-                   SELECT DISTINCT _tmpData.GoodsId, _tmpData_find.GoodsKindId, _tmpData_find.PriceSale_all AS Value
+                   SELECT DISTINCT _tmpData_find.GoodsId, _tmpData_find.GoodsKindId, _tmpData_find.PriceSale_all AS Value
                    FROM tmpMI
                         LEFT JOIN _tmpData ON _tmpData.GoodsId      = tmpMI.GoodsId
                                           AND _tmpData.GoodsKindId  = tmpMI.GoodsKindId
@@ -890,6 +1042,7 @@ end if;*/
                   ) AS _tmpData
             )
 
+            -- 3.2.1. цена затраты(старая схема)
           , CHR (13)
           , (WITH tmpMI AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsId, MILO_GoodsKind.ObjectId AS GoodsKindId
                             FROM MovementItem
@@ -901,26 +1054,58 @@ end if;*/
                               AND MovementItem.DescId = zc_MI_Master()
                               AND MovementItem.isErased = FALSE
                            )
-             -- 3.2. цена затраты(старая схема)
-             SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (Value), ' ; ')
-             FROM (SELECT _tmpData.GoodsId, _tmpData.GoodsKindId, _tmpData.Price3_cost AS Value
+             -- 3.2.1. цена затраты(старая схема)
+             SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (Value) || ' (' || _tmpData.GoodsKindName || ')', ' ; ')
+             FROM (SELECT _tmpData.GoodsId, _tmpData.GoodsKindId, _tmpData.Price3_cost_real AS Value, COALESCE (Object_GoodsKind.ValueData, '') AS GoodsKindName
                    FROM _tmpData
                         INNER JOIN tmpMI ON tmpMI.GoodsId     = _tmpData.GoodsId
                                         AND tmpMI.GoodsKindId = _tmpData.GoodsKindId
                                         AND _tmpData.PriceSale > 0
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpData.GoodsKindId
+
                   UNION
-                   SELECT DISTINCT _tmpData.GoodsId, _tmpData_find.GoodsKindId, _tmpData_find.Price3_cost_all AS Value
+                   SELECT DISTINCT _tmpData_find.GoodsId, _tmpData_find.GoodsKindId, _tmpData_find.Price3_cost_all_real AS Value, COALESCE (Object_GoodsKind.ValueData, '') AS GoodsKindName
                    FROM tmpMI
                         LEFT JOIN _tmpData ON _tmpData.GoodsId      = tmpMI.GoodsId
                                           AND _tmpData.GoodsKindId  = tmpMI.GoodsKindId
                                           AND _tmpData.PriceSale    > 0
                                           AND tmpMI.GoodsKindId     > 0
                         LEFT JOIN _tmpData AS _tmpData_find ON _tmpData_find.GoodsId = tmpMI.GoodsId
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpData_find.GoodsKindId
                    WHERE _tmpData.GoodsId IS NULL
                    ORDER BY 1, 2
                   ) AS _tmpData
             )
 
+             -- 3.2.2. плюс суммы с ПРАЙС-ПЛАН РАСХОДЫ НА ТРУД
+          , CHR (13)
+          , (SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (Value) || ' (' || _tmpData.GoodsKindName || ')', ' ; ')
+             FROM (SELECT _tmpData.GoodsId, _tmpData.GoodsKindId, COALESCE (Object_GoodsKind.ValueData, '') AS GoodsKindName
+                        , COALESCE (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Goods_Weight.ValueData <> 0
+                                              THEN ObjectFloat_Goods_Weight.ValueData * PriceList3.Price
+                                         ELSE PriceList3.Price
+                                    END
+                                  , 0) AS Value
+                   FROM _tmpData
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpData.GoodsKindId
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                             ON ObjectLink_Goods_Measure.ObjectId = _tmpData.GoodsId
+                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                        LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
+                                                    ON ObjectFloat_Goods_Weight.ObjectId = _tmpData.GoodsId
+                                                   AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                        -- 1497 - ПРАЙС-ПЛАН РАСХОДЫ НА ТРУД
+                        LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3 ON PriceList3.PriceListId = 11812271
+                                                                                AND PriceList3.GoodsId     = _tmpData.GoodsId
+                                                                                AND PriceList3.GoodsKindId = _tmpData.GoodsKindId
+                                                                              --AND vbEndDate >= PriceList3.StartDate AND vbEndDate < PriceList3.EndDate
+                                                                                AND CASE WHEN vbEndDate < '01.01.2025' THEN '01.01.2025' ELSE vbEndDate END >= PriceList3.StartDate
+                                                                                AND CASE WHEN vbEndDate < '01.01.2025' THEN '01.01.2025' ELSE vbEndDate END < PriceList3.EndDate
+                   ORDER BY 1, 2
+                  ) AS _tmpData
+            )
+
+             -- 3.3. цена с/с + затраты(старая схема)
           , CHR (13)
           , (WITH tmpMI AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsId, MILO_GoodsKind.ObjectId AS GoodsKindId
                             FROM MovementItem
@@ -933,25 +1118,28 @@ end if;*/
                               AND MovementItem.isErased = FALSE
                            )
              -- 3.3. цена с/с + затраты(старая схема)
-             SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (Value), ' ; ')
-             FROM (SELECT _tmpData.GoodsId, _tmpData.GoodsKindId, _tmpData.Price_cost AS Value
+             SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (Value) || ' (' || _tmpData.GoodsKindName || ')', ' ; ')
+             FROM (SELECT _tmpData.GoodsId, _tmpData.GoodsKindId, _tmpData.Price_cost AS Value, COALESCE (Object_GoodsKind.ValueData, '') AS GoodsKindName
                    FROM _tmpData
                         INNER JOIN tmpMI ON tmpMI.GoodsId     = _tmpData.GoodsId
                                         AND tmpMI.GoodsKindId = _tmpData.GoodsKindId
                                         AND _tmpData.PriceSale > 0
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpData.GoodsKindId
                   UNION
-                   SELECT DISTINCT _tmpData.GoodsId, _tmpData_find.GoodsKindId, _tmpData_find.Price_cost_all AS Value
+                   SELECT DISTINCT _tmpData_find.GoodsId, _tmpData_find.GoodsKindId, _tmpData_find.Price_cost_all AS Value, COALESCE (Object_GoodsKind.ValueData, '') AS GoodsKindName
                    FROM tmpMI
                         LEFT JOIN _tmpData ON _tmpData.GoodsId      = tmpMI.GoodsId
                                           AND _tmpData.GoodsKindId  = tmpMI.GoodsKindId
                                           AND _tmpData.PriceSale    > 0
                                           AND tmpMI.GoodsKindId     > 0
                         LEFT JOIN _tmpData AS _tmpData_find ON _tmpData_find.GoodsId = tmpMI.GoodsId
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpData_find.GoodsKindId
                    WHERE _tmpData.GoodsId IS NULL
                    ORDER BY 1, 2
                   ) AS _tmpData
             )
 
+            -- 3.4. виды упак
           , CHR (13)
           , (WITH tmpMI AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsId, MILO_GoodsKind.ObjectId AS GoodsKindId
                             FROM MovementItem
@@ -969,20 +1157,19 @@ end if;*/
                    FROM _tmpData
                         INNER JOIN tmpMI ON tmpMI.GoodsId      = _tmpData.GoodsId
                                         AND tmpMI.GoodsKindId  = _tmpData.GoodsKindId
-                                        AND _tmpData.PriceSale > 0
                   UNION
-                   SELECT DISTINCT _tmpData.GoodsId, _tmpData_find.GoodsKindId
+                   SELECT DISTINCT _tmpData_find.GoodsId, _tmpData_find.GoodsKindId
                    FROM tmpMI
                         LEFT JOIN _tmpData ON _tmpData.GoodsId      = tmpMI.GoodsId
                                           AND _tmpData.GoodsKindId  = tmpMI.GoodsKindId
-                                          AND _tmpData.PriceSale    > 0
                                           AND tmpMI.GoodsKindId     > 0
                         LEFT JOIN _tmpData AS _tmpData_find ON _tmpData_find.GoodsId = tmpMI.GoodsId
                    WHERE _tmpData.GoodsId IS NULL
                    ORDER BY 1, 2
                   ) AS _tmpData
             )
-  
+
+            -- 3.5. Продажи
           , CHR (13)
           , (WITH tmpMI AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsId, MILO_GoodsKind.ObjectId AS GoodsKindId
                             FROM MovementItem
@@ -995,25 +1182,30 @@ end if;*/
                               AND MovementItem.isErased = FALSE
                            )
              -- 3.5. Продажи
-             SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (SummIn_sale) || ' / ' || zfConvert_FloatToString (OperCount_sale), ' ; ')
-             FROM (SELECT _tmpData.GoodsId, _tmpData.GoodsKindId, _tmpData.SummIn_sale, _tmpData.OperCount_sale
+             SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (SummIn_sale) || ' / ' || zfConvert_FloatToString (OperCount_sale) || ' (' || _tmpData.GoodsKindName || ')', ' ; ')
+             FROM (SELECT _tmpData.GoodsId, _tmpData.GoodsKindId, _tmpData.SummIn_sale, _tmpData.OperCount_sale, COALESCE (Object_GoodsKind.ValueData, '') AS GoodsKindName
                    FROM _tmpData
                         INNER JOIN tmpMI ON tmpMI.GoodsId      = _tmpData.GoodsId
                                         AND tmpMI.GoodsKindId  = _tmpData.GoodsKindId
                                         AND _tmpData.PriceSale > 0
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpData.GoodsKindId
+
                   UNION
-                   SELECT DISTINCT _tmpData.GoodsId, _tmpData_find.GoodsKindId, _tmpData_find.SummIn_sale, _tmpData_find.OperCount_sale
+                   SELECT DISTINCT _tmpData_find.GoodsId, _tmpData_find.GoodsKindId, _tmpData_find.SummIn_sale, _tmpData_find.OperCount_sale, COALESCE (Object_GoodsKind.ValueData, '') AS GoodsKindName
                    FROM tmpMI
                         LEFT JOIN _tmpData ON _tmpData.GoodsId      = tmpMI.GoodsId
                                           AND _tmpData.GoodsKindId  = tmpMI.GoodsKindId
                                           AND _tmpData.PriceSale    > 0
                                           AND tmpMI.GoodsKindId     > 0
                         LEFT JOIN _tmpData AS _tmpData_find ON _tmpData_find.GoodsId = tmpMI.GoodsId
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpData_find.GoodsKindId
+
                    WHERE _tmpData.GoodsId IS NULL
                    ORDER BY 1, 2
                   ) AS _tmpData
             )
 
+            -- 3.6. Средняя с/с
           , CHR (13)
           , (WITH tmpMI AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsId, MILO_GoodsKind.ObjectId AS GoodsKindId
                             FROM MovementItem
@@ -1034,6 +1226,28 @@ end if;*/
                   ) AS _tmpData
             )
 
+            -- План с/с - новая схема
+          , CHR (13)
+          , (SELECT STRING_AGG (DISTINCT zfConvert_FloatToString (_tmpData.Price1_plan) || ' (' || _tmpData.GoodsKindName || ')', ' ; ')
+             FROM (SELECT _tmpData.*, COALESCE (Object_GoodsKind.ValueData, '') AS GoodsKindName
+                   FROM _tmpData
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpData.GoodsKindId
+                   ORDER BY _tmpData.GoodsId, _tmpData.GoodsKindId
+                  ) AS _tmpData
+            )
+
+          , CHR (13)
+            -- Рецептура для план с/с
+          , (SELECT STRING_AGG (DISTINCT _tmpData.ReceiptCode_str || ' (' || COALESCE (_tmpData.ReceiptId_plan, 0) :: TVarChar || ')' || ' (' || _tmpData.GoodsKindName || ')', ' ; ')
+             FROM (SELECT _tmpData.*, COALESCE (ObjectString_Code.ValueData, '') AS ReceiptCode_str, COALESCE (Object_GoodsKind.ValueData, '') AS GoodsKindName
+                   FROM _tmpData
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpData.GoodsKindId
+                        LEFT JOIN ObjectString AS ObjectString_Code
+                                               ON ObjectString_Code.ObjectId = _tmpData.ReceiptId_plan
+                                              AND ObjectString_Code.DescId   = zc_ObjectString_Receipt_Code()
+                   ORDER BY _tmpData.GoodsId, _tmpData.GoodsKindId
+                  ) AS _tmpData
+            )
           ;
 
     END IF;
@@ -1048,5 +1262,74 @@ $BODY$
  22.09.20         *
 */
 
+/*
+ select distinct
+                   zfCalc_ReceiptChild_GroupNumber (inGoodsId                := _calcChildReceiptTable.GoodsId_out
+                                                   , inGoodsKindId            := _calcChildReceiptTable.GoodsKindId_out
+                                                   , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
+                                                   , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
+                                                   , inIsWeightMain           := ObjectBoolean_WeightMain.ValueData
+                                                   , inIsTaxExit              := ObjectBoolean_TaxExit.ValueData
+                                                    ) AS GroupNumber
+-- , Summ1 / ObjectFloatReceipt_Value.ValueData
+, Price1 * Amount_out / Amount_in, Price1 * Amount_out / Amount_in_calc
+, Object.* , *
+-- select  sum (Price1)
+from _calcChildReceiptTable
+
+            LEFT JOIN ObjectFloat AS ObjectFloatReceipt_Value
+                                  ON ObjectFloatReceipt_Value.ObjectId = _calcChildReceiptTable.ReceiptId
+                                 AND ObjectFloatReceipt_Value.DescId = zc_ObjectFloat_Receipt_Value()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                       ON ObjectLink_Goods_InfoMoney.ObjectId = _calcChildReceiptTable.GoodsId_out
+                                      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                  LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CASE WHEN _calcChildReceiptTable.GoodsId_out = zc_Goods_WorkIce() THEN zc_Enum_InfoMoney_10105() ELSE ObjectLink_Goods_InfoMoney.ChildObjectId END
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_WeightMain
+                                          ON ObjectBoolean_WeightMain.ObjectId = _calcChildReceiptTable.ReceiptChildId
+                                         AND ObjectBoolean_WeightMain.DescId = zc_ObjectBoolean_ReceiptChild_WeightMain()
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
+                                          ON ObjectBoolean_TaxExit.ObjectId = _calcChildReceiptTable.ReceiptChildId
+                                         AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
+
+
+                 INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                       ON ObjectLink_Receipt_Goods.ObjectId = _calcChildReceiptTable .ReceiptId
+                                      AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                                      --AND ObjectLink_Receipt_Goods.ChildObjectId = 2894
+
+                 INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                       ON ObjectLink_Receipt_GoodsKind.ObjectId = _calcChildReceiptTable .ReceiptId
+                                      AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                      --AND ObjectLink_Receipt_GoodsKind.ChildObjectId = 8344
+
+          inner JOIN ObjectBoolean AS ObjectBoolean_Main
+                                  ON ObjectBoolean_Main.ObjectId = _calcChildReceiptTable .ReceiptId
+                                 AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+and ObjectBoolean_Main.ValueData = true
+
+          inner JOIN Object on Object.Id = _calcChildReceiptTable .GoodsId_out
+
+
+ where isCost = false
+   AND _calcChildReceiptTable.ReceiptId = 123
+
+   and 1 = zfCalc_ReceiptChild_GroupNumber (inGoodsId                := _calcChildReceiptTable.GoodsId_out
+                                                   , inGoodsKindId            := _calcChildReceiptTable.GoodsKindId_out
+                                                   , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
+                                                   , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
+                                                   , inIsWeightMain           := ObjectBoolean_WeightMain.ValueData
+                                                   , inIsTaxExit              := ObjectBoolean_TaxExit.ValueData
+                                                    )
+
+
+-- select * from gpUpdate_MI_ProductionUnion_isWeightMain(inMovementItemId := 312169125 , inisWeightMain := 'False' ,  inSession := '343013');
+-- select * from gpSelect_MovementItem_PromoGoods(inMovementId := 30273381 , inIsErased := 'False' ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+-- order by _calcChildReceiptTable .ReceiptId
+
+-- select * from Object where Id = 18886
+-- select * from Movement where Id = 30065853
+*/
 -- тест
 --
+-- select * from gpInsertUpdate_MI_Promo_PriceCalc(inMovementId := 30440557,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
