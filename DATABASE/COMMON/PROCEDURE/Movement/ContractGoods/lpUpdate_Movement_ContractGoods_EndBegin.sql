@@ -5,12 +5,12 @@ DROP FUNCTION IF EXISTS lpUpdate_Movement_ContractGoods_EndBegin (Integer, TDate
 CREATE OR REPLACE FUNCTION lpUpdate_Movement_ContractGoods_EndBegin(
     IN inId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inOperDate            TDateTime , -- Дата документа / С какой даты действует
-  -- OUT outEndBeginDate       TDateTime , -- По какую дату действует
+   OUT outEndBeginDate       TDateTime , -- По какую дату действует
     IN inContractId          Integer   , --
     IN inCurrencyId          Integer   , -- Валюта
     IN inUserId              Integer     -- пользователь
 )
-RETURNS VOID
+RETURNS TDateTime
 AS
 $BODY$
    DECLARE vbMovementId_old  Integer;
@@ -77,7 +77,7 @@ BEGIN
      --RAISE EXCEPTION 'Ошибка.<%> <%>.', vbMovementId_next,(select InvNumber from Movement where id = vbMovementId_next);
 
      -- конечная дата у текущего документа
-     -- outEndBeginDate := (CASE WHEN vbMovementId_next > 0 THEN vbOperDate_next - INTERVAL '1 DAY' ELSE zc_DateEnd() END);
+     outEndBeginDate := (CASE WHEN vbMovementId_next > 0 THEN vbOperDate_next - INTERVAL '1 DAY' ELSE zc_DateEnd() END);
 
      -- сохранили свойство <Дата окончания> текущего документа
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), inId, outEndBeginDate);
@@ -104,7 +104,8 @@ $BODY$
 /*
 --пересчет параметра за период
 
-SELECT tt.Id, lpUpdate_Movement_ContractGoods_EndBegin (tt.Id, tt.OperDate, tt.ContractId, tt.CurrencyId, 9457)
+
+SELECT tt.Id,  tt.OperDate, lpUpdate_Movement_ContractGoods_EndBegin (tt.Id, tt.OperDate, tt.ContractId, tt.CurrencyId, 9457)
 FROM (
         SELECT  Movement.Id, Movement.OperDate, MovementLinkObject_Contract.ObjectId AS ContractId, MovementLinkObject_Currency.ObjectId AS CurrencyId 
         FROM Movement
@@ -117,9 +118,16 @@ FROM (
                                             AND MovementLinkObject_Currency.DescId = zc_MovementLinkObject_Currency()
                                            -- AND MovementLinkObject_Currency.ObjectId = 14461
 WHERE Movement.DescId = zc_Movement_ContractGoods()
-              AND Movement.OperDate > '01.01.2024'--
+     
+     AND Movement.OperDate >= '01.11.2024' AND Movement.OperDate < '11.11.2024'--
+     -- AND Movement.OperDate >= '11.11.2024' AND Movement.OperDate < '21.11.2024'--
+     --AND Movement.OperDate >= '21.11.2024' AND Movement.OperDate < '01.12.2024'--
+
               AND Movement.StatusId <> zc_Enum_Status_Erased()
 --and Movement.Id = 30115650
 ) AS tt
+
+--SELECT * FROM Movement WHERE Id = 27973035
+
 
 */

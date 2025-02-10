@@ -3647,6 +3647,11 @@ end;
 
 procedure TLoadFormTest.LoadReportPromoFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_DetailErrorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_DetailErrorForm');
+   exit;
+
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_MarketForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_MarketForm');

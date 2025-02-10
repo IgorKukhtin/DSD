@@ -36,7 +36,22 @@ BEGIN
             AND MovementItem.isErased = FALSE
            ) AS tmp
     WHERE tmp.Ord > 1 OR tmp.OperDate IS NULL;
-    
+    --удалить уже сохраненные строки ecли лишний период - непровильный был расчет
+    PERFORM lpSetErased_MovementItem (inMovementItemId:= tmp.Id, inUserId:= vbUserId)
+    FROM (SELECT MovementItem.Id, MIDate_OperDate.ValueData AS OperDate
+               , ROW_NUMBER () OVER (PARTITION BY MovementItem.ParentId, MIDate_OperDate.ValueData ORDER by MovementItem.Id) AS ord
+          FROM MovementItem
+            LEFT JOIN MovementItemDate AS MIDate_OperDate
+                                       ON MIDate_OperDate.MovementItemId = MovementItem.Id
+                                      AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
+            LEFT JOIN (SELECT DISTINCT _tmpReport.OperDate FROM _tmpReport) AS tmp ON tmp.OperDate = MIDate_OperDate.ValueData
+          WHERE MovementItem.MovementId = inMovementId
+            AND MovementItem.DescId = zc_MI_Detail()
+            AND MovementItem.isErased = FALSE
+            AND tmp.OperDate IS NULL
+           ) AS tmp
+    ;
+
 
      -- Данные Sale / ReturnIn
      INSERT INTO _tmpReport (GoodsId, GoodsKindId, OperDate, Amount, AmountIn, AmountReal, AmountRetIn)
@@ -106,32 +121,39 @@ BEGIN
            SELECT COALESCE (tmpMI_Detail.Id,0)         AS Id
                 , tmpMI_Master.Id                      AS ParentId
                 , tmpMI_Master.ObjectId                AS GoodsId
-                , COALESCE (_tmpReport.Amount, _tmpReport_2.Amount,0)               AS Amount
-                , COALESCE (_tmpReport.AmountIn, _tmpReport_2.AmountIn, 0)          AS AmountIn
-                , COALESCE (_tmpReport.AmountReal, _tmpReport_2.AmountReal, 0)      AS AmountReal
-                , COALESCE (_tmpReport.AmountRetIn, _tmpReport_2.AmountRetIn, 0)    AS AmountRetIn
-                , COALESCE (_tmpReport.OperDate, _tmpReport_2.OperDate) ::TDateTime AS OperDate
+                , COALESCE (_tmpReport.Amount,0)               AS Amount
+                , COALESCE (_tmpReport.AmountIn, 0)          AS AmountIn
+                , COALESCE (_tmpReport.AmountReal, 0)      AS AmountReal
+                , COALESCE (_tmpReport.AmountRetIn, 0)    AS AmountRetIn
+                , (_tmpReport.OperDate) ::TDateTime AS OperDate
            FROM tmpMI_Master
                 --привязка по виду товара
                 LEFT JOIN _tmpReport ON _tmpReport.GoodsId = tmpMI_Master.ObjectId
-                                    AND _tmpReport.GoodsKindId = tmpMI_Master.GoodsKindId
-                                    AND tmpMI_Master.GoodsKindId <> 0
-                LEFT JOIN (SELECT _tmpReport.GoodsId
+                                    AND COALESCE (_tmpReport.GoodsKindId,0) = COALESCE (tmpMI_Master.GoodsKindId,0)
+                                    --AND _tmpReport.GoodsKindId = tmpMI_Master.GoodsKindId
+                                    --AND tmpMI_Master.GoodsKindId <> 0
+                /*LEFT JOIN (SELECT _tmpReport.GoodsId
                                 , _tmpReport.OperDate
                                 , SUM (COALESCE (Amount,0))      AS Amount
                                 , SUM (COALESCE (AmountIn,0))    AS AmountIn
                                 , SUM (COALESCE (AmountReal,0))  AS AmountReal
                                 , SUM (COALESCE (AmountRetIn,0)) AS AmountRetIn  
                            FROM  _tmpReport
+                           
                            GROUP BY _tmpReport.GoodsId
                                   , _tmpReport.OperDate 
                           ) AS _tmpReport_2
                             ON _tmpReport_2.GoodsId = tmpMI_Master.ObjectId
-                           AND COALESCE (tmpMI_Master.GoodsKindId,0) = 0
+                           AND COALESCE (tmpMI_Master.GoodsKindId,0) = 0  */
+                 
                 LEFT JOIN tmpMI_Detail ON tmpMI_Detail.ParentId = tmpMI_Master.Id
-                                      AND tmpMI_Detail.OperDate = COALESCE (_tmpReport.OperDate, _tmpReport_2.OperDate)
+                                      AND tmpMI_Detail.OperDate =  _tmpReport.OperDate
 
           ) AS tmp
+     WHERE COALESCE (tmp.Amount,0) <> 0
+        OR COALESCE (tmp.AmountIn,0) <> 0
+        OR COALESCE (tmp.AmountReal,0) <> 0
+        OR COALESCE (tmp.AmountRetIn,0) <> 0
     ;
 
 END;

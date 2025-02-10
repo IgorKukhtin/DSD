@@ -129,10 +129,10 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                     ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
                                                    AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                               INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                      ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MI_PromoPartner.ObjectId)
                                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
-                                                   AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
+                                                  
 
                                LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
                                                      ON ObjectFloat_VATPercent.ObjectId = Movement_Promo.PriceListId
@@ -149,12 +149,23 @@ BEGIN
                                 OR (COALESCE (Movement_Promo.isPromo, FALSE) = FALSE AND inIsTender = TRUE)
                                 OR (inIsPromo = FALSE AND inIsTender = FALSE)
                                 OR inMovementId > 0
-                                )
+                                ) 
+                            AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
                         )
   --период продаж док акций
-  , tmpDate_list AS (SELECT tmpMov.Id
-                          , GENERATE_SERIES (DATE_TRUNC ('MONTH',tmpMov.StartSale), DATE_TRUNC ('MONTH',tmpMov.EndSale), '1 Month' :: INTERVAL) AS OperDate
-                     FROM tmpMovement_Promo AS tmpMov
+  , tmpDate_list AS (SELECT tmp.Id
+                          , CASE WHEN tmp.Ord_asc = 1 THEN zc_DateStart() ELSE tmp.OperDate END    AS OperDate_start
+                          , CASE WHEN tmp.Ord_desc = 1 THEN zc_DateEnd() ELSE tmp.OperDate_end END AS OperDate_end 
+                          , tmp.OperDate 
+                     FROM (SELECT tmp.*
+                                , tmp.OperDate + INTERVAL '1 Month' - INTERVAL '1 Day' AS OperDate_end
+                                , ROW_NUMBER () OVER (ORDER BY tmp.OperDate ASC) AS Ord_asc
+                                , ROW_NUMBER () OVER (ORDER BY tmp.OperDate DESC) AS Ord_desc 
+                           FROM (SELECT tmpMov.Id
+                                      , GENERATE_SERIES (DATE_TRUNC ('MONTH',tmpMov.StartSale), DATE_TRUNC ('MONTH',tmpMov.EndSale), '1 Month' :: INTERVAL) AS OperDate
+                                 FROM tmpMovement_Promo AS tmpMov
+                                 ) AS tmp
+                           ) AS tmp
                      )
 
    --строки из Акции - детально - факт продажи/ возврат и за аналогичный период для inIsReal = false
@@ -308,11 +319,11 @@ BEGIN
                                               AND ObjectString.DescId = zc_ObjectString_Goods_GroupNameFull()
                                            )
   --
-  , tmpData_notFind AS (SELECT DISTINCT tmpMI_SaleReturn.GoodsId
+  , tmpData_notFind AS (SELECT DISTINCT tmpMI_SaleReturn.GoodsId, tmpMI_SaleReturn.GoodsKindId
                         FROM tmpMI_SaleReturn
                              LEFT JOIN tmpMI_1 AS tmpData_promo
                                                ON tmpData_promo.GoodsId     = tmpMI_SaleReturn.GoodsId
-                                              AND tmpData_promo.GoodsKindId = tmpMI_SaleReturn.GoodsKindId
+                                              AND (tmpData_promo.GoodsKindId_find = tmpMI_SaleReturn.GoodsKindId OR COALESCE (tmpData_promo.GoodsKindId_find,0) = 0)
                         WHERE tmpData_promo.GoodsId IS NULL
                        )
 
@@ -394,14 +405,13 @@ BEGIN
                    --показываем только товары проданные за период и факт продажи возврата и менсяц по дате покупателя.
                    LEFT JOIN tmpMI_SaleReturn ON tmpMI_SaleReturn.MovementId_promo = MI_PromoGoods.MovementId
                                              AND tmpMI_SaleReturn.GoodsId = MI_PromoGoods.GoodsId
-                                             AND tmpMI_SaleReturn.Month_Partner = tmpDate_list.OperDate --
-                                            -- AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  COALESCE (MI_PromoGoods.GoodsKindId_find,0)
-                                            --      OR COALESCE (MI_PromoGoods.GoodsKindId_find,0) = 0)
-                                            -- AND inIsReal = TRUE 
+                                             AND tmpMI_SaleReturn.Month_Partner BETWEEN tmpDate_list.OperDate_start AND tmpDate_list.OperDate_end --  
+                                             AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) = COALESCE (tmpData_notFind.GoodsKindId,0))
+                                             AND inIsReal = TRUE  
 
                    LEFT JOIN tmpMI_Detail ON tmpMI_Detail.MovementId = MI_PromoGoods.MovementId
                                                      AND tmpMI_Detail.ParentId = MI_PromoGoods.Id
-                                                     AND tmpMI_Detail.OperDate = tmpDate_list.OperDate --
+                                                     AND tmpMI_Detail.OperDate BETWEEN tmpDate_list.OperDate_start AND tmpDate_list.OperDate_end  --= tmpDate_list.OperDate --
                                                      AND inIsReal = FALSE
 
                    LEFT JOIN tmpMIFloat_PriceIn1 AS MIFloat_PriceIn1
@@ -468,16 +478,16 @@ BEGIN
                    , SUM (COALESCE (MI_PromoGoods.AmountOut, 0) - COALESCE (MI_PromoGoods.AmountIn, 0))            :: TFloat  AS AmountSale_promo       -- продажа - возврат
                    , SUM(COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) :: TFloat  AS AmountSaleWeight_promo -- продажа - возврат
 
-                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut, tmpMI_Detail.Amount, 0))       AS AmountOut
-                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut, tmpMI_Detail.Amount, 0)
+                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut,tmpMI_SaleReturn1.AmountOut,tmpMI_SaleReturn2.AmountOut, tmpMI_Detail.Amount, 0))       AS AmountOut
+                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut,tmpMI_SaleReturn1.AmountOut,tmpMI_SaleReturn2.AmountOut, tmpMI_Detail.Amount, 0)
                                    * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END
                                    )  AS AmountOutWeight   --Кол-во реализация (факт) Вес
                    , SUM (COALESCE (tmpMI_SaleReturn.AmountIn, tmpMI_Detail.AmountIn, 0))         AS AmountIn          --Кол-во возврат (факт)
                    , SUM (COALESCE (tmpMI_SaleReturn.AmountIn, tmpMI_Detail.AmountIn,0)
                           * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END)   AS AmountInWeight    --Кол-во возврат (факт) Вес
 
-                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut, tmpMI_Detail.Amount, 0) - COALESCE (tmpMI_SaleReturn.AmountIn, tmpMI_Detail.AmountIn, 0))            :: TFloat  AS AmountSale       -- продажа - возврат
-                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut, tmpMI_Detail.Amount, 0) * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END
+                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut,tmpMI_SaleReturn1.AmountOut,tmpMI_SaleReturn2.AmountOut, tmpMI_Detail.Amount, 0) - COALESCE (tmpMI_SaleReturn.AmountIn, tmpMI_Detail.AmountIn, 0))            :: TFloat  AS AmountSale       -- продажа - возврат
+                   , SUM (COALESCE (tmpMI_SaleReturn.AmountOut,tmpMI_SaleReturn1.AmountOut,tmpMI_SaleReturn2.AmountOut, tmpMI_Detail.Amount, 0) * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END
                         - COALESCE (tmpMI_SaleReturn.AmountIn, tmpMI_Detail.AmountIn, 0) * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE 1 END
                          ) :: TFloat  AS AmountSaleWeight -- продажа - возврат
 
@@ -504,18 +514,40 @@ BEGIN
                    LEFT JOIN tmpMI_1 AS MI_PromoGoods ON MI_PromoGoods.MovementId = tmpDate_list.Id
                    
                    LEFT JOIN tmpData_notFind ON tmpData_notFind.GoodsId = MI_PromoGoods.GoodsId
+                                            AND (COALESCE (tmpData_notFind.GoodsKindId,0) = COALESCE (MI_PromoGoods.GoodsKindId_find,0) OR  COALESCE (MI_PromoGoods.GoodsKindId_find,0) =0) 
                    
-                   --показываем только товары проданные за период и факт продажи возврата и менсяц по дате покупателя.
+                   --показываем только товары проданные за период и факт продажи возврата и менсяц по дате покупателя. 
+                      --привязка по GoodsKindId
                    LEFT JOIN tmpMI_SaleReturn ON tmpMI_SaleReturn.MovementId_promo = MI_PromoGoods.MovementId
                                              AND tmpMI_SaleReturn.GoodsId = MI_PromoGoods.GoodsId
-                                             AND tmpMI_SaleReturn.Month_Partner = tmpDate_list.OperDate
-                                             AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  COALESCE (MI_PromoGoods.GoodsKindId_find,0)
-                                                  OR COALESCE (MI_PromoGoods.GoodsKindId_find,0) = 0)
+                                             AND tmpMI_SaleReturn.Month_Partner BETWEEN tmpDate_list.OperDate_start AND tmpDate_list.OperDate_end 
+                                             AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) = COALESCE (MI_PromoGoods.GoodsKindId,0) AND COALESCE (MI_PromoGoods.GoodsKindId,0) <> 0)
+                                             --AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  COALESCE (MI_PromoGoods.GoodsKindId_find,0)
+                                             --     OR COALESCE (MI_PromoGoods.GoodsKindId_find,0) = 0)
                                              AND inIsReal = TRUE 
+                      -- привязка по  GoodsKindCompleteId , если  GoodsKindId - пусто
+                   LEFT JOIN tmpMI_SaleReturn AS tmpMI_SaleReturn1
+                                              ON tmpMI_SaleReturn1.MovementId_promo = MI_PromoGoods.MovementId
+                                             AND tmpMI_SaleReturn1.GoodsId = MI_PromoGoods.GoodsId
+                                             AND tmpMI_SaleReturn1.Month_Partner BETWEEN tmpDate_list.OperDate_start AND tmpDate_list.OperDate_end 
+                                             AND (COALESCE (tmpMI_SaleReturn1.GoodsKindId,0) = COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) AND COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) <> 0 )
+                                             --AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  COALESCE (MI_PromoGoods.GoodsKindId_find,0)
+                                             --     OR COALESCE (MI_PromoGoods.GoodsKindId_find,0) = 0)
+                                             AND inIsReal = TRUE
+
+                      -- привязка если GoodsKindId - пусто и если GoodsKindCompleteId - пусто 
+                   LEFT JOIN tmpMI_SaleReturn AS tmpMI_SaleReturn2
+                                              ON tmpMI_SaleReturn2.MovementId_promo = MI_PromoGoods.MovementId
+                                             AND tmpMI_SaleReturn2.GoodsId = MI_PromoGoods.GoodsId
+                                             AND tmpMI_SaleReturn2.Month_Partner BETWEEN tmpDate_list.OperDate_start AND tmpDate_list.OperDate_end 
+                                             AND COALESCE (MI_PromoGoods.GoodsKindId_find,0) = 0
+                                             --AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  COALESCE (MI_PromoGoods.GoodsKindId_find,0)
+                                             --     OR COALESCE (MI_PromoGoods.GoodsKindId_find,0) = 0)
+                                             AND inIsReal = TRUE
 
                    LEFT JOIN tmpMI_Detail ON tmpMI_Detail.MovementId = MI_PromoGoods.MovementId
                                                      AND tmpMI_Detail.ParentId = MI_PromoGoods.Id
-                                                     AND tmpMI_Detail.OperDate = tmpDate_list.OperDate --
+                                                     AND tmpMI_Detail.OperDate BETWEEN tmpDate_list.OperDate_start AND tmpDate_list.OperDate_end --tmpDate_list.OperDate --
                                                      AND inIsReal = FALSE
                    
                    LEFT JOIN tmpMIFloat_PriceIn1 AS MIFloat_PriceIn1
@@ -545,6 +577,89 @@ BEGIN
                      , tmpDate_list.OperDate
               )
 
+  --сгруппировать после Union
+  , tmpMI_group AS (
+               SELECT
+                     MI_PromoGoods.MovementId          --ИД документа <Акция>
+                   , MI_PromoGoods.GoodsId             --Ид объекта  <товар>
+                   , MI_PromoGoods.GoodsCode           --код объекта  <товар>
+                   , MI_PromoGoods.GoodsName           --наименование объекта <товар>
+                   , MI_PromoGoods.Measure             --Единица измерения
+                   , MI_PromoGoods.MeasureId             --Единица измерения
+                   , MI_PromoGoods.TradeMark           --Торговая марка
+
+                   , MI_PromoGoods.Price               --Цена в прайсе
+                   , MI_PromoGoods.PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
+                   , MI_PromoGoods.PriceSale           --Цена на полке
+
+                   , MI_PromoGoods.GoodsWeight -- Вес
+                   , MI_PromoGoods.GoodsKindId         AS GoodsKindId
+                   , MI_PromoGoods.GoodsKindCompleteId AS GoodsKindCompleteId 
+                   
+                   , MI_PromoGoods.GoodsKindName        ::TVarChar AS GoodsKindName       --Наименование обьекта <Вид товара>
+                   , MI_PromoGoods.GoodsKindCompleteName::TVarChar AS GoodsKindCompleteName
+
+                   , AVG (MI_PromoGoods.Amount)           AS Amount              --% скидки на товар
+                   , SUM (MI_PromoGoods.AmountReal)       AS AmountReal          --Объем продаж в аналогичный период, кг
+                   , SUM (MI_PromoGoods.AmountRealWeight) AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
+
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMin,0))       AS AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMinWeight,0)) AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMax,0))       AS AmountPlanMax       --Максимум планируемого объема продаж на акционный период (в кг)
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMaxWeight,0)) AS AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
+                    --информативно для проверки
+                   , SUM (COALESCE (MI_PromoGoods.AmountOut_promo,0))        AS AmountOut_promo         --Кол-во реализация (факт)
+                   , SUM (COALESCE (MI_PromoGoods.AmountOutWeight_promo,0))  AS AmountOutWeight_promo   --Кол-во реализация (факт) Вес
+                   , SUM (COALESCE (MI_PromoGoods.AmountIn_promo,0))         AS AmountIn_promo          --Кол-во возврат (факт)
+                   , SUM (COALESCE (MI_PromoGoods.AmountInWeight_promo,0))   AS AmountInWeight_promo    --Кол-во возврат (факт) Вес
+
+                   , SUM (COALESCE (MI_PromoGoods.AmountSale_promo, 0) )           ::TFloat AS AmountSale_promo       -- продажа - возврат
+                   , SUM(COALESCE (MI_PromoGoods.AmountSaleWeight_promo, 0))       ::TFloat AS AmountSaleWeight_promo -- продажа - возврат
+
+                   , SUM (COALESCE (MI_PromoGoods.AmountOut, 0))                            AS AmountOut
+                   , SUM (COALESCE (MI_PromoGoods.AmountOutWeight, 0))                      AS AmountOutWeight   --Кол-во реализация (факт) Вес
+                   , SUM (COALESCE (MI_PromoGoods.AmountIn, 0))                             AS AmountIn          --Кол-во возврат (факт)
+                   , SUM (COALESCE (MI_PromoGoods.AmountInWeight, 0))                       AS AmountInWeight    --Кол-во возврат (факт) Вес
+
+                   , SUM (COALESCE (MI_PromoGoods.AmountSale, 0))                  ::TFloat AS AmountSale       -- продажа - возврат
+                   , SUM (COALESCE (MI_PromoGoods.AmountSaleWeight, 0))            ::TFloat AS AmountSaleWeight -- продажа - возврат
+
+                   , MI_PromoGoods.Month_Partner                                   ::TDateTime AS Month_Partner
+                   ----
+                   , SUM(COALESCE (MI_PromoGoods.Price_Diff, 0))                   ::TFloat AS Price_Diff
+
+                   , AVG (COALESCE (MI_PromoGoods.MainDiscount,0))                 ::TFloat AS MainDiscount
+                   , MAX (MI_PromoGoods.PriceIn1)                                  ::TFloat AS PriceIn1               --себестоимость факт,  за кг
+                   , MAX (MI_PromoGoods.ContractCondition)                         ::TFloat AS ContractCondition      -- Бонус сети, %
+                   , MI_PromoGoods.GoodsGroupNameFull                                       AS GoodsGroupNameFull
+
+                   -- продажа за аналогичный период
+                   , SUM (COALESCE (MI_PromoGoods.AmountReal_calc,0))              ::TFloat AS AmountReal_calc
+                   , SUM (COALESCE (MI_PromoGoods.AmountRealWeight_calc,0))        ::TFloat AS AmountRealWeight_calc
+                   -- возврат за аналогичный период
+                   , SUM (COALESCE (MI_PromoGoods.AmountRetIn_calc,0))             ::TFloat AS AmountRetIn_calc
+                   , SUM (COALESCE (MI_PromoGoods.AmountRetInWeight_calc,0))       ::TFloat AS AmountRetInWeight_calc
+
+              FROM tmpMI AS MI_PromoGoods
+              GROUP BY MI_PromoGoods.MovementId
+                     , MI_PromoGoods.GoodsId
+                     , MI_PromoGoods.GoodsCode
+                     , MI_PromoGoods.GoodsName
+                     , MI_PromoGoods.Measure
+                     , MI_PromoGoods.MeasureId
+                     , MI_PromoGoods.TradeMark
+                     , MI_PromoGoods.Price
+                     , MI_PromoGoods.PriceWithVAT
+                     , MI_PromoGoods.PriceSale
+                     , MI_PromoGoods.GoodsWeight
+                     , MI_PromoGoods.GoodsKindId
+                     , MI_PromoGoods.GoodsKindCompleteId
+                     , MI_PromoGoods.GoodsKindName
+                     , MI_PromoGoods.GoodsKindCompleteName
+                     , MI_PromoGoods.GoodsGroupNameFull
+                     , MI_PromoGoods.Month_Partner
+              )
+               
    -- данные продаж + возвратов, в доакционный период
   , tmpSaleReturn AS (SELECT tmp.Id  AS MovementId_promo
                            , spSelect.DateMonth
@@ -754,7 +869,7 @@ BEGIN
           , COALESCE (tmpSaleReturn.AmountRetInWeight, MI_PromoGoods.AmountRetInWeight_calc, 0)::TFloat AS AmountRetInWeight_calc
         FROM tmpMovement_Promo AS Movement_Promo
             -- LEFT JOIN tmpVAT ON tmpVAT.PriceListId = Movement_Promo.PriceListId
-             LEFT JOIN tmpMI AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
+             LEFT JOIN tmpMI_group AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
 
              LEFT JOIN tmpSaleReturn ON tmpSaleReturn.MovementId_promo = Movement_Promo.Id
                                     AND tmpSaleReturn.GoodsId = MI_PromoGoods.GoodsId

@@ -1565,8 +1565,8 @@ uses
   BankAccountJournal_srv_r in '..\..\Forms\Document\BankAccountJournal_srv_r.pas' {BankAccountJournal_srv_rForm: TParentForm},
   CashJournal_srv_r in '..\..\Forms\Document\CashJournal_srv_r.pas' {CashJournal_srv_rForm: TParentForm},
   Report_PartionCell_GoodsHistory in '..\..\Forms\Report\Report_PartionCell_GoodsHistory.pas' {Report_PartionCell_GoodsHistoryForm: TParentForm},
-  PartionCellCheckEdit in '..\..\Forms\Guides\PartionCellCheckEdit.pas' {PartionCellCheckEditForm: TParentForm};
-
+  PartionCellCheckEdit in '..\..\Forms\Guides\PartionCellCheckEdit.pas' {PartionCellCheckEditForm: TParentForm},
+  Report_Promo_DetailError in '..\..\Forms\Report\Report_Promo_DetailError.pas' {Report_Promo_DetailErrorForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
