@@ -43,7 +43,7 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
         end
         item
           Format = ',0.####'
-          Kind = skSum
+          Kind = skCount
           Column = ord
         end>
       DataController.Summary.SummaryGroups = <>
