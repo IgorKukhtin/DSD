@@ -88,7 +88,11 @@ BEGIN
 
                                          WHERE ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
                                         )
-        , tmpObject_Contract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+        , tmpObject_Contract_View AS (SELECT *
+                                      FROM Object_Contract_View
+                                      WHERE Object_Contract_View.isErased = FALSE
+                                        AND (Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+                                     )
         , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View WHERE Container_Partner_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
         , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
         , tmpObject_InfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
@@ -258,7 +262,7 @@ BEGIN
 
          LEFT JOIN tmpObject_Contract_View AS Object_Contract_View
                                            ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-                                          AND Object_Contract_View.isErased = FALSE
+                                        --*AND Object_Contract_View.isErased = FALSE
                                         --AND (Object_Contract_View.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId OR tmpContractPartner_Juridical.JuridicalId IS NULL)
                                         --AND (Object_Contract_View.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId OR tmpContractPartner_Juridical.ContractId IS NULL)
          LEFT JOIN tmpContractPartner_Juridical ON tmpContractPartner_Juridical.ContractId = Object_Contract_View.ContractId
@@ -416,7 +420,12 @@ BEGIN
                                         )
        , tmpOB_isBranchAll AS (SELECT * FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Juridical_isBranchAll())
 
-       , tmpObject_Contract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+       , tmpObject_Contract_View AS (SELECT *
+                                     FROM Object_Contract_View
+                                     WHERE Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                       AND Object_Contract_View.isErased = FALSE
+                                       AND (Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+                                    )
        , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View WHERE Container_Partner_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
        , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
        , tmpObject_InfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
@@ -600,8 +609,8 @@ BEGIN
 
          LEFT JOIN tmpObject_Contract_View AS Object_Contract_View
                                            ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-                                          AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                                          AND Object_Contract_View.isErased = FALSE
+                                          --*AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                          --*AND Object_Contract_View.isErased = FALSE
                                         --AND (Object_Contract_View.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId OR tmpContractPartner_Juridical.JuridicalId IS NULL)
                                         --AND (Object_Contract_View.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId OR tmpContractPartner_Juridical.ContractId IS NULL)
          LEFT JOIN tmpContractPartner_Juridical ON tmpContractPartner_Juridical.ContractId = Object_Contract_View.ContractId
