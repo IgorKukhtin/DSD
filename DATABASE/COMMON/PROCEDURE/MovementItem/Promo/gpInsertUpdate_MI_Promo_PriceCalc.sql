@@ -854,7 +854,7 @@ else
                                                END
 
                                                -- план с/с - Новая схема
-                                             + CASE WHEN _tmpData.Price1_plan > 0 AND vbUserId = 5 THEN _tmpData.Price1_plan
+                                             + CASE WHEN _tmpData.Price1_plan > 0 /*AND vbUserId = 5*/ THEN _tmpData.Price1_plan
 
                                                     ELSE -- факт с/с * 110 %
                                                          CAST (1.1 * CASE WHEN _tmpData.PriceSale > 0
