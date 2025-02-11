@@ -126,39 +126,41 @@ BEGIN
                                   WHERE MI_PromoGoods.MovementId = inMovementId
                                     AND MI_PromoGoods.isErased   = FALSE
                                  )
-              , tmpData_notFind AS (SELECT DISTINCT _tmpData.GoodsId
+              , tmpData_notFind AS (SELECT _tmpData.GoodsId, SUM (_tmpData.AmountOrder) AS AmountOrder, SUM (_tmpData.AmountOut) AS AmountOut, SUM (_tmpData.AmountIn) AS AmountIn
                                     FROM _tmpData
                                          LEFT JOIN tmpData_promo ON tmpData_promo.GoodsId             = _tmpData.GoodsId
                                                               --AND tmpData_promo.GoodsKindCompleteId = _tmpData.GoodsKindId
                                                                 AND tmpData_promo.GoodsKindId         = _tmpData.GoodsKindId
                                     WHERE tmpData_promo.GoodsId IS NULL
+                                    GROUP BY _tmpData.GoodsId
                                    )
            -- если в продажах "другие" виды упаковки
-           SELECT MI_PromoGoods.Id
+           /*SELECT MI_PromoGoods.Id
                 , MI_PromoGoods.isErased
-                , COALESCE (tmpData_sum.AmountOut,   0)   /* * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/ AS AmountOut
-                , COALESCE (tmpData_sum.AmountOrder, 0) /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountOrder
-                , COALESCE (tmpData_sum.AmountIn,    0)    /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountIn
+                , CASE WHEN MI_PromoGoods.Ord = 1 THEN COALESCE (tmpData_sum.AmountOut,   0) ELSE 0 END AS AmountOut     -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
+                , CASE WHEN MI_PromoGoods.Ord = 1 THEN COALESCE (tmpData_sum.AmountOrder, 0) ELSE 0 END AS AmountOrder   -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
+                , CASE WHEN MI_PromoGoods.Ord = 1 THEN COALESCE (tmpData_sum.AmountIn,    0) ELSE 0 END AS AmountIn      -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
            FROM tmpData_promo AS MI_PromoGoods
                 JOIN tmpData_notFind ON tmpData_notFind.GoodsId = MI_PromoGoods.GoodsId
                 LEFT JOIN tmpData_sum ON tmpData_sum.GoodsId = MI_PromoGoods.GoodsId
-           WHERE MI_PromoGoods.Ord = 1
-          UNION ALL
+           -- WHERE MI_PromoGoods.Ord = 1
+
+          UNION ALL*/
            -- если в продажах "такие же" виды упаковки
            SELECT MI_PromoGoods.Id
                 , MI_PromoGoods.isErased
-                , COALESCE (_tmpData.AmountOut,   0)   /* * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/ AS AmountOut
-                , COALESCE (_tmpData.AmountOrder, 0) /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountOrder
-                , COALESCE (_tmpData.AmountIn,    0)    /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountIn
+                , COALESCE (_tmpData.AmountOut,   0) + CASE WHEN MI_PromoGoods.Ord = 1 THEN COALESCE (tmpData_notFind.AmountOut,   0) ELSE 0 END  AS AmountOut      -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
+                , COALESCE (_tmpData.AmountOrder, 0) + CASE WHEN MI_PromoGoods.Ord = 1 THEN COALESCE (tmpData_notFind.AmountOrder, 0) ELSE 0 END  AS AmountOrder    -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
+                , COALESCE (_tmpData.AmountIn,    0) + CASE WHEN MI_PromoGoods.Ord = 1 THEN COALESCE (tmpData_notFind.AmountIn,    0) ELSE 0 END  AS AmountIn       -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
            FROM tmpData_promo AS MI_PromoGoods
                 LEFT JOIN tmpData_notFind ON tmpData_notFind.GoodsId = MI_PromoGoods.GoodsId
                 LEFT JOIN _tmpData ON _tmpData.GoodsId     = MI_PromoGoods.GoodsId
                                 --AND _tmpData.GoodsKindId = MI_PromoGoods.GoodsKindCompleteId
                                   AND _tmpData.GoodsKindId = MI_PromoGoods.GoodsKindId
-           WHERE tmpData_notFind.GoodsId IS NULL
+           -- WHERE tmpData_notFind.GoodsId IS NULL
           ) AS tmp
     ;
-    
+
     -- Пересчет
     PERFORM gpInsertUpdate_MI_Promo_Detail (inMovementId:= inMovementId, inSession:= inSession);
 

@@ -42,6 +42,14 @@ $BODY$
 BEGIN
     -- Проверили
     IF COALESCE (inGoodsKindId, 0) = 0 AND 1=1
+       AND EXISTS (SELECT 1 FROM ObjectLink AS OL
+                               WHERE OL.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                        , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                        , zc_Enum_InfoMoney_30102() -- Тушенка
+                                                         )
+                              AND OL.DescId = zc_ObjectLink_Goods_InfoMoney()
+                              AND OL.ObjectId = inGoodsId
+                  )
     THEN
         -- RAISE EXCEPTION 'Ошибка. Необходимо заполнить колонку Вид (примечание), а значение вид товара = <%> должно быть пустым.', lfGet_Object_ValueData (inGoodsKindId);
         RAISE EXCEPTION 'Ошибка.Необходимо заполнить колонку вид товара.';
