@@ -114,10 +114,11 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.GroupSummaryLayout = gslStandard
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -136,6 +137,7 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
           object TradeMarkName: TcxGridDBColumn [1]
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -157,7 +159,35 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 252
           end
-          object MeasureName: TcxGridDBColumn [4]
+          object GoodsKindName: TcxGridDBColumn [4]
+            Caption = #1042#1080#1076
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1072#1082#1094#1080#1080')'
+            Options.Editing = False
+            Width = 90
+          end
+          object GoodsKindCompleteName: TcxGridDBColumn [5]
+            Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'GoodsKindCompleteName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+            Options.Editing = False
+            Width = 85
+          end
+          object GoodsKindName_List: TcxGridDBColumn [6]
+            Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            DataBinding.FieldName = 'GoodsKindName_List'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            Options.Editing = False
+            Width = 77
+          end
+          object MeasureName: TcxGridDBColumn [7]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -165,7 +195,7 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 51
           end
-          object GoodsWeight: TcxGridDBColumn [5]
+          object GoodsWeight: TcxGridDBColumn [8]
             Caption = #1042#1077#1089
             DataBinding.FieldName = 'GoodsWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -176,7 +206,7 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 59
           end
-          object AmountWeight: TcxGridDBColumn [6]
+          object AmountWeight: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090'), '#1074#1077#1089
             DataBinding.FieldName = 'AmountWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -187,7 +217,7 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 94
           end
-          object AmountInWeight: TcxGridDBColumn [7]
+          object AmountInWeight: TcxGridDBColumn [10]
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090'), '#1074#1077#1089
             DataBinding.FieldName = 'AmountInWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -199,20 +229,19 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 104
           end
-          object AmountRealWeight: TcxGridDBColumn [8]
+          object AmountRealWeight: TcxGridDBColumn [11]
             Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076', '#1074#1077#1089
             DataBinding.FieldName = 'AmountRealWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1074#1077#1089' ('#1080#1090#1086#1075#1086')'
             Options.Editing = False
             Width = 104
           end
-          object AmountRetInWeight: TcxGridDBColumn [9]
+          object AmountRetInWeight: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076', '#1074#1077#1089
             DataBinding.FieldName = 'AmountRetInWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -225,7 +254,36 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 104
           end
-          object Amount: TcxGridDBColumn [10]
+          object AmountDays: TcxGridDBColumn [13]
+            Caption = #1044#1085#1077#1081' '#1087#1077#1088#1080#1086#1076#1072
+            DataBinding.FieldName = 'AmountDays'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object DateStart_pr: TcxGridDBColumn [14]
+            Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'DateStart_pr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1053#1072#1095'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 100
+          end
+          object DateEnd_pr: TcxGridDBColumn [15]
+            Caption = #1050#1086#1085#1077#1095#1085'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'DateEnd_pr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1050#1086#1085#1077#1095#1085'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 100
+          end
+          object Amount: TcxGridDBColumn [16]
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -237,7 +295,7 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 94
           end
-          object AmountIn: TcxGridDBColumn [11]
+          object AmountIn: TcxGridDBColumn [17]
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -248,7 +306,7 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 104
           end
-          object AmountReal: TcxGridDBColumn [12]
+          object AmountReal: TcxGridDBColumn [18]
             Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountReal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -260,7 +318,7 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             Options.Editing = False
             Width = 104
           end
-          object AmountRetIn: TcxGridDBColumn [13]
+          object AmountRetIn: TcxGridDBColumn [19]
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountRetIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -271,62 +329,6 @@ inherited Promo_MI_DetailForm: TPromo_MI_DetailForm
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' '#1074' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
             Options.Editing = False
             Width = 104
-          end
-          object GoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076
-            DataBinding.FieldName = 'GoodsKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1072#1082#1094#1080#1080')'
-            Options.Editing = False
-            Width = 90
-          end
-          object GoodsKindCompleteName: TcxGridDBColumn
-            Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
-            DataBinding.FieldName = 'GoodsKindCompleteName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
-            Options.Editing = False
-            Width = 85
-          end
-          object GoodsKindName_List: TcxGridDBColumn
-            Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
-            DataBinding.FieldName = 'GoodsKindName_List'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
-            Options.Editing = False
-            Width = 77
-          end
-          object DateStart_pr: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
-            DataBinding.FieldName = 'DateStart_pr'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1053#1072#1095'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
-            Options.Editing = False
-            Width = 100
-          end
-          object DateEnd_pr: TcxGridDBColumn
-            Caption = #1050#1086#1085#1077#1095#1085'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
-            DataBinding.FieldName = 'DateEnd_pr'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1050#1086#1085#1077#1095#1085'. '#1076#1072#1090#1072' '#1076#1083#1103' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
-            Options.Editing = False
-            Width = 100
-          end
-          object AmountDays: TcxGridDBColumn
-            Caption = #1044#1085#1077#1081' '#1087#1077#1088#1080#1086#1076#1072
-            DataBinding.FieldName = 'AmountDays'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 70
           end
         end
       end
