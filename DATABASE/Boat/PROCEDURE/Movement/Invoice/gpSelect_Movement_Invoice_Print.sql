@@ -255,7 +255,7 @@ BEGIN
 
            LEFT JOIN ObjectString AS ObjectString_TaxNumber
                                   ON ObjectString_TaxNumber.ObjectId = tmpInvoice.ObjectId
-                                 AND ObjectString_TaxNumber.DescId = zc_ObjectString_Client_TaxNumber()
+                                 AND ObjectString_TaxNumber.DescId IN (zc_ObjectString_Client_TaxNumber(), zc_ObjectString_Partner_TaxNumber())
           LEFT JOIN ObjectFloat AS ObjectFloat_Power
                                 ON ObjectFloat_Power.ObjectId = tmpProduct.EngineId
                                AND ObjectFloat_Power.DescId = zc_ObjectFloat_ProdEngine_Power()
@@ -266,11 +266,11 @@ BEGIN
           LEFT JOIN Object AS Object_Client ON Object_Client.Id = tmpInvoice.ObjectId
           LEFT JOIN ObjectString AS ObjectString_Street
                                  ON ObjectString_Street.ObjectId = Object_Client.Id
-                                AND ObjectString_Street.DescId = zc_ObjectString_Client_Street()
+                                AND ObjectString_Street.DescId  IN (zc_ObjectString_Client_Street(), zc_ObjectString_Partner_Street())
 
           LEFT JOIN ObjectLink AS ObjectLink_PLZ
                                ON ObjectLink_PLZ.ObjectId = Object_Client.Id
-                              AND ObjectLink_PLZ.DescId = zc_ObjectLink_Client_PLZ()
+                              AND ObjectLink_PLZ.DescId   IN (zc_ObjectLink_Client_PLZ(), zc_ObjectLink_Partner_PLZ())
           LEFT JOIN Object AS Object_PLZ ON Object_PLZ.Id = ObjectLink_PLZ.ChildObjectId
           LEFT JOIN ObjectString AS ObjectString_City
                                  ON ObjectString_City.ObjectId = Object_PLZ.Id
