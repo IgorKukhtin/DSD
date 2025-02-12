@@ -1,4 +1,4 @@
-  -- Function: gpInsertUpdate_MI_Promo_Param()
+-- Function: gpInsertUpdate_MI_Promo_Param()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Promo_Param (Integer, TVarChar);
 
