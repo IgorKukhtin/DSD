@@ -1542,6 +1542,8 @@ type
     miCashOperation_srv_r: TMenuItem;
     actReport_Promo_DetailError: TdsdOpenForm;
     miReport_Promo_DetailError: TMenuItem;
+    actReestrIncomeinBuh: TdsdOpenForm;
+    miReestrIncomeinBuh: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
