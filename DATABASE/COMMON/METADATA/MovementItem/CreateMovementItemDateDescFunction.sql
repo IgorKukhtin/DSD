@@ -52,6 +52,11 @@ CREATE OR REPLACE FUNCTION zc_MIDate_Buh() RETURNS Integer AS $BODY$BEGIN RETURN
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_Buh', 'когда сформирована виза Бухгалтерия (финиш)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Buh');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_inBuh() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_inBuh'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_inBuh', 'когда сформирована виза Бухгалтерия в работе' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_inBuh');
+
+
 CREATE OR REPLACE FUNCTION zc_MIDate_Log() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Log'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_Log', 'когда сформирована виза Отдел логистики' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Log');
@@ -194,6 +199,7 @@ INSERT INTO MovementItemDateDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В. 
+ 12.02.25         * zc_MIDate_inBuh
  21.10.24         * zc_MIDate_PriceRetOut 
  24.08.24         * zc_MIDate_PartionGoods_next
  14.05.22                                                                         * zc_MIDate_ReestrDateSP

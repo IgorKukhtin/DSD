@@ -6,7 +6,7 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 854
-  ExplicitHeight = 459
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -469,6 +469,20 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
           object Member_Buh: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103')'
             DataBinding.FieldName = 'Member_Buh'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Date_InBuh: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1074' '#1088#1072#1073#1086#1090#1077')'
+            DataBinding.FieldName = 'Date_InBuh'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Member_InBuh: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1074' '#1088#1072#1073#1086#1090#1077')'
+            DataBinding.FieldName = 'Member_InBuh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120

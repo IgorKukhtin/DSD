@@ -1058,6 +1058,9 @@ BEGIN
 
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Double()     , inDescId:= zc_Object_ReestrKind(), inCode:= 15,inName:= 'Выведен дубликат'           , inEnumName:= 'zc_Enum_ReestrKind_Double');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Scan()       , inDescId:= zc_Object_ReestrKind(), inCode:= 16,inName:= 'В наличии скан'             , inEnumName:= 'zc_Enum_ReestrKind_Scan');
+
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_InBuh()      , inDescId:= zc_Object_ReestrKind(), inCode:= 17, inName:= 'Бухгалтерия в работе'      , inEnumName:= 'zc_Enum_ReestrKind_InBuh');
+
 END $$;
 
 

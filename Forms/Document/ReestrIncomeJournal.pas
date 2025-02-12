@@ -24,7 +24,7 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  cxButtonEdit, dsdGuides, frxClass, frxDBSet, EDI, dsdInternetAction;
+  cxButtonEdit, dsdGuides, frxClass, frxDBSet, EDI, dsdInternetAction, dsdCommon;
 
 type
   TReestrIncomeJournalForm = class(TAncestorJournalForm)
