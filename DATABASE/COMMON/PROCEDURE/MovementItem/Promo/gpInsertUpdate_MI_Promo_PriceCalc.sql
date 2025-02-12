@@ -22,6 +22,29 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
 
 
+     -- Проверили - Ви товара
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                     INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                           ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                          AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                         , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                         , zc_Enum_InfoMoney_30102() -- Тушенка
+                                                                                          )
+                                          AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE
+                  AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Необходимо заполнить колонку вид товара.';
+     END IF;
+
+
      -- пересчет всех контрагентов
    --PERFORM lpUpdate_Movement_Promo_Auto (inMovementId:= inMovementId, inUserId:= vbUserId);
 

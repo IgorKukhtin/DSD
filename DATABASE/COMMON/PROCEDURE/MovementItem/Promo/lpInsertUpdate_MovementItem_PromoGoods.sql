@@ -42,6 +42,7 @@ $BODY$
 BEGIN
     -- Проверили
     IF COALESCE (inGoodsKindId, 0) = 0 AND 1=1
+       AND 1=0
        AND EXISTS (SELECT 1 FROM ObjectLink AS OL
                                WHERE OL.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
                                                         , zc_Enum_InfoMoney_30101() -- Готовая продукция
