@@ -65,7 +65,11 @@ BEGIN
 
    -- Ограничение - если роль Начисления транспорт-меню
    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 78489 AND UserId = vbUserId)
+      -- не Админ
       AND NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+      -- нет ограничений на Просмотр
+      AND NOT EXISTS (SELECT 1 AS Id FROM Object_ViewPriceList_View WHERE Object_ViewPriceList_View.UserId = vbUserId)
+      -- 
       AND COALESCE (inPriceListId, 0) NOT IN (SELECT zc_PriceList_Fuel()
                                              UNION
                                               SELECT DISTINCT ObjectLink_Contract_PriceList.ChildObjectId
@@ -92,8 +96,9 @@ BEGIN
 
 
 
-   -- Ограничение - Прайс-лист - просмотр с ограничениями
-   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10575455)
+   -- есть ограничения на Просмотр
+   IF EXISTS (SELECT 1 AS Id FROM Object_ViewPriceList_View WHERE Object_ViewPriceList_View.UserId = vbUserId)
+      --EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10575455) -- Ограничение - Прайс-лист - просмотр с ограничениями
    THEN
        -- Ограничение
        IF NOT EXISTS (SELECT 1 AS Id FROM Object_ViewPriceList_View WHERE Object_ViewPriceList_View.UserId = vbUserId AND Object_ViewPriceList_View.PriceListId = inPriceListId)
