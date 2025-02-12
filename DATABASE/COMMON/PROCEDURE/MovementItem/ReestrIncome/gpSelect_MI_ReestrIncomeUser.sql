@@ -15,9 +15,9 @@ RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
 
               , Date_Insert TDateTime, MemberName_Insert TVarChar
               , Date_Snab TDateTime, Date_SnabRe TDateTime
-              , Date_Remake TDateTime, Date_Econom TDateTime, Date_Buh TDateTime, Date_EconomIn TDateTime, Date_EconomOut TDateTime
+              , Date_Remake TDateTime, Date_Econom TDateTime, Date_Buh TDateTime, Date_EconomIn TDateTime, Date_EconomOut TDateTime, Date_inBuh TDateTime
               , Member_Snab TVarChar, Member_SnabRe TVarChar, Member_Remake TVarChar
-              , Member_Econom TVarChar, Member_Buh TVarChar, Member_EconomIn TVarChar, Member_EconomOut TVarChar
+              , Member_Econom TVarChar, Member_Buh TVarChar, Member_EconomIn TVarChar, Member_EconomOut TVarChar, Member_inBuh TVarChar
 
               , BarCode_Income TVarChar, OperDate_Income TDateTime, InvNumber_Income TVarChar
               , OperDatePartner TDateTime, InvNumberPartner TVarChar, StatusCode_Income Integer, StatusName_Income TVarChar
@@ -53,7 +53,8 @@ BEGIN
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_EconomIn()  THEN zc_MIDate_EconomIn()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_EconomOut() THEN zc_MIDate_EconomOut()
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn()   THEN zc_MIDate_PartnerIn()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MIDate_PartnerIn()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_inBuh()     THEN zc_MIDate_inBuh()
                              END AS DateDescId
                       );
      -- ŒÔÂ‰ÂÎˇÂÚÒˇ
@@ -64,7 +65,8 @@ BEGIN
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_EconomIn()  THEN zc_MILinkObject_EconomIn()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_EconomOut() THEN zc_MILinkObject_EconomOut()
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn()   THEN zc_MILinkObject_PartnerInTo()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MILinkObject_PartnerInTo()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_inBuh()     THEN zc_MILinkObject_inBuh()
                                  END AS MILinkObjectId
                       );
 
@@ -122,6 +124,7 @@ BEGIN
             , MIDate_Buh.ValueData                      AS Date_Buh
             , MIDate_EconomIn.ValueData                 AS Date_EconomIn
             , MIDate_EconomOut.ValueData                AS Date_EconomOut
+            , MIDate_inBuh.ValueData                    AS Date_inBuh
             
             , Object_Snab.ValueData                   AS Member_Snab
             , Object_SnabRe.ValueData                 AS Member_SnabRe
@@ -130,6 +133,7 @@ BEGIN
             , Object_Buh.ValueData                    AS Member_Buh
             , Object_EconomIn.ValueData               AS Member_EconomIn
             , Object_EconomOut.ValueData              AS Member_EconomOut
+            , Object_inBuh.ValueData                  AS Member_inBuh
 
             , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_Income.Id) AS BarCode_Income
             , Movement_Income.OperDate                    AS OperDate_Income
@@ -196,6 +200,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = MovementItem.Id
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
+            LEFT JOIN MovementItemDate AS MIDate_inBuh
+                                       ON MIDate_inBuh.MovementItemId = MovementItem.Id
+                                      AND MIDate_inBuh.DescId = zc_MIDate_inBuh()
 
             LEFT JOIN MovementItemDate AS MIDate_EconomIn
                                        ON MIDate_EconomIn.MovementItemId = MovementItem.Id
@@ -239,6 +246,10 @@ BEGIN
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_inBuh
+                                             ON MILinkObject_inBuh.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_inBuh.DescId = zc_MILinkObject_inBuh()
+            LEFT JOIN Object AS Object_inBuh ON Object_inBuh.Id = MILinkObject_inBuh.ObjectId
             --
             LEFT JOIN Movement AS Movement_Income ON Movement_Income.id = tmpMI.MovementId_Income  -- ‰ÓÍ. ÔÓ‰‡ÊË
             LEFT JOIN Object AS Object_Status_Income ON Object_Status_Income.Id = Movement_Income.StatusId
@@ -315,6 +326,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.02.25         *
  30.11.20         *
 */
 

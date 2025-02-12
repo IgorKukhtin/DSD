@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Date_Buh         TDateTime
              , Date_EconomIn    TDateTime
              , Date_EconomOut   TDateTime
+             , Date_inBuh       TDateTime
 
              , Member_Insert      TVarChar
              , Member_Snab        TVarChar
@@ -46,6 +47,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Member_Buh         TVarChar
              , Member_EconomIn    TVarChar
              , Member_EconomOut   TVarChar
+             , Member_inBuh       TVarChar
 
              , PersonalName            TVarChar
              , PersonalTradeName       TVarChar
@@ -140,6 +142,7 @@ BEGIN
            , MIDate_Buh.ValueData            AS Date_Buh
            , MIDate_EconomIn.ValueData       AS Date_EconomIn
            , MIDate_EconomOut.ValueData      AS Date_EconomOut
+           , MIDate_inBuh.ValueData          AS Date_inBuh
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
            , Object_Snab.ValueData         AS Member_Snab
@@ -149,6 +152,7 @@ BEGIN
            , Object_Buh.ValueData          AS Member_Buh
            , Object_EconomIn.ValueData     AS Member_EconomIn
            , Object_EconomOut.ValueData    AS Member_EconomOut
+           , Object_inBuh.ValueData        AS Member_inBuh
 
            , Object_Personal.ValueData           AS PersonalName
            , Object_PersonalTrade.ValueData      AS PersonalTradeName
@@ -227,6 +231,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_EconomOut
                                        ON MIDate_EconomOut.MovementItemId = MovementItem.Id
                                       AND MIDate_EconomOut.DescId = zc_MIDate_EconomOut()
+            LEFT JOIN MovementItemDate AS MIDate_inBuh
+                                       ON MIDate_inBuh.MovementItemId = MovementItem.Id
+                                      AND MIDate_inBuh.DescId = zc_MIDate_inBuh()
                                       
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Snab
                                              ON MILinkObject_Snab.MovementItemId = MovementItem.Id
@@ -262,6 +269,12 @@ BEGIN
                                              ON MILinkObject_EconomOut.MovementItemId = MovementItem.Id
                                             AND MILinkObject_EconomOut.DescId = zc_MILinkObject_EconomOut()
             LEFT JOIN Object AS Object_EconomOut ON Object_EconomOut.Id = MILinkObject_EconomOut.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_inBuh
+                                             ON MILinkObject_inBuh.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_inBuh.DescId = zc_MILinkObject_inBuh()
+            LEFT JOIN Object AS Object_inBuh ON Object_inBuh.Id = MILinkObject_inBuh.ObjectId
+
 
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id -- tmpMI.MovementItemId
@@ -357,6 +370,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.02.25         * inBuh
  30.11.20         *
 */
 

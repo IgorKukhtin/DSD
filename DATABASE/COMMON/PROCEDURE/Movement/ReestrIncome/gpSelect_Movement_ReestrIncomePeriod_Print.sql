@@ -63,6 +63,7 @@ BEGIN
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MIDate_Remake()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()    THEN zc_MIDate_Econom()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_inBuh()     THEN zc_MIDate_inBuh()
                              END AS DateDescId
                       );
      -- Определяется
@@ -73,6 +74,7 @@ BEGIN
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MILinkObject_Remake()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()    THEN zc_MILinkObject_Econom()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_inBuh()     THEN zc_MILinkObject_inBuh()
                                  END AS MILinkObjectId
                       );
 
@@ -137,7 +139,8 @@ BEGIN
                                                      , zc_MIDate_SnabRe()
                                                      , zc_MIDate_Remake()
                                                      , zc_MIDate_Buh()
-                                                     , zc_MIDate_Econom())
+                                                     , zc_MIDate_Econom()
+                                                     , zc_MIDate_inBuh())
                    )
 
      , tmpMILO AS (SELECT MovementItemLinkObject.*
@@ -149,7 +152,8 @@ BEGIN
                                                          , zc_MILinkObject_SnabRe()
                                                          , zc_MILinkObject_Remake()
                                                          , zc_MILinkObject_Buh()
-                                                         , zc_MILinkObject_Econom())
+                                                         , zc_MILinkObject_Econom()
+                                                         , zc_MILinkObject_inBuh())
                    )
 
      , tmpData AS
@@ -188,6 +192,7 @@ BEGIN
            , COALESCE (MIDate_Remake.ValueData, NULL) ::TDateTime         AS Date_Remake
            , COALESCE (MIDate_Econom.ValueData, NULL) ::TDateTime         AS Date_Econom
            , COALESCE (MIDate_Buh.ValueData, NULL) ::TDateTime            AS Date_Buh
+           , COALESCE (MIDate_inBuh.ValueData, NULL) ::TDateTime          AS Date_inBuh
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
            , Object_Snab.ValueData          AS Member_Snab
@@ -197,6 +202,7 @@ BEGIN
            , Object_Remake.ValueData         AS Member_Remake
            , Object_Econom.ValueData         AS Member_Econom
            , Object_Buh.ValueData            AS Member_Buh
+           , Object_inBuh.ValueData          AS Member_inBuh
 
        FROM tmpMI
             LEFT JOIN Object AS Object_ObjectMember ON Object_ObjectMember.Id = tmpMI.MemberId
@@ -213,6 +219,9 @@ BEGIN
             LEFT JOIN tmpMIDate AS MIDate_Buh
                                 ON MIDate_Buh.MovementItemId = tmpMI.MovementItemId
                                AND MIDate_Buh.DescId = zc_MIDate_Buh()
+            LEFT JOIN tmpMIDate AS MIDate_inBuh
+                                ON MIDate_inBuh.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_inBuh.DescId = zc_MIDate_inBuh()
             LEFT JOIN tmpMIDate AS MIDate_Snab
                                 ON MIDate_Snab.MovementItemId = tmpMI.MovementItemId
                                AND MIDate_Snab.DescId = zc_MIDate_Snab()
@@ -260,6 +269,11 @@ BEGIN
                               ON MILinkObject_Buh.MovementItemId = tmpMI.MovementItemId
                              AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
+
+            LEFT JOIN tmpMILO AS MILinkObject_inBuh
+                              ON MILinkObject_inBuh.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_inBuh.DescId = zc_MILinkObject_inBuh()
+            LEFT JOIN Object AS Object_inBuh ON Object_inBuh.Id = MILinkObject_inBuh.ObjectId
             --
             LEFT JOIN Movement AS Movement_Income ON Movement_Income.id = tmpMI.MovementId_Income
 
@@ -333,6 +347,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.02.25         *
  02.12.20         *
  22.07.20         *
  24.01.18         *
