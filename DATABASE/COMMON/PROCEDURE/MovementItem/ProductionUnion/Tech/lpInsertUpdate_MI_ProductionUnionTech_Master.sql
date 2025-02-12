@@ -68,6 +68,8 @@ BEGIN
 
    -- закріть доступ корректировки взвешиваний после массажера и  после шприцевания определенным лицам: Гриневич Е. + Пронько Л.
    IF inUserId IN (9031170, 954882)
+      -- Ограничение 7 дней пр-во (Гриневич)
+      OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  AS UserRole_View WHERE UserRole_View.UserId = inUserId AND UserRole_View.RoleId = 11841068)
    THEN
        IF inRealWeightMsg <> COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_RealWeightMsg()), 0)
        THEN

@@ -60,6 +60,8 @@ BEGIN
 
   -- Проверка - Гриневич К.А.
   IF inUserId IN (9031170) OR vbDescId = zc_Movement_Cash()
+     -- Ограничение 7 дней пр-во (Гриневич)
+     OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  AS UserRole_View WHERE UserRole_View.UserId = inUserId AND UserRole_View.RoleId = 11841068)
   THEN
       PERFORM lpCheckPeriodClose_local (vbOperDate, inMovementId, vbDescId, inUserId);
   END IF;
