@@ -27,7 +27,11 @@ BEGIN
 
 
      -- Гриневич К.А.
-     IF inUserId IN (9031170) AND inOperDate < CURRENT_DATE - INTERVAL '7 DAY'
+     IF (inUserId IN (9031170)
+        -- Ограничение 7 дней пр-во (Гриневич)
+        OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  AS UserRole_View WHERE UserRole_View.UserId = inUserId AND UserRole_View.RoleId = 11841068)
+        )
+        AND inOperDate < CURRENT_DATE - INTERVAL '7 DAY'
      THEN
          RAISE EXCEPTION 'Ошибка.Дата документа = <%>.Разрешено корректировать документы с <%>.'
                        , zfConvert_DateToString (inOperDate)
