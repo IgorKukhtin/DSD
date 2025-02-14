@@ -73,6 +73,13 @@ BEGIN
        -- сохранили связь с <кто сформировал визу "Бухгалтерия">
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), inId, Null);
     END IF;
+
+    IF inReestrKindId = zc_Enum_ReestrKind_inBuh() THEN 
+       -- сохранили <когда сформирована виза "Бухгалтерия в работе">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_inBuh(), inId, Null);
+       -- сохранили связь с <кто сформировал визу "Бухгалтерия в работе">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_inBuh(), inId, Null);
+    END IF;
     
     -- Находим предыдущее значение <Состояние по реестру> документа продажи
     vbReestrKindId := (SELECT CASE WHEN tmp.DescId = zc_MIDate_EconomIn()    THEN zc_Enum_ReestrKind_EconomIn()
@@ -82,12 +89,13 @@ BEGIN
                                    WHEN tmp.DescId = zc_MIDate_Remake()      THEN zc_Enum_ReestrKind_Remake()
                                    WHEN tmp.DescId = zc_MIDate_Econom()      THEN zc_Enum_ReestrKind_Econom()
                                    WHEN tmp.DescId = zc_MIDate_Buh()         THEN zc_Enum_ReestrKind_Buh()
+                                   WHEN tmp.DescId = zc_MIDate_inBuh()       THEN zc_Enum_ReestrKind_inBuh()
                               END 
                        FROM (SELECT ROW_NUMBER() OVER(ORDER BY MID.ValueData desc) AS Num, MID.DescId 
                              FROM MovementItemDate AS MID
                              WHERE MID.MovementItemId = inId
                                AND MID.DescId IN (zc_MIDate_EconomIn(), zc_MIDate_EconomOut(), zc_MIDate_Snab(), zc_MIDate_SnabRe(), zc_MIDate_Econom()
-                                                , zc_MIDate_Remake(), zc_MIDate_Buh())
+                                                , zc_MIDate_Remake(), zc_MIDate_inBuh(), zc_MIDate_Buh())
                                AND MID.ValueData IS NOT NULL
                        ) AS tmp
                        WHERE tmp.Num = 1);
@@ -106,6 +114,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.02.25         *
  02.12.20         * ReestrIncome
  17.11.20         * _Log
  20.07.17         *

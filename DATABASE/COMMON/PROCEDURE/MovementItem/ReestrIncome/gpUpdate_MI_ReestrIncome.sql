@@ -116,6 +116,7 @@ BEGIN
                                                                                                    , zc_MILinkObject_Remake() -- <Документ исправлен>
                                                                                                    , zc_MILinkObject_Econom()
                                                                                                    , zc_MILinkObject_Buh()
+                                                                                                   , zc_MILinkObject_inBuh()
                                                                                                     )
                                       WHERE Movement.OperDate = CURRENT_DATE
                                         AND Movement.DescId = zc_Movement_ReestrIncome()
@@ -125,7 +126,8 @@ BEGIN
                                                                      WHEN zc_MILinkObject_Snab()      THEN 3
                                                                      WHEN zc_MILinkObject_Remake()    THEN 4
                                                                      WHEN zc_MILinkObject_Econom()    THEN 5
-                                                                     WHEN zc_MILinkObject_Buh()       THEN 6
+                                                                     WHEN zc_MILinkObject_inBuh()     THEN 6
+                                                                     WHEN zc_MILinkObject_Buh()       THEN 7
                                                     ELSE 101
                                                END
                                              , Movement.Id
@@ -211,6 +213,15 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), vbId_mi, vbMemberId_user);
     END IF;
 
+    -- <Бухгалтерия в работе>
+    IF inReestrKindId = zc_Enum_ReestrKind_inBuh()
+    THEN 
+       -- сохранили <когда сформирована виза>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Buh(), vbId_mi, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), vbId_mi, vbMemberId_user);
+    END IF;
+
     -- <Снабжение (в работе)>
     IF inReestrKindId = zc_Enum_ReestrKind_Snab()
     THEN 
@@ -249,6 +260,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+12.02.25          *
 02.12.20          *
 */
 
