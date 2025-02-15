@@ -30,13 +30,21 @@ BEGIN
 
 
      CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE tmpChildReceiptTable (ReceiptId_parent Integer, ReceiptId_from Integer, ReceiptId Integer, GoodsId_in Integer, GoodsKindId_in Integer, Amount_in TFloat
-                                           , ReceiptId_calc Integer, Amount_in_calc TFloat, Amount_in_calc_two TFloat, Amount_out_calc TFloat
-                                           , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, Amount_out_start TFloat, isStart Integer, isCost Boolean
-                                           , Price1 TFloat, Price2 TFloat, Price3 TFloat
-                                           , Price1_calc TFloat, Price2_calc TFloat, Price3_calc TFloat
-                                           , Koeff1_bon TFloat, Koeff2_bon TFloat, Koeff3_bon TFloat, Price1_bon TFloat, Price2_bon TFloat, Price3_bon TFloat
-                                            ) ON COMMIT DROP;
+
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpChildReceiptTable')
+     THEN
+         DELETE FROM tmpChildReceiptTable;
+     ELSE
+         CREATE TEMP TABLE tmpChildReceiptTable (ReceiptId_parent Integer, ReceiptId_from Integer, ReceiptId Integer, GoodsId_in Integer, GoodsKindId_in Integer, Amount_in TFloat
+                                               , ReceiptId_calc Integer, Amount_in_calc TFloat, Amount_in_calc_two TFloat, Amount_out_calc TFloat
+                                               , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, Amount_out_start TFloat, isStart Integer, isCost Boolean
+                                               , Price1 TFloat, Price2 TFloat, Price3 TFloat
+                                               , Price1_calc TFloat, Price2_calc TFloat, Price3_calc TFloat
+                                               , Koeff1_bon TFloat, Koeff2_bon TFloat, Koeff3_bon TFloat, Price1_bon TFloat, Price2_bon TFloat, Price3_bon TFloat
+                                                ) ON COMMIT DROP;
+     END IF;
+
+
    -- Ограничения по товару
    IF COALESCE( inGoodsId,0) <> 0
     THEN
@@ -518,6 +526,7 @@ BEGIN
                                       ON ObjectLink_Receipt_GoodsKind_complete.ObjectId = tmp.ReceiptId
                                      AND ObjectLink_Receipt_GoodsKind_complete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
                  INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = ObjectLink_Receipt_Goods.ChildObjectId
+
             GROUP BY tmp.ReceiptId_parent
                    , tmp.ReceiptId
                    , tmp.ReceiptId_calc
