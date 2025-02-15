@@ -49,6 +49,8 @@ type
     isOut: TcxGridDBColumn;
     isReal: TcxGridDBColumn;
     isOperDate: TcxGridDBColumn;
+    cbGoods: TcxCheckBox;
+    actRefreshGoods: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

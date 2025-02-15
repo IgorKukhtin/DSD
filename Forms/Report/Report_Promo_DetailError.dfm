@@ -1,258 +1,80 @@
 inherited Report_Promo_DetailErrorForm: TReport_Promo_DetailErrorForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1040#1082#1094#1080#1103#1084' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1060#1072#1082#1090#1072' '#1087#1088#1086#1076#1072#1078'>'
-  ClientHeight = 380
-  ClientWidth = 588
+  ClientHeight = 347
+  ClientWidth = 776
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 604
-  ExplicitHeight = 419
+  ExplicitWidth = 792
+  ExplicitHeight = 386
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 56
-    Width = 588
-    Height = 324
+    Width = 776
+    Height = 291
     TabOrder = 3
     ExplicitTop = 56
-    ExplicitWidth = 588
+    ExplicitWidth = 776
     ExplicitHeight = 324
-    ClientRectBottom = 324
-    ClientRectRight = 588
+    ClientRectBottom = 291
+    ClientRectRight = 776
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 588
+      ExplicitWidth = 776
       ExplicitHeight = 324
       inherited cxGrid: TcxGrid
-        Width = 588
-        Height = 324
-        ExplicitWidth = 588
-        ExplicitHeight = 324
+        Width = 776
+        Height = 291
+        ExplicitLeft = 16
+        ExplicitTop = -20
+        ExplicitWidth = 776
+        ExplicitHeight = 291
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountRealWeight_det
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountRealWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountOutWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = AmountOutWeight_det
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountRealWeight_det
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountOutWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = #1057#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = AmountOutWeight_det
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = InvNumber
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealWeight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -312,14 +134,116 @@ inherited Report_Promo_DetailErrorForm: TReport_Promo_DetailErrorForm
             HeaderHint = #1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' '#1087#1086#1089#1083#1077' '#1076#1072#1090#1099' '#1086#1090#1075#1088#1091#1079#1082#1080
             Width = 121
           end
+          object GoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object GoodsName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 252
+          end
+          object GoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1072#1082#1094#1080#1080')'
+            Options.Editing = False
+            Width = 90
+          end
+          object GoodsKindCompleteName: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'GoodsKindCompleteName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+            Options.Editing = False
+            Width = 85
+          end
+          object GoodsWeight: TcxGridDBColumn
+            Caption = #1042#1077#1089
+            DataBinding.FieldName = 'GoodsWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
+          end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
+          object AmountRealWeight: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076', '#1074#1077#1089
+            DataBinding.FieldName = 'AmountRealWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1074#1077#1089' ('#1080#1090#1086#1075#1086')'
+            Options.Editing = False
+            Width = 104
+          end
+          object AmountRealWeight_det: TcxGridDBColumn
+            Caption = '*'#1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076', '#1074#1077#1089
+            DataBinding.FieldName = 'AmountRealWeight_det'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076', '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+            Options.Editing = False
+            Width = 104
+          end
+          object AmountOutWeight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090'), '#1074#1077#1089
+            DataBinding.FieldName = 'AmountOutWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1074#1077#1089' ('#1080#1090#1086#1075#1086')'
+            Options.Editing = False
+            Width = 104
+          end
+          object AmountOutWeight_det: TcxGridDBColumn
+            Caption = '*'#1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090'), '#1074#1077#1089
+            DataBinding.FieldName = 'AmountOutWeight_det'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1086' '#1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090'), '#1084#1077#1089#1103#1094#1072#1084
+            Options.Editing = False
+            Width = 104
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 588
+    Width = 776
     Height = 30
-    ExplicitWidth = 588
+    ExplicitWidth = 776
     ExplicitHeight = 30
     inherited deStart: TcxDateEdit
       Left = 118
@@ -340,6 +264,14 @@ inherited Report_Promo_DetailErrorForm: TReport_Promo_DetailErrorForm
     inherited cxLabel2: TcxLabel
       Left = 220
       ExplicitLeft = 220
+    end
+    object cbGoods: TcxCheckBox
+      Left = 443
+      Top = 6
+      Action = actRefreshGoods
+      Caption = #1087#1086' '#1090#1086#1074#1072#1088#1072#1084
+      TabOrder = 4
+      Width = 94
     end
   end
   inherited ActionList: TActionList
@@ -593,6 +525,20 @@ inherited Report_Promo_DetailErrorForm: TReport_Promo_DetailErrorForm
       Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
       ImageIndex = 38
     end
+    object actRefreshGoods: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -618,6 +564,14 @@ inherited Report_Promo_DetailErrorForm: TReport_Promo_DetailErrorForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoods'
+        Value = False
+        Component = cbGoods
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

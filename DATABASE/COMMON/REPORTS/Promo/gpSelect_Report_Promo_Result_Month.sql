@@ -530,7 +530,7 @@ BEGIN
                                               ON tmpMI_SaleReturn1.MovementId_promo = MI_PromoGoods.MovementId
                                              AND tmpMI_SaleReturn1.GoodsId = MI_PromoGoods.GoodsId
                                              AND tmpMI_SaleReturn1.Month_Partner BETWEEN tmpDate_list.OperDate_start AND tmpDate_list.OperDate_end 
-                                             AND (COALESCE (tmpMI_SaleReturn1.GoodsKindId,0) = COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) AND COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) <> 0 )
+                                             AND (COALESCE (tmpMI_SaleReturn1.GoodsKindId,0) = COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) AND COALESCE (MI_PromoGoods.GoodsKindCompleteId,0) <> 0 AND COALESCE (MI_PromoGoods.GoodsKindId,0) = 0)
                                              --AND (COALESCE (tmpMI_SaleReturn.GoodsKindId,0) =  COALESCE (MI_PromoGoods.GoodsKindId_find,0)
                                              --     OR COALESCE (MI_PromoGoods.GoodsKindId_find,0) = 0)
                                              AND inIsReal = TRUE
