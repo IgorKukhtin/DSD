@@ -102,7 +102,8 @@ BEGIN
                     INNER JOIN MovementItem ON MovementItem.Id = tmp.MovementItemId
                                            AND MovementItem.isErased = FALSE
                     INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                                       AND Movement.StatusId = zc_Enum_Status_Complete()                   
+                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                                       AND Movement.DescId = zc_Movement_Send()                   
                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
