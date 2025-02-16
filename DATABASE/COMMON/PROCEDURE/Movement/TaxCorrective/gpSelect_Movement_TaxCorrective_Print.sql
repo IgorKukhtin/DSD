@@ -1230,12 +1230,12 @@ BEGIN
                        THEN '1601009900'
 
                   WHEN tmpGoods.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
-                       THEN '1601'
+                       THEN '' -- '1601'
                   WHEN tmpGoods.InfoMoneyId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())
-                       THEN '1602'
+                       THEN '' -- '1602'
                   WHEN tmpGoods.InfoMoneyId = zc_Enum_InfoMoney_30103()
-                       THEN '1905'
-                  ELSE '0'
+                       THEN '' -- '1905'
+                  ELSE '' -- '0'
               END :: TVarChar AS GoodsCodeUKTZED
 
            , CASE WHEN tmpMI.OperDate < '01.01.2017' THEN ''

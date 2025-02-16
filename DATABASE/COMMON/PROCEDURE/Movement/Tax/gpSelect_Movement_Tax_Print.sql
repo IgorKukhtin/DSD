@@ -992,12 +992,12 @@ order by 4*/
                        THEN '1601009900'
 
                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
-                       THEN '1601'
+                       THEN '' -- '1601'
                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())
-                       THEN '1602'
+                       THEN '' -- '1602'
                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30103()
-                       THEN '1905'
-                  ELSE '0'
+                       THEN '' -- '1905'
+                  ELSE '' -- '0'
               END :: TVarChar AS GoodsCodeUKTZED
 
            , CASE WHEN Movement.OperDate < '01.03.2017' THEN ''
