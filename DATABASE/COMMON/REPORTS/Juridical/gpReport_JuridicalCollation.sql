@@ -73,6 +73,14 @@ BEGIN
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
+
+     -- !!!Опришко Н.М.!!!
+     IF vbUserId = 11117426 AND COALESCE (inJuridicalId, 0) <> 15021 -- ЕКСПЕРТ-АГРОТРЕЙД ТОВ
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав для отчета по Юр.Лицу <%>.', lfGet_Object_ValueData_sh (inJuridicalId);
+     END IF;
+
+
      -- Разрешен просмотр долги Маркетинг - НАЛ
      vbIsInfoMoneyDestination_21500:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = vbUserId AND tmp.RoleId = 8852398)
                                    OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = vbUserId AND tmp.RoleId = 2) -- Роль администратора

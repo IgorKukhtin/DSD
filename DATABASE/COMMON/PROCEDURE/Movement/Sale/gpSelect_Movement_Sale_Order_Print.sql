@@ -7,8 +7,8 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Order_Print (Integer, Integer, Bo
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Order_Print(
     IN inMovementId                 Integer  , -- ключ Документа Заявки
     IN inMovementId_Weighing        Integer  , -- ключ Документа взвешивания
-    IN inIsDiff                     Boolean  , --
-    IN inIsDiffTax                  Boolean  , --
+    IN inIsDiff                     Boolean  , -- если надо меньше заявки
+    IN inIsDiffTax                  Boolean  , -- если надо там где разница с заявкой больше чем разрешенный %
     IN inSession                    TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -24,6 +24,7 @@ $BODY$
     DECLARE vbFromId_group      Integer;
     DECLARE vbToId              Integer;
     DECLARE vbDiffTax           TFloat;
+    DECLARE vbIsDiffTax_10      Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -66,6 +67,19 @@ BEGIN
        ;
      -- 
      ANALYZE _tmpListMovement;
+     
+     
+     -- если это для Кишени
+     vbIsDiffTax_10:= EXISTS (SELECT 1
+                              FROM _tmpListMovement
+                                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                         ON ObjectLink_Partner_Juridical.ObjectId = _tmpListMovement.ToId
+                                                        AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                   INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                         ON ObjectLink_Juridical_Retail.ObjectId      = ObjectLink_Partner_Juridical.ChildObjectId
+                                                        AND ObjectLink_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
+                                                        AND ObjectLink_Juridical_Retail.ChildObjectId = 310846 
+                             );
 
      -- параметры из документа - inMovementId_Weighing
      IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_order AND Movement.DescId = zc_Movement_OrderInternal())
@@ -434,11 +448,53 @@ BEGIN
             , tmpResult1.CountDiff_B
             , tmpResult1.CountDiff_M
 
-            , CASE WHEN tmpResult1.CountDiff_B > 0.1 AND vbUserId=5 AND 1=0 THEN 25 WHEN tmpResult1.Amount_Order > 0 THEN tmpResult1.CountDiff_B / tmpResult1.Amount_Order * 100 WHEN tmpResult1.CountDiff_B <> 0 THEN 100 ELSE 0 END  :: TFloat AS CountDiff_B_tax
+            , CASE WHEN tmpResult1.CountDiff_B > 0.1 AND vbUserId=5 AND 1=0
+                        THEN 25
+                   WHEN tmpResult1.Amount_Order > 0
+                        THEN tmpResult1.CountDiff_B / tmpResult1.Amount_Order * 100
+                   WHEN tmpResult1.CountDiff_B <> 0
+                        THEN 100
+                   ELSE 0
+              END  :: TFloat AS CountDiff_B_tax
+              
+            , CASE WHEN EXISTS (SELECT 1 FROM _tmpListMovement WHERE _tmpListMovement.FromId = zc_Unit_RK())
+                    AND vbIsDiffTax_10 = TRUE
+                        -- CountDiff_B_tax
+                    AND 9.99 < CASE WHEN tmpResult1.Amount_Order > 0
+                                         THEN tmpResult1.CountDiff_B / tmpResult1.Amount_Order * 100
+                                    WHEN tmpResult1.CountDiff_B <> 0
+                                         THEN 100
+                                    ELSE 0
+                               END  :: TFloat
+                        THEN TRUE
+                        
+                   WHEN EXISTS (SELECT 1 FROM _tmpListMovement WHERE _tmpListMovement.FromId = zc_Unit_RK())
+                        -- CountDiff_B_tax
+                    AND 19.99 < CASE WHEN tmpResult1.Amount_Order > 0
+                                          THEN tmpResult1.CountDiff_B / tmpResult1.Amount_Order * 100
+                                     WHEN tmpResult1.CountDiff_B <> 0
+                                          THEN 100
+                                     ELSE 0
+                                END  :: TFloat
+                        THEN TRUE
+                        
+                   WHEN -- CountDiff_B_tax
+                        19.99 < CASE WHEN tmpResult1.Amount_Order > 0
+                                          THEN tmpResult1.CountDiff_B / tmpResult1.Amount_Order * 100
+                                     WHEN tmpResult1.CountDiff_B <> 0
+                                          THEN 100
+                                     ELSE 0
+                                END  :: TFloat
+                        THEN TRUE
+
+                   ELSE FALSE
+              END :: Boolean AS Color_where_Yellow
 
             , tmpResult1.WeightDiff_B
             , tmpResult1.WeightDiff_M
+
        FROM (SELECT tmpResult1.GoodsId
+
                   , tmpResult1.GoodsKindId
                   , tmpResult1.MeasureName
       
@@ -469,12 +525,14 @@ BEGIN
                   , tmpResult1.AmountSecond_Order_Sh
                   , tmpResult1.AmountSecond_Order_Weight
       
+                    -- Больше чем заказ
                   , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
                             - (tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret) > 0
                          THEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
                             - (tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret)
                          ELSE 0
                     END AS CountDiff_B
+                    -- Меньше чем заказ
                   , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
                             - (tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret) < 0
                          THEN -1 * (tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
@@ -482,12 +540,15 @@ BEGIN
                          ELSE 0
                     END AS CountDiff_M
       
+                    -- Больше чем заказ
                   , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
                             - (tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret) > 0
                          THEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
                             - (tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret)
                          ELSE 0
                     END AS WeightDiff_B
+
+                    -- Меньше чем заказ
                   , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
                             - (tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret) < 0
                          THEN -1 * (tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
@@ -495,8 +556,9 @@ BEGIN
                          ELSE 0
                     END AS WeightDiff_M
 
-                   --кол-во заказа по % откл.
+                    -- кол-во заказа по % откл.
                   , ((COALESCE (tmpResult1.Amount_Order,0) + COALESCE (tmpResult1.AmountSecond_Order,0)) * vbDiffTax / 100) AS AmountTax
+
              FROM ( SELECT tmpResult.GoodsId
                          , tmpResult.GoodsKindId
       
@@ -562,7 +624,9 @@ BEGIN
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
         WHERE (inIsDiff = FALSE OR (tmpResult1.Amount + tmpResult1.Amount_Weighing) < (tmpResult1.Amount_Order + tmpResult1.AmountSecond_Order))
-          AND (inIsDiffTax = FALSE OR ((tmpResult1.AmountTax <= CountDiff_B AND CountDiff_B <> 0)
+          AND (inIsDiffTax = FALSE OR (-- или значение Больше чем заказ больше чем разрешенный %
+                                       (tmpResult1.AmountTax <= CountDiff_B AND CountDiff_B <> 0)
+                                       -- значение Меньше чем заказ больше чем разрешенный %
                                     OR (tmpResult1.AmountTax <= CountDiff_M AND CountDiff_M <> 0)
                                       ))
       ;
@@ -581,5 +645,4 @@ $BODY$
  09.07.15         *
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Order_Print (inMovementId := 597300,  inMovementId_Weighing:= 0, inIsDiff:= TRUE,  inSession:= zfCalc_UserAdmin());
--- SELECT * from gpSelect_Movement_Sale_Order_Print (inMovementId := 1815949, inMovementId_Weighing:= 0, inIsDiff:= FALSE, inSession := zfCalc_UserAdmin());
+-- SELECT * from gpSelect_Movement_Sale_Order_Print (inMovementId := 30491887, inMovementId_Weighing:= 0, inIsDiff:= FALSE, inIsDiffTax:= FALSE, inSession := zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
