@@ -49,14 +49,14 @@ object BoxForm: TBoxForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 37
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 243
+        Width = 166
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -67,6 +67,16 @@ object BoxForm: TBoxForm
         HeaderAlignmentVert = vaCenter
         Width = 78
       end
+      object NPP: TcxGridDBColumn
+        Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'NPP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 59
+      end
       object BoxVolume: TcxGridDBColumn
         Caption = #1054#1073#1098#1077#1084', '#1084'3.'
         DataBinding.FieldName = 'BoxVolume'
@@ -75,7 +85,7 @@ object BoxForm: TBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 70
+        Width = 47
       end
       object BoxWeight: TcxGridDBColumn
         Caption = #1042#1077#1089' '#1103#1097#1080#1082#1072
@@ -85,7 +95,7 @@ object BoxForm: TBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 70
+        Width = 48
       end
       object BoxHeight: TcxGridDBColumn
         Caption = #1042#1099#1089#1086#1090#1072
@@ -96,7 +106,7 @@ object BoxForm: TBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 47
       end
       object BoxLength: TcxGridDBColumn
         Caption = #1044#1083#1080#1085#1072
@@ -107,7 +117,7 @@ object BoxForm: TBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 48
       end
       object BoxWidth: TcxGridDBColumn
         Caption = #1064#1080#1088#1080#1085#1072
@@ -118,7 +128,7 @@ object BoxForm: TBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 36
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -459,10 +469,14 @@ object BoxForm: TBoxForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 136
     Top = 224
   end
