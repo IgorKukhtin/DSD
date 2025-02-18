@@ -107,7 +107,8 @@ BEGIN
            , MIFloat_CountTare2.ValueData   ::TFloat AS CountTare2
            , MIFloat_CountTare3.ValueData   ::TFloat AS CountTare3
            , MIFloat_CountTare4.ValueData   ::TFloat AS CountTare4
-           , MIFloat_CountTare5.ValueData   ::TFloat AS CountTare5 
+           , MIFloat_CountTare5.ValueData   ::TFloat AS CountTare5
+           , MIFloat_PartionNum.ValueData   ::TFloat AS PartionGoods 
            
            , Object_Box1.Id                   AS BoxId_1
            , Object_Box1.ValueData ::TVarChar AS BoxName_1
@@ -120,6 +121,7 @@ BEGIN
            , Object_Box5.Id                   AS BoxId_5
            , Object_Box5.ValueData ::TVarChar AS BoxName_5
 
+           
            , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -204,6 +206,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountTare5
                                         ON MIFloat_CountTare5.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountTare5.DescId = zc_MIFloat_CountTare5()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionNum
+                                        ON MIFloat_PartionNum.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionNum.DescId = zc_MIFloat_PartionNum()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId = MovementItem.Id
@@ -295,8 +301,10 @@ BEGIN
                                             AND MILinkObject_Box5.DescId = zc_MILinkObject_Box5()
             LEFT JOIN Object AS Object_Box5 ON Object_Box5.Id = MILinkObject_Box5.ObjectId
 
-
-
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell
+                                             ON MILinkObject_PartionCell.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PartionCell.DescId = zc_MILinkObject_PartionCell()
+            LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
 ;
 
 END;

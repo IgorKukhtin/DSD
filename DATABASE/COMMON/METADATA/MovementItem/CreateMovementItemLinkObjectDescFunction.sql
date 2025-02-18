@@ -571,6 +571,11 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_22() RETURNS Integer AS $
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_PartionCell_22', 'Ячейка-22' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_22');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_PartionCell', 'Ячейка хранения' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell');
+
+
 /*
 -- !!!delete!!!  
 CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_real_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_real_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

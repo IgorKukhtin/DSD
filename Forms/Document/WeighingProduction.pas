@@ -272,6 +272,8 @@ type
     bbUpdateBox: TdxBarButton;
     actRefreshMI: TdsdDataSetRefresh;
     macUpdateBox: TMultiAction;
+    PartionCellName: TcxGridDBColumn;
+    PartionNum: TcxGridDBColumn;
   private
   public
   end;
