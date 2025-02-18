@@ -355,8 +355,6 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 451
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -3
-        ExplicitTop = -3
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -431,6 +429,31 @@ object WeighingProductionForm: TWeighingProductionForm
               Format = ',0.####'
               Kind = skSum
               Column = WeightOther
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountTare1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountTare2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountTare3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountTare4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountTare5
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -502,6 +525,31 @@ object WeighingProductionForm: TWeighingProductionForm
               Format = ',0.####'
               Kind = skSum
               Column = WeightOther
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountTare1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountTare2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountTare3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountTare4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountTare5
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -802,6 +850,101 @@ object WeighingProductionForm: TWeighingProductionForm
             HeaderHint = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080'-2'
             Options.Editing = False
             Width = 80
+          end
+          object BoxName_1: TcxGridDBColumn
+            Caption = #1058#1072#1088#1072'-1'
+            DataBinding.FieldName = 'BoxName_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object BoxName_2: TcxGridDBColumn
+            Caption = #1058#1072#1088#1072'-2'
+            DataBinding.FieldName = 'BoxName_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object BoxName_3: TcxGridDBColumn
+            Caption = #1058#1072#1088#1072'-3'
+            DataBinding.FieldName = 'BoxName_3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object BoxName_4: TcxGridDBColumn
+            Caption = #1058#1072#1088#1072'-4'
+            DataBinding.FieldName = 'BoxName_4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object BoxName_5: TcxGridDBColumn
+            Caption = #1058#1072#1088#1072'-5'
+            DataBinding.FieldName = 'BoxName_5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object CountTare1: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076#1072' 1'
+            DataBinding.FieldName = 'CountTare1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object CountTare2: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076#1072' 2'
+            DataBinding.FieldName = 'CountTare2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object CountTare3: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076#1072' 3'
+            DataBinding.FieldName = 'CountTare3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object CountTare4: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076#1072' 4'
+            DataBinding.FieldName = 'CountTare4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object CountTare5: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076#1072' 5'
+            DataBinding.FieldName = 'CountTare5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -1874,6 +2017,10 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateBox'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -2020,6 +2167,10 @@ object WeighingProductionForm: TWeighingProductionForm
       Action = MIProtocolOpenFormCell
       Category = 0
     end
+    object bbUpdateBox: TdxBarButton
+      Action = macUpdateBox
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2101,6 +2252,19 @@ object WeighingProductionForm: TWeighingProductionForm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
+    end
+    object actRefreshMI: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2568,6 +2732,43 @@ object WeighingProductionForm: TWeighingProductionForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1075#1083'. '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1075#1083#1072#1074#1085#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 28
+    end
+    object actUpdateBox: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1090#1072#1088#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1090#1072#1088#1099
+      ImageIndex = 69
+      FormName = 'TWeighingProductionBoxEditForm'
+      FormNameParam.Value = 'TWeighingProductionBoxEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateBox: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateBox
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1090#1072#1088#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1090#1072#1088#1099
+      ImageIndex = 69
     end
   end
   object MasterDS: TDataSource

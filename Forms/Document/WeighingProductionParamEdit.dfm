@@ -123,8 +123,8 @@ object WeighingProductionParamEditForm: TWeighingProductionParamEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 15
-    Top = 58
+    Left = 31
+    Top = 50
   end
   object GuidesBarCodeBox: TdsdGuides
     KeyField = 'Id'
@@ -167,7 +167,7 @@ object WeighingProductionParamEditForm: TWeighingProductionParamEditForm
       end
       item
         Name = 'MasterOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'MasterOperDate'
         DataType = ftDateTime

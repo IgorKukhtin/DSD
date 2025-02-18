@@ -268,6 +268,10 @@ type
     cxGridLevel_PartionCell: TcxGridLevel;
     MIProtocolOpenFormCell: TdsdOpenForm;
     bbMIProtocolOpenFormCell: TdxBarButton;
+    actUpdateBox: TExecuteDialog;
+    bbUpdateBox: TdxBarButton;
+    actRefreshMI: TdsdDataSetRefresh;
+    macUpdateBox: TMultiAction;
   private
   public
   end;
