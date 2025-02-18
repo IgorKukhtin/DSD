@@ -2096,6 +2096,14 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           Visible = True
+          ItemName = 'bbSelectMIPrintPassport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -2192,6 +2200,10 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object bbUpdateBox: TdxBarButton
       Action = macUpdateBox
+      Category = 0
+    end
+    object bbSelectMIPrintPassport: TdxBarButton
+      Action = actSelectMIPrintPassport
       Category = 0
     end
   end
@@ -2670,6 +2682,38 @@ object WeighingProductionForm: TWeighingProductionForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actSelectMIPrintPassport: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMIPrintPassport
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIPrintPassport
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1072#1089#1087#1086#1088#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1055#1072#1089#1087#1086#1088#1090#1072
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMI_WeighingProductionPassport'
+      ReportNameParam.Value = 'PrintMI_WeighingProductionPassport'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrintBarCode: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -2832,8 +2876,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 408
-    Top = 112
+    Left = 360
+    Top = 80
   end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -3618,8 +3662,8 @@ object WeighingProductionForm: TWeighingProductionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 879
-    Top = 192
+    Left = 903
+    Top = 344
   end
   object OrderChoiceGuides: TdsdGuides
     KeyField = 'Id'
@@ -3828,5 +3872,34 @@ object WeighingProductionForm: TWeighingProductionForm
     PackSize = 1
     Left = 1032
     Top = 280
+  end
+  object spSelectMIPrintPassport: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_WeighingProduction_PrintPassport'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 903
+    Top = 432
   end
 end

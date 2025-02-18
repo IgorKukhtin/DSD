@@ -274,6 +274,9 @@ type
     macUpdateBox: TMultiAction;
     PartionCellName: TcxGridDBColumn;
     PartionNum: TcxGridDBColumn;
+    actSelectMIPrintPassport: TdsdPrintAction;
+    spSelectMIPrintPassport: TdsdStoredProc;
+    bbSelectMIPrintPassport: TdxBarButton;
   private
   public
   end;

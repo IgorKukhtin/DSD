@@ -29,7 +29,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , KVK TVarChar
              , AssetName TVarChar, AssetName_two TVarChar
              , CountTare1 TFloat, CountTare2 TFloat, CountTare3 TFloat, CountTare4 TFloat, CountTare5 TFloat
+             , PartionNum TFloat
              , BoxId_1 Integer, BoxName_1 TVarChar, BoxId_2 Integer, BoxName_2 TVarChar, BoxId_3 Integer, BoxName_3 TVarChar, BoxId_4 Integer, BoxName_4 TVarChar, BoxId_5 Integer, BoxName_5 TVarChar
+             , PartionCellId Integer, PartionCellName TVarChar
              , isErased Boolean
               )
 AS
@@ -108,7 +110,7 @@ BEGIN
            , MIFloat_CountTare3.ValueData   ::TFloat AS CountTare3
            , MIFloat_CountTare4.ValueData   ::TFloat AS CountTare4
            , MIFloat_CountTare5.ValueData   ::TFloat AS CountTare5
-           , MIFloat_PartionNum.ValueData   ::TFloat AS PartionGoods 
+           , MIFloat_PartionNum.ValueData   ::TFloat AS PartionNum 
            
            , Object_Box1.Id                   AS BoxId_1
            , Object_Box1.ValueData ::TVarChar AS BoxName_1
@@ -119,8 +121,10 @@ BEGIN
            , Object_Box4.Id                   AS BoxId_4
            , Object_Box4.ValueData ::TVarChar AS BoxName_4
            , Object_Box5.Id                   AS BoxId_5
-           , Object_Box5.ValueData ::TVarChar AS BoxName_5
-
+           , Object_Box5.ValueData ::TVarChar AS BoxName_5        
+           
+           , Object_PartionCell.Id                   AS PartionCellId
+           , Object_PartionCell.ValueData ::TVarChar AS PartionCellName
            
            , MovementItem.isErased
 
