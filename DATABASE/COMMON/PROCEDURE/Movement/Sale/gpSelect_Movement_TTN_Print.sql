@@ -429,7 +429,7 @@ BEGIN
            , tmpTransportGoods.PersonalDriverName
            , CASE WHEN COALESCE (ObjectString_PersonalDriver_INN.ValueData,'') <> '' THEN '('||ObjectString_PersonalDriver_INN.ValueData||')' ELSE '' END ::TVarChar AS INN_PersonalDriver
            , COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData) :: TVarChar AS DriverCertificate
-           , ('(водій) '||CASE WHEN TRIM (COALESCE (tmpTransportGoods.MemberName1, '')) = '' THEN tmpTransportGoods.PersonalDriverName ELSE tmpTransportGoods.MemberName1 END) :: TVarChar AS MemberName1
+           , ('(водій) '||CASE WHEN TRIM (COALESCE (tmpTransportGoods.MemberName1, '')) = '' THEN COALESCE (tmpTransportGoods.PersonalDriverName, '') ELSE tmpTransportGoods.MemberName1 END) :: TVarChar AS MemberName1
            , CASE WHEN COALESCE (ObjectString_Member1_INN.ValueData,'') <> '' THEN '('||ObjectString_Member1_INN.ValueData||')' ELSE '' END               ::TVarChar AS INN_Member1
            , tmpTransportGoods.MemberName2
            , tmpTransportGoods.MemberName3

@@ -38,6 +38,7 @@ BEGIN
                   AND MovementItem.isErased   = FALSE
                   AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0
                )
+        AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Необходимо заполнить колонку вид товара.';
      END IF;
