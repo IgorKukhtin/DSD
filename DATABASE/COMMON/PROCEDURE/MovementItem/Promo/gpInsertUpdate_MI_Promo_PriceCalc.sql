@@ -423,7 +423,7 @@ BEGIN
                      );
 
      -- расчет цен за предыдущий месяц от проведения акции
-     vbEndDate   := (vbMonthPromo - INTERVAL '1 DAY') :: TDateTime;
+     vbEndDate   := CASE WHEN inMovementId = 30449524 THEN '31.01.2025' :: TDateTime ELSE (vbMonthPromo - INTERVAL '1 DAY') :: TDateTime END;
      vbStartDate := DATE_TRUNC ('MONTH', vbEndDate) :: TDateTime;
 
 
@@ -825,6 +825,8 @@ BEGIN
                                                                 --AND vbEndDate >= PriceList3.StartDate AND vbEndDate < PriceList3.EndDate
                                                                   AND CASE WHEN vbEndDate < '01.01.2025' THEN '01.01.2025' ELSE vbEndDate END >= PriceList3.StartDate
                                                                   AND CASE WHEN vbEndDate < '01.01.2025' THEN '01.01.2025' ELSE vbEndDate END < PriceList3.EndDate
+                                                                  -- убрали ТРУД
+                                                                  AND 1=0
 
           -- цена с/с  план - новая схема по прайсу 47-ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)
           LEFT JOIN tmpPrice1_plan ON tmpPrice1_plan.GoodsId     = tmp.GoodsId
@@ -926,7 +928,7 @@ end
         ;
 
 
-    IF vbUserId IN (5, 6604558) -- Голота К.О.
+    IF vbUserId IN (5) -- Голота К.О. , 6604558
        -- AND vbUserId <> 5
        AND 1=1
     THEN
@@ -1124,6 +1126,8 @@ end
                                                                               --AND vbEndDate >= PriceList3.StartDate AND vbEndDate < PriceList3.EndDate
                                                                                 AND CASE WHEN vbEndDate < '01.01.2025' THEN '01.01.2025' ELSE vbEndDate END >= PriceList3.StartDate
                                                                                 AND CASE WHEN vbEndDate < '01.01.2025' THEN '01.01.2025' ELSE vbEndDate END < PriceList3.EndDate
+                                                                                -- убрали ТРУД
+                                                                                AND 1=0
                    ORDER BY 1, 2
                   ) AS _tmpData
             )

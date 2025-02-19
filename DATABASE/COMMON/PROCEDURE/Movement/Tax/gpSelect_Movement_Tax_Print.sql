@@ -991,6 +991,9 @@ order by 4*/
                   WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
                        THEN '1601009900'
 
+                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> ''
+                       THEN ObjectString_Goods_UKTZED_new.ValueData
+
                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
                        THEN '' -- '1601'
                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())

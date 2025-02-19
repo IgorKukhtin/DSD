@@ -69,7 +69,7 @@ BEGIN
      ANALYZE _tmpListMovement;
      
      
-     -- если это для Кишени
+     -- если это для Кишени + Варус
      vbIsDiffTax_10:= EXISTS (SELECT 1
                               FROM _tmpListMovement
                                    INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -78,7 +78,9 @@ BEGIN
                                    INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                          ON ObjectLink_Juridical_Retail.ObjectId      = ObjectLink_Partner_Juridical.ChildObjectId
                                                         AND ObjectLink_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
-                                                        AND ObjectLink_Juridical_Retail.ChildObjectId = 310846 
+                                                        AND ObjectLink_Juridical_Retail.ChildObjectId IN (310846 -- ВК
+                                                                                                        , 310855 -- Варус
+                                                                                                         )
                              );
 
      -- параметры из документа - inMovementId_Weighing

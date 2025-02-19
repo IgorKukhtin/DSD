@@ -425,6 +425,10 @@ BEGIN
                                -- у товара
                                WHEN ObjectString_Goods_UKTZED.ValueData <> ''
                                     THEN ObjectString_Goods_UKTZED.ValueData
+
+                               WHEN ObjectString_Goods_UKTZED_new.ValueData <> ''
+                                    THEN ObjectString_Goods_UKTZED_new.ValueData
+
                           END AS Goods_UKTZED
 
                         , ObjectString_Goods_TaxImport.ValueData   AS Goods_TaxImport

@@ -1493,7 +1493,7 @@ BEGIN
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_9() AND tmp.PartionCellId > 0)
                 AND COALESCE (inPartionCellId_9, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-9 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -1571,7 +1571,7 @@ BEGIN
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_10() AND tmp.PartionCellId > 0)
                 AND COALESCE (inPartionCellId_10, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-10 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -1647,8 +1647,9 @@ BEGIN
              IF COALESCE (outPartionCellId_11, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_11() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_11, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-11 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -1724,8 +1725,9 @@ BEGIN
              IF COALESCE (outPartionCellId_12, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_12() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_12, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-12 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -1800,8 +1802,9 @@ BEGIN
              IF COALESCE (outPartionCellId_13, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_13() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_13, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-13 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -1876,8 +1879,9 @@ BEGIN
              IF COALESCE (outPartionCellId_14, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_14() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_14, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-14 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -1952,8 +1956,9 @@ BEGIN
              IF COALESCE (outPartionCellId_15, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_15() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_15, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-15 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -2028,8 +2033,9 @@ BEGIN
              IF COALESCE (outPartionCellId_16, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_16() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_16, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-16 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -2104,8 +2110,9 @@ BEGIN
              IF COALESCE (outPartionCellId_17, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_17() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_17, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-17 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -2180,8 +2187,9 @@ BEGIN
              IF COALESCE (outPartionCellId_18, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_18() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_18, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-18 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -2256,8 +2264,9 @@ BEGIN
              IF COALESCE (outPartionCellId_19, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_19() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_19, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-19 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -2332,8 +2341,9 @@ BEGIN
              IF COALESCE (outPartionCellId_20, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_20() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_20, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-20 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -2408,8 +2418,9 @@ BEGIN
              IF COALESCE (outPartionCellId_21, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_21() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_21, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-21 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
@@ -2484,8 +2495,9 @@ BEGIN
              IF COALESCE (outPartionCellId_22, 0) = 0 AND 1=1
                 -- если НЕ был zc_PartionCell_RK
                 AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell AS tmp WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_22() AND tmp.PartionCellId > 0)
+                AND COALESCE (inPartionCellId_22, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Место хранение не определено.%Нельзя поставить в отбор.', CHR (13);
+                 RAISE EXCEPTION 'Ошибка.Место хранение-22 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
      -- реальная ячейка
