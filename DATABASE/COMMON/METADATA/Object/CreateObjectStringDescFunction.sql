@@ -1088,13 +1088,15 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_SiteTag_Comment', zc_object_SiteTag(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_SiteTag_Comment');
 
-
  CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsGroupProperty_QualityINN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsGroupProperty_QualityINN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_GoodsGroupProperty_QualityINN', zc_object_GoodsGroupProperty(), 'Ідентифікаційний номер тварини від якої отримано сировину' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsGroupProperty_QualityINN');
 
+ CREATE OR REPLACE FUNCTION zc_ObjectString_MessagePersonalService_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MessagePersonalService_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_MessagePersonalService_Comment', zc_object_MessagePersonalService(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MessagePersonalService_Comment');
 
-
+  
 
 
 
@@ -1704,6 +1706,7 @@ INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 19.02.25         * zc_ObjectString_MessagePersonalService_Comment
  21.01.25         * zc_ObjectString_GoodsGroupProperty_QualityINN
  02.12.24         * zc_ObjectString_SiteTag_Comment
  28.10.24         * zc_ObjectString_Member_Code1C
