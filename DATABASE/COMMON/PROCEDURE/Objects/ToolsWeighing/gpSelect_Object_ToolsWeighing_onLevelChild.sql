@@ -169,6 +169,10 @@ BEGIN
            UNION SELECT 'WeightTare4'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'WeightTare5'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'WeightTare6'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightTare7'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightTare8'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightTare9'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightTare10'           AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
            UNION SELECT 'isCalc_sht'             AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
