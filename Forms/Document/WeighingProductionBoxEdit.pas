@@ -24,7 +24,7 @@ uses
 
 type
   TWeighingProductionBoxEditForm = class(TParentForm)
-    cxButton1: TcxButton;
+    cxButtonOk: TcxButton;
     cxButton2: TcxButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
@@ -85,6 +85,44 @@ type
     edCountTare9: TcxCurrencyEdit;
     cxLabel20: TcxLabel;
     edCountTare10: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
+    cxLabel22: TcxLabel;
+    ñåGoodsKind: TcxButtonEdit;
+    GuidesGoodsKind: TdsdGuides;
+    cxLabel23: TcxLabel;
+    dePartionGoodsDate: TcxDateEdit;
+    cxLabel24: TcxLabel;
+    edBoxWeight1: TcxCurrencyEdit;
+    cxLabel25: TcxLabel;
+    edBoxWeight2: TcxCurrencyEdit;
+    cxLabel26: TcxLabel;
+    edBoxWeight3: TcxCurrencyEdit;
+    cxLabel27: TcxLabel;
+    edBoxWeight4: TcxCurrencyEdit;
+    cxLabel28: TcxLabel;
+    edBoxWeight5: TcxCurrencyEdit;
+    cxLabel29: TcxLabel;
+    edBoxWeight6: TcxCurrencyEdit;
+    cxLabel30: TcxLabel;
+    edBoxWeight7: TcxCurrencyEdit;
+    cxLabel31: TcxLabel;
+    edBoxWeight8: TcxCurrencyEdit;
+    cxLabel32: TcxLabel;
+    edBoxWeight9: TcxCurrencyEdit;
+    cxLabel33: TcxLabel;
+    edBoxWeight10: TcxCurrencyEdit;
+    cxLabel34: TcxLabel;
+    edBoxWeightTotal: TcxCurrencyEdit;
+    cxLabel35: TcxLabel;
+    edRealWeight: TcxCurrencyEdit;
+    cxLabel36: TcxLabel;
+    edNettoWeight: TcxCurrencyEdit;
+    EnterMoveNext: TEnterMoveNext;
+    spUpdate_before: TdsdStoredProc;
+    HeaderExit: THeaderExit;
+    actUpdate_Calc_before: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

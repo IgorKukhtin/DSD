@@ -342,14 +342,12 @@ object WeighingProductionForm: TWeighingProductionForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 475
     ClientRectBottom = 474
     ClientRectRight = 1289
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 451
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -357,7 +355,6 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 450
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 451
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -372,11 +369,6 @@ object WeighingProductionForm: TWeighingProductionForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = InsertDate
             end
             item
               Format = ',0.####'
@@ -478,11 +470,6 @@ object WeighingProductionForm: TWeighingProductionForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = InsertDate
             end
             item
               Format = ',0.####'
@@ -976,7 +963,6 @@ object WeighingProductionForm: TWeighingProductionForm
     object cxTabSheetPartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 1
-      ExplicitHeight = 451
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0
@@ -985,7 +971,6 @@ object WeighingProductionForm: TWeighingProductionForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitHeight = 451
         object cxGridDBTableView_PartionCell: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionCellDS
@@ -2299,6 +2284,7 @@ object WeighingProductionForm: TWeighingProductionForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -2819,6 +2805,52 @@ object WeighingProductionForm: TWeighingProductionForm
           Component = MasterCDS
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionGoodsDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RealWeight'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RealWeight'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -2832,6 +2864,9 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           Action = actRefreshMI
+        end
+        item
+          Action = actSelectMIPrintPassport
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1090#1072#1088#1099
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1090#1072#1088#1099

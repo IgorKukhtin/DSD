@@ -34,8 +34,8 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingProduction());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_WeighingProduction_Box());
+    -- vbUserId:= lpGetUserBySession (inSession);
 
      -- проверка
      IF COALESCE (inId,0) = 0
