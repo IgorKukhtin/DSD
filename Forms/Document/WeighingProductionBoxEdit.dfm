@@ -24,7 +24,6 @@
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
-    Default = True
     ModalResult = 1
     TabOrder = 0
   end
@@ -1614,7 +1613,7 @@
         Control = edCountTare3
       end
       item
-        Control = edBoxWeight4
+        Control = edCountTare4
       end
       item
         Control = edCountTare5
