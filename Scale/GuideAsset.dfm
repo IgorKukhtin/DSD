@@ -307,6 +307,7 @@ object GuideAssetForm: TGuideAssetForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 408
     Top = 392

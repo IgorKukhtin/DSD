@@ -173,6 +173,34 @@ type
     gbSummPartner: TGroupBox;
     EditSummPartner: TcxCurrencyEdit;
     RoundPrice: TcxGridDBColumn;
+    infoPanelTare10: TPanel;
+    PanelTare10: TPanel;
+    LabelTare10: TLabel;
+    EditTare10: TcxCurrencyEdit;
+    infoPanelWeightTare10: TPanel;
+    LabelWeightTare10: TLabel;
+    PanelWeightTare10: TPanel;
+    infoPanelTare9: TPanel;
+    PanelTare9: TPanel;
+    LabelTare9: TLabel;
+    EditTare9: TcxCurrencyEdit;
+    infoPanelWeightTare9: TPanel;
+    LabelWeightTare9: TLabel;
+    PanelWeightTare9: TPanel;
+    infoPanelTare8: TPanel;
+    PanelTare8: TPanel;
+    LabelTare8: TLabel;
+    EditTare8: TcxCurrencyEdit;
+    infoPanelWeightTare8: TPanel;
+    LabelWeightTare8: TLabel;
+    PanelWeightTare8: TPanel;
+    infoPanelTare7: TPanel;
+    PanelTare7: TPanel;
+    LabelTare7: TLabel;
+    EditTare7: TcxCurrencyEdit;
+    infoPanelWeightTare7: TPanel;
+    LabelWeightTare7: TLabel;
+    PanelWeightTare7: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -250,6 +278,14 @@ type
     procedure EditPriceExit(Sender: TObject);
     procedure EditSummPartnerExit(Sender: TObject);
     procedure EditAmountPartnerExit(Sender: TObject);
+    procedure EditTare10KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditTare9KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditTare8KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditTare7KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     oldParam1, oldParam2:Integer;
     oldParam3:TDateTime;
@@ -545,6 +581,10 @@ begin
   EditTare4.Text:='';PanelWeightTare4.Caption:='';
   EditTare5.Text:='';PanelWeightTare5.Caption:='';
   EditTare6.Text:='';PanelWeightTare6.Caption:='';
+  EditTare7.Text:='';PanelWeightTare7.Caption:='';
+  EditTare8.Text:='';PanelWeightTare8.Caption:='';
+  EditTare9.Text:='';PanelWeightTare9.Caption:='';
+  EditTare10.Text:='';PanelWeightTare10.Caption:='';
   EditTare0.Text:='';PanelWeightTare0.Caption:='';
   //
   if ParamsMI.ParamByName('GoodsId').AsInteger<>0
@@ -854,6 +894,22 @@ begin
                           else if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
 
                      else if ActiveControl=EditTare6 then
+                          if infoPanelTare7.Visible then ActiveControl:=EditTare7
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
+
+                     else if ActiveControl=EditTare7 then
+                          if infoPanelTare8.Visible then ActiveControl:=EditTare8
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
+
+                     else if ActiveControl=EditTare8 then
+                          if infoPanelTare9.Visible then ActiveControl:=EditTare9
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
+
+                     else if ActiveControl=EditTare9 then
+                          if infoPanelTare10.Visible then ActiveControl:=EditTare10
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
+
+                     else if ActiveControl=EditTare10 then
                           if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
 
                      else if ActiveControl=EditTare0
@@ -1802,6 +1858,42 @@ procedure TGuideGoodsForm.EditTare6KeyDown(Sender: TObject; var Key: Word;
 begin
     if Key=13
     then
+     if infoPanelTare7.Visible then ActiveControl:=EditTare7
+     else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare7KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+     if infoPanelTare8.Visible then ActiveControl:=EditTare8
+     else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare8KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+     if infoPanelTare9.Visible then ActiveControl:=EditTare9
+     else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare9KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+     if infoPanelTare10.Visible then ActiveControl:=EditTare10
+     else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare10KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
      if infoPanelTare0.Visible then ActiveControl:=EditTare0
 end;
 {------------------------------------------------------------------------------}
@@ -1959,6 +2051,30 @@ begin
            ParamsMI.ParamByName('CountTare6').AsFloat:=0;
      end;
      PanelWeightTare6.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare6').AsFloat * SettingMain.WeightTare6);
+     //7
+     try ParamsMI.ParamByName('CountTare7').AsFloat:=StrToFloat(EditTare7.Text);
+     except
+           ParamsMI.ParamByName('CountTare7').AsFloat:=0;
+     end;
+     PanelWeightTare7.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare7').AsFloat * SettingMain.WeightTare7);
+     //8
+     try ParamsMI.ParamByName('CountTare8').AsFloat:=StrToFloat(EditTare8.Text);
+     except
+           ParamsMI.ParamByName('CountTare8').AsFloat:=0;
+     end;
+     PanelWeightTare8.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare8').AsFloat * SettingMain.WeightTare8);
+     //9
+     try ParamsMI.ParamByName('CountTare9').AsFloat:=StrToFloat(EditTare9.Text);
+     except
+           ParamsMI.ParamByName('CountTare9').AsFloat:=0;
+     end;
+     PanelWeightTare9.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare9').AsFloat * SettingMain.WeightTare9);
+     //10
+     try ParamsMI.ParamByName('CountTare10').AsFloat:=StrToFloat(EditTare10.Text);
+     except
+           ParamsMI.ParamByName('CountTare10').AsFloat:=0;
+     end;
+     PanelWeightTare10.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10);
      //
      //0
      if infoPanelTare0.Visible then
@@ -2186,6 +2302,14 @@ begin
      then ActiveControl:=EditTare5;
      if (ParamsMI.ParamByName('CountTare6').AsFloat < 0)//and(infoPanelTare6.Visible)
      then ActiveControl:=EditTare6;
+     if (ParamsMI.ParamByName('CountTare7').AsFloat < 0)//and(infoPanelTare6.Visible)
+     then ActiveControl:=EditTare7;
+     if (ParamsMI.ParamByName('CountTare8').AsFloat < 0)//and(infoPanelTare6.Visible)
+     then ActiveControl:=EditTare8;
+     if (ParamsMI.ParamByName('CountTare9').AsFloat < 0)//and(infoPanelTare6.Visible)
+     then ActiveControl:=EditTare9;
+     if (ParamsMI.ParamByName('CountTare10').AsFloat < 0)//and(infoPanelTare6.Visible)
+     then ActiveControl:=EditTare10;
      if (ParamsMI.ParamByName('WeightTare').AsFloat < 0)//and(infoPanelTare0.Visible)
      then ActiveControl:=EditTare0;
 end;
@@ -2492,25 +2616,128 @@ begin
   infoPanelTare4.Visible:= SettingMain.WeightTare4 > 0;infoPanelTare4.Height:=35;
   infoPanelTare5.Visible:= SettingMain.WeightTare5 > 0;infoPanelTare5.Height:=35;
   infoPanelTare6.Visible:= SettingMain.WeightTare6 > 0;infoPanelTare6.Height:=35;
+  infoPanelTare7.Visible:= SettingMain.WeightTare7 > 0;infoPanelTare7.Height:=35;
+  infoPanelTare8.Visible:= SettingMain.WeightTare8 > 0;infoPanelTare8.Height:=35;
+  infoPanelTare9.Visible:= SettingMain.WeightTare9 > 0;infoPanelTare9.Height:=35;
+  infoPanelTare10.Visible:= SettingMain.WeightTare10 > 0;infoPanelTare10.Height:=35;
   //вес тары (ручной режим)
   infoPanelTare0.Visible:=(SettingMain.WeightTare1 > 0)and(GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'));
   infoPanelTare0.Height:=35;
   //
-       if infoPanelTare6.Visible then infoPanelTareFix.Height:=35*6
-  else if infoPanelTare5.Visible then infoPanelTareFix.Height:=35*5
-  else if infoPanelTare4.Visible then infoPanelTareFix.Height:=35*4
-  else if infoPanelTare3.Visible then infoPanelTareFix.Height:=35*3
-  else if infoPanelTare2.Visible then infoPanelTareFix.Height:=35*2
-  else if infoPanelTare1.Visible then infoPanelTareFix.Height:=35*1;
-  if infoPanelTare0.Visible then infoPanelTareFix.Height:=infoPanelTareFix.Height + 35;
+  if SettingMain.BranchCode = 115 then
+  begin
+       infoPanelTare1.Height:=35 + 2;
+       infoPanelTare2.Height:=35 + 2;
+       infoPanelTare3.Height:=35 + 2;
+       infoPanelTare4.Height:=35 + 2;
+       infoPanelTare5.Height:=35 + 2;
+       infoPanelTare6.Height:=35 + 2;
+       infoPanelTare7.Height:=35 + 2;
+       infoPanelTare8.Height:=35 + 2;
+       infoPanelTare9.Height:=35 + 2;
+       infoPanelTare10.Height:=35 + 2;
+
+       infoPanelTare.Width:= 230 + 100;
+       infoPanelPriceList.Width:= 250 - 100;
+       ParamsPanel.Height:= ParamsPanel.Height + infoPanelTare1.Height * 2;
+
+      EditTare1.Top:= 14;
+      EditTare2.Top:= 14;
+      EditTare3.Top:= 14;
+      EditTare4.Top:= 14;
+      EditTare5.Top:= 14;
+      EditTare6.Top:= 14;
+      EditTare7.Top:= 14;
+      EditTare8.Top:= 14;
+      EditTare9.Top:= 14;
+      EditTare10.Top:= 14;
+
+      LabelTare1.Alignment:= taLeftJustify;
+      LabelTare2.Alignment:= taLeftJustify;
+      LabelTare3.Alignment:= taLeftJustify;
+      LabelTare4.Alignment:= taLeftJustify;
+      LabelTare5.Alignment:= taLeftJustify;
+      LabelTare6.Alignment:= taLeftJustify;
+      LabelTare7.Alignment:= taLeftJustify;
+      LabelTare8.Alignment:= taLeftJustify;
+      LabelTare9.Alignment:= taLeftJustify;
+      LabelTare10.Alignment:= taLeftJustify;
+      LabelTare0.Alignment:= taLeftJustify;
+
+      LabelTare1.Font.Style:=[fsBold];
+      LabelTare2.Font.Style:=[fsBold];
+      LabelTare3.Font.Style:=[fsBold];
+      LabelTare4.Font.Style:=[fsBold];
+      LabelTare5.Font.Style:=[fsBold];
+      LabelTare6.Font.Style:=[fsBold];
+      LabelTare7.Font.Style:=[fsBold];
+      LabelTare8.Font.Style:=[fsBold];
+      LabelTare9.Font.Style:=[fsBold];
+      LabelTare10.Font.Style:=[fsBold];
+      LabelTare0.Font.Style:=[fsBold];
+  end;
+
+  //
+       if infoPanelTare10.Visible then infoPanelTareFix.Height:=infoPanelTare1.Height*10
+  else if infoPanelTare9.Visible then infoPanelTareFix.Height:=infoPanelTare1.Height*9
+  else if infoPanelTare8.Visible then infoPanelTareFix.Height:=infoPanelTare1.Height*8
+  else if infoPanelTare7.Visible then infoPanelTareFix.Height:=infoPanelTare1.Height*7
+  else if infoPanelTare6.Visible then infoPanelTareFix.Height:=infoPanelTare1.Height*6
+  else if infoPanelTare5.Visible then infoPanelTareFix.Height:=infoPanelTare1.Height*5
+  else if infoPanelTare4.Visible then infoPanelTareFix.Height:=infoPanelTare1.Height*4
+  else if infoPanelTare3.Visible then infoPanelTareFix.Height:=infoPanelTare1.Height*3
+  else if infoPanelTare2.Visible then infoPanelTareFix.Height:=infoPanelTare1.Height*2
+  else if infoPanelTare1.Visible then infoPanelTareFix.Height:=infoPanelTare1.Height*1;
+  if infoPanelTare0.Visible then infoPanelTareFix.Height:=infoPanelTareFix.Height + infoPanelTare0.Height;
   infoPanelTareFix.Height:=infoPanelTareFix.Height + 4;
   //
-  LabelTare1.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare1)+' кг';
-  LabelTare2.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare2)+' кг';
-  LabelTare3.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare3)+' кг';
-  LabelTare4.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare4)+' кг';
-  LabelTare5.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare5)+' кг';
-  LabelTare6.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare6)+' кг';
+  if SettingMain.BranchCode = 115 then
+  begin
+      LabelTare1.Caption:= SettingMain.NameTare1;
+      LabelTare2.Caption:= SettingMain.NameTare2;
+      LabelTare3.Caption:= SettingMain.NameTare3;
+      LabelTare4.Caption:= SettingMain.NameTare4;
+      LabelTare5.Caption:= SettingMain.NameTare5;
+      LabelTare6.Caption:= SettingMain.NameTare6;
+      LabelTare7.Caption:= SettingMain.NameTare7;
+      LabelTare8.Caption:= SettingMain.NameTare8;
+      LabelTare9.Caption:= SettingMain.NameTare9;
+      LabelTare10.Caption:= SettingMain.NameTare10;
+
+      if SettingMain.WeightTare1 > 0
+      then LabelTare1.Caption:= SettingMain.NameTare1 + ' '+FloatToStr(SettingMain.WeightTare1)+' кг';
+      if SettingMain.WeightTare2 > 0
+      then LabelTare2.Caption:= SettingMain.NameTare2 + ' '+FloatToStr(SettingMain.WeightTare2)+' кг';
+      if SettingMain.WeightTare3 > 0
+      then LabelTare3.Caption:= SettingMain.NameTare3 + ' '+FloatToStr(SettingMain.WeightTare3)+' кг';
+      if SettingMain.WeightTare4 > 0
+      then LabelTare4.Caption:= SettingMain.NameTare4 + ' '+FloatToStr(SettingMain.WeightTare4)+' кг';
+      if SettingMain.WeightTare5 > 0
+      then LabelTare5.Caption:= SettingMain.NameTare5 + ' '+FloatToStr(SettingMain.WeightTare5)+' кг';
+      if SettingMain.WeightTare6 > 0
+      then LabelTare6.Caption:= SettingMain.NameTare6 + ' '+FloatToStr(SettingMain.WeightTare6)+' кг';
+      if SettingMain.WeightTare7 > 0
+      then LabelTare7.Caption:= SettingMain.NameTare7 + ' '+FloatToStr(SettingMain.WeightTare7)+' кг';
+      if SettingMain.WeightTare8 > 0
+      then LabelTare8.Caption:= SettingMain.NameTare8 + ' '+FloatToStr(SettingMain.WeightTare8)+' кг';
+      if SettingMain.WeightTare9 > 0
+      then LabelTare9.Caption:= SettingMain.NameTare9 + ' '+FloatToStr(SettingMain.WeightTare9)+' кг';
+      if SettingMain.WeightTare10 > 0
+      then LabelTare10.Caption:= SettingMain.NameTare10 + ' '+FloatToStr(SettingMain.WeightTare10)+' кг';
+  end
+  else
+  begin
+      LabelTare1.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare1)+' кг';
+      LabelTare2.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare2)+' кг';
+      LabelTare3.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare3)+' кг';
+      LabelTare4.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare4)+' кг';
+      LabelTare5.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare5)+' кг';
+      LabelTare6.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare6)+' кг';
+      LabelTare7.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare7)+' кг';
+      LabelTare8.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare8)+' кг';
+      LabelTare9.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare9)+' кг';
+      LabelTare10.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare10)+' кг';
+  end;
   LabelTare0.Caption:= 'Ручной Вес тары, кг';
   //
   //

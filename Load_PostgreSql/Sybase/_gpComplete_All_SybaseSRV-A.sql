@@ -24,17 +24,17 @@ BEGIN
      IF vbStatusId <> zc_Enum_Status_Complete() AND inSession <> '' THEN RETURN; END IF;
      
 
-     CREATE TEMP TABLE _tmpItem (ContainerId_Goods Integer, Amount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmp_ch_ch (ContainerId_Goods Integer, Amount TFloat) ON COMMIT DROP;
 
      IF EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId = zc_Unit_RK())
         AND vbMovementDescId IN (zc_Movement_Send(), zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion())
      THEN 
          IF vbMovementDescId = zc_Movement_ProductionUnion()
          THEN 
-             INSERT INTO _tmpItem (ContainerId_Goods, Amount)
+             INSERT INTO _tmp_ch_ch (ContainerId_Goods, Amount)
                 SELECT ContainerId, Amount FROM MovementItemContainer WHERE MovementId = inMovementId AND DescId = 1 AND isActive = FALSE;
          ELSE
-             INSERT INTO _tmpItem (ContainerId_Goods, Amount)
+             INSERT INTO _tmp_ch_ch (ContainerId_Goods, Amount)
                 SELECT ContainerId, Amount FROM MovementItemContainer WHERE MovementId = inMovementId AND DescId = 1;
          END IF;
      END IF;
@@ -387,7 +387,7 @@ BEGIN
          IF vbMovementDescId = zc_Movement_ProductionUnion()
          THEN 
              IF EXISTS (SELECT 1
-                        FROM  (SELECT SUM (_tmpItem.Amount) AS Amount, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
+                        FROM  (SELECT SUM (_tmp_ch_ch.Amount) AS Amount, _tmp_ch_ch.ContainerId_Goods FROM _tmp_ch_ch GROUP BY _tmp_ch_ch.ContainerId_Goods
                               ) AS tmp_old
                               FULL JOIN (SELECT SUM (MovementItemContainer.Amount) AS Amount, MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementId = inMovementId AND DescId = 1 AND isActive = FALSE GROUP BY MovementItemContainer.ContainerId
                                         ) AS tmp_new
@@ -401,7 +401,7 @@ BEGIN
                       , (SELECT InvNumber FROM Movement WHERE Movement.Id = inMovementId)
 
                       , (SELECT COALESCE (tmp_new.ContainerId, tmp_old.ContainerId_Goods)
-                        FROM  (SELECT SUM (_tmpItem.Amount) AS Amount, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
+                        FROM  (SELECT SUM (_tmp_ch_ch.Amount) AS Amount, _tmp_ch_ch.ContainerId_Goods FROM _tmp_ch_ch GROUP BY _tmp_ch_ch.ContainerId_Goods
                               ) AS tmp_old
                               FULL JOIN (SELECT SUM (MovementItemContainer.Amount) AS Amount, MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementId = inMovementId AND DescId = 1 AND isActive = FALSE GROUP BY MovementItemContainer.ContainerId
                                         ) AS tmp_new
@@ -411,7 +411,7 @@ BEGIN
                         LIMIT 1
                        )
                       , (SELECT tmp_old.Amount
-                        FROM  (SELECT SUM (_tmpItem.Amount) AS Amount, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
+                        FROM  (SELECT SUM (_tmp_ch_ch.Amount) AS Amount, _tmp_ch_ch.ContainerId_Goods FROM _tmp_ch_ch GROUP BY _tmp_ch_ch.ContainerId_Goods
                               ) AS tmp_old
                               FULL JOIN (SELECT SUM (MovementItemContainer.Amount) AS Amount, MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementId = inMovementId AND DescId = 1 AND isActive = FALSE GROUP BY MovementItemContainer.ContainerId
                                         ) AS tmp_new
@@ -421,7 +421,7 @@ BEGIN
                         LIMIT 1
                        )
                       , (SELECT tmp_new.Amount
-                        FROM  (SELECT SUM (_tmpItem.Amount) AS Amount, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
+                        FROM  (SELECT SUM (_tmp_ch_ch.Amount) AS Amount, _tmp_ch_ch.ContainerId_Goods FROM _tmp_ch_ch GROUP BY _tmp_ch_ch.ContainerId_Goods
                               ) AS tmp_old
                               FULL JOIN (SELECT SUM (MovementItemContainer.Amount) AS Amount, MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementId = inMovementId AND DescId = 1 AND isActive = FALSE GROUP BY MovementItemContainer.ContainerId
                                         ) AS tmp_new
@@ -436,7 +436,7 @@ BEGIN
          ELSE
 
              IF EXISTS (SELECT 1
-                        FROM  (SELECT SUM (_tmpItem.Amount) AS Amount, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
+                        FROM  (SELECT SUM (_tmp_ch_ch.Amount) AS Amount, _tmp_ch_ch.ContainerId_Goods FROM _tmp_ch_ch GROUP BY _tmp_ch_ch.ContainerId_Goods
                               ) AS tmp_old
                               FULL JOIN (SELECT SUM (MovementItemContainer.Amount) AS Amount, MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementId = inMovementId AND DescId = 1 GROUP BY MovementItemContainer.ContainerId
                                         ) AS tmp_new
@@ -450,7 +450,7 @@ BEGIN
                       , (SELECT InvNumber FROM Movement WHERE Movement.Id = inMovementId)
 
                       , (SELECT COALESCE (tmp_new.ContainerId, tmp_old.ContainerId_Goods)
-                        FROM  (SELECT SUM (_tmpItem.Amount) AS Amount, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
+                        FROM  (SELECT SUM (_tmp_ch_ch.Amount) AS Amount, _tmp_ch_ch.ContainerId_Goods FROM _tmp_ch_ch GROUP BY _tmp_ch_ch.ContainerId_Goods
                               ) AS tmp_old
                               FULL JOIN (SELECT SUM (MovementItemContainer.Amount) AS Amount, MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementId = inMovementId AND DescId = 1 GROUP BY MovementItemContainer.ContainerId
                                         ) AS tmp_new
@@ -460,7 +460,7 @@ BEGIN
                         LIMIT 1
                        )
                       , (SELECT tmp_old.Amount
-                        FROM  (SELECT SUM (_tmpItem.Amount) AS Amount, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
+                        FROM  (SELECT SUM (_tmp_ch_ch.Amount) AS Amount, _tmp_ch_ch.ContainerId_Goods FROM _tmp_ch_ch GROUP BY _tmp_ch_ch.ContainerId_Goods
                               ) AS tmp_old
                               FULL JOIN (SELECT SUM (MovementItemContainer.Amount) AS Amount, MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementId = inMovementId AND DescId = 1 GROUP BY MovementItemContainer.ContainerId
                                         ) AS tmp_new
@@ -470,7 +470,7 @@ BEGIN
                         LIMIT 1
                        )
                       , (SELECT tmp_new.Amount
-                        FROM  (SELECT SUM (_tmpItem.Amount) AS Amount, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
+                        FROM  (SELECT SUM (_tmp_ch_ch.Amount) AS Amount, _tmp_ch_ch.ContainerId_Goods FROM _tmp_ch_ch GROUP BY _tmp_ch_ch.ContainerId_Goods
                               ) AS tmp_old
                               FULL JOIN (SELECT SUM (MovementItemContainer.Amount) AS Amount, MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementId = inMovementId AND DescId = 1 GROUP BY MovementItemContainer.ContainerId
                                         ) AS tmp_new

@@ -74,6 +74,9 @@ type
     // Scale + ScaleCeh
     function gpUpdate_Scale_Movement_Status(MovementId_parent:Integer): Boolean;
 
+    // Scale
+    function gpInitialize_SettingMain_Tare_115: Boolean;
+
   end;
 
   function gpInitialize_Const: Boolean; // Scale + ScaleCeh
@@ -849,6 +852,7 @@ begin
        Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('ChangePercentAmount').AsFloat);
        Params.AddParam('inCountTare', ftFloat, ptInput, execParamsMI.ParamByName('CountTare').AsFloat);
        Params.AddParam('inWeightTare', ftFloat, ptInput, execParamsMI.ParamByName('WeightTare').AsFloat);
+
        Params.AddParam('inCountTare1', ftFloat, ptInput, execParamsMI.ParamByName('CountTare1').AsFloat);
        Params.AddParam('inWeightTare1', ftFloat, ptInput, SettingMain.WeightTare1);
        Params.AddParam('inCountTare2', ftFloat, ptInput, execParamsMI.ParamByName('CountTare2').AsFloat);
@@ -861,6 +865,16 @@ begin
        Params.AddParam('inWeightTare5', ftFloat, ptInput, SettingMain.WeightTare5);
        Params.AddParam('inCountTare6', ftFloat, ptInput, execParamsMI.ParamByName('CountTare6').AsFloat);
        Params.AddParam('inWeightTare6', ftFloat, ptInput, SettingMain.WeightTare6);
+       Params.AddParam('inCountTare7', ftFloat, ptInput, execParamsMI.ParamByName('CountTare7').AsFloat);
+       Params.AddParam('inWeightTare7', ftFloat, ptInput, SettingMain.WeightTare7);
+       Params.AddParam('inCountTare8', ftFloat, ptInput, execParamsMI.ParamByName('CountTare8').AsFloat);
+       Params.AddParam('inWeightTare8', ftFloat, ptInput, SettingMain.WeightTare8);
+       Params.AddParam('inCountTare9', ftFloat, ptInput, execParamsMI.ParamByName('CountTare9').AsFloat);
+       Params.AddParam('inWeightTare9', ftFloat, ptInput, SettingMain.WeightTare9);
+       Params.AddParam('inCountTare10', ftFloat, ptInput, execParamsMI.ParamByName('CountTare10').AsFloat);
+       Params.AddParam('inWeightTare10', ftFloat, ptInput, SettingMain.WeightTare10);
+
+
        Params.AddParam('inPrice', ftFloat, ptInput, execParamsMI.ParamByName('Price').AsFloat);
        Params.AddParam('inPrice_Return', ftFloat, ptInput, execParamsMI.ParamByName('Price_Return').AsFloat);
        Params.AddParam('inCountForPrice', ftFloat, ptInput, execParamsMI.ParamByName('CountForPrice').AsFloat);
@@ -1871,6 +1885,83 @@ begin
   Result:=true;
 end;
 {------------------------------------------------------------------------}
+function TDMMainScaleForm.gpInitialize_SettingMain_Tare_115: Boolean;
+begin
+    Result:=false;
+    with spSelect do begin
+       StoredProcName:='gpSelect_Scale_Tare_115';
+       OutputType:=otDataSet;
+       Params.Clear;
+       //try
+         Execute;
+         //
+         DataSet.First;
+         //
+         while not DataSet.EOF do
+         begin
+              if DataSet.FieldByName('NPP').asInteger = 1 then
+              begin
+                  SettingMain.WeightTare1:=DataSet.FieldByName('Weight').asFloat;
+                  SettingMain.NameTare1:=DataSet.FieldByName('GuideName').asString;
+              end;
+              if DataSet.FieldByName('NPP').asInteger = 2 then
+              begin
+                  SettingMain.WeightTare2:=DataSet.FieldByName('Weight').asFloat;
+                  SettingMain.NameTare2:=DataSet.FieldByName('GuideName').asString;
+              end;
+              if DataSet.FieldByName('NPP').asInteger = 3 then
+              begin
+                  SettingMain.WeightTare3:=DataSet.FieldByName('Weight').asFloat;
+                  SettingMain.NameTare3:=DataSet.FieldByName('GuideName').asString;
+              end;
+              if DataSet.FieldByName('NPP').asInteger = 4 then
+              begin
+                  SettingMain.WeightTare4:=DataSet.FieldByName('Weight').asFloat;
+                  SettingMain.NameTare4:=DataSet.FieldByName('GuideName').asString;
+              end;
+              if DataSet.FieldByName('NPP').asInteger = 5 then
+              begin
+                  SettingMain.WeightTare5:=DataSet.FieldByName('Weight').asFloat;
+                  SettingMain.NameTare5:=DataSet.FieldByName('GuideName').asString;
+              end;
+              if DataSet.FieldByName('NPP').asInteger = 6 then
+              begin
+                  SettingMain.WeightTare6:=DataSet.FieldByName('Weight').asFloat;
+                  SettingMain.NameTare6:=DataSet.FieldByName('GuideName').asString;
+              end;
+              if DataSet.FieldByName('NPP').asInteger = 7 then
+              begin
+                  SettingMain.WeightTare7:=DataSet.FieldByName('Weight').asFloat;
+                  SettingMain.NameTare7:=DataSet.FieldByName('GuideName').asString;
+              end;
+              if DataSet.FieldByName('NPP').asInteger = 8 then
+              begin
+                  SettingMain.WeightTare8:=DataSet.FieldByName('Weight').asFloat;
+                  SettingMain.NameTare8:=DataSet.FieldByName('GuideName').asString;
+              end;
+              if DataSet.FieldByName('NPP').asInteger = 9 then
+              begin
+                  SettingMain.WeightTare9:=DataSet.FieldByName('Weight').asFloat;
+                  SettingMain.NameTare9:=DataSet.FieldByName('GuideName').asString;
+              end;
+              if DataSet.FieldByName('NPP').asInteger = 10 then
+              begin
+                  SettingMain.WeightTare10:=DataSet.FieldByName('Weight').asFloat;
+                  SettingMain.NameTare10:=DataSet.FieldByName('GuideName').asString;
+              end;
+              //
+              DataSet.Next;
+         end;
+
+
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
 function gpInitialize_SettingMain_Default: Boolean;
 begin
   SettingMain.isGoodsComplete:=GetArrayList_Value_byName(Default_Array,'isGoodsComplete') = AnsiUpperCase('TRUE');
@@ -1888,12 +1979,23 @@ begin
            SettingMain.Limit_Second_save_MI:=0;
        end;
        //
-       SettingMain.WeightTare1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare1'));
-       SettingMain.WeightTare2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare2'));
-       SettingMain.WeightTare3:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare3'));
-       SettingMain.WeightTare4:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare4'));
-       SettingMain.WeightTare5:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare5'));
-       SettingMain.WeightTare6:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare6'));
+       if SettingMain.BranchCode = 115 then
+       begin
+            DMMainScaleForm.gpInitialize_SettingMain_Tare_115;
+       end
+       else
+       begin
+           SettingMain.WeightTare1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare1'));
+           SettingMain.WeightTare2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare2'));
+           SettingMain.WeightTare3:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare3'));
+           SettingMain.WeightTare4:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare4'));
+           SettingMain.WeightTare5:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare5'));
+           SettingMain.WeightTare6:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare6'));
+           SettingMain.WeightTare7:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare7'));
+           SettingMain.WeightTare8:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare8'));
+           SettingMain.WeightTare9:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare9'));
+           SettingMain.WeightTare10:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare10'));
+       end;
        //
        SettingMain.isPartionDate:=GetArrayList_Value_byName(Default_Array,'isPartionDate') = AnsiUpperCase('TRUE');
        //

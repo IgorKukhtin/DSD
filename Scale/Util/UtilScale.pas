@@ -82,6 +82,32 @@ type
     WeightTare4:Double;   // only Scale
     WeightTare5:Double;   // only Scale
     WeightTare6:Double;   // only Scale
+    WeightTare7:Double;   // only Scale
+    WeightTare8:Double;   // only Scale
+    WeightTare9:Double;   // only Scale
+    WeightTare10:Double;  // only Scale
+
+    NameTare1:String;   // only Scale
+    NameTare2:String;   // only Scale
+    NameTare3:String;   // only Scale
+    NameTare4:String;   // only Scale
+    NameTare5:String;   // only Scale
+    NameTare6:String;   // only Scale
+    NameTare7:String;   // only Scale
+    NameTare8:String;   // only Scale
+    NameTare9:String;   // only Scale
+    NameTare10:String;  // only Scale
+
+    TareId_1:String;   // only Scale
+    TareId_2:String;   // only Scale
+    TareId_3:String;   // only Scale
+    TareId_4:String;   // only Scale
+    TareId_5:String;   // only Scale
+    TareId_6:String;   // only Scale
+    TareId_7:String;   // only Scale
+    TareId_8:String;   // only Scale
+    TareId_9:String;   // only Scale
+    TareId_10:String;  // only Scale
 
     Limit_Second_save_MI:Integer;
 
@@ -645,6 +671,10 @@ begin
      ParamAdd(Params,'CountTare4',ftFloat);          // Количество тары вида4
      ParamAdd(Params,'CountTare5',ftFloat);          // Количество тары вида5
      ParamAdd(Params,'CountTare6',ftFloat);          // Количество тары вида6
+     ParamAdd(Params,'CountTare7',ftFloat);          // Количество тары вида6
+     ParamAdd(Params,'CountTare8',ftFloat);          // Количество тары вида6
+     ParamAdd(Params,'CountTare9',ftFloat);          // Количество тары вида6
+     ParamAdd(Params,'CountTare10',ftFloat);          // Количество тары вида6
      ParamAdd(Params,'Amount_Goods',ftFloat);        //
 
      ParamAdd(Params,'isAmountPartnerSecond',ftBoolean); // без оплаты да/нет - Кол-во поставщика
