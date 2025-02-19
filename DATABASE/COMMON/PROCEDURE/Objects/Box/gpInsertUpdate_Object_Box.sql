@@ -1,7 +1,8 @@
 ﻿-- Function: gpInsertUpdate_Object_Box()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Box(Integer,Integer,TVarChar,TFloat,TFloat,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Box(Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Box(Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Box(Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Box(
  INOUT ioId	      Integer,   	-- ключ объекта <Единица измерения>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Box(
     IN inBoxHeight    TFloat  ,     -- 
     IN inBoxLength    TFloat  ,     --
     IN inBoxWidth     TFloat  ,     --
+    IN inNPP          TFloat  ,     --
     IN inSession      TVarChar      -- сессия пользователя
 )
   RETURNS integer AS
@@ -48,6 +50,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Box_Length(), ioId, inBoxLength);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Box_Width(), ioId, inBoxWidth);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Box_NPP(), ioId, inNPP);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -60,6 +64,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.02.25         *
  24.06.18         *
  09.10.14                                                       *
 

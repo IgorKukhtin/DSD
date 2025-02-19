@@ -268,6 +268,15 @@ type
     cxGridLevel_PartionCell: TcxGridLevel;
     MIProtocolOpenFormCell: TdsdOpenForm;
     bbMIProtocolOpenFormCell: TdxBarButton;
+    actUpdateBox: TExecuteDialog;
+    bbUpdateBox: TdxBarButton;
+    actRefreshMI: TdsdDataSetRefresh;
+    macUpdateBox: TMultiAction;
+    PartionCellName: TcxGridDBColumn;
+    PartionNum: TcxGridDBColumn;
+    actSelectMIPrintPassport: TdsdPrintAction;
+    spSelectMIPrintPassport: TdsdStoredProc;
+    bbSelectMIPrintPassport: TdxBarButton;
   private
   public
   end;

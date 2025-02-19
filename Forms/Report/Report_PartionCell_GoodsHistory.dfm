@@ -2,7 +2,7 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
   Left = 0
   Top = 0
   Caption = #1048#1089#1090#1086#1088#1080#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' <'#1071#1095#1077#1077#1082' '#1093#1088#1072#1085#1077#1085#1080#1103' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
-  ClientHeight = 376
+  ClientHeight = 375
   ClientWidth = 743
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,11 +22,12 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
     Left = 0
     Top = 97
     Width = 743
-    Height = 279
+    Height = 278
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitHeight = 279
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -35,6 +36,11 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
           Format = ',0.####'
           Kind = skSum
           Column = ord
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -45,6 +51,11 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
           Format = ',0.####'
           Kind = skCount
           Column = ord
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -111,6 +122,17 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 107
+      end
+      object Amount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 82
       end
       object InvNumber_full: TcxGridDBColumn
         Caption = #8470' '#1044#1086#1082#1091#1084#1077#1085#1090#1072

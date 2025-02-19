@@ -58,7 +58,7 @@ object BoxEditForm: TBoxEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 130
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -132,6 +132,21 @@ object BoxEditForm: TBoxEditForm
     Properties.DisplayFormat = ',0.###'
     TabOrder = 15
     Width = 80
+  end
+  object edNPP: TcxCurrencyEdit
+    Left = 153
+    Top = 30
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 16
+    Width = 130
+  end
+  object cxLabel14: TcxLabel
+    Left = 153
+    Top = 8
+    Caption = #8470' '#1087'/'#1087
   end
   object ActionList: TActionList
     Left = 152
@@ -232,6 +247,14 @@ object BoxEditForm: TBoxEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = Null
+        Component = edNPP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -309,10 +332,17 @@ object BoxEditForm: TBoxEditForm
         Component = edWidth
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NPP'
+        Value = Null
+        Component = edNPP
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 16
+    Left = 104
+    Top = 112
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

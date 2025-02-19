@@ -28,6 +28,10 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , UnitName_KVK TVarChar
              , KVK TVarChar
              , AssetName TVarChar, AssetName_two TVarChar
+             , CountTare1 TFloat, CountTare2 TFloat, CountTare3 TFloat, CountTare4 TFloat, CountTare5 TFloat
+             , PartionNum TFloat
+             , BoxId_1 Integer, BoxName_1 TVarChar, BoxId_2 Integer, BoxName_2 TVarChar, BoxId_3 Integer, BoxName_3 TVarChar, BoxId_4 Integer, BoxName_4 TVarChar, BoxId_5 Integer, BoxName_5 TVarChar
+             , PartionCellId Integer, PartionCellName TVarChar
              , isErased Boolean
               )
 AS
@@ -99,8 +103,29 @@ BEGIN
            , MIString_KVK.ValueData          AS KVK
 
            , Object_Asset.ValueData          AS AssetName
-           , Object_Asset_two.ValueData      AS AssetName_two
-
+           , Object_Asset_two.ValueData      AS AssetName_two   
+           
+           , MIFloat_CountTare1.ValueData   ::TFloat AS CountTare1
+           , MIFloat_CountTare2.ValueData   ::TFloat AS CountTare2
+           , MIFloat_CountTare3.ValueData   ::TFloat AS CountTare3
+           , MIFloat_CountTare4.ValueData   ::TFloat AS CountTare4
+           , MIFloat_CountTare5.ValueData   ::TFloat AS CountTare5
+           , MIFloat_PartionNum.ValueData   ::TFloat AS PartionNum 
+           
+           , Object_Box1.Id                   AS BoxId_1
+           , Object_Box1.ValueData ::TVarChar AS BoxName_1
+           , Object_Box2.Id                   AS BoxId_2
+           , Object_Box2.ValueData ::TVarChar AS BoxName_2
+           , Object_Box3.Id                   AS BoxId_3
+           , Object_Box3.ValueData ::TVarChar AS BoxName_3
+           , Object_Box4.Id                   AS BoxId_4
+           , Object_Box4.ValueData ::TVarChar AS BoxName_4
+           , Object_Box5.Id                   AS BoxId_5
+           , Object_Box5.ValueData ::TVarChar AS BoxName_5        
+           
+           , Object_PartionCell.Id                   AS PartionCellId
+           , Object_PartionCell.ValueData ::TVarChar AS PartionCellName
+           
            , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -170,6 +195,26 @@ BEGIN
                                         ON MIFloat_WeightOther.MovementItemId = MovementItem.Id
                                        AND MIFloat_WeightOther.DescId = zc_MIFloat_WeightOther()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare1
+                                        ON MIFloat_CountTare1.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountTare1.DescId = zc_MIFloat_CountTare1()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare2
+                                        ON MIFloat_CountTare2.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountTare2.DescId = zc_MIFloat_CountTare2()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare3
+                                        ON MIFloat_CountTare3.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountTare3.DescId = zc_MIFloat_CountTare3()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare4
+                                        ON MIFloat_CountTare4.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountTare4.DescId = zc_MIFloat_CountTare4()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare5
+                                        ON MIFloat_CountTare5.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountTare5.DescId = zc_MIFloat_CountTare5()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionNum
+                                        ON MIFloat_PartionNum.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionNum.DescId = zc_MIFloat_PartionNum()
+
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
@@ -233,7 +278,37 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
                                              ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
-            LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = MILinkObject_Asset_two.ObjectId
+            LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = MILinkObject_Asset_two.ObjectId 
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Box1
+                                             ON MILinkObject_Box1.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Box1.DescId = zc_MILinkObject_Box1()
+            LEFT JOIN Object AS Object_Box1 ON Object_Box1.Id = MILinkObject_Box1.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Box2
+                                             ON MILinkObject_Box2.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Box2.DescId = zc_MILinkObject_Box2()
+            LEFT JOIN Object AS Object_Box2 ON Object_Box2.Id = MILinkObject_Box2.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Box3
+                                             ON MILinkObject_Box3.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Box3.DescId = zc_MILinkObject_Box3()
+            LEFT JOIN Object AS Object_Box3 ON Object_Box3.Id = MILinkObject_Box3.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Box4
+                                             ON MILinkObject_Box4.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Box4.DescId = zc_MILinkObject_Box4()
+            LEFT JOIN Object AS Object_Box4 ON Object_Box4.Id = MILinkObject_Box4.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Box5
+                                             ON MILinkObject_Box5.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Box5.DescId = zc_MILinkObject_Box5()
+            LEFT JOIN Object AS Object_Box5 ON Object_Box5.Id = MILinkObject_Box5.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell
+                                             ON MILinkObject_PartionCell.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PartionCell.DescId = zc_MILinkObject_PartionCell()
+            LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
 ;
 
 END;

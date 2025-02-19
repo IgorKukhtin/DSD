@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Box(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BoxVolume TFloat, BoxWeight TFloat
              , BoxHeight TFloat, BoxLength TFloat, BoxWidth TFloat
+             , NPP TFloat
              , isErased boolean
               )
 AS
@@ -27,7 +28,8 @@ BEGIN
 
                , COALESCE (ObjectFloat_Height.ValueData,0) ::TFloat  AS BoxHeight
                , COALESCE (ObjectFloat_Length.ValueData,0) ::TFloat  AS BoxLength
-               , COALESCE (ObjectFloat_Width.ValueData,0)  ::TFloat  AS BoxWidth
+               , COALESCE (ObjectFloat_Width.ValueData,0)  ::TFloat  AS BoxWidth 
+               , COALESCE (ObjectFloat_NPP.ValueData,0)    ::TFloat  AS NPP
 
                , Object.isErased   AS isErased
 
@@ -51,6 +53,10 @@ BEGIN
                                   ON ObjectFloat_Width.ObjectId = Object.Id
                                  AND ObjectFloat_Width.DescId = zc_ObjectFloat_Box_Width()
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_NPP
+                                  ON ObjectFloat_NPP.ObjectId = Object.Id
+                                 AND ObjectFloat_NPP.DescId = zc_ObjectFloat_Box_NPP()
+
        WHERE Object.DescId = zc_Object_Box()
       UNION ALL
        SELECT 0 AS Id
@@ -62,6 +68,7 @@ BEGIN
             , 0 :: TFloat AS BoxHeight
             , 0 :: TFloat AS BoxLength
             , 0 :: TFloat AS BoxWidth
+            , 0 :: TFloat AS NPP
             , FALSE       AS isErased
       ;
 
@@ -74,6 +81,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.02.25         *
  24.06.18         *
  09.10.14                                                       *
 */
