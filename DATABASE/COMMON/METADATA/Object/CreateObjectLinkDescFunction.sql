@@ -2250,8 +2250,17 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_UnitPeresort_Unit', 'Подразделение', zc_Object_UnitPeresort(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UnitPeresort_Unit');
   
-   
-    
+  CREATE OR REPLACE FUNCTION zc_ObjectLink_MessagePersonalService_Member() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_Member'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MessagePersonalService_Member', 'Физические лица', zc_Object_MessagePersonalService(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_Member');
+
+  CREATE OR REPLACE FUNCTION zc_ObjectLink_MessagePersonalService_PersonalServiceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_PersonalServiceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MessagePersonalService_PersonalServiceList', 'Ведомости начисления', zc_Object_MessagePersonalService(), zc_Object_PersonalServiceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_PersonalServiceList');
+  
+
+
+
             
 
     
@@ -3149,6 +3158,8 @@ SELECT 'zc_ObjectLink_GoodsGroupProperty_Parent', 'Аналитический классификатор',
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 19.02.25         * zc_ObjectLink_MessagePersonalService_PersonalServiceList
+                    zc_ObjectLink_MessagePersonalService_Member
  11.12.24         * zc_ObjectLink_BankAccount_PaidKind
  07.11.24         * zc_ObjectLink_Partner_PersonalSigning
  28.10.24         * zc_ObjectLink_Unit_Department

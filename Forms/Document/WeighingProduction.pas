@@ -277,6 +277,7 @@ type
     actSelectMIPrintPassport: TdsdPrintAction;
     spSelectMIPrintPassport: TdsdStoredProc;
     bbSelectMIPrintPassport: TdxBarButton;
+    sbbPrint: TdxBarSubItem;
   private
   public
   end;

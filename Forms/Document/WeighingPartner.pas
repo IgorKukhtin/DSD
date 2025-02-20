@@ -204,8 +204,15 @@ type
     bbsPrint: TdxBarSubItem;
     spSelectPrint_allPartner: TdsdStoredProc;
     dsdPrintAction1: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrintAction1: TdxBarButton;
     dxBarSeparator1: TdxBarSeparator;
+    actUpdateBox: TExecuteDialog;
+    macUpdateBox: TMultiAction;
+    spSelectMIPrintPassport: TdsdStoredProc;
+    actSelectMIPrintPassport: TdsdPrintAction;
+    actRefreshMI: TdsdDataSetRefresh;
+    bbSelectMIPrintPassport: TdxBarButton;
+    bbUpdateBox: TdxBarButton;
   private
   public
   end;
