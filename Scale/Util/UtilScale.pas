@@ -98,16 +98,16 @@ type
     NameTare9:String;   // only Scale
     NameTare10:String;  // only Scale
 
-    TareId_1:String;   // only Scale
-    TareId_2:String;   // only Scale
-    TareId_3:String;   // only Scale
-    TareId_4:String;   // only Scale
-    TareId_5:String;   // only Scale
-    TareId_6:String;   // only Scale
-    TareId_7:String;   // only Scale
-    TareId_8:String;   // only Scale
-    TareId_9:String;   // only Scale
-    TareId_10:String;  // only Scale
+    TareId_1:Integer;   // only Scale
+    TareId_2:Integer;   // only Scale
+    TareId_3:Integer;   // only Scale
+    TareId_4:Integer;   // only Scale
+    TareId_5:Integer;   // only Scale
+    TareId_6:Integer;   // only Scale
+    TareId_7:Integer;   // only Scale
+    TareId_8:Integer;   // only Scale
+    TareId_9:Integer;   // only Scale
+    TareId_10:Integer;  // only Scale
 
     Limit_Second_save_MI:Integer;
 
