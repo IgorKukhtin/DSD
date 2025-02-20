@@ -127,7 +127,8 @@ uses
   PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
   DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
   dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas',
-  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm};
+  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
+  DialogTare in '..\Scale\DialogTare.pas' {DialogTareForm};
 
 {$R *.res}
 
@@ -176,6 +177,7 @@ begin
          Application.CreateForm(TGuideAssetForm, GuideAssetForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
          Application.CreateForm(TGuidePartionCellForm, GuidePartionCellForm);
+         Application.CreateForm(TDialogTareForm, DialogTareForm);
 
   end
   else
@@ -217,6 +219,7 @@ begin
          Application.CreateForm(TGuideAssetForm, GuideAssetForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
          Application.CreateForm(TGuidePartionCellForm, GuidePartionCellForm);
+         Application.CreateForm(TDialogTareForm, DialogTareForm);
 
   end;
   //

@@ -2604,14 +2604,14 @@ begin
   oldParam2:=-1;
   oldParam3:=Date+1;
   // tare-main
-  PanelTare.Visible:= SettingMain.WeightTare1 = 0;
-  rgTareWeight.Visible:= SettingMain.WeightTare1 = 0;
+  PanelTare.Visible:= (SettingMain.WeightTare1 = 0) and (SettingMain.WeightTare3 = 0) ;
+  rgTareWeight.Visible:= (SettingMain.WeightTare1 = 0) and (SettingMain.WeightTare3 = 0) ;
   //вес тары (ручной режим)
-  gbTareWeightEnter.Visible:=(SettingMain.WeightTare1 = 0)and(GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'));
+  gbTareWeightEnter.Visible:=(SettingMain.WeightTare1 = 0) and (SettingMain.WeightTare3 = 0) and(GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'));
   // tare-fix
-  infoPanelTareFix.Visible:= SettingMain.WeightTare1 > 0;
-  infoPanelTare1.Visible:= SettingMain.WeightTare1 > 0;infoPanelTare1.Height:=35;
-  infoPanelTare2.Visible:= SettingMain.WeightTare2 > 0;infoPanelTare2.Height:=35;
+  infoPanelTareFix.Visible:= (SettingMain.WeightTare1 > 0) or (SettingMain.WeightTare3 > 0);
+  infoPanelTare1.Visible:= infoPanelTareFix.Visible = TRUE;infoPanelTare1.Height:=35;
+  infoPanelTare2.Visible:= infoPanelTareFix.Visible = TRUE;infoPanelTare2.Height:=35;
   infoPanelTare3.Visible:= SettingMain.WeightTare3 > 0;infoPanelTare3.Height:=35;
   infoPanelTare4.Visible:= SettingMain.WeightTare4 > 0;infoPanelTare4.Height:=35;
   infoPanelTare5.Visible:= SettingMain.WeightTare5 > 0;infoPanelTare5.Height:=35;
@@ -2621,7 +2621,7 @@ begin
   infoPanelTare9.Visible:= SettingMain.WeightTare9 > 0;infoPanelTare9.Height:=35;
   infoPanelTare10.Visible:= SettingMain.WeightTare10 > 0;infoPanelTare10.Height:=35;
   //вес тары (ручной режим)
-  infoPanelTare0.Visible:=(SettingMain.WeightTare1 > 0)and(GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'));
+  infoPanelTare0.Visible:=((SettingMain.WeightTare1 > 0) or (SettingMain.WeightTare3 > 0))and(GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'));
   infoPanelTare0.Height:=35;
   //
   if SettingMain.BranchCode = 115 then

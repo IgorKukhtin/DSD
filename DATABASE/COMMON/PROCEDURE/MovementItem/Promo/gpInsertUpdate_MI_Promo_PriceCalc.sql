@@ -659,8 +659,16 @@ BEGIN
 
           -- цена с/с  план - новая схема по прайсу 47-ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)
         , tmpPrice1_plan AS (SELECT tmpReceipt.GoodsId, tmpReceipt.GoodsKindId, tmpReceipt.ReceiptId
-                                  , SUM (CAST (_calcChildReceiptTable.Amount_out * COALESCE (PriceList1_gk.Price, PriceList1.Price, 0) / _calcChildReceiptTable.Amount_in AS NUMERIC (16,2))) AS Price_47
+                                  , SUM (CASE WHEN ObjectFloatReceipt_Value.ValueData > 0
+                                                  THEN CAST (_calcChildReceiptTable.Amount_out * COALESCE (PriceList1_gk.Price, PriceList1.Price, 0) / ObjectFloatReceipt_Value.ValueData -- _calcChildReceiptTable.Amount_in
+                                                             AS NUMERIC (16,2))
+                                                  ELSE 0
+                                         END) AS Price_47
                              FROM tmpReceipt
+
+                                  INNER JOIN ObjectFloat AS ObjectFloatReceipt_Value
+                                                         ON ObjectFloatReceipt_Value.ObjectId = tmpReceipt.ReceiptId
+                                                        AND ObjectFloatReceipt_Value.DescId = zc_ObjectFloat_Receipt_Value()
 
                                   INNER JOIN tmpChildReceiptTable AS _calcChildReceiptTable
                                                                   ON _calcChildReceiptTable.ReceiptId = tmpReceipt.ReceiptId

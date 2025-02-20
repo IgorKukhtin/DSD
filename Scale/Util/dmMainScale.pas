@@ -874,6 +874,16 @@ begin
        Params.AddParam('inCountTare10', ftFloat, ptInput, execParamsMI.ParamByName('CountTare10').AsFloat);
        Params.AddParam('inWeightTare10', ftFloat, ptInput, SettingMain.WeightTare10);
 
+       Params.AddParam('inTareId_1', ftInteger, ptInput, SettingMain.TareId_1);
+       Params.AddParam('inTareId_2', ftInteger, ptInput, SettingMain.TareId_2);
+       Params.AddParam('inTareId_3', ftInteger, ptInput, SettingMain.TareId_3);
+       Params.AddParam('inTareId_4', ftInteger, ptInput, SettingMain.TareId_4);
+       Params.AddParam('inTareId_5', ftInteger, ptInput, SettingMain.TareId_5);
+       Params.AddParam('inTareId_6', ftInteger, ptInput, SettingMain.TareId_6);
+       Params.AddParam('inTareId_7', ftInteger, ptInput, SettingMain.TareId_7);
+       Params.AddParam('inTareId_8', ftInteger, ptInput, SettingMain.TareId_8);
+       Params.AddParam('inTareId_9', ftInteger, ptInput, SettingMain.TareId_9);
+       Params.AddParam('inTareId_10', ftInteger, ptInput, SettingMain.TareId_10);
 
        Params.AddParam('inPrice', ftFloat, ptInput, execParamsMI.ParamByName('Price').AsFloat);
        Params.AddParam('inPrice_Return', ftFloat, ptInput, execParamsMI.ParamByName('Price_Return').AsFloat);
@@ -1903,51 +1913,61 @@ begin
               begin
                   SettingMain.WeightTare1:=DataSet.FieldByName('Weight').asFloat;
                   SettingMain.NameTare1:=DataSet.FieldByName('GuideName').asString;
+                  SettingMain.TareId_1:=DataSet.FieldByName('GuideId').asInteger;
               end;
               if DataSet.FieldByName('NPP').asInteger = 2 then
               begin
                   SettingMain.WeightTare2:=DataSet.FieldByName('Weight').asFloat;
                   SettingMain.NameTare2:=DataSet.FieldByName('GuideName').asString;
+                  SettingMain.TareId_2:=DataSet.FieldByName('GuideId').asInteger;
               end;
               if DataSet.FieldByName('NPP').asInteger = 3 then
               begin
                   SettingMain.WeightTare3:=DataSet.FieldByName('Weight').asFloat;
                   SettingMain.NameTare3:=DataSet.FieldByName('GuideName').asString;
+                  SettingMain.TareId_3:=DataSet.FieldByName('GuideId').asInteger;
               end;
               if DataSet.FieldByName('NPP').asInteger = 4 then
               begin
                   SettingMain.WeightTare4:=DataSet.FieldByName('Weight').asFloat;
                   SettingMain.NameTare4:=DataSet.FieldByName('GuideName').asString;
+                  SettingMain.TareId_4:=DataSet.FieldByName('GuideId').asInteger;
               end;
               if DataSet.FieldByName('NPP').asInteger = 5 then
               begin
                   SettingMain.WeightTare5:=DataSet.FieldByName('Weight').asFloat;
                   SettingMain.NameTare5:=DataSet.FieldByName('GuideName').asString;
+                  SettingMain.TareId_5:=DataSet.FieldByName('GuideId').asInteger;
               end;
               if DataSet.FieldByName('NPP').asInteger = 6 then
               begin
                   SettingMain.WeightTare6:=DataSet.FieldByName('Weight').asFloat;
                   SettingMain.NameTare6:=DataSet.FieldByName('GuideName').asString;
+                  SettingMain.TareId_6:=DataSet.FieldByName('GuideId').asInteger;
               end;
               if DataSet.FieldByName('NPP').asInteger = 7 then
               begin
                   SettingMain.WeightTare7:=DataSet.FieldByName('Weight').asFloat;
                   SettingMain.NameTare7:=DataSet.FieldByName('GuideName').asString;
+                  SettingMain.TareId_7:=DataSet.FieldByName('GuideId').asInteger;
               end;
               if DataSet.FieldByName('NPP').asInteger = 8 then
               begin
                   SettingMain.WeightTare8:=DataSet.FieldByName('Weight').asFloat;
                   SettingMain.NameTare8:=DataSet.FieldByName('GuideName').asString;
+                  SettingMain.TareId_8:=DataSet.FieldByName('GuideId').asInteger;
               end;
               if DataSet.FieldByName('NPP').asInteger = 9 then
               begin
                   SettingMain.WeightTare9:=DataSet.FieldByName('Weight').asFloat;
                   SettingMain.NameTare9:=DataSet.FieldByName('GuideName').asString;
+                  SettingMain.TareId_9:=DataSet.FieldByName('GuideId').asInteger;
               end;
               if DataSet.FieldByName('NPP').asInteger = 10 then
               begin
                   SettingMain.WeightTare10:=DataSet.FieldByName('Weight').asFloat;
                   SettingMain.NameTare10:=DataSet.FieldByName('GuideName').asString;
+                  SettingMain.TareId_10:=DataSet.FieldByName('GuideId').asInteger;
               end;
               //
               DataSet.Next;
