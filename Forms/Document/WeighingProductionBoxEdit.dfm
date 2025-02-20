@@ -4,7 +4,7 @@
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
   ClientHeight = 403
-  ClientWidth = 697
+  ClientWidth = 703
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -207,12 +207,12 @@
     Width = 170
   end
   object cxLabel10: TcxLabel
-    Left = 262
+    Left = 216
     Top = 59
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edCountTare1: TcxCurrencyEdit
-    Left = 262
+    Left = 216
     Top = 78
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -222,12 +222,12 @@
     Width = 64
   end
   object cxLabel11: TcxLabel
-    Left = 262
+    Left = 216
     Top = 103
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edCountTare2: TcxCurrencyEdit
-    Left = 262
+    Left = 216
     Top = 121
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -237,12 +237,12 @@
     Width = 64
   end
   object cxLabel13: TcxLabel
-    Left = 262
+    Left = 216
     Top = 146
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edCountTare3: TcxCurrencyEdit
-    Left = 262
+    Left = 216
     Top = 165
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -252,12 +252,12 @@
     Width = 64
   end
   object cxLabel14: TcxLabel
-    Left = 262
+    Left = 216
     Top = 190
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edCountTare4: TcxCurrencyEdit
-    Left = 262
+    Left = 216
     Top = 209
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -267,12 +267,12 @@
     Width = 64
   end
   object cxLabel15: TcxLabel
-    Left = 262
+    Left = 216
     Top = 234
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edCountTare5: TcxCurrencyEdit
-    Left = 262
+    Left = 216
     Top = 253
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -282,12 +282,12 @@
     Width = 64
   end
   object cxLabel16: TcxLabel
-    Left = 603
+    Left = 555
     Top = 59
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edCountTare6: TcxCurrencyEdit
-    Left = 603
+    Left = 555
     Top = 78
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -297,12 +297,12 @@
     Width = 64
   end
   object cxLabel17: TcxLabel
-    Left = 603
+    Left = 555
     Top = 103
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edCountTare7: TcxCurrencyEdit
-    Left = 603
+    Left = 555
     Top = 121
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -312,12 +312,12 @@
     Width = 64
   end
   object cxLabel18: TcxLabel
-    Left = 603
+    Left = 555
     Top = 146
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edCountTare8: TcxCurrencyEdit
-    Left = 603
+    Left = 555
     Top = 165
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -327,12 +327,12 @@
     Width = 64
   end
   object cxLabel19: TcxLabel
-    Left = 603
+    Left = 555
     Top = 190
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edCountTare9: TcxCurrencyEdit
-    Left = 603
+    Left = 555
     Top = 209
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -342,12 +342,12 @@
     Width = 64
   end
   object cxLabel20: TcxLabel
-    Left = 603
+    Left = 555
     Top = 234
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edCountTare10: TcxCurrencyEdit
-    Left = 603
+    Left = 555
     Top = 253
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -391,26 +391,26 @@
     Width = 173
   end
   object cxLabel23: TcxLabel
-    Left = 546
-    Top = 7
+    Left = 555
+    Top = 8
     Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080':'
   end
   object dePartionGoodsDate: TcxDateEdit
-    Left = 546
-    Top = 27
+    Left = 555
+    Top = 30
     EditValue = 42005d
     Properties.ReadOnly = True
     Properties.ShowTime = False
     TabOrder = 47
-    Width = 121
+    Width = 126
   end
   object cxLabel24: TcxLabel
-    Left = 205
-    Top = 59
+    Left = 301
+    Top = 54
     Caption = #1042#1077#1089
   end
-  object edBoxWeight1: TcxCurrencyEdit
-    Left = 205
+  object edBoxWeight1_tare: TcxCurrencyEdit
+    Left = 300
     Top = 78
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -421,12 +421,12 @@
     Width = 49
   end
   object cxLabel25: TcxLabel
-    Left = 206
+    Left = 301
     Top = 103
     Caption = #1042#1077#1089
   end
-  object edBoxWeight2: TcxCurrencyEdit
-    Left = 205
+  object edBoxWeight2_tare: TcxCurrencyEdit
+    Left = 300
     Top = 121
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -437,12 +437,12 @@
     Width = 49
   end
   object cxLabel26: TcxLabel
-    Left = 205
+    Left = 300
     Top = 146
     Caption = #1042#1077#1089
   end
-  object edBoxWeight3: TcxCurrencyEdit
-    Left = 205
+  object edBoxWeight3_tare: TcxCurrencyEdit
+    Left = 300
     Top = 165
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -453,12 +453,12 @@
     Width = 49
   end
   object cxLabel27: TcxLabel
-    Left = 205
+    Left = 300
     Top = 190
     Caption = #1042#1077#1089
   end
-  object edBoxWeight4: TcxCurrencyEdit
-    Left = 205
+  object edBoxWeight4_tare: TcxCurrencyEdit
+    Left = 300
     Top = 209
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -469,12 +469,12 @@
     Width = 49
   end
   object cxLabel28: TcxLabel
-    Left = 205
+    Left = 300
     Top = 234
     Caption = #1042#1077#1089
   end
-  object edBoxWeight5: TcxCurrencyEdit
-    Left = 204
+  object edBoxWeight5_tare: TcxCurrencyEdit
+    Left = 299
     Top = 253
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -485,12 +485,12 @@
     Width = 49
   end
   object cxLabel29: TcxLabel
-    Left = 546
+    Left = 632
     Top = 59
     Caption = #1042#1077#1089
   end
-  object edBoxWeight6: TcxCurrencyEdit
-    Left = 546
+  object edBoxWeight6_tare: TcxCurrencyEdit
+    Left = 632
     Top = 78
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -501,12 +501,12 @@
     Width = 49
   end
   object cxLabel30: TcxLabel
-    Left = 546
+    Left = 632
     Top = 103
     Caption = #1042#1077#1089
   end
-  object edBoxWeight7: TcxCurrencyEdit
-    Left = 546
+  object edBoxWeight7_tare: TcxCurrencyEdit
+    Left = 632
     Top = 121
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -517,12 +517,12 @@
     Width = 49
   end
   object cxLabel31: TcxLabel
-    Left = 546
+    Left = 632
     Top = 146
     Caption = #1042#1077#1089
   end
-  object edBoxWeight8: TcxCurrencyEdit
-    Left = 546
+  object edBoxWeight8_tare: TcxCurrencyEdit
+    Left = 632
     Top = 165
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -533,12 +533,12 @@
     Width = 49
   end
   object cxLabel32: TcxLabel
-    Left = 546
+    Left = 632
     Top = 190
     Caption = #1042#1077#1089
   end
-  object edBoxWeight9: TcxCurrencyEdit
-    Left = 546
+  object edBoxWeight9_tare: TcxCurrencyEdit
+    Left = 632
     Top = 209
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -549,12 +549,12 @@
     Width = 49
   end
   object cxLabel33: TcxLabel
-    Left = 546
+    Left = 632
     Top = 234
     Caption = #1042#1077#1089
   end
-  object edBoxWeight10: TcxCurrencyEdit
-    Left = 546
+  object edBoxWeight10_tare: TcxCurrencyEdit
+    Left = 632
     Top = 253
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -736,6 +736,7 @@
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
@@ -765,6 +766,7 @@
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
@@ -1004,70 +1006,151 @@
       item
         Name = 'BoxWeight1'
         Value = Null
-        Component = edBoxWeight1
+        Component = FormParams
+        ComponentItem = 'BoxWeight1'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'BoxWeight2'
         Value = Null
-        Component = edBoxWeight2
+        Component = FormParams
+        ComponentItem = 'BoxWeight2'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'BoxWeight3'
         Value = Null
-        Component = edBoxWeight3
+        Component = FormParams
+        ComponentItem = 'BoxWeight3'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'BoxWeight4'
         Value = Null
-        Component = edBoxWeight4
+        Component = FormParams
+        ComponentItem = 'BoxWeight4'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'BoxWeight5'
         Value = Null
-        Component = edBoxWeight5
+        Component = FormParams
+        ComponentItem = 'BoxWeight5'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'BoxWeight6'
         Value = Null
-        Component = edBoxWeight6
+        Component = FormParams
+        ComponentItem = 'BoxWeight6'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'BoxWeight7'
         Value = Null
-        Component = edBoxWeight7
+        Component = FormParams
+        ComponentItem = 'BoxWeight7'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'BoxWeight8'
         Value = Null
-        Component = edBoxWeight8
+        Component = FormParams
+        ComponentItem = 'BoxWeight8'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'BoxWeight9'
         Value = Null
-        Component = edBoxWeight9
+        Component = FormParams
+        ComponentItem = 'BoxWeight9'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'BoxWeight10'
         Value = Null
-        Component = edBoxWeight10
+        Component = FormParams
+        ComponentItem = 'BoxWeight10'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxWeight1_tare'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BoxWeight1_tare'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxWeight2_tare'
+        Value = Null
+        Component = edBoxWeight2_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxWeight3_tare'
+        Value = Null
+        Component = edBoxWeight3_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxWeight4_tare'
+        Value = Null
+        Component = edBoxWeight4_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxWeight5_tare'
+        Value = Null
+        Component = edBoxWeight5_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxWeight6_tare'
+        Value = Null
+        Component = edBoxWeight6_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxWeight7_tare'
+        Value = Null
+        Component = edBoxWeight7_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxWeight8_tare'
+        Value = Null
+        Component = edBoxWeight8_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxWeight9_tare'
+        Value = Null
+        Component = edBoxWeight9_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxWeight10_tare'
+        Value = Null
+        Component = edBoxWeight10_tare
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1570,8 +1653,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 171
-    Top = 32
+    Left = 115
+    Top = 24
   end
   object GuidesGoodsKind: TdsdGuides
     KeyField = 'Id'
@@ -1636,8 +1719,8 @@
       item
         Control = cxButtonOk
       end>
-    Left = 660
-    Top = 45
+    Left = 676
+    Top = 197
   end
   object spUpdate_before: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_WeighingProduction_BoxCalc'
@@ -1735,7 +1818,8 @@
       item
         Name = 'inBoxWeight1'
         Value = 0.000000000000000000
-        Component = edBoxWeight1
+        Component = FormParams
+        ComponentItem = 'BoxWeight1'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1743,7 +1827,8 @@
       item
         Name = 'inBoxWeight2'
         Value = 0.000000000000000000
-        Component = edBoxWeight2
+        Component = FormParams
+        ComponentItem = 'BoxWeight2'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1751,7 +1836,8 @@
       item
         Name = 'inBoxWeight3'
         Value = 0.000000000000000000
-        Component = edBoxWeight3
+        Component = FormParams
+        ComponentItem = 'BoxWeight3'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1759,7 +1845,8 @@
       item
         Name = 'inBoxWeight4'
         Value = 0.000000000000000000
-        Component = edBoxWeight4
+        Component = FormParams
+        ComponentItem = 'BoxWeight4'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1767,7 +1854,8 @@
       item
         Name = 'inBoxWeight5'
         Value = 0.000000000000000000
-        Component = edBoxWeight5
+        Component = FormParams
+        ComponentItem = 'BoxWeight5'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1775,7 +1863,8 @@
       item
         Name = 'inBoxWeight6'
         Value = 0.000000000000000000
-        Component = edBoxWeight6
+        Component = FormParams
+        ComponentItem = 'BoxWeight6'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1783,7 +1872,8 @@
       item
         Name = 'inBoxWeight7'
         Value = 0.000000000000000000
-        Component = edBoxWeight7
+        Component = FormParams
+        ComponentItem = 'BoxWeight7'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1791,7 +1881,8 @@
       item
         Name = 'inBoxWeight8'
         Value = 0.000000000000000000
-        Component = edBoxWeight8
+        Component = FormParams
+        ComponentItem = 'BoxWeight8'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1799,7 +1890,8 @@
       item
         Name = 'inBoxWeight9'
         Value = 0.000000000000000000
-        Component = edBoxWeight9
+        Component = FormParams
+        ComponentItem = 'BoxWeight9'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1807,7 +1899,8 @@
       item
         Name = 'inBoxWeight10'
         Value = 0.000000000000000000
-        Component = edBoxWeight10
+        Component = FormParams
+        ComponentItem = 'BoxWeight10'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1833,10 +1926,80 @@
         Component = edBoxWeightTotal
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxWeight1_tare'
+        Value = Null
+        Component = edBoxWeight1_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxWeight2_tare'
+        Value = Null
+        Component = edBoxWeight2_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxWeight3_tare'
+        Value = Null
+        Component = edBoxWeight3_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxWeight4_tare'
+        Value = Null
+        Component = edBoxWeight4_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxWeight5_tare'
+        Value = Null
+        Component = edBoxWeight5_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxWeight6_tare'
+        Value = Null
+        Component = edBoxWeight6_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxWeight7_tare'
+        Value = Null
+        Component = edBoxWeight7_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxWeight8_tare'
+        Value = Null
+        Component = edBoxWeight8_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxWeight9_tare'
+        Value = Null
+        Component = edBoxWeight9_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxWeight10_tare'
+        Value = Null
+        Component = edBoxWeight10_tare
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 650
-    Top = 104
+    Left = 674
+    Top = 272
   end
   object HeaderExit: THeaderExit
     ExitList = <
@@ -1871,7 +2034,7 @@
         Control = edCountTare10
       end>
     Action = actUpdate_Calc_before
-    Left = 652
-    Top = 188
+    Left = 676
+    Top = 332
   end
 end
