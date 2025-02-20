@@ -7,11 +7,18 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                                   , TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+                                                                   , TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);*/
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingPartner(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -36,12 +43,31 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingPartner(
     IN inWeightTare5         TFloat    , -- Вес ящ. вида5
     IN inCountTare6          TFloat    , -- Количество ящ. вида6
     IN inWeightTare6         TFloat    , -- Вес ящ. вида6
-        
+    IN inCountTare7          TFloat    , -- Количество ящ. вида7
+    IN inWeightTare7         TFloat    , -- Вес ящ. вида7
+    IN inCountTare8          TFloat    , -- Количество ящ. вида8
+    IN inWeightTare8         TFloat    , -- Вес ящ. вида8
+    IN inCountTare9          TFloat    , -- Количество ящ. вида9
+    IN inWeightTare9         TFloat    , -- Вес ящ. вида9
+    IN inCountTare10         TFloat    , -- Количество ящ. вида10
+    IN inWeightTare10        TFloat    , -- Вес ящ. вида10
+
+    IN inTareId_1              Integer   , --
+    IN inTareId_2              Integer   , --
+    IN inTareId_3              Integer   , --
+    IN inTareId_4              Integer   , --
+    IN inTareId_5              Integer   , --
+    IN inTareId_6              Integer   , --
+    IN inTareId_7              Integer   , --
+    IN inTareId_8              Integer   , --
+    IN inTareId_9              Integer   , --
+    IN inTareId_10             Integer   , --
+
     IN inCountPack           TFloat    , -- Количество упаковок
     IN inHeadCount           TFloat    , -- Количество голов
     IN inBoxCount            TFloat    , -- Количество Ящик(гофро)
     IN inBoxNumber           TFloat    , -- Номер ящика
-    IN inLevelNumber         TFloat    , -- Номер слоя 
+    IN inLevelNumber         TFloat    , -- Номер слоя
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
@@ -51,9 +77,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingPartner(
     IN inPriceListId         Integer   , -- Прайс
     IN inBoxId               Integer   , -- Ящик(гофро)
     IN inMovementId_Promo    Integer   ,
-    IN inIsBarCode           Boolean   , -- 
+    IN inIsBarCode           Boolean   , --
+    IN inBranchCode          Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS Integer
 AS
 $BODY$
@@ -72,7 +99,7 @@ BEGIN
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-   
+
      -- сохранили свойство <MovementId-Акция>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), ioId, inMovementId_Promo);
 
@@ -110,30 +137,104 @@ BEGIN
      -- сохранили свойство <По сканеру>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_BarCode(), ioId, inIsBarCode);
 
-     -- сохранили свойство <Количество ящ. вида1>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare1(), ioId, inCountTare1);
-     -- сохранили свойство <Вес ящ. вида1>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare1(), ioId, inWeightTare1);
-     -- сохранили свойство <Количество ящ. вида2>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare2(), ioId, inCountTare2);
-     -- сохранили свойство <Вес ящ. вида2>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare2(), ioId, inWeightTare2);
-     -- сохранили свойство <Количество ящ. вида3>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare3(), ioId, inCountTare3);
-     -- сохранили свойство <Вес ящ. вида3>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare3(), ioId, inWeightTare3);
-     -- сохранили свойство <Количество ящ. вида4>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare4(), ioId, inCountTare4);
-     -- сохранили свойство <Вес ящ. вида4>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare4(), ioId, inWeightTare4);
-     -- сохранили свойство <Количество ящ. вида5>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare5(), ioId, inCountTare5);
-     -- сохранили свойство <Вес ящ. вида5>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare5(), ioId, inWeightTare5);
-     -- сохранили свойство <Количество ящ. вида6>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare6(), ioId, inCountTare6);
-     -- сохранили свойство <Вес ящ. вида6>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare6(), ioId, inWeightTare6);
+
+     IF inBranchCode = 115
+     THEN
+         -- можно заполнить 5 параметров
+         IF (CASE WHEN inCountTare1  > 0 THEN 1 ELSE 0 END
+           + CASE WHEN inCountTare2  > 0 THEN 1 ELSE 0 END
+           + CASE WHEN inCountTare3  > 0 THEN 1 ELSE 0 END
+           + CASE WHEN inCountTare4  > 0 THEN 1 ELSE 0 END
+           + CASE WHEN inCountTare5  > 0 THEN 1 ELSE 0 END
+           + CASE WHEN inCountTare6  > 0 THEN 1 ELSE 0 END
+           + CASE WHEN inCountTare7  > 0 THEN 1 ELSE 0 END
+           + CASE WHEN inCountTare8  > 0 THEN 1 ELSE 0 END
+           + CASE WHEN inCountTare9  > 0 THEN 1 ELSE 0 END
+           + CASE WHEN inCountTare10 > 0 THEN 1 ELSE 0 END) > 5
+         THEN
+             RAISE EXCEPTION 'Ошибка.Заполнено более 5 значений';
+         END IF;
+
+
+         PERFORM CASE WHEN tmp.Ord = 1 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box1(), ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 2 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box2(), ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 3 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box3(), ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 4 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box4(), ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 5 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box5(), ioId, tmp.BoxId)
+                 END
+               , CASE WHEN tmp.Ord = 1 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare1(), ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 2 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare2(), ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 3 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare3(), ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 4 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare4(), ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 5 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare5(), ioId, tmp.CountTare ::TFloat)
+                 END
+
+               , CASE WHEN tmp.Ord = 1 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare1(), ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 2 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare2(), ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 3 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare3(), ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 4 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare4(), ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 5 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare5(), ioId, tmp.WeightTare ::TFloat)
+                 END
+
+         FROM (WITH tmpParamAll AS (SELECT inTareId_1 AS BoxId, COALESCE (inCountTare1,0) AS CountTare, COALESCE (inWeightTare1, 0) AS WeightTare, 1 AS npp
+                          UNION ALL SELECT inTareId_2 AS BoxId, COALESCE (inCountTare2,0) AS CountTare, COALESCE (inWeightTare2, 0) AS WeightTare, 2 AS npp
+                          UNION ALL SELECT inTareId_3 AS BoxId, COALESCE (inCountTare3,0) AS CountTare, COALESCE (inWeightTare3, 0) AS WeightTare, 3 AS npp
+                          UNION ALL SELECT inTareId_4 AS BoxId, COALESCE (inCountTare4,0) AS CountTare, COALESCE (inWeightTare4, 0) AS WeightTare, 4 AS npp
+                          UNION ALL SELECT inTareId_5 AS BoxId, COALESCE (inCountTare5,0) AS CountTare, COALESCE (inWeightTare5, 0) AS WeightTare, 5 AS npp
+                          UNION ALL SELECT inTareId_6 AS BoxId, COALESCE (inCountTare6,0) AS CountTare, COALESCE (inWeightTare6, 0) AS WeightTare, 6 AS npp
+                          UNION ALL SELECT inTareId_7 AS BoxId, COALESCE (inCountTare7,0) AS CountTare, COALESCE (inWeightTare7, 0) AS WeightTare, 7 AS npp
+                          UNION ALL SELECT inTareId_8 AS BoxId, COALESCE (inCountTare8,0) AS CountTare, COALESCE (inWeightTare8, 0) AS WeightTare, 8 AS npp
+                          UNION ALL SELECT inTareId_9 AS BoxId, COALESCE (inCountTare9,0) AS CountTare, COALESCE (inWeightTare9, 0) AS WeightTare, 9 AS npp
+                          UNION ALL SELECT inTareId_10 AS BoxId, COALESCE (inCountTare10,0) AS CountTare, COALESCE (inWeightTare10, 0) AS WeightTare, 10 AS npp
+                                   )
+                     , tmpParam AS (SELECT tmpParamAll.*
+                                         , ROW_NUMBER() OVER (ORDER BY tmpParamAll.npp) AS Ord
+                                    FROM tmpParamAll
+                                    WHERE tmpParamAll.CountTare <> 0 AND tmpParamAll.BoxId <> 0
+                                   )
+                            -- всегда 5 параметров если вдруг нужно что-то обнулить
+                          , tmp AS (SELECT 1 AS Ord
+                          UNION ALL SELECT 2 AS Ord
+                          UNION ALL SELECT 3 AS Ord
+                          UNION ALL SELECT 4 AS Ord
+                          UNION ALL SELECT 5 AS Ord
+                                    )
+               SELECT COALESCE (tmpParam.BoxId, 0)      AS BoxId
+                    , COALESCE (tmpParam.CountTare, 0)  AS CountTare
+                    , COALESCE (tmpParam.WeightTare, 0) AS WeightTare
+                    , tmp.Ord
+               FROM tmp
+                    LEFT JOIN tmpParam ON tmpParam.Ord = tmp.Ord
+              ) AS tmp;
+
+     ELSE
+
+         -- сохранили свойство <Количество ящ. вида1>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare1(), ioId, inCountTare1);
+         -- сохранили свойство <Вес ящ. вида1>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare1(), ioId, inWeightTare1);
+         -- сохранили свойство <Количество ящ. вида2>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare2(), ioId, inCountTare2);
+         -- сохранили свойство <Вес ящ. вида2>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare2(), ioId, inWeightTare2);
+         -- сохранили свойство <Количество ящ. вида3>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare3(), ioId, inCountTare3);
+         -- сохранили свойство <Вес ящ. вида3>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare3(), ioId, inWeightTare3);
+         -- сохранили свойство <Количество ящ. вида4>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare4(), ioId, inCountTare4);
+         -- сохранили свойство <Вес ящ. вида4>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare4(), ioId, inWeightTare4);
+         -- сохранили свойство <Количество ящ. вида5>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare5(), ioId, inCountTare5);
+         -- сохранили свойство <Вес ящ. вида5>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare5(), ioId, inWeightTare5);
+         -- сохранили свойство <Количество ящ. вида6>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare6(), ioId, inCountTare6);
+         -- сохранили свойство <Вес ящ. вида6>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare6(), ioId, inWeightTare6);
+
+     END IF;
 
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
