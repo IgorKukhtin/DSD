@@ -21,6 +21,11 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_wms_Movement_WeighingProduction());
      vbUserId:= lpGetUserBySession (inSession);
 
+     IF COALESCE (inId,0) = 0 
+     THEN
+         RAISE EXCEPTION 'Ошибка.Строка не определена.';
+     END IF;
+
      -- параметры из документа
      SELECT Movement.DescId
           , Movement.StatusId                                                   

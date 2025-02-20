@@ -26,7 +26,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_WeighingProduction());
 
-     -- inShowAll:= TRUE;
+     -- inShowAll:= TRUE; 
+     IF COALESCE (inId,0) = 0 
+     THEN
+         RAISE EXCEPTION 'Ошибка.Строка не определена.';
+     END IF;
+     
      RETURN QUERY
      WITH
      tmpBox AS (SELECT MAX (tmp.BoxId_1) AS BoxId_1, MAX (tmp.BoxName_1) AS BoxName_1, MAX (tmp.BoxWeight1) AS BoxWeight1

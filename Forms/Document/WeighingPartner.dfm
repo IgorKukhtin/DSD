@@ -1522,6 +1522,10 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateBox'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1651,10 +1655,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbSelectMIPrintPassport'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end>
     end
-    object bb: TdxBarButton
+    object bbPrintAction1: TdxBarButton
       Action = dsdPrintAction1
       Category = 0
     end
@@ -1664,6 +1672,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Hint = 'Separator'
       Visible = ivAlways
       ShowCaption = False
+    end
+    object bbSelectMIPrintPassport: TdxBarButton
+      Action = actSelectMIPrintPassport
+      Category = 0
+    end
+    object bbUpdateBox: TdxBarButton
+      Action = macUpdateBox
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1780,6 +1796,20 @@ object WeighingPartnerForm: TWeighingPartnerForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actRefreshMI: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -2284,6 +2314,55 @@ object WeighingPartnerForm: TWeighingPartnerForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actSelectMIPrintPassport: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMIPrintPassport
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIPrintPassport
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1072#1089#1087#1086#1088#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1055#1072#1089#1087#1086#1088#1090#1072
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMI_WeighingProductionPassport'
+      ReportNameParam.Value = 'PrintMI_WeighingProductionPassport'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macUpdateBox: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateBox
+        end
+        item
+          Action = actRefreshMI
+        end
+        item
+          Action = actSelectMIPrintPassport
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1090#1072#1088#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1090#1072#1088#1099
+      ImageIndex = 69
+    end
     object actPrint_all: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>
@@ -2363,6 +2442,73 @@ object WeighingPartnerForm: TWeighingPartnerForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actUpdateBox: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1090#1072#1088#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1090#1072#1088#1099
+      ImageIndex = 69
+      FormName = 'TWeighingProductionBoxEditForm'
+      FormNameParam.Value = 'TWeighingProductionBoxEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionGoodsDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RealWeight'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RealWeight'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   object MasterDS: TDataSource
@@ -3738,6 +3884,35 @@ object WeighingPartnerForm: TWeighingPartnerForm
       end>
     PackSize = 1
     Left = 999
+    Top = 336
+  end
+  object spSelectMIPrintPassport: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_WeighingProduction_PrintPassport'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 831
     Top = 336
   end
 end

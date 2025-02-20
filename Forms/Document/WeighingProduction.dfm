@@ -355,6 +355,8 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 450
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = -285
+        ExplicitTop = -24
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -2049,39 +2051,15 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPrintNoGroup'
+          ItemName = 'sbbPrint'
         end
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintBarCode'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintStikerKVK'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSelectMIPrintPassport'
         end
         item
           Visible = True
@@ -2190,6 +2168,33 @@ object WeighingProductionForm: TWeighingProductionForm
     object bbSelectMIPrintPassport: TdxBarButton
       Action = actSelectMIPrintPassport
       Category = 0
+    end
+    object sbbPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintNoGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintBarCode'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStikerKVK'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSelectMIPrintPassport'
+        end>
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
