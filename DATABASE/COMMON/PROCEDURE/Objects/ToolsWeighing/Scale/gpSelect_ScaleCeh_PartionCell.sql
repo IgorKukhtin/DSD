@@ -11,6 +11,7 @@ RETURNS TABLE (PartionCellId   Integer
              , Level_cell Integer
              , BoxCount Integer
              , InvNumber TVarChar
+             , Name_search TVarChar
              , isErased  Boolean
               )
 AS
@@ -29,6 +30,7 @@ BEGIN
             , ObjectFloat_PartionCell_Level.ValueData    :: Integer AS Level_cell
             , ObjectFloat_PartionCell_BoxCount.ValueData :: Integer AS BoxCount
             , zfCalc_PartionCellName (Object_PartionCell.ValueData, ObjectFloat_PartionCell_BoxCount.ValueData, ObjectFloat_PartionCell_Level.ValueData) AS InvNumber
+            , (Object_PartionCell.ValueData ||';'||REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (Object_PartionCell.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '')) :: TVarChar AS Name_search
             , Object_PartionCell.isErased                           AS isErased
 
        FROM Object AS Object_PartionCell

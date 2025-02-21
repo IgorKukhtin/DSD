@@ -516,6 +516,10 @@ BEGIN
                        THEN '  (ПЕРЕПАК)'
                   ELSE ''
              END
+          || CASE WHEN inBranchCode = 115
+                       THEN '  (ПОДГОТОВКА)'
+                  ELSE ''
+             END
             ) :: TVarChar AS MovementDescName_master
 
            , MovementDesc_next.ItemName AS MovementDescName_next
@@ -644,9 +648,16 @@ BEGIN
                         THEN 'Приход на филиал'
                    WHEN tmp.MovementDescId = zc_Movement_SendOnPrice()
                         THEN 'Возврат с филиала'
+
+
                    ELSE tmp.ItemName -- MovementDesc.ItemName
                      || CASE WHEN EXISTS (SELECT 1 FROM _tmpToolsWeighing WHERE _tmpToolsWeighing.MovementDescId = zc_Movement_Inventory() AND _tmpToolsWeighing.isListInventory = TRUE)
                                   THEN '  (выборочная для списка товаров)'
+                             ELSE ''
+                        END
+
+                     || CASE WHEN inBranchCode = 115
+                                  THEN '  (ПОДГОТОВКА)'
                              ELSE ''
                         END
 

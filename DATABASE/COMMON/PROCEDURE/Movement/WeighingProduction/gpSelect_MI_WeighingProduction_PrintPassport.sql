@@ -30,7 +30,8 @@ BEGIN
      SELECT Movement.DescId
           , Movement.StatusId                                                   
           , Movement.OperDate
-          , Object_User.ValueData  :: TVarChar AS StoreKeeperName -- кладовщик
+            -- кладовщик
+          , CASE WHEN Object_User.Id = 5 THEN 'Морозенко А.А.' ELSE Object_User.ValueData END
             INTO vbDescId, vbStatusId, vbOperDate, vbStoreKeeperName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_User

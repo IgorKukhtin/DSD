@@ -18,7 +18,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, Vcl.ComCtrls, dxCore, cxDateUtils, cxButtonEdit,
+  cxMaskEdit, cxDropDownEdit, cxCalendar;
 
 type
   TDialogTareForm = class(TAncestorDialogScaleForm)
@@ -100,6 +101,19 @@ type
     infoPanelWeightTare7: TPanel;
     LabelWeightTare7: TLabel;
     PanelWeightTare7: TPanel;
+    infoPanelPartion: TPanel;
+    Panel1: TPanel;
+    Label1: TLabel;
+    PanelWeightGoods_total: TPanel;
+    Panel3: TPanel;
+    Label2: TLabel;
+    PanelWeightTare_total: TPanel;
+    PanelPartionDate: TPanel;
+    LabelPartionDate: TLabel;
+    PartionDateEdit: TcxDateEdit;
+    AssetPanel: TPanel;
+    AssetLabel: TLabel;
+    EditPartionCell: TcxButtonEdit;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
