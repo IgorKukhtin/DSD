@@ -1480,7 +1480,7 @@ begin
      //
      if (ParamsMI.ParamByName('PricePartner').AsFloat = 0) and (calcPricePartner > 0) then ParamsMI.ParamByName('PricePartner').AsFloat:= calcPricePartner;
 
-     if (SettingMain.BranchCode = 115) and (ParamsMI.ParamByName('PartionCellId').AsInteger = 0) then
+     if (1=0) and (SettingMain.BranchCode = 115) and (ParamsMI.ParamByName('PartionCellId').AsInteger = 0) then
      begin
           ShowMessage('Ошибка.Не установлена Ячейка №.');
           ActiveControl:= EditPartionCell;
