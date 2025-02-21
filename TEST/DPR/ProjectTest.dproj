@@ -5507,6 +5507,14 @@
 				<Form>MessagePersonalServiceLastForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_WeighingPartner_Passport.pas">
+				<Form>Report_WeighingPartner_PassportForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_WeighingPartner_PassportDialog.pas">
+				<Form>Report_WeighingPartner_PassportDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
