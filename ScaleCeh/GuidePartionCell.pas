@@ -22,7 +22,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TGuidePartionCellForm = class(TForm)
@@ -156,7 +156,7 @@ begin
      //
      if (fEnterName)and(trim(EditName.Text)<>'')
      then
-       if  (pos(AnsiUpperCase(EditName.Text),AnsiUpperCase(DataSet.FieldByName('PartionCellName').AsString))>0)
+       if  (pos(AnsiUpperCase(EditName.Text),AnsiUpperCase(DataSet.FieldByName('Name_search').AsString))>0)
        then Accept:=true else Accept:=false;
 
 end;

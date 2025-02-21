@@ -769,8 +769,7 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitLeft = -5
-              ExplicitTop = 1
+              ExplicitWidth = 19
             end
             object PanelWeightTare1: TPanel
               Left = 0
@@ -1673,9 +1672,9 @@ object GuideGoodsForm: TGuideGoodsForm
       end
     end
     object infoPanelPriceList: TPanel
-      Left = 732
+      Left = 902
       Top = 0
-      Width = 250
+      Width = 80
       Height = 378
       Align = alRight
       BevelOuter = bvNone
@@ -1683,7 +1682,7 @@ object GuideGoodsForm: TGuideGoodsForm
       object rgPriceList: TRadioGroup
         Left = 0
         Top = 41
-        Width = 250
+        Width = 80
         Height = 337
         Align = alClient
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
@@ -1696,7 +1695,7 @@ object GuideGoodsForm: TGuideGoodsForm
       object gbPriceListCode: TGroupBox
         Left = 0
         Top = 0
-        Width = 250
+        Width = 80
         Height = 41
         Align = alTop
         Caption = #1050#1086#1076
@@ -2023,6 +2022,186 @@ object GuideGoodsForm: TGuideGoodsForm
           OnExit = EditWeightValueExit
           OnKeyDown = EditPriceKeyDown
           Width = 125
+        end
+      end
+    end
+    object infoPanelPartion: TPanel
+      Left = 732
+      Top = 0
+      Width = 170
+      Height = 378
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 4
+      object Panel1: TPanel
+        Left = 0
+        Top = 329
+        Width = 170
+        Height = 49
+        Align = alBottom
+        TabOrder = 0
+        object Label1: TLabel
+          Left = 1
+          Top = 1
+          Width = 168
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1042#1077#1089' '#1053#1077#1090#1090#1086' '#1048#1058#1054#1043#1054
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 93
+        end
+        object PanelWeightGoods_total: TPanel
+          Left = 1
+          Top = 15
+          Width = 168
+          Height = 33
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelWeightGoods_total'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clNavy
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
+      end
+      object Panel3: TPanel
+        Left = 0
+        Top = 280
+        Width = 170
+        Height = 49
+        Align = alBottom
+        TabOrder = 1
+        object Label2: TLabel
+          Left = 1
+          Top = 1
+          Width = 168
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1042#1077#1089' '#1090#1072#1088#1099' '#1048#1058#1054#1043#1054
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 89
+        end
+        object PanelWeightTare_total: TPanel
+          Left = 1
+          Top = 15
+          Width = 168
+          Height = 33
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelWeightTare_total'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clNavy
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
+      end
+      object PanelPartionDate: TPanel
+        Left = 0
+        Top = 0
+        Width = 170
+        Height = 49
+        Align = alTop
+        BevelInner = bvRaised
+        BevelOuter = bvNone
+        TabOrder = 2
+        object LabelPartionDate: TLabel
+          Left = 1
+          Top = 1
+          Width = 168
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = '   '#1055#1072#1088#1090#1080#1103' '#1079#1072
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 62
+        end
+        object PartionDateEdit: TcxDateEdit
+          Left = 23
+          Top = 15
+          EditValue = 41640d
+          ParentFont = False
+          Properties.DateButtons = [btnToday]
+          Properties.SaveTime = False
+          Properties.ShowTime = False
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clBlack
+          Style.Font.Height = -12
+          Style.Font.Name = 'Arial'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+          TabOrder = 0
+          OnKeyDown = PartionDateEditKeyDown
+          Width = 120
+        end
+      end
+      object AssetPanel: TPanel
+        Left = 0
+        Top = 49
+        Width = 170
+        Height = 49
+        Align = alTop
+        Alignment = taLeftJustify
+        TabOrder = 3
+        object AssetLabel: TLabel
+          Left = 1
+          Top = 1
+          Width = 168
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1042#1099#1073#1086#1088' '#1071#1095#1077#1081#1082#1072' '#8470
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 95
+        end
+        object EditPartionCell: TcxButtonEdit
+          Left = 4
+          Top = 18
+          ParentFont = False
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Properties.OnButtonClick = EditPartionCellPropertiesButtonClick
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clBlack
+          Style.Font.Height = -11
+          Style.Font.Name = 'Arial'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+          TabOrder = 0
+          Text = 'EditPartionCell'
+          OnKeyDown = EditPartionCellKeyDown
+          Width = 163
         end
       end
     end

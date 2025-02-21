@@ -1298,6 +1298,10 @@ $BODY$
 */
 
 /*
+--
+-- 1
+--
+
  select distinct
                    zfCalc_ReceiptChild_GroupNumber (inGoodsId                := _calcChildReceiptTable.GoodsId_out
                                                    , inGoodsKindId            := _calcChildReceiptTable.GoodsKindId_out
@@ -1364,6 +1368,105 @@ and ObjectBoolean_Main.ValueData = true
 
 -- select * from Object where Id = 18886
 -- select * from Movement where Id = 30065853
+
+
+--
+-- 2
+--
+
+with tmpChildReceiptTable AS (SELECT lpSelect.ReceiptId_from, lpSelect.ReceiptId, lpSelect.GoodsId_in, lpSelect.GoodsKindId_in, lpSelect.Amount_in
+                                        , lpSelect.ReceiptChildId, lpSelect.GoodsId_out, lpSelect.GoodsKindId_out, lpSelect.Amount_out, lpSelect.isStart, lpSelect.isCost
+                                        , COALESCE(PriceList3.Price, PriceList3_test.Price, 0) AS Price3
+                                   FROM lpSelect_Object_ReceiptChildDetail () AS lpSelect
+                                        -- 46 - ПРАЙС - ФАКТ калькуляции без бонусов
+                                        LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3 ON PriceList3.PriceListId = 18885
+                                                                                                AND PriceList3.GoodsId     = lpSelect.GoodsId_out
+                                                                                                AND CURRENT_DATE >= PriceList3.StartDate AND CURRENT_DATE < PriceList3.EndDate
+                                        -- 46 - ПРАЙС - ФАКТ калькуляции без бонусов
+                                        LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3_test ON PriceList3_test.PriceListId = 18885
+                                                                                                     AND PriceList3_test.GoodsId     = lpSelect.GoodsId_out
+                                                                                                     AND CURRENT_DATE >= PriceList3_test.StartDate AND CURRENT_DATE < PriceList3_test.EndDate
+                                                                                                    -- AND vbUserId = 5
+
+
+where lpSelect.ReceiptId = 6482080
+and lpSelect.isCost = false
+
+  )
+
+        , tmpReceipt AS (SELECT tmpGoods.GoodsId, COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) AS  GoodsKindId
+                              , MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
+                         FROM (select distinct ObjectLink_Receipt_Goods.ChildObjectId as GoodsId from tmpChildReceiptTable
+                              INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                    ON ObjectLink_Receipt_Goods.ObjectId = tmpChildReceiptTable.ReceiptId
+                                                   AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+) as tmpGoods
+                              INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                    ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
+                                                   AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                              INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                                 AND Object_Receipt.isErased = FALSE
+                              INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                       ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                                      AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                      AND ObjectBoolean_Main.ValueData = TRUE
+                              LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                   ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
+                                                  AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                         GROUP BY tmpGoods.GoodsId, COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0)
+                        )
+
+        , tmpPrice1_plan AS (SELECT tmpReceipt.GoodsId, tmpReceipt.GoodsKindId, tmpReceipt.ReceiptId
+                                  , SUM (CASE WHEN ObjectFloatReceipt_Value.ValueData > 0
+                                                  THEN CAST (_calcChildReceiptTable.Amount_out * COALESCE (PriceList1_gk.Price, PriceList1.Price, 0) / ObjectFloatReceipt_Value.ValueData -- _calcChildReceiptTable.Amount_in
+                                                             AS NUMERIC (16,2))
+                                                  ELSE 0
+                                         END) AS Price_47
+--                                  , _calcChildReceiptTable.GoodsId_out
+--                                  , _calcChildReceiptTable.GoodsKindId_out
+--, ObjectFloatReceipt_Value.ValueData
+--, _calcChildReceiptTable.Amount_out
+--, COALESCE (PriceList1_gk.Price, PriceList1.Price, 0)
+--, _calcChildReceiptTable.Amount_in
+--, _calcChildReceiptTable.ReceiptId_from, _calcChildReceiptTable.ReceiptId, _calcChildReceiptTable.GoodsId_in
+                             FROM tmpReceipt
+
+                                  --INNER JOIN _calcChildReceiptTable ON _calcChildReceiptTable.ReceiptId = tmpReceipt.ReceiptId
+                                  INNER JOIN tmpChildReceiptTable AS _calcChildReceiptTable
+                                                                  ON _calcChildReceiptTable.ReceiptId = tmpReceipt.ReceiptId
+                                                                   -- без затрат
+                                                                   AND _calcChildReceiptTable.isCost = FALSE
+                                                                   -- без этого
+                                                                   AND _calcChildReceiptTable.ReceiptId_from = 0
+
+
+                                  LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1_gk ON PriceList1_gk.PriceListId = 18886 -- inPriceListId_1
+                                                                                             AND PriceList1_gk.GoodsId     = _calcChildReceiptTable.GoodsId_out
+                                                                                             AND PriceList1_gk.GoodsKindId = _calcChildReceiptTable.GoodsKindId_out
+                                                                                             AND CURRENT_DATE >= PriceList1_gk.StartDate AND CURRENT_DATE < PriceList1_gk.EndDate
+
+                                  LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1 ON PriceList1.PriceListId = 18886 -- inPriceListId_1
+                                                                                          AND PriceList1.GoodsId     = _calcChildReceiptTable.GoodsId_out
+                                                                                          AND PriceList1.GoodsKindId = 0
+                                                                                          AND CURRENT_DATE >= PriceList1.StartDate AND CURRENT_DATE < PriceList1.EndDate
+                                                                                          AND PriceList1_gk.GoodsId IS NULL
+
+            LEFT JOIN ObjectFloat AS ObjectFloatReceipt_Value
+                                  ON ObjectFloatReceipt_Value.ObjectId = tmpReceipt.ReceiptId
+                                 AND ObjectFloatReceipt_Value.DescId = zc_ObjectFloat_Receipt_Value()
+-- where lpSelect.ReceiptId_from
+
+                             GROUP BY tmpReceipt.GoodsId, tmpReceipt.GoodsKindId, tmpReceipt.ReceiptId
+                              --    , _calcChildReceiptTable.GoodsId_out
+                                --  , _calcChildReceiptTable.GoodsKindId_out
+                            )
+
+select *
+from tmpPrice1_plan
+-- left join Object on Object.Id = GoodsId_out
+--left join Object as Object_2 on Object_2.Id = GoodsId_in
+-- order by GoodsId_out
+
 */
 -- тест
 --
