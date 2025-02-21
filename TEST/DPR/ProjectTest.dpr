@@ -1567,7 +1567,8 @@ uses
   Report_PartionCell_GoodsHistory in '..\..\Forms\Report\Report_PartionCell_GoodsHistory.pas' {Report_PartionCell_GoodsHistoryForm: TParentForm},
   PartionCellCheckEdit in '..\..\Forms\Guides\PartionCellCheckEdit.pas' {PartionCellCheckEditForm: TParentForm},
   Report_Promo_DetailError in '..\..\Forms\Report\Report_Promo_DetailError.pas' {Report_Promo_DetailErrorForm: TParentForm},
-  WeighingProductionBoxEdit in '..\..\Forms\Document\WeighingProductionBoxEdit.pas' {WeighingProductionBoxEditForm: TParentForm};
+  WeighingProductionBoxEdit in '..\..\Forms\Document\WeighingProductionBoxEdit.pas' {WeighingProductionBoxEditForm: TParentForm},
+  MessagePersonalServiceLast in '..\..\Forms\Guides\MessagePersonalServiceLast.pas' {MessagePersonalServiceLastForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -3,19 +3,19 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MessagePersonalService (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MessagePersonalService(
- INOUT ioId                      Integer,       -- ключ объекта <Бренд>
-    IN inCode                    Integer,       -- свойство <Код Бренда>
-    IN inName                    TVarChar,      -- главное Название Бренда 
+ INOUT ioId                      Integer,       -- ключ объекта
+ INOUT ioCode                    Integer,       -- № Сессии
+    IN inName                    TVarChar,      -- Сообщение об ошибке
     IN inPersonalServiceListId   Integer,       --
     IN inMemberId                Integer,       --
-    IN inComment                 TVarChar,      --
+    IN inComment                 TVarChar,      -- Примечание
     IN inSession                 TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;
+   DECLARE vbIsInsert Boolean;  
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_MessagePersonalService());
@@ -25,10 +25,10 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
    
     -- Если код не установлен, определяем его как последний+1
-   inCode:= lfGet_ObjectCode (inCode, zc_Object_MessagePersonalService()); 
+   ioCode:= lfGet_ObjectCode (ioCode, zc_Object_MessagePersonalService()); 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_MessagePersonalService(), inCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_MessagePersonalService(), ioCode, inName);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MessagePersonalService_PersonalServiceList(), ioId, inPersonalServiceListId);
@@ -47,7 +47,6 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -60,4 +59,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_MessagePersonalService()
+--

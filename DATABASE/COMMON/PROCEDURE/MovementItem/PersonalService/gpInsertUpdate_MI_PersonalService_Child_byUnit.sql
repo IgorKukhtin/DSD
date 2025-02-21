@@ -37,7 +37,64 @@ BEGIN
      vbStartDate := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);
      vbEndDate   := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 DAY')::TDateTime); 
      
-     
+     ---- Создать таблицу, в которую будут залиты все данные для анализа
+     CREATE TEMP TABLE _tmpReport (PersonalServiceListId Integer
+                                 , MemberId Integer
+                                 , PositionId Integer
+                                 , PositionLevelId Integer
+                                 , StaffListId Integer
+                                 , ModelServiceId Integer
+                                 , StaffListSummKindId Integer
+                                 , AmountOnOneMember TFloat
+                                 , Count_Member TFloat
+                                 , Count_Day TFloat
+                                 , SheetWorkTime_Amount TFloat
+                                 , SUM_MemberHours TFloat
+                                 , Price TFloat
+                                 , GrossOnOneMember TFloat
+                                 , KoeffHoursWork_car TFloat) ON COMMIT DROP;
+     INSERT INTO _tmpReport (PersonalServiceListId 
+                           , MemberId 
+                           , PositionId 
+                           , PositionLevelId 
+                           , StaffListId 
+                           , ModelServiceId 
+                           , StaffListSummKindId 
+                           , AmountOnOneMember 
+                           , Count_Member 
+                           , Count_Day 
+                           , SheetWorkTime_Amount 
+                           , SUM_MemberHours 
+                           , Price 
+                           , GrossOnOneMember 
+                           , KoeffHoursWork_car )
+     SELECT tmp.PersonalServiceListId
+          , tmp.MemberId
+          , tmp.PositionId
+          , tmp.PositionLevelId
+          , tmp.StaffListId
+          , tmp.ModelServiceId
+          , tmp.StaffListSummKindId
+          , tmp.AmountOnOneMember
+          , tmp.Count_Member
+          , tmp.Count_Day
+          , tmp.SheetWorkTime_Amount
+          , tmp.SUM_MemberHours
+          , tmp.Price
+          , tmp.GrossOnOneMember
+          , tmp.KoeffHoursWork_car
+     FROM gpSelect_Report_Wage_Server(inStartDate      := vbStartDate ::TDateTime --дата начала периода
+                                    , inEndDate        := vbEndDate   ::TDateTime --дата окончания периода
+                                    , inUnitId         := inUnitId    ::Integer   --подразделение
+                                    , inModelServiceId := 0           ::Integer   --модель начисления
+                                    , inMemberId       := 0           ::Integer   --сотрудник
+                                    , inPositionId     := 0           ::Integer   --должность
+                                    , inDetailDay                    := FALSE  ::Boolean   --детализировать по дням
+                                    , inDetailModelService           := FALSE  ::Boolean   --детализировать по моделям
+                                    , inDetailModelServiceItemMaster := FALSE  ::Boolean   --детализировать по типам документов в модели
+                                    , inDetailModelServiceItemChild  := FALSE  ::Boolean   --детализировать по товарам в типах документов
+                                    , inSession        := inSession   ::TVarChar
+                                    ) tmp;
 
        -- сохраняем расчитанные отчетом данные по зп
        PERFORM gpInsertUpdate_MI_PersonalService_Child_Auto (inUnitId                 := inUnitId
@@ -60,21 +117,11 @@ BEGIN
                                                            , inKoeff                  := tmp.KoeffHoursWork_car
                                                            , inSession                := inSession
                                                             )
-       FROM  gpSelect_Report_Wage_Server(inStartDate      := vbStartDate ::TDateTime --дата начала периода
-                                       , inEndDate        := vbEndDate   ::TDateTime --дата окончания периода
-                                       , inUnitId         := inUnitId    ::Integer   --подразделение
-                                       , inModelServiceId := 0           ::Integer   --модель начисления
-                                       , inMemberId       := 0           ::Integer   --сотрудник
-                                       , inPositionId     := 0           ::Integer   --должность
-                                       , inDetailDay                    := FALSE  ::Boolean   --детализировать по дням
-                                       , inDetailModelService           := FALSE  ::Boolean   --детализировать по моделям
-                                       , inDetailModelServiceItemMaster := FALSE  ::Boolean   --детализировать по типам документов в модели
-                                       , inDetailModelServiceItemChild  := FALSE  ::Boolean   --детализировать по товарам в типах документов
-                                       , inSession        := inSession   ::TVarChar
-                                       ) tmp;  
+       FROM  _tmpReport AS tmp;  
                                         
     outPersonalServiceDate := CURRENT_TIMESTAMP;
 
+    if vbUserId = 9457 then RAISE EXCEPTION 'Test.Ok.'; end if;
 
 END;
 $BODY$
