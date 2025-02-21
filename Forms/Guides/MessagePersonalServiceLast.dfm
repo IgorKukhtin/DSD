@@ -592,6 +592,7 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
     RefreshAction = actRefresh
     ComponentList = <
       item
+        Component = GuidesPersonalServiceList
       end>
     Left = 536
     Top = 160
