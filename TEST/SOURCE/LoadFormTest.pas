@@ -113,6 +113,7 @@ type
     procedure LoadMemberSheetWorkTimeFormTest;
     procedure LoadMemberHolidayFormTest;
     procedure LoadMemberPersonalServiceListFormTest;
+    procedure LoadMessagePersonalServiceLastFormTest;
     procedure LoadMobileTariffFormTest;
     procedure LoadMobileBillsFormTest;
     procedure LoadMobileProjectFormTest;
@@ -3751,10 +3752,10 @@ end;
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_PersonalForm');
     exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
    /// exit;
@@ -4566,6 +4567,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCalendarForm');
   }
   end;
+
+ procedure TLoadFormTest.LoadMessagePersonalServiceLastFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMessagePersonalServiceLastForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMessagePersonalServiceLastForm');
+end;
 
 procedure TLoadFormTest.LoadMobileTariffFormTest;
 begin

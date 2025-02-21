@@ -11,6 +11,8 @@ RETURNS TABLE (Id Integer
              , CountTare6 TFloat, CountTare7 TFloat, CountTare8 TFloat, CountTare9 TFloat, CountTare10 TFloat 
              , BoxWeight1 TFloat, BoxWeight2 TFloat, BoxWeight3 TFloat, BoxWeight4 TFloat, BoxWeight5 TFloat
              , BoxWeight6 TFloat, BoxWeight7 TFloat, BoxWeight8 TFloat, BoxWeight9 TFloat, BoxWeight10 TFloat 
+             , BoxWeight1_Tare TFloat, BoxWeight2_Tare TFloat, BoxWeight3_Tare TFloat, BoxWeight4_Tare TFloat, BoxWeight5_Tare TFloat
+             , BoxWeight6_Tare TFloat, BoxWeight7_Tare TFloat, BoxWeight8_Tare TFloat, BoxWeight9_Tare TFloat, BoxWeight10_Tare TFloat
              , BoxWeightTotal TFloat
              , NettoWeight TFloat
              , RealWeight TFloat
@@ -22,12 +24,11 @@ RETURNS TABLE (Id Integer
 AS
 $BODY$
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_WeighingProduction());
 
      -- inShowAll:= TRUE; 
-     IF COALESCE (inId,0) = 0 
+     IF COALESCE (inId,0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Строка не определена.';
      END IF;
@@ -46,25 +47,25 @@ BEGIN
                      , MAX (tmp.BoxId_10) AS BoxId_10, MAX (tmp.BoxName_10) AS BoxName_10, MAX (tmp.BoxWeight10) AS BoxWeight10
                 FROM (
                       SELECT CASE WHEN spSelect.NPP = 1 THEN spSelect.Id ELSE 0 END    AS BoxId_1
-                           , CASE WHEN spSelect.NPP = 1 THEN spSelect.Name ELSE '' END AS BoxName_1
+                           , CASE WHEN spSelect.NPP = 1 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_1
                            , CASE WHEN spSelect.NPP = 2 THEN spSelect.Id ELSE 0 END    AS BoxId_2
-                           , CASE WHEN spSelect.NPP = 2 THEN spSelect.Name ELSE '' END AS BoxName_2
+                           , CASE WHEN spSelect.NPP = 2 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_2
                            , CASE WHEN spSelect.NPP = 3 THEN spSelect.Id ELSE 0 END    AS BoxId_3
-                           , CASE WHEN spSelect.NPP = 3 THEN spSelect.Name ELSE '' END AS BoxName_3
+                           , CASE WHEN spSelect.NPP = 3 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_3
                            , CASE WHEN spSelect.NPP = 4 THEN spSelect.Id ELSE 0 END    AS BoxId_4
-                           , CASE WHEN spSelect.NPP = 4 THEN spSelect.Name ELSE '' END AS BoxName_4
+                           , CASE WHEN spSelect.NPP = 4 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_4
                            , CASE WHEN spSelect.NPP = 5 THEN spSelect.Id ELSE 0 END    AS BoxId_5
-                           , CASE WHEN spSelect.NPP = 5 THEN spSelect.Name ELSE '' END AS BoxName_5
+                           , CASE WHEN spSelect.NPP = 5 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_5
                            , CASE WHEN spSelect.NPP = 6 THEN spSelect.Id ELSE 0 END    AS BoxId_6
-                           , CASE WHEN spSelect.NPP = 6 THEN spSelect.Name ELSE '' END AS BoxName_6
+                           , CASE WHEN spSelect.NPP = 6 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_6
                            , CASE WHEN spSelect.NPP = 7 THEN spSelect.Id ELSE 0 END    AS BoxId_7
-                           , CASE WHEN spSelect.NPP = 7 THEN spSelect.Name ELSE '' END AS BoxName_7
+                           , CASE WHEN spSelect.NPP = 7 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_7
                            , CASE WHEN spSelect.NPP = 8 THEN spSelect.Id ELSE 0 END    AS BoxId_8
-                           , CASE WHEN spSelect.NPP = 8 THEN spSelect.Name ELSE '' END AS BoxName_8
+                           , CASE WHEN spSelect.NPP = 8 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_8
                            , CASE WHEN spSelect.NPP = 9 THEN spSelect.Id ELSE 0 END    AS BoxId_9
-                           , CASE WHEN spSelect.NPP = 9 THEN spSelect.Name ELSE '' END AS BoxName_9
+                           , CASE WHEN spSelect.NPP = 9 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_9
                            , CASE WHEN spSelect.NPP = 10 THEN spSelect.Id ELSE 0 END    AS BoxId_10
-                           , CASE WHEN spSelect.NPP = 10 THEN spSelect.Name ELSE '' END AS BoxName_10
+                           , CASE WHEN spSelect.NPP = 10 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_10
 
                            , CASE WHEN spSelect.NPP = 1 THEN spSelect.BoxWeight ELSE 0 END    AS BoxWeight1
                            , CASE WHEN spSelect.NPP = 2 THEN spSelect.BoxWeight ELSE 0 END    AS BoxWeight2
@@ -221,8 +222,19 @@ BEGIN
            , tmpBox.CountTare10   ::TFloat  
 
            , tmpBox.BoxWeight1 ::TFloat, tmpBox.BoxWeight2 ::TFloat, tmpBox.BoxWeight3 ::TFloat, tmpBox.BoxWeight4 ::TFloat, tmpBox.BoxWeight5 ::TFloat
-           , tmpBox.BoxWeight6 ::TFloat, tmpBox.BoxWeight7 ::TFloat, tmpBox.BoxWeight8 ::TFloat, tmpBox.BoxWeight9 ::TFloat, tmpBox.BoxWeight10 ::TFloat 
+           , tmpBox.BoxWeight6 ::TFloat, tmpBox.BoxWeight7 ::TFloat, tmpBox.BoxWeight8 ::TFloat, tmpBox.BoxWeight9 ::TFloat, tmpBox.BoxWeight10 ::TFloat
            
+           , (COALESCE (tmpBox.CountTare1,0) * COALESCE (tmpBox.BoxWeight1,0))   ::TFloat  AS  BoxWeight1_Tare
+           , (COALESCE (tmpBox.CountTare2,0) * COALESCE (tmpBox.BoxWeight2,0))   ::TFloat  AS  BoxWeight2_Tare
+           , (COALESCE (tmpBox.CountTare3,0) * COALESCE (tmpBox.BoxWeight3,0))   ::TFloat  AS  BoxWeight3_Tare
+           , (COALESCE (tmpBox.CountTare4,0) * COALESCE (tmpBox.BoxWeight4,0))   ::TFloat  AS  BoxWeight4_Tare
+           , (COALESCE (tmpBox.CountTare5,0) * COALESCE (tmpBox.BoxWeight5,0))   ::TFloat  AS  BoxWeight5_Tare
+           , (COALESCE (tmpBox.CountTare6,0) * COALESCE (tmpBox.BoxWeight6,0))   ::TFloat  AS  BoxWeight6_Tare
+           , (COALESCE (tmpBox.CountTare7,0) * COALESCE (tmpBox.BoxWeight7,0))   ::TFloat  AS  BoxWeight7_Tare
+           , (COALESCE (tmpBox.CountTare8,0) * COALESCE (tmpBox.BoxWeight8,0))   ::TFloat  AS  BoxWeight8_Tare
+           , (COALESCE (tmpBox.CountTare9,0) * COALESCE (tmpBox.BoxWeight9,0))   ::TFloat  AS  BoxWeight9_Tare
+           , (COALESCE (tmpBox.CountTare10,0) * COALESCE (tmpBox.BoxWeight10,0)) ::TFloat  AS  BoxWeight10_Tare
+
            , (COALESCE (tmpBox.CountTare1,0) * COALESCE (tmpBox.BoxWeight1,0)
             + COALESCE (tmpBox.CountTare2,0) * COALESCE (tmpBox.BoxWeight2,0)
             + COALESCE (tmpBox.CountTare3,0) * COALESCE (tmpBox.BoxWeight3,0)
@@ -233,7 +245,7 @@ BEGIN
             + COALESCE (tmpBox.CountTare8,0) * COALESCE (tmpBox.BoxWeight8,0)
             + COALESCE (tmpBox.CountTare9,0) * COALESCE (tmpBox.BoxWeight9,0)
             + COALESCE (tmpBox.CountTare10,0) * COALESCE (tmpBox.BoxWeight10,0)) ::TFloat AS BoxWeightTotal
-            
+
            ,(COALESCE (tmpBox.RealWeight,0) -
              (COALESCE (tmpBox.CountTare1,0) * COALESCE (tmpBox.BoxWeight1,0)
             + COALESCE (tmpBox.CountTare2,0) * COALESCE (tmpBox.BoxWeight2,0)
@@ -247,7 +259,7 @@ BEGIN
             + COALESCE (tmpBox.CountTare10,0) * COALESCE (tmpBox.BoxWeight10,0)) ) ::TFloat AS NettoWeight  
 
            , tmpBox.RealWeight ::TFloat
-               
+
            , tmpBox.BoxId_1, tmpBox.BoxId_2, tmpBox.BoxId_3, tmpBox.BoxId_4, tmpBox.BoxId_5
            , tmpBox.BoxId_6, tmpBox.BoxId_7, tmpBox.BoxId_8, tmpBox.BoxId_9, tmpBox.BoxId_10
            , tmpBox.BoxName_1 ::TVarChar, tmpBox.BoxName_2 ::TVarChar, tmpBox.BoxName_3 ::TVarChar, tmpBox.BoxName_4 ::TVarChar, tmpBox.BoxName_5 ::TVarChar

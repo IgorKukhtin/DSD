@@ -23,7 +23,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxSplitter, cxButtonEdit, cxCalendar, cxContainer, Vcl.ComCtrls,
   dxCore, cxDateUtils, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  Vcl.ExtCtrls, ChoicePeriod, dsdCommon;
+  Vcl.ExtCtrls, ChoicePeriod, dsdCommon, cxCurrencyEdit;
 
 type
   TUnit_PersonalForm = class(TParentForm)
@@ -99,6 +99,14 @@ type
     gpInsertUpdate_PersonalService_byUnit: TdsdStoredProc;
     bbInsertUpdate_PersonalService: TdxBarButton;
     PeriodChoice: TPeriodChoice;
+    spInsert_MessagePersonalService: TdsdStoredProc;
+    cxLabel3: TcxLabel;
+    edSessionCode: TcxCurrencyEdit;
+    dxLabel3: TdxBarControlContainerItem;
+    bbSessionCode: TdxBarControlContainerItem;
+    actInsert_MessagePersonalService: TdsdExecStoredProc;
+    actOpenMessagePersonalServiceForm: TdsdOpenForm;
+    bbMessagePersonalServiceForm: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,9 +1,10 @@
 ﻿-- 
-DROP FUNCTION IF EXISTS gpSelect_Object_MessagePersonalService (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MessagePersonalService (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MessagePersonalService(
-    IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет 
-    IN inSession     TVarChar            -- сессия пользователя
+    IN inSessionCode            Integer,
+    IN inPersonalServiceListId  Integer,            --  
+    IN inSession                TVarChar            -- сессия пользователя
    
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -66,7 +67,8 @@ BEGIN
                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
        WHERE Object_MessagePersonalService.DescId = zc_Object_MessagePersonalService()
-         AND (Object_MessagePersonalService.isErased = FALSE OR inIsShowAll = TRUE)
+         AND (Object_MessagePersonalService.ObjectCode = inSessionCode OR inSessionCode = 0)
+         AND (COALESCE (Object_PersonalServiceList.Id,0) = inPersonalServiceListId OR inPersonalServiceListId = 0)
        ;
 
 END;
