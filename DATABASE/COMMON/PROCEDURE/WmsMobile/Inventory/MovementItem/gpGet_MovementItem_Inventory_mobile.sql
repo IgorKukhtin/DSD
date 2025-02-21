@@ -24,26 +24,36 @@ RETURNS TABLE (MovementItemId    Integer
                -- є паспорта
              , PartionNum        Integer
                -- ѕоддон
+             , BoxId_1           Integer
              , BoxName_1         TVarChar
              , CountTare_1       Integer
              , WeightTare_1      TFloat
                -- ящик
+             , BoxId_2           Integer
              , BoxName_2         TVarChar
              , CountTare_2       Integer
              , WeightTare_2      TFloat
                -- ящик
+             , BoxId_3           Integer
              , BoxName_3         TVarChar
              , CountTare_3       Integer
              , WeightTare_3      TFloat
                -- ящик
+             , BoxId_4           Integer
              , BoxName_4         TVarChar
              , CountTare_4       Integer
              , WeightTare_4      TFloat
                -- ящик
+             , BoxId_5           Integer
              , BoxName_5         TVarChar
              , CountTare_5       Integer
              , WeightTare_5      TFloat
 
+               --  ол-во ящиков
+             , CountTare_all     Integer
+
+               -- ¬ес всех ящиков
+             , WeightTare_all    TFloat
               )
 AS
 $BODY$
@@ -179,29 +189,46 @@ BEGIN
                -- є паспорта
              , MIFloat_PartionNum.ValueData :: Integer   AS PartionNum
                -- ѕоддон
+             , tmpMI_Tare_1.BoxId           :: Integer   AS BoxId_1
              , tmpMI_Tare_1.BoxName         :: TVarChar  AS BoxName_1
              , tmpMI_Tare_1.CountTare       :: Integer   AS CountTare_1
              , tmpMI_Tare_1.WeightTare      :: TFloat    AS WeightTare_1
 
                -- ящик
+             , tmpMI_Tare_1.BoxId           :: Integer   AS BoxId_1
              , tmpMI_Tare_2.BoxName         :: TVarChar  AS BoxName_2
              , tmpMI_Tare_2.CountTare       :: Integer   AS CountTare_2
              , tmpMI_Tare_2.WeightTare      :: TFloat    AS WeightTare_2
 
                -- ящик
+             , tmpMI_Tare_3.BoxId           :: Integer   AS BoxId_3
              , tmpMI_Tare_3.BoxName         :: TVarChar  AS BoxName_3
              , tmpMI_Tare_3.CountTare       :: Integer   AS CountTare_3
              , tmpMI_Tare_3.WeightTare      :: TFloat    AS WeightTare_3
 
                -- ящик
+             , tmpMI_Tare_4.BoxId           :: Integer   AS BoxId_4
              , tmpMI_Tare_4.BoxName         :: TVarChar  AS BoxName_4
              , tmpMI_Tare_4.CountTare       :: Integer   AS CountTare_4
              , tmpMI_Tare_4.WeightTare      :: TFloat    AS WeightTare_4
 
                -- ящик
+             , tmpMI_Tare_5.BoxId           :: Integer   AS BoxId_5
              , tmpMI_Tare_5.BoxName         :: TVarChar  AS BoxName_5
              , tmpMI_Tare_5.CountTare       :: Integer   AS CountTare_5
              , tmpMI_Tare_5.WeightTare      :: TFloat    AS WeightTare_5
+
+               --  ол-во ящиков
+             , (COALESCE (tmpMI_Tare_3.CountTare, 0)
+              + COALESCE (tmpMI_Tare_4.CountTare, 0)
+              + COALESCE (tmpMI_Tare_5.CountTare, 0)
+               ) :: Integer AS CountTare_all
+
+               -- ¬ес всех ящиков
+             , (COALESCE (tmpMI_Tare_3.CountTare, 0) * COALESCE (tmpMI_Tare_3.WeightTare, 0)
+              + COALESCE (tmpMI_Tare_4.CountTare, 0) * COALESCE (tmpMI_Tare_4.WeightTare, 0)
+              + COALESCE (tmpMI_Tare_5.CountTare, 0) * COALESCE (tmpMI_Tare_5.WeightTare, 0)
+               ) :: TFloat AS WeightTare_all
 
         FROM MovementItem
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
