@@ -1568,7 +1568,9 @@ uses
   PartionCellCheckEdit in '..\..\Forms\Guides\PartionCellCheckEdit.pas' {PartionCellCheckEditForm: TParentForm},
   Report_Promo_DetailError in '..\..\Forms\Report\Report_Promo_DetailError.pas' {Report_Promo_DetailErrorForm: TParentForm},
   WeighingProductionBoxEdit in '..\..\Forms\Document\WeighingProductionBoxEdit.pas' {WeighingProductionBoxEditForm: TParentForm},
-  MessagePersonalServiceLast in '..\..\Forms\Guides\MessagePersonalServiceLast.pas' {MessagePersonalServiceLastForm: TParentForm};
+  MessagePersonalServiceLast in '..\..\Forms\Guides\MessagePersonalServiceLast.pas' {MessagePersonalServiceLastForm: TParentForm},
+  Report_WeighingPartner_Passport in '..\..\Forms\Report\Report_WeighingPartner_Passport.pas' {Report_WeighingPartner_PassportForm: TParentForm},
+  Report_WeighingPartner_PassportDialog in '..\..\Forms\Report\Report_WeighingPartner_PassportDialog.pas' {Report_WeighingPartner_PassportDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

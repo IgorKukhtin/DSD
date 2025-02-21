@@ -2599,6 +2599,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Container_dataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Container_dataForm');
