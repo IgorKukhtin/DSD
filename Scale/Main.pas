@@ -291,6 +291,7 @@ type
     actWeighingPartner_ActDiffF: TdsdInsertUpdateAction;
     bbPrintReestr: TSpeedButton;
     cbPartionDate_save: TCheckBox;
+    bbPrint_MIPassport: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -339,6 +340,7 @@ type
     procedure cbDocInsertClick(Sender: TObject);
     procedure bbUpdatePricePartnerClick(Sender: TObject);
     procedure bbPrintReestrClick(Sender: TObject);
+    procedure bbPrint_MIPassportClick(Sender: TObject);
   private
     //aTest: Boolean;
     Scale_AP: IAPScale;
@@ -1023,6 +1025,11 @@ begin
      end;
      //
     Print_Movement_Income_Reestr(StartDate, EndDate, ParamsMovement.ParamByName('MovementDescId').asInteger, UnitId);
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbPrint_MIPassportClick(Sender: TObject);
+begin
+     Print_MIPassport (ParamsMovement.ParamByName('MovementId').AsInteger, CDS.FieldByName('MovementItemId').AsInteger);
 end;
 {------------------------------------------------------------------------}
 function TMainForm.GetParams_Goods (isRetail : Boolean; BarCode : String; isModeSave : Boolean) : Boolean;
@@ -2239,6 +2246,16 @@ begin
   bbUpdateUnit.Visible:= not bbUpdatePartner.Visible;
   //
   bbGuideGoodsView.Visible:= GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE');
+  //
+  if SettingMain.BranchCode = 115 then
+  begin
+       bbPrint_MIPassport.Visible:= TRUE;
+       bbSale_Order_all.Visible:= FALSE;
+       bbSale_Order_diff.Visible:= FALSE;
+       bbSale_Order_diffTax.Visible:= FALSE;
+  end
+  else
+       bbPrint_MIPassport.Visible:= FALSE;
   //
   with spSelect do
   begin

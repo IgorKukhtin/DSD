@@ -151,6 +151,14 @@ BEGIN
      END IF;
 
 
+     -- проверка
+     IF inBranchCode = 115
+     THEN
+          RAISE EXCEPTION 'Ошибка.Нет прав закрывать документ.';
+       --END IF;
+     END IF;
+
+
      -- проверка - договор не Маркетинг
      IF EXISTS(SELECT 1
                FROM MovementLinkMovement AS MovementLinkMovement_Order

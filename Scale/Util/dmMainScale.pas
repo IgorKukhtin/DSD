@@ -885,6 +885,8 @@ begin
        Params.AddParam('inTareId_9', ftInteger, ptInput, SettingMain.TareId_9);
        Params.AddParam('inTareId_10', ftInteger, ptInput, SettingMain.TareId_10);
 
+       Params.AddParam('inPartionCellId', ftInteger, ptInput, execParamsMI.ParamByName('PartionCellId').AsInteger);
+
        Params.AddParam('inPrice', ftFloat, ptInput, execParamsMI.ParamByName('Price').AsFloat);
        Params.AddParam('inPrice_Return', ftFloat, ptInput, execParamsMI.ParamByName('Price_Return').AsFloat);
        Params.AddParam('inCountForPrice', ftFloat, ptInput, execParamsMI.ParamByName('CountForPrice').AsFloat);
@@ -919,6 +921,8 @@ begin
 
        //try
          Execute;
+
+         execParamsMI.ParamByName('MovementItemId').AsInteger:=DataSet.FieldByName('Id').AsInteger;
          execParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
          execParamsMovement.ParamByName('TotalSummPartner').AsFloat:=DataSet.FieldByName('TotalSummPartner').AsFloat;
          execParamsMovement.ParamByName('MessageText').AsString:=DataSet.FieldByName('MessageText').AsString;
@@ -1737,9 +1741,9 @@ begin
          zc_Movement_OrderIncome:=DataSet.FieldByName('Value').asInteger;
 
          //Measure
-         //Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Sh() :: TVarChar';
-         //Execute;
-         //zc_Measure_Sh:=DataSet.FieldByName('Value').asInteger;
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Sh() :: TVarChar';
+         Execute;
+         zc_Measure_Sh:=DataSet.FieldByName('Value').asInteger;
 
          Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Kg() :: TVarChar';
          Execute;

@@ -16,7 +16,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 
@@ -62,6 +62,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingPartner(
     IN inTareId_8              Integer   , --
     IN inTareId_9              Integer   , --
     IN inTareId_10             Integer   , --
+
+    IN inPartionCellId         Integer   , -- 
 
     IN inCountPack           TFloat    , -- Количество упаковок
     IN inHeadCount           TFloat    , -- Количество голов
@@ -113,6 +115,8 @@ BEGIN
 
      -- сохранили свойство <Дата/время создания>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
+     -- сохранили протокол
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), ioId, vbUserId);
 
      -- сохранили свойство <Количество у контрагента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
@@ -140,6 +144,17 @@ BEGIN
 
      IF inBranchCode = 115
      THEN
+         -- Еще сохранили № паспорта
+         IF vbIsInsert = TRUE
+         THEN
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionNum(), ioId, CAST (NEXTVAL ('MI_PartionPassport_seq') AS TFloat));
+         END IF;
+         
+
+         --  Ячейка хранения 
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell(), ioId, inPartionCellId);
+         
+
          -- можно заполнить 5 параметров
          IF (CASE WHEN inCountTare1  > 0 THEN 1 ELSE 0 END
            + CASE WHEN inCountTare2  > 0 THEN 1 ELSE 0 END

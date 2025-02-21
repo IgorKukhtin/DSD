@@ -171,6 +171,8 @@ type
     actPrint_Income_bySklad: TdsdPrintAction;
     spSelectPrint_reestr: TdsdStoredProc;
     actPrint_reestr_income: TdsdPrintAction;
+    spSelectMIPrintPassport: TdsdStoredProc;
+    actSelectMIPrintPassport: TdsdPrintAction;
   private
   end;
 
@@ -197,6 +199,8 @@ type
   function Print_Movement_Income_Sklad(MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
 
   function Print_Movement_Income_Reestr(StartDate, EndDate : TDateTime; MovementDescId,UnitId:Integer):Boolean;
+
+  function Print_MIPassport (MovementId, MovementItemId:Integer):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
   procedure SendEDI_OrdSpr (MovementId: Integer);
@@ -321,6 +325,19 @@ begin
      //
      UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
      UtilPrintForm.actPrint_Income_bySklad.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_MIPassport (MovementId, MovementItemId:Integer):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+     UtilPrintForm.FormParams.ParamByName('MovementItemId').Value := MovementItemId;
+     //
+     //
+     UtilPrintForm.actSelectMIPrintPassport.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 function Print_Movement_Income_Reestr(StartDate, EndDate : TDateTime; MovementDescId,UnitId:Integer):Boolean;
