@@ -10,31 +10,15 @@ CREATE OR REPLACE FUNCTION gpMovementItem_ChoiceCell_SetUnErased(
   RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbMovementId Integer;
-   DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_ChoiceCell());
      vbUserId:= lpGetUserBySession (inSession);
 
-  -- устанавливаем новое значение
-  outIsErased := FALSE;
+     -- устанавливаем новое значение
+     outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 
-  -- Обязательно меняем
-  UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
-         RETURNING MovementId INTO vbMovementId;
-
-  -- определяем <Статус>
-  vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
-  -- проверка - проведенные/удаленные документы Изменять нельзя
-  IF vbStatusId <> zc_Enum_Status_UnComplete()
-  THEN
-      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
-  END IF;
-
-  -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, false);
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -46,4 +30,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpMovementItem_ChoiceCell_SetUnErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')
+-- SELECT * FROM gpMovementItem_ChoiceCell_SetUnErased (inMovementItemId:= 55, inSession:= '2')
