@@ -664,7 +664,7 @@ object PartionCell_listForm: TPartionCell_listForm
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 640
-    Top = 128
+    Left = 568
+    Top = 96
   end
 end

@@ -46,6 +46,15 @@ type
     actSelectMIPrintPassport: TdsdPrintAction;
     BoxName_1: TcxGridDBColumn;
     PrintItemsCDS: TClientDataSet;
+    lbSearchName: TcxLabel;
+    edSearchBarCode: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
+    dsdChoiceGuides1: TdsdChoiceGuides;
+    BarCode: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edSearchGoodsCode: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edSearchPartionNum: TcxTextEdit;
   private
     { Private declarations }
   public
