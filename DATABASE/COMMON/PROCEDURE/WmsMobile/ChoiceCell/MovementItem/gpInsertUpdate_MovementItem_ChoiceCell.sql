@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_MovementItem_ChoiceCell()
+
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ChoiceCell (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ChoiceCell(
- --INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
     IN inBarCode             TVarChar  , -- штрихкод €ч. отбора
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
-RETURNS VOID AS
+RETURNS VOID
+AS
 $BODY$
    DECLARE vbUserId Integer;
 

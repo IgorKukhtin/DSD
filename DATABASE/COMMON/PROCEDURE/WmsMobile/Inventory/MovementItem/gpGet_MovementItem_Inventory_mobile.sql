@@ -57,14 +57,9 @@ RETURNS TABLE (MovementItemId    Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-
+   DECLARE vbUserId         Integer;
    DECLARE vbMovementItemId Integer;
-   DECLARE vbOperDate     TDateTime;
-
-   DECLARE vbGoodsId     Integer;
-   DECLARE vbGoodsKindId Integer;
-   DECLARE vbPartionNum  TFloat;
+   DECLARE vbPartionNum     TFloat;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -160,14 +155,14 @@ BEGIN
                                                                                               WHEN zc_MILinkObject_Box4() THEN zc_MIFloat_CountTare4()
                                                                                               WHEN zc_MILinkObject_Box5() THEN zc_MIFloat_CountTare5()
                                                                                          END
-                                 INNER JOIN tmpMIF_WeightTare ON tmpMIF_WeightTare.MovementItemId = tmpMILO_Box.MovementItemId
-                                                             AND tmpMIF_WeightTare.DescId = CASE tmpMILO_Box.DescId
-                                                                                                 WHEN zc_MILinkObject_Box1() THEN zc_MIFloat_WeightTare1()
-                                                                                                 WHEN zc_MILinkObject_Box2() THEN zc_MIFloat_WeightTare2()
-                                                                                                 WHEN zc_MILinkObject_Box3() THEN zc_MIFloat_WeightTare3()
-                                                                                                 WHEN zc_MILinkObject_Box4() THEN zc_MIFloat_WeightTare4()
-                                                                                                 WHEN zc_MILinkObject_Box5() THEN zc_MIFloat_WeightTare5()
-                                                                                            END
+                                 LEFT JOIN tmpMIF_WeightTare ON tmpMIF_WeightTare.MovementItemId = tmpMILO_Box.MovementItemId
+                                                            AND tmpMIF_WeightTare.DescId = CASE tmpMILO_Box.DescId
+                                                                                                WHEN zc_MILinkObject_Box1() THEN zc_MIFloat_WeightTare1()
+                                                                                                WHEN zc_MILinkObject_Box2() THEN zc_MIFloat_WeightTare2()
+                                                                                                WHEN zc_MILinkObject_Box3() THEN zc_MIFloat_WeightTare3()
+                                                                                                WHEN zc_MILinkObject_Box4() THEN zc_MIFloat_WeightTare4()
+                                                                                                WHEN zc_MILinkObject_Box5() THEN zc_MIFloat_WeightTare5()
+                                                                                           END
                                  LEFT JOIN Object AS Object_Box ON Object_Box.Id = tmpMILO_Box.ObjectId
                             WHERE tmpMILO_Box.ObjectId > 0
                            )
@@ -195,7 +190,7 @@ BEGIN
              , tmpMI_Tare_1.WeightTare      :: TFloat    AS WeightTare_1
 
                -- ящик
-             , tmpMI_Tare_1.BoxId           :: Integer   AS BoxId_1
+             , tmpMI_Tare_2.BoxId           :: Integer   AS BoxId_1
              , tmpMI_Tare_2.BoxName         :: TVarChar  AS BoxName_2
              , tmpMI_Tare_2.CountTare       :: Integer   AS CountTare_2
              , tmpMI_Tare_2.WeightTare      :: TFloat    AS WeightTare_2

@@ -2139,8 +2139,8 @@ object GuideGoodsForm: TGuideGoodsForm
           ExplicitWidth = 62
         end
         object PartionDateEdit: TcxDateEdit
-          Left = 23
-          Top = 15
+          Left = 26
+          Top = 17
           EditValue = 41640d
           ParentFont = False
           Properties.DateButtons = [btnToday]

@@ -1488,6 +1488,15 @@ begin
           exit;
      end;
 
+     if (SettingMain.BranchCode = 115)
+     then try ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:= StrToDate(PartionDateEdit.Text);
+          except
+                Result:= false;
+                ShowMessage('Ошибка.Партия Дата не установлена.');
+                ActiveControl:= PartionDateEdit;
+                exit;
+          end;
+
      //
      //Save MI
      if Result = TRUE then
