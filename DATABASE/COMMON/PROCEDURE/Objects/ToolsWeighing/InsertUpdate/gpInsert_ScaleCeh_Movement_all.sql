@@ -440,10 +440,10 @@ BEGIN
      IF vbMovementDescId = zc_Movement_Inventory()
      THEN
          --!!!tmp
-         IF vbUserId = 5 THEN inOperDate:= '29.02.2024'; END IF;
+         -- IF vbUserId = 5 THEN inOperDate:= '29.02.2024'; END IF;
 
          -- Розподільчий комплекс
-         vbIsCloseInventory:= 8459 <> COALESCE ((SELECT MLO.ObjectId AS MLO FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From()), 0);
+         vbIsCloseInventory:= zc_Unit_RK() <> COALESCE ((SELECT MLO.ObjectId AS MLO FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From()), 0);
      END IF;
 
      -- для zc_Movement_Inventory
