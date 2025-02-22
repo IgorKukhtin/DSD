@@ -77,13 +77,21 @@ BEGIN
 
              , CASE WHEN MIString_PartionGoods.ValueData <> ''
                          THEN MIString_PartionGoods.ValueData
-                    WHEN MI_Partion.Id > 0
+                    WHEN MI_Partion.Id > 0 AND Movement_Partion.DescId = zc_Movement_ProductionUnion()
                          THEN 
                        ('кол.=<' || zfConvert_FloatToString (COALESCE (MI_Partion.Amount, 0)) || '>'
                      || ' кут.=<' || zfConvert_FloatToString (COALESCE (MIFloat_CuterCount.ValueData, 0)) || '>'
                      || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
-                     || ' партия=<' || DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) || '>'
+                     || ' партия=<' || zfConvert_DateToString (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) || '>'
                      || ' № <' || COALESCE (Movement_Partion.InvNumber, '') || '>'
+                       )
+                    WHEN MI_Partion.Id > 0 AND Movement_Partion.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                         THEN 
+                       ('кол. = <' || zfConvert_FloatToString (COALESCE (MI_Partion.Amount, 0)) || '>'
+                     || ' вид = <' || COALESCE (Object_GoodsKind_part.ValueData, '') || '>'
+                     || CASE WHEN MIDate_PartionGoods_part.ValueData > zc_DateStart() THEN ' партия = <' || zfConvert_DateToString (MIDate_PartionGoods_part.ValueData) || '>' ELSE '' END
+                     || ' № док. <' || COALESCE (Movement_Partion.InvNumber, '') || '>'
+                     || ' от <' || zfConvert_DateToString (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) || '>'
                        )
                     ELSE MIFloat_MovementItemId.ValueData :: TVarChar
                END :: TVarChar AS PartionGoods
@@ -262,7 +270,7 @@ BEGIN
                                        AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
             LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = CASE WHEN MIFloat_MovementItemId.ValueData > 0 THEN MIFloat_MovementItemId.ValueData ELSE NULL END :: Integer
             LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId
-                                                  AND Movement_Partion.DescId   = zc_Movement_ProductionUnion()
+                                                  AND Movement_Partion.DescId   IN (zc_Movement_ProductionUnion(), zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
                                              ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
@@ -270,6 +278,15 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                         ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
                                        AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+
+            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind_part
+                                             ON MILO_GoodsKind_part.MovementItemId = MI_Partion.Id
+                                            AND MILO_GoodsKind_part.DescId         = zc_MILinkObject_GoodsKind()
+            LEFT JOIN Object AS Object_GoodsKind_part ON Object_GoodsKind_part.Id = MILO_GoodsKind_part.ObjectId
+            LEFT JOIN MovementItemDate AS MIDate_PartionGoods_part
+                                       ON MIDate_PartionGoods_part.MovementItemId = MI_Partion.Id
+                                      AND MIDate_PartionGoods_part.DescId         = zc_MIDate_PartionGoods()
+
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
