@@ -80,8 +80,6 @@ inherited MainForm: TMainForm
     Visible = False
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
-    ExplicitLeft = -32
-    ExplicitTop = 97
     object cxGridGetMsgDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DSGetMsg
@@ -10602,6 +10600,9 @@ inherited MainForm: TMainForm
         object miWeighingProduction_wms: TMenuItem
           Action = actWeighingProduction_wms
         end
+        object miReport_WeighingPartner_Passport: TMenuItem
+          Action = actReport_WeighingPartner_Passport
+        end
       end
       object N28: TMenuItem
         Action = actReport_MIProtocol
@@ -11675,12 +11676,6 @@ inherited MainForm: TMainForm
       object miReport_OrderInternalBasis_Olap: TMenuItem
         Action = actReport_OrderInternalBasis_Olap
         Caption = #1054#1051#1040#1055' - '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1084' '#1087#1086' '#1089#1099#1088#1100#1102
-      end
-      object N265: TMenuItem
-        Caption = '-'
-      end
-      object miReport_WeighingPartner_Passport: TMenuItem
-        Action = actReport_WeighingPartner_Passport
       end
     end
     object miReportsGoods: TMenuItem [12]

@@ -1546,7 +1546,6 @@ type
     miReestrIncomeinBuh: TMenuItem;
     actReport_WeighingPartner_Passport: TdsdOpenForm;
     miReport_WeighingPartner_Passport: TMenuItem;
-    N265: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
