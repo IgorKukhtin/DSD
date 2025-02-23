@@ -1,6 +1,6 @@
 -- Function: gpSelect_MovementItem_Inventory_mobile()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Inventory_mobile (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Inventory_mobile (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory_mobile(
     IN inSession             TVarChar    -- сесси€ пользовател€
@@ -48,11 +48,11 @@ RETURNS TABLE (MovementItemId    Integer
              , CountTare_5       Integer
              , WeightTare_5      TFloat
 
-               --  ол-во ящиков
-             , CountTare_all     Integer
+               -- »“ќ√ќ  ол-во ящиков
+             , CountTare_calc    Integer
 
-               -- ¬ес всех ящиков
-             , WeightTare_all    TFloat
+               -- »“ќ√ќ ¬ес всех ящиков
+             , WeightTare_calc   TFloat
               )
 AS
 $BODY$
@@ -110,11 +110,11 @@ BEGIN
              , gpGet.CountTare_5
              , gpGet.WeightTare_5
 
-               --  ол-во ящиков
-             , gpGet.CountTare_all
+               -- »“ќ√ќ  ол-во ящиков
+             , gpGet.CountTare_calc
 
-               -- ¬ес всех ящиков
-             , gpGet.WeightTare_all
+               -- »“ќ√ќ ¬ес всех ящиков
+             , gpGet.WeightTare_calc
 
         FROM gpGet_MovementItem_Inventory_mobile ('2033173234093', zfCalc_UserAdmin()) AS gpGet
        ;

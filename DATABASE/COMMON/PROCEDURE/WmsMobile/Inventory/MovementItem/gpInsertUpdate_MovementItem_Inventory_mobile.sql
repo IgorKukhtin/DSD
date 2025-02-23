@@ -37,7 +37,7 @@ BEGIN
      END IF;
 
 
-     -- Проверка что его еще не сканировали
+     -- Проверка что еще не сканировали Паспорт
      vbMovementItemId_find:= (SELECT MovementItem.Id
                               FROM Movement
                                    INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
@@ -59,13 +59,14 @@ BEGIN
                                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.DescId     = zc_MI_Master()
                                                     AND MovementItem.isErased   = FALSE
+                                   -- Партия - Паспорт, которую надо проверить
                                    INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                                 ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                                                AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
                                                                AND MIFloat_MovementItemId.ValueData      = inMovementItemId :: TFloat
 
                               WHERE Movement.DescId = zc_Movement_WeighingProduction()
-                                AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '28 DAY' AND vbOperDate
+                                AND Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate - INTERVAL '5 DAY')
                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
                               LIMIT 1
                              );

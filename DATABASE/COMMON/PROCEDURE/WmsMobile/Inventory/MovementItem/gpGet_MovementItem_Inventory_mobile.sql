@@ -49,11 +49,11 @@ RETURNS TABLE (MovementItemId    Integer
              , CountTare_5       Integer
              , WeightTare_5      TFloat
 
-               -- Кол-во Ящиков
-             , CountTare_all     Integer
+               -- ИТОГО Кол-во Ящиков
+             , CountTare_calc    Integer
 
-               -- Вес всех Ящиков
-             , WeightTare_all    TFloat
+               -- ИТОГО Вес всех Ящиков
+             , WeightTare_calc   TFloat
               )
 AS
 $BODY$
@@ -135,26 +135,18 @@ BEGIN
                                  , Object_Box.ValueData                      AS BoxName
                                  , tmpMIF_CountTare.ValueData                AS CountTare
                                  , COALESCE (tmpMIF_WeightTare.ValueData, 0) AS WeightTare
-                                   -- № п/п
-                                 , ROW_NUMBER() OVER (PARTITION BY tmpMILO_Box.MovementItemId
-                                                      ORDER BY CASE tmpMILO_Box.DescId
-                                                                    WHEN zc_MILinkObject_Box1() THEN 1
-                                                                    WHEN zc_MILinkObject_Box2() THEN 2
-                                                                    WHEN zc_MILinkObject_Box3() THEN 3
-                                                                    WHEN zc_MILinkObject_Box4() THEN 4
-                                                                    WHEN zc_MILinkObject_Box5() THEN 5
-                                                               END ASC
-                                                     ) AS Ord
+                                   -- DescId
+                                 , tmpMILO_Box.DescId                        AS DescId_box
                             FROM tmpMILO_Box
-                                 LEFT JOIN tmpMIF_CountTare ON tmpMIF_CountTare.MovementItemId = tmpMILO_Box.MovementItemId
-                                                           AND tmpMIF_CountTare.ValueData      > 0
-                                                           AND tmpMIF_CountTare.DescId = CASE tmpMILO_Box.DescId
-                                                                                              WHEN zc_MILinkObject_Box1() THEN zc_MIFloat_CountTare1()
-                                                                                              WHEN zc_MILinkObject_Box2() THEN zc_MIFloat_CountTare2()
-                                                                                              WHEN zc_MILinkObject_Box3() THEN zc_MIFloat_CountTare3()
-                                                                                              WHEN zc_MILinkObject_Box4() THEN zc_MIFloat_CountTare4()
-                                                                                              WHEN zc_MILinkObject_Box5() THEN zc_MIFloat_CountTare5()
-                                                                                         END
+                                 INNER JOIN tmpMIF_CountTare ON tmpMIF_CountTare.MovementItemId = tmpMILO_Box.MovementItemId
+                                                            AND tmpMIF_CountTare.ValueData      > 0
+                                                            AND tmpMIF_CountTare.DescId = CASE tmpMILO_Box.DescId
+                                                                                               WHEN zc_MILinkObject_Box1() THEN zc_MIFloat_CountTare1()
+                                                                                               WHEN zc_MILinkObject_Box2() THEN zc_MIFloat_CountTare2()
+                                                                                               WHEN zc_MILinkObject_Box3() THEN zc_MIFloat_CountTare3()
+                                                                                               WHEN zc_MILinkObject_Box4() THEN zc_MIFloat_CountTare4()
+                                                                                               WHEN zc_MILinkObject_Box5() THEN zc_MIFloat_CountTare5()
+                                                                                          END
                                  LEFT JOIN tmpMIF_WeightTare ON tmpMIF_WeightTare.MovementItemId = tmpMILO_Box.MovementItemId
                                                             AND tmpMIF_WeightTare.DescId = CASE tmpMILO_Box.DescId
                                                                                                 WHEN zc_MILinkObject_Box1() THEN zc_MIFloat_WeightTare1()
@@ -179,7 +171,7 @@ BEGIN
                -- Ячейка хранения
              , Object_PartionCell.Id                     AS PartionCellId
              , Object_PartionCell.ValueData              AS PartionCellName
-               -- партия
+               -- партия - Дата
              , MIDate_PartionGoods.ValueData             AS PartionGoodsDate
                -- № паспорта
              , MIFloat_PartionNum.ValueData :: Integer   AS PartionNum
@@ -213,17 +205,19 @@ BEGIN
              , tmpMI_Tare_5.CountTare       :: Integer   AS CountTare_5
              , tmpMI_Tare_5.WeightTare      :: TFloat    AS WeightTare_5
 
-               -- Кол-во Ящиков
-             , (COALESCE (tmpMI_Tare_3.CountTare, 0)
+               -- ИТОГО Кол-во Ящиков
+             , (COALESCE (tmpMI_Tare_2.CountTare, 0)
+              + COALESCE (tmpMI_Tare_3.CountTare, 0)
               + COALESCE (tmpMI_Tare_4.CountTare, 0)
               + COALESCE (tmpMI_Tare_5.CountTare, 0)
-               ) :: Integer AS CountTare_all
+               ) :: Integer AS CountTare_calc
 
-               -- Вес всех Ящиков
-             , (COALESCE (tmpMI_Tare_3.CountTare, 0) * COALESCE (tmpMI_Tare_3.WeightTare, 0)
+               -- ИТОГО Вес всех Ящиков
+             , (COALESCE (tmpMI_Tare_2.CountTare, 0) * COALESCE (tmpMI_Tare_2.WeightTare, 0)
+              + COALESCE (tmpMI_Tare_3.CountTare, 0) * COALESCE (tmpMI_Tare_3.WeightTare, 0)
               + COALESCE (tmpMI_Tare_4.CountTare, 0) * COALESCE (tmpMI_Tare_4.WeightTare, 0)
               + COALESCE (tmpMI_Tare_5.CountTare, 0) * COALESCE (tmpMI_Tare_5.WeightTare, 0)
-               ) :: TFloat AS WeightTare_all
+               ) :: TFloat AS WeightTare_calc
 
         FROM MovementItem
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -246,15 +240,15 @@ BEGIN
              LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
 
              LEFT JOIN tmpMI_Tare AS tmpMI_Tare_1 ON tmpMI_Tare_1.MovementItemId = MovementItem.Id
-                                                 AND tmpMI_Tare_1.Ord            = 1
+                                                 AND tmpMI_Tare_1.DescId_box     = zc_MILinkObject_Box1()
              LEFT JOIN tmpMI_Tare AS tmpMI_Tare_2 ON tmpMI_Tare_2.MovementItemId = MovementItem.Id
-                                                 AND tmpMI_Tare_2.Ord            = 2
+                                                 AND tmpMI_Tare_2.DescId_box     = zc_MILinkObject_Box2()
              LEFT JOIN tmpMI_Tare AS tmpMI_Tare_3 ON tmpMI_Tare_3.MovementItemId = MovementItem.Id
-                                                 AND tmpMI_Tare_3.Ord            = 3
+                                                 AND tmpMI_Tare_3.DescId_box     = zc_MILinkObject_Box3()
              LEFT JOIN tmpMI_Tare AS tmpMI_Tare_4 ON tmpMI_Tare_4.MovementItemId = MovementItem.Id
-                                                 AND tmpMI_Tare_4.Ord            = 4
+                                                 AND tmpMI_Tare_4.DescId_box     = zc_MILinkObject_Box4()
              LEFT JOIN tmpMI_Tare AS tmpMI_Tare_5 ON tmpMI_Tare_5.MovementItemId = MovementItem.Id
-                                                 AND tmpMI_Tare_5.Ord            = 5
+                                                 AND tmpMI_Tare_5.DescId_box     = zc_MILinkObject_Box5()
 
         WHERE MovementItem.Id     = vbMovementItemId
           AND MovementItem.DescId = zc_MI_Master()
@@ -272,4 +266,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_MovementItem_Inventory_mobile ('7', zfCalc_UserAdmin())
--- SELECT * FROM gpGet_MovementItem_Inventory_mobile ('2033173234093', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_MovementItem_Inventory_mobile ('2033173823490', zfCalc_UserAdmin())
