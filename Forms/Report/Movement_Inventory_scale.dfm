@@ -1,5 +1,5 @@
-inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1072#1089#1087#1086#1088#1090' '#1090#1086#1074#1072#1088#1072' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103') >'
+inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1102' '#1087#1072#1089#1087#1086#1088#1090' ('#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103')>'
   ClientHeight = 348
   ClientWidth = 1064
   AddOnFormData.isSingle = False
@@ -67,37 +67,57 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare8
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare9
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare10
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = BoxCountTotal
+              Column = CountTare_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = BoxWeightTotal
+              Column = WeightTare
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_5
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -143,37 +163,57 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare8
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare9
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare10
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = BoxCountTotal
+              Column = CountTare_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = BoxWeightTotal
+              Column = WeightTare
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_5
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -224,27 +264,9 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             HeaderAlignmentVert = vaCenter
             Width = 59
           end
-          object InsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103' ('#1074#1079#1074#1077#1096'.)'
-            DataBinding.FieldName = 'InsertDate'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 84
-          end
-          object InsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100'  '#1089#1086#1079#1076#1072#1085#1080#1103' ('#1074#1079#1074#1077#1096'.)'
-            DataBinding.FieldName = 'InsertName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
-          end
-          object BarCode: TcxGridDBColumn
+          object MovementItemId_passport: TcxGridDBColumn
             Caption = #1064#1090#1088#1080#1093#1082#1086#1076
-            DataBinding.FieldName = 'BarCode'
+            DataBinding.FieldName = 'MovementItemId_passport'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -278,13 +300,6 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             HeaderAlignmentVert = vaCenter
             Width = 52
           end
-          object MeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 33
-          end
           object PartionGoodsDate: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoodsDate'
@@ -310,7 +325,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 80
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+            Caption = #1042#1077#1089' '#1085#1077#1090#1090#1086
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -325,17 +340,25 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Options.Editing = False
             Width = 60
           end
-          object BoxCountTotal: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
-            DataBinding.FieldName = 'BoxCountTotal'
+          object CountTare_calc: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1071#1097#1080#1082#1086#1074
+            DataBinding.FieldName = 'CountTare_calc'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object BoxWeightTotal: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1103#1097#1080#1082#1086#1074
-            DataBinding.FieldName = 'BoxWeightTotal'
+          object WeightTare_calc: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1042#1077#1089' '#1074#1089#1077#1093' '#1071#1097#1080#1082#1086#1074' - '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'WeightTare_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object WeightTare: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1090#1072#1088#1099' - '#1092#1072#1082#1090
+            DataBinding.FieldName = 'WeightTare'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -351,6 +374,17 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
           object CountTare1: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'1'
             DataBinding.FieldName = 'CountTare1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object WeightTare_1: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076#1072'1'
+            DataBinding.FieldName = 'WeightTare_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -377,6 +411,17 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Options.Editing = False
             Width = 60
           end
+          object WeightTare_2: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076#1072'2'
+            DataBinding.FieldName = 'WeightTare_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object BoxName_3: TcxGridDBColumn
             Caption = #1071#1097'. '#1074#1080#1076#1072'3'
             DataBinding.FieldName = 'BoxName_3'
@@ -387,6 +432,17 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
           object CountTare3: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'3'
             DataBinding.FieldName = 'CountTare3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object WeightTare_3: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076#1072'3'
+            DataBinding.FieldName = 'WeightTare_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -413,6 +469,17 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Options.Editing = False
             Width = 60
           end
+          object WeightTare_4: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076#1072'4'
+            DataBinding.FieldName = 'WeightTare_4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object BoxName_5: TcxGridDBColumn
             Caption = #1071#1097'. '#1074#1080#1076#1072'5'
             DataBinding.FieldName = 'BoxName_5'
@@ -431,16 +498,9 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Options.Editing = False
             Width = 60
           end
-          object BoxName_6: TcxGridDBColumn
-            Caption = #1071#1097'. '#1074#1080#1076#1072'6'
-            DataBinding.FieldName = 'BoxName_6'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object CountTare6: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'6'
-            DataBinding.FieldName = 'CountTare6'
+          object WeightTare_5: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076#1072'5'
+            DataBinding.FieldName = 'WeightTare_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -449,77 +509,45 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Options.Editing = False
             Width = 60
           end
-          object BoxName_7: TcxGridDBColumn
-            Caption = #1071#1097'. '#1074#1080#1076#1072'7'
-            DataBinding.FieldName = 'BoxName_7'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object CountTare7: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'7'
-            DataBinding.FieldName = 'CountTare7'
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'InsertDate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 84
+          end
+          object InsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100'  '#1089#1086#1079#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 97
           end
-          object BoxName_8: TcxGridDBColumn
-            Caption = #1071#1097'. '#1074#1080#1076#1072'8'
-            DataBinding.FieldName = 'BoxName_8'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object CountTare8: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'8'
-            DataBinding.FieldName = 'CountTare8'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          object UpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 78
           end
-          object BoxName_9: TcxGridDBColumn
-            Caption = #1071#1097'. '#1074#1080#1076#1072'9'
-            DataBinding.FieldName = 'BoxName_9'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object CountTare9: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'9'
-            DataBinding.FieldName = 'CountTare9'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          object UpdateName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 101
           end
-          object BoxName_10: TcxGridDBColumn
-            Caption = #1071#1097'. '#1074#1080#1076#1072'10'
-            DataBinding.FieldName = 'BoxName_10'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
+          object isErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
             Width = 70
-          end
-          object CountTare10: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'10'
-            DataBinding.FieldName = 'CountTare10'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
         end
       end
@@ -635,8 +663,8 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_WeighingPartner_PassportDialogForm'
-      FormNameParam.Value = 'TReport_WeighingPartner_PassportDialogForm'
+      FormName = 'TDatePeriodDialogForm'
+      FormNameParam.Value = 'TDatePeriodDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -723,6 +751,25 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -733,7 +780,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_WeighingPartner_Passport'
+    StoredProcName = 'gpSelect_Movement_Inventory_scale'
     Params = <
       item
         Name = 'inStartDate'
@@ -752,10 +799,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         MultiSelectSeparator = ','
       end
       item
-        Name = 'fff'
+        Name = 'inIsErased'
         Value = Null
+        Component = actShowErased
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -785,19 +833,19 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -820,14 +868,18 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       Action = actSelectMIPrintPassport
       Category = 0
     end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
     Top = 232
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 112
-    Top = 128
+    Left = 96
+    Top = 184
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -838,8 +890,8 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       end
       item
       end>
-    Left = 224
-    Top = 136
+    Left = 208
+    Top = 216
   end
   object FormParams: TdsdFormParams
     Params = <>
@@ -884,10 +936,10 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
   object FieldFilter_Name: TdsdFieldFilter
     TextEdit = edSearchBarCode
     DataSet = MasterCDS
-    Column = BarCode
+    Column = MovementItemId_passport
     ColumnList = <
       item
-        Column = BarCode
+        Column = MovementItemId_passport
       end
       item
         Column = GoodsCode

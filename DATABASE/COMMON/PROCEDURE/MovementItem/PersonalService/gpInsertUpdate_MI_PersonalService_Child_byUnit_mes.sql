@@ -200,6 +200,25 @@ BEGIN
      ---RAISE EXCEPTION 'Test2. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService);  
 
      -- 3 соответствие должности в табеле и в "Справочнике Штатное расписание (данные)
+
+         /*
+                -- получаем данные из спр. Штатное расписание
+     SELECT ObjectFloat_HoursPlan.ValueData     AS HoursPlan
+          , ObjectFloat_HoursDay.ValueData      AS HoursDay
+          , ObjectFloat_PersonalCount.ValueData AS PersonalCount
+            INTO vbHoursPlan, vbHoursDay, vbPersonalCount
+     FROM Object AS Object_StaffList
+          LEFT JOIN ObjectFloat AS ObjectFloat_HoursPlan
+                                ON ObjectFloat_HoursPlan.ObjectId = Object_StaffList.Id
+                               AND ObjectFloat_HoursPlan.DescId = zc_ObjectFloat_StaffList_HoursPlan()
+          LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
+                                ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id
+                               AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
+          LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount
+                                ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id
+                               AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
+     WHERE Object_StaffList.Id     = inStaffListId;
+         */
      -- 4) Часы в табеле, до даты увольнения 
      -- 5) Часы в табеле, после даты приема
      
