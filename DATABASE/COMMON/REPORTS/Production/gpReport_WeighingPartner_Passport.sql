@@ -26,10 +26,10 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Statu
              , CountTare7   TFloat
              , CountTare8   TFloat
              , CountTare9   TFloat
-             , CountTare10  TFloat 
+             , CountTare10  TFloat
              , BoxCountTotal  TFloat
              , BoxWeightTotal TFloat
-             
+
              , BoxName_1   TVarChar
              , BoxName_2   TVarChar
              , BoxName_3   TVarChar
@@ -54,20 +54,49 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     RETURN QUERY 
-     WITH 
-     tmpMovement AS ( SELECT Movement.Id           AS MovementId
-                           , Movement.InvNumber    AS InvNumber
-                           , Movement.OperDate     AS OperDate
-                           , Movement.StatusId
-                       FROM Movement
-                            INNER JOIN MovementFloat AS MovementFloat_BranchCode
-                                                     ON MovementFloat_BranchCode.MovementId = Movement.Id
-                                                    AND MovementFloat_BranchCode.DescId     = zc_MovementFloat_BranchCode()
-                                                    AND MovementFloat_BranchCode.ValueData  = 115
-                       WHERE Movement.DescId IN (zc_Movement_WeighingPartner())
-                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                         --AND Movement.StatusId = zc_Enum_Status_Complete()
+     RETURN QUERY
+     WITH
+       tmpMovement AS (SELECT Movement.Id           AS MovementId
+                            , Movement.InvNumber    AS InvNumber
+                            , Movement.OperDate     AS OperDate
+                            , Movement.StatusId
+                        FROM Movement
+                             INNER JOIN MovementFloat AS MovementFloat_BranchCode
+                                                      ON MovementFloat_BranchCode.MovementId = Movement.Id
+                                                     AND MovementFloat_BranchCode.DescId     = zc_MovementFloat_BranchCode()
+                                                     AND MovementFloat_BranchCode.ValueData  = 115
+                        WHERE Movement.DescId IN (zc_Movement_WeighingPartner())
+                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                      UNION
+                       -- Перемещения на РК
+                       SELECT DISTINCT
+                              Movement.Id           AS MovementId
+                            , Movement.InvNumber    AS InvNumber
+                            , Movement.OperDate     AS OperDate
+                            , Movement.StatusId
+                        FROM Movement
+                              -- Перемещения
+                             INNER JOIN MovementFloat AS MovementFloat_MovementDesc
+                                                      ON MovementFloat_MovementDesc.MovementId =  Movement.Id
+                                                     AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
+                                                     AND MovementFloat_MovementDesc.ValueData  = zc_Movement_Send() :: TFloat
+                             -- на РК
+                             INNER JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
+                                                                    AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                                                    AND MLO_To.ObjectId   = zc_Unit_RK()
+                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.isErased   = FALSE
+                             -- с признаком Автоматически
+                             INNER JOIN MovementItemBoolean AS MIB_isAuto
+                                                            ON MIB_isAuto.MovementItemId = MovementItem.Id
+                                                           AND MIB_isAuto.DescId         = zc_MIBoolean_isAuto()
+                                                           AND MIB_isAuto.ValueData      = TRUE
+
+                        WHERE Movement.DescId IN (zc_Movement_WeighingProduction())
+                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                      )
    --данные по таре в строку
    , tmpBox AS (SELECT MAX (tmp.BoxId_1) AS BoxId_1, MAX (tmp.BoxName_1) AS BoxName_1, MAX (tmp.BoxWeight1) AS BoxWeight1
@@ -112,11 +141,11 @@ BEGIN
                            , CASE WHEN spSelect.NPP = 8 THEN spSelect.BoxWeight ELSE 0 END    AS BoxWeight8
                            , CASE WHEN spSelect.NPP = 9 THEN spSelect.BoxWeight ELSE 0 END    AS BoxWeight9
                            , CASE WHEN spSelect.NPP = 10 THEN spSelect.BoxWeight ELSE 0 END   AS BoxWeight10
-                           
+
                       FROM gpSelect_Object_Box (inSession) AS spSelect
                       ) AS tmp
                 )
-                
+
    , tmpMI AS (SELECT tmpMovement.*
                     , MovementItem.Id
                     , MovementItem.ObjectId
@@ -166,7 +195,7 @@ BEGIN
    , tmpData AS (SELECT MovementItem.*
                       , MILinkObject_GoodsKind.ObjectId    AS GoodsKindId
                       , MILinkObject_PartionCell.ObjectId  AS PartionCellId
- 
+
                       , CASE WHEN tmpBox.BoxId_1 = MILinkObject_Box1.ObjectId THEN MIFloat_CountTare1.ValueData
                              WHEN tmpBox.BoxId_1 = MILinkObject_Box2.ObjectId THEN MIFloat_CountTare2.ValueData
                              WHEN tmpBox.BoxId_1 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
@@ -226,25 +255,25 @@ BEGIN
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box4.ObjectId THEN MIFloat_CountTare4.ValueData
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
-                        END   ::TFloat AS CountTare10 
+                        END   ::TFloat AS CountTare10
                       , tmpBox.BoxWeight1 ::TFloat, tmpBox.BoxWeight2 ::TFloat, tmpBox.BoxWeight3 ::TFloat, tmpBox.BoxWeight4 ::TFloat, tmpBox.BoxWeight5 ::TFloat
                       , tmpBox.BoxWeight6 ::TFloat, tmpBox.BoxWeight7 ::TFloat, tmpBox.BoxWeight8 ::TFloat, tmpBox.BoxWeight9 ::TFloat, tmpBox.BoxWeight10 ::TFloat
                       , tmpBox.BoxId_1, tmpBox.BoxId_2, tmpBox.BoxId_3, tmpBox.BoxId_4, tmpBox.BoxId_5
                       , tmpBox.BoxId_6, tmpBox.BoxId_7, tmpBox.BoxId_8, tmpBox.BoxId_9, tmpBox.BoxId_10
                       , tmpBox.BoxName_1 ::TVarChar, tmpBox.BoxName_2 ::TVarChar, tmpBox.BoxName_3 ::TVarChar, tmpBox.BoxName_4 ::TVarChar, tmpBox.BoxName_5 ::TVarChar
                       , tmpBox.BoxName_6 ::TVarChar, tmpBox.BoxName_7 ::TVarChar, tmpBox.BoxName_8 ::TVarChar, tmpBox.BoxName_9 ::TVarChar, tmpBox.BoxName_10 ::TVarChar
- 
+
                       , MIFloat_RealWeight.ValueData ::TFloat AS RealWeight
-                      , MIFloat_PartionNum.ValueData          AS PartionNum 
-                      
+                      , MIFloat_PartionNum.ValueData          AS PartionNum
+
                       , COALESCE (MIDate_PartionGoods.ValueData, MovementItem.OperDate) :: TDateTime AS PartionGoodsDate
                       , MIDate_Insert.ValueData  AS InsertDate
                       , MILO_Insert.ObjectId     AS InsertId
                       , MIDate_Update.ValueData  AS UpdateDate
- 
+
                  FROM tmpMI AS MovementItem
                      LEFT JOIN tmpBox ON 1=1
-          
+
                      LEFT JOIN tmpMIFloat AS MIFloat_CountTare1
                                           ON MIFloat_CountTare1.MovementItemId = MovementItem.Id
                                          AND MIFloat_CountTare1.DescId = zc_MIFloat_CountTare1()
@@ -260,14 +289,14 @@ BEGIN
                      LEFT JOIN tmpMIFloat AS MIFloat_CountTare5
                                           ON MIFloat_CountTare5.MovementItemId = MovementItem.Id
                                          AND MIFloat_CountTare5.DescId = zc_MIFloat_CountTare5()
- 
+
                      LEFT JOIN tmpMIFloat AS MIFloat_PartionNum
                                           ON MIFloat_PartionNum.MovementItemId = MovementItem.Id
                                          AND MIFloat_PartionNum.DescId = zc_MIFloat_PartionNum()
                      LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
                                           ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
                                          AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
- 
+
                      LEFT JOIN tmpMIDate AS MIDate_PartionGoods
                                          ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                         AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -360,10 +389,10 @@ BEGIN
                 + COALESCE (tmpData.CountTare8,0) * COALESCE (tmpData.BoxWeight8,0)
                 + COALESCE (tmpData.CountTare9,0) * COALESCE (tmpData.BoxWeight9,0)
                 + COALESCE (tmpData.CountTare10,0) * COALESCE (tmpData.BoxWeight10,0)) ::TFloat AS BoxWeightTotal
-               
+
                , tmpData.BoxName_1 ::TVarChar, tmpData.BoxName_2 ::TVarChar, tmpData.BoxName_3 ::TVarChar, tmpData.BoxName_4 ::TVarChar, tmpData.BoxName_5 ::TVarChar
                , tmpData.BoxName_6 ::TVarChar, tmpData.BoxName_7 ::TVarChar, tmpData.BoxName_8 ::TVarChar, tmpData.BoxName_9 ::TVarChar, tmpData.BoxName_10 ::TVarChar
- 
+
           FROM tmpData
                LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId
                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.ObjectId
@@ -376,11 +405,10 @@ BEGIN
                                      AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                    ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                    ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-;
+              ;
 
 END;
 $BODY$
