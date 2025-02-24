@@ -165,9 +165,9 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actMovement_Inventory_scale: TdsdOpenForm [1]
-      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1102' '#1087#1072#1089#1087#1086#1088#1090' ('#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103')'
+      Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' ('#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1072#1089#1087#1086#1088#1090#1072')'
       FormName = 'TMovement_Inventory_scaleForm'
       FormNameParam.Value = 'TMovement_Inventory_scaleForm'
       FormNameParam.DataType = ftString
@@ -198,9 +198,9 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actReport_WeighingPartner_Passport: TdsdOpenForm [2]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103#1084' '#1055#1072#1089#1087#1086#1088#1090' '#1090#1086#1074#1072#1088#1072'>'
+      Caption = #1055#1072#1089#1087#1086#1088#1090' '#1043#1055' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103')'
       FormName = 'TReport_WeighingPartner_PassportForm'
       FormNameParam.Value = 'TReport_WeighingPartner_PassportForm'
       FormNameParam.DataType = ftString
@@ -10633,6 +10633,12 @@ inherited MainForm: TMainForm
         object miWeighingProduction_wms: TMenuItem
           Action = actWeighingProduction_wms
         end
+        object N265: TMenuItem
+          Caption = '-'
+        end
+        object miReport_WeighingPartner_Passport: TMenuItem
+          Action = actReport_WeighingPartner_Passport
+        end
         object miMovement_Inventory_scale: TMenuItem
           Action = actMovement_Inventory_scale
         end
@@ -11709,12 +11715,6 @@ inherited MainForm: TMainForm
       object miReport_OrderInternalBasis_Olap: TMenuItem
         Action = actReport_OrderInternalBasis_Olap
         Caption = #1054#1051#1040#1055' - '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1084' '#1087#1086' '#1089#1099#1088#1100#1102
-      end
-      object N265: TMenuItem
-        Caption = '-'
-      end
-      object miReport_WeighingPartner_Passport: TMenuItem
-        Action = actReport_WeighingPartner_Passport
       end
     end
     object miReportsGoods: TMenuItem [12]
