@@ -2752,18 +2752,21 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         item
           Name = 'StartDate'
           Value = 45474d
+          Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 45474d
+          Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
           Value = ''
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
