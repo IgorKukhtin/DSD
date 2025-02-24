@@ -604,7 +604,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -669,7 +669,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -967,7 +967,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1172,10 +1172,14 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end

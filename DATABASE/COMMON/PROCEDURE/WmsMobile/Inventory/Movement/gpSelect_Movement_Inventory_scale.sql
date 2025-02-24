@@ -19,7 +19,9 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
                -- Ш/К - паспорт
              , MovementItemId_passport TVarChar
                -- № паспорта
-             , PartionNum        Integer
+             , PartionNum        Integer        
+             --Ячейка хранения
+             , PartionCellId Integer, PartionCellName TVarChar
                -- Вес нетто
              , Amount            TFloat
                -- ИТОГО Вес тары - факт
@@ -176,9 +178,9 @@ BEGIN
            , Movement.StatusName             AS StatusName
 
            , MovementItem.Id                             AS MovementItemId
-           , Object_Goods.Id          		         AS GoodsId
-           , Object_Goods.ObjectCode  		         AS GoodsCode
-           , Object_Goods.ValueData   		         AS GoodsName
+           , Object_Goods.Id                             AS GoodsId
+           , Object_Goods.ObjectCode                     AS GoodsCode
+           , Object_Goods.ValueData                      AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsKind.Id                         AS GoodsKindId
            , Object_GoodsKind.ValueData                  AS GoodsKindName
@@ -190,7 +192,11 @@ BEGIN
              ) :: TVarChar AS MovementItemId_passport
 
              -- № паспорта
-           , tmpMIFloat_PartionNum_passport.ValueData :: Integer AS PartionNum
+           , tmpMIFloat_PartionNum_passport.ValueData :: Integer AS PartionNum  
+           
+             -- Ячейка хранения
+           , Object_PartionCell.Id                    AS PartionCellId
+           , Object_PartionCell.ValueData ::TVarChar  AS PartionCellName
 
              -- Вес нетто
            , MovementItem.Amount
@@ -322,6 +328,7 @@ BEGIN
            LEFT JOIN tmpMILO_passport AS tmpMILO_PartionCell_passport
                                       ON tmpMILO_PartionCell_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                      AND tmpMILO_PartionCell_passport.DescId         = zc_MILinkObject_PartionCell()
+           LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMILO_PartionCell_passport.ObjectId
 
            -- данные в Партии - Паспорта
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_CountTare1_passport

@@ -1547,6 +1547,8 @@ type
     actReport_WeighingPartner_Passport: TdsdOpenForm;
     miReport_WeighingPartner_Passport: TMenuItem;
     N265: TMenuItem;
+    actMovement_Inventory_scale: TdsdOpenForm;
+    miMovement_Inventory_scale: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
