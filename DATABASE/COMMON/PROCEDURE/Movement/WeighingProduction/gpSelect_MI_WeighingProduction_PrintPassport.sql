@@ -21,14 +21,14 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_wms_Movement_WeighingProduction());
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF COALESCE (inId,0) = 0 
+     IF COALESCE (inId,0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Строка не определена.';
      END IF;
 
      -- параметры из документа
      SELECT Movement.DescId
-          , Movement.StatusId                                                   
+          , Movement.StatusId
           , Movement.OperDate
             -- кладовщик
           , CASE WHEN Object_User.Id = 5 THEN 'Морозенко А.А.' ELSE Object_User.ValueData END
@@ -57,36 +57,40 @@ BEGIN
 
   , tmpMI AS (SELECT MovementItem.Id              AS MovementItemId
                    , zfFormat_BarCode (zc_BarCodePref_MI(), MovementItem.Id )  AS BarCode
-                   , MovementItem.ObjectId        AS GoodsId  
+                   , MovementItem.ObjectId        AS GoodsId
                    , Object_Goods.ObjectCode      AS GoodsCode
                    , Object_Goods.ValueData       AS GoodsName
                    , Object_GoodsKind.Id          AS GoodsKindId
                    , Object_GoodsKind.ValueData   AS GoodsKindName
                    , MIFloat_PartionNum.ValueData AS PartionNum
                    , COALESCE (MIDate_PartionGoods.ValueData, vbOperDate) :: TDateTime AS PartionGoodsDate
-                   
+
                    , vbStoreKeeperName  ::TVarChar AS StoreKeeperName
-                   
-                   , MovementItem.Amount  ::TFloat
-                   , tmpBox.CountTare1    ::TFloat 
-                   , tmpBox.CountTare2    ::TFloat 
-                   , tmpBox.CountTare3    ::TFloat 
-                   , tmpBox.CountTare4    ::TFloat 
-                   , tmpBox.CountTare5    ::TFloat 
-                   , tmpBox.CountTare6    ::TFloat 
-                   , tmpBox.CountTare7    ::TFloat 
-                   , tmpBox.CountTare8    ::TFloat 
-                   , tmpBox.CountTare9    ::TFloat 
-                   , tmpBox.CountTare10   ::TFloat  
-             
+
+                   , CASE WHEN vbDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
+                               THEN MovementItem.Amount * COALESCE (OF_Weight.ValueData, 0)
+                          ELSE  MovementItem.Amount
+                     END ::TFloat AS Amount
+
+                   , tmpBox.CountTare1    ::TFloat
+                   , tmpBox.CountTare2    ::TFloat
+                   , tmpBox.CountTare3    ::TFloat
+                   , tmpBox.CountTare4    ::TFloat
+                   , tmpBox.CountTare5    ::TFloat
+                   , tmpBox.CountTare6    ::TFloat
+                   , tmpBox.CountTare7    ::TFloat
+                   , tmpBox.CountTare8    ::TFloat
+                   , tmpBox.CountTare9    ::TFloat
+                   , tmpBox.CountTare10   ::TFloat
+
                    , tmpBox.BoxName_1 ::TVarChar, tmpBox.BoxName_2 ::TVarChar, tmpBox.BoxName_3 ::TVarChar, tmpBox.BoxName_4 ::TVarChar, tmpBox.BoxName_5 ::TVarChar
                    , tmpBox.BoxName_6 ::TVarChar, tmpBox.BoxName_7 ::TVarChar, tmpBox.BoxName_8 ::TVarChar, tmpBox.BoxName_9 ::TVarChar, tmpBox.BoxName_10 ::TVarChar
 
                    , Object_PartionCell.Id                   AS PartionCellId
                    , Object_PartionCell.ValueData ::TVarChar AS PartionCellName
-                   
-              FROM MovementItem 
-                   
+
+              FROM MovementItem
+
                    LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
                    LEFT JOIN MovementItemFloat AS MIFloat_PartionNum
                                                ON MIFloat_PartionNum.MovementItemId = MovementItem.Id
@@ -107,6 +111,13 @@ BEGIN
                    LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
 
                    LEFT JOIN tmpBox ON 1 = 1
+
+                   LEFT JOIN ObjectLink AS OL_Measure
+                                        ON OL_Measure.ObjectId = MovementItem.ObjectId
+                                       AND OL_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                   LEFT JOIN ObjectFloat AS OF_Weight
+                                         ON OF_Weight.ObjectId = MovementItem.ObjectId
+                                        AND OF_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
               WHERE MovementItem.MovementId = inMovementId
                 AND MovementItem.Id         = inId
@@ -130,5 +141,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_MI_WeighingProduction_PrintPassport(inMovementId := 15745229 , inId := 162901040 ,  inSession := '5');
---FETCH ALL "<unnamed portal 12>";
+-- SELECT * FROM gpSelect_MI_WeighingProduction_PrintPassport(inMovementId := 15745229 , inId := 162901040 ,  inSession := '5'); --FETCH ALL "<unnamed portal 12>";

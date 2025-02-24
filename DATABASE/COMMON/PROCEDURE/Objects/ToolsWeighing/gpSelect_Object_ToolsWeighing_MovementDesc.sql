@@ -48,6 +48,7 @@ RETURNS TABLE (Number              Integer
              , isListInventory           Boolean -- Scale + ScaleCeh - инвентаризаци€ только дл€ списка
              , isAsset                   Boolean -- Scale + ScaleCeh - открыть справочник ќ—
              , isPartionCell             Boolean -- Scale + ScaleCeh - открыть справочник PartionCell
+             , isPartionPassport         Boolean -- ScaleCeh - открыть диалог дл€ формировани€ паспорта
              , isReReturnIn              Boolean -- Scale - открыть журнал документов ¬озврат от покупател€
              , isCloseInventory          Boolean
              , isCalc_Sh                 Boolean
@@ -121,6 +122,7 @@ BEGIN
                                        , isListInventory          Boolean
                                        , isAsset                  Boolean
                                        , isPartionCell            Boolean
+                                       , isPartionPassport        Boolean
                                        , isReReturnIn             Boolean
                                        , isCloseInventory         Boolean
                                        , isCalc_Sh                Boolean
@@ -136,7 +138,7 @@ BEGIN
                                  , PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn
                                  , isPartionGoodsDate, isPartionDate_save, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isInvNumberPartner, isInvNumberPartner_check, isDocPartner, isPersonalGroup, isOrderInternal
                                  , isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, isListInventory, isAsset
-                                 , isPartionCell, isReReturnIn, isCloseInventory, isCalc_Sh, isRePack
+                                 , isPartionCell, isPartionPassport, isReReturnIn, isCloseInventory, isCalc_Sh, isRePack
                                  , isOperCountPartner, isOperPricePartner, isReturnOut_Date, isCalc_PriceVat
                                  , ItemName
                                   )
@@ -208,6 +210,7 @@ BEGIN
             , CASE WHEN tmp.isListInventory           ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isListInventory
             , CASE WHEN tmp.isAsset                   ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isAsset
             , CASE WHEN tmp.isPartionCell             ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPartionCell
+            , CASE WHEN tmp.isPartionPassport         ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPartionPassport
             , CASE WHEN tmp.isReReturnIn              ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isReReturnIn
             , CASE WHEN tmp.isCloseInventory          ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isCloseInventory
             , CASE WHEN tmp.isCalc_Sh                 ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isCalc_Sh
@@ -264,6 +267,8 @@ BEGIN
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isListInventory',    'FALSE',                                                     inSession)              END AS isListInventory
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isAsset',            'FALSE',                                                     inSession)              END AS isAsset
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isPartionCell',      'FALSE',                                                     inSession)              END AS isPartionCell
+                        , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isPartionPassport',  'FALSE',                                                     inSession)              END AS isPartionPassport
+
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isReReturnIn',       'FALSE',                                                     inSession)              END AS isReReturnIn
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isCloseInventory',   'TRUE',                                                      inSession)              END AS isCloseInventory
                         , CASE WHEN                    inIsCeh     = TRUE               THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isCalc_Sh',          'FALSE',                                                     inSession) ELSE 'FALSE' END AS isCalc_Sh
@@ -546,6 +551,7 @@ BEGIN
            , _tmpToolsWeighing.isListInventory
            , _tmpToolsWeighing.isAsset
            , _tmpToolsWeighing.isPartionCell
+           , _tmpToolsWeighing.isPartionPassport
            , _tmpToolsWeighing.isReReturnIn
            , _tmpToolsWeighing.isCloseInventory
            , _tmpToolsWeighing.isCalc_Sh
@@ -685,6 +691,7 @@ BEGIN
             , FALSE AS isListInventory
             , FALSE AS isAsset
             , FALSE AS isPartionCell
+            , FALSE AS isPartionPassport
             , FALSE AS isReReturnIn
             , FALSE AS isCloseInventory
             , FALSE AS isCalc_Sh
