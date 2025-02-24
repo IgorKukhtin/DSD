@@ -276,6 +276,12 @@ type
     actUpdate_Currency: TdsdUpdateDataSet;
     mactUpdate_Currency: TMultiAction;
     bbUpdate_Currency: TdxBarButton;
+    spSelectPrintBox: TdsdStoredProc;
+    actPrintBox: TdsdPrintAction;
+    bbPrintBox: TdxBarButton;
+    spSelectPrintBoxTotal: TdsdStoredProc;
+    actPrintBoxTotal: TdsdPrintAction;
+    bbPrintBoxTotal: TdxBarButton;
   private
     { Private declarations }
   public
