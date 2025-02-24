@@ -306,6 +306,7 @@ begin
            ParamByName('isKVK').asBoolean:= DataSet.FieldByName('isKVK').asBoolean;
            ParamByName('isAsset').asBoolean:= DataSet.FieldByName('isAsset').asBoolean;
            ParamByName('isPartionCell').asBoolean:= DataSet.FieldByName('isPartionCell').asBoolean;
+           ParamByName('isPartionPassport').asBoolean:= DataSet.FieldByName('isPartionPassport').asBoolean;
 
          end;
 
@@ -957,6 +958,41 @@ begin
            Params.AddParam('inCountSkewer2', ftFloat, ptInput, execParamsMI.ParamByName('CountSkewer2').AsFloat);
            Params.AddParam('inWeightSkewer2', ftFloat, ptInput, SettingMain.WeightSkewer2);
            Params.AddParam('inWeightOther', ftFloat, ptInput, execParamsMI.ParamByName('WeightOther').AsFloat);
+
+           Params.AddParam('inCountTare1', ftFloat, ptInput, execParamsMI.ParamByName('CountTare1').AsFloat);
+           Params.AddParam('inWeightTare1', ftFloat, ptInput, SettingMain.WeightTare1);
+           Params.AddParam('inCountTare2', ftFloat, ptInput, execParamsMI.ParamByName('CountTare2').AsFloat);
+           Params.AddParam('inWeightTare2', ftFloat, ptInput, SettingMain.WeightTare2);
+           Params.AddParam('inCountTare3', ftFloat, ptInput, execParamsMI.ParamByName('CountTare3').AsFloat);
+           Params.AddParam('inWeightTare3', ftFloat, ptInput, SettingMain.WeightTare3);
+           Params.AddParam('inCountTare4', ftFloat, ptInput, execParamsMI.ParamByName('CountTare4').AsFloat);
+           Params.AddParam('inWeightTare4', ftFloat, ptInput, SettingMain.WeightTare4);
+           Params.AddParam('inCountTare5', ftFloat, ptInput, execParamsMI.ParamByName('CountTare5').AsFloat);
+           Params.AddParam('inWeightTare5', ftFloat, ptInput, SettingMain.WeightTare5);
+           Params.AddParam('inCountTare6', ftFloat, ptInput, execParamsMI.ParamByName('CountTare6').AsFloat);
+           Params.AddParam('inWeightTare6', ftFloat, ptInput, SettingMain.WeightTare6);
+           Params.AddParam('inCountTare7', ftFloat, ptInput, execParamsMI.ParamByName('CountTare7').AsFloat);
+           Params.AddParam('inWeightTare7', ftFloat, ptInput, SettingMain.WeightTare7);
+           Params.AddParam('inCountTare8', ftFloat, ptInput, execParamsMI.ParamByName('CountTare8').AsFloat);
+           Params.AddParam('inWeightTare8', ftFloat, ptInput, SettingMain.WeightTare8);
+           Params.AddParam('inCountTare9', ftFloat, ptInput, execParamsMI.ParamByName('CountTare9').AsFloat);
+           Params.AddParam('inWeightTare9', ftFloat, ptInput, SettingMain.WeightTare9);
+           Params.AddParam('inCountTare10', ftFloat, ptInput, execParamsMI.ParamByName('CountTare10').AsFloat);
+           Params.AddParam('inWeightTare10', ftFloat, ptInput, SettingMain.WeightTare10);
+
+           Params.AddParam('inTareId_1', ftInteger, ptInput, SettingMain.TareId_1);
+           Params.AddParam('inTareId_2', ftInteger, ptInput, SettingMain.TareId_2);
+           Params.AddParam('inTareId_3', ftInteger, ptInput, SettingMain.TareId_3);
+           Params.AddParam('inTareId_4', ftInteger, ptInput, SettingMain.TareId_4);
+           Params.AddParam('inTareId_5', ftInteger, ptInput, SettingMain.TareId_5);
+           Params.AddParam('inTareId_6', ftInteger, ptInput, SettingMain.TareId_6);
+           Params.AddParam('inTareId_7', ftInteger, ptInput, SettingMain.TareId_7);
+           Params.AddParam('inTareId_8', ftInteger, ptInput, SettingMain.TareId_8);
+           Params.AddParam('inTareId_9', ftInteger, ptInput, SettingMain.TareId_9);
+           Params.AddParam('inTareId_10', ftInteger, ptInput, SettingMain.TareId_10);
+
+           Params.AddParam('inPartionCellId', ftInteger, ptInput, execParamsMI.ParamByName('PartionCellId').AsInteger);
+
            Params.AddParam('inPartionGoodsDate', ftDateTime, ptInput, execParamsMI.ParamByName('PartionGoodsDate').AsDateTime);
            Params.AddParam('inPartionGoods', ftString, ptInput, execParamsMI.ParamByName('PartionGoods').AsString);
            Params.AddParam('inNumberKVK', ftString, ptInput, execParamsMovement.ParamByName('NumberKVK').AsString);

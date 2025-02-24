@@ -2624,7 +2624,8 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 62
+        ExplicitLeft = -2
+        ExplicitTop = 5
       end
       object PartionDateEdit: TcxDateEdit
         Left = 4

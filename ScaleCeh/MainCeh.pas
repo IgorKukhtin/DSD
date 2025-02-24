@@ -314,6 +314,9 @@ type
     PanelLeft_1: TPanel;
     PanelBottom_all: TPanel;
     PanelRight_2: TPanel;
+    isPartionPassportPanel: TPanel;
+    cbPartionPasspor: TCheckBox;
+    bbPrint_MIPassport: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -412,6 +415,8 @@ type
     procedure bbUpdateAsset_twoClick(Sender: TObject);
     procedure EditAsset_twoPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure cbPartionPassporClick(Sender: TObject);
+    procedure bbPrint_MIPassportClick(Sender: TObject);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
@@ -477,7 +482,7 @@ uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPri
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
     ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport, GuideSubjectDoc, GuidePersonalGroup, GuidePersonal, GuideAsset, GuidePartionCell
     ,IdIPWatch, LookAndFillSettings
-    ,DialogBoxLight, DialogGoodsSeparate
+    ,DialogBoxLight, DialogGoodsSeparate, DialogTare
     ,CommonData;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -968,6 +973,44 @@ begin
            end;
        //
        //
+       if (cbPartionPasspor.Checked = TRUE) and (isPartionPassportPanel.Visible = TRUE)
+       then if not DialogTareForm.Execute (ParamsMovement,ParamsMI) then
+            begin
+                 ActiveControl:=EditGoodsCode;
+                 PanelMovementDesc.Font.Color:=clRed;
+                 PanelMovementDesc.Caption:='Ошибка.Не заполнены данные Паспорта.';
+                 exit;
+            end
+            else begin
+                   if ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh
+                   then
+                   ParamsMI.ParamByName('WeightTare').AsFloat:= ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1
+                                                              + ParamsMI.ParamByName('CountTare2').AsFloat * SettingMain.WeightTare2
+                                                              + ParamsMI.ParamByName('CountTare3').AsFloat * SettingMain.WeightTare3
+                                                              + ParamsMI.ParamByName('CountTare4').AsFloat * SettingMain.WeightTare4
+                                                              + ParamsMI.ParamByName('CountTare5').AsFloat * SettingMain.WeightTare5
+                                                              + ParamsMI.ParamByName('CountTare6').AsFloat * SettingMain.WeightTare6
+                                                              + ParamsMI.ParamByName('CountTare7').AsFloat * SettingMain.WeightTare7
+                                                              + ParamsMI.ParamByName('CountTare8').AsFloat * SettingMain.WeightTare8
+                                                              + ParamsMI.ParamByName('CountTare9').AsFloat * SettingMain.WeightTare9
+                                                              + ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10
+                                                               ;
+                   EditWeightTare_enter.Text:= FloatToStr(ParamsMI.ParamByName('WeightTare').AsFloat);
+                 end
+       else begin
+                 ParamsMI.ParamByName('CountTare1').AsFloat:= 0;
+                 ParamsMI.ParamByName('CountTare2').AsFloat:= 0;
+                 ParamsMI.ParamByName('CountTare3').AsFloat:= 0;
+                 ParamsMI.ParamByName('CountTare4').AsFloat:= 0;
+                 ParamsMI.ParamByName('CountTare5').AsFloat:= 0;
+                 ParamsMI.ParamByName('CountTare6').AsFloat:= 0;
+                 ParamsMI.ParamByName('CountTare7').AsFloat:= 0;
+                 ParamsMI.ParamByName('CountTare8').AsFloat:= 0;
+                 ParamsMI.ParamByName('CountTare9').AsFloat:= 0;
+                 ParamsMI.ParamByName('CountTare10').AsFloat:= 0;
+            end;
+       //
+       //
        //Сначала пересчитали кол-во
        SetParams_OperCount;
        //
@@ -1150,6 +1193,11 @@ begin
        then ValueStep_kvk:= 0;
 
        //
+       // Сразу печатаем Паспорт - ГП для РК
+       if (cbPartionPasspor.Checked = TRUE) and (isPartionPassportPanel.Visible = TRUE)
+       then
+           Print_MIPassport (ParamsMovement.ParamByName('MovementId').AsInteger, ParamsMI.ParamByName('MovementItemId').AsInteger);
+       //
        // Сразу печатаем Этикетку - для сырья
        if (Result = TRUE) and (Length(PrinterSticker_Array) > 0)
          and ((ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = TRUE) or (ParamsMovement.ParamByName('isSticker_KVK').asBoolean = TRUE))
@@ -1318,6 +1366,8 @@ begin
 
           InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
      end;
+     //
+     isPartionPassportPanel.Visible:= ParamsMovement.ParamByName('isPartionPassport').asBoolean=true;
      //
      //PanelSticker_Ceh.Visible:=ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = TRUE;
      cbSticker_Ceh.Checked:= ParamsMovement.ParamByName('isKVK').asBoolean=true;
@@ -1966,6 +2016,11 @@ begin
      myActiveControl;
 end;
 {------------------------------------------------------------------------}
+procedure TMainCehForm.cbPartionPassporClick(Sender: TObject);
+begin
+     ActiveControl:= EditGoodsCode;
+end;
+{------------------------------------------------------------------------}
 procedure TMainCehForm.actRefreshExecute(Sender: TObject);
 begin
     RefreshDataSet;
@@ -2261,7 +2316,8 @@ begin
           if (ActiveControl.ClassName = 'TcxGridSite') or (ActiveControl.ClassName = 'TcxGrid') or (ActiveControl.ClassName = 'TcxDateEdit')
             or (ActiveControl.ClassName = 'TGroupButton')
           then WriteParamsMovement
-          else begin ActiveControl:=EditGoodsCode;
+          else if ActiveControl <> cbPartionPasspor
+               then begin ActiveControl:=EditGoodsCode;
                      PanelMovementDesc.Font.Color:=clRed;
                      PanelMovementDesc.Caption:='Ошибка.Не определен код <Продукции>';
                end;
@@ -2966,6 +3022,10 @@ begin
   end;
   //
   //
+  if ParamsMovement.ParamByName('isPartionPassport').asBoolean = TRUE
+  then isPartionPassportPanel.Visible:= TRUE
+  else isPartionPassportPanel.Visible:= FALSE;
+  //
   AssetPanel.Visible:= SettingMain.isAsset = TRUE;
   Asset_twoPanel.Visible:= SettingMain.isAsset = TRUE;
   bbUpdateAsset.Visible:= SettingMain.isAsset = TRUE;
@@ -3091,7 +3151,7 @@ begin
             LabelSkewer.Caption:='Крючки';
   end ;
   //
-  PanelSticker_Ceh.Visible:=(PrinterSticker_Array[0].Name <> '')
+  PanelSticker_Ceh.Visible:=(PrinterSticker_Array[0].Name <> '') and (SettingMain.BranchCode <> 1)
                         //and ((SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 202))
                             ;
 
@@ -3978,6 +4038,11 @@ begin
                                  , CDS.FieldByName('MovementItemId').AsInteger
                                  , ParamsMovement.ParamByName('isSticker_KVK').asBoolean
                                  , TRUE);
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbPrint_MIPassportClick(Sender: TObject);
+begin
+     Print_MIPassport (ParamsMovement.ParamByName('MovementId').AsInteger, CDS.FieldByName('MovementItemId').AsInteger);
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.bbSale_Order_allClick(Sender: TObject);

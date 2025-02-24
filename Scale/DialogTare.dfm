@@ -1,27 +1,27 @@
 inherited DialogTareForm: TDialogTareForm
   Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
-  ClientHeight = 452
-  ClientWidth = 560
+  ClientHeight = 460
+  ClientWidth = 620
   OldCreateOrder = True
   Position = poScreenCenter
   OnCloseQuery = FormCloseQuery
-  ExplicitWidth = 576
-  ExplicitHeight = 491
+  OnCreate = FormCreate
+  ExplicitWidth = 636
+  ExplicitHeight = 499
   PixelsPerInch = 96
   TextHeight = 14
   inherited bbPanel: TPanel
-    Top = 411
-    Width = 560
-    ExplicitTop = 447
-    ExplicitWidth = 433
+    Top = 419
+    Width = 620
+    ExplicitTop = 419
+    ExplicitWidth = 620
     inherited bbOk: TBitBtn
-      Left = 35
+      Left = 27
       Default = False
-      ExplicitLeft = 35
+      ExplicitLeft = 27
     end
     inherited bbCancel: TBitBtn
       Left = 148
-      Default = True
       Kind = bkCustom
       ExplicitLeft = 148
     end
@@ -29,33 +29,30 @@ inherited DialogTareForm: TDialogTareForm
   object infoPanelTareFix: TPanel
     Left = 0
     Top = 0
-    Width = 425
-    Height = 411
-    Align = alLeft
+    Width = 450
+    Height = 419
+    Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 447
     object infoPanelTare1: TPanel
       Left = 0
       Top = 0
-      Width = 425
+      Width = 450
       Height = 37
       Align = alTop
       TabOrder = 0
-      ExplicitWidth = 433
       object PanelTare1: TPanel
         Left = 1
         Top = 1
-        Width = 315
+        Width = 340
         Height = 35
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 323
         object LabelTare1: TLabel
           Left = 0
           Top = 0
-          Width = 315
+          Width = 340
           Height = 14
           Align = alTop
           Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 1.0 '#1082#1075
@@ -63,9 +60,9 @@ inherited DialogTareForm: TDialogTareForm
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 81
+          ExplicitWidth = 88
         end
         object EditTare1: TcxCurrencyEdit
           Left = 5
@@ -74,19 +71,22 @@ inherited DialogTareForm: TDialogTareForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditTare1KeyDown
           Width = 100
         end
       end
       object infoPanelWeightTare1: TPanel
-        Left = 316
+        Left = 341
         Top = 1
         Width = 108
         Height = 35
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 324
         object LabelWeightTare1: TLabel
           Left = 0
           Top = 0
@@ -124,24 +124,22 @@ inherited DialogTareForm: TDialogTareForm
     object infoPanelTare0: TPanel
       Left = 0
       Top = 370
-      Width = 425
+      Width = 450
       Height = 37
       Align = alTop
       TabOrder = 1
-      ExplicitWidth = 433
       object PanelTare0: TPanel
         Left = 1
         Top = 1
-        Width = 315
+        Width = 340
         Height = 35
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 323
         object LabelTare0: TLabel
           Left = 0
           Top = 0
-          Width = 315
+          Width = 340
           Height = 14
           Align = alTop
           Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 0.0 '#1082#1075
@@ -149,9 +147,9 @@ inherited DialogTareForm: TDialogTareForm
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 81
+          ExplicitWidth = 88
         end
         object EditTare0: TcxCurrencyEdit
           Left = 5
@@ -165,14 +163,13 @@ inherited DialogTareForm: TDialogTareForm
         end
       end
       object infoPanelWeightTare0: TPanel
-        Left = 316
+        Left = 341
         Top = 1
         Width = 108
         Height = 35
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 324
         object LabelWeightTare0: TLabel
           Left = 0
           Top = 0
@@ -210,24 +207,22 @@ inherited DialogTareForm: TDialogTareForm
     object infoPanelTare2: TPanel
       Left = 0
       Top = 37
-      Width = 425
+      Width = 450
       Height = 37
       Align = alTop
       TabOrder = 2
-      ExplicitWidth = 433
       object PanelTare2: TPanel
         Left = 1
         Top = 1
-        Width = 315
+        Width = 340
         Height = 35
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 323
         object LabelTare2: TLabel
           Left = 0
           Top = 0
-          Width = 315
+          Width = 340
           Height = 14
           Align = alTop
           Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 2.0 '#1082#1075
@@ -235,9 +230,9 @@ inherited DialogTareForm: TDialogTareForm
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 81
+          ExplicitWidth = 88
         end
         object EditTare2: TcxCurrencyEdit
           Left = 5
@@ -246,19 +241,22 @@ inherited DialogTareForm: TDialogTareForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditTare2KeyDown
           Width = 100
         end
       end
       object infoPanelWeightTare2: TPanel
-        Left = 316
+        Left = 341
         Top = 1
         Width = 108
         Height = 35
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 324
         object LabelWeightTare2: TLabel
           Left = 0
           Top = 0
@@ -296,24 +294,22 @@ inherited DialogTareForm: TDialogTareForm
     object infoPanelTare5: TPanel
       Left = 0
       Top = 148
-      Width = 425
+      Width = 450
       Height = 37
       Align = alTop
       TabOrder = 3
-      ExplicitWidth = 433
       object PanelTare5: TPanel
         Left = 1
         Top = 1
-        Width = 315
+        Width = 340
         Height = 35
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 323
         object LabelTare5: TLabel
           Left = 0
           Top = 0
-          Width = 315
+          Width = 340
           Height = 14
           Align = alTop
           Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 5.0 '#1082#1075
@@ -321,9 +317,9 @@ inherited DialogTareForm: TDialogTareForm
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 81
+          ExplicitWidth = 88
         end
         object EditTare5: TcxCurrencyEdit
           Left = 5
@@ -332,19 +328,22 @@ inherited DialogTareForm: TDialogTareForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditTare5KeyDown
           Width = 100
         end
       end
       object infoPanelWeightTare5: TPanel
-        Left = 316
+        Left = 341
         Top = 1
         Width = 108
         Height = 35
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 324
         object LabelWeightTare5: TLabel
           Left = 0
           Top = 0
@@ -382,24 +381,22 @@ inherited DialogTareForm: TDialogTareForm
     object infoPanelTare4: TPanel
       Left = 0
       Top = 111
-      Width = 425
+      Width = 450
       Height = 37
       Align = alTop
       TabOrder = 4
-      ExplicitWidth = 433
       object PanelTare4: TPanel
         Left = 1
         Top = 1
-        Width = 315
+        Width = 340
         Height = 35
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 323
         object LabelTare4: TLabel
           Left = 0
           Top = 0
-          Width = 315
+          Width = 340
           Height = 14
           Align = alTop
           Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 4.0 '#1082#1075
@@ -407,9 +404,9 @@ inherited DialogTareForm: TDialogTareForm
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 81
+          ExplicitWidth = 88
         end
         object EditTare4: TcxCurrencyEdit
           Left = 5
@@ -418,19 +415,22 @@ inherited DialogTareForm: TDialogTareForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditTare4KeyDown
           Width = 100
         end
       end
       object infoPanelWeightTare4: TPanel
-        Left = 316
+        Left = 341
         Top = 1
         Width = 108
         Height = 35
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 324
         object LabelWeightTare4: TLabel
           Left = 0
           Top = 0
@@ -468,24 +468,22 @@ inherited DialogTareForm: TDialogTareForm
     object infoPanelTare3: TPanel
       Left = 0
       Top = 74
-      Width = 425
+      Width = 450
       Height = 37
       Align = alTop
       TabOrder = 5
-      ExplicitWidth = 433
       object PanelTare3: TPanel
         Left = 1
         Top = 1
-        Width = 315
+        Width = 340
         Height = 35
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 323
         object LabelTare3: TLabel
           Left = 0
           Top = 0
-          Width = 315
+          Width = 340
           Height = 14
           Align = alTop
           Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 3.0 '#1082#1075
@@ -493,9 +491,9 @@ inherited DialogTareForm: TDialogTareForm
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 81
+          ExplicitWidth = 88
         end
         object EditTare3: TcxCurrencyEdit
           Left = 5
@@ -504,19 +502,22 @@ inherited DialogTareForm: TDialogTareForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditTare3KeyDown
           Width = 100
         end
       end
       object infoPanelWeightTare3: TPanel
-        Left = 316
+        Left = 341
         Top = 1
         Width = 108
         Height = 35
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 324
         object LabelWeightTare3: TLabel
           Left = 0
           Top = 0
@@ -554,24 +555,22 @@ inherited DialogTareForm: TDialogTareForm
     object infoPanelTare6: TPanel
       Left = 0
       Top = 185
-      Width = 425
+      Width = 450
       Height = 37
       Align = alTop
       TabOrder = 6
-      ExplicitWidth = 433
       object PanelTare6: TPanel
         Left = 1
         Top = 1
-        Width = 315
+        Width = 340
         Height = 35
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 323
         object LabelTare6: TLabel
           Left = 0
           Top = 0
-          Width = 315
+          Width = 340
           Height = 14
           Align = alTop
           Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 6.0 '#1082#1075
@@ -579,9 +578,10 @@ inherited DialogTareForm: TDialogTareForm
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 81
+          ExplicitLeft = -6
+          ExplicitTop = 3
         end
         object EditTare6: TcxCurrencyEdit
           Left = 5
@@ -590,19 +590,22 @@ inherited DialogTareForm: TDialogTareForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditTare6KeyDown
           Width = 100
         end
       end
       object infoPanelWeightTare6: TPanel
-        Left = 316
+        Left = 341
         Top = 1
         Width = 108
         Height = 35
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 324
         object LabelWeightTare6: TLabel
           Left = 0
           Top = 0
@@ -640,24 +643,22 @@ inherited DialogTareForm: TDialogTareForm
     object infoPanelTare10: TPanel
       Left = 0
       Top = 333
-      Width = 425
+      Width = 450
       Height = 37
       Align = alTop
       TabOrder = 7
-      ExplicitWidth = 433
       object PanelTare10: TPanel
         Left = 1
         Top = 1
-        Width = 315
+        Width = 340
         Height = 35
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 323
         object LabelTare10: TLabel
           Left = 0
           Top = 0
-          Width = 315
+          Width = 340
           Height = 14
           Align = alTop
           Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 10.0 '#1082#1075
@@ -665,9 +666,9 @@ inherited DialogTareForm: TDialogTareForm
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 87
+          ExplicitWidth = 94
         end
         object EditTare10: TcxCurrencyEdit
           Left = 5
@@ -676,19 +677,22 @@ inherited DialogTareForm: TDialogTareForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditTare10KeyDown
           Width = 100
         end
       end
       object infoPanelWeightTare10: TPanel
-        Left = 316
+        Left = 341
         Top = 1
         Width = 108
         Height = 35
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 324
         object LabelWeightTare10: TLabel
           Left = 0
           Top = 0
@@ -726,24 +730,22 @@ inherited DialogTareForm: TDialogTareForm
     object infoPanelTare9: TPanel
       Left = 0
       Top = 296
-      Width = 425
+      Width = 450
       Height = 37
       Align = alTop
       TabOrder = 8
-      ExplicitWidth = 433
       object PanelTare9: TPanel
         Left = 1
         Top = 1
-        Width = 315
+        Width = 340
         Height = 35
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 323
         object LabelTare9: TLabel
           Left = 0
           Top = 0
-          Width = 315
+          Width = 340
           Height = 14
           Align = alTop
           Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 9.0 '#1082#1075
@@ -751,9 +753,9 @@ inherited DialogTareForm: TDialogTareForm
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 81
+          ExplicitWidth = 88
         end
         object EditTare9: TcxCurrencyEdit
           Left = 5
@@ -762,19 +764,22 @@ inherited DialogTareForm: TDialogTareForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditTare9KeyDown
           Width = 100
         end
       end
       object infoPanelWeightTare9: TPanel
-        Left = 316
+        Left = 341
         Top = 1
         Width = 108
         Height = 35
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 324
         object LabelWeightTare9: TLabel
           Left = 0
           Top = 0
@@ -812,24 +817,22 @@ inherited DialogTareForm: TDialogTareForm
     object infoPanelTare8: TPanel
       Left = 0
       Top = 259
-      Width = 425
+      Width = 450
       Height = 37
       Align = alTop
       TabOrder = 9
-      ExplicitWidth = 433
       object PanelTare8: TPanel
         Left = 1
         Top = 1
-        Width = 315
+        Width = 340
         Height = 35
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 323
         object LabelTare8: TLabel
           Left = 0
           Top = 0
-          Width = 315
+          Width = 340
           Height = 14
           Align = alTop
           Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 8.0 '#1082#1075
@@ -837,9 +840,9 @@ inherited DialogTareForm: TDialogTareForm
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 81
+          ExplicitWidth = 88
         end
         object EditTare8: TcxCurrencyEdit
           Left = 5
@@ -848,19 +851,22 @@ inherited DialogTareForm: TDialogTareForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditTare8KeyDown
           Width = 100
         end
       end
       object infoPanelWeightTare8: TPanel
-        Left = 316
+        Left = 341
         Top = 1
         Width = 108
         Height = 35
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 324
         object LabelWeightTare8: TLabel
           Left = 0
           Top = 0
@@ -898,24 +904,22 @@ inherited DialogTareForm: TDialogTareForm
     object infoPanelTare7: TPanel
       Left = 0
       Top = 222
-      Width = 425
+      Width = 450
       Height = 37
       Align = alTop
       TabOrder = 10
-      ExplicitWidth = 433
       object PanelTare7: TPanel
         Left = 1
         Top = 1
-        Width = 315
+        Width = 340
         Height = 35
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 323
         object LabelTare7: TLabel
           Left = 0
           Top = 0
-          Width = 315
+          Width = 340
           Height = 14
           Align = alTop
           Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 7.0 '#1082#1075
@@ -923,9 +927,9 @@ inherited DialogTareForm: TDialogTareForm
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 81
+          ExplicitWidth = 88
         end
         object EditTare7: TcxCurrencyEdit
           Left = 5
@@ -934,19 +938,22 @@ inherited DialogTareForm: TDialogTareForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditTare7KeyDown
           Width = 100
         end
       end
       object infoPanelWeightTare7: TPanel
-        Left = 316
+        Left = 341
         Top = 1
         Width = 108
         Height = 35
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 324
         object LabelWeightTare7: TLabel
           Left = 0
           Top = 0
@@ -983,22 +990,20 @@ inherited DialogTareForm: TDialogTareForm
     end
   end
   object infoPanelPartion: TPanel
-    Left = 390
+    Left = 450
     Top = 0
     Width = 170
-    Height = 411
+    Height = 419
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = -6
     object Panel1: TPanel
       Left = 0
-      Top = 362
+      Top = 370
       Width = 170
       Height = 49
       Align = alBottom
       TabOrder = 0
-      ExplicitTop = 329
       object Label1: TLabel
         Left = 1
         Top = 1
@@ -1034,12 +1039,11 @@ inherited DialogTareForm: TDialogTareForm
     end
     object Panel3: TPanel
       Left = 0
-      Top = 313
+      Top = 321
       Width = 170
       Height = 49
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 280
       object Label2: TLabel
         Left = 1
         Top = 1
@@ -1054,7 +1058,8 @@ inherited DialogTareForm: TDialogTareForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 89
+        ExplicitLeft = 5
+        ExplicitTop = 7
       end
       object PanelWeightTare_total: TPanel
         Left = 1
@@ -1100,10 +1105,11 @@ inherited DialogTareForm: TDialogTareForm
       end
       object PartionDateEdit: TcxDateEdit
         Left = 23
-        Top = 15
+        Top = 17
         EditValue = 41640d
         ParentFont = False
         Properties.DateButtons = [btnToday]
+        Properties.ReadOnly = True
         Properties.SaveTime = False
         Properties.ShowTime = False
         Style.Font.Charset = RUSSIAN_CHARSET
@@ -1142,7 +1148,7 @@ inherited DialogTareForm: TDialogTareForm
       end
       object EditPartionCell: TcxButtonEdit
         Left = 4
-        Top = 18
+        Top = 21
         ParentFont = False
         Properties.Buttons = <
           item
@@ -1150,6 +1156,7 @@ inherited DialogTareForm: TDialogTareForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Properties.OnButtonClick = EditPartionCellPropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -11
@@ -1158,8 +1165,69 @@ inherited DialogTareForm: TDialogTareForm
         Style.IsFontAssigned = True
         TabOrder = 0
         Text = 'EditPartionCell'
+        OnKeyDown = EditPartionCellKeyDown
         Width = 163
       end
     end
+    object Panel2: TPanel
+      Left = 0
+      Top = 272
+      Width = 170
+      Height = 49
+      Align = alBottom
+      TabOrder = 4
+      ExplicitTop = 321
+      object Label3: TLabel
+        Left = 1
+        Top = 1
+        Width = 168
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 69
+      end
+      object PanelCounttTare_total: TPanel
+        Left = 1
+        Top = 15
+        Width = 168
+        Height = 33
+        Align = alClient
+        BevelOuter = bvNone
+        Caption = 'PanelCounttTare_total'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clNavy
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+        ExplicitLeft = 5
+        ExplicitTop = 11
+      end
+    end
+  end
+  object spSelect: TdsdStoredProc
+    DataSet = CDS
+    DataSets = <
+      item
+        DataSet = CDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 264
+    Top = 296
+  end
+  object CDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 272
+    Top = 384
   end
 end

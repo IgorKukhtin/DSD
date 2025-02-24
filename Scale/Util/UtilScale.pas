@@ -453,6 +453,7 @@ begin
      ParamAdd(Params,'PartionCellName',ftString);
      ParamAdd(Params,'PartionCellInvNumber',ftString);
 
+     ParamAdd(Params,'isPartionPassport',ftBoolean);
 
      ParamAdd(Params,'isAsset',ftBoolean);
      ParamAdd(Params,'AssetId',ftInteger);
@@ -635,105 +636,123 @@ begin
      Params:=nil;
      if SettingMain.isCeh = FALSE then
      begin
-     ParamAdd(Params,'MovementItemId',ftInteger);    // Id строки
-     ParamAdd(Params,'GoodsId',ftInteger);           // Товары
-     ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
-     ParamAdd(Params,'GoodsName',ftString);          // Товары
-     ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
-     ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
-     ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
-     ParamAdd(Params,'StorageLineId',ftInteger);     // Линия пр-ва
-     ParamAdd(Params,'StorageLineCode',ftInteger);   // Линия пр-ва
-     ParamAdd(Params,'StorageLineName',ftString);    // Линия пр-ва
-     ParamAdd(Params,'RealWeight_Get',ftFloat);      //
-     ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и % скидки для кол-ва)
-     ParamAdd(Params,'CountTare',ftFloat);           // Количество тары
-     ParamAdd(Params,'WeightTare',ftFloat);          // Вес 1-ой тары
-     ParamAdd(Params,'ChangePercentAmount',ftFloat); // % скидки для кол-ва
-     ParamAdd(Params,'Price',ftFloat);               //
-     ParamAdd(Params,'Price_Return',ftFloat);        //
-     ParamAdd(Params,'CountForPrice',ftFloat);       //
-     ParamAdd(Params,'CountForPrice_Return',ftFloat);//
-     ParamAdd(Params,'Count',ftFloat);               // Количество пакетов или Количество батонов
-     ParamAdd(Params,'HeadCount',ftFloat);           // Количество голов
-     ParamAdd(Params,'BoxCount',ftFloat);            //
-     ParamAdd(Params,'BoxCode',ftInteger);           //
-     ParamAdd(Params,'PartionGoods',ftString);       //
+         ParamAdd(Params,'MovementItemId',ftInteger);    // Id строки
+         ParamAdd(Params,'GoodsId',ftInteger);           // Товары
+         ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
+         ParamAdd(Params,'GoodsName',ftString);          // Товары
+         ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
+         ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
+         ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
+         ParamAdd(Params,'StorageLineId',ftInteger);     // Линия пр-ва
+         ParamAdd(Params,'StorageLineCode',ftInteger);   // Линия пр-ва
+         ParamAdd(Params,'StorageLineName',ftString);    // Линия пр-ва
+         ParamAdd(Params,'RealWeight_Get',ftFloat);      //
+         ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и % скидки для кол-ва)
+         ParamAdd(Params,'CountTare',ftFloat);           // Количество тары
+         ParamAdd(Params,'WeightTare',ftFloat);          // Вес 1-ой тары
+         ParamAdd(Params,'ChangePercentAmount',ftFloat); // % скидки для кол-ва
+         ParamAdd(Params,'Price',ftFloat);               //
+         ParamAdd(Params,'Price_Return',ftFloat);        //
+         ParamAdd(Params,'CountForPrice',ftFloat);       //
+         ParamAdd(Params,'CountForPrice_Return',ftFloat);//
+         ParamAdd(Params,'Count',ftFloat);               // Количество пакетов или Количество батонов
+         ParamAdd(Params,'HeadCount',ftFloat);           // Количество голов
+         ParamAdd(Params,'BoxCount',ftFloat);            //
+         ParamAdd(Params,'BoxCode',ftInteger);           //
+         ParamAdd(Params,'PartionGoods',ftString);       //
 
-     ParamAdd(Params,'PartionGoodsDate',ftDateTime);  // Дата партия
-     ParamAdd(Params,'isPartionDate_save',ftBoolean); // выбрали сохранять Дату партия да/нет
+         ParamAdd(Params,'PartionGoodsDate',ftDateTime);  // Дата партия
+         ParamAdd(Params,'isPartionDate_save',ftBoolean); // выбрали сохранять Дату партия да/нет
 
-     ParamAdd(Params,'isBarCode',ftBoolean);         //
-     ParamAdd(Params,'MovementId_Promo',ftInteger);  //
-     ParamAdd(Params,'CountTare1',ftFloat);          // Количество тары вида1
-     ParamAdd(Params,'CountTare2',ftFloat);          // Количество тары вида2
-     ParamAdd(Params,'CountTare3',ftFloat);          // Количество тары вида3
-     ParamAdd(Params,'CountTare4',ftFloat);          // Количество тары вида4
-     ParamAdd(Params,'CountTare5',ftFloat);          // Количество тары вида5
-     ParamAdd(Params,'CountTare6',ftFloat);          // Количество тары вида6
-     ParamAdd(Params,'CountTare7',ftFloat);          // Количество тары вида6
-     ParamAdd(Params,'CountTare8',ftFloat);          // Количество тары вида6
-     ParamAdd(Params,'CountTare9',ftFloat);          // Количество тары вида6
-     ParamAdd(Params,'CountTare10',ftFloat);          // Количество тары вида6
-     ParamAdd(Params,'Amount_Goods',ftFloat);        //
+         ParamAdd(Params,'isBarCode',ftBoolean);         //
+         ParamAdd(Params,'MovementId_Promo',ftInteger);  //
 
-     ParamAdd(Params,'PartionCellId',ftInteger);       //
-     ParamAdd(Params,'PartionCellName',ftString);      //
+         ParamAdd(Params,'CountTare1',ftFloat);          // Количество тары вида1
+         ParamAdd(Params,'CountTare2',ftFloat);          // Количество тары вида2
+         ParamAdd(Params,'CountTare3',ftFloat);          // Количество тары вида3
+         ParamAdd(Params,'CountTare4',ftFloat);          // Количество тары вида4
+         ParamAdd(Params,'CountTare5',ftFloat);          // Количество тары вида5
+         ParamAdd(Params,'CountTare6',ftFloat);          // Количество тары вида6
+         ParamAdd(Params,'CountTare7',ftFloat);          // Количество тары вида6
+         ParamAdd(Params,'CountTare8',ftFloat);          // Количество тары вида6
+         ParamAdd(Params,'CountTare9',ftFloat);          // Количество тары вида6
+         ParamAdd(Params,'CountTare10',ftFloat);          // Количество тары вида6
+         ParamAdd(Params,'Amount_Goods',ftFloat);        //
 
-     ParamAdd(Params,'isAmountPartnerSecond',ftBoolean); // без оплаты да/нет - Кол-во поставщика
-     ParamAdd(Params,'isPriceWithVAT',ftBoolean);     // Цена с НДС да/нет - для цена поставщика
-     ParamAdd(Params,'OperDate_ReturnOut',ftDateTime);// Дата для цены возврат поставщику
-     ParamAdd(Params,'PricePartner',ftFloat);         // цена поставщика - ввод в контроле
-     ParamAdd(Params,'SummPartner',ftFloat);         // цена поставщика - ввод в контроле
-     ParamAdd(Params,'PriceIncome',ftFloat);          // цена по спецификации
-     ParamAdd(Params,'AmountPartnerSecond',ftFloat);  // Кол-во поставщика
+         ParamAdd(Params,'PartionCellId',ftInteger);       //
+         ParamAdd(Params,'PartionCellName',ftString);      //
+
+         ParamAdd(Params,'isAmountPartnerSecond',ftBoolean); // без оплаты да/нет - Кол-во поставщика
+         ParamAdd(Params,'isPriceWithVAT',ftBoolean);     // Цена с НДС да/нет - для цена поставщика
+         ParamAdd(Params,'OperDate_ReturnOut',ftDateTime);// Дата для цены возврат поставщику
+         ParamAdd(Params,'PricePartner',ftFloat);         // цена поставщика - ввод в контроле
+         ParamAdd(Params,'SummPartner',ftFloat);         // цена поставщика - ввод в контроле
+         ParamAdd(Params,'PriceIncome',ftFloat);          // цена по спецификации
+         ParamAdd(Params,'AmountPartnerSecond',ftFloat);  // Кол-во поставщика
 
      end
      else
      begin
-     ParamAdd(Params,'MovementItemId',ftInteger);    // Id строки
-     ParamAdd(Params,'GoodsId',ftInteger);           // Товары
-     ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
-     ParamAdd(Params,'GoodsName',ftString);          // Товары
-     ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
-     ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
-     ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
-     ParamAdd(Params,'StorageLineId',ftInteger);     // Линия пр-ва
-     ParamAdd(Params,'StorageLineCode',ftInteger);   // Линия пр-ва
-     ParamAdd(Params,'StorageLineName',ftString);    // Линия пр-ва
+         ParamAdd(Params,'MovementItemId',ftInteger);    // Id строки
+         ParamAdd(Params,'GoodsId',ftInteger);           // Товары
+         ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
+         ParamAdd(Params,'GoodsName',ftString);          // Товары
+         ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
+         ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
+         ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
+         ParamAdd(Params,'StorageLineId',ftInteger);     // Линия пр-ва
+         ParamAdd(Params,'StorageLineCode',ftInteger);   // Линия пр-ва
+         ParamAdd(Params,'StorageLineName',ftString);    // Линия пр-ва
 
-     ParamAdd(Params,'GoodsKindId_list',ftString);   // Виды товаров
-     ParamAdd(Params,'GoodsKindName_List',ftString); // Виды товаров
+         ParamAdd(Params,'GoodsKindId_list',ftString);   // Виды товаров
+         ParamAdd(Params,'GoodsKindName_List',ftString); // Виды товаров
 
-     ParamAdd(Params,'GoodsKindId_max',ftInteger);   // Виды товаров
-     ParamAdd(Params,'GoodsKindCode_max',ftInteger); // Виды товаров
-     ParamAdd(Params,'GoodsKindName_max',ftString);  // Виды товаров
+         ParamAdd(Params,'GoodsKindId_max',ftInteger);   // Виды товаров
+         ParamAdd(Params,'GoodsKindCode_max',ftInteger); // Виды товаров
+         ParamAdd(Params,'GoodsKindName_max',ftString);  // Виды товаров
 
-     ParamAdd(Params,'MeasureId',ftInteger);         // Единица измерения
-     ParamAdd(Params,'MeasureCode',ftInteger);       // Единица измерения
-     ParamAdd(Params,'MeasureName',ftString);        // Единица измерения
+         ParamAdd(Params,'MeasureId',ftInteger);         // Единица измерения
+         ParamAdd(Params,'MeasureCode',ftInteger);       // Единица измерения
+         ParamAdd(Params,'MeasureName',ftString);        // Единица измерения
 
-     ParamAdd(Params,'isWeight_gd',ftBoolean);       // Схема - втулки
-     ParamAdd(Params,'Weight_gd',ftFloat);           // Вес товара
-     ParamAdd(Params,'WeightTare_gd',ftFloat);       // Вес втулки
-     ParamAdd(Params,'CountForWeight_gd',ftFloat);   // Кол. для Веса
-     ParamAdd(Params,'WeightPackageSticker_gd',ftFloat);//  вес 1-ого пакета -  Вес пакета для печ.ЭТИКЕТКИ
+         ParamAdd(Params,'isWeight_gd',ftBoolean);       // Схема - втулки
+         ParamAdd(Params,'Weight_gd',ftFloat);           // Вес товара
+         ParamAdd(Params,'WeightTare_gd',ftFloat);       // Вес втулки
+         ParamAdd(Params,'CountForWeight_gd',ftFloat);   // Кол. для Веса
+         ParamAdd(Params,'WeightPackageSticker_gd',ftFloat);//  вес 1-ого пакета -  Вес пакета для печ.ЭТИКЕТКИ
 
-     ParamAdd(Params,'OperCount',ftFloat);           // Количество (с учетом: минус тара и прочее)
-     ParamAdd(Params,'RealWeight_Get',ftFloat);      //
-     ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и прочее)
-     ParamAdd(Params,'WeightTare',ftFloat);          // Вес тары
-     ParamAdd(Params,'WeightOther',ftFloat);         // Вес, прочее
-     ParamAdd(Params,'CountSkewer1',ftFloat);        // Количество шпажек/крючков вида1
-     ParamAdd(Params,'CountSkewer2',ftFloat);        // Количество шпажек/крючков вида2
-     ParamAdd(Params,'Count',ftFloat);               // Количество батонов
-     ParamAdd(Params,'CountPack',ftFloat);           // Количество пакетов
-     ParamAdd(Params,'HeadCount',ftFloat);           // Количество голов
-     ParamAdd(Params,'LiveWeight',ftFloat);          // Живой вес
-     ParamAdd(Params,'PartionGoods',ftString);       //
-     ParamAdd(Params,'PartionGoodsDate',ftDateTime); //
-     ParamAdd(Params,'isStartWeighing',ftBoolean);   //локальный параметр
-     ParamAdd(Params,'isEnterCount',ftBoolean);      //всегда ввод кол-ва - надо для тары
+         ParamAdd(Params,'OperCount',ftFloat);           // Количество (с учетом: минус тара и прочее)
+         ParamAdd(Params,'RealWeight_Get',ftFloat);      //
+         ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и прочее)
+         ParamAdd(Params,'WeightTare',ftFloat);          // Вес тары
+         ParamAdd(Params,'WeightOther',ftFloat);         // Вес, прочее
+         ParamAdd(Params,'CountSkewer1',ftFloat);        // Количество шпажек/крючков вида1
+         ParamAdd(Params,'CountSkewer2',ftFloat);        // Количество шпажек/крючков вида2
+         ParamAdd(Params,'Count',ftFloat);               // Количество батонов
+         ParamAdd(Params,'CountPack',ftFloat);           // Количество пакетов
+         ParamAdd(Params,'HeadCount',ftFloat);           // Количество голов
+         ParamAdd(Params,'LiveWeight',ftFloat);          // Живой вес
+         ParamAdd(Params,'PartionGoods',ftString);       //
+         ParamAdd(Params,'PartionGoodsDate',ftDateTime); //
+         ParamAdd(Params,'isStartWeighing',ftBoolean);   //локальный параметр
+         ParamAdd(Params,'isEnterCount',ftBoolean);      //всегда ввод кол-ва - надо для тары
+
+
+         ParamAdd(Params,'CountTare1',ftFloat);          // Количество тары вида1
+         ParamAdd(Params,'CountTare2',ftFloat);          // Количество тары вида2
+         ParamAdd(Params,'CountTare3',ftFloat);          // Количество тары вида3
+         ParamAdd(Params,'CountTare4',ftFloat);          // Количество тары вида4
+         ParamAdd(Params,'CountTare5',ftFloat);          // Количество тары вида5
+         ParamAdd(Params,'CountTare6',ftFloat);          // Количество тары вида6
+         ParamAdd(Params,'CountTare7',ftFloat);          // Количество тары вида6
+         ParamAdd(Params,'CountTare8',ftFloat);          // Количество тары вида6
+         ParamAdd(Params,'CountTare9',ftFloat);          // Количество тары вида6
+         ParamAdd(Params,'CountTare10',ftFloat);          // Количество тары вида6
+         ParamAdd(Params,'Amount_Goods',ftFloat);        //
+
+         ParamAdd(Params,'PartionCellId',ftInteger);       //
+         ParamAdd(Params,'PartionCellName',ftString);      //
+
      end;
      //
      if SettingMain.isSticker = TRUE then

@@ -87,7 +87,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbDeleteItemClick
       end
       object bbExit: TSpeedButton
-        Left = 524
+        Left = 554
         Top = 2
         Width = 31
         Height = 29
@@ -395,8 +395,8 @@ object MainCehForm: TMainCehForm
         OnClick = bbInsertPartionGoodsClose_outClick
       end
       object bbSale_Order_all: TSpeedButton
-        Left = 400
-        Top = 2
+        Left = 431
+        Top = 3
         Width = 31
         Height = 29
         Hint = #1047#1072#1103#1074#1082#1072'/'#1054#1090#1075#1088#1091#1079#1082#1072' '#1042#1057#1045' - F8'
@@ -419,7 +419,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbSale_Order_allClick
       end
       object bbSale_Order_diff: TSpeedButton
-        Left = 432
+        Left = 462
         Top = 2
         Width = 31
         Height = 29
@@ -438,7 +438,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbSale_Order_diffClick
       end
       object bbSale_Order_diffTax: TSpeedButton
-        Left = 463
+        Left = 493
         Top = 2
         Width = 31
         Height = 29
@@ -457,7 +457,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbSale_Order_diffTaxClick
       end
       object bbPrint: TSpeedButton
-        Left = 494
+        Left = 524
         Top = 2
         Width = 31
         Height = 29
@@ -585,6 +585,25 @@ object MainCehForm: TMainCehForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbUpdateAsset_twoClick
+      end
+      object bbPrint_MIPassport: TSpeedButton
+        Left = 400
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1055#1077#1095#1072#1090#1100' '#1055#1072#1089#1087#1086#1088#1090
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          888888880000000888888888FFFFFFF888888888000000088888880000FFFFFF
+          88888077770FFFFFF88878888880FFFFFF887888888900000008788888888887
+          77787FFFFFFFFFF7777887F0000000FF7778887FFFFFFF0FF7788887F8888807
+          77888888788888F8888888888F88888088888888877777778888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbPrint_MIPassportClick
       end
     end
     object infoPanelTotalSumm: TPanel
@@ -1874,7 +1893,7 @@ object MainCehForm: TMainCehForm
           end
           object OperDateEdit: TcxDateEdit
             Left = 10
-            Top = 14
+            Top = 15
             EditValue = 41640d
             Properties.DateButtons = [btnToday]
             Properties.SaveTime = False
@@ -2516,7 +2535,7 @@ object MainCehForm: TMainCehForm
             end
             object EditWeightTare_enter: TcxCurrencyEdit
               Left = 4
-              Top = 12
+              Top = 11
               Properties.Alignment.Horz = taRightJustify
               Properties.Alignment.Vert = taVCenter
               Properties.AssignedValues.DisplayFormat = True
@@ -2962,7 +2981,7 @@ object MainCehForm: TMainCehForm
           Visible = False
           object cbSticker_Ceh: TCheckBox
             Left = 6
-            Top = 10
+            Top = 12
             Width = 117
             Height = 17
             Caption = #1055#1077#1095#1072#1090#1100' '#1057#1090#1080#1082#1077#1088#1072
@@ -3355,6 +3374,30 @@ object MainCehForm: TMainCehForm
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 6
+          end
+        end
+        object isPartionPassportPanel: TPanel
+          Left = 0
+          Top = 107
+          Width = 123
+          Height = 44
+          Align = alBottom
+          BevelOuter = bvNone
+          TabOrder = 5
+          object cbPartionPasspor: TCheckBox
+            Left = 6
+            Top = 13
+            Width = 115
+            Height = 23
+            Caption = #1055#1077#1095#1072#1090#1100' '#1055#1040#1057#1055#1054#1056#1058
+            Font.Charset = RUSSIAN_CHARSET
+            Font.Color = clBlue
+            Font.Height = -11
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            TabOrder = 0
+            OnClick = cbPartionPassporClick
           end
         end
       end
