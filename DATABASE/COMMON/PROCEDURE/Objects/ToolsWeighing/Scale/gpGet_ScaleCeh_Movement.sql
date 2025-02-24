@@ -18,12 +18,13 @@ RETURNS TABLE (MovementId       Integer
              , isProductionIn     Boolean
              , MovementDescNumber Integer
 
-             , isSticker_Ceh  Boolean
-             , isSticker_KVK  Boolean
+             , isSticker_Ceh      Boolean
+             , isSticker_KVK      Boolean
 
-             , isKVK          Boolean
-             , isAsset        Boolean
-             , isPartionCell  Boolean
+             , isKVK              Boolean
+             , isAsset            Boolean
+             , isPartionCell      Boolean
+             , isPartionPassport  Boolean
 
              , MovementDescId Integer
              , FromId         Integer, FromCode         Integer, FromName       TVarChar
@@ -155,7 +156,7 @@ BEGIN
                     ) AS tmp
               ) :: Boolean AS isSticker_KVK
 
-              -- определили <KVK>
+              -- определили <isKVK>
             , (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
                FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
                                                      , inLevel2      := 'Movement'
@@ -167,7 +168,7 @@ BEGIN
                     ) AS tmp
               ) :: Boolean AS isKVK
 
-              -- определили <Asset>
+              -- определили <isAsset>
             , (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
                FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
                                                      , inLevel2      := 'Movement'
@@ -179,7 +180,7 @@ BEGIN
                     ) AS tmp
               ) :: Boolean AS isAsset
 
-              -- определили <PartionCell>
+              -- определили <isPartionCell>
             , (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
                FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
                                                      , inLevel2      := 'Movement'
@@ -190,7 +191,20 @@ BEGIN
                                                       ) AS RetV
                     ) AS tmp
               ) :: Boolean AS isPartionCell
-              
+
+              -- определили <isPartionPassport>
+            , (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
+               FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                     , inLevel2      := 'Movement'
+                                                     , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat_MovementDescNumber.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat_MovementDescNumber.ValueData :: Integer) :: TVarChar
+                                                     , inItemName    := 'isPartionPassport'
+                                                     , inDefaultValue:= 'FALSE'
+                                                     , inSession     := inSession
+                                                      ) AS RetV
+                    ) AS tmp
+              ) :: Boolean AS isPartionPassport
+
+
 
             , tmpMovement.MovementDescId :: Integer          AS MovementDescId
             , Object_From.Id                                 AS FromId

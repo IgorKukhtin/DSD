@@ -4,7 +4,17 @@
 -- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, TVarChar);
+/*DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat
+                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                            , TDateTime, TVarChar, TVarChar, Integer, TVarChar
+                                             );*/
+DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat
+                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                            , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                            , TDateTime, TVarChar, TVarChar, Integer, TVarChar
+                                             );
 
 CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_MI(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -30,6 +40,41 @@ CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_MI(
     IN inCountSkewer2        TFloat    , -- Количество шпажек вида2
     IN inWeightSkewer2       TFloat    , -- Вес одной шпажки вида2
     IN inWeightOther         TFloat    , -- Вес, прочее
+
+    IN inCountTare1            TFloat    , -- Количество ящ. вида1
+    IN inWeightTare1           TFloat    , -- Вес ящ. вида1
+    IN inCountTare2            TFloat    , -- Количество ящ. вида2
+    IN inWeightTare2           TFloat    , -- Вес ящ. вида2
+    IN inCountTare3            TFloat    , -- Количество ящ. вида3
+    IN inWeightTare3           TFloat    , -- Вес ящ. вида3
+    IN inCountTare4            TFloat    , -- Количество ящ. вида4
+    IN inWeightTare4           TFloat    , -- Вес ящ. вида4
+    IN inCountTare5            TFloat    , -- Количество ящ. вида5
+    IN inWeightTare5           TFloat    , -- Вес ящ. вида5
+    IN inCountTare6            TFloat    , -- Количество ящ. вида6
+    IN inWeightTare6           TFloat    , -- Вес ящ. вида6
+    IN inCountTare7            TFloat    , -- Количество ящ. вида7
+    IN inWeightTare7           TFloat    , -- Вес ящ. вида7
+    IN inCountTare8            TFloat    , -- Количество ящ. вида8
+    IN inWeightTare8           TFloat    , -- Вес ящ. вида8
+    IN inCountTare9            TFloat    , -- Количество ящ. вида9
+    IN inWeightTare9           TFloat    , -- Вес ящ. вида9
+    IN inCountTare10           TFloat    , -- Количество ящ. вида10
+    IN inWeightTare10          TFloat    , -- Вес ящ. вида10
+
+    IN inTareId_1              Integer   , --
+    IN inTareId_2              Integer   , --
+    IN inTareId_3              Integer   , --
+    IN inTareId_4              Integer   , --
+    IN inTareId_5              Integer   , --
+    IN inTareId_6              Integer   , --
+    IN inTareId_7              Integer   , --
+    IN inTareId_8              Integer   , --
+    IN inTareId_9              Integer   , --
+    IN inTareId_10             Integer   , --
+
+    IN inPartionCellId         Integer   , --
+
     IN inPartionGoodsDate    TDateTime , -- Партия товара (дата)
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inNumberKVK           TVarChar  , -- № КВК
@@ -48,6 +93,7 @@ $BODY$
    DECLARE vbToId           Integer;
    DECLARE vbUnitId         Integer;
    DECLARE vbMovementDescId Integer;
+   DECLARE vbOperDate       TDateTime;
 
    DECLARE vbWeight_goods              TFloat;
    DECLARE vbWeightTare_goods          TFloat;
@@ -69,6 +115,21 @@ BEGIN
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
+
+
+     -- определили Дату
+     vbOperDate:= (SELECT gpGet_Scale_OperDate (inIsCeh       := TRUE
+                                              , inBranchCode  := inBranchCode
+                                              , inSession     := inSession
+                                               ));
+     -- заменили Дату
+     IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.OperDate = vbOperDate)
+        AND inBranchCode < 200
+     THEN
+         UPDATE Movement SET OperDate = vbOperDate WHERE Movement.Id = inMovementId;
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+     END IF;
 
 
      -- определили
@@ -225,6 +286,41 @@ BEGIN
                                                           , inCountSkewer2        := inCountSkewer2
                                                           , inWeightSkewer2       := inWeightSkewer2
                                                           , inWeightOther         := inWeightOther
+
+                                                          , inCountTare1          := inCountTare1
+                                                          , inWeightTare1         := inWeightTare1
+                                                          , inCountTare2          := inCountTare2
+                                                          , inWeightTare2         := inWeightTare2
+                                                          , inCountTare3          := inCountTare3
+                                                          , inWeightTare3         := inWeightTare3
+                                                          , inCountTare4          := inCountTare4
+                                                          , inWeightTare4         := inWeightTare4
+                                                          , inCountTare5          := inCountTare5
+                                                          , inWeightTare5         := inWeightTare5
+                                                          , inCountTare6          := inCountTare6
+                                                          , inWeightTare6         := inWeightTare6
+                                                          , inCountTare7          := inCountTare7
+                                                          , inWeightTare7         := inWeightTare7
+                                                          , inCountTare8          := inCountTare8
+                                                          , inWeightTare8         := inWeightTare8
+                                                          , inCountTare9          := inCountTare9
+                                                          , inWeightTare9         := inWeightTare9
+                                                          , inCountTare10         := inCountTare10
+                                                          , inWeightTare10        := inWeightTare10
+
+                                                          , inTareId_1            := inTareId_1
+                                                          , inTareId_2            := inTareId_2
+                                                          , inTareId_3            := inTareId_3
+                                                          , inTareId_4            := inTareId_4
+                                                          , inTareId_5            := inTareId_5
+                                                          , inTareId_6            := inTareId_6
+                                                          , inTareId_7            := inTareId_7
+                                                          , inTareId_8            := inTareId_8
+                                                          , inTareId_9            := inTareId_9
+                                                          , inTareId_10           := inTareId_10
+
+                                                          , inPartionCellId       := inPartionCellId
+
                                                           , inPartionGoodsDate    := CASE WHEN inIsPartionGoodsDate = TRUE AND COALESCE (vbDocumentKindId, 0) = 0
                                                                                                THEN inPartionGoodsDate
                                                                                           ELSE NULL
