@@ -14,20 +14,19 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     Width = 1064
     Height = 257
     TabOrder = 3
+    ExplicitTop = 91
     ExplicitWidth = 1064
-    ExplicitHeight = 291
+    ExplicitHeight = 257
     ClientRectBottom = 257
     ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1064
-      ExplicitHeight = 291
+      ExplicitHeight = 257
       inherited cxGrid: TcxGrid
         Width = 1064
         Height = 257
-        ExplicitLeft = 24
-        ExplicitTop = -40
         ExplicitWidth = 1064
-        ExplicitHeight = 291
+        ExplicitHeight = 257
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -529,7 +528,6 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
   inherited Panel: TPanel
     Width = 1064
     Height = 65
-    ExplicitLeft = 8
     ExplicitWidth = 1064
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
@@ -896,7 +894,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         TextEdit = edSearchGoodsCode
       end
       item
-        Column = PartionCellName
+        Column = PartionNum
         TextEdit = edSearchPartionNum
       end>
     ActionNumber1 = dsdChoiceGuides1

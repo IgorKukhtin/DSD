@@ -946,7 +946,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
         TextEdit = edSearchGoodsCode
       end
       item
-        Column = PartionCellName
+        Column = PartionNum
         TextEdit = edSearchPartionNum
       end>
     ActionNumber1 = dsdChoiceGuides1
