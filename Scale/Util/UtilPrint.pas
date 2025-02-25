@@ -173,6 +173,8 @@ type
     actPrint_reestr_income: TdsdPrintAction;
     spSelectMIPrintPassport: TdsdStoredProc;
     actSelectMIPrintPassport: TdsdPrintAction;
+    spSelectPrintBoxTotal: TdsdStoredProc;
+    actPrintBoxTotal: TdsdPrintAction;
   private
   end;
 
@@ -197,6 +199,7 @@ type
   function Print_Income_diff (MovementId: Integer):Boolean;
   function Print_Income_Price_diff (MovementId: Integer):Boolean;
   function Print_Movement_Income_Sklad(MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Box_Total (MovementId: Integer):Boolean;
 
   function Print_Movement_Income_Reestr(StartDate, EndDate : TDateTime; MovementDescId,UnitId:Integer):Boolean;
 
@@ -305,6 +308,16 @@ begin
      //
      UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
      UtilPrintForm.actPrint_Income_diff.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Box_Total (MovementId: Integer):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='GoodsName_two';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+     UtilPrintForm.actPrintBoxTotal.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 function Print_Income_Price_diff (MovementId: Integer):Boolean;

@@ -159,6 +159,7 @@ type
     cbIncome_Price_diff: TCheckBox;
     cbPrintTransport_Total: TCheckBox;
     cbIncome_sklad: TCheckBox;
+    bbPrintGofro: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -200,6 +201,7 @@ type
     procedure cbIncome_Price_diffClick(Sender: TObject);
     procedure cbPrintTransport_TotalClick(Sender: TObject);
     procedure cbIncome_skladClick(Sender: TObject);
+    procedure bbPrintGofroClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -737,6 +739,10 @@ begin
   cbIncome_Price_diff.Visible := (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202);
   cbIncome_diff.Visible := (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202);
 
+  cbIncome_sklad.Visible := (SettingMain.BranchCode >= 201);
+
+  bbPrintGofro.Visible := (SettingMain.BranchCode = 1);
+
   Create_ParamsMovement(ParamsMovement_local);
 
   with spSelect do
@@ -882,6 +888,12 @@ begin
                                     , 1    // myPrintCount
                                     , TRUE // isPreview
                                      );
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbPrintGofroClick(Sender: TObject);
+begin
+     Print_Box_Total (CDS.FieldByName('MovementId_parent').AsInteger  // MovementId
+                     );
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbPrint_diffClick(Sender: TObject);

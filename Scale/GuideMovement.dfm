@@ -35,8 +35,8 @@ object GuideMovementForm: TGuideMovementForm
       BevelOuter = bvNone
       TabOrder = 0
       object ButtonExit: TSpeedButton
-        Left = 717
-        Top = 2
+        Left = 757
+        Top = 3
         Width = 31
         Height = 29
         Action = actExit
@@ -385,8 +385,8 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbSale_Order_diffTaxClick
       end
       object bbPrintStickerTermo: TSpeedButton
-        Left = 682
-        Top = 2
+        Left = 679
+        Top = 3
         Width = 31
         Height = 29
         Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088'  '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
@@ -594,6 +594,25 @@ object GuideMovementForm: TGuideMovementForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbChangePercentAmountClick
+      end
+      object bbPrintGofro: TSpeedButton
+        Left = 718
+        Top = 3
+        Width = 31
+        Height = 29
+        Hint = #1055#1077#1095#1072#1090#1100' '#1043#1054#1060#1056#1054#1058#1040#1056#1040' '#1048#1058#1054#1043
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888888888888888888888000000000788888077777777777888788888888887
+          778878888889F9F7708878888888888777787FFFFFFFFFF7777887F0000000FF
+          7778887FF9FFF10FF7788887F898180777888888788988F8888888888F189880
+          8888888887777777888888888888888888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbPrintGofroClick
       end
     end
     object cxDBGrid: TcxGrid
@@ -1556,7 +1575,7 @@ object GuideMovementForm: TGuideMovementForm
     end
     object cbIncome_sklad: TCheckBox
       Left = 1006
-      Top = 23
+      Top = 14
       Width = 115
       Height = 17
       Caption = #1055#1088#1080#1093#1086#1076' ('#1089#1082#1083#1072#1076')'

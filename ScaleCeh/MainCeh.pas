@@ -2001,6 +2001,8 @@ procedure TMainCehForm.bbChoice_UnComleteClick(Sender: TObject);
 begin
      if GuideMovementCehForm.Execute(ParamsMovement,TRUE)//isChoice=TRUE
      then begin
+               isPartionPassportPanel.Visible:= ParamsMovement.ParamByName('isPartionPassport').asBoolean=true;
+               //
                WriteParamsMovement;
                RefreshDataSet;
                CDS.First;
