@@ -1644,14 +1644,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
   //exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderForm');
-    exit;
+    //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderJournalForm');
@@ -2599,7 +2599,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleForm');
  // exit;
@@ -2609,7 +2609,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportDialogForm');
   exit;
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Container_dataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Container_dataForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Container_dataDialogForm'));
@@ -2634,10 +2634,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateForm');
   exit;
 
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_GoodsHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_GoodsHistoryForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
   }
