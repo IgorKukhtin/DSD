@@ -275,9 +275,18 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 111
+          end
+          object PartionNum: TcxGridDBColumn
+            Caption = #8470' '#1055#1072#1089#1087#1086#1088#1090#1072
+            DataBinding.FieldName = 'PartionNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -303,14 +312,6 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           object PartionGoodsDate: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoodsDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object PartionNum: TcxGridDBColumn
-            Caption = #1055#1072#1089#1087#1086#1088#1090
-            DataBinding.FieldName = 'PartionNum'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -530,6 +531,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -538,6 +540,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -612,7 +615,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
       Style.IsFontAssigned = True
     end
     object edSearchPartionNum: TcxTextEdit
-      Left = 673
+      Left = 699
       Top = 36
       TabOrder = 7
       DesignSize = (
@@ -624,7 +627,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
   object cxLabel3: TcxLabel [2]
     Left = 602
     Top = 35
-    Caption = #1055#1072#1089#1087#1086#1088#1090':'
+    Caption = #8470' '#1055#1072#1089#1087#1086#1088#1090#1072':'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clBlue

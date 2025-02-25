@@ -91,6 +91,105 @@ type
     cdsChoiceCelListTopPartionGoodsDate_nextLabel: TStringField;
     cdsChoiceCelListErasedCode: TIntegerField;
     cdsChoiceCelListTopErasedCode: TIntegerField;
+    cdsInventoryListTop: TClientDataSet;
+    cdsInventoryListTopPartionNum: TIntegerField;
+    cdsInventoryListTopMovementItemId: TIntegerField;
+    cdsInventoryListTopGoodsId: TIntegerField;
+    cdsInventoryListTopGoodsCode: TIntegerField;
+    cdsInventoryListTopGoodsName: TStringField;
+    cdsInventoryListTopChoiceGoodsKindId: TIntegerField;
+    cdsInventoryListTopPartionCellName: TStringField;
+    cdsInventoryListTopGoodsKindName: TStringField;
+    cdsInventoryListTopPartionGoodsDate: TDateTimeField;
+    cdsInventoryList: TClientDataSet;
+    cdsInventoryListPartionNum: TIntegerField;
+    cdsInventoryListMovementItemId: TIntegerField;
+    cdsInventoryListGoodsId: TIntegerField;
+    cdsInventoryListGoodsCode: TIntegerField;
+    cdsInventoryListGoodsName: TStringField;
+    cdsInventoryListChoiceGoodsKindId: TIntegerField;
+    cdsInventoryListPartionCellName: TStringField;
+    cdsInventoryListGoodsKindName: TStringField;
+    cdsInventoryListPartionGoodsDate: TDateTimeField;
+    cdsInventoryEdit: TClientDataSet;
+    cdsInventoryEditMovementItemId: TIntegerField;
+    cdsInventoryEditPartionNum: TIntegerField;
+    cdsInventoryEditPartionCellName: TStringField;
+    cdsInventoryEditGoodsId: TIntegerField;
+    cdsInventoryEditGoodsCode: TIntegerField;
+    cdsInventoryEditGoodsName: TStringField;
+    cdsInventoryEditGoodsKindId: TIntegerField;
+    cdsInventoryEditGoodsKindName: TStringField;
+    cdsInventoryEditPartionGoodsDate: TDateTimeField;
+    cdsInventoryListAmount: TFloatField;
+    cdsInventoryListTopAmount: TFloatField;
+    cdsInventoryEditAmount: TFloatField;
+    cdsInventoryListTopBoxId_1: TIntegerField;
+    cdsInventoryListTopBoxId_2: TIntegerField;
+    cdsInventoryListTopBoxId_3: TIntegerField;
+    cdsInventoryListTopBoxId_5: TIntegerField;
+    cdsInventoryListTopBoxId_4: TIntegerField;
+    cdsInventoryListBoxId_1: TIntegerField;
+    cdsInventoryListBoxId_2: TIntegerField;
+    cdsInventoryListBoxId_3: TIntegerField;
+    cdsInventoryListBoxId_4: TIntegerField;
+    cdsInventoryListBoxId_5: TIntegerField;
+    cdsInventoryEditBoxId_1: TIntegerField;
+    cdsInventoryEditBoxId_2: TIntegerField;
+    cdsInventoryEditBoxId_3: TIntegerField;
+    cdsInventoryEditBoxId_4: TIntegerField;
+    cdsInventoryEditBoxId_5: TIntegerField;
+    cdsInventoryListTopBoxName_1: TStringField;
+    cdsInventoryListTopBoxName_2: TStringField;
+    cdsInventoryListTopBoxName_3: TStringField;
+    cdsInventoryListTopBoxName_4: TStringField;
+    cdsInventoryListTopBoxName_5: TStringField;
+    cdsInventoryListBoxName_1: TStringField;
+    cdsInventoryListBoxName_2: TStringField;
+    cdsInventoryListBoxName_3: TStringField;
+    cdsInventoryListBoxName_4: TStringField;
+    cdsInventoryListBoxName_5: TStringField;
+    cdsInventoryEditBoxName_1: TStringField;
+    cdsInventoryEditBoxName_2: TStringField;
+    cdsInventoryEditBoxName_3: TStringField;
+    cdsInventoryEditBoxName_4: TStringField;
+    cdsInventoryEditBoxName_5: TStringField;
+    cdsInventoryEditCountTare_1: TIntegerField;
+    cdsInventoryEditCountTare_2: TIntegerField;
+    cdsInventoryEditCountTare_3: TIntegerField;
+    cdsInventoryEditCountTare_4: TIntegerField;
+    cdsInventoryEditCountTare_5: TIntegerField;
+    cdsInventoryListCountTare_1: TIntegerField;
+    cdsInventoryListCountTare_2: TIntegerField;
+    cdsInventoryListCountTare_3: TIntegerField;
+    cdsInventoryListCountTare_4: TIntegerField;
+    cdsInventoryListCountTare_5: TIntegerField;
+    cdsInventoryListTopCountTare_1: TIntegerField;
+    cdsInventoryListTopCountTare_2: TIntegerField;
+    cdsInventoryListTopCountTare_3: TIntegerField;
+    cdsInventoryListTopCountTare_4: TIntegerField;
+    cdsInventoryListTopCountTare_5: TIntegerField;
+    cdsInventoryEditWeightTare_1: TFloatField;
+    cdsInventoryEditWeightTare_2: TFloatField;
+    cdsInventoryEditWeightTare_3: TFloatField;
+    cdsInventoryEditWeightTare_4: TFloatField;
+    cdsInventoryEditWeightTare_5: TFloatField;
+    cdsInventoryListWeightTare_1: TFloatField;
+    cdsInventoryListWeightTare_2: TFloatField;
+    cdsInventoryListWeightTare_3: TFloatField;
+    cdsInventoryListWeightTare_4: TFloatField;
+    cdsInventoryListWeightTare_5: TFloatField;
+    cdsInventoryListTopWeightTare_1: TFloatField;
+    cdsInventoryListTopWeightTare_2: TFloatField;
+    cdsInventoryListTopWeightTare_3: TFloatField;
+    cdsInventoryListTopWeightTare_4: TFloatField;
+    cdsInventoryListTopWeightTare_5: TFloatField;
+    cdsInventoryListTopCountTare_calc: TIntegerField;
+    cdsInventoryListCountTare_calc: TIntegerField;
+    cdsInventoryEditCountTare_calc: TIntegerField;
+    cdsInventoryEditWeightTare_calc: TFloatField;
+    cdsInventoryListWeightTare_calc: TFloatField;
+    cdsInventoryListTopWeightTare_calc: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
     procedure cdsChoiceCelListCalcFields(DataSet: TDataSet);
     procedure cdsChoiceCelListTopCalcFields(DataSet: TDataSet);
@@ -114,11 +213,18 @@ type
     { подтверждение места отбора}
     function ConfirmChoiceCel(ABarCode: String) : Boolean;
 
+    { загрузка инвентаризации по коду}
+    function DownloadInventoryBarCode(ABarCode: String) : Boolean;
+    { подтверждение инвентаризации}
+    function ConfirmInventory(AMovementItemId: Integer) : Boolean;
+
     procedure SetErasedChoiceCel(ADataSet: TClientDataset);
     procedure SetUnErasedChoiceCel(ADataSet: TClientDataset);
 
     function DownloadChoiceCelList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
     function DownloadChoiceCelListTop : Boolean;
+    function DownloadInventoryList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
+    function DownloadInventoryListTop : Boolean;
 
     property LimitList : Integer read FLimitList write FLimitList default 300;
   end;
@@ -607,12 +713,12 @@ begin
   end;
 end;
 
-{ загрузка места отбора по коду}
 procedure TDM.DataModuleCreate(Sender: TObject);
 begin
   FLimitList := 300;
 end;
 
+{ загрузка места отбора по коду}
 function TDM.DownloadChoiceCelBarCode(ABarCode: String) : Boolean;
 var
   StoredProc : TdsdStoredProc;
@@ -660,6 +766,66 @@ begin
     StoredProc.StoredProcName := 'gpInsertUpdate_MovementItem_ChoiceCell';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('inBarCode', ftString, ptInput, ABarCode);
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := True;
+    except
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
+{ загрузка инвентаризации по коду}
+function TDM.DownloadInventoryBarCode(ABarCode: String) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  Result := False;
+  if Trim(ABarCode) = '' then Exit;
+
+  cdsInventoryEdit.Close;
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsInventoryEdit.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpGet_MovementItem_Inventory_mobile';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inBarCode', ftString, ptInput, ABarCode);
+    StoredProc.DataSet := cdsInventoryEdit;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := cdsInventoryEdit.Active;
+    except
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsInventoryEdit.EnableControls;
+  end;
+end;
+
+{ подтверждение инвентаризации}
+function TDM.ConfirmInventory(AMovementItemId: Integer) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  Result := False;
+  if AMovementItemId = 0 then Exit;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    StoredProc.StoredProcName := 'gpInsertUpdate_MovementItem_Inventory_mobile';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, AMovementItemId);
 
     try
       StoredProc.Execute(false, false, false);
@@ -740,6 +906,77 @@ begin
   finally
     FreeAndNil(StoredProc);
     cdsChoiceCelListTop.EnableControls;
+  end;
+end;
+
+function TDM.DownloadInventoryList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+  nId: Integer;
+begin
+
+  if cdsInventoryList.Active and not cdsInventoryList.IsEmpty then
+    nID := DM.cdsInventoryListMovementItemId.AsInteger
+  else nID := 0;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsInventoryList.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpSelect_MovementItem_Inventory_mobile';
+    StoredProc.Params.Clear;
+//    StoredProc.Params.AddParam('inIsOrderBy', ftBoolean, ptInput, AIsOrderBy);
+//    StoredProc.Params.AddParam('inIsAllUser', ftBoolean, ptInput, AIsAllUser);
+//    StoredProc.Params.AddParam('inLimit', ftInteger, ptInput, FLimitList);
+//    StoredProc.Params.AddParam('inFilter', ftWideString, ptInput, AFilter);
+//    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, AIsErased);
+    StoredProc.DataSet := cdsInventoryList;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := cdsInventoryList.Active;
+      if Result and (nID <> 0) then cdsInventoryList.Locate('Id', nId, []);
+      if cdsInventoryList.RecordCount >= FLimitList then
+        frmMain.llwInventoryList.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' записей'
+      else frmMain.llwInventoryList.Text := 'Найдено ' + IntToStr(cdsInventoryList.RecordCount) + ' записей';
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(GetTextMessage(E));
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsInventoryList.EnableControls;
+  end;
+end;
+
+function TDM.DownloadInventoryListTop : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  Result := False;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsChoiceCelListTop.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpSelect_MovementItem_Inventory_mobile';
+    StoredProc.Params.Clear;
+    StoredProc.DataSet := cdsInventoryListTop;
+
+    try
+      StoredProc.Execute(false, false, false, 2);
+      Result := cdsInventoryListTop.Active;
+    except
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsInventoryListTop.EnableControls;
   end;
 end;
 
