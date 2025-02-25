@@ -3,7 +3,7 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
   Top = 0
   Caption = #1048#1089#1090#1086#1088#1080#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' <'#1071#1095#1077#1077#1082' '#1093#1088#1072#1085#1077#1085#1080#1103' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 375
-  ClientWidth = 743
+  ClientWidth = 1123
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,13 +21,13 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 97
-    Width = 743
+    Width = 1123
     Height = 278
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitHeight = 279
+    ExplicitWidth = 743
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -107,10 +107,27 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
         Options.Editing = False
         Width = 80
       end
+      object OperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' '#1087#1088#1086#1090#1086#1082#1086#1083'  ('#1082#1086#1088#1088'.) '
+        DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' '#1087#1088#1086#1090#1086#1082#1086#1083'  ('#1082#1086#1088#1088'.) '
+        Options.Editing = False
+        Width = 131
+      end
+      object OperDate_new: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'/ '#1074#1088#1077#1084#1103' '#1087#1088'. ('#1082#1086#1088#1088'.) '#1087#1086#1089#1083#1077
+        DataBinding.FieldName = 'OperDate_new'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' '#1087#1088#1086#1090#1086#1082#1086#1083' ('#1082#1086#1088#1088'.) '#1087#1086#1089#1083#1077
+        Options.Editing = False
+        Width = 119
+      end
       object UserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'UserName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 132
@@ -151,14 +168,6 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
         HeaderHint = #1050#1086#1076' ('#1087#1086#1089#1083#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1081')'
         Width = 80
       end
-      object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' '#1087#1088#1086#1090#1086#1082#1086#1083' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
-        DataBinding.FieldName = 'OperDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 200
-      end
       object PartionCellName_new: TcxGridDBColumn
         Caption = #1071#1095#1077#1081#1082#1072' ('#1087#1086#1089#1083#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1081')'
         DataBinding.FieldName = 'PartionCellName_new'
@@ -166,21 +175,12 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
         HeaderAlignmentVert = vaCenter
         Width = 180
       end
-      object OperDate_new: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' '#1087#1088#1086#1090#1086#1082#1086#1083'  ('#1082#1086#1088#1088'.) '#1087#1086#1089#1083#1077
-        DataBinding.FieldName = 'OperDate_new'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 128
-      end
       object UserName_new: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.) '#1087#1086#1089#1083#1077
         DataBinding.FieldName = 'UserName_new'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 117
       end
       object MovementItemId: TcxGridDBColumn
         Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1090#1088#1086#1082#1080
@@ -206,10 +206,11 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 743
+    Width = 1123
     Height = 71
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 743
     object lbSearchName: TcxLabel
       Left = 659
       Top = 33
@@ -922,8 +923,8 @@ object Report_PartionCell_GoodsHistoryForm: TReport_PartionCell_GoodsHistoryForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 536
-    Top = 128
+    Left = 528
+    Top = 208
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

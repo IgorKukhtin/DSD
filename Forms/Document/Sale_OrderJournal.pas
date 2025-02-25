@@ -356,6 +356,12 @@ type
     bbPrint_Sale3_TTN_Quality: TdxBarButton;
     actPrint_TTN_copy3_list: TdsdPrintAction;
     macPrint_TTN_Copy3_list: TMultiAction;
+    spSelectPrintBox: TdsdStoredProc;
+    spSelectPrintBoxTotal: TdsdStoredProc;
+    actPrintBox: TdsdPrintAction;
+    actPrintBoxTotal: TdsdPrintAction;
+    bbPrintBoxTotal: TdxBarButton;
+    bbPrintBox: TdxBarButton;
   private
     { Private declarations }
   public

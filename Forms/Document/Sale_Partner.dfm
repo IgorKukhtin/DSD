@@ -21,7 +21,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       inherited cxGrid: TcxGrid
         Width = 1370
         Height = 300
-        ExplicitLeft = 3
         ExplicitWidth = 1370
         ExplicitHeight = 300
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -2796,8 +2795,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
           StoredProc = spSelectPrintBoxTotal
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1088#1072#1089#1096'.)'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1088#1072#1089#1096'.)'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1087#1086' '#1082#1083#1080#1077#1085#1090#1091')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1087#1086' '#1082#1083#1080#1077#1085#1090#1091')'
       ImageIndex = 21
       DataSets = <
         item
