@@ -19,9 +19,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SalePodium(
  INOUT ioSummChangePercent              TFloat    , -- *** - Дополнительная скидка в продаже ГРН
  INOUT ioSummChangePercent_curr         TFloat    , -- *** - Дополнительная скидка в продаже в валюте***
 
-   OUT ioSummRounding                   TFloat    , -- *** - Сумма округления в ГРН
-   OUT ioSummRounding_curr              TFloat    , -- *** - Сумма округления в валюте***
-
    OUT outOperPrice                     TFloat    , -- Цена вх. в валюте
    OUT outCountForPrice                 TFloat    , -- Цена вх.за количество
    OUT outTotalSumm                     TFloat    , -- +Сумма вх. в валюте
@@ -534,10 +531,6 @@ BEGIN
          END IF;
 
      END IF;
-     
-     -- Сумма округления - Вводится в диалоге с оплатой
-     ioSummRounding     := COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummRounding()),      0);
-     ioSummRounding_curr:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummRounding_curr()), 0);
 
 
      -- вернули название Скидки
@@ -570,15 +563,15 @@ BEGIN
      IF vbCurrencyId_Client = zc_Currency_GRN()
      THEN
          -- расчитали для ГРН
-         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_pl,   ioChangePercent, ioChangePercentNext) + COALESCE (ioSummChangePercent,      0) + COALESCE (ioSummRounding, 0); 
+         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_pl,   ioChangePercent, ioChangePercentNext) + COALESCE (ioSummChangePercent,      0);
          -- расчитали для Валюты
-         outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_curr, ioChangePercent, ioChangePercentNext) + COALESCE (ioSummChangePercent_curr, 0) + COALESCE (ioSummRounding_curr, 0);
+         outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_curr, ioChangePercent, ioChangePercentNext) + COALESCE (ioSummChangePercent_curr, 0);
      ELSE
          -- ***это основная ветка
          -- расчитали для Валюты
-         outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_curr, ioChangePercent, ioChangePercentNext) + COALESCE (ioSummChangePercent_curr, 0) + COALESCE (ioSummRounding_curr, 0);
+         outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_curr, ioChangePercent, ioChangePercentNext) + COALESCE (ioSummChangePercent_curr, 0);
          -- расчитали для ГРН - переводим сумму со скидкой в валюте в ГРН
-         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_CurrencyFrom (zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_curr, ioChangePercent, ioChangePercentNext), vbCurrencyValue_pl, vbParValue_pl) + COALESCE (ioSummChangePercent, 0) + COALESCE (ioSummRounding, 0);
+         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_CurrencyFrom (zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_curr, ioChangePercent, ioChangePercentNext), vbCurrencyValue_pl, vbParValue_pl) + COALESCE (ioSummChangePercent,      0);
      END IF;
 
 
@@ -644,6 +637,7 @@ BEGIN
                                               , inAmount                := ioAmount
                                               , inChangePercent         := COALESCE (ioChangePercent, 0)
                                               , inChangePercentNext     := COALESCE (ioChangePercentNext, 0)
+                                              -- , inSummChangePercent     := COALESCE (ioSummChangePercent, 0)
                                               , inOperPrice             := COALESCE (outOperPrice, 0)
                                               , inCountForPrice         := COALESCE (outCountForPrice, 0)
                                                 -- передаем цену прайса в ГРН
@@ -653,6 +647,12 @@ BEGIN
                                               , inParValue              := outParValue
                                                 -- Итого скидка в ГРН: по% + ручная
                                               , inTotalChangePercent    := COALESCE (outTotalChangePercent, 0)
+                                              -- , inTotalChangePercentPay := COALESCE (outTotalChangePercentPay, 0)
+                                              -- , inTotalPay              := COALESCE (outTotalPay, 0)
+                                              -- , inTotalPayOth           := COALESCE (outTotalPayOth, 0)
+                                              -- , inTotalCountReturn      := COALESCE (outTotalCountReturn, 0)
+                                              -- , inTotalReturn           := COALESCE (outTotalReturn, 0)
+                                              -- , inTotalPayReturn        := COALESCE (outTotalPayReturn, 0)
                                               , inBarCode               := inBarCode_partner
                                               , inComment               := -- !!!для SYBASE - потом убрать!!!
                                                                            CASE WHEN vbUserId = zc_User_Sybase() AND SUBSTRING (inComment FROM 1 FOR 5) = '*123*'
