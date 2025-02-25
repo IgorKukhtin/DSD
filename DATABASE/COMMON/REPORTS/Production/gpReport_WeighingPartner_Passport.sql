@@ -1,4 +1,4 @@
- -- Function: gpReport_WeighingPartner_Passport
+-- Function: gpReport_WeighingPartner_Passport - Паспорт ГП (взвешивания)21:50 24.02.2025
 
 DROP FUNCTION IF EXISTS gpReport_WeighingPartner_Passport (TDateTime, TDateTime, TVarChar);
 
@@ -7,8 +7,9 @@ CREATE OR REPLACE FUNCTION gpReport_WeighingPartner_Passport(
     IN inEndDate            TDateTime , --
     IN inSession            TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
-             , Id Integer, BarCode TVarChar
+RETURNS TABLE (MovementId Integer, ItemName TVarChar, ItemName_inf TVarChar
+             , InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
+             , MovementItemId Integer, BarCode TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar, GoodsKindName TVarChar
              , PartionGoodsDate TDateTime
@@ -60,11 +61,19 @@ BEGIN
                             , Movement.InvNumber    AS InvNumber
                             , Movement.OperDate     AS OperDate
                             , Movement.StatusId
+                            , Movement.DescId
+                            , MovementDesc.ItemName AS ItemName
                         FROM Movement
                              INNER JOIN MovementFloat AS MovementFloat_BranchCode
                                                       ON MovementFloat_BranchCode.MovementId = Movement.Id
                                                      AND MovementFloat_BranchCode.DescId     = zc_MovementFloat_BranchCode()
                                                      AND MovementFloat_BranchCode.ValueData  = 115
+                             -- Вид документа
+                             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
+                                                     ON MovementFloat_MovementDesc.MovementId = Movement.Id
+                                                    AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
+                             LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData :: Integer
+
                         WHERE Movement.DescId IN (zc_Movement_WeighingPartner())
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -75,8 +84,10 @@ BEGIN
                             , Movement.InvNumber    AS InvNumber
                             , Movement.OperDate     AS OperDate
                             , Movement.StatusId
+                            , Movement.DescId
+                            , MovementDesc.ItemName AS ItemName
                         FROM Movement
-                              -- Перемещения
+                             -- Вид документа - Перемещение
                              INNER JOIN MovementFloat AS MovementFloat_MovementDesc
                                                       ON MovementFloat_MovementDesc.MovementId =  Movement.Id
                                                      AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
@@ -85,7 +96,7 @@ BEGIN
                              INNER JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                                                     AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                                                     AND MLO_To.ObjectId   = zc_Unit_RK()
-                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.DescId     = zc_MI_Master()
                                                     AND MovementItem.isErased   = FALSE
                              -- с признаком Автоматически
@@ -94,7 +105,9 @@ BEGIN
                                                            AND MIB_isAuto.DescId         = zc_MIBoolean_isAuto()
                                                            AND MIB_isAuto.ValueData      = TRUE
 
-                        WHERE Movement.DescId IN (zc_Movement_WeighingProduction())
+                             LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData :: Integer
+
+                       WHERE Movement.DescId IN (zc_Movement_WeighingProduction())
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                      )
@@ -151,10 +164,10 @@ BEGIN
                     , MovementItem.ObjectId
                     , MovementItem.Amount
                FROM tmpMovement
-                 INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
-                                        AND MovementItem.DescId     = zc_MI_Master()
-                                        AND MovementItem.isErased   = FALSE
-               )
+                     INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = FALSE
+              )
 
    , tmpMIFloat AS (SELECT *
                     FROM MovementItemFloat
@@ -166,8 +179,8 @@ BEGIN
                                                      , zc_MIFloat_CountTare5()
                                                      , zc_MIFloat_RealWeight()
                                                      , zc_MIFloat_PartionNum()
-                                                     )
-                   )
+                                                      )
+                  )
 
    , tmpMILO AS (SELECT *
                  FROM MovementItemLinkObject
@@ -180,8 +193,8 @@ BEGIN
                                                        , zc_MILinkObject_GoodsKind()
                                                        , zc_MILinkObject_PartionCell()
                                                        , zc_MILinkObject_Insert()
-                                                       )
-                )
+                                                        )
+               )
 
    , tmpMIDate AS (SELECT *
                    FROM MovementItemDate
@@ -189,10 +202,11 @@ BEGIN
                      AND MovementItemDate.DescId IN (zc_MIDate_PartionGoods()
                                                    , zc_MIDate_Insert()
                                                    , zc_MIDate_Update()
-                                                   )
-                  )
+                                                    )
+                 )
 
    , tmpData AS (SELECT MovementItem.*
+                      , zfFormat_BarCode (zc_BarCodePref_MI(), MovementItem.Id) AS BarCode
                       , MILinkObject_GoodsKind.ObjectId    AS GoodsKindId
                       , MILinkObject_PartionCell.ObjectId  AS PartionCellId
 
@@ -338,11 +352,13 @@ BEGIN
 
           --РЕЗУЛЬТАТ
           SELECT tmpData.MovementId
+               , tmpData.ItemName
+               , MovementDesc.ItemName AS ItemName_inf
                , tmpData.InvNumber
                , tmpData.OperDate
                , Object_Status.ObjectCode AS StatusCode
-               , tmpData.Id AS Id
-               , zfFormat_BarCode (zc_BarCodePref_MI(), tmpData.Id)  AS BarCode
+               , tmpData.Id AS MovementItemId
+               , (tmpData.BarCode || zfCalc_SummBarCode(tmpData.BarCode) :: TVarChar) :: TVarChar AS BarCode
                , Object_Goods.Id                   AS GoodsId
                , Object_Goods.ObjectCode ::Integer AS GoodsCode
                , Object_Goods.ValueData            AS GoodsName
@@ -408,6 +424,8 @@ BEGIN
                                     ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+               LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.DescId
               ;
 
 END;
