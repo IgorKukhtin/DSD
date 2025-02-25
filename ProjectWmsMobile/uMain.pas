@@ -13,7 +13,8 @@ uses
   FMX.ListView, FMX.Media,  Winsoft.FireMonkey.Obr, System.ImageList, FMX.ImgList,
   FMX.DateTimeCtrls, System.Rtti, System.Bindings.Outputs, Fmx.Bind.Editors,
   Data.Bind.EngExt, Fmx.Bind.DBEngExt, Data.Bind.Components, Data.Bind.DBScope,
-  FMX.ListBox, FMX.ExtCtrls, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, System.StrUtils
+  FMX.ListBox, FMX.ExtCtrls, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, System.StrUtils,
+  FMX.Grid.Style, FMX.Grid
   {$IFDEF ANDROID}
   ,System.Permissions,Androidapi.JNI.Os, FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge, Androidapi.JNI.GraphicsContentViewText,
@@ -64,9 +65,9 @@ type
     bChoiceCellScan: TButton;
     Image1: TImage;
     lChoiceCel: TLabel;
-    bSendScan: TButton;
+    bInventoryScan: TButton;
     Image2: TImage;
-    Label5: TLabel;
+    lInventoryCel: TLabel;
     bProductionScan: TButton;
     Image4: TImage;
     lProduction: TLabel;
@@ -193,12 +194,11 @@ type
     bChoiceCelScanMode: TSpeedButton;
     bViewChoiceCel: TSpeedButton;
     bChoiceCelScanNull: TSpeedButton;
-    SpeedButton7: TSpeedButton;
     lwChoiceCelScan: TListView;
     Panel11: TPanel;
-    pbPULErased: TPopupBox;
-    pbPULAllUser: TPopupBox;
-    pbPULOrderBy: TPopupBox;
+    pbChoiceCelErased: TPopupBox;
+    pbChoiceCelAllUser: TPopupBox;
+    pbChoiceCelOrderBy: TPopupBox;
     llwChoiceCelList: TLabel;
     lwChoiceCelList: TListView;
     Label17: TLabel;
@@ -232,6 +232,61 @@ type
     BindSourceDB3: TBindSourceDB;
     LinkListControlToField2: TLinkListControlToField;
     TempEdit: TEdit;
+    tiInventoryScan: TTabItem;
+    Panel2: TPanel;
+    bInventoryScanSearch: TSpeedButton;
+    TempEditInventory: TEdit;
+    bInventoryScanMode: TSpeedButton;
+    bViewInventory: TSpeedButton;
+    bInventoryScanNull: TSpeedButton;
+    lwInventoryScan: TListView;
+    tiInventoryEdit: TTabItem;
+    Panel3: TPanel;
+    Label1: TLabel;
+    Edit2: TEdit;
+    Edit3: TEdit;
+    Label5: TLabel;
+    Edit4: TEdit;
+    Label11: TLabel;
+    Label12: TLabel;
+    Edit5: TEdit;
+    Memo1: TMemo;
+    Label13: TLabel;
+    Edit6: TEdit;
+    Label14: TLabel;
+    Edit7: TEdit;
+    Label15: TLabel;
+    bpInventoryCancel: TButton;
+    bpInventoryClick: TButton;
+    tiInventoryList: TTabItem;
+    Panel4: TPanel;
+    pbInventoryErased: TPopupBox;
+    pbInventoryAllUser: TPopupBox;
+    pbInventoryOrderBy: TPopupBox;
+    llwInventoryList: TLabel;
+    lwInventoryList: TListView;
+    BindSourceDB4: TBindSourceDB;
+    BindSourceDB5: TBindSourceDB;
+    BindSourceDB6: TBindSourceDB;
+    LinkListControlToField3: TLinkListControlToField;
+    LinkListControlToField4: TLinkListControlToField;
+    LinkControlToField8: TLinkControlToField;
+    LinkControlToField9: TLinkControlToField;
+    LinkControlToField10: TLinkControlToField;
+    Edit1: TEdit;
+    Label16: TLabel;
+    Edit8: TEdit;
+    Label18: TLabel;
+    LinkControlToField11: TLinkControlToField;
+    LinkControlToField12: TLinkControlToField;
+    LinkControlToField13: TLinkControlToField;
+    LinkControlToField14: TLinkControlToField;
+    LinkControlToField15: TLinkControlToField;
+    LinkControlToField16: TLinkControlToField;
+    lvBox: TListView;
+    Label19: TLabel;
+    Label23: TLabel;
+    Label25: TLabel;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -246,12 +301,14 @@ type
     procedure ShowInformation;
     procedure ShowChoiceCelScan;
     procedure ShowChoiceCelList;
+    procedure ShowInventoryList;
     procedure ShowEditChoiceCelItem(AId: Integer);
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
     procedure OnScanResultLogin(Sender: TObject; AData_String: String);
     procedure OnScanChoiceCel(Sender: TObject; AData_String: String);
+    procedure OnScanInventory(Sender: TObject; AData_String: String);
     procedure bLogInClick(Sender: TObject);
     procedure bUpdateProgramClick(Sender: TObject);
     procedure CameraScanBarCodeSampleBufferReady(Sender: TObject;
@@ -297,10 +354,16 @@ type
       const EventInfo: TGestureEventInfo; var Handled: Boolean);
     procedure lwChoiceCelListDblClick(Sender: TObject);
     procedure bpChoiceCelCancelClick(Sender: TObject);
-    procedure pbPULOrderByChange(Sender: TObject);
+    procedure pbChoiceCelOrderByChange(Sender: TObject);
     procedure bChoiceCelScanSearchClick(Sender: TObject);
     procedure TimerTorchModeTimer(Sender: TObject);
     procedure bChoiceCellScanClick(Sender: TObject);
+    procedure bInventoryScanClick(Sender: TObject);
+    procedure pbInventoryOrderByChange(Sender: TObject);
+    procedure bViewInventoryClick(Sender: TObject);
+    procedure bpInventoryCancelClick(Sender: TObject);
+    procedure bpInventoryClickClick(Sender: TObject);
+    procedure bInventoryScanSearchClick(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -350,6 +413,10 @@ type
     FChoiceCelId: Integer;
     FChoiceCelBarCode: String;
 
+    // Найденное инвентаризации
+    FInventoryMovementItemId: Integer;
+    FInventoryBarCode: String;
+
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
     procedure CalcContentBoundsProc(Sender: TObject;
                                     var ContentBounds: TRectF);
@@ -359,22 +426,29 @@ type
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
     procedure ChoiceCelConfirm(const AResult: TModalResult);
+    procedure InventoryConfirm(const AResult: TModalResult);
     procedure ErasedChoiceCelTop(const AResult: TModalResult);
     procedure ErasedChoiceCelList(const AResult: TModalResult);
     procedure UnErasedChoiceCelList(const AResult: TModalResult);
     procedure UnErasedChoiceCelTop(const AResult: TModalResult);
 
     procedure InputChoiceCel(const AResult: TModalResult; const AValues: array of string);
+    procedure InputInventory(const AResult: TModalResult; const AValues: array of string);
 
     {$IF DEFINED(ANDROID)}
     function HandleAppEvent(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;
     {$ENDIF}
 
     procedure Wait(AWait: Boolean);
+    // Заполнение ящиков
+    procedure AddlvBox(AName, ACount, AWeight: String);
+
   public
     { Public declarations }
     procedure SetChoiceCelScanButton;
+    procedure SetInventoryScanButton;
     procedure ProcessChoiceCel(ABarCode: String);
+    procedure ProcessInventory(ABarCode: String);
 
     procedure NextScan;
 
@@ -852,6 +926,19 @@ begin
   end;
 end;
 
+procedure TfrmMain.InputInventory(const AResult: TModalResult; const AValues: array of string);
+begin
+  try
+    if (AResult = mrOk) and (AValues[0] <> '') then
+    begin
+
+      OnScanInventory(Nil, AValues[0]);
+    end;
+  finally
+    TempEditInventory.Visible := False;
+  end;
+end;
+
 
 procedure TfrmMain.bChoiceCelScanSearchClick(Sender: TObject);
 begin
@@ -887,6 +974,22 @@ begin
   begin
     try
       DM.ConfirmChoiceCel(FChoiceCelBarCode);
+    except
+      on E : Exception do
+      begin
+        TDialogService.ShowMessage('Ошибка подтверждения'+#13#10 + GetTextMessage(E));
+      end;
+    end;
+  end;
+end;
+
+procedure TfrmMain.InventoryConfirm(const AResult: TModalResult);
+begin
+  if (AResult = mrYes) and (FInventoryMovementItemId <> 0) and DM.cdsInventoryEdit.Active and
+     (DM.cdsInventoryEdit.RecordCount = 1) then
+  begin
+    try
+      DM.ConfirmInventory(FInventoryMovementItemId);
     except
       on E : Exception do
       begin
@@ -942,6 +1045,20 @@ begin
   ReturnPriorForm;
 //  TDialogService.MessageDialog('Подтвердить?',
 //    TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChoiceCelConfirm)
+end;
+
+procedure TfrmMain.bpInventoryCancelClick(Sender: TObject);
+begin
+  DM.cdsInventoryEdit.Close;
+  ReturnPriorForm;
+end;
+
+procedure TfrmMain.bpInventoryClickClick(Sender: TObject);
+begin
+  InventoryConfirm(mrYes);
+  ReturnPriorForm;
+//  TDialogService.MessageDialog('Подтвердить?',
+//    TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, InventoryConfirm)
 end;
 
 // переход на заданную форму с сохранением её в стэк открываемых форм
@@ -1055,6 +1172,34 @@ begin
   end;
 end;
 
+procedure TfrmMain.SetInventoryScanButton;
+begin
+  bInventoryScanMode.ImageIndex := 13;
+  bInventoryScanMode.TextSettings.FontColor := bInventoryScanSearch.TextSettings.FontColor;
+  bInventoryScanMode.TextSettings.Font.Style := bInventoryScanSearch.TextSettings.Font.Style;
+  bInventoryScanMode.TextSettings.Font.Size := bInventoryScanSearch.TextSettings.Font.Size;
+  bInventoryScanNull.ImageIndex := 13;
+  bInventoryScanNull.TextSettings.FontColor := bInventoryScanSearch.TextSettings.FontColor;
+  bInventoryScanNull.TextSettings.Font.Style := bInventoryScanSearch.TextSettings.Font.Style;
+  bInventoryScanNull.TextSettings.Font.Size := bInventoryScanSearch.TextSettings.Font.Size;
+
+
+  case FScanType of
+    0 : begin
+          bInventoryScanMode.ImageIndex := 12;
+          bInventoryScanMode.TextSettings.FontColor := TAlphaColorRec.Peru;
+          bInventoryScanMode.TextSettings.Font.Style := [TFontStyle.fsBold];
+          bInventoryScanMode.TextSettings.Font.Size := bInventoryScanSearch.TextSettings.Font.Size + 1;
+        end;
+    3 : begin
+          bInventoryScanNull.ImageIndex := 12;
+          bInventoryScanNull.TextSettings.FontColor := TAlphaColorRec.Peru;
+          bInventoryScanNull.TextSettings.Font.Style := [TFontStyle.fsBold];
+          bInventoryScanNull.TextSettings.Font.Size := bInventoryScanSearch.TextSettings.Font.Size + 1;
+        end;
+  end;
+end;
+
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 begin
 
@@ -1066,7 +1211,7 @@ begin
     bLogIn.Enabled := False;
     bChoiceCellScan.Enabled := False;
     bRelogin.Enabled := False;
-    bSendScan.Enabled := False;
+    sbScan.Enabled := False;
     bUpload.Enabled := False;
   end else if not bGoods.Enabled then
   begin
@@ -1082,7 +1227,7 @@ begin
           bLogIn.Enabled := True;
           bChoiceCellScan.Enabled := True;
           bRelogin.Enabled := True;
-          bSendScan.Enabled := True;
+          sbScan.Enabled := True;
           bUpload.Enabled := True;
         end);
     end);
@@ -1095,7 +1240,7 @@ begin
     FDataWedgeBarCode.OnScanResult := Nil;
   end;
   if (tcMain.ActiveTab <> tiInformation) and (tcMain.ActiveTab <> tiScanBarCode) then lwBarCodeResult.Items.Clear;
-  PasswordEdit.Text := '';
+  PasswordEdit.Text := ''; //'asdasxq1';
   lCaption.TextSettings.Font.Size := FCaptionFontSize;
 
   { настройка панели возврата }
@@ -1158,14 +1303,32 @@ begin
     if tcMain.ActiveTab = tiChoiceCelEdit then
     begin
       lCaption.Text := 'Подтверждение "Места отбора"';
+    end else
+    if tcMain.ActiveTab = tiInventoryScan then
+    begin
+      lCaption.Text := 'Сканирование "Инвентаризации"';
+      SetInventoryScanButton;
+      sbRefresh.Visible := True;
+      DM.DownloadInventoryListTop;
+      FDataWedgeBarCode.OnScanResult := OnScanInventory;
+      NextScan;
+    end else
+    if tcMain.ActiveTab = tiInventoryList then
+    begin
+      lCaption.Text := 'Просмотр док-тов "Инвентаризации"';
+      sbRefresh.Visible := True;
+    end  else
+    if tcMain.ActiveTab = tiInventoryEdit then
+    begin
+      lCaption.Text := 'Подтверждение "Инвентаризации"';
     end;
 
-    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiChoiceCelScan) then
+    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiChoiceCelScan) or (tcMain.ActiveTab = tiInventoryScan) then
     begin
       sbScan.Visible := FisZebraScaner and not FisCameraScaner and not FisHideScanButton or not FisZebraScaner or FisCameraScaner;
     end else sbScan.Visible := false;
 
-    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiChoiceCelScan) or (tcMain.ActiveTab = tiScanBarCode) then
+    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiChoiceCelScan) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiScanBarCode) then
     begin
       sbIlluminationMode.Visible := not FisHideIlluminationButton  and (FisZebraScaner or FisCameraScaner and ScanCamera.HasFlash or
                                     (tcMain.ActiveTab = tiScanBarCode) and ScanCamera.HasFlash);
@@ -1263,9 +1426,18 @@ end;
 procedure TfrmMain.ShowChoiceCelList;
 begin
 
-  if not DM.DownloadChoiceCelList(pbPULOrderBy.ItemIndex > 0, pbPULAllUser.ItemIndex > 0, pbPULErased.ItemIndex > 0, GetSearshBox(lwChoiceCelList).Text) then Exit;
+  if not DM.DownloadChoiceCelList(pbChoiceCelOrderBy.ItemIndex > 0, pbChoiceCelAllUser.ItemIndex > 0, pbChoiceCelErased.ItemIndex > 0, GetSearshBox(lwChoiceCelList).Text) then Exit;
 
   if tcMain.ActiveTab <> tiChoiceCelList then SwitchToForm(tiChoiceCelList, nil);
+end;
+
+// начитка информации журнала инвентаризаций
+procedure TfrmMain.ShowInventoryList;
+begin
+
+  if not DM.DownloadInventoryList(pbInventoryOrderBy.ItemIndex > 0, pbInventoryAllUser.ItemIndex > 0, pbInventoryErased.ItemIndex > 0, GetSearshBox(lwInventoryList).Text) then Exit;
+
+  if tcMain.ActiveTab <> tiInventoryList then SwitchToForm(tiInventoryList, nil);
 end;
 
 // открытие на редактирование ранее введенной строки Сборка Узла / Лодки
@@ -1291,6 +1463,19 @@ begin
   ShowInformation;
 end;
 
+procedure TfrmMain.bInventoryScanClick(Sender: TObject);
+begin
+  FScanType := 0;
+  SwitchToForm(tiInventoryScan, nil);
+end;
+
+procedure TfrmMain.bInventoryScanSearchClick(Sender: TObject);
+begin
+  TempEditInventory.Visible := True;
+  TempEditInventory.SetFocus;
+  TDialogService.InputQuery('Ввод № док. заказа', ['№ док. заказа'], [''], InputInventory);
+end;
+
 // возврат на форму логина
 procedure TfrmMain.bLogInClick(Sender: TObject);
 begin
@@ -1311,6 +1496,11 @@ end;
 procedure TfrmMain.bViewChoiceCelClick(Sender: TObject);
 begin
   ShowChoiceCelList;
+end;
+
+procedure TfrmMain.bViewInventoryClick(Sender: TObject);
+begin
+  ShowInventoryList;
 end;
 
 procedure TfrmMain.OnCloseDialog(const AResult: TModalResult);
@@ -1388,6 +1578,12 @@ begin
   end else if tcMain.ActiveTab = tiChoiceCelList then
   begin
     ShowChoiceCelList;
+  end else if tcMain.ActiveTab = tiInventoryScan then
+  begin
+  //  DM.DownloadInventoryTop;
+  end else if tcMain.ActiveTab = tiInventoryList then
+  begin
+    ShowInventoryList;
   end;
 end;
 
@@ -1795,9 +1991,14 @@ begin
   end;
 end;
 
-procedure TfrmMain.pbPULOrderByChange(Sender: TObject);
+procedure TfrmMain.pbChoiceCelOrderByChange(Sender: TObject);
 begin
   if DM.cdsChoiceCelList.Active then ShowChoiceCelList;
+end;
+
+procedure TfrmMain.pbInventoryOrderByChange(Sender: TObject);
+begin
+  if DM.cdsInventoryList.Active then ShowInventoryList;
 end;
 
 procedure TfrmMain.btnCancelClick(Sender: TObject);
@@ -1908,11 +2109,72 @@ begin
   end;
 end;
 
+// Заполнение ящиков
+procedure TfrmMain.AddlvBox(AName, ACount, AWeight: String);
+begin
+  with TListViewItem(TAppearanceListViewItems(lvBox.Items.AddItem(0))) do
+  begin
+    Data['Name'] := AName;
+    Data['Count'] := ACount;
+    Data['Weight'] := AWeight;
+  end;
+end;
+
+// Обработка Инвентаризации
+procedure TfrmMain.ProcessInventory(ABarCode: String);
+begin
+
+  FInventoryMovementItemId := 0;
+  FInventoryBarCode := '';
+  if Trim(ABarCode) = '' then Exit;
+
+  if DM.DownloadInventoryBarCode(ABarCode) then
+  begin
+
+    if DM.cdsInventoryEdit.RecordCount = 0 then
+    begin
+      TDialogService.ShowMessage('По коду или штрих коду '#13#10#13#10 + ABarCode + #13#10#13#10'Место отбора не найден');
+    end else if DM.cdsInventoryEdit.RecordCount > 1 then
+    begin
+      TDialogService.ShowMessage('По коду или штрих коду '#13#10#13#10 + ABarCode + #13#10#13#10'Найдено более одно Место отбора.');
+    end;
+
+    FInventoryMovementItemId := DM.cdsInventoryEditMovementItemId.AsInteger;
+    FInventoryBarCode := Trim(ABarCode);
+
+    if FInventoryMovementItemId <> 0 then
+    begin
+      if FScanType <> 3 then
+      begin
+        SwitchToForm(tiInventoryEdit, nil);
+        lvBox.Items.Clear;
+        AddlvBox(dm.cdsInventoryEditBoxName_5.AsString, dm.cdsInventoryEditCountTare_5.AsString, dm.cdsInventoryEditWeightTare_5.AsString);
+        AddlvBox(dm.cdsInventoryEditBoxName_4.AsString, dm.cdsInventoryEditCountTare_4.AsString, dm.cdsInventoryEditWeightTare_4.AsString);
+        AddlvBox(dm.cdsInventoryEditBoxName_3.AsString, dm.cdsInventoryEditCountTare_3.AsString, dm.cdsInventoryEditWeightTare_3.AsString);
+        AddlvBox(dm.cdsInventoryEditBoxName_2.AsString, dm.cdsInventoryEditCountTare_2.AsString, dm.cdsInventoryEditWeightTare_2.AsString);
+        AddlvBox(dm.cdsInventoryEditBoxName_1.AsString, dm.cdsInventoryEditCountTare_1.AsString, dm.cdsInventoryEditWeightTare_1.AsString);
+      end else
+      begin
+        InventoryConfirm(mrYes);
+        DM.DownloadInventoryListTop;
+        NextScan;
+      end;
+    end else if FScanType = 3 then NextScan;
+  end;
+end;
+
 // Обрабатываем отсканированный
 procedure TfrmMain.OnScanChoiceCel(Sender: TObject; AData_String: String);
 begin
   FisScanOk := True;
   ProcessChoiceCel(AData_String);
+end;
+
+// Обрабатываем отсканированный
+procedure TfrmMain.OnScanInventory(Sender: TObject; AData_String: String);
+begin
+  FisScanOk := True;
+  ProcessInventory(AData_String);
 end;
 
 end.
