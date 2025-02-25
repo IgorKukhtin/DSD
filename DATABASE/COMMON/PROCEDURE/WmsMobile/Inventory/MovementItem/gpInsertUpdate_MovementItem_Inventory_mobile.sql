@@ -166,8 +166,8 @@ BEGIN
                                                           , inGoodsId             := gpGet.GoodsId
                                                           , inAmount              := gpGet.Amount
                                                           , inIsStartWeighing     := TRUE
-                                                          , inRealWeight          := gpGet.Amount + gpGet.WeightTare_all
-                                                          , inWeightTare          := gpGet.WeightTare_all
+                                                          , inRealWeight          := gpGet.Amount + gpGet.WeightTare_calc
+                                                          , inWeightTare          := gpGet.WeightTare_calc
                                                           , inLiveWeight          := 0
                                                           , inHeadCount           := 0
                                                           , inCount               := 0
@@ -208,3 +208,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_Inventory_mobile (317323409, zfCalc_UserAdmin())
 -- SELECT * FROM gpInsertUpdate_MovementItem_Inventory_mobile (317382349, zfCalc_UserAdmin())
+

@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_Inventory_scale()
+-- Function: gpSelect_Movement_Inventory_scale - Инвентаризация (сканирование паспорта)
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Inventory_scale (TDateTime, TDateTime, Boolean, TVarChar);
 
@@ -19,7 +19,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
                -- Ш/К - паспорт
              , MovementItemId_passport TVarChar
                -- № паспорта
-             , PartionNum        Integer        
+             , PartionNum        Integer
              --Ячейка хранения
              , PartionCellId Integer, PartionCellName TVarChar
                -- Вес нетто
@@ -192,8 +192,8 @@ BEGIN
              ) :: TVarChar AS MovementItemId_passport
 
              -- № паспорта
-           , tmpMIFloat_PartionNum_passport.ValueData :: Integer AS PartionNum  
-           
+           , tmpMIFloat_PartionNum_passport.ValueData :: Integer AS PartionNum
+
              -- Ячейка хранения
            , Object_PartionCell.Id                    AS PartionCellId
            , Object_PartionCell.ValueData ::TVarChar  AS PartionCellName

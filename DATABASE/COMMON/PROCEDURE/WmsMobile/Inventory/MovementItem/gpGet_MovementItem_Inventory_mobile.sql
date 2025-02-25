@@ -172,7 +172,7 @@ BEGIN
              , Object_PartionCell.Id                     AS PartionCellId
              , Object_PartionCell.ValueData              AS PartionCellName
                -- парти€ - ƒата
-             , MIDate_PartionGoods.ValueData             AS PartionGoodsDate
+             , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) AS PartionGoodsDate
                -- є паспорта
              , MIFloat_PartionNum.ValueData :: Integer   AS PartionNum
                -- ѕоддон
@@ -183,25 +183,25 @@ BEGIN
 
                -- ящик
              , tmpMI_Tare_2.BoxId           :: Integer   AS BoxId_1
-             , tmpMI_Tare_2.BoxName         :: TVarChar  AS BoxName_2
+             , (tmpMI_Tare_2.BoxName  || ' (' || zfConvert_FloatToString (tmpMI_Tare_1.CountTare) || 'кг.)')        :: TVarChar  AS BoxName_2
              , tmpMI_Tare_2.CountTare       :: Integer   AS CountTare_2
              , tmpMI_Tare_2.WeightTare      :: TFloat    AS WeightTare_2
 
                -- ящик
              , tmpMI_Tare_3.BoxId           :: Integer   AS BoxId_3
-             , tmpMI_Tare_3.BoxName         :: TVarChar  AS BoxName_3
+             , (tmpMI_Tare_3.BoxName  || ' (' || zfConvert_FloatToString (tmpMI_Tare_1.CountTare) || 'кг.)')         :: TVarChar  AS BoxName_3
              , tmpMI_Tare_3.CountTare       :: Integer   AS CountTare_3
              , tmpMI_Tare_3.WeightTare      :: TFloat    AS WeightTare_3
 
                -- ящик
              , tmpMI_Tare_4.BoxId           :: Integer   AS BoxId_4
-             , tmpMI_Tare_4.BoxName         :: TVarChar  AS BoxName_4
+             , (tmpMI_Tare_4.BoxName  || ' (' || zfConvert_FloatToString (tmpMI_Tare_1.CountTare) || 'кг.)')        :: TVarChar  AS BoxName_4
              , tmpMI_Tare_4.CountTare       :: Integer   AS CountTare_4
              , tmpMI_Tare_4.WeightTare      :: TFloat    AS WeightTare_4
 
                -- ящик
              , tmpMI_Tare_5.BoxId           :: Integer   AS BoxId_5
-             , tmpMI_Tare_5.BoxName         :: TVarChar  AS BoxName_5
+             , (tmpMI_Tare_5.BoxName  || ' (' || zfConvert_FloatToString (tmpMI_Tare_1.CountTare) || 'кг.)')        :: TVarChar  AS BoxName_5
              , tmpMI_Tare_5.CountTare       :: Integer   AS CountTare_5
              , tmpMI_Tare_5.WeightTare      :: TFloat    AS WeightTare_5
 
@@ -228,6 +228,7 @@ BEGIN
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                        AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
+             LEFT JOIN Movement ON Movement.Id =  MovementItem.MovementId
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id

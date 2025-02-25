@@ -87,7 +87,7 @@ BEGIN
                         FROM tmpStatus
                              INNER JOIN Movement ON Movement.OperDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '5 DAY')
                                                 AND Movement.DescId = zc_Movement_WeighingProduction()
-                                                AND Movement.StatusId = tmpStatus.StatusId
+                                                AND Movement.StatusId <> zc_Enum_Status_Erased() -- tmpStatus.StatusId
                              -- Этот склад
                              INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                                       AND MLO_From.DescId     = zc_MovementLinkObject_From()
