@@ -920,7 +920,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         Name = 'inId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementItemId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
