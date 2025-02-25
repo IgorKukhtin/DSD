@@ -55,6 +55,9 @@ type
     edSearchGoodsCode: TcxTextEdit;
     cxLabel4: TcxLabel;
     edSearchPartionNum: TcxTextEdit;
+    MovementItemId: TcxGridDBColumn;
+    ItemName_inf: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
   private
     { Private declarations }
   public

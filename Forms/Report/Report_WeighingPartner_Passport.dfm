@@ -178,13 +178,20 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object ItemName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object StatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusCode'
@@ -206,39 +213,55 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
                 ImageIndex = 13
                 Value = 3
               end>
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 69
+            Options.Editing = False
+            Width = 70
           end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 48
+            Options.Editing = False
+            Width = 55
+          end
+          object ItemName_inf: TcxGridDBColumn
+            Caption = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'ItemName_inf'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 59
           end
           object InsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103' ('#1074#1079#1074#1077#1096'.)'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'InsertDate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1077' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077')'
+            Options.Editing = False
             Width = 84
           end
           object InsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100'  '#1089#1086#1079#1076#1072#1085#1080#1103' ('#1074#1079#1074#1077#1096'.)'
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077')'
             Options.Editing = False
             Width = 97
           end
@@ -248,13 +271,23 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 80
+          end
+          object PartionNum: TcxGridDBColumn
+            Caption = #8470' '#1055#1072#1089#1087#1086#1088#1090#1072
+            DataBinding.FieldName = 'PartionNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 111
           end
           object GoodsCode: TcxGridDBColumn
@@ -262,6 +295,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 42
           end
           object GoodsName: TcxGridDBColumn
@@ -269,6 +303,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 157
           end
           object GoodsKindName: TcxGridDBColumn
@@ -276,13 +311,15 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 52
+            Options.Editing = False
+            Width = 70
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 33
           end
           object PartionGoodsDate: TcxGridDBColumn
@@ -291,15 +328,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
-          end
-          object PartionNum: TcxGridDBColumn
-            Caption = #1055#1072#1089#1087#1086#1088#1090
-            DataBinding.FieldName = 'PartionNum'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
+            Width = 70
           end
           object PartionCellName: TcxGridDBColumn
             Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
@@ -310,7 +339,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 80
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -346,6 +375,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'BoxName_1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountTare1: TcxGridDBColumn
@@ -364,6 +394,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'BoxName_2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountTare2: TcxGridDBColumn
@@ -382,6 +413,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'BoxName_3'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountTare3: TcxGridDBColumn
@@ -400,6 +432,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'BoxName_4'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountTare4: TcxGridDBColumn
@@ -418,6 +451,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'BoxName_5'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountTare5: TcxGridDBColumn
@@ -436,6 +470,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'BoxName_6'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountTare6: TcxGridDBColumn
@@ -454,6 +489,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'BoxName_7'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountTare7: TcxGridDBColumn
@@ -472,6 +508,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'BoxName_8'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountTare8: TcxGridDBColumn
@@ -490,6 +527,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'BoxName_9'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountTare9: TcxGridDBColumn
@@ -508,6 +546,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'BoxName_10'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountTare10: TcxGridDBColumn
@@ -520,6 +559,20 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object MovementItemId: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementItemId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
@@ -572,7 +625,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       Width = 198
     end
     object cxLabel4: TcxLabel
-      Left = 305
+      Left = 307
       Top = 35
       Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072':'
       ParentFont = False
@@ -584,7 +637,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       Style.IsFontAssigned = True
     end
     object edSearchPartionNum: TcxTextEdit
-      Left = 673
+      Left = 700
       Top = 36
       TabOrder = 7
       DesignSize = (
@@ -594,9 +647,9 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     end
   end
   object cxLabel3: TcxLabel [2]
-    Left = 602
+    Left = 605
     Top = 35
-    Caption = #1055#1072#1089#1087#1086#1088#1090':'
+    Caption = #8470' '#1055#1072#1089#1087#1086#1088#1090#1072':'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clBlue
