@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{B830B171-E62F-4379-8DA0-E7F3C47D97D4}</ProjectGuid>
-        <ProjectVersion>20.1</ProjectVersion>
+        <ProjectVersion>20.2</ProjectVersion>
         <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
@@ -31,11 +31,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='iOSSimARM64' and '$(Base)'=='true') or '$(Base_iOSSimARM64)'!=''">
         <Base_iOSSimARM64>true</Base_iOSSimARM64>
-        <CfgParent>Base</CfgParent>
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Linux64' and '$(Base)'=='true') or '$(Base_Linux64)'!=''">
-        <Base_Linux64>true</Base_Linux64>
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
@@ -82,12 +77,6 @@
         <Cfg_1>true</Cfg_1>
         <Base>true</Base>
     </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Linux64' and '$(Cfg_1)'=='true') or '$(Cfg_1_Linux64)'!=''">
-        <Cfg_1_Linux64>true</Cfg_1_Linux64>
-        <CfgParent>Cfg_1</CfgParent>
-        <Cfg_1>true</Cfg_1>
-        <Base>true</Base>
-    </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='OSX64' and '$(Cfg_1)'=='true') or '$(Cfg_1_OSX64)'!=''">
         <Cfg_1_OSX64>true</Cfg_1_OSX64>
         <CfgParent>Cfg_1</CfgParent>
@@ -125,12 +114,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='iOSDevice64' and '$(Cfg_2)'=='true') or '$(Cfg_2_iOSDevice64)'!=''">
         <Cfg_2_iOSDevice64>true</Cfg_2_iOSDevice64>
-        <CfgParent>Cfg_2</CfgParent>
-        <Cfg_2>true</Cfg_2>
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Linux64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Linux64)'!=''">
-        <Cfg_2_Linux64>true</Cfg_2_Linux64>
         <CfgParent>Cfg_2</CfgParent>
         <Cfg_2>true</Cfg_2>
         <Base>true</Base>
@@ -178,7 +161,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_UsePackage>fmx;DbxDriver;bindengine;IndyIP;emsclient;IndyProtocols;dbxcds;ZCoreD28;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;ZDbcD28;ZComponentD28;FireDACDBXDriver;CustomIPTransport;IndySystem;FireDAC;bindcompdbx;rtl;DBXSqliteDriver;DataSnapFireDAC;FireDAC;xmlrtl;dsnap;DataSnapNativeClient;FireDACDriver;ZPlainD28;IndyIPClient;bindcompfmx;fmxFireDAC;DataSnap;fmxase;dbrtl;ZParseSqlD28;DBXInterBaseDriver;bindcomp;IndyCore;RESTBackendComponents;DclTKRBarCodeSannerPkgD28;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACDSDriver;tethering;CloudService;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
-        <VerInfo_Keys>package=ua.dp.alan.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <VerInfo_Keys>package=ua.dp.alan.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=;minSdkVersion=23;targetSdkVersion=34</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Android_LauncherIcon36>img\Android\WmsMobile_36.png</Android_LauncherIcon36>
@@ -208,7 +191,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android64)'!=''">
         <DCC_UsePackage>fmx;DbxDriver;bindengine;IndyIP;emsclient;IndyProtocols;dbxcds;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;FireDACDBXDriver;CustomIPTransport;IndySystem;FireDAC;bindcompdbx;rtl;DBXSqliteDriver;DataSnapFireDAC;FireDAC;xmlrtl;dsnap;DataSnapNativeClient;FireDACDriver;IndyIPClient;bindcompfmx;fmxFireDAC;DataSnap;dbrtl;DBXInterBaseDriver;bindcomp;IndyCore;RESTBackendComponents;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACDSDriver;tethering;CloudService;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
-        <VerInfo_Keys>package=ua.dp.alan.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <VerInfo_Keys>package=ua.dp.alan.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=;minSdkVersion=23;targetSdkVersion=34</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Android_LauncherIcon36>img\Android\WmsMobile_36.png</Android_LauncherIcon36>
@@ -299,14 +282,6 @@
         <iPad_Setting58>$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png</iPad_Setting58>
         <iPad_Notification40>$(BDS)\bin\Artwork\iOS\iPad\FM_NotificationIcon_40x40.png</iPad_Notification40>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_Linux64)'!=''">
-        <Debugger_Launcher>/usr/bin/gnome-terminal -- &quot;%debuggee%&quot;</Debugger_Launcher>
-        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\WmsMobile.icns</Icns_MainIcns>
-        <Manifest_File>(None)</Manifest_File>
-        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
-        <DCC_UnitSearchPath>..\SOURCE FMX\Components BarCode\Library\Android\arm64-v8a;..\SOURCE FMX\Components BarCode;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(Base_OSX64)'!=''">
         <DCC_UsePackage>DataSnapServer;fmx;DbxDriver;bindengine;IndyIP;FireDACODBC;emsclient;IndyProtocols;dbxcds;DBXFirebirdDriver;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;FireDACDBXDriver;fmxdae;CustomIPTransport;FireDACMSSQLDriver;IndySystem;FireDAC;DataSnapServerMidas;FireDACODBCDriver;bindcompdbx;rtl;FireDACMySQLDriver;DBXSqliteDriver;DataSnapFireDAC;inetdbxpress;FireDAC;xmlrtl;dsnap;DBXOracleDriver;DBXInformixDriver;fmxobj;DataSnapNativeClient;FireDACDriver;IndyIPClient;bindcompfmx;inetdb;FireDACASADriver;fmxFireDAC;DBXMySQLDriver;DataSnap;fmxase;dbrtl;FireDACOracleDriver;DataSnapIndy10ServerTransport;DBXInterBaseDriver;FireDACMongoDBDriver;FireDACTDataDriver;bindcomp;IndyCore;RESTBackendComponents;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACPgDriver;FireDACDSDriver;tethering;CloudService;DBXSybaseASADriver;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleVersion=1.0.0;CFBundleShortVersionString=1.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);NSHighResolutionCapable=true;LSApplicationCategoryType=public.app-category.utilities;NSLocationUsageDescription=The reason for accessing the location information of the user;NSContactsUsageDescription=The reason for accessing the contacts;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSCameraUsageDescription=The reason for accessing the camera;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSMotionUsageDescription=The reason for accessing the accelerometer;NSDesktopFolderUsageDescription=The reason for accessing the Desktop folder;NSDocumentsFolderUsageDescription=The reason for accessing the Documents folder;NSDownloadsFolderUsageDescription=The reason for accessing the Downloads folder;NSNetworkVolumesUsageDescription=The reason for accessing files on a network volume;NSRemovableVolumesUsageDescription=The reason for accessing files on a removable volume;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing the Bluetooth interface</VerInfo_Keys>
@@ -385,11 +360,6 @@
         <PF_AutoCertificateAdHoc>False</PF_AutoCertificateAdHoc>
         <VerInfo_Build>2</VerInfo_Build>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_1_Linux64)'!=''">
-        <Debugger_Launcher>/usr/bin/gnome-terminal -- &quot;%debuggee%&quot;</Debugger_Launcher>
-        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\WmsMobile.icns</Icns_MainIcns>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_OSX64)'!=''">
         <Debugger_Launcher>/usr/X11/bin/xterm -e &quot;%debuggee%&quot;</Debugger_Launcher>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -435,10 +405,6 @@
         <PF_AutoMobileProvisionAdHoc>False</PF_AutoMobileProvisionAdHoc>
         <PF_AutoCertificateAdHoc>False</PF_AutoCertificateAdHoc>
         <VerInfo_Build>2</VerInfo_Build>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_2_Linux64)'!=''">
-        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\WmsMobile.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_OSX64)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -494,7 +460,7 @@
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp290.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
-            <Deployment Version="4">
+            <Deployment Version="5">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="iOSSimulator">
                         <Overwrite>true</Overwrite>
@@ -556,270 +522,72 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_144x144.png" Configuration="Release" Class="Android_LauncherIcon144">
-                    <Platform Name="Android">
-                        <RemoteName>ic_launcher.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_192x192.png" Configuration="Release" Class="Android_LauncherIcon192">
-                    <Platform Name="Android">
-                        <RemoteName>ic_launcher.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_36x36.png" Configuration="Release" Class="Android_LauncherIcon36">
-                    <Platform Name="Android">
-                        <RemoteName>ic_launcher.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_48x48.png" Configuration="Release" Class="Android_LauncherIcon48">
-                    <Platform Name="Android">
-                        <RemoteName>ic_launcher.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_72x72.png" Configuration="Release" Class="Android_LauncherIcon72">
-                    <Platform Name="Android">
-                        <RemoteName>ic_launcher.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_96x96.png" Configuration="Release" Class="Android_LauncherIcon96">
-                    <Platform Name="Android">
-                        <RemoteName>ic_launcher.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_24x24.png" Configuration="Release" Class="Android_NotificationIcon24">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_36x36.png" Configuration="Release" Class="Android_NotificationIcon36">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_48x48.png" Configuration="Release" Class="Android_NotificationIcon48">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_72x72.png" Configuration="Release" Class="Android_NotificationIcon72">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_96x96.png" Configuration="Release" Class="Android_NotificationIcon96">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Configuration="Debug" Class="Android_SplashImage426">
-                    <Platform Name="Android">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_144x144.png" Configuration="Release" Class="Android_LauncherIcon144"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_192x192.png" Configuration="Release" Class="Android_LauncherIcon192"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_36x36.png" Configuration="Release" Class="Android_LauncherIcon36"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_48x48.png" Configuration="Release" Class="Android_LauncherIcon48"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_72x72.png" Configuration="Release" Class="Android_LauncherIcon72"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_96x96.png" Configuration="Release" Class="Android_LauncherIcon96"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_24x24.png" Configuration="Release" Class="Android_NotificationIcon24"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_36x36.png" Configuration="Release" Class="Android_NotificationIcon36"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_48x48.png" Configuration="Release" Class="Android_NotificationIcon48"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_72x72.png" Configuration="Release" Class="Android_NotificationIcon72"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_96x96.png" Configuration="Release" Class="Android_NotificationIcon96"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Configuration="Debug" Class="Android_SplashImage426"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Configuration="Debug" Class="Android_SplashImage426">
                     <Platform Name="Android64">
                         <RemoteName>splash_image.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Configuration="Release" Class="Android_SplashImage426">
-                    <Platform Name="Android">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png" Configuration="Debug" Class="Android_SplashImage470">
-                    <Platform Name="Android">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Configuration="Release" Class="Android_SplashImage426"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png" Configuration="Debug" Class="Android_SplashImage470"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png" Configuration="Debug" Class="Android_SplashImage470">
                     <Platform Name="Android64">
                         <RemoteName>splash_image.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png" Configuration="Release" Class="Android_SplashImage470">
-                    <Platform Name="Android">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png" Configuration="Debug" Class="Android_SplashImage640">
-                    <Platform Name="Android">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png" Configuration="Release" Class="Android_SplashImage470"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png" Configuration="Debug" Class="Android_SplashImage640"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png" Configuration="Debug" Class="Android_SplashImage640">
                     <Platform Name="Android64">
                         <RemoteName>splash_image.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png" Configuration="Release" Class="Android_SplashImage640">
-                    <Platform Name="Android">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Configuration="Debug" Class="Android_SplashImage960">
-                    <Platform Name="Android">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png" Configuration="Release" Class="Android_SplashImage640"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Configuration="Debug" Class="Android_SplashImage960"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Configuration="Debug" Class="Android_SplashImage960">
                     <Platform Name="Android64">
                         <RemoteName>splash_image.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Configuration="Release" Class="Android_SplashImage960">
-                    <Platform Name="Android">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
-                    <Platform Name="Win32">
-                        <RemoteDir>Assets\</RemoteDir>
-                        <RemoteName>Logo150x150.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
-                    <Platform Name="Win32">
-                        <RemoteDir>Assets\</RemoteDir>
-                        <RemoteName>Logo44x44.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_152x152.png" Configuration="Release" Class="iPad_AppIcon152">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_167x167.png" Configuration="Release" Class="iPad_AppIcon167">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageDark_2x.png" Configuration="Release" Class="iPad_LaunchDark2x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>FM_LaunchScreenImage_iPadDark@2x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImage_2x.png" Configuration="Release" Class="iPad_Launch2x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>FM_LaunchScreenImage_iPad@2x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_NotificationIcon_40x40.png" Configuration="Release" Class="iPad_Notification40">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png" Configuration="Release" Class="iPad_Setting58">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png" Configuration="Release" Class="iPad_SpotLight80">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_1024x1024.png" Configuration="Release" Class="iOS_AppStore1024">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_120x120.png" Configuration="Release" Class="iPhone_AppIcon120">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png" Configuration="Release" Class="iPhone_AppIcon180">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_2x.png" Configuration="Release" Class="iPhone_LaunchDark2x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>FM_LaunchScreenImage_iPhoneDark@2x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_3x.png" Configuration="Release" Class="iPhone_LaunchDark3x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>FM_LaunchScreenImage_iPhoneDark@3x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2x.png" Configuration="Release" Class="iPhone_Launch2x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>FM_LaunchScreenImage_iPhone@2x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_3x.png" Configuration="Release" Class="iPhone_Launch3x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>FM_LaunchScreenImage_iPhone@3x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_40x40.png" Configuration="Release" Class="iPhone_Notification40">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_60x60.png" Configuration="Release" Class="iPhone_Notification60">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_58x58.png" Configuration="Release" Class="iPhone_Setting58">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_87x87.png" Configuration="Release" Class="iPhone_Setting87">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_120x120.png" Configuration="Release" Class="iPhone_Spotlight120">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_80x80.png" Configuration="Release" Class="iPhone_Spotlight80">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Debug" Class="ProjectOSXResource">
-                    <Platform Name="OSXARM64">
-                        <RemoteName>WmsMobile.icns</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Configuration="Release" Class="Android_SplashImage960"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png" Configuration="Debug" Class="UWP_DelphiLogo150"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png" Configuration="Debug" Class="UWP_DelphiLogo44"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_152x152.png" Configuration="Release" Class="iPad_AppIcon152"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_167x167.png" Configuration="Release" Class="iPad_AppIcon167"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageDark_2x.png" Configuration="Release" Class="iPad_LaunchDark2x"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImage_2x.png" Configuration="Release" Class="iPad_Launch2x"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_NotificationIcon_40x40.png" Configuration="Release" Class="iPad_Notification40"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png" Configuration="Release" Class="iPad_Setting58"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png" Configuration="Release" Class="iPad_SpotLight80"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_1024x1024.png" Configuration="Release" Class="iOS_AppStore1024"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_120x120.png" Configuration="Release" Class="iPhone_AppIcon120"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png" Configuration="Release" Class="iPhone_AppIcon180"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_2x.png" Configuration="Release" Class="iPhone_LaunchDark2x"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_3x.png" Configuration="Release" Class="iPhone_LaunchDark3x"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2x.png" Configuration="Release" Class="iPhone_Launch2x"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_3x.png" Configuration="Release" Class="iPhone_Launch3x"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_40x40.png" Configuration="Release" Class="iPhone_Notification40"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_60x60.png" Configuration="Release" Class="iPhone_Notification60"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_58x58.png" Configuration="Release" Class="iPhone_Setting58"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_87x87.png" Configuration="Release" Class="iPhone_Setting87"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_120x120.png" Configuration="Release" Class="iPhone_Spotlight120"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_80x80.png" Configuration="Release" Class="iPhone_Spotlight80"/>
+                <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Debug" Class="ProjectOSXResource"/>
                 <DeployFile LocalName="$(BDS)\bin\midas.dll" Configuration="Debug" Class="File">
                     <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
@@ -830,48 +598,29 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi-v7a\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeArmeabiv7aFile"/>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi-v7a\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeArmeabiv7aFile">
                     <Platform Name="Android64">
                         <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeArmeabiFile">
-                    <Platform Name="Android">
-                        <RemoteName>libWmsMobile.so</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeArmeabiFile"/>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeArmeabiFile">
                     <Platform Name="Android64">
                         <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeArmeabiFile">
-                    <Platform Name="Android">
-                        <RemoteName>libWmsMobile.so</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeMipsFile">
-                    <Platform Name="Android">
-                        <RemoteName>libWmsMobile.so</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeArmeabiFile"/>
+                <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeMipsFile"/>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeMipsFile">
                     <Platform Name="Android64">
                         <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeMipsFile">
-                    <Platform Name="Android">
-                        <RemoteName>libWmsMobile.so</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeMipsFile"/>
                 <DeployFile LocalName="$(BDS)\redist\linux64\libmidas.so.2" Configuration="Debug" Class="File">
                     <Platform Name="Linux64">
                         <Overwrite>true</Overwrite>
@@ -918,274 +667,99 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Configuration="Debug" Class="AndroidGDBServer">
-                    <Platform Name="Android">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Configuration="Debug" Class="AndroidGDBServer"/>
+                <DeployFile LocalName="..\BIN\Android64\Debug\AndroidManifest.xml" Configuration="Debug" Class="ProjectAndroidManifest"/>
                 <DeployFile LocalName="..\BIN\Android64\Debug\AndroidManifest.xml" Configuration="Debug" Class="ProjectAndroidManifest">
                     <Platform Name="Android64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\Android64\Debug\WmsMobile.classes" Configuration="Debug" Class="AndroidClasses">
-                    <Platform Name="Android64">
-                        <Operation>64</Operation>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="..\BIN\Android64\Debug\colors-night-v21.xml" Configuration="Debug" Class="Android_ColorsDark"/>
                 <DeployFile LocalName="..\BIN\Android64\Debug\colors-night-v21.xml" Configuration="Debug" Class="Android_ColorsDark">
                     <Platform Name="Android64">
                         <RemoteName>colors.xml</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\BIN\Android64\Debug\colors.xml" Configuration="Debug" Class="Android_Colors"/>
                 <DeployFile LocalName="..\BIN\Android64\Debug\colors.xml" Configuration="Debug" Class="Android_Colors">
                     <Platform Name="Android64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\BIN\Android64\Debug\libWmsMobile.so" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\BIN\Android64\Debug\libWmsMobile.so" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Android64">
                         <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\BIN\Android64\Debug\provider_paths.xml" Configuration="Debug" Class="AndroidFileProvider"/>
                 <DeployFile LocalName="..\BIN\Android64\Debug\provider_paths.xml" Configuration="Debug" Class="AndroidFileProvider">
                     <Platform Name="Android64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\BIN\Android64\Debug\splash_image_def.xml" Configuration="Debug" Class="AndroidSplashImageDef"/>
                 <DeployFile LocalName="..\BIN\Android64\Debug\splash_image_def.xml" Configuration="Debug" Class="AndroidSplashImageDef">
                     <Platform Name="Android64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\BIN\Android64\Debug\strings.xml" Configuration="Debug" Class="Android_Strings"/>
                 <DeployFile LocalName="..\BIN\Android64\Debug\strings.xml" Configuration="Debug" Class="Android_Strings">
                     <Platform Name="Android64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\BIN\Android64\Debug\styles-v21.xml" Configuration="Debug" Class="AndroidSplashStylesV21"/>
                 <DeployFile LocalName="..\BIN\Android64\Debug\styles-v21.xml" Configuration="Debug" Class="AndroidSplashStylesV21">
                     <Platform Name="Android64">
                         <RemoteName>styles.xml</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\BIN\Android64\Debug\styles.xml" Configuration="Debug" Class="AndroidSplashStyles"/>
                 <DeployFile LocalName="..\BIN\Android64\Debug\styles.xml" Configuration="Debug" Class="AndroidSplashStyles">
                     <Platform Name="Android64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\AndroidManifest.xml" Configuration="Debug" Class="ProjectAndroidManifest">
-                    <Platform Name="Android">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\WmsMobile.classes" Configuration="Debug" Class="AndroidClasses">
-                    <Platform Name="Android">
-                        <Operation>64</Operation>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\colors-night-v21.xml" Configuration="Debug" Class="Android_ColorsDark">
-                    <Platform Name="Android">
-                        <RemoteName>colors.xml</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\colors.xml" Configuration="Debug" Class="Android_Colors">
-                    <Platform Name="Android">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\libWmsMobile.so" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Android">
-                        <RemoteName>libWmsMobile.so</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\provider_paths.xml" Configuration="Debug" Class="AndroidFileProvider">
-                    <Platform Name="Android">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\splash_image_def.xml" Configuration="Debug" Class="AndroidSplashImageDef">
-                    <Platform Name="Android">
-                        <Enabled>false</Enabled>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\strings.xml" Configuration="Debug" Class="Android_Strings">
-                    <Platform Name="Android">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\styles-v21.xml" Configuration="Debug" Class="AndroidSplashStylesV21">
-                    <Platform Name="Android">
-                        <RemoteName>styles.xml</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\styles.xml" Configuration="Debug" Class="AndroidSplashStyles">
-                    <Platform Name="Android">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Release\AndroidManifest.xml" Configuration="Release" Class="ProjectAndroidManifest">
-                    <Platform Name="Android">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Release\WmsMobile.classes" Configuration="Release" Class="AndroidClasses">
-                    <Platform Name="Android">
-                        <Operation>64</Operation>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Release\colors.xml" Configuration="Release" Class="Android_Colors">
-                    <Platform Name="Android">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Release\libWmsMobile.so" Configuration="Release" Class="ProjectOutput">
-                    <Platform Name="Android">
-                        <RemoteName>libWmsMobile.so</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Release\splash_image_def.xml" Configuration="Release" Class="AndroidSplashImageDef">
-                    <Platform Name="Android">
-                        <Enabled>false</Enabled>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Release\strings.xml" Configuration="Release" Class="Android_Strings">
-                    <Platform Name="Android">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Release\styles-v21.xml" Configuration="Release" Class="AndroidSplashStylesV21">
-                    <Platform Name="Android">
-                        <RemoteName>styles.xml</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Release\styles.xml" Configuration="Release" Class="AndroidSplashStyles">
-                    <Platform Name="Android">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Linux64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Linux64">
-                        <RemoteName>WmsMobile</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
-                    <Platform Name="OSX64">
-                        <RemoteName>WmsMobile</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
-                    <Platform Name="OSX64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList">
-                    <Platform Name="OSX64">
-                        <RemoteName>Info.plist</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="OSX64">
-                        <RemoteName>WmsMobile</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
-                    <Platform Name="OSXARM64">
-                        <RemoteName>WmsMobile</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
-                    <Platform Name="OSXARM64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList">
-                    <Platform Name="OSXARM64">
-                        <RemoteName>Info.plist</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="OSXARM64">
-                        <RemoteName>WmsMobile</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\Win32\Debug\WmsMobile.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>WmsMobile.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.dSYM" Configuration="Debug" Class="ProjectiOSDeviceDebug">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>WmsMobile</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.entitlements" Configuration="Debug" Class="ProjectiOSEntitlements">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.info.plist" Configuration="Debug" Class="ProjectiOSInfoPList">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Info.plist</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.launchscreen" Configuration="Debug" Class="ProjectiOSLaunchScreen">
-                    <Platform Name="iOSDevice64">
-                        <Operation>64</Operation>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>WmsMobile</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile.entitlements" Configuration="Release" Class="ProjectiOSEntitlements">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile.info.plist" Configuration="Release" Class="ProjectiOSInfoPList">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Info.plist</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile.launchscreen" Configuration="Release" Class="ProjectiOSLaunchScreen">
-                    <Platform Name="iOSDevice64">
-                        <Operation>64</Operation>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile" Configuration="Release" Class="ProjectOutput">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>WmsMobile</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="..\BIN\Android\Debug\AndroidManifest.xml" Configuration="Debug" Class="ProjectAndroidManifest"/>
+                <DeployFile LocalName="..\BIN\Android\Debug\colors-night-v21.xml" Configuration="Debug" Class="Android_ColorsDark"/>
+                <DeployFile LocalName="..\BIN\Android\Debug\colors.xml" Configuration="Debug" Class="Android_Colors"/>
+                <DeployFile LocalName="..\BIN\Android\Debug\libWmsMobile.so" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\BIN\Android\Debug\provider_paths.xml" Configuration="Debug" Class="AndroidFileProvider"/>
+                <DeployFile LocalName="..\BIN\Android\Debug\splash_image_def.xml" Configuration="Debug" Class="AndroidSplashImageDef"/>
+                <DeployFile LocalName="..\BIN\Android\Debug\strings.xml" Configuration="Debug" Class="Android_Strings"/>
+                <DeployFile LocalName="..\BIN\Android\Debug\styles-v21.xml" Configuration="Debug" Class="AndroidSplashStylesV21"/>
+                <DeployFile LocalName="..\BIN\Android\Debug\styles.xml" Configuration="Debug" Class="AndroidSplashStyles"/>
+                <DeployFile LocalName="..\BIN\Android\Release\AndroidManifest.xml" Configuration="Release" Class="ProjectAndroidManifest"/>
+                <DeployFile LocalName="..\BIN\Android\Release\colors.xml" Configuration="Release" Class="Android_Colors"/>
+                <DeployFile LocalName="..\BIN\Android\Release\libWmsMobile.so" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\BIN\Android\Release\splash_image_def.xml" Configuration="Release" Class="AndroidSplashImageDef"/>
+                <DeployFile LocalName="..\BIN\Android\Release\strings.xml" Configuration="Release" Class="Android_Strings"/>
+                <DeployFile LocalName="..\BIN\Android\Release\styles-v21.xml" Configuration="Release" Class="AndroidSplashStylesV21"/>
+                <DeployFile LocalName="..\BIN\Android\Release\styles.xml" Configuration="Release" Class="AndroidSplashStyles"/>
+                <DeployFile LocalName="..\BIN\Linux64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile.dSYM" Configuration="Debug" Class="ProjectOSXDebug"/>
+                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements"/>
+                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList"/>
+                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile.dSYM" Configuration="Debug" Class="ProjectOSXDebug"/>
+                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements"/>
+                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList"/>
+                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\BIN\Win32\Debug\WmsMobile.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.dSYM" Configuration="Debug" Class="ProjectiOSDeviceDebug"/>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.entitlements" Configuration="Debug" Class="ProjectiOSEntitlements"/>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.info.plist" Configuration="Debug" Class="ProjectiOSInfoPList"/>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.launchscreen" Configuration="Debug" Class="ProjectiOSLaunchScreen"/>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile.entitlements" Configuration="Release" Class="ProjectiOSEntitlements"/>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile.info.plist" Configuration="Release" Class="ProjectiOSInfoPList"/>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile.launchscreen" Configuration="Release" Class="ProjectiOSLaunchScreen"/>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile" Configuration="Release" Class="ProjectOutput"/>
                 <DeployFile LocalName="Library\macOS64\libzbar.dylib" Configuration="Debug" Class="File">
                     <Platform Name="OSX64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
@@ -1200,227 +774,80 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Android">
-                        <RemoteDir>.\assets\internal\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android64">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Linux64">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="OSX64">
-                        <RemoteDir>Contents\Resources\StartUp\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="OSXARM64">
-                        <RemoteDir>Contents\Resources\StartUp\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Win32">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="iOSDevice64">
-                        <RemoteDir>StartUp\Documents\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="iOSDevice64">
-                        <RemoteDir>StartUp\Documents\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\Android\WmsMobile_144.png" Configuration="Debug" Class="Android_LauncherIcon144">
-                    <Platform Name="Android">
-                        <RemoteName>ic_launcher.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Release" Class="ProjectFile"/>
+                <DeployFile LocalName="img\Android\WmsMobile_144.png" Configuration="Debug" Class="Android_LauncherIcon144"/>
                 <DeployFile LocalName="img\Android\WmsMobile_144.png" Configuration="Debug" Class="Android_LauncherIcon144">
                     <Platform Name="Android64">
                         <RemoteName>ic_launcher.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\WmsMobile_192.png" Configuration="Debug" Class="Android_LauncherIcon192">
-                    <Platform Name="Android">
-                        <RemoteName>ic_launcher.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="img\Android\WmsMobile_192.png" Configuration="Debug" Class="Android_LauncherIcon192"/>
                 <DeployFile LocalName="img\Android\WmsMobile_192.png" Configuration="Debug" Class="Android_LauncherIcon192">
                     <Platform Name="Android64">
                         <RemoteName>ic_launcher.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\WmsMobile_24.png" Configuration="Debug" Class="Android_NotificationIcon24">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="img\Android\WmsMobile_24.png" Configuration="Debug" Class="Android_NotificationIcon24"/>
                 <DeployFile LocalName="img\Android\WmsMobile_24.png" Configuration="Debug" Class="Android_NotificationIcon24">
                     <Platform Name="Android64">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\WmsMobile_36.png" Configuration="Debug" Class="Android_NotificationIcon36">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="img\Android\WmsMobile_36.png" Configuration="Debug" Class="Android_NotificationIcon36"/>
                 <DeployFile LocalName="img\Android\WmsMobile_36.png" Configuration="Debug" Class="Android_NotificationIcon36">
                     <Platform Name="Android64">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\WmsMobile_48.png" Configuration="Debug" Class="Android_NotificationIcon48">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="img\Android\WmsMobile_48.png" Configuration="Debug" Class="Android_NotificationIcon48"/>
                 <DeployFile LocalName="img\Android\WmsMobile_48.png" Configuration="Debug" Class="Android_NotificationIcon48">
                     <Platform Name="Android64">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\WmsMobile_72.png" Configuration="Debug" Class="Android_NotificationIcon72">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="img\Android\WmsMobile_72.png" Configuration="Debug" Class="Android_NotificationIcon72"/>
                 <DeployFile LocalName="img\Android\WmsMobile_72.png" Configuration="Debug" Class="Android_NotificationIcon72">
                     <Platform Name="Android64">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\WmsMobile_96.png" Configuration="Debug" Class="Android_NotificationIcon96">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="img\Android\WmsMobile_96.png" Configuration="Debug" Class="Android_NotificationIcon96"/>
                 <DeployFile LocalName="img\Android\WmsMobile_96.png" Configuration="Debug" Class="Android_NotificationIcon96">
                     <Platform Name="Android64">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\WmsMobile.icns" Configuration="Debug" Class="ProjectOSXResource">
-                    <Platform Name="OSX64">
-                        <RemoteName>WmsMobile.icns</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPad\WmsMobile_152x152.png" Configuration="Debug" Class="iPad_AppIcon152">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPad\WmsMobile_167x167.png" Configuration="Debug" Class="iPad_AppIcon167">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPad\WmsMobile_2x.png" Configuration="Debug" Class="iPad_LaunchDark2x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>FM_LaunchScreenImage_iPadDark@2x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPad\WmsMobile_40x40.png" Configuration="Debug" Class="iPad_Notification40">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPad\WmsMobile_58x58.png" Configuration="Debug" Class="iPad_Setting58">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPad\WmsMobile_80x80.png" Configuration="Debug" Class="iPad_SpotLight80">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPhone\WmsMobile_1024x1024.png" Configuration="Debug" Class="iOS_AppStore1024">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPhone\WmsMobile_120x120.png" Configuration="Debug" Class="iPhone_Spotlight120">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPhone\WmsMobile_180x180.png" Configuration="Debug" Class="iPhone_AppIcon180">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPhone\WmsMobile_2x.png" Configuration="Debug" Class="iPhone_LaunchDark2x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>FM_LaunchScreenImage_iPhoneDark@2x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPhone\WmsMobile_3x.png" Configuration="Debug" Class="iPhone_LaunchDark3x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>FM_LaunchScreenImage_iPhoneDark@3x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPhone\WmsMobile_40x40.png" Configuration="Debug" Class="iPhone_Notification40">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPhone\WmsMobile_58x58.png" Configuration="Debug" Class="iPhone_Setting58">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPhone\WmsMobile_60x60.png" Configuration="Debug" Class="iPhone_Notification60">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPhone\WmsMobile_80x80.png" Configuration="Debug" Class="iPhone_Spotlight80">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPhone\WmsMobile_87x87.png" Configuration="Debug" Class="iPhone_Setting87">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="img\WmsMobile.icns" Configuration="Debug" Class="ProjectOSXResource"/>
+                <DeployFile LocalName="img\iPad\WmsMobile_152x152.png" Configuration="Debug" Class="iPad_AppIcon152"/>
+                <DeployFile LocalName="img\iPad\WmsMobile_167x167.png" Configuration="Debug" Class="iPad_AppIcon167"/>
+                <DeployFile LocalName="img\iPad\WmsMobile_2x.png" Configuration="Debug" Class="iPad_LaunchDark2x"/>
+                <DeployFile LocalName="img\iPad\WmsMobile_40x40.png" Configuration="Debug" Class="iPad_Notification40"/>
+                <DeployFile LocalName="img\iPad\WmsMobile_58x58.png" Configuration="Debug" Class="iPad_Setting58"/>
+                <DeployFile LocalName="img\iPad\WmsMobile_80x80.png" Configuration="Debug" Class="iPad_SpotLight80"/>
+                <DeployFile LocalName="img\iPhone\WmsMobile_1024x1024.png" Configuration="Debug" Class="iOS_AppStore1024"/>
+                <DeployFile LocalName="img\iPhone\WmsMobile_120x120.png" Configuration="Debug" Class="iPhone_Spotlight120"/>
+                <DeployFile LocalName="img\iPhone\WmsMobile_180x180.png" Configuration="Debug" Class="iPhone_AppIcon180"/>
+                <DeployFile LocalName="img\iPhone\WmsMobile_2x.png" Configuration="Debug" Class="iPhone_LaunchDark2x"/>
+                <DeployFile LocalName="img\iPhone\WmsMobile_3x.png" Configuration="Debug" Class="iPhone_LaunchDark3x"/>
+                <DeployFile LocalName="img\iPhone\WmsMobile_40x40.png" Configuration="Debug" Class="iPhone_Notification40"/>
+                <DeployFile LocalName="img\iPhone\WmsMobile_58x58.png" Configuration="Debug" Class="iPhone_Setting58"/>
+                <DeployFile LocalName="img\iPhone\WmsMobile_60x60.png" Configuration="Debug" Class="iPhone_Notification60"/>
+                <DeployFile LocalName="img\iPhone\WmsMobile_80x80.png" Configuration="Debug" Class="iPhone_Spotlight80"/>
+                <DeployFile LocalName="img\iPhone\WmsMobile_87x87.png" Configuration="Debug" Class="iPhone_Setting87"/>
                 <DeployFile LocalName="splash_image_def.xml" Configuration="Debug" Class="File">
                     <Platform Name="Android">
                         <RemoteDir>res\drawable\</RemoteDir>
@@ -1447,16 +874,6 @@
                         <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="AndroidClasses">
-                    <Platform Name="Android">
-                        <RemoteDir>classes</RemoteDir>
-                        <Operation>64</Operation>
-                    </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>classes</RemoteDir>
-                        <Operation>64</Operation>
-                    </Platform>
-                </DeployClass>
                 <DeployClass Name="AndroidFileProvider">
                     <Platform Name="Android">
                         <RemoteDir>res\xml</RemoteDir>
@@ -1464,12 +881,6 @@
                     </Platform>
                     <Platform Name="Android64">
                         <RemoteDir>res\xml</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="AndroidGDBServer">
-                    <Platform Name="Android">
-                        <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -2397,7 +1808,6 @@
                 <Platform value="Android64">True</Platform>
                 <Platform value="iOSDevice64">False</Platform>
                 <Platform value="iOSSimARM64">False</Platform>
-                <Platform value="Linux64">False</Platform>
                 <Platform value="OSX64">False</Platform>
                 <Platform value="OSXARM64">False</Platform>
                 <Platform value="Win32">True</Platform>

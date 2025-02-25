@@ -395,6 +395,9 @@ type
     actPrint_TTN_final: TdsdPrintAction;
     macPrint_TTN_final: TMultiAction;
     bbPrint_TTN_final: TdxBarButton;
+    spSelectPrintBoxTotal: TdsdStoredProc;
+    actPrintBoxTotal: TdsdPrintAction;
+    bbtPrintBoxTotal: TdxBarButton;
   private
     { Private declarations }
   public

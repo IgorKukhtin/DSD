@@ -257,11 +257,11 @@ begin
   LoadReportFromFile('PrintMovement_WeighingProduction', ReportPath + '\Товарный Учет\PrintMovement_WeighingProduction.fr3');
   LoadReportFromFile('PrintMovement_WeighingProductionWmsSticker', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionWmsSticker.fr3');
   exit;
-   }
+
 
   LoadReportFromFile('PrintMI_WeighingProductionPassport', ReportPath + '\Товарный Учет\PrintMI_WeighingProductionPassport.fr3');
   exit;
-  {
+
   LoadReportFromFile('Обороты по подотчету', ReportPath + '\Отчеты (финансы)\Обороты по подотчету.fr3');
   exit;
 
@@ -522,10 +522,10 @@ begin
   exit;
 
   LoadReportFromFile('Акт обвалки', ReportPath + '\Производство\Акт обвалки.fr3');
-  }
+
   LoadReportFromFile('Акт обвалки (4001)', ReportPath + '\Производство\Акт обвалки (4001).fr3');
   exit;
-  {
+
 
   LoadReportFromFile('Накладная по обвалке', ReportPath + '\Производство\Накладная по обвалке.fr3');
   exit;
@@ -613,9 +613,16 @@ begin
   LoadReportFromFile('PrintMovement_Sale2DiscountPrice', ReportPath + '\Товарный Учет\PrintMovement_Sale2DiscountPrice.fr3');
   LoadReportFromFile('PrintMovement_Sale2PriceWithVAT', ReportPath + '\Товарный Учет\PrintMovement_Sale2PriceWithVAT.fr3');
   exit;
-
+  }
+  LoadReportFromFile('PrintMovement_SalePackWeightTotal', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeightTotal.fr3');
+  exit;
+  {
   LoadReportFromFile('PrintMovement_SalePackWeight', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeight.fr3');
   LoadReportFromFile('PrintMovement_SalePackWeight_Fozzy', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeight_Fozzy.fr3');
+
+
+
+
 
   LoadReportFromFile('PrintMovement_Sale2_3683763', ReportPath + '\Товарный Учет\PrintMovement_Sale2_3683763.fr3');
   exit;
