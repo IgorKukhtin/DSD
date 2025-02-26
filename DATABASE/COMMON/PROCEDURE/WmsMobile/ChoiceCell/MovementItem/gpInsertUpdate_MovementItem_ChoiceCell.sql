@@ -160,7 +160,7 @@ BEGIN
 
 IF vbUserId = 5 AND 1=1
 THEN
-    RAISE EXCEPTION 'Ошибка.OK';
+    RAISE EXCEPTION 'Ошибка.OK (%)', vbGoodsId;
 END IF;
 
 END;

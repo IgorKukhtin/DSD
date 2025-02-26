@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_ChoiceCellMobile()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ChoiceCellMobile (Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar, Boolean);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ChoiceCellMobile (Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ChoiceCellMobile(
     IN inIsOrderBy        Boolean      , --
@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PartionGoodsDate TDateTime, PartionGoodsDate_next TDateTime
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
-             , isErased Boolean
+             , isErased Boolean, ErasedCode Integer
               )
 AS
 $BODY$
@@ -47,7 +47,7 @@ BEGIN
                            , Object_Status.ObjectCode  AS StatusCode
                            , Object_Status.ValueData   AS StatusName
                         FROM tmpStatus
-                             INNER JOIN Movement ON Movement.OperDate >= CURRENT_DATE - INTERVAL '2 MONTH'
+                             INNER JOIN Movement ON Movement.OperDate >= CASE WHEN inLimit = 10 THEN CURRENT_DATE - INTERVAL '1 DAY' ELSE CURRENT_DATE - INTERVAL '1 MONTH' END
                                                 AND Movement.DescId = zc_Movement_ChoiceCell()
                                                 AND Movement.StatusId = tmpStatus.StatusId
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -109,6 +109,9 @@ BEGIN
            , MIDate_Update.ValueData    AS UpdateDate
 
            , MovementItem.isErased                                AS isErased
+
+           , CASE WHEN MovementItem.isErased = TRUE THEN 10 ELSE -1 END :: Integer AS ErasedCode
+
         FROM tmpMovement AS Movement
             INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 

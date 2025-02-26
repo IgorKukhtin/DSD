@@ -23,7 +23,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
-     
+
      -- Результат такой
      RETURN QUERY
        SELECT *
@@ -42,5 +42,5 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Movement_ChoiceCellMobileTop (inSession := zfCalc_UserAdmin());
+--
+-- SELECT * FROM gpSelect_Movement_ChoiceCellMobileTop (inSession := zfCalc_UserAdmin());

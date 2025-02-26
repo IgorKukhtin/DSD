@@ -51,23 +51,50 @@ BEGIN
 
           -- ВСЕ заполненные места хранения - ячейки + ячейка "Отбор"
              WITH -- нашли где заполнена одна ячейка
-                  tmpMILO AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.ObjectId = vbPartionCellId)
+                  tmpMILO AS (SELECT MovementItem.*
+                                   , MILO.ObjectId AS PartionCellId
+                              FROM MovementItemLinkObject AS MILO
+                                   INNER JOIN MovementItem ON MovementItem.Id       = MILO.MovementItemId
+                                                          AND MovementItem.isErased = FALSE
+                                                          -- для этого товара
+                                                          AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
+                              WHERE MILO.ObjectId = vbPartionCellId
+                                AND MILO.DescId IN (zc_MILinkObject_PartionCell_1()
+                                                  , zc_MILinkObject_PartionCell_2()
+                                                  , zc_MILinkObject_PartionCell_3()
+                                                  , zc_MILinkObject_PartionCell_4()
+                                                  , zc_MILinkObject_PartionCell_5()
+                                                  , zc_MILinkObject_PartionCell_6()
+                                                  , zc_MILinkObject_PartionCell_7()
+                                                  , zc_MILinkObject_PartionCell_8()
+                                                  , zc_MILinkObject_PartionCell_9()
+                                                  , zc_MILinkObject_PartionCell_10()
+                                                  , zc_MILinkObject_PartionCell_11()
+                                                  , zc_MILinkObject_PartionCell_12()
+                                                  , zc_MILinkObject_PartionCell_13()
+                                                  , zc_MILinkObject_PartionCell_14()
+                                                  , zc_MILinkObject_PartionCell_15()
+                                                  , zc_MILinkObject_PartionCell_16()
+                                                  , zc_MILinkObject_PartionCell_17()
+                                                  , zc_MILinkObject_PartionCell_18()
+                                                  , zc_MILinkObject_PartionCell_19()
+                                                  , zc_MILinkObject_PartionCell_20()
+                                                  , zc_MILinkObject_PartionCell_21()
+                                                  , zc_MILinkObject_PartionCell_22()
+                                                   )
+                             )
                   -- нашли MovementItem
                 , tmpMI AS (SELECT DISTINCT
-                                   tmpMILO.ObjectId        AS PartionCellId
-                                 , Movement.DescId         AS MovementDescId
-                                 , Movement.OperDate       AS OperDate
-                                 , MovementItem.Id         AS MovementItemId
-                                 , MovementItem.MovementId AS MovementId
-                                 , MovementItem.ObjectId   AS GoodsId
-                                 , MovementItem.Amount     AS Amount
+                                   MovementItem.PartionCellId AS PartionCellId
+                                 , Movement.DescId            AS MovementDescId
+                                 , Movement.OperDate          AS OperDate
+                                 , MovementItem.Id            AS MovementItemId
+                                 , MovementItem.MovementId    AS MovementId
+                                 , MovementItem.ObjectId      AS GoodsId
+                                 , MovementItem.Amount        AS Amount
                                  , COALESCE (MILO_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) AS PartionGoodsDate
-                            FROM tmpMILO
-                                 INNER JOIN MovementItem ON MovementItem.Id       = tmpMILO.MovementItemId
-                                                        AND MovementItem.isErased = FALSE
-                                                        -- для этого товара
-                                                        AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
+                            FROM tmpMILO AS MovementItem
                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                                     AND ((Movement.DescId = zc_Movement_Send()
                                                           -- ВСЕ статусы?
@@ -79,9 +106,9 @@ BEGIN
                                                         )
                                  -- RK
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                            ON MovementLinkObject_To.MovementId = Movement.Id
-                                                           AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                                           AND MovementLinkObject_To.ObjectId   = zc_Unit_RK()
+                                                               ON MovementLinkObject_To.MovementId = Movement.Id
+                                                              AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                              AND MovementLinkObject_To.ObjectId   = zc_Unit_RK()
                                  -- ПЕРЕПАК
                                  LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
                                                            ON MovementBoolean_isRePack.MovementId = Movement.Id
@@ -94,35 +121,11 @@ BEGIN
                                                             ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                            AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
                             -- Только заполненные
-                            WHERE tmpMILO.ObjectId > 0
+                            WHERE MovementItem.PartionCellId > 0
                               -- без ПЕРЕПАК
                               AND MovementBoolean_isRePack.MovementId IS NULL
                               -- для этого Вида товара
                               AND (COALESCE (MILO_GoodsKind.ObjectId, 0) = inGoodsKindId OR inGoodsKindId = 0)
-                              --
-                              AND tmpMILO.DescId IN (zc_MILinkObject_PartionCell_1()
-                                                   , zc_MILinkObject_PartionCell_2()
-                                                   , zc_MILinkObject_PartionCell_3()
-                                                   , zc_MILinkObject_PartionCell_4()
-                                                   , zc_MILinkObject_PartionCell_5()
-                                                   , zc_MILinkObject_PartionCell_6()
-                                                   , zc_MILinkObject_PartionCell_7()
-                                                   , zc_MILinkObject_PartionCell_8()
-                                                   , zc_MILinkObject_PartionCell_9()
-                                                   , zc_MILinkObject_PartionCell_10()
-                                                   , zc_MILinkObject_PartionCell_11()
-                                                   , zc_MILinkObject_PartionCell_12()
-                                                   , zc_MILinkObject_PartionCell_13()
-                                                   , zc_MILinkObject_PartionCell_14()
-                                                   , zc_MILinkObject_PartionCell_15()
-                                                   , zc_MILinkObject_PartionCell_16()
-                                                   , zc_MILinkObject_PartionCell_17()
-                                                   , zc_MILinkObject_PartionCell_18()
-                                                   , zc_MILinkObject_PartionCell_19()
-                                                   , zc_MILinkObject_PartionCell_20()
-                                                   , zc_MILinkObject_PartionCell_21()
-                                                   , zc_MILinkObject_PartionCell_22()
-                                                    )
                            )
         -- ВСЕ заполненные места хранения - ячейки + ячейка "Отбор"
         INSERT INTO _tmpPartionCell_mi (MovementId, MovementDescId, OperDate, PartionCellId, MovementItemId, GoodsId, GoodsKindId, Amount, PartionGoodsDate)
@@ -180,4 +183,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpSelect_Object_PartionCell_mi (inGoodsId:= 0, inGoodsKindId:= 0)
+-- SELECT * FROM lpSelect_Object_PartionCell_mi (inGoodsId:= 2160, inGoodsKindId:= 0)
