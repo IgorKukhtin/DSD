@@ -96,6 +96,14 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object InvNumberOrder: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
+            DataBinding.FieldName = 'InvNumberOrder'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object FromCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1086#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromCode'
@@ -123,6 +131,21 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
+          end
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object ContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
           end
           object isGoodsBox: TcxGridDBColumn
             Caption = #1054#1090#1075#1088'. '#1074' '#1075#1086#1092#1088#1086

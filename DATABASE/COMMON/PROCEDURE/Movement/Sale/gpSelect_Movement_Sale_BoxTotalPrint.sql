@@ -23,6 +23,7 @@ $BODY$
     DECLARE vbPaidKindId Integer;
     DECLARE vbContractId Integer;
             vbToId       Integer;
+            vbInvNumberOrder TVarChar;
 
     DECLARE vbTotalCount  TFloat;
     DECLARE vbVATPercent TFloat;
@@ -99,8 +100,9 @@ BEGIN
           , MovementLinkObject_To.ObjectId                            AS ToId
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)        AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)        AS ContractId
-          , COALESCE (MovementFloat_VATPercent.ValueData, 0)          AS VATPercent
-            INTO vbOperDate, vbOperDatePartner, vbDescId, vbStatusId , vbToId, vbPaidKindId, vbContractId  , vbVATPercent
+          , COALESCE (MovementFloat_VATPercent.ValueData, 0)          AS VATPercent 
+          , MovementString_InvNumberOrder.ValueData  ::TVarChar       AS InvNumberOrder
+            INTO vbOperDate, vbOperDatePartner, vbDescId, vbStatusId , vbToId, vbPaidKindId, vbContractId, vbVATPercent, vbInvNumberOrder
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId = Movement.Id
@@ -117,6 +119,9 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                   ON MovementFloat_VATPercent.MovementId = Movement.Id
                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+          LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                   ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                  AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
      WHERE Movement.Id = inMovementId
     ;
 
@@ -388,10 +393,14 @@ BEGIN
                                                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                                       AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
                                                                       AND MovementLinkObject_Contract.ObjectId = vbContractId
+                                         LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                                                  ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                                                 AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder() 
                                      WHERE Movement.DescId = zc_Movement_Sale()
                                        AND Movement.OperDate >= vbOperDate - INTERVAL '1 day'
                                        AND Movement.OperDate <= vbOperDate + INTERVAL '1 day'
                                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                                       AND COALESCE (MovementString_InvNumberOrder.ValueData,'') = COALESCE (vbInvNumberOrder,'')
                                        AND Movement.Id <> inMovementId
                                      )
                    , tmpMI AS (SELECT *

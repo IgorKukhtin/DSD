@@ -200,9 +200,76 @@ BEGIN
      ---RAISE EXCEPTION 'Test2. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService);  
 
      -- 3 соответствие должности в табеле и в "Справочнике Штатное расписание (данные)
+     -- получаем данные из спр. Штатное расписание по должностям, и проверяем все ли соотв. полученнім при формировнии отчета
+     INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
+     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Должность '|| Object_Position.ValueData ||' не соответствует штатному расписанию' ::TVarChar, 'проверка 3' ::TVarChar
+     FROM 
+          (WITH
+           tmpStaffList AS (SELECT 
+                                  ObjectLink_StaffList_Unit.ObjectId               AS StaffListId
+                                , ObjectLink_StaffList_Position.ChildObjectId      AS PositionId
+                                , ObjectLink_StaffList_PositionLevel.ChildObjectId AS PositionLevelId
+                            FROM ObjectLink AS ObjectLink_StaffList_Unit
+                                 LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
+                                                      ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
+                                                     AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
+                       
+                                 LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
+                                                      ON ObjectLink_StaffList_PositionLevel.ObjectId = Object_StaffList.Id
+                                                     AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()
 
-         /*
-                -- получаем данные из спр. Штатное расписание
+                            WHERE ObjectLink_StaffList_Unit.ChildObjectId = inUnitId
+                              AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
+                            )
+           SELECT spReport.MemberId
+                , spReport.PersonalServiceListId
+                , spReport.PositionId
+           FROM _tmpReport AS spReport
+                LEFT JOIN tmpStaffList ON tmpStaffList.StaffListId = spReport.StaffListId
+                                      AND tmpStaffList.PositionId = spReport.PositionId
+                                      AND COALESCE (tmpStaffList.PositionLevelId,0) = COALESCE (spReport.PositionLevelId,0)
+           WHERE tmpStaffList.PositionId IS NULL
+          ) AS tmp
+          LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmp.PositionId
+          ;
+        
+
+         
+         
+         
+         
+     SELECT 
+           ObjectLink_StaffList_Unit.ObjectId AS StaffListId
+         , ObjectFloat_HoursPlan.ValueData     AS HoursPlan  
+         , ObjectFloat_HoursDay.ValueData      AS HoursDay
+         , ObjectFloat_PersonalCount.ValueData AS PersonalCount
+         , ObjectLink_StaffList_Position.ChildObjectId AS PositionId
+         , ObjectLink_StaffList_PositionLevel.ChildObjectId  AS PositionLevelId
+     FROM ObjectLink AS ObjectLink_StaffList_Unit
+          LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
+                               ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
+                              AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
+
+          LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
+                               ON ObjectLink_StaffList_PositionLevel.ObjectId = Object_StaffList.Id
+                              AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()
+           
+          LEFT JOIN ObjectFloat AS ObjectFloat_HoursPlan 
+                                ON ObjectFloat_HoursPlan.ObjectId = Object_StaffList.Id 
+                               AND ObjectFloat_HoursPlan.DescId = zc_ObjectFloat_StaffList_HoursPlan()
+          LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
+                                ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
+                               AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
+          
+          LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount 
+                                ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id 
+                               AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
+     WHERE ObjectLink_StaffList_Unit.ChildObjectId = inUnitId
+       AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit();
+                                
+         
+         
+         
      SELECT ObjectFloat_HoursPlan.ValueData     AS HoursPlan
           , ObjectFloat_HoursDay.ValueData      AS HoursDay
           , ObjectFloat_PersonalCount.ValueData AS PersonalCount
@@ -219,7 +286,8 @@ BEGIN
                                AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
      WHERE Object_StaffList.Id     = inStaffListId;
          */
-     -- 4) Часы в табеле, до даты увольнения 
+     -- 4) Часы в табеле, до даты увольнения
+      
      -- 5) Часы в табеле, после даты приема
      
       

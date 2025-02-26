@@ -13,7 +13,9 @@ CREATE OR REPLACE FUNCTION gpReport_SaleTare_Gofro(
 )
 RETURNS TABLE(OperDate TDateTime, OperDatePartner TDateTime
             , FromId Integer, FromCode Integer, FromName TVarChar
-            , ToId Integer, ToCode Integer, ToName TVarChar
+            , ToId Integer, ToCode Integer, ToName TVarChar 
+            , ContractId Integer, ContractCode Integer, ContractName TVarChar 
+            , InvNumberOrder TVarChar
             , isGoodsBox Boolean
             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
             , GoodsGroupNameFull TVarChar
@@ -100,12 +102,19 @@ BEGIN
                            AND MovementDate.DescId = zc_MovementDate_OperDatePartner()
                          )
 
+   , tmpMovementString AS (SELECT MovementString.*
+                           FROM MovementString
+                           WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
+                             AND MovementString.DescId = zc_MovementString_InvNumberOrder()
+                           )
+
    , tmpMovementLinkObject AS (SELECT MovementLinkObject.*
                                FROM MovementLinkObject
                                WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                  AND MovementLinkObject.DescId IN (zc_MovementLinkObject_To()
                                                                  , zc_MovementLinkObject_From()
                                                                  , zc_MovementLinkObject_GoodsProperty()
+                                                                 , zc_MovementLinkObject_Contract()
                                                                  )
                                )
 
@@ -155,7 +164,11 @@ BEGIN
                 , Object_From.ValueData               AS FromName
                 , Object_To.Id                        AS ToId
                 , Object_To.ObjectCode                AS ToCode
-                , Object_To.ValueData                 AS ToName
+                , Object_To.ValueData                 AS ToName 
+                , Object_Contract.Id                  AS ContractId
+                , Object_Contract.ObjectCode          AS ContractCode
+                , Object_Contract.ValueData           AS ContractName 
+                , MovementString_InvNumberOrder.ValueData  ::TVarChar AS InvNumberOrder
                 , COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) :: Boolean AS isGoodsBox
 
                 , Object_Goods.Id                     AS GoodsId
@@ -178,6 +191,11 @@ BEGIN
                 LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
                                           ON MovementDate_OperDatePartner.MovementId = Movement.Id
 
+                LEFT JOIN tmpMovementString AS MovementString_InvNumberOrder
+                                            ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                           AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder() 
+                                           AND inisDetail = True
+
                 LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -187,6 +205,12 @@ BEGIN
                                                 ON MovementLinkObject_To.MovementId = Movement.Id
                                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                 LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+                LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Contract
+                                                ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                               AND inisDetail = True
+                LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
@@ -217,6 +241,10 @@ BEGIN
                 , COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE)
                 , CASE WHEN inisDetail = TRUE THEN Movement.Id ELSE 0 END
                 , CASE WHEN inisDetail = TRUE THEN Movement.InvNumber ELSE '' END
+                , Object_Contract.Id
+                , Object_Contract.ObjectCode
+                , Object_Contract.ValueData
+                , MovementString_InvNumberOrder.ValueData
            ;
 END;
 $BODY$
