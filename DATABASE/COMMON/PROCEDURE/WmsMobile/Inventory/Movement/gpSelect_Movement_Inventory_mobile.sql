@@ -22,6 +22,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementItemId_passport TVarChar
                -- № паспорта
              , PartionNum        Integer
+               -- Ячейка хранения
+             , PartionCellId Integer, PartionCellName TVarChar
                -- Вес нетто
              , Amount            TFloat
                -- ИТОГО Вес тары - факт
@@ -74,7 +76,7 @@ BEGIN
      RETURN QUERY
         WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                     UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                     --UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                           )
 
         -- Документы zc_Movement_WeighingProduction - здесь данные сканирование Паспорта - КПК
@@ -87,7 +89,7 @@ BEGIN
                         FROM tmpStatus
                              INNER JOIN Movement ON Movement.OperDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '5 DAY')
                                                 AND Movement.DescId = zc_Movement_WeighingProduction()
-                                                AND Movement.StatusId <> zc_Enum_Status_Erased() -- tmpStatus.StatusId
+                                                AND Movement.StatusId = tmpStatus.StatusId
                              -- Этот склад
                              INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                                       AND MLO_From.DescId     = zc_MovementLinkObject_From()
@@ -193,6 +195,10 @@ BEGIN
 
              -- № паспорта
            , tmpMIFloat_PartionNum_passport.ValueData :: Integer AS PartionNum
+
+             -- Ячейка хранения
+           , Object_PartionCell.Id                    AS PartionCellId
+           , Object_PartionCell.ValueData ::TVarChar  AS PartionCellName
 
              -- Вес нетто
            , MovementItem.Amount
@@ -324,6 +330,7 @@ BEGIN
            LEFT JOIN tmpMILO_passport AS tmpMILO_PartionCell_passport
                                       ON tmpMILO_PartionCell_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                      AND tmpMILO_PartionCell_passport.DescId         = zc_MILinkObject_PartionCell()
+           LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMILO_PartionCell_passport.ObjectId
 
            -- данные в Партии - Паспорта
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_CountTare1_passport
