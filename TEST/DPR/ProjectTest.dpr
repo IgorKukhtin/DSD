@@ -1571,7 +1571,8 @@ uses
   MessagePersonalServiceLast in '..\..\Forms\Guides\MessagePersonalServiceLast.pas' {MessagePersonalServiceLastForm: TParentForm},
   Report_WeighingPartner_Passport in '..\..\Forms\Report\Report_WeighingPartner_Passport.pas' {Report_WeighingPartner_PassportForm: TParentForm},
   Report_WeighingPartner_PassportDialog in '..\..\Forms\Report\Report_WeighingPartner_PassportDialog.pas' {Report_WeighingPartner_PassportDialogForm: TParentForm},
-  Movement_Inventory_scale in '..\..\Forms\Report\Movement_Inventory_scale.pas' {Movement_Inventory_scaleForm: TParentForm};
+  Movement_Inventory_scale in '..\..\Forms\Report\Movement_Inventory_scale.pas' {Movement_Inventory_scaleForm: TParentForm},
+  MessagePersonalService_Object in '..\..\Forms\Guides\MessagePersonalService_Object.pas' {MessagePersonalService_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

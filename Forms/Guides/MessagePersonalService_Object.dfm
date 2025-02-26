@@ -1,9 +1,9 @@
-object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
+object MessagePersonalService_ObjectForm: TMessagePersonalService_ObjectForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1086#1073#1097#1077#1085#1080#1103' '#1087#1086' '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102' '#1047#1055'>'
   ClientHeight = 358
-  ClientWidth = 793
+  ClientWidth = 713
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,15 +19,17 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 79
-    Width = 793
-    Height = 279
+    Top = 26
+    Width = 713
+    Height = 332
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -16
+    ExplicitTop = 79
+    ExplicitWidth = 793
+    ExplicitHeight = 279
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -60,35 +62,14 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 71
+        Width = 101
       end
       object PersonalServiceListName: TcxGridDBColumn
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
         DataBinding.FieldName = 'PersonalServiceListName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 178
-      end
-      object MemberName: TcxGridDBColumn
-        Caption = #1060#1048#1054
-        DataBinding.FieldName = 'MemberName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 133
-      end
-      object Name: TcxGridDBColumn
-        Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1086#1073' '#1086#1096#1080#1073#1082#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 290
-      end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 161
+        Width = 202
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
@@ -104,92 +85,19 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 227
+        Width = 249
       end
-      object isErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 35
+      object InsertDate_min: TcxGridDBColumn
+        Caption = #1053#1072#1095#1072#1083#1086' '#1089#1077#1089#1089#1080#1080
+        DataBinding.FieldName = 'InsertDate_min'
+      end
+      object InsertDate_max: TcxGridDBColumn
+        Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1089#1077#1089#1089#1080#1080
+        DataBinding.FieldName = 'InsertDate_max'
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
-    end
-  end
-  object Panel: TPanel
-    Left = 0
-    Top = 0
-    Width = 793
-    Height = 53
-    Align = alTop
-    TabOrder = 4
-    object cxLabel3: TcxLabel
-      Left = 131
-      Top = 5
-      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
-    end
-    object cxLabel4: TcxLabel
-      Left = 254
-      Top = 5
-      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
-    end
-    object deStart: TcxDateEdit
-      Left = 131
-      Top = 26
-      EditValue = 42667d
-      Properties.Kind = ckDateTime
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 2
-      Width = 117
-    end
-    object deEnd: TcxDateEdit
-      Left = 254
-      Top = 26
-      EditValue = 42667d
-      Properties.Kind = ckDateTime
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 3
-      Width = 117
-    end
-    object cxLabel6: TcxLabel
-      Left = 13
-      Top = 5
-      Caption = #8470' '#1089#1077#1089#1089#1080#1080':'
-    end
-    object cxLabel1: TcxLabel
-      Left = 404
-      Top = 5
-      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
-    end
-    object edMessage: TcxButtonEdit
-      Left = 13
-      Top = 26
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 6
-      Width = 100
-    end
-    object edPersonalServiceList: TcxButtonEdit
-      Left = 404
-      Top = 28
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 7
-      Width = 285
     end
   end
   object DataSource: TDataSource
@@ -359,6 +267,21 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
     Images = dmMain.ImageList
     Left = 288
     Top = 160
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <
+        item
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -373,22 +296,6 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshStart: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGet
-      StoredProcList = <
-        item
-          StoredProc = spGet
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      RefreshOnTabSetChanges = False
-    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -397,7 +304,7 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Id'
+          ComponentItem = 'Code'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -405,92 +312,60 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'MemberCode'
+          ComponentItem = 'Code'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'MemberName'
+          ComponentItem = 'Code'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PositionId'
+          Name = 'InsertDate'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'PositionId'
+          ComponentItem = 'InsertDate'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PositionName'
+          Name = 'InsertName'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'PositionName'
+          ComponentItem = 'InsertName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitId'
+          Name = 'InsertDate_min'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'UnitId'
+          ComponentItem = 'InsertDate_min'
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitName'
+          Name = 'InsertDate_max'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'UnitName'
-          DataType = ftString
+          ComponentItem = 'InsertDate_max'
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ContractId'
-          Value = 0
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractName'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PositionLevelId'
+          Name = 'PersonalServiceListId'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'PositionLevelId'
+          ComponentItem = 'PersonalServiceListId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PositionLevelName'
+          Name = 'PersonalServiceListName'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'PositionLevelName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MemberId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'MemberId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalGroupId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalGroupId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalGroupName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalGroupName'
+          ComponentItem = 'PersonalServiceListName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -529,29 +404,13 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_MessagePersonalService'
+    StoredProcName = 'gpSelect_Object_MessagePersonalServiceChoice'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
-    Params = <
-      item
-        Name = 'inSessionCode'
-        Value = 'False'
-        Component = GuidesMessage
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersonalServiceListId'
-        Value = False
-        Component = GuidesPersonalServiceList
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     PackSize = 1
     Left = 48
     Top = 216
@@ -596,13 +455,9 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = GuidesMessage
-      end
-      item
-        Component = GuidesPersonalServiceList
       end>
-    Left = 496
-    Top = 144
+    Left = 536
+    Top = 160
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -619,114 +474,5 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
       end>
     Left = 416
     Top = 168
-  end
-  object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_MessagePersonalServiceLast'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'SessionCode'
-        Value = Null
-        Component = GuidesMessage
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SessionCode'
-        Value = Null
-        Component = GuidesMessage
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StartDate'
-        Value = Null
-        Component = deStart
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'EndDate'
-        Value = Null
-        Component = deEnd
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 440
-    Top = 264
-  end
-  object GuidesMessage: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edMessage
-    isShowModal = True
-    FormNameParam.Value = 'TMessagePersonalService_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMessagePersonalService_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesMessage
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesMessage
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalServiceListId'
-        Value = ''
-        Component = edPersonalServiceList
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalServiceListName'
-        Value = ''
-        Component = GuidesPersonalServiceList
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 56
-    Top = 21
-  end
-  object GuidesPersonalServiceList: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPersonalServiceList
-    isShowModal = True
-    FormNameParam.Value = 'TPersonalServiceListForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonalServiceListForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesPersonalServiceList
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesPersonalServiceList
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 464
-    Top = 21
   end
 end
