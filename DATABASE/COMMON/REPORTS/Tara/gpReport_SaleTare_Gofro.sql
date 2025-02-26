@@ -193,7 +193,8 @@ BEGIN
 
                 LEFT JOIN tmpMovementString AS MovementString_InvNumberOrder
                                             ON MovementString_InvNumberOrder.MovementId = Movement.Id
-                                           AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+                                           AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder() 
+                                           AND inisDetail = True
 
                 LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
@@ -208,6 +209,7 @@ BEGIN
                 LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Contract
                                                 ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                               AND inisDetail = True
                 LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
