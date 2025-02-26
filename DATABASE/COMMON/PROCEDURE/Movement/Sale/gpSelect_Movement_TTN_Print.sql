@@ -70,7 +70,7 @@ BEGIN
      IF TRIM (COALESCE (vbMemberName1_check, '')) = ''
          AND 1=1
      THEN
-         RAISE EXCEPTION 'Ошибка.ФИО Водителя не установлено.';
+         RAISE EXCEPTION 'Ошибка.Нет данных для <отримав водій/експедитор>.';
      END IF;
 
 
@@ -449,7 +449,7 @@ BEGIN
            , COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData) :: TVarChar AS DriverCertificate
 
 --         , ('(водій) '||CASE WHEN TRIM (COALESCE (tmpTransportGoods.MemberName1, '')) = '' THEN COALESCE (tmpTransportGoods.PersonalDriverName, '') ELSE tmpTransportGoods.MemberName1 END) :: TVarChar AS MemberName1
-           , ('(водій) '|| vbMemberName1_check) :: TVarChar AS MemberName1
+           , ('(водій) '|| COALESCE (vbMemberName1_check, '')) :: TVarChar AS MemberName1
 
 
            , CASE WHEN COALESCE (ObjectString_Member1_INN.ValueData,'') <> '' THEN '('||ObjectString_Member1_INN.ValueData||')' ELSE '' END               ::TVarChar AS INN_Member1
