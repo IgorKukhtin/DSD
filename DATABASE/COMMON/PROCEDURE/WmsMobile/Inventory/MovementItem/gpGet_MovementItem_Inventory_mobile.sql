@@ -87,7 +87,7 @@ BEGIN
 
 
      -- Проверка
-     IF COALESCE (vbMovementItemId, 0) = 0 OR NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = vbMovementItemId AND MovementItem.isErased = FALSE)
+     IF COALESCE (vbMovementItemId, 0) = 0 OR NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = vbMovementItemId /*AND MovementItem.isErased = FALSE*/)
      THEN
         --
          RAISE EXCEPTION 'Ошибка.Паспорт  с % = <%> не найден.'

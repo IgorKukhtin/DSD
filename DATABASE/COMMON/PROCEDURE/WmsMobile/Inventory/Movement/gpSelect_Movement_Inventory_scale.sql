@@ -20,7 +20,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementItemId_passport TVarChar
                -- № паспорта
              , PartionNum        Integer
-             --Ячейка хранения
+               -- Ячейка хранения
              , PartionCellId Integer, PartionCellName TVarChar
                -- Вес нетто
              , Amount            TFloat
