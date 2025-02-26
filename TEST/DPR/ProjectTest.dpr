@@ -1378,7 +1378,6 @@ uses
   PersonalTransport in '..\..\Forms\Document\PersonalTransport.pas' {PersonalTransportForm: TParentForm},
   PersonalTransportJournal in '..\..\Forms\Document\PersonalTransportJournal.pas' {PersonalTransportJournalForm: TParentForm},
   Report_JuridicalDefermentPayment365 in '..\..\Forms\Report\Report_JuridicalDefermentPayment365.pas' {Report_JuridicalDefermentPayment365Form: TParentForm},
-  Unit_Personal in '..\..\Forms\Guides\Unit_Personal.pas' {Unit_PersonalForm: TParentForm},
   Report_SaleExternal_Goods in '..\..\Forms\Report\Report_SaleExternal_Goods.pas' {Report_SaleExternal_GoodsForm: TParentForm},
   Report_SaleExternal_GoodsDialog in '..\..\Forms\Report\Report_SaleExternal_GoodsDialog.pas' {Report_SaleExternal_GoodsDialogForm: TParentForm},
   TelegramGroup in '..\..\Forms\Guides\TelegramGroup.pas' {TelegramGroupForm: TParentForm},
@@ -1572,7 +1571,8 @@ uses
   Report_WeighingPartner_Passport in '..\..\Forms\Report\Report_WeighingPartner_Passport.pas' {Report_WeighingPartner_PassportForm: TParentForm},
   Report_WeighingPartner_PassportDialog in '..\..\Forms\Report\Report_WeighingPartner_PassportDialog.pas' {Report_WeighingPartner_PassportDialogForm: TParentForm},
   Movement_Inventory_scale in '..\..\Forms\Report\Movement_Inventory_scale.pas' {Movement_Inventory_scaleForm: TParentForm},
-  MessagePersonalService_Object in '..\..\Forms\Guides\MessagePersonalService_Object.pas' {MessagePersonalService_ObjectForm: TParentForm};
+  MessagePersonalService_Object in '..\..\Forms\Guides\MessagePersonalService_Object.pas' {MessagePersonalService_ObjectForm: TParentForm},
+  Unit_Personal in '..\..\Forms\Guides\Unit_Personal.pas' {Unit_PersonalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

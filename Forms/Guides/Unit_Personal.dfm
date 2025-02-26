@@ -64,8 +64,16 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderHint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1087' '#1072#1074#1090#1086#1084#1072#1090#1086#1084
         Width = 70
       end
+      object isError_psl: TcxGridDBColumn
+        Caption = #1054#1096#1080#1073#1082#1072
+        DataBinding.FieldName = 'isError_psl'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1096#1080#1073#1082#1072' ('#1073#1086#1083#1077#1077' 1 '#1074#1077#1076#1086#1084#1086#1089#1090#1080') '#1044#1072' / '#1053#1077#1090
+        Options.Editing = False
+        Width = 50
+      end
       object PersonalServiceDate: TcxGridDBColumn
-        AlternateCaption = '80'
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1055
         DataBinding.FieldName = 'PersonalServiceDate'
         PropertiesClassName = 'TcxDateEditProperties'
@@ -114,19 +122,28 @@ object Unit_PersonalForm: TUnit_PersonalForm
       object BusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
         DataBinding.FieldName = 'BusinessName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 76
       end
-      object JuridicalName: TcxGridDBColumn
-        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalName'
+      object AreaName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085
+        DataBinding.FieldName = 'AreaName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 60
+      end
+      object PersonalServiceListName: TcxGridDBColumn
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
+        DataBinding.FieldName = 'PersonalServiceListName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 91
       end
       object AccountGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' c'#1095'. '#1075#1088'.'
@@ -135,15 +152,8 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 50
-      end
-      object AreaName: TcxGridDBColumn
-        Caption = #1056#1077#1075#1080#1086#1085
-        DataBinding.FieldName = 'AreaName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
       end
       object AccountGroupName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
@@ -152,6 +162,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object AccountDirectionCode: TcxGridDBColumn
@@ -161,14 +172,17 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 50
       end
       object AccountDirectionName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'AccountDirectionName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 76
       end
       object ProfitLossGroupCode: TcxGridDBColumn
@@ -178,6 +192,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 50
       end
       object ProfitLossGroupName: TcxGridDBColumn
@@ -187,6 +202,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object ProfitLossDirectionCode: TcxGridDBColumn
@@ -196,14 +212,17 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 50
       end
       object ProfitLossDirectionName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'ProfitLossDirectionName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 76
       end
       object InvNumber: TcxGridDBColumn
@@ -213,6 +232,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 114
       end
       object Contract_JuridicalName: TcxGridDBColumn
@@ -222,6 +242,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 66
       end
       object Contract_InfomoneyName: TcxGridDBColumn
@@ -231,24 +252,8 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 110
-      end
-      object RouteName: TcxGridDBColumn
-        Caption = #1052#1072#1088#1096#1088#1091#1090
-        DataBinding.FieldName = 'RouteName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 67
-      end
-      object RouteSortingName: TcxGridDBColumn
-        Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
-        DataBinding.FieldName = 'RouteSortingName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 98
       end
       object PartnerCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
@@ -267,15 +272,6 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
-      end
-      object isPartionDate: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
-        DataBinding.FieldName = 'isPartionDate'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
       end
       object PersonalHeadName: TcxGridDBColumn
         Caption = #1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
@@ -300,50 +296,6 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1060#1080#1083#1080#1072#1083' ('#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1103')'
-        Options.Editing = False
-        Width = 80
-      end
-      object isPartionGoodsKind: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1080' '#1087#1086' '#1074#1080#1076#1091' '#1091#1087#1072#1082'. '#1076#1083#1103' '#1089#1099#1088#1100#1103
-        DataBinding.FieldName = 'isPartionGoodsKind'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 66
-      end
-      object isCountCount: TcxGridDBColumn
-        Caption = #1059#1095#1077#1090' '#1073#1072#1090#1086#1085#1086#1074
-        DataBinding.FieldName = 'isCountCount'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
-      end
-      object UnitCode_HistoryCost: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1087#1086#1076#1088'. ('#1089'/'#1089' '#1074#1086#1079#1074#1088#1072#1090')'
-        DataBinding.FieldName = 'UnitCode_HistoryCost'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object UnitName_HistoryCost: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089'/'#1089' '#1074#1086#1079#1074#1088#1072#1090')'
-        DataBinding.FieldName = 'UnitName_HistoryCost'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actUnitChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
@@ -884,7 +836,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
     Top = 152
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit'
+    StoredProcName = 'gpSelect_Object_Unit_Personal'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -892,8 +844,8 @@ object Unit_PersonalForm: TUnit_PersonalForm
       end>
     Params = <>
     PackSize = 1
-    Left = 416
-    Top = 160
+    Left = 72
+    Top = 152
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232
@@ -1037,6 +989,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
       end
       item
         Name = 'inName'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

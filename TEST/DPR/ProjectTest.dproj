@@ -4779,10 +4779,6 @@
 				<Form>Report_JuridicalDefermentPayment365Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Unit_Personal.pas">
-				<Form>Unit_PersonalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_SaleExternal_Goods.pas">
 				<Form>Report_SaleExternal_GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5521,6 +5517,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MessagePersonalService_Object.pas">
 				<Form>MessagePersonalService_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Unit_Personal.pas">
+				<Form>Unit_PersonalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
