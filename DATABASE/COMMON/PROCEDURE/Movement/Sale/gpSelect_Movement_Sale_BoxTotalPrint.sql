@@ -23,7 +23,10 @@ $BODY$
     DECLARE vbPaidKindId Integer;
     DECLARE vbContractId Integer;
             vbToId       Integer;
-            vbInvNumberOrder TVarChar;
+            vbInvNumberOrder   TVarChar;
+            vbInvNumberPartner_Order TVarChar;
+            vbOperDate_Order   TDateTime;
+            vbMovementId_Order Integer;
 
     DECLARE vbTotalCount  TFloat;
     DECLARE vbVATPercent TFloat;
@@ -101,8 +104,14 @@ BEGIN
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)        AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)        AS ContractId
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)          AS VATPercent 
-          , MovementString_InvNumberOrder.ValueData  ::TVarChar       AS InvNumberOrder
-            INTO vbOperDate, vbOperDatePartner, vbDescId, vbStatusId , vbToId, vbPaidKindId, vbContractId, vbVATPercent, vbInvNumberOrder
+         
+          , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
+          , Movement_order.OperDate                        AS OperDate_Order
+          , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
+          , MovementString_InvNumberPartner_order.ValueData AS InvNumberPartner_Order
+
+            INTO vbOperDate, vbOperDatePartner, vbDescId, vbStatusId , vbToId, vbPaidKindId, vbContractId, vbVATPercent
+               , vbMovementId_Order, vbOperDate_Order, vbInvNumberOrder, vbInvNumberPartner_Order
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId = Movement.Id
@@ -119,6 +128,16 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                   ON MovementFloat_VATPercent.MovementId = Movement.Id
                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                         ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+          LEFT JOIN Movement AS Movement_order ON Movement_order.Id = MovementLinkMovement_Order.MovementChildId  
+          
+          LEFT JOIN MovementString AS MovementString_InvNumberPartner_order
+                                   ON MovementString_InvNumberPartner_order.MovementId = Movement_order.Id
+                                  AND MovementString_InvNumberPartner_order.DescId = zc_MovementString_InvNumberPartner()
+                                    
           LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                    ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                   AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
@@ -179,7 +198,11 @@ BEGIN
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
 
            , Movement.OperDate                          AS OperDate
-           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) :: TDateTime AS OperDatePartner
+           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) :: TDateTime AS OperDatePartner 
+           , vbMovementId_Order       AS MovementId_Order
+           , vbOperDate_Order         AS OperDate_Order
+           , vbInvNumberOrder         AS InvNumberOrder 
+           , vbInvNumberPartner_Order AS InvNumberPartner_Order
            , 0                              AS VATPercent
            , 0                              AS ChangePercent
            , vbTotalCount                   AS TotalCount
@@ -199,8 +222,8 @@ BEGIN
            , CASE WHEN vbIsKiev = TRUE THEN TRUE ELSE FALSE END AS isPrintPageBarCode
 
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
-           , Object_PaidKind.ValueData         		AS PaidKindName
-           , View_Contract.InvNumber        		AS ContractName
+           , Object_PaidKind.ValueData         		    AS PaidKindName
+           , View_Contract.InvNumber        		    AS ContractName
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
            , COALESCE (ObjectString_PartnerCode.ValueData, '') :: TVarChar AS PartnerCode
