@@ -33,6 +33,10 @@ CREATE OR REPLACE VIEW Container_Partner_View AS
        LEFT JOIN ContainerLinkObject AS CLO_Contract
                                      ON CLO_Contract.ContainerId = CLO_Partner.ContainerId
                                     AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+       LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                            ON ObjectLink_Contract_Juridical.ObjectId = CLO_Contract.ObjectId
+                           AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+
        LEFT JOIN ContainerLinkObject AS CLO_Juridical
                                      ON CLO_Juridical.ContainerId = CLO_Partner.ContainerId
                                     AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -56,13 +60,14 @@ CREATE OR REPLACE VIEW Container_Partner_View AS
                            AND ObjectLink_Destination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
 
   WHERE CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+     AND (ObjectLink_Contract_Juridical.ChildObjectId = CLO_Juridical.ObjectId
+          -- OR CLO_Juridical.ObjectId
+         )
      AND ObjectLink_Destination.ChildObjectId NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
                                                     , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                     , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                      )
  ;
-
-ALTER TABLE Container_Partner_View  OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
