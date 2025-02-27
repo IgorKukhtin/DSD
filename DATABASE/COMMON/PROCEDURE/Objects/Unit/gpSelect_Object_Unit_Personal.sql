@@ -50,16 +50,16 @@ BEGIN
    -- vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
    -- Результат
    RETURN QUERY
-     WITH 
+     WITH
      tmpUnit AS (SELECT spSelect.*
                  FROM gpSelect_Object_Unit (inSession) AS spSelect
                 )
-   , tmpPersonalServiceList AS (SELECT tmp.* 
-                                     , COUNT (*) OVER (PARTITION BY tmp.UnitId )     AS Count
-                                     , ROW_NUMBER () OVER (PARTITION BY tmp.UnitId ) AS Ord
+   , tmpPersonalServiceList AS (SELECT tmp.UnitId
+                                     , SUM (tmp.Count) AS Count
+                                     , STRING_AGG (DISTINCT tmp.PersonalServiceListName, ';') ::TVarChar AS PersonalServiceListName
                                 FROM (SELECT DISTINCT 
                                              ObjectLink_Personal_Unit.ChildObjectId AS UnitId
-                                           , Object_PersonalServiceList.Id          AS PersonalServiceListId
+                                           , 1                                      AS Count
                                            , Object_PersonalServiceList.ValueData   AS PersonalServiceListName
                                       FROM Object AS Object_Personal
                                            INNER JOIN ObjectBoolean AS ObjectBoolean_Main
@@ -78,6 +78,7 @@ BEGIN
                                         AND Object_Personal.isErased = FALSE
                                         AND COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId,0) <> 0
                                       ) AS tmp
+                                      GROUP BY tmp.UnitId
                                 )
        --
        SELECT
@@ -152,4 +153,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Unit (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Unit_Personal (zfCalc_UserAdmin())

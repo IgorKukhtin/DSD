@@ -24,7 +24,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- проверка
-     IF COALESCE (inisPersonalService, FALSE) = FALSE
+     IF COALESCE (inisPersonalService, FALSE) = FALSE     --zc_ObjectBoolean_Unit_PersonalService
      THEN
          RETURN;
      END IF;
@@ -148,8 +148,8 @@ BEGIN
      --1) ведомость не проведена
      --2) в разрезе фио - заполнена графа "Ведомость начисления главная" 
      --3) соответствие должности в табеле и в "Справочнике Штатное расписание (данные) 
-     --4) Часы в табеле, до даты увольнения 
-     --5) Часы в табеле, после даты приема 
+     --4)Часы в табеле, после даты увольнения
+     --5)Часы в табеле, до даты приема                     
      --6) есть признак "Основное место работы" , если в разрезе фио проверка прошла
         -- только тогда сохранение и проведение, если не прошла - сохраняется только все сообщения об ошибке + фио + должность + ведомость + № сессии + дата/время - все в zc_Object_MessagePersonalService, если ошибки нет тогда 1 строчка ведомость + № сессии + дата/время 
  
@@ -233,63 +233,121 @@ BEGIN
           LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmp.PositionId
           ;
         
-
+     -- 4) Часы в табеле, после даты увольнения
+     -- 5) Часы в табеле, до даты приема     
+     INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
+     SELECT tmp.MemberId
+          , tmp.PersonalServiceListId
+          , CASE WHEN tmp.ErrorCode = 4 THEN 'Часы в табеле, после даты увольнения'
+                 WHEn tmp.ErrorCode = 5 THEN 'Часы в табеле, до даты приема'
+            END ::TVarChar
+          , CASE WHEN tmp.ErrorCode = 4 THEN 'проверка 4'
+                 WHEn tmp.ErrorCode = 5 THEN 'проверка 5'
+            END ::TVarChar
+     FROM 
+          (WITH
+          -- находим принятых и уволенных сотр. в период табеля
+          tmpListOut AS (SELECT Object_Personal_View.MemberId
+                              , MAX (Object_Personal_View.PersonalId) AS PersonalId
+                              , Object_Personal_View.PositionId
+                              , _tmpReport.PersonalServiceListId 
+                              , COALESCE (Object_Personal_View.PositionLevelId,0) AS PositionLevelId
+                              , MAX (CASE WHEN Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate
+                                               THEN Object_Personal_View.DateIn
+                                          ELSE zc_DateStart()
+                                     END)  AS DateIn
+                              , CASE WHEN MAX (COALESCE (Object_Personal_View.DateOut_user, zc_DateStart())) = zc_DateStart()
+                                          THEN zc_DateEnd()
+                                     ELSE MAX (COALESCE (Object_Personal_View.DateOut_user, zc_DateStart()))
+                                END :: TDateTime AS DateOut
+                         FROM _tmpReport 
+                             LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = _tmpReport.MemberId
+                                                           AND Object_Personal_View.PositionId = _tmpReport.PositionId
+                                                           AND COALESCE (Object_Personal_View.PositionLevelId,0) = COALESCE (_tmpReport.PositionLevelId,0)
+                                                           AND Object_Personal_View.UnitId = inUnitId
+                         WHERE ((Object_Personal_View.DateOut >= vbStartDate AND Object_Personal_View.DateOut <= vbEndDate)
+                             OR (Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate)
+                                )
+                         GROUP BY Object_Personal_View.MemberId
+                                , Object_Personal_View.PositionId 
+                                , COALESCE (Object_Personal_View.PositionLevelId,0)
+                                , _tmpReport.PersonalServiceListId
+                         )
+        , tmpOperDate AS (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate)
+        
+        , tmpWorkTimeKind AS (SELECT SUM (COALESCE (MI_SheetWorkTime.Amount, 0))    AS Amount
+                                   , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
+                                   , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
+                                   , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
+                                   , Movement.operDate
+                              FROM tmpOperDate
+                                   JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
+                                                AND Movement.DescId = zc_Movement_SheetWorkTime()
+                                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                   JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                          AND MovementLinkObject_Unit.ObjectId = inUnitId
+                                   JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
+                                                                        AND MI_SheetWorkTime.DescId = zc_MI_Master()
+                                                                        AND MI_SheetWorkTime.isErased = FALSE
+                                   LEFT JOIN MovementItemLinkObject AS MIObject_Position
+                                                                    ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
+                                                                   AND MIObject_Position.DescId = zc_MILinkObject_Position()
+                                   LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                                                                    ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id
+                                                                   AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+                                   LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                                                    ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
+                                                                   AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+                                   INNER JOIN (SELECT DISTINCT tmpListOut.MemberId
+                                                    , tmpListOut.PositionId
+                                                    , tmpListOut.PositionLevelId
+                                               FROM tmpListOut) AS tmpMember ON tmpMember.MemberId = COALESCE(MI_SheetWorkTime.ObjectId, 0)
+                                                                            AND tmpMember.PositionId = COALESCE(MIObject_Position.ObjectId, 0)
+                                                                            AND COALESCE(tmpMember.PositionLevelId,0) = COALESCE(MIObject_PositionLevel.ObjectId, 0)
+                              GROUP BY COALESCE(MI_SheetWorkTime.ObjectId, 0)
+                                     , COALESCE(MIObject_Position.ObjectId, 0)
+                                     , COALESCE(MIObject_PositionLevel.ObjectId, 0)
+                                     , Movement.operDate
+                             )
+        -- ошибки 4, 5
+         , tmpDate AS (SELECT tmp.operdate
+                            , tmp.Amount
+                            , tmp.MemberId
+                            , COALESCE (tmpList.PersonalServiceListId, tmpList_out.PersonalServiceListId) AS PersonalServiceListId
+                            --, tmp.PositionId
+                            --, tmp.PositionLevelId
+                            --, COALESCE (tmpList.DateIn, tmpList_out.DateIn) AS DateIn
+                            --, COALESCE (tmpList.DateOut, tmpList_out.DateOut) AS DateOut
+                            , CASE WHEN tmpList.MemberId IS NOT NULL THEN 5
+                                   WHEN tmpList_out.MemberId IS NOT NULL THEN 4
+                              END AS ErrorCode
+                       FROM tmpMovement AS tmp
+                          -- если был принят не сначала месяца или уволен в течении месяца отмечаем Х
          
-         
-         
-         
-     SELECT 
-           ObjectLink_StaffList_Unit.ObjectId AS StaffListId
-         , ObjectFloat_HoursPlan.ValueData     AS HoursPlan  
-         , ObjectFloat_HoursDay.ValueData      AS HoursDay
-         , ObjectFloat_PersonalCount.ValueData AS PersonalCount
-         , ObjectLink_StaffList_Position.ChildObjectId AS PositionId
-         , ObjectLink_StaffList_PositionLevel.ChildObjectId  AS PositionLevelId
-     FROM ObjectLink AS ObjectLink_StaffList_Unit
-          LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
-                               ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
-                              AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
-
-          LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
-                               ON ObjectLink_StaffList_PositionLevel.ObjectId = Object_StaffList.Id
-                              AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()
-           
-          LEFT JOIN ObjectFloat AS ObjectFloat_HoursPlan 
-                                ON ObjectFloat_HoursPlan.ObjectId = Object_StaffList.Id 
-                               AND ObjectFloat_HoursPlan.DescId = zc_ObjectFloat_StaffList_HoursPlan()
-          LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
-                                ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
-                               AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
-          
-          LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount 
-                                ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id 
-                               AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
-     WHERE ObjectLink_StaffList_Unit.ChildObjectId = inUnitId
-       AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit();
-                                
-         
-         
-         
-     SELECT ObjectFloat_HoursPlan.ValueData     AS HoursPlan
-          , ObjectFloat_HoursDay.ValueData      AS HoursDay
-          , ObjectFloat_PersonalCount.ValueData AS PersonalCount
-            INTO vbHoursPlan, vbHoursDay, vbPersonalCount
-     FROM Object AS Object_StaffList
-          LEFT JOIN ObjectFloat AS ObjectFloat_HoursPlan
-                                ON ObjectFloat_HoursPlan.ObjectId = Object_StaffList.Id
-                               AND ObjectFloat_HoursPlan.DescId = zc_ObjectFloat_StaffList_HoursPlan()
-          LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
-                                ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id
-                               AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
-          LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount
-                                ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id
-                               AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
-     WHERE Object_StaffList.Id     = inStaffListId;
-         */
-     -- 4) Часы в табеле, до даты увольнения
-      
-     -- 5) Часы в табеле, после даты приема
-     
+                          LEFT JOIN tmpListOut AS tmpList
+                                               ON tmpList.DateIn   > tmp.OperDate
+                                              AND tmpList.MemberId = tmp.MemberId
+                                              AND tmpList.PositionId = tmp.PositionId
+                                              AND COALESCE (tmpList.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
+                                              AND tmp.Amount            <> 0
+                          LEFT JOIN tmpListOut AS tmpList_out
+                                               ON tmpList_out.DateOut   < tmp.OperDate 
+                                              AND tmpList_out.MemberId = tmp.MemberId
+                                              AND tmpList_out.PositionId = tmp.PositionId
+                                              AND COALESCE (tmpList_out.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
+                                              AND tmp.Amount            <> 0
+                        WHERE tmpList.MemberId IS NOT NULL or tmpList_out.MemberId IS NOT NULL
+                        )
+             --
+             SELECT DISTINCT
+                    tmp.MemberId
+                  , tmp.PersonalServiceListId
+                  , tmp.ErrorCode
+             FROM tmpDate AS tmp
+             
+             ) AS tmp;
       
      -- 6) есть признак "Основное место работы" , если в разрезе фио проверка прошла 
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
