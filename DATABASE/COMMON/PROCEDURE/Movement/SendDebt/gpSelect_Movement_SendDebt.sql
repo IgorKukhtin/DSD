@@ -1,12 +1,14 @@
 -- Function: gpSelect_Movement_SendDebt()
 
 -- DROP FUNCTION IF EXISTS gpSelect_Movement_SendDebt (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendDebt (TDateTime, TDateTime, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_SendDebt (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_SendDebt (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendDebt(
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , --
-    IN inJuridicalBasisId Integer   , -- Главное юр.лицо
+    IN inJuridicalBasisId Integer   , -- Главное юр.лицо  
+    IN inIsErased         Boolean   ,
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
@@ -63,7 +65,17 @@ BEGIN
        WITH tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View)
           , tmpContract AS (SELECT * FROM Object_Contract_InvNumber_View)
           , tmpJuridicalDetails AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
-          , tmpMovement AS (SELECT * FROM Movement WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_SendDebt())
+          
+          , tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+                    UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                    UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                         )
+          , tmpMovement AS (SELECT Movement.*
+                            FROM tmpStatus
+                                 JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                              AND Movement.DescId = zc_Movement_SendDebt()
+                                              AND Movement.StatusId = tmpStatus.StatusId
+                           )
           , tmpMI AS (SELECT * FROM MovementItem WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement))
           , tmpMILO AS (SELECT * FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
           , tmpMIString AS (SELECT * FROM MovementItemString WHERE MovementItemString.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
@@ -135,7 +147,7 @@ BEGIN
             , MIString_Comment.ValueData  AS Comment
             , COALESCE(MovementBoolean_isCopy.ValueData, FALSE) AS isCopy
             
-       FROM Movement
+       FROM tmpMovement AS Movement
             -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -238,22 +250,21 @@ BEGIN
             LEFT JOIN tmpMIFloat AS MIFloat_ParValue_To
                                  ON MIFloat_ParValue_To.MovementItemId = MI_Child.Id
                                 AND MIFloat_ParValue_To.DescId = zc_MIFloat_ParValue()
-
-      WHERE Movement.DescId = zc_Movement_SendDebt()
-        AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+      ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_SendDebt (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_SendDebt (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 
+ 28.02.25         * inIsErased
  06.10.16         * add inJuridicalBasisId
  24.01.14         *
 */
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_SendDebt (inStartDate:= '01.12.2017', inEndDate:= '31.12.2017', inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_SendDebt (inStartDate:= '01.01.2025', inEndDate:= '31.01.2025', inJuridicalBasisId:= 0, inIsErased := true, inSession:= zfCalc_UserAdmin())

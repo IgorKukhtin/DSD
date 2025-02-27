@@ -59,6 +59,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 58
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -612,6 +613,10 @@ object SendDebtJournalForm: TSendDebtJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbiShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -720,6 +725,10 @@ object SendDebtJournalForm: TSendDebtJournalForm
     end
     object bbisCopy: TdxBarButton
       Action = mactIsCopy
+      Category = 0
+    end
+    object bbiShowErased: TdxBarButton
+      Action = actShowErased
       Category = 0
     end
   end
@@ -1070,6 +1079,25 @@ object SendDebtJournalForm: TSendDebtJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SendDebt'
@@ -1100,6 +1128,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Value = Null
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1193,6 +1229,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216
