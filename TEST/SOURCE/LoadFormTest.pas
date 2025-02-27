@@ -2603,13 +2603,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleForm');
  // exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportDialogForm');
   exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Container_dataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Container_dataForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Container_dataDialogForm'));

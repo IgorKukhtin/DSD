@@ -386,7 +386,6 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 60
           end
           object BoxName_2: TcxGridDBColumn
@@ -405,7 +404,6 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 60
           end
           object BoxName_3: TcxGridDBColumn
@@ -572,6 +570,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
         end
@@ -776,6 +775,18 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
     end
+    object actUpdateDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Count
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Count
+        end>
+      Caption = 'actUpdateDS'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -954,5 +965,40 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     CheckBoxList = <>
     Left = 464
     Top = 64
+  end
+  object spUpdate_Count: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_WeighingPartner_report'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountTare1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountTare1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountTare2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountTare2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 208
   end
 end

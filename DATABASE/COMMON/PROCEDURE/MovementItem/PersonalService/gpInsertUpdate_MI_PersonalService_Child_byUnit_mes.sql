@@ -30,8 +30,8 @@ BEGIN
      END IF;
 
      -- расчет за прошлый мес€ц
-     vbStartDate := '01.02.2025' ::TDateTime; --DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);
-     vbEndDate   := '19.02.2025' ::TDateTime; --DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 DAY')::TDateTime); 
+     vbStartDate := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);  --'01.02.2025' ::TDateTime; --
+     vbEndDate   := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 DAY')::TDateTime);    --'19.02.2025' ::TDateTime; --
      
      --
      CREATE TEMP TABLE _tmpMessagePersonalService (MemberId Integer

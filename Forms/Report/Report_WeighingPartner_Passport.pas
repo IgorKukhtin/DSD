@@ -58,6 +58,8 @@ type
     MovementItemId: TcxGridDBColumn;
     ItemName_inf: TcxGridDBColumn;
     ItemName: TcxGridDBColumn;
+    spUpdate_Count: TdsdStoredProc;
+    actUpdateDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
