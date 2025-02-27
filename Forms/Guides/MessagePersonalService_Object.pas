@@ -1,4 +1,4 @@
-unit MessagePersonalServiceLast;
+unit MessagePersonalService_Object;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   dxSkinXmas2008Blue, cxCurrencyEdit, Vcl.ExtCtrls, dsdCommon;
 
 type
-  TMessagePersonalServiceLastForm = class(TParentForm)
+  TMessagePersonalService_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
@@ -45,36 +45,22 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    Name: TcxGridDBColumn;
     PersonalServiceListName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    isErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    MemberName: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
     FormParams: TdsdFormParams;
-    spGet: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     dxBarControlContainerItem3: TdxBarControlContainerItem;
     dxBarControlContainerItem4: TdxBarControlContainerItem;
     dxBarControlContainerItem5: TdxBarControlContainerItem;
     dxBarControlContainerItem6: TdxBarControlContainerItem;
-    Panel: TPanel;
-    cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
-    deStart: TcxDateEdit;
-    deEnd: TcxDateEdit;
-    cxLabel6: TcxLabel;
-    cxLabel1: TcxLabel;
-    edMessage: TcxButtonEdit;
-    GuidesMessage: TdsdGuides;
-    edPersonalServiceList: TcxButtonEdit;
-    GuidesPersonalServiceList: TdsdGuides;
+    InsertDate_min: TcxGridDBColumn;
+    InsertDate_max: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -86,5 +72,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TMessagePersonalServiceLastForm);
+  RegisterClass(TMessagePersonalService_ObjectForm);
 end.

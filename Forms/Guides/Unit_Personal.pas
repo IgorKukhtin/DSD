@@ -58,7 +58,6 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     BusinessName: TcxGridDBColumn;
-    JuridicalName: TcxGridDBColumn;
     AccountDirectionCode: TcxGridDBColumn;
     AccountDirectionName: TcxGridDBColumn;
     AccountGroupCode: TcxGridDBColumn;
@@ -73,17 +72,11 @@ type
     InvNumber: TcxGridDBColumn;
     Contract_JuridicalName: TcxGridDBColumn;
     Contract_InfomoneyName: TcxGridDBColumn;
-    RouteName: TcxGridDBColumn;
-    RouteSortingName: TcxGridDBColumn;
-    isPartionDate: TcxGridDBColumn;
     AreaName: TcxGridDBColumn;
     PartnerCode: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
     PersonalHeadName: TcxGridDBColumn;
-    UnitCode_HistoryCost: TcxGridDBColumn;
-    UnitName_HistoryCost: TcxGridDBColumn;
     Address: TcxGridDBColumn;
-    isPartionGoodsKind: TcxGridDBColumn;
     actUnitChoiceForm: TOpenChoiceForm;
     actUpdate_HistoryCost: TdsdUpdateDataSet;
     actProtocol: TdsdOpenForm;
@@ -91,7 +84,6 @@ type
     actInsertUpdate_PersonalService: TdsdExecStoredProc;
     macInsertUpdate_PersonalService_list: TMultiAction;
     macInsertUpdate_PersonalService: TMultiAction;
-    isCountCount: TcxGridDBColumn;
     isPersonalService: TcxGridDBColumn;
     PersonalServiceDate: TcxGridDBColumn;
     spUpdate_Unit_Personal: TdsdStoredProc;
@@ -107,6 +99,8 @@ type
     actInsert_MessagePersonalService: TdsdExecStoredProc;
     actOpenMessagePersonalServiceForm: TdsdOpenForm;
     bbMessagePersonalServiceForm: TdxBarButton;
+    PersonalServiceListName: TcxGridDBColumn;
+    isError_psl: TcxGridDBColumn;
   private
     { Private declarations }
   public

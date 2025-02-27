@@ -4583,6 +4583,9 @@ begin
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMessagePersonalServiceLastForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMessagePersonalServiceLastForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMessagePersonalService_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMessagePersonalService_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadMobileTariffFormTest;
