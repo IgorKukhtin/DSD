@@ -383,7 +383,7 @@ BEGIN
          FROM _tmpMessagePersonalService AS tmp;
      
      ELSE    
-     /*
+     
        -- сохраняем расчитанные отчетом данные по зп
        PERFORM gpInsertUpdate_MI_PersonalService_Child_Auto (inUnitId                 := inUnitId
                                                            , inPersonalServiceListId  := tmp.PersonalServiceListId
@@ -406,7 +406,7 @@ BEGIN
                                                            , inSession                := inSession
                                                             )
        FROM _tmpReport AS tmp; 
-       */
+       
 
        -- если НЕТ ошибок то записываем в MessagePersonalService ведомости по отчету, которые обработаны
        PERFORM gpInsertUpdate_Object_MessagePersonalService(ioId                    := 0                          ::Integer,       -- ключ объекта
@@ -422,8 +422,9 @@ BEGIN
      END IF;
          
     outPersonalServiceDate := CURRENT_TIMESTAMP;
+    
 
-    --if vbUserId = 9457 then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
+    if vbUserId IN (9457, 5) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
 
 END;
 $BODY$
