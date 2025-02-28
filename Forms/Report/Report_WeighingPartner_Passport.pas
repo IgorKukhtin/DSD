@@ -60,6 +60,27 @@ type
     ItemName: TcxGridDBColumn;
     spUpdate_Count: TdsdStoredProc;
     actUpdateDS: TdsdUpdateDataSet;
+    cxLabel5: TcxLabel;
+    edBoxName_1: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    edBoxName_2: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edBoxName_3: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    edBoxName_4: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edBoxName_5: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    edBoxName_6: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    edBoxName_7: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    edBoxName_8: TcxTextEdit;
+    cxLabel13: TcxLabel;
+    edBoxName_9: TcxTextEdit;
+    cxLabel14: TcxLabel;
+    edBoxName_10: TcxTextEdit;
+    spGet: TdsdStoredProc;
   private
     { Private declarations }
   public
