@@ -18,16 +18,27 @@ $BODY$
     DECLARE vbUserId    Integer; 
     DECLARE vbStartDate TDateTime;
     DECLARE vbEndDate   TDateTime;
+            vbisPersonalService Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService_Child());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- проверка
-     IF COALESCE (inisPersonalService, FALSE) = FALSE     --zc_ObjectBoolean_Unit_PersonalService
+     vbisPersonalService := (SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_Unit_PersonalService() AND OB.ObjectId = inUnitId);
+
+     -- проверка по свойству подразделения
+     IF COALESCE (vbisPersonalService, FALSE) = FALSE
      THEN
          RETURN;
      END IF;
+
+      
+     /*
+     IF COALESCE (inisPersonalService, FALSE) = FALSE     --zc_ObjectBoolean_Unit_PersonalService
+     THEN
+         RETURN;
+     END IF; 
+     */
 
      -- расчет за прошлый месяц
      vbStartDate := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);  --'01.02.2025' ::TDateTime; --
