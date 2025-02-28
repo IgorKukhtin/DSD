@@ -383,41 +383,53 @@ BEGIN
          FROM _tmpMessagePersonalService AS tmp;
      
      ELSE    
-     
-       -- сохраняем расчитанные отчетом данные по зп
-       PERFORM gpInsertUpdate_MI_PersonalService_Child_Auto (inUnitId                 := inUnitId
-                                                           , inPersonalServiceListId  := tmp.PersonalServiceListId
-                                                           , inMemberId               := tmp.MemberId
-                                                           , inStartDate              := vbStartDate
-                                                           , inEndDate                := vbEndDate
-                                                           , inPositionId             := tmp.PositionId
-                                                           , inPositionLevelId        := tmp.PositionLevelId
-                                                           , inStaffListId            := tmp.StaffListId
-                                                           , inModelServiceId         := tmp.ModelServiceId
-                                                           , inStaffListSummKindId    := tmp.StaffListSummKindId
-                                                           , inAmount                 := tmp.AmountOnOneMember
-                                                           , inMemberCount            := tmp.Count_Member
-                                                           , inDayCount               := tmp.Count_Day
-                                                           , inWorkTimeHoursOne       := tmp.SheetWorkTime_Amount
-                                                           , inWorkTimeHours          := tmp.SUM_MemberHours
-                                                           , inPrice                  := tmp.Price
-                                                           , inGrossOne               := tmp.GrossOnOneMember
-                                                           , inKoeff                  := tmp.KoeffHoursWork_car
-                                                           , inSession                := inSession
-                                                            )
-       FROM _tmpReport AS tmp; 
+    
+         -- сначала удаляем ранее сохраненные
+         PERFORM gpInsertUpdate_MI_PersonalService_Child_Erased (inUnitId                := inUnitId                  ::Integer
+                                                               , inPersonalServiceListId := tmp/PersonalServiceListId ::Integer    -- ведомость начисления
+                                                               , inStartDate             := vbStartDate               ::TDateTime  -- дата
+                                                               , inEndDate               := vbEndDate                 ::TDateTime  -- дата
+                                                               , inPositionId            := 0                         ::Integer    -- если = 0, тогда удалять все, иначе - только эту должность
+                                                               , inSession               := inSession                 ::TVarChar
+                                                               )
+         FROM (SELECT DISTINCT tmp.PersonalServiceListId
+               FROM _tmpReport AS tmp
+               ) AS tmp; 
+    
+         -- сохраняем расчитанные отчетом данные по зп
+         PERFORM gpInsertUpdate_MI_PersonalService_Child_Auto (inUnitId                 := inUnitId
+                                                             , inPersonalServiceListId  := tmp.PersonalServiceListId
+                                                             , inMemberId               := tmp.MemberId
+                                                             , inStartDate              := vbStartDate
+                                                             , inEndDate                := vbEndDate
+                                                             , inPositionId             := tmp.PositionId
+                                                             , inPositionLevelId        := tmp.PositionLevelId
+                                                             , inStaffListId            := tmp.StaffListId
+                                                             , inModelServiceId         := tmp.ModelServiceId
+                                                             , inStaffListSummKindId    := tmp.StaffListSummKindId
+                                                             , inAmount                 := tmp.AmountOnOneMember
+                                                             , inMemberCount            := tmp.Count_Member
+                                                             , inDayCount               := tmp.Count_Day
+                                                             , inWorkTimeHoursOne       := tmp.SheetWorkTime_Amount
+                                                             , inWorkTimeHours          := tmp.SUM_MemberHours
+                                                             , inPrice                  := tmp.Price
+                                                             , inGrossOne               := tmp.GrossOnOneMember
+                                                             , inKoeff                  := tmp.KoeffHoursWork_car
+                                                             , inSession                := inSession
+                                                              )
+         FROM _tmpReport AS tmp; 
        
 
-       -- если НЕТ ошибок то записываем в MessagePersonalService ведомости по отчету, которые обработаны
-       PERFORM gpInsertUpdate_Object_MessagePersonalService(ioId                    := 0                          ::Integer,       -- ключ объекта
-                                                            inCode                  := inSessionCode              ::Integer,       -- № Сессии            
-                                                            inName                  := 'Без ошибок'               ::TVarChar,      -- Сообщение об ошибке 
-                                                            inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer,       --                    
-                                                            inMemberId              := NULL                       ::Integer,       --                    
-                                                            inComment               := 'Выполнено'                ::TVarChar,      -- Примечание         
-                                                            inSession               := inSession                  ::TVarChar
-                                                            )
-       FROM (SELECT DISTINCT _tmpReport.PersonalServiceListId FROM _tmpReport) AS tmp; 
+         -- если НЕТ ошибок то записываем в MessagePersonalService ведомости по отчету, которые обработаны
+         PERFORM gpInsertUpdate_Object_MessagePersonalService(ioId                    := 0                          ::Integer,       -- ключ объекта
+                                                              inCode                  := inSessionCode              ::Integer,       -- № Сессии            
+                                                              inName                  := 'Без ошибок'               ::TVarChar,      -- Сообщение об ошибке 
+                                                              inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer,       --                    
+                                                              inMemberId              := NULL                       ::Integer,       --                    
+                                                              inComment               := 'Выполнено'                ::TVarChar,      -- Примечание         
+                                                              inSession               := inSession                  ::TVarChar
+                                                              )
+         FROM (SELECT DISTINCT _tmpReport.PersonalServiceListId FROM _tmpReport) AS tmp; 
                     
      END IF;
          
