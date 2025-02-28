@@ -353,8 +353,8 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Caption = #1050#1086#1083'-'#1074#1086' '#1055#1086#1076#1076#1086#1085' 80'#1093'120'
             DataBinding.FieldName = 'CountTare1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -373,7 +373,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'CountTare2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -381,6 +381,8 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -389,6 +391,8 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
           object RealWeight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080' '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'RealWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -397,6 +401,8 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
           object BoxCountTotal: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxCountTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -405,6 +411,9 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
           object BoxWeightTotal: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxWeightTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -423,7 +432,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'CountTare3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -442,7 +451,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'CountTare4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -461,7 +470,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'CountTare5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -480,7 +489,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'CountTare6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -499,7 +508,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'CountTare7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -518,7 +527,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'CountTare8'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -537,7 +546,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'CountTare9'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -556,7 +565,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'CountTare10'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
