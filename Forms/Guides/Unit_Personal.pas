@@ -58,10 +58,6 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     BusinessName: TcxGridDBColumn;
-    AccountDirectionCode: TcxGridDBColumn;
-    AccountDirectionName: TcxGridDBColumn;
-    AccountGroupCode: TcxGridDBColumn;
-    AccountGroupName: TcxGridDBColumn;
     ProfitLossGroupCode: TcxGridDBColumn;
     ProfitLossGroupName: TcxGridDBColumn;
     ProfitLossDirectionCode: TcxGridDBColumn;
@@ -69,9 +65,6 @@ type
     ParentName: TcxGridDBColumn;
     actGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
-    InvNumber: TcxGridDBColumn;
-    Contract_JuridicalName: TcxGridDBColumn;
-    Contract_InfomoneyName: TcxGridDBColumn;
     AreaName: TcxGridDBColumn;
     PartnerCode: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
