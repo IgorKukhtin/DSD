@@ -19,7 +19,7 @@ $BODY$
            vbBoxId2    Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingPartner());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_MI_WeighingPartner_report());
      --vbUserId:= lpGetUserBySession (inSession);
 
      IF COALESCE (inId,0) = 0
