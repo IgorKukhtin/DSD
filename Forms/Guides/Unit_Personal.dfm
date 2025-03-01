@@ -1,7 +1,7 @@
 object Unit_PersonalForm: TUnit_PersonalForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'> '#1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080#1081' '#1088#1072#1089#1095#1077#1090' '#1047#1055
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'> - '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1047#1055
   ClientHeight = 388
   ClientWidth = 980
   Color = clBtnFace
@@ -46,41 +46,22 @@ object Unit_PersonalForm: TUnit_PersonalForm
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object isIrna: TcxGridDBColumn
-        Caption = #1048#1088#1085#1072
-        DataBinding.FieldName = 'isIrna'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1088#1085#1072' ('#1044#1072'/'#1053#1077#1090')'
-        Options.Editing = False
-        Width = 45
-      end
       object isPersonalService: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1080#1088'. '#1047#1055
+        Caption = #1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1047#1055
         DataBinding.FieldName = 'isPersonalService'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1087' '#1072#1074#1090#1086#1084#1072#1090#1086#1084
-        Width = 70
-      end
-      object isError_psl: TcxGridDBColumn
-        Caption = #1054#1096#1080#1073#1082#1072
-        DataBinding.FieldName = 'isError_psl'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1054#1096#1080#1073#1082#1072' ('#1073#1086#1083#1077#1077' 1 '#1074#1077#1076#1086#1084#1086#1089#1090#1080') '#1044#1072' / '#1053#1077#1090
-        Options.Editing = False
-        Width = 50
+        HeaderHint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1100' '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1047#1055
+        Width = 80
       end
       object PersonalServiceDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1055
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1040#1074#1090#1086' '#1047#1055
         DataBinding.FieldName = 'PersonalServiceDate'
         PropertiesClassName = 'TcxDateEditProperties'
         Properties.Kind = ckDateTime
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1083#1080#1089#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1087' '#1072#1074#1090#1086#1084#1072#1090#1086#1084
+        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055
         Options.Editing = False
         Width = 93
       end
@@ -99,7 +80,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 38
+        Width = 45
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -109,7 +90,34 @@ object Unit_PersonalForm: TUnit_PersonalForm
         Options.Editing = False
         SortIndex = 0
         SortOrder = soAscending
-        Width = 142
+        Width = 200
+      end
+      object PersonalServiceListName: TcxGridDBColumn
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
+        DataBinding.FieldName = 'PersonalServiceListName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
+      end
+      object isError_psl: TcxGridDBColumn
+        Caption = #1055#1088#1086#1074#1077#1088#1082#1072
+        DataBinding.FieldName = 'isError_psl'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1074#1077#1088#1082#1072' ('#1073#1086#1083#1077#1077' 1 '#1074#1077#1076#1086#1084#1086#1089#1090#1080') '#1044#1072' / '#1053#1077#1090
+        Options.Editing = False
+        Width = 50
+      end
+      object AreaName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085
+        DataBinding.FieldName = 'AreaName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
       end
       object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
@@ -126,63 +134,6 @@ object Unit_PersonalForm: TUnit_PersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 76
-      end
-      object AreaName: TcxGridDBColumn
-        Caption = #1056#1077#1075#1080#1086#1085
-        DataBinding.FieldName = 'AreaName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
-      end
-      object PersonalServiceListName: TcxGridDBColumn
-        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
-        DataBinding.FieldName = 'PersonalServiceListName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 91
-      end
-      object AccountGroupCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' c'#1095'. '#1075#1088'.'
-        DataBinding.FieldName = 'AccountGroupCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 50
-      end
-      object AccountGroupName: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'AccountGroupName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 80
-      end
-      object AccountDirectionCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' c'#1095'. '#1085#1072#1087#1088'.'
-        DataBinding.FieldName = 'AccountDirectionCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 50
-      end
-      object AccountDirectionName: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'AccountDirectionName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
         Width = 76
       end
       object ProfitLossGroupCode: TcxGridDBColumn
@@ -225,36 +176,6 @@ object Unit_PersonalForm: TUnit_PersonalForm
         VisibleForCustomization = False
         Width = 76
       end
-      object InvNumber: TcxGridDBColumn
-        Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090')'
-        DataBinding.FieldName = 'InvNumber'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 114
-      end
-      object Contract_JuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1076#1086#1075#1086#1074#1086#1088')'
-        DataBinding.FieldName = 'Contract_JuridicalName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 66
-      end
-      object Contract_InfomoneyName: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
-        DataBinding.FieldName = 'Contract_InfomoneyName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 110
-      end
       object PartnerCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
         DataBinding.FieldName = 'PartnerCode'
@@ -284,6 +205,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
       object UnitName_Head: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1088#1091#1082#1086#1074'.)'
         DataBinding.FieldName = 'UnitName_Head'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1103')'
@@ -293,6 +215,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
       object BranchName_Head: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083' ('#1088#1091#1082#1086#1074'.)'
         DataBinding.FieldName = 'BranchName_Head'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1060#1080#1083#1080#1072#1083' ('#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1103')'
@@ -302,6 +225,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
       object SheetWorkTimeName: TcxGridDBColumn
         Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
         DataBinding.FieldName = 'SheetWorkTimeName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
@@ -311,6 +235,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
       object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -319,10 +244,21 @@ object Unit_PersonalForm: TUnit_PersonalForm
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object isIrna: TcxGridDBColumn
+        Caption = #1048#1088#1085#1072
+        DataBinding.FieldName = 'isIrna'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1088#1085#1072' ('#1044#1072'/'#1053#1077#1090')'
+        Options.Editing = False
+        Width = 45
       end
       object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -458,7 +394,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbProtocol'
         end
         item
           Visible = True
@@ -466,7 +402,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocol'
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -508,7 +444,6 @@ object Unit_PersonalForm: TUnit_PersonalForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False
@@ -542,7 +477,6 @@ object Unit_PersonalForm: TUnit_PersonalForm
     object bbMessagePersonalServiceForm: TdxBarButton
       Action = actOpenMessagePersonalServiceForm
       Category = 0
-      ImageIndex = 26
     end
   end
   object ActionList: TActionList
@@ -766,11 +700,10 @@ object Unit_PersonalForm: TUnit_PersonalForm
         item
           Action = actOpenMessagePersonalServiceForm
         end>
-      QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>?'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1047#1055' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
-      Caption = 'macInsertUpdate_PersonalService'
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-      ImageIndex = 41
+      QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'> '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1047#1055' '#1057#1090#1072#1088#1090
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103#1084' '#1047#1055
     end
     object actInsertUpdate_PersonalService: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -811,7 +744,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
     object actOpenMessagePersonalServiceForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1086#1073#1097#1077#1085#1080#1103' '#1087#1086' '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102' '#1047#1055'>'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1096#1080#1073#1082#1072#1084
       Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1086#1073#1097#1077#1085#1080#1103' '#1087#1086' '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102' '#1047#1055'>'
       FormName = 'TMessagePersonalServiceLastForm'
       FormNameParam.Value = 'TMessagePersonalServiceLastForm'
