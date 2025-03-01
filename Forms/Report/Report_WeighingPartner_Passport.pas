@@ -80,7 +80,7 @@ type
     edBoxName_9: TcxTextEdit;
     cxLabel14: TcxLabel;
     edBoxName_10: TcxTextEdit;
-    spGet: TdsdStoredProc;
+    spGet_Box_NPP: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -593,6 +593,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
   inherited Panel: TPanel
     Width = 1018
     Height = 129
+    ExplicitTop = -7
     ExplicitWidth = 1018
     ExplicitHeight = 129
     inherited deStart: TcxDateEdit
@@ -679,7 +680,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       Top = 26
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 135
+      Width = 93
     end
     object cxLabel6: TcxLabel
       Left = 127
@@ -691,103 +692,103 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       Top = 65
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 135
+      Width = 93
     end
     object cxLabel7: TcxLabel
-      Left = 269
+      Left = 229
       Top = 7
       Caption = #1071#1097#1080#1082'-1'
     end
     object edBoxName_3: TcxTextEdit
-      Left = 269
+      Left = 228
       Top = 26
       Properties.ReadOnly = True
       TabOrder = 13
       Width = 150
     end
     object cxLabel9: TcxLabel
-      Left = 269
+      Left = 229
       Top = 47
       Caption = #1071#1097#1080#1082'-2'
     end
     object edBoxName_4: TcxTextEdit
-      Left = 269
+      Left = 229
       Top = 65
       Properties.ReadOnly = True
       TabOrder = 15
       Width = 150
     end
     object cxLabel8: TcxLabel
-      Left = 423
+      Left = 384
       Top = 7
       Caption = #1071#1097#1080#1082'-3'
     end
     object edBoxName_5: TcxTextEdit
-      Left = 423
+      Left = 384
       Top = 26
       Properties.ReadOnly = True
       TabOrder = 17
-      Width = 150
+      Width = 180
     end
     object cxLabel10: TcxLabel
-      Left = 423
+      Left = 384
       Top = 47
       Caption = #1071#1097#1080#1082'-4'
     end
     object edBoxName_6: TcxTextEdit
-      Left = 423
+      Left = 384
       Top = 65
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 150
+      Width = 180
     end
     object cxLabel11: TcxLabel
-      Left = 578
-      Top = 7
+      Left = 570
+      Top = 8
       Caption = #1071#1097#1080#1082'-5'
     end
     object edBoxName_7: TcxTextEdit
-      Left = 578
+      Left = 569
       Top = 26
       Properties.ReadOnly = True
       TabOrder = 21
-      Width = 150
+      Width = 180
     end
     object cxLabel12: TcxLabel
-      Left = 578
-      Top = 47
+      Left = 570
+      Top = 48
       Caption = #1071#1097#1080#1082'-6'
     end
     object edBoxName_8: TcxTextEdit
-      Left = 578
+      Left = 570
       Top = 65
       Properties.ReadOnly = True
       TabOrder = 23
-      Width = 150
+      Width = 180
     end
     object cxLabel13: TcxLabel
-      Left = 733
+      Left = 754
       Top = 7
       Caption = #1071#1097#1080#1082'-7'
     end
     object edBoxName_9: TcxTextEdit
-      Left = 733
+      Left = 754
       Top = 26
       Properties.ReadOnly = True
       TabOrder = 25
-      Width = 150
+      Width = 180
     end
     object cxLabel14: TcxLabel
-      Left = 733
+      Left = 754
       Top = 47
       Caption = #1071#1097#1080#1082'-8'
     end
     object edBoxName_10: TcxTextEdit
-      Left = 733
+      Left = 754
       Top = 65
       Properties.ReadOnly = True
       TabOrder = 27
-      Width = 150
+      Width = 180
     end
   end
   object cxLabel3: TcxLabel [2]
@@ -827,10 +828,10 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProc = spGet
+      StoredProc = spGet_Box_NPP
       StoredProcList = <
         item
-          StoredProc = spGet
+          StoredProc = spGet_Box_NPP
         end
         item
           StoredProc = spSelect
@@ -1177,7 +1178,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     Left = 480
     Top = 208
   end
-  object spGet: TdsdStoredProc
+  object spGet_Box_NPP: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Box_NPP'
     DataSets = <>
     OutputType = otResult
