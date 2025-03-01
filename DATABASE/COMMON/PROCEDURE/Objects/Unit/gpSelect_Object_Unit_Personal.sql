@@ -77,6 +77,7 @@ BEGIN
                                       WHERE Object_Personal.DescId = zc_Object_Personal()
                                         AND Object_Personal.isErased = FALSE
                                         AND COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId,0) <> 0
+                                        AND COALESCE ( TRIM (Object_PersonalServiceList.ValueData),'') <> ''
                                       ) AS tmp
                                       GROUP BY tmp.UnitId
                                 )

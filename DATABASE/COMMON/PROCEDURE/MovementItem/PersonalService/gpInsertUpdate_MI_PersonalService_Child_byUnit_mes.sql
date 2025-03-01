@@ -222,11 +222,11 @@ BEGIN
                                 , ObjectLink_StaffList_PositionLevel.ChildObjectId AS PositionLevelId
                             FROM ObjectLink AS ObjectLink_StaffList_Unit
                                  LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
-                                                      ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
+                                                      ON ObjectLink_StaffList_Position.ObjectId = ObjectLink_StaffList_Unit.ObjectId
                                                      AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
                        
                                  LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
-                                                      ON ObjectLink_StaffList_PositionLevel.ObjectId = Object_StaffList.Id
+                                                      ON ObjectLink_StaffList_PositionLevel.ObjectId = ObjectLink_StaffList_Unit.ObjectId
                                                      AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()
 
                             WHERE ObjectLink_StaffList_Unit.ChildObjectId = inUnitId
