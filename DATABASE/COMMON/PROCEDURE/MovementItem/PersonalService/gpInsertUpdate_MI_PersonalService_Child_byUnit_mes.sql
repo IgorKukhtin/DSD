@@ -384,7 +384,7 @@ BEGIN
      THEN
          -- если есть ошибки то записываем их в MessagePersonalService
          PERFORM gpInsertUpdate_Object_MessagePersonalService(ioId                    := 0                          ::Integer,       --
-                                                              inCode                  := inSessionCode              ::Integer,      -- № Сессии           
+                                                              ioCode                  := inSessionCode              ::Integer,      -- № Сессии           
                                                               inName                  := tmp.Name                   ::TVarChar,     -- Сообщение об ошибке
                                                               inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer,      --                    
                                                               inMemberId              := tmp.MemberId               ::Integer,      --                    
@@ -397,7 +397,7 @@ BEGIN
     
          -- сначала удаляем ранее сохраненные
          PERFORM gpInsertUpdate_MI_PersonalService_Child_Erased (inUnitId                := inUnitId                  ::Integer
-                                                               , inPersonalServiceListId := tmp/PersonalServiceListId ::Integer    -- ведомость начисления
+                                                               , inPersonalServiceListId := tmp.PersonalServiceListId ::Integer    -- ведомость начисления
                                                                , inStartDate             := vbStartDate               ::TDateTime  -- дата
                                                                , inEndDate               := vbEndDate                 ::TDateTime  -- дата
                                                                , inPositionId            := 0                         ::Integer    -- если = 0, тогда удалять все, иначе - только эту должность
@@ -433,7 +433,7 @@ BEGIN
 
          -- если НЕТ ошибок то записываем в MessagePersonalService ведомости по отчету, которые обработаны
          PERFORM gpInsertUpdate_Object_MessagePersonalService(ioId                    := 0                          ::Integer,       -- ключ объекта
-                                                              inCode                  := inSessionCode              ::Integer,       -- № Сессии            
+                                                              ioCode                  := inSessionCode              ::Integer,       -- № Сессии            
                                                               inName                  := 'Без ошибок'               ::TVarChar,      -- Сообщение об ошибке 
                                                               inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer,       --                    
                                                               inMemberId              := NULL                       ::Integer,       --                    
