@@ -1549,6 +1549,10 @@ type
     actMovement_Inventory_scale: TdsdOpenForm;
     miMovement_Inventory_scale: TMenuItem;
     N265: TMenuItem;
+    actCashOperationVinnica: TdsdOpenForm;
+    miCashOperationVinnica: TMenuItem;
+    actPersonalCashVinnica: TdsdOpenForm;
+    miPersonalCashVinnica: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
