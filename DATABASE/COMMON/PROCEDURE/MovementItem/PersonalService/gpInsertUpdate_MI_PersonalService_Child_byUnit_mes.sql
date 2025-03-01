@@ -334,7 +334,7 @@ BEGIN
                             , CASE WHEN tmpList.MemberId IS NOT NULL THEN 5
                                    WHEN tmpList_out.MemberId IS NOT NULL THEN 4
                               END AS ErrorCode
-                       FROM tmpMovement AS tmp
+                       FROM tmpWorkTimeKind AS tmp
                           -- если был прин€т не сначала мес€ца или уволен в течении мес€ца отмечаем ’
          
                           LEFT JOIN tmpListOut AS tmpList
