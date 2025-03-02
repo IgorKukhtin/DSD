@@ -50,6 +50,15 @@ BEGIN
                                              )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportLviv())
 
+                       -- филиал - Vinnica
+                       WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentVinnica()
+                                            , zc_Enum_Process_AccessKey_CashVinnica()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceVinnica()
+                                            , zc_Enum_Process_AccessKey_ServiceVinnica()
+                                            , zc_Enum_Process_AccessKey_TrasportVinnica()
+                                             )
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportVinnica())
+
                        -- филиал - Ирна
                        WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentIrna()
                                             , zc_Enum_Process_AccessKey_CashIrna()
