@@ -18,7 +18,7 @@ $BODY$
     DECLARE vbUserId    Integer; 
     DECLARE vbStartDate TDateTime;
     DECLARE vbEndDate   TDateTime;
-            vbisPersonalService Boolean;
+    DECLARE vbisPersonalService Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService_Child());
@@ -442,12 +442,14 @@ BEGIN
                                                               )
          FROM (SELECT DISTINCT _tmpReport.PersonalServiceListId FROM _tmpReport) AS tmp; 
                     
+
+         -- Для Теста - только при формированиии
+         if vbUserId IN (9457, 5) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
+
      END IF;
          
     outPersonalServiceDate := CURRENT_TIMESTAMP;
     
-
-    if vbUserId IN (9457, 5) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
 
 END;
 $BODY$
