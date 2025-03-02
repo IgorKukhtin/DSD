@@ -384,15 +384,22 @@ BEGIN
      IF (SELECT COUNT (*) FROM _tmpMessagePersonalService) > 0
      THEN
          -- если есть ошибки то записываем их в MessagePersonalService
-         PERFORM gpInsertUpdate_Object_MessagePersonalService(ioId                    := 0                          ::Integer,       --
-                                                              ioCode                  := inSessionCode              ::Integer,      -- № Сессии
-                                                              inName                  := tmp.Name                   ::TVarChar,     -- Сообщение об ошибке
-                                                              inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer,      --
-                                                              inMemberId              := tmp.MemberId               ::Integer,      --
-                                                              inComment               := tmp.Comment                ::TVarChar,     -- Примечание
-                                                              inSession               := inSession                  ::TVarChar
+         PERFORM gpInsertUpdate_Object_MessagePersonalService (ioId                    := 0                          ::Integer       --
+                                                             , ioCode                  := inSessionCode              ::Integer      -- № Сессии
+                                                             , inName                  := tmp.Name                   ::TVarChar     -- Сообщение об ошибке
+                                                             , inUnitId                := inUnitId
+                                                             , inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer      --
+                                                             , inMemberId              := tmp.MemberId               ::Integer      --
+                                                             , inComment               := tmp.Comment                ::TVarChar     -- Примечание
+                                                             , inSession               := inSession                  ::TVarChar
                                                               )
-         FROM _tmpMessagePersonalService AS tmp;
+         FROM (SELECT DISTINCT 
+                      _tmpMessagePersonalService.Name
+                    , _tmpMessagePersonalService.PersonalServiceListId
+                    , _tmpMessagePersonalService.MemberId
+                    , _tmpMessagePersonalService.Comment
+               FROM _tmpMessagePersonalService
+              ) AS tmp;
 
      ELSEIF vbUserId NOT IN (5)
      THEN
@@ -434,13 +441,14 @@ BEGIN
 
 
          -- если НЕТ ошибок то записываем в MessagePersonalService ведомости по отчету, которые обработаны
-         PERFORM gpInsertUpdate_Object_MessagePersonalService(ioId                    := 0                          ::Integer,       -- ключ объекта
-                                                              ioCode                  := inSessionCode              ::Integer,       -- № Сессии
-                                                              inName                  := 'Без ошибок'               ::TVarChar,      -- Сообщение об ошибке
-                                                              inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer,       --
-                                                              inMemberId              := NULL                       ::Integer,       --
-                                                              inComment               := 'Выполнено'                ::TVarChar,      -- Примечание
-                                                              inSession               := inSession                  ::TVarChar
+         PERFORM gpInsertUpdate_Object_MessagePersonalService (ioId                    := 0                          ::Integer       -- ключ объекта
+                                                             , ioCode                  := inSessionCode              ::Integer       -- № Сессии
+                                                             , inName                  := 'Без ошибок'               ::TVarChar      -- Сообщение об ошибке
+                                                             , inUnitId                := inUnitId
+                                                             , inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer       --
+                                                             , inMemberId              := NULL                       ::Integer       --
+                                                             , inComment               := 'Выполнено'                ::TVarChar      -- Примечание
+                                                             , inSession               := inSession                  ::TVarChar
                                                               )
          FROM (SELECT DISTINCT _tmpReport.PersonalServiceListId FROM _tmpReport) AS tmp;
 
@@ -464,4 +472,4 @@ $BODY$
 */
 
 -- тест
---select * from  gpInsertUpdate_MI_PersonalService_Child_byUnit_mes( inSessionCode := 1 ::Integer, inUnitId := 8449 ::Integer, inisPersonalService:= TRUE ::Boolean, inSession := '6561986' ::TVarChar)
+-- SELECT * FROM gpInsertUpdate_MI_PersonalService_Child_byUnit_mes( inSessionCode := 1 ::Integer, inUnitId := 8449 ::Integer, inisPersonalService:= TRUE ::Boolean, inSession := '6561986' ::TVarChar)
