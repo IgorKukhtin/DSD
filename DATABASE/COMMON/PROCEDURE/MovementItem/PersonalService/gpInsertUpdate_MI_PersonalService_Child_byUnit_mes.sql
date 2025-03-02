@@ -5,17 +5,17 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_byUnit_mes (Inte
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Child_byUnit_mes(
     --IN inStartDate            TDateTime , -- дата
-    --IN inEndDate              TDateTime , -- дата 
+    --IN inEndDate              TDateTime , -- дата
     IN inSessionCode          Integer   , -- № Сессии MessagePersonalService
     IN inUnitId               Integer   , -- подразделение
-    IN inisPersonalService    Boolean   , --   
-   OUT outPersonalServiceDate TDateTime , --                        
+    IN inisPersonalService    Boolean   , --
+   OUT outPersonalServiceDate TDateTime , --
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TDateTime
 AS
 $BODY$
-    DECLARE vbUserId    Integer; 
+    DECLARE vbUserId    Integer;
     DECLARE vbStartDate TDateTime;
     DECLARE vbEndDate   TDateTime;
     DECLARE vbisPersonalService Boolean;
@@ -28,22 +28,23 @@ BEGIN
 
      -- проверка по свойству подразделения
      IF COALESCE (vbisPersonalService, FALSE) = FALSE
+        AND vbUserId <> 5
      THEN
          RETURN;
      END IF;
 
-      
+
      /*
      IF COALESCE (inisPersonalService, FALSE) = FALSE     --zc_ObjectBoolean_Unit_PersonalService
      THEN
          RETURN;
-     END IF; 
+     END IF;
      */
 
      -- расчет за прошлый месяц
      vbStartDate := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);  --'01.02.2025' ::TDateTime; --
      vbEndDate   := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 DAY')::TDateTime);    --'19.02.2025' ::TDateTime; --
-     
+
      --
      CREATE TEMP TABLE _tmpMessagePersonalService (MemberId Integer
                                                  , PersonalServiceListId Integer
@@ -55,8 +56,8 @@ BEGIN
                                    , PositionId Integer
                                    , PositionLevelId Integer
                                    , PersonalServiceListId Integer
-                                   , isMain Boolean) ON COMMIT DROP;  
-                                           
+                                   , isMain Boolean) ON COMMIT DROP;
+
      ---- Создать таблицу, в которую будут залиты все данные для анализа
      CREATE TEMP TABLE _tmpReport (PersonalServiceListId Integer
                                  , MemberId Integer
@@ -73,20 +74,20 @@ BEGIN
                                  , Price TFloat
                                  , GrossOnOneMember TFloat
                                  , KoeffHoursWork_car TFloat) ON COMMIT DROP;
-     INSERT INTO _tmpReport (PersonalServiceListId 
-                           , MemberId 
-                           , PositionId 
-                           , PositionLevelId 
-                           , StaffListId 
-                           , ModelServiceId 
-                           , StaffListSummKindId 
-                           , AmountOnOneMember 
-                           , Count_Member 
-                           , Count_Day 
-                           , SheetWorkTime_Amount 
-                           , SUM_MemberHours 
-                           , Price 
-                           , GrossOnOneMember 
+     INSERT INTO _tmpReport (PersonalServiceListId
+                           , MemberId
+                           , PositionId
+                           , PositionLevelId
+                           , StaffListId
+                           , ModelServiceId
+                           , StaffListSummKindId
+                           , AmountOnOneMember
+                           , Count_Member
+                           , Count_Day
+                           , SheetWorkTime_Amount
+                           , SUM_MemberHours
+                           , Price
+                           , GrossOnOneMember
                            , KoeffHoursWork_car )
      SELECT tmp.PersonalServiceListId
           , tmp.MemberId
@@ -110,7 +111,7 @@ BEGIN
                                     , inMemberId       := 0           ::Integer   --сотрудник
                                     , inPositionId     := 0           ::Integer   --должность
                                     , inDetailDay                    := FALSE  ::Boolean   --детализировать по дням
-                                    , inDetailMonth                  := FALSE  ::Boolean   --детализировать по месяцам 
+                                    , inDetailMonth                  := FALSE  ::Boolean   --детализировать по месяцам
                                     , inDetailModelService           := FALSE  ::Boolean   --детализировать по моделям
                                     , inDetailModelServiceItemMaster := FALSE  ::Boolean   --детализировать по типам документов в модели
                                     , inDetailModelServiceItemChild  := FALSE  ::Boolean   --детализировать по товарам в типах документов
@@ -134,7 +135,7 @@ BEGIN
           INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                 ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                               AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId 
+                               AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId
           LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
                               AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
@@ -144,7 +145,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
                                ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
                               AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
-          
+
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal.Id
                               AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
@@ -155,20 +156,20 @@ BEGIN
        AND Object_Personal.isErased = FALSE;
 
 
-     --проверка  
+     --проверка
      --1) ведомость не проведена
-     --2) в разрезе фио - заполнена графа "Ведомость начисления главная" 
-     --3) соответствие должности в табеле и в "Справочнике Штатное расписание (данные) 
+     --2) в разрезе фио - заполнена графа "Ведомость начисления главная"
+     --3) соответствие должности в табеле и в "Справочнике Штатное расписание (данные)
      --4)Часы в табеле, после даты увольнения
-     --5)Часы в табеле, до даты приема                     
+     --5)Часы в табеле, до даты приема
      --6) есть признак "Основное место работы" , если в разрезе фио проверка прошла
-        -- только тогда сохранение и проведение, если не прошла - сохраняется только все сообщения об ошибке + фио + должность + ведомость + № сессии + дата/время - все в zc_Object_MessagePersonalService, если ошибки нет тогда 1 строчка ведомость + № сессии + дата/время 
- 
-     
+        -- только тогда сохранение и проведение, если не прошла - сохраняется только все сообщения об ошибке + фио + должность + ведомость + № сессии + дата/время - все в zc_Object_MessagePersonalService, если ошибки нет тогда 1 строчка ведомость + № сессии + дата/время
+
+
      -- 1 ведомость не проведена
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
      SELECT NULL :: Integer, tmp.PersonalServiceListId, 'Документ проведен' ::TVarChar, 'проверка 1' ::TVarChar
-     FROM 
+     FROM
           (WITH
            tmpMovement AS (SELECT tmpPSL.PersonalServiceListId
                                 , Movement.StatusId
@@ -180,7 +181,7 @@ BEGIN
                                INNER JOIN Movement ON Movement.Id = MLO_PersonalServiceList.MovementId
                                                   AND Movement.DescId   = zc_Movement_PersonalService()
                                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
-                               INNER JOIN MovementDate AS MovementDate_ServiceDate                 
+                               INNER JOIN MovementDate AS MovementDate_ServiceDate
                                                        ON MovementDate_ServiceDate.MovementId = Movement.Id
                                                       AND MovementDate_ServiceDate.ValueData = DATE_TRUNC ('MONTH', vbEndDate)
                                                       AND MovementDate_ServiceDate.DescId    = zc_MovementDate_ServiceDate()
@@ -193,13 +194,13 @@ BEGIN
            WHERE tmpMovement.Ord = 1
            ) AS tmp
      WHERE tmp.StatusId = zc_Enum_Status_Complete();
-     
+
      --RAISE EXCEPTION 'Test1. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService);
 
-     -- 2 в разрезе фио - заполнена графа "Ведомость начисления главная" 
+     -- 2 в разрезе фио - заполнена графа "Ведомость начисления главная"
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
      SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Главная ведомость не установлена' ::TVarChar, 'проверка 2' ::TVarChar
-     FROM 
+     FROM
           (SELECT spReport.MemberId
                 , spReport.PersonalServiceListId
            FROM _tmpReport AS spReport
@@ -208,15 +209,15 @@ BEGIN
                                       AND _tmpPersonal.PositionLevelId = spReport.PositionLevelId
            WHERE _tmpPersonal.PersonalServiceListId IS NULL
           ) AS tmp;
-     ---RAISE EXCEPTION 'Test2. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService);  
+     ---RAISE EXCEPTION 'Test2. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService);
 
      -- 3 соответствие должности в табеле и в "Справочнике Штатное расписание (данные)
      -- получаем данные из спр. Штатное расписание по должностям, и проверяем все ли соотв. полученнім при формировнии отчета
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
      SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Должность '|| Object_Position.ValueData ||' не соответствует штатному расписанию' ::TVarChar, 'проверка 3' ::TVarChar
-     FROM 
+     FROM
           (WITH
-           tmpStaffList AS (SELECT 
+           tmpStaffList AS (SELECT
                                   ObjectLink_StaffList_Unit.ObjectId               AS StaffListId
                                 , ObjectLink_StaffList_Position.ChildObjectId      AS PositionId
                                 , ObjectLink_StaffList_PositionLevel.ChildObjectId AS PositionLevelId
@@ -224,7 +225,7 @@ BEGIN
                                  LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
                                                       ON ObjectLink_StaffList_Position.ObjectId = ObjectLink_StaffList_Unit.ObjectId
                                                      AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
-                       
+
                                  LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
                                                       ON ObjectLink_StaffList_PositionLevel.ObjectId = ObjectLink_StaffList_Unit.ObjectId
                                                      AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()
@@ -243,9 +244,9 @@ BEGIN
           ) AS tmp
           LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmp.PositionId
           ;
-        
+
      -- 4) Часы в табеле, после даты увольнения
-     -- 5) Часы в табеле, до даты приема     
+     -- 5) Часы в табеле, до даты приема
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
      SELECT tmp.MemberId
           , tmp.PersonalServiceListId
@@ -255,13 +256,13 @@ BEGIN
           , CASE WHEN tmp.ErrorCode = 4 THEN 'проверка 4'
                  WHEn tmp.ErrorCode = 5 THEN 'проверка 5'
             END ::TVarChar
-     FROM 
+     FROM
           (WITH
           -- находим принятых и уволенных сотр. в период табеля
           tmpListOut AS (SELECT Object_Personal_View.MemberId
                               , MAX (Object_Personal_View.PersonalId) AS PersonalId
                               , Object_Personal_View.PositionId
-                              , _tmpReport.PersonalServiceListId 
+                              , _tmpReport.PersonalServiceListId
                               , COALESCE (Object_Personal_View.PositionLevelId,0) AS PositionLevelId
                               , MAX (CASE WHEN Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate
                                                THEN Object_Personal_View.DateIn
@@ -271,7 +272,7 @@ BEGIN
                                           THEN zc_DateEnd()
                                      ELSE MAX (COALESCE (Object_Personal_View.DateOut_user, zc_DateStart()))
                                 END :: TDateTime AS DateOut
-                         FROM _tmpReport 
+                         FROM _tmpReport
                              LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = _tmpReport.MemberId
                                                            AND Object_Personal_View.PositionId = _tmpReport.PositionId
                                                            AND COALESCE (Object_Personal_View.PositionLevelId,0) = COALESCE (_tmpReport.PositionLevelId,0)
@@ -280,12 +281,12 @@ BEGIN
                              OR (Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate)
                                 )
                          GROUP BY Object_Personal_View.MemberId
-                                , Object_Personal_View.PositionId 
+                                , Object_Personal_View.PositionId
                                 , COALESCE (Object_Personal_View.PositionLevelId,0)
                                 , _tmpReport.PersonalServiceListId
                          )
         , tmpOperDate AS (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate)
-        
+
         , tmpWorkTimeKind AS (SELECT SUM (COALESCE (MI_SheetWorkTime.Amount, 0))    AS Amount
                                    , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
                                    , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
@@ -336,7 +337,7 @@ BEGIN
                               END AS ErrorCode
                        FROM tmpWorkTimeKind AS tmp
                           -- если был принят не сначала месяца или уволен в течении месяца отмечаем Х
-         
+
                           LEFT JOIN tmpListOut AS tmpList
                                                ON tmpList.DateIn   > tmp.OperDate
                                               AND tmpList.MemberId = tmp.MemberId
@@ -344,7 +345,7 @@ BEGIN
                                               AND COALESCE (tmpList.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
                                               AND tmp.Amount            <> 0
                           LEFT JOIN tmpListOut AS tmpList_out
-                                               ON tmpList_out.DateOut   < tmp.OperDate 
+                                               ON tmpList_out.DateOut   < tmp.OperDate
                                               AND tmpList_out.MemberId = tmp.MemberId
                                               AND tmpList_out.PositionId = tmp.PositionId
                                               AND COALESCE (tmpList_out.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
@@ -357,18 +358,18 @@ BEGIN
                   , tmp.PersonalServiceListId
                   , tmp.ErrorCode
              FROM tmpDate AS tmp
-             
+
              ) AS tmp;
-      
-     -- 6) есть признак "Основное место работы" , если в разрезе фио проверка прошла 
+
+     -- 6) есть признак "Основное место работы" , если в разрезе фио проверка прошла
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
      SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Основное место работы не установлено' ::TVarChar, 'проверка 6' ::TVarChar
-     FROM 
+     FROM
           (WITH
            --Определено ли для сотрудника Основное место работы
            tmpMain AS (SELECT DISTINCT _tmpPersonal.MemberId
                        FROM _tmpPersonal
-                       WHERE _tmpPersonal.isMain = TRUE 
+                       WHERE _tmpPersonal.isMain = TRUE
                       )
            SELECT spReport.MemberId
                 , spReport.PersonalServiceListId
@@ -376,25 +377,26 @@ BEGIN
                 LEFT JOIN tmpMain ON tmpMain.MemberId = spReport.MemberId
            WHERE tmpMain.MemberId IS NULL
           ) AS tmp;
-     
+
      --RAISE EXCEPTION 'Test6. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService);
-     
-     -- после проверок  
+
+     -- после проверок
      IF (SELECT COUNT (*) FROM _tmpMessagePersonalService) > 0
      THEN
          -- если есть ошибки то записываем их в MessagePersonalService
          PERFORM gpInsertUpdate_Object_MessagePersonalService(ioId                    := 0                          ::Integer,       --
-                                                              ioCode                  := inSessionCode              ::Integer,      -- № Сессии           
+                                                              ioCode                  := inSessionCode              ::Integer,      -- № Сессии
                                                               inName                  := tmp.Name                   ::TVarChar,     -- Сообщение об ошибке
-                                                              inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer,      --                    
-                                                              inMemberId              := tmp.MemberId               ::Integer,      --                    
-                                                              inComment               := tmp.Comment                ::TVarChar,     -- Примечание         
+                                                              inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer,      --
+                                                              inMemberId              := tmp.MemberId               ::Integer,      --
+                                                              inComment               := tmp.Comment                ::TVarChar,     -- Примечание
                                                               inSession               := inSession                  ::TVarChar
                                                               )
          FROM _tmpMessagePersonalService AS tmp;
-     
-     ELSE    
-    
+
+     ELSEIF vbUserId NOT IN (5)
+     THEN
+
          -- сначала удаляем ранее сохраненные
          PERFORM gpInsertUpdate_MI_PersonalService_Child_Erased (inUnitId                := inUnitId                  ::Integer
                                                                , inPersonalServiceListId := tmp.PersonalServiceListId ::Integer    -- ведомость начисления
@@ -405,8 +407,8 @@ BEGIN
                                                                )
          FROM (SELECT DISTINCT tmp.PersonalServiceListId
                FROM _tmpReport AS tmp
-               ) AS tmp; 
-    
+               ) AS tmp;
+
          -- сохраняем расчитанные отчетом данные по зп
          PERFORM gpInsertUpdate_MI_PersonalService_Child_Auto (inUnitId                 := inUnitId
                                                              , inPersonalServiceListId  := tmp.PersonalServiceListId
@@ -428,28 +430,28 @@ BEGIN
                                                              , inKoeff                  := tmp.KoeffHoursWork_car
                                                              , inSession                := inSession
                                                               )
-         FROM _tmpReport AS tmp; 
-       
+         FROM _tmpReport AS tmp;
+
 
          -- если НЕТ ошибок то записываем в MessagePersonalService ведомости по отчету, которые обработаны
          PERFORM gpInsertUpdate_Object_MessagePersonalService(ioId                    := 0                          ::Integer,       -- ключ объекта
-                                                              ioCode                  := inSessionCode              ::Integer,       -- № Сессии            
-                                                              inName                  := 'Без ошибок'               ::TVarChar,      -- Сообщение об ошибке 
-                                                              inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer,       --                    
-                                                              inMemberId              := NULL                       ::Integer,       --                    
-                                                              inComment               := 'Выполнено'                ::TVarChar,      -- Примечание         
+                                                              ioCode                  := inSessionCode              ::Integer,       -- № Сессии
+                                                              inName                  := 'Без ошибок'               ::TVarChar,      -- Сообщение об ошибке
+                                                              inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer,       --
+                                                              inMemberId              := NULL                       ::Integer,       --
+                                                              inComment               := 'Выполнено'                ::TVarChar,      -- Примечание
                                                               inSession               := inSession                  ::TVarChar
                                                               )
-         FROM (SELECT DISTINCT _tmpReport.PersonalServiceListId FROM _tmpReport) AS tmp; 
-                    
+         FROM (SELECT DISTINCT _tmpReport.PersonalServiceListId FROM _tmpReport) AS tmp;
+
 
          -- Для Теста - только при формированиии
          if vbUserId IN (9457, 5) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
 
      END IF;
-         
+
     outPersonalServiceDate := CURRENT_TIMESTAMP;
-    
+
 
 END;
 $BODY$
