@@ -2252,16 +2252,17 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   
   CREATE OR REPLACE FUNCTION zc_ObjectLink_MessagePersonalService_Member() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_Member'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
-  SELECT 'zc_ObjectLink_MessagePersonalService_Member', 'Физические лица', zc_Object_MessagePersonalService(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_Member');
+  SELECT 'zc_ObjectLink_MessagePersonalService_Member', 'Физическое лицо', zc_Object_MessagePersonalService(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_Member');
 
   CREATE OR REPLACE FUNCTION zc_ObjectLink_MessagePersonalService_PersonalServiceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_PersonalServiceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
-  SELECT 'zc_ObjectLink_MessagePersonalService_PersonalServiceList', 'Ведомости начисления', zc_Object_MessagePersonalService(), zc_Object_PersonalServiceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_PersonalServiceList');
+  SELECT 'zc_ObjectLink_MessagePersonalService_PersonalServiceList', 'Ведомость начисления', zc_Object_MessagePersonalService(), zc_Object_PersonalServiceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_PersonalServiceList');
   
 
-
-
-            
+  CREATE OR REPLACE FUNCTION zc_ObjectLink_MessagePersonalService_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MessagePersonalService_Unit', 'Подразделение', zc_Object_MessagePersonalService(), zc_Object_PersonalServiceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_Unit');
+           
 
     
     
