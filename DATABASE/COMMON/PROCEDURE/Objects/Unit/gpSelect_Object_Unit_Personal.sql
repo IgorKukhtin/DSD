@@ -51,8 +51,9 @@ BEGIN
    -- Результат
    RETURN QUERY
      WITH
-     tmpUnit AS (SELECT spSelect.*
-                 FROM gpSelect_Object_Unit (inSession) AS spSelect
+     tmpUnit AS (SELECT gpSelect.*
+                 FROM gpSelect_Object_Unit (inSession) AS gpSelect
+                 WHERE gpSelect.isErased = FALSE
                 )
    , tmpPersonalServiceList AS (SELECT tmp.UnitId
                                      , SUM (tmp.Count) AS Count
