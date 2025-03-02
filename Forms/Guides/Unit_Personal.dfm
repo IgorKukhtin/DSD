@@ -83,7 +83,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
         Width = 45
       end
       object Name: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -745,7 +745,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1096#1080#1073#1082#1072#1084
-      Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1086#1073#1097#1077#1085#1080#1103' '#1087#1086' '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102' '#1047#1055'>'
+      Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1090#1095#1077#1090' '#1087#1086' '#1086#1096#1080#1073#1082#1072#1084' '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1047#1055'>'
       FormName = 'TMessagePersonalServiceLastForm'
       FormNameParam.Value = 'TMessagePersonalServiceLastForm'
       FormNameParam.DataType = ftString
@@ -780,7 +780,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
     Left = 72
     Top = 152
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232
     Top = 288
   end
@@ -924,6 +924,14 @@ object Unit_PersonalForm: TUnit_PersonalForm
         Name = 'inName'
         Value = Null
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

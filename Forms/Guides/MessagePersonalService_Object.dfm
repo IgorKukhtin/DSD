@@ -1,9 +1,9 @@
 object MessagePersonalService_ObjectForm: TMessagePersonalService_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1086#1073#1097#1077#1085#1080#1103' '#1087#1086' '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102' '#1047#1055'>'
+  Caption = #1057#1077#1089#1089#1080#1103' '#1087#1086' '#1086#1096#1080#1073#1082#1072#1084' - '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1047#1055
   ClientHeight = 358
-  ClientWidth = 713
+  ClientWidth = 854
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,16 +20,14 @@ object MessagePersonalService_ObjectForm: TMessagePersonalService_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 713
+    Width = 854
     Height = 332
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 79
-    ExplicitWidth = 793
-    ExplicitHeight = 279
+    ExplicitWidth = 713
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -62,17 +60,25 @@ object MessagePersonalService_ObjectForm: TMessagePersonalService_ObjectForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 101
+        Width = 80
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 200
       end
       object PersonalServiceListName: TcxGridDBColumn
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
         DataBinding.FieldName = 'PersonalServiceListName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 202
       end
       object InsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103
         DataBinding.FieldName = 'InsertDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -80,20 +86,26 @@ object MessagePersonalService_ObjectForm: TMessagePersonalService_ObjectForm
         Width = 139
       end
       object InsertName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'InsertName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 249
+        Width = 200
       end
       object InsertDate_min: TcxGridDBColumn
         Caption = #1053#1072#1095#1072#1083#1086' '#1089#1077#1089#1089#1080#1080
         DataBinding.FieldName = 'InsertDate_min'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object InsertDate_max: TcxGridDBColumn
-        Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1089#1077#1089#1089#1080#1080
+        Caption = #1047#1072#1074#1077#1088#1096#1077#1085#1080#1077' '#1089#1077#1089#1089#1080#1080
         DataBinding.FieldName = 'InsertDate_max'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -184,14 +196,6 @@ object MessagePersonalService_ObjectForm: TMessagePersonalService_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -213,10 +217,9 @@ object MessagePersonalService_ObjectForm: TMessagePersonalService_ObjectForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
-      Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides

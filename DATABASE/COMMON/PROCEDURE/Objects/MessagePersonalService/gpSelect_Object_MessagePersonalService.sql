@@ -1,13 +1,14 @@
-﻿-- 
+﻿--
 DROP FUNCTION IF EXISTS gpSelect_Object_MessagePersonalService (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MessagePersonalService(
     IN inSessionCode            Integer,
-    IN inPersonalServiceListId  Integer,            --  
+    IN inPersonalServiceListId  Integer,            --
     IN inSession                TVarChar            -- сессия пользователя
-   
+
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , UnitId Integer, UnitName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , MemberId Integer, MemberName TVarChar
              , Comment TVarChar
@@ -31,7 +32,8 @@ BEGIN
              Object_MessagePersonalService.Id           AS Id
            , Object_MessagePersonalService.ObjectCode   AS Code   --Session
            , Object_MessagePersonalService.ValueData    AS Name   --Message
-           
+           , Object_Unit.Id                             AS UnitId
+           , Object_Unit.ValueData                      AS UnitName
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
            , Object_Member.Id                           AS MemberId
@@ -45,7 +47,12 @@ BEGIN
        FROM Object AS Object_MessagePersonalService
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_MessagePersonalService.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_MessagePersonalService_Comment()  
+                                AND ObjectString_Comment.DescId = zc_ObjectString_MessagePersonalService_Comment()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit
+                               ON ObjectLink_Unit.ObjectId = Object_MessagePersonalService.Id
+                              AND ObjectLink_Unit.DescId   = zc_ObjectLink_MessagePersonalService_Unit()
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
                                ON ObjectLink_PersonalServiceList.ObjectId = Object_MessagePersonalService.Id
@@ -60,7 +67,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_MessagePersonalService.Id
                               AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
+          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
 
           LEFT JOIN ObjectDate AS ObjectDate_Insert
                                ON ObjectDate_Insert.ObjectId = Object_MessagePersonalService.Id
@@ -83,4 +90,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_MessagePersonalService (inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_MessagePersonalService (inSessionCode:= 1, inPersonalServiceListId:= 0, inSession:= zfCalc_UserAdmin())

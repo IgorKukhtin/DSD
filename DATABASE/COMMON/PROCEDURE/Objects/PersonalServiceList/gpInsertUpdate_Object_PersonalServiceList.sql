@@ -63,6 +63,12 @@ BEGIN
 
 --RAISE EXCEPTION 'Ошибкa <%>', inKoeffSummCardSecond;
 
+   IF TRIM (COALESCE (inName , '')) = ''
+   THEN
+       RAISE EXCEPTION 'Ошибкa.Название Ведомости не заполнено.';
+   END IF;
+   
+   
    
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;

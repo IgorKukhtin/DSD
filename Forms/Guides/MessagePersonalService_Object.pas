@@ -61,6 +61,7 @@ type
     dxBarControlContainerItem6: TdxBarControlContainerItem;
     InsertDate_min: TcxGridDBColumn;
     InsertDate_max: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,9 +1,9 @@
 object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1086#1073#1097#1077#1085#1080#1103' '#1087#1086' '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102' '#1047#1055'>'
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1096#1080#1073#1082#1072#1084' - '#1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1047#1055
   ClientHeight = 358
-  ClientWidth = 793
+  ClientWidth = 968
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,14 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 79
-    Width = 793
+    Width = 968
     Height = 279
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -16
+    ExplicitWidth = 793
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,7 +51,6 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.Footer = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -61,6 +60,13 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 71
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 200
       end
       object PersonalServiceListName: TcxGridDBColumn
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
@@ -74,7 +80,7 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 133
+        Width = 200
       end
       object Name: TcxGridDBColumn
         Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1086#1073' '#1086#1096#1080#1073#1082#1077
@@ -91,16 +97,18 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
         Width = 161
       end
       object InsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103
         DataBinding.FieldName = 'InsertDate'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 139
       end
       object InsertName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'InsertName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -123,10 +131,11 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 793
+    Width = 968
     Height = 53
     Align = alTop
     TabOrder = 4
+    ExplicitWidth = 793
     object cxLabel3: TcxLabel
       Left = 131
       Top = 5
@@ -139,8 +148,8 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
     end
     object deStart: TcxDateEdit
       Left = 131
-      Top = 26
-      EditValue = 42667d
+      Top = 28
+      EditValue = 45658d
       Properties.Kind = ckDateTime
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -149,8 +158,8 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
     end
     object deEnd: TcxDateEdit
       Left = 254
-      Top = 26
-      EditValue = 42667d
+      Top = 28
+      EditValue = 45658d
       Properties.Kind = ckDateTime
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -169,7 +178,7 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
     end
     object edMessage: TcxButtonEdit
       Left = 13
-      Top = 26
+      Top = 28
       Properties.Buttons = <
         item
           Default = True
@@ -387,6 +396,7 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object dsdChoiceGuides: TdsdChoiceGuides

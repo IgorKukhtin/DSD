@@ -75,6 +75,7 @@ type
     GuidesMessage: TdsdGuides;
     edPersonalServiceList: TcxButtonEdit;
     GuidesPersonalServiceList: TdsdGuides;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

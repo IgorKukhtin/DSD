@@ -55,7 +55,7 @@ type
     GridDS: TDataSource;
     ClientDataSet: TClientDataSet;
     spSelect: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     BusinessName: TcxGridDBColumn;
     ProfitLossGroupCode: TcxGridDBColumn;

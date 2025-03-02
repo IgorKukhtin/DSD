@@ -1,11 +1,13 @@
 -- 
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MessagePersonalService (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MessagePersonalService (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MessagePersonalService(
  INOUT ioId                      Integer,       -- ключ объекта
  INOUT ioCode                    Integer,       -- № Сессии
     IN inName                    TVarChar,      -- Сообщение об ошибке
+    IN inUnitId                  Integer,       --
     IN inPersonalServiceListId   Integer,       --
     IN inMemberId                Integer,       --
     IN inComment                 TVarChar,      -- Примечание
@@ -30,6 +32,8 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_MessagePersonalService(), ioCode, inName);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MessagePersonalService_Unit(), ioId, inUnitId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MessagePersonalService_PersonalServiceList(), ioId, inPersonalServiceListId);
    -- сохранили свойство <>
