@@ -384,8 +384,9 @@ BEGIN
                , tmpData.CountTare9     ::TFloat
                , tmpData.CountTare10    ::TFloat
 
-               , (COALESCE (tmpData.CountTare1,0)
-                + COALESCE (tmpData.CountTare2,0)
+               , (-- COALESCE (tmpData.CountTare1,0)
+                  --+ COALESCE (tmpData.CountTare2,0)
+                  0
                 + COALESCE (tmpData.CountTare3,0)
                 + COALESCE (tmpData.CountTare4,0)
                 + COALESCE (tmpData.CountTare5,0)
@@ -395,8 +396,9 @@ BEGIN
                 + COALESCE (tmpData.CountTare9,0)
                 + COALESCE (tmpData.CountTare10,0)) ::TFloat AS BoxCountTotal
 
-               , (COALESCE (tmpData.CountTare1,0) * COALESCE (tmpData.BoxWeight1,0)
-                + COALESCE (tmpData.CountTare2,0) * COALESCE (tmpData.BoxWeight2,0)
+               , (-- COALESCE (tmpData.CountTare1,0) * COALESCE (tmpData.BoxWeight1,0)
+                  --+ COALESCE (tmpData.CountTare2,0) * COALESCE (tmpData.BoxWeight2,0)
+                  0
                 + COALESCE (tmpData.CountTare3,0) * COALESCE (tmpData.BoxWeight3,0)
                 + COALESCE (tmpData.CountTare4,0) * COALESCE (tmpData.BoxWeight4,0)
                 + COALESCE (tmpData.CountTare5,0) * COALESCE (tmpData.BoxWeight5,0)
