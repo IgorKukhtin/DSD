@@ -401,6 +401,8 @@ type
     spSelectPrint_grid: TdsdStoredProc;
     bbPrintGridNew: TdxBarButton;
     actPrint_Grid_new: TdsdPrintAction;
+    MI_ChildProtocolOpenForm: TdsdOpenForm;
+    bbMI_ChildProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

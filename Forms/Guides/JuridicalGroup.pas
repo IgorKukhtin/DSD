@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dsdCommon;
 
 type
   TJuridicalGroupForm = class(TParentForm)
@@ -54,6 +54,8 @@ type
     bbSetEnerased: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
     bbChoiceGuide: TdxBarButton;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

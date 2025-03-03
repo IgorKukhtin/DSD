@@ -170,6 +170,10 @@ object JuridicalGroupForm: TJuridicalGroupForm
         item
           Visible = True
           ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
         end>
       OneOnRow = True
       Row = 0
@@ -207,6 +211,10 @@ object JuridicalGroupForm: TJuridicalGroupForm
       Action = actChoiceGuides
       Category = 0
     end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = ProtocolOpenForm
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -235,10 +243,12 @@ object JuridicalGroupForm: TJuridicalGroupForm
       FormName = 'TJuridicalGroupEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -254,12 +264,15 @@ object JuridicalGroupForm: TJuridicalGroupForm
       FormName = 'TJuridicalGroupEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -312,19 +325,53 @@ object JuridicalGroupForm: TJuridicalGroupForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
       DataSource = DataSource
+    end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -335,6 +382,7 @@ object JuridicalGroupForm: TJuridicalGroupForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 240
     Top = 208
   end
@@ -372,10 +420,13 @@ object JuridicalGroupForm: TJuridicalGroupForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 160
     Top = 168
   end
