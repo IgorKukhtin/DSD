@@ -24,7 +24,8 @@ object WorkTimeKindForm: TWorkTimeKindForm
     Height = 350
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 624
+    ExplicitLeft = 8
+    ExplicitTop = -6
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -699,6 +700,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 296
     Top = 168
