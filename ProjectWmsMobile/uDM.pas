@@ -190,6 +190,8 @@ type
     cdsInventoryEditWeightTare_calc: TFloatField;
     cdsInventoryListWeightTare_calc: TFloatField;
     cdsInventoryListTopWeightTare_calc: TFloatField;
+    cdsInventoryListStatusCode: TIntegerField;
+    cdsInventoryListTopStatusCode: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure cdsChoiceCelListCalcFields(DataSet: TDataSet);
     procedure cdsChoiceCelListTopCalcFields(DataSet: TDataSet);
@@ -924,13 +926,13 @@ begin
   try
     StoredProc.OutputType := otDataSet;
 
-    StoredProc.StoredProcName := 'gpSelect_MovementItem_Inventory_mobile';
+    StoredProc.StoredProcName := 'gpSelect_Movement_Inventory_mobile';
     StoredProc.Params.Clear;
-//    StoredProc.Params.AddParam('inIsOrderBy', ftBoolean, ptInput, AIsOrderBy);
-//    StoredProc.Params.AddParam('inIsAllUser', ftBoolean, ptInput, AIsAllUser);
-//    StoredProc.Params.AddParam('inLimit', ftInteger, ptInput, FLimitList);
-//    StoredProc.Params.AddParam('inFilter', ftWideString, ptInput, AFilter);
-//    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, AIsErased);
+    StoredProc.Params.AddParam('inIsOrderBy', ftBoolean, ptInput, AIsOrderBy);
+    StoredProc.Params.AddParam('inIsAllUser', ftBoolean, ptInput, AIsAllUser);
+    StoredProc.Params.AddParam('inLimit', ftInteger, ptInput, FLimitList);
+    StoredProc.Params.AddParam('inFilter', ftWideString, ptInput, AFilter);
+    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, AIsErased);
     StoredProc.DataSet := cdsInventoryList;
 
     try
@@ -965,8 +967,13 @@ begin
   try
     StoredProc.OutputType := otDataSet;
 
-    StoredProc.StoredProcName := 'gpSelect_MovementItem_Inventory_mobile';
+    StoredProc.StoredProcName := 'gpSelect_Movement_Inventory_mobile';
     StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inIsOrderBy', ftBoolean, ptInput, True);
+    StoredProc.Params.AddParam('inIsAllUser', ftBoolean, ptInput, False);
+    StoredProc.Params.AddParam('inLimit', ftInteger, ptInput, 5);
+    StoredProc.Params.AddParam('inFilter', ftWideString, ptInput, '');
+    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
     StoredProc.DataSet := cdsInventoryListTop;
 
     try
