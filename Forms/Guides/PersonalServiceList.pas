@@ -91,6 +91,8 @@ type
     mactUpdate_User: TMultiAction;
     actUpdate_PersonalOut: TdsdExecStoredProc;
     macUpdate_PersonalOut: TMultiAction;
+    actShowAll: TBooleanStoredProcAction;
+    bbinIsErased: TdxBarButton;
   private
     { Private declarations }
   public
