@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_PersonalServiceList()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_PersonalServiceList(TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_PersonalServiceList(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PersonalServiceList(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PersonalServiceList(
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inIsErased      Boolean,
+    IN inSession       TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -252,7 +254,8 @@ BEGIN
            OR vbBranchId_Constraint IS NULL)
            --OR (Object_PersonalServiceList.Id = 4409489
              -- AND vbUserId = 9457)
-              )
+              ) 
+      AND (Object_PersonalServiceList.isErased = inIsErased OR inIsErased = TRUE)
    ;
 
 END;
@@ -283,4 +286,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PersonalServiceList('2')
+-- SELECT * FROM gpSelect_Object_PersonalServiceList(FALSE, '2')
