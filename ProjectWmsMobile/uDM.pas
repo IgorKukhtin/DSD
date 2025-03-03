@@ -192,6 +192,8 @@ type
     cdsInventoryListTopWeightTare_calc: TFloatField;
     cdsInventoryListStatusCode: TIntegerField;
     cdsInventoryListTopStatusCode: TIntegerField;
+    cdsInventoryListErasedCode: TIntegerField;
+    cdsInventoryListTopErasedCode: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure cdsChoiceCelListCalcFields(DataSet: TDataSet);
     procedure cdsChoiceCelListTopCalcFields(DataSet: TDataSet);
@@ -222,6 +224,9 @@ type
 
     procedure SetErasedChoiceCel(ADataSet: TClientDataset);
     procedure SetUnErasedChoiceCel(ADataSet: TClientDataset);
+
+    procedure SetErasedInventory(ADataSet: TClientDataset);
+    procedure SetUnErasedInventory(ADataSet: TClientDataset);
 
     function DownloadChoiceCelList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
     function DownloadChoiceCelListTop : Boolean;
@@ -938,7 +943,7 @@ begin
     try
       StoredProc.Execute(false, false, false);
       Result := cdsInventoryList.Active;
-      if Result and (nID <> 0) then cdsInventoryList.Locate('Id', nId, []);
+      if Result and (nID <> 0) then cdsInventoryList.Locate('MovementItemId', nId, []);
       if cdsInventoryList.RecordCount >= FLimitList then
         frmMain.llwInventoryList.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' записей'
       else frmMain.llwInventoryList.Text := 'Найдено ' + IntToStr(cdsInventoryList.RecordCount) + ' записей';
@@ -969,11 +974,11 @@ begin
 
     StoredProc.StoredProcName := 'gpSelect_Movement_Inventory_mobile';
     StoredProc.Params.Clear;
-    StoredProc.Params.AddParam('inIsOrderBy', ftBoolean, ptInput, True);
-    StoredProc.Params.AddParam('inIsAllUser', ftBoolean, ptInput, False);
+    StoredProc.Params.AddParam('inIsOrderBy', ftBoolean, ptInput, False);
+    StoredProc.Params.AddParam('inIsAllUser', ftBoolean, ptInput, True);
     StoredProc.Params.AddParam('inLimit', ftInteger, ptInput, 5);
     StoredProc.Params.AddParam('inFilter', ftWideString, ptInput, '');
-    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
+    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, True);
     StoredProc.DataSet := cdsInventoryListTop;
 
     try
@@ -1029,6 +1034,66 @@ begin
       StoredProc.OutputType := otResult;
 
       StoredProc.StoredProcName := 'gpMovementItem_ChoiceCell_SetUnErased';
+      StoredProc.Params.Clear;
+      StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, ADataSet.FieldByName('MovementItemId').AsInteger);
+      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+
+      try
+        StoredProc.Execute(false, false, false);
+        ADataSet.Edit;
+        ADataSet.FieldByName('ErasedCode').AsInteger := -1;
+        ADataSet.Post;
+      except
+        on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+      end;
+    finally
+      FreeAndNil(StoredProc);
+    end;
+  end;
+end;
+
+procedure TDM.SetErasedInventory(ADataSet: TClientDataset);
+  var StoredProc : TdsdStoredProc;
+begin
+
+  if ADataSet.Active and not ADataSet.IsEmpty then
+  begin
+
+    StoredProc := TdsdStoredProc.Create(nil);
+    try
+      StoredProc.OutputType := otResult;
+
+      StoredProc.StoredProcName := 'gpMovementItem_Inventory_SetErased_mobile';
+      StoredProc.Params.Clear;
+      StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, ADataSet.FieldByName('MovementItemId').AsInteger);
+      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+
+      try
+        StoredProc.Execute(false, false, false);
+        ADataSet.Edit;
+        ADataSet.FieldByName('ErasedCode').AsInteger := 10;
+        ADataSet.Post;
+      except
+        on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+      end;
+    finally
+      FreeAndNil(StoredProc);
+    end;
+  end;
+end;
+
+procedure TDM.SetUnErasedInventory(ADataSet: TClientDataset);
+  var StoredProc : TdsdStoredProc;
+begin
+
+  if ADataSet.Active and not ADataSet.IsEmpty then
+  begin
+
+    StoredProc := TdsdStoredProc.Create(nil);
+    try
+      StoredProc.OutputType := otResult;
+
+      StoredProc.StoredProcName := 'gpMovementItem_Inventory_SetUnErased_mobile';
       StoredProc.Params.Clear;
       StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, ADataSet.FieldByName('MovementItemId').AsInteger);
       StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);

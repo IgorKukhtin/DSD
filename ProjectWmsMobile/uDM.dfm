@@ -299,6 +299,9 @@ object DM: TDM
     object cdsInventoryListTopWeightTare_calc: TFloatField
       FieldName = 'WeightTare_calc'
     end
+    object cdsInventoryListTopErasedCode: TIntegerField
+      FieldName = 'ErasedCode'
+    end
   end
   object cdsInventoryList: TClientDataSet
     Aggregates = <>
@@ -412,6 +415,9 @@ object DM: TDM
     end
     object cdsInventoryListWeightTare_calc: TFloatField
       FieldName = 'WeightTare_calc'
+    end
+    object cdsInventoryListErasedCode: TIntegerField
+      FieldName = 'ErasedCode'
     end
   end
   object cdsInventoryEdit: TClientDataSet
