@@ -286,7 +286,6 @@ type
     lvBox: TListView;
     Label19: TLabel;
     Label23: TLabel;
-    Label25: TLabel;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -364,6 +363,12 @@ type
     procedure bpInventoryCancelClick(Sender: TObject);
     procedure bpInventoryClickClick(Sender: TObject);
     procedure bInventoryScanSearchClick(Sender: TObject);
+    procedure lwInventoryScanDblClick(Sender: TObject);
+    procedure lwInventoryScanGesture(Sender: TObject;
+      const EventInfo: TGestureEventInfo; var Handled: Boolean);
+    procedure lwInventoryListGesture(Sender: TObject;
+      const EventInfo: TGestureEventInfo; var Handled: Boolean);
+    procedure lwInventoryListDblClick(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -1240,7 +1245,7 @@ begin
     FDataWedgeBarCode.OnScanResult := Nil;
   end;
   if (tcMain.ActiveTab <> tiInformation) and (tcMain.ActiveTab <> tiScanBarCode) then lwBarCodeResult.Items.Clear;
-  PasswordEdit.Text := ''; //'asdasxq1';
+  PasswordEdit.Text := 'asdasxq1';
   lCaption.TextSettings.Font.Size := FCaptionFontSize;
 
   { настройка панели возврата }
@@ -1811,6 +1816,84 @@ begin
   end;
 end;
 
+procedure TfrmMain.lwInventoryListDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  var Handled: Boolean;
+      GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
+begin
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  Handled := False;
+  lwInventoryListGesture(Sender, GestureEventInfo, Handled)
+  {$ENDIF}
+end;
+
+procedure TfrmMain.lwInventoryListGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+var I: Integer;
+begin
+  if ppActions.IsOpen or Handled then Exit;
+
+  // Сскроем все
+  for I := 0 to ComponentCount - 1 do
+    if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      TButton(Components[I]).Visible := False;
+
+  // Редактирование
+  if (tcMain.ActiveTab = tiInventoryList) and DM.cdsInventoryList.Active and not DM.cdsInventoryList.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    //btaEraseRecord.Visible := DM.cdsInventoryListErasedCode.AsInteger <> 10;
+    btaUnEraseRecord.Visible := not btaEraseRecord.Visible;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
+
+end;
+
+procedure TfrmMain.lwInventoryScanDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  var Handled: Boolean;
+      GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
+begin
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  Handled := False;
+  lwInventoryScanGesture(Sender, GestureEventInfo, Handled)
+  {$ENDIF}
+end;
+
+procedure TfrmMain.lwInventoryScanGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+var I: Integer;
+begin
+  if ppActions.IsOpen or Handled then Exit;
+
+  // Сскроем все
+  for I := 0 to ComponentCount - 1 do
+    if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      TButton(Components[I]).Visible := False;
+
+  // Редактирование
+  if (tcMain.ActiveTab = tiInventoryScan) and DM.cdsInventoryListTop.Active and not DM.cdsInventoryListTop.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    btaEraseRecord.Visible := True;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
+end;
+
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
 var
   ErrorMessage: String;
@@ -2148,9 +2231,12 @@ begin
       begin
         SwitchToForm(tiInventoryEdit, nil);
         lvBox.Items.Clear;
-        AddlvBox(dm.cdsInventoryEditBoxName_5.AsString, dm.cdsInventoryEditCountTare_5.AsString, dm.cdsInventoryEditWeightTare_5.AsString);
-        AddlvBox(dm.cdsInventoryEditBoxName_4.AsString, dm.cdsInventoryEditCountTare_4.AsString, dm.cdsInventoryEditWeightTare_4.AsString);
-        AddlvBox(dm.cdsInventoryEditBoxName_3.AsString, dm.cdsInventoryEditCountTare_3.AsString, dm.cdsInventoryEditWeightTare_3.AsString);
+        if dm.cdsInventoryEditWeightTare_5.AsInteger > 0 then
+          AddlvBox(dm.cdsInventoryEditBoxName_5.AsString, dm.cdsInventoryEditCountTare_5.AsString, dm.cdsInventoryEditWeightTare_5.AsString);
+        if dm.cdsInventoryEditWeightTare_4.AsInteger > 0 then
+          AddlvBox(dm.cdsInventoryEditBoxName_4.AsString, dm.cdsInventoryEditCountTare_4.AsString, dm.cdsInventoryEditWeightTare_4.AsString);
+        if dm.cdsInventoryEditWeightTare_3.AsInteger > 0 then
+          AddlvBox(dm.cdsInventoryEditBoxName_3.AsString, dm.cdsInventoryEditCountTare_3.AsString, dm.cdsInventoryEditWeightTare_3.AsString);
         AddlvBox(dm.cdsInventoryEditBoxName_2.AsString, dm.cdsInventoryEditCountTare_2.AsString, dm.cdsInventoryEditWeightTare_2.AsString);
         AddlvBox(dm.cdsInventoryEditBoxName_1.AsString, dm.cdsInventoryEditCountTare_1.AsString, dm.cdsInventoryEditWeightTare_1.AsString);
       end else

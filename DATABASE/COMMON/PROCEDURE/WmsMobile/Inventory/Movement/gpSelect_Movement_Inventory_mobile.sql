@@ -63,6 +63,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
+             , ErasedCode Integer
               )
 AS
 $BODY$
@@ -251,6 +252,7 @@ BEGIN
            , MIDate_Update.ValueData    AS UpdateDate
 
            , MovementItem.isErased      AS isErased
+           , CASE WHEN MovementItem.isErased = TRUE THEN 10 ELSE -1 END :: Integer AS ErasedCode
 
         FROM tmpMovement AS Movement
             INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id

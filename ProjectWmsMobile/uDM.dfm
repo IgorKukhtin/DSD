@@ -195,6 +195,9 @@ object DM: TDM
     object cdsInventoryListTopMovementItemId: TIntegerField
       FieldName = 'MovementItemId'
     end
+    object cdsInventoryListTopStatusCode: TIntegerField
+      FieldName = 'StatusCode'
+    end
     object cdsInventoryListTopGoodsId: TIntegerField
       FieldName = 'GoodsId'
     end
@@ -305,6 +308,9 @@ object DM: TDM
     Top = 280
     object cdsInventoryListMovementItemId: TIntegerField
       FieldName = 'MovementItemId'
+    end
+    object cdsInventoryListStatusCode: TIntegerField
+      FieldName = 'StatusCode'
     end
     object cdsInventoryListGoodsId: TIntegerField
       FieldName = 'GoodsId'

@@ -4283,7 +4283,37 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [60]
+    object MI_ChildProtocolOpenForm: TdsdOpenForm [59]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'MemberName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [61]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4310,7 +4340,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [63]
+    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [64]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -5827,6 +5857,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbMI_ChildProtocolOpenForm'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -6215,6 +6249,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbPrintGridNew: TdxBarButton
       Action = macPrint_grid_new
+      Category = 0
+    end
+    object bbMI_ChildProtocolOpenForm: TdxBarButton
+      Action = MI_ChildProtocolOpenForm
       Category = 0
     end
   end
