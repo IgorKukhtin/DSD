@@ -600,7 +600,7 @@ object frmMain: TfrmMain
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 9
+        TabIndex = 7
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -20703,7 +20703,7 @@ object frmMain: TfrmMain
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -21140,7 +21140,7 @@ object frmMain: TfrmMain
               TextSettings.Trimming = None
               OnClick = bpInventoryCancelClick
             end
-            object bpInventoryClick: TButton
+            object bpInventory: TButton
               Anchors = [akLeft, akBottom]
               Images = ilButton
               ImageIndex = 2
@@ -21153,7 +21153,7 @@ object frmMain: TfrmMain
               TabOrder = 24
               Text = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100
               TextSettings.Trimming = None
-              OnClick = bpInventoryClickClick
+              OnClick = bpInventoryClick
             end
             object Edit1: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -21277,7 +21277,7 @@ object frmMain: TfrmMain
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -23951,6 +23951,10 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'StatusCode'
           ControlMemberName = 'StatusCode'
+        end
+        item
+          SourceMemberName = 'ErasedCode'
+          ControlMemberName = 'ErasedCode'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -23999,6 +24003,10 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'StatusCode'
           ControlMemberName = 'StatusCode'
+        end
+        item
+          SourceMemberName = 'ErasedCode'
+          ControlMemberName = 'ErasedCode'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>

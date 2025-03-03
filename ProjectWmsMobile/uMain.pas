@@ -257,7 +257,7 @@ type
     Edit7: TEdit;
     Label15: TLabel;
     bpInventoryCancel: TButton;
-    bpInventoryClick: TButton;
+    bpInventory: TButton;
     tiInventoryList: TTabItem;
     Panel4: TPanel;
     pbInventoryErased: TPopupBox;
@@ -302,6 +302,7 @@ type
     procedure ShowChoiceCelList;
     procedure ShowInventoryList;
     procedure ShowEditChoiceCelItem(AId: Integer);
+    procedure ShowEditInventoryItem(AId: Integer);
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
@@ -361,7 +362,6 @@ type
     procedure pbInventoryOrderByChange(Sender: TObject);
     procedure bViewInventoryClick(Sender: TObject);
     procedure bpInventoryCancelClick(Sender: TObject);
-    procedure bpInventoryClickClick(Sender: TObject);
     procedure bInventoryScanSearchClick(Sender: TObject);
     procedure lwInventoryScanDblClick(Sender: TObject);
     procedure lwInventoryScanGesture(Sender: TObject;
@@ -369,6 +369,7 @@ type
     procedure lwInventoryListGesture(Sender: TObject;
       const EventInfo: TGestureEventInfo; var Handled: Boolean);
     procedure lwInventoryListDblClick(Sender: TObject);
+    procedure bpInventoryClick(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -436,6 +437,11 @@ type
     procedure ErasedChoiceCelList(const AResult: TModalResult);
     procedure UnErasedChoiceCelList(const AResult: TModalResult);
     procedure UnErasedChoiceCelTop(const AResult: TModalResult);
+
+    procedure ErasedInventoryTop(const AResult: TModalResult);
+    procedure ErasedInventoryList(const AResult: TModalResult);
+    procedure UnErasedInventoryList(const AResult: TModalResult);
+    procedure UnErasedInventoryTop(const AResult: TModalResult);
 
     procedure InputChoiceCel(const AResult: TModalResult; const AValues: array of string);
     procedure InputInventory(const AResult: TModalResult; const AValues: array of string);
@@ -1037,6 +1043,39 @@ begin
   end;
 end;
 
+procedure TfrmMain.ErasedInventoryTop(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.SetErasedInventory(DM.cdsInventoryListTop);
+    DM.DownloadInventoryListTop;
+  end;
+end;
+
+procedure TfrmMain.ErasedInventoryList(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.SetErasedInventory(DM.cdsInventoryList);
+  end;
+end;
+
+procedure TfrmMain.UnErasedInventoryList(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.SetUnErasedInventory(DM.cdsInventoryList);
+  end;
+end;
+
+procedure TfrmMain.UnErasedInventoryTop(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.SetUnErasedInventory(DM.cdsInventoryListTop);
+  end;
+end;
+
 // Формирование документа сборки
 procedure TfrmMain.bpChoiceCelCancelClick(Sender: TObject);
 begin
@@ -1058,7 +1097,7 @@ begin
   ReturnPriorForm;
 end;
 
-procedure TfrmMain.bpInventoryClickClick(Sender: TObject);
+procedure TfrmMain.bpInventoryClick(Sender: TObject);
 begin
   InventoryConfirm(mrYes);
   ReturnPriorForm;
@@ -1245,7 +1284,7 @@ begin
     FDataWedgeBarCode.OnScanResult := Nil;
   end;
   if (tcMain.ActiveTab <> tiInformation) and (tcMain.ActiveTab <> tiScanBarCode) then lwBarCodeResult.Items.Clear;
-  PasswordEdit.Text := 'asdasxq1';
+  PasswordEdit.Text := '';
   lCaption.TextSettings.Font.Size := FCaptionFontSize;
 
   { настройка панели возврата }
@@ -1451,6 +1490,16 @@ begin
   if AID = 0 then Exit;
 
   bpChoiceCel.Visible := False;
+
+//  if  DM.GetChoiceCelItem(AId) then
+//    SwitchToForm(tiChoiceCelEdit, nil);
+end;
+
+procedure TfrmMain.ShowEditInventoryItem(AId: Integer);
+begin
+  if AID = 0 then Exit;
+
+  bpInventory.Visible := False;
 
 //  if  DM.GetChoiceCelItem(AId) then
 //    SwitchToForm(tiChoiceCelEdit, nil);
@@ -1843,7 +1892,7 @@ begin
   if (tcMain.ActiveTab = tiInventoryList) and DM.cdsInventoryList.Active and not DM.cdsInventoryList.IsEmpty then
   begin
     btaCancel.Visible := True;
-    //btaEraseRecord.Visible := DM.cdsInventoryListErasedCode.AsInteger <> 10;
+    btaEraseRecord.Visible := DM.cdsInventoryListErasedCode.AsInteger <> 10;
     btaUnEraseRecord.Visible := not btaEraseRecord.Visible;
     ppActions.Height := 2;
     for I := 0 to ComponentCount - 1 do
@@ -1883,7 +1932,8 @@ begin
   if (tcMain.ActiveTab = tiInventoryScan) and DM.cdsInventoryListTop.Active and not DM.cdsInventoryListTop.IsEmpty then
   begin
     btaCancel.Visible := True;
-    btaEraseRecord.Visible := True;
+    btaEraseRecord.Visible := DM.cdsInventoryListTopErasedCode.AsInteger <> 10;
+    btaUnEraseRecord.Visible := not btaEraseRecord.Visible;
     ppActions.Height := 2;
     for I := 0 to ComponentCount - 1 do
       if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
@@ -2134,6 +2184,65 @@ begin
                                    'вид товара <' + DM.cdsChoiceCelListGoodsKindName.AsString + '>'#13#10 +
                                    '<' + DM.cdsChoiceCelListGoodsName.AsString + '> ?',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedChoiceCelList)
+    end  else
+    // Удаление позиции
+    if TButton(Sender).Tag = 2 then
+      TDialogService.MessageDialog('Удалить Места отбора'#13#10'Ячейка отбора = <' + DM.cdsChoiceCelListTopChoiceCellName.AsString + '>'#13#10 +
+                                   'документ = <' + DM.cdsChoiceCelListTopInvNumber.AsString + '>'#13#10 +
+                                   'вид товара <' + DM.cdsChoiceCelListTopGoodsKindName.AsString + '>'#13#10 +
+                                   '<' + DM.cdsChoiceCelListTopGoodsName.AsString + '> ?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedChoiceCelTop);
+    // Востановление позиции
+    if TButton(Sender).Tag = 3  then
+    begin
+      TDialogService.MessageDialog('Отменить удаление Места отбора'#13#10'Ячейка отбора = <' + DM.cdsChoiceCelListTopChoiceCellName.AsString + '>'#13#10 +
+                                   'документ = <' + DM.cdsChoiceCelListTopInvNumber.AsString + '>'#13#10 +
+                                   'вид товара <' + DM.cdsChoiceCelListTopGoodsKindName.AsString + '>'#13#10 +
+                                   '<' + DM.cdsChoiceCelListTopGoodsName.AsString + '> ?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedChoiceCelTop)
+    end;
+  end else if (tcMain.ActiveTab = tiInventoryScan) then
+  begin
+    // Изменить позицию
+    if TButton(Sender).Tag = 1 then
+    begin
+      ShowEditInventoryItem(DM.cdsInventoryListTopMovementItemId.AsInteger);
+    end else
+    // Удаление позиции
+    if TButton(Sender).Tag = 2 then
+      TDialogService.MessageDialog('Удалить Товар'#13#10'Товар = <' + DM.cdsInventoryListTopGoodsName.AsString + '>'#13#10 +
+                                   'количество = <' + DM.cdsInventoryListTopAmount.AsString + '>'#13#10 +
+                                   'вид товара <' + DM.cdsInventoryListTopGoodsKindName.AsString + '> ?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedInventoryTop);
+    // Востановление позиции
+    if TButton(Sender).Tag = 3  then
+    begin
+      TDialogService.MessageDialog('Отменить удаление Товара'#13#10'Товар = <' + DM.cdsInventoryListTopGoodsName.AsString + '>'#13#10 +
+                                   'количество = <' + DM.cdsInventoryListTopAmount.AsString + '>'#13#10 +
+                                   'вид товара <' + DM.cdsInventoryListTopGoodsKindName.AsString + '> ?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedInventoryTop)
+    end;
+  end else if (tcMain.ActiveTab = tiInventoryList) then
+  begin
+    // Изменить позицию
+    if TButton(Sender).Tag = 1 then
+    begin
+      ShowEditInventoryItem(DM.cdsInventoryListMovementItemId.AsInteger);
+    end else
+    // Удаление позиции
+    if TButton(Sender).Tag = 2 then
+      TDialogService.MessageDialog('Удалить Товар'#13#10'Товар = <' + DM.cdsInventoryListGoodsName.AsString + '>'#13#10 +
+                                   'количество = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
+                                   'вид товара <' + DM.cdsInventoryListGoodsKindName.AsString + '> ?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedInventoryList)
+    else
+    // Востановление позиции
+    if TButton(Sender).Tag = 3  then
+    begin
+      TDialogService.MessageDialog('Отменить удаление Товара'#13#10'Товар = <' + DM.cdsInventoryListGoodsName.AsString + '>'#13#10 +
+                                   'количество = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
+                                   'вид товара <' + DM.cdsInventoryListGoodsKindName.AsString + '> ?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedInventoryList)
     end;
   end;
 
