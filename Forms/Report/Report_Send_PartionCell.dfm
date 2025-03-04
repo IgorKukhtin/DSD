@@ -24,6 +24,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       inherited cxGrid: TcxGrid
         Width = 1540
         Height = 311
+        ExplicitLeft = 3
+        ExplicitTop = 24
         ExplicitWidth = 1540
         ExplicitHeight = 311
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -2611,7 +2613,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Caption = 'actContinueAction'
       Continue.Value = False
       Continue.Component = FormParams
-      Continue.ComponentItem = 'outisPrint'
+      Continue.ComponentItem = 'outisEdit'
       Continue.DataType = ftBoolean
       Continue.MultiSelectSeparator = ','
     end

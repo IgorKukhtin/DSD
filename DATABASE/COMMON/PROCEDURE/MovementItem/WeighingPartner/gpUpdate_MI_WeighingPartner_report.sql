@@ -82,7 +82,7 @@ BEGIN
      
      
      --
-     --IF vbUserId = 9457 THEN RAISE EXCEPTION 'OK.'; END IF; 
+     IF vbUserId = 9457 THEN RAISE EXCEPTION 'OK.'; END IF; 
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, vbIsInsert);
