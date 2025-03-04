@@ -19,12 +19,15 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                     -- THEN 257164 -- покупатели Киев
                     THEN 280271 -- покупатели Львов
 
+               WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideVinnica()
+                    THEN 280276 -- покупатели Вінниця
+
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideNikolaev()
                     THEN 257165 -- покупатели Николаев (Херсон)
 
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideOdessa()
                     THEN 257166 -- покупатели Одесса
-                    
+
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideCherkassi()
                     THEN 257167 -- покупатели Черкассы (Кировоград)
 
@@ -60,6 +63,9 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
 
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideLviv()
                     THEN 3080683 -- филиал Львов
+
+               WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideVinnica()
+                    THEN 11920989 -- филиал Винница
 
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideNikolaev()
                     THEN 8373 -- филиал Николаев (Херсон)
@@ -105,6 +111,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
               , MAX (CASE WHEN AccessKeyId IN (zc_Enum_Process_AccessKey_GuideDnepr()
                                              , zc_Enum_Process_AccessKey_GuideKiev()
                                              , zc_Enum_Process_AccessKey_GuideLviv()
+                                             , zc_Enum_Process_AccessKey_GuideVinnica()
                                              , zc_Enum_Process_AccessKey_GuideKrRog()
                                              , zc_Enum_Process_AccessKey_GuideNikolaev()
                                              , zc_Enum_Process_AccessKey_GuideKharkov()
@@ -147,12 +154,13 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
 
                                              , zc_Enum_Process_AccessKey_PersonalServiceKiev()
                                              , zc_Enum_Process_AccessKey_PersonalServiceLviv()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceVinnica()
                                              , zc_Enum_Process_AccessKey_PersonalServiceKrRog()
                                              , zc_Enum_Process_AccessKey_PersonalServiceNikolaev()
                                              , zc_Enum_Process_AccessKey_PersonalServiceKharkov()
                                              , zc_Enum_Process_AccessKey_PersonalServiceCherkassi()
                                              , zc_Enum_Process_AccessKey_PersonalServiceDoneck()
-                                             , zc_Enum_Process_AccessKey_PersonalServiceOdessa() 
+                                             , zc_Enum_Process_AccessKey_PersonalServiceOdessa()
                                              , zc_Enum_Process_AccessKey_PersonalServiceZaporozhye()
 
                                              , zc_Enum_Process_AccessKey_PersonalServiceIrna()
@@ -174,7 +182,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                THEN AccessKeyId
                           ELSE 0
                      END) AS AccessKeyId_all
-                     
+
 
          FROM Object_RoleAccessKey_View
          WHERE AccessKeyId <> 0
@@ -208,7 +216,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
 --                                                                                                   , 30200 -- Административные расходы + Содержание транспорта
 --                                                                                                    )
                                                                                                      )
-                                                                                                     
+
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServicePav()
                                                                         )
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceOther()
@@ -243,6 +251,9 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                                                         )
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceLviv()
                                                                      AND BranchId = 3080683 -- филиал Львов
+                                                                        )
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceVinnica()
+                                                                     AND BranchId = 11920989 -- Филиал Винница
                                                                         )
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceIrna()
                                                                      AND BranchId = 8109544 -- филиал Ирна
