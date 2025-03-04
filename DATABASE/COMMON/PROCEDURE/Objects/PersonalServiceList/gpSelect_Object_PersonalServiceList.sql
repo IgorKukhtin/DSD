@@ -256,6 +256,69 @@ BEGIN
              -- AND vbUserId = 9457)
               ) 
       AND (Object_PersonalServiceList.isErased = inIsErased OR inIsErased = TRUE)
+
+  UNION ALL
+     SELECT 
+             0 :: Integer AS Id
+           , 0 :: Integer AS Code
+            , 'Очистить значение' ::TVarChar  AS Name
+           , 0  :: Integer  AS JuridicalId
+           , '' :: TVarChar AS JuridicalName
+
+           , 0   :: Integer AS PaidKindId
+           , '' :: TVarChar AS PaidKindName
+           , 0   :: Integer AS BranchId
+           , '' :: TVarChar AS BranchName
+           , 0   :: Integer AS BankId
+           , '' :: TVarChar AS BankName
+
+           , 0   :: Integer AS MemberId
+           , '' :: TVarChar AS MemberName
+
+           , 0   :: Integer AS MemberHeadManagerId
+           , '' :: TVarChar AS MemberHeadManagerName
+           , 0   :: Integer AS MemberManagerId
+           , '' :: TVarChar AS MemberManagerName
+           , 0   :: Integer AS MemberBookkeeperId
+           , '' :: TVarChar AS MemberBookkeeperName
+
+           , 0   :: Integer AS PersonalHeadId
+           , 0   :: Integer AS PersonalHeadCode
+           , '' :: TVarChar AS PersonalHeadName
+           , '' :: TVarChar AS UnitName_Head
+           , '' :: TVarChar AS BranchName_Head
+
+           , 0   :: Integer AS BankAccountId
+           , '' :: TVarChar AS BankAccountName
+           , 0   :: Integer AS PSLExportKindId
+           , '' :: TVarChar AS PSLExportKindName 
+           
+           , 0   :: Integer AS ServiceListId_AvanceF2
+           , '' :: TVarChar AS ServiceListName_AvanceF2
+
+           , '' :: TVarChar AS ContentType
+           , '' :: TVarChar AS OnFlowType
+
+           , CAST (0 AS NUMERIC (16,10)) AS KoeffSummCardSecond
+           , 0   :: TFloat AS Compensation           
+           , '' :: TVarChar AS CompensationName
+
+           , 0   :: TFloat AS SummAvance
+           , 0   :: TFloat AS SummAvanceMax
+           , 0   :: TFloat AS HourAvance
+
+           , FALSE ::Boolean AS isSecond
+           , FALSE ::Boolean AS isRecalc
+           , FALSE ::Boolean AS isPersonalOut
+           , FALSE ::Boolean AS isBankOut
+           , FALSE ::Boolean AS isDetail
+           , FALSE ::Boolean AS isAvanceNot
+           , FALSE ::Boolean AS isBankNot
+           , FALSE ::Boolean AS isCompensationNot
+           , FALSE ::Boolean AS isUser
+
+           , TRUE :: Boolean AS isErased
+
    ;
 
 END;
