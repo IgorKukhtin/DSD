@@ -2724,19 +2724,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object actPrintBox: TdsdPrintAction
       Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       StoredProc = spSelectPrintBox
       StoredProcList = <
         item
@@ -2777,19 +2765,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object actPrintBoxTotal: TdsdPrintAction
       Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       StoredProc = spSelectPrintBoxTotal
       StoredProcList = <
         item
@@ -2798,6 +2774,43 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1087#1086' '#1082#1083#1080#1077#1085#1090#1091')'
       Hint = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1087#1086' '#1082#1083#1080#1077#1085#1090#1091')'
       ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackWeightTotal'
+      ReportNameParam.Value = 'PrintMovement_SalePackWeightTotal'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintBoxTotalPartner: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintBox_PartnerTotal
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintBox_PartnerTotal
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086' '#1075#1086#1092#1088#1086#1090#1072#1088#1072' ('#1087#1086' '#1076#1072#1090#1077' '#1087#1086#1082'.)'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086' '#1075#1086#1092#1088#1086#1090#1072#1088#1072' ('#1087#1086' '#1076#1072#1090#1077' '#1087#1086#1082'.)'
+      ImageIndex = 19
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -3232,6 +3245,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintBoxTotalPartner'
+        end
+        item
+          Visible = True
           ItemName = 'bbsSeparator'
         end
         item
@@ -3313,6 +3330,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object bbPrintBoxTotal: TdxBarButton
       Action = actPrintBoxTotal
+      Category = 0
+    end
+    object bbPrintBoxTotalPartner: TdxBarButton
+      Action = actPrintBoxTotalPartner
       Category = 0
     end
   end
@@ -6174,5 +6195,29 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     PackSize = 1
     Left = 623
     Top = 232
+  end
+  object spSelectPrintBox_PartnerTotal: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_BoxPartnerTotalPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 583
+    Top = 360
   end
 end

@@ -6744,8 +6744,8 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 792
-    Top = 200
+    Left = 712
+    Top = 144
   end
   object spUpdateEdiInvoice: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_Edi'
