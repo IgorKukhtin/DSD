@@ -314,6 +314,11 @@ type
     spSelectPrintBoxTotal: TdsdStoredProc;
     actPrintBoxTotal: TdsdPrintAction;
     bbPrintBoxTotal: TdxBarButton;
+    spSelectPrintBox_PartnerTotal: TdsdStoredProc;
+    bbPrintBoxTotalPartner: TdxBarButton;
+    actPrintBoxTotalPartner: TdsdPrintAction;
+    actPrintBoxTotal1: TdsdPrintAction;
+    bbb: TdxBarButton;
   private
     { Private declarations }
   public
