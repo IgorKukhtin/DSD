@@ -6,8 +6,15 @@ CREATE OR REPLACE FUNCTION zfCalc_ViewWorkHour(WorkHour TFloat, WorkTimeKindName
 RETURNS TVarChar AS
 $BODY$
 BEGIN
-  WorkTimeKindName := COALESCE(WorkTimeKindName, '');
-  RETURN to_char(WorkHour, WorkTimeKindName)::TVarChar;
+     -- 
+     WorkTimeKindName := COALESCE(WorkTimeKindName, '');
+     -- 
+     IF WorkTimeKindName ILIKE 'FM99/Ñ9O%'
+     THEN
+         RETURN (to_char(WorkHour, 'FM99') || '/Ñ9O%') :: TVarChar;
+     ELSE
+         RETURN to_char(WorkHour, WorkTimeKindName) :: TVarChar;
+     END IF;
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
