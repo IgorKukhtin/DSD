@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_MI_WeightPartner_BoxNamePSW(
     IN inCountTare2    TFloat,
     IN inSession       TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (BoxName TVarChar) AS
+RETURNS TABLE (BoxName TVarChar, Password TVarChar) AS
 $BODY$
    DECLARE vbUserId Integer;
            vbCountTare1_old TFloat;
@@ -24,6 +24,7 @@ BEGIN
     THEN
         RETURN QUERY 
           SELECT Object.ValueData ::TVarChar
+               , NULL ::TVarChar AS Password
           FROM ObjectFloat AS ObjectFloat_NPP     
                INNER JOIN Object ON Object.Id = ObjectFloat_NPP.ObjectId
                                 AND Object.DescId = zc_Object_Box()
@@ -36,6 +37,7 @@ BEGIN
     THEN
         RETURN QUERY 
           SELECT Object.ValueData ::TVarChar
+               , NULL ::TVarChar AS Password
           FROM ObjectFloat AS ObjectFloat_NPP     
                INNER JOIN Object ON Object.Id = ObjectFloat_NPP.ObjectId
                                 AND Object.DescId = zc_Object_Box()

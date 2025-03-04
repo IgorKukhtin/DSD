@@ -14,22 +14,19 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     Width = 1018
     Height = 311
     TabOrder = 3
-    ExplicitLeft = -8
-    ExplicitTop = 195
+    ExplicitTop = 155
     ExplicitWidth = 1018
     ExplicitHeight = 311
     ClientRectBottom = 311
     ClientRectRight = 1018
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1018
-      ExplicitHeight = 371
+      ExplicitHeight = 311
       inherited cxGrid: TcxGrid
         Width = 1018
         Height = 311
-        ExplicitLeft = 3
-        ExplicitTop = 144
         ExplicitWidth = 1018
-        ExplicitHeight = 371
+        ExplicitHeight = 311
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -596,8 +593,6 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
   inherited Panel: TPanel
     Width = 1018
     Height = 129
-    ExplicitLeft = 32
-    ExplicitTop = 20
     ExplicitWidth = 1018
     ExplicitHeight = 129
     inherited deStart: TcxDateEdit
@@ -988,6 +983,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
           Component = FormParams
           ComponentItem = 'inPassword'
           DataType = ftBoolean
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -1470,6 +1466,14 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         Value = Null
         Component = FormParams
         ComponentItem = 'BoxName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPassword'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
