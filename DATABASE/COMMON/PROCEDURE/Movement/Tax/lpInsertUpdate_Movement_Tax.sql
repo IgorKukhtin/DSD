@@ -48,39 +48,20 @@ BEGIN
            )
      THEN IF inContractId > 0  AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
           THEN -- Для Предоплаты
-               vbAccessKeyId:= CASE COALESCE ((SELECT ObjectLink_Unit_Branch.ChildObjectId
-                                               FROM ObjectLink AS OL
-                                                    INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                                          ON ObjectLink_Personal_Unit.ObjectId = OL.ChildObjectId
-                                                                         AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
-                                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                                                         ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
-                                                                        AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+               vbAccessKeyId:= zfGet_AccessKey_onBranch (COALESCE ((SELECT ObjectLink_Unit_Branch.ChildObjectId
+                                                                    FROM ObjectLink AS OL
+                                                                         INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                                               ON ObjectLink_Personal_Unit.ObjectId = OL.ChildObjectId
+                                                                                              AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
+                                                                         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                                                              ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                                                                                             AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
 
-                                               WHERE OL.ObjectId = inContractId
-                                                 AND OL.DescId   = zc_ObjectLink_Contract_PersonalCollation()
-                                              ), 0)
-                          WHEN 8379 -- филиал Киев
-                               THEN zc_Enum_Process_AccessKey_DocumentKiev()
-                          WHEN 8374     -- филиал Одесса
-                               THEN zc_Enum_Process_AccessKey_DocumentOdessa()
-                          WHEN 8377 -- филиал Кр.Рог
-                               THEN zc_Enum_Process_AccessKey_DocumentKrRog()
-                          WHEN 8373 -- филиал Николаев (Херсон)
-                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev()
-                          WHEN 8381 -- филиал Харьков"
-                               THEN zc_Enum_Process_AccessKey_DocumentKharkov()
-                          WHEN 8375 -- филиал Черкассы
-                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi()
-                          WHEN 301310 -- филиал Запорожье
-                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye()
-                          WHEN 3080683 -- филиал Львов
-                               THEN zc_Enum_Process_AccessKey_DocumentLviv()
-                          WHEN 8109544 -- филиал Ирна
-                               THEN zc_Enum_Process_AccessKey_DocumentIrna()
-
-                          ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax())
-                     END;
+                                                                    WHERE OL.ObjectId = inContractId
+                                                                      AND OL.DescId   = zc_ObjectLink_Contract_PersonalCollation()
+                                                                   ), 0)
+                                                       , zc_Enum_Process_InsertUpdate_Movement_Tax(), inUserId
+                                                        );
 
           ELSEIF COALESCE (inContractId, 0) = 0 AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
           THEN
@@ -94,37 +75,8 @@ BEGIN
      END IF;
 
      -- определяется филиал
-     vbBranchId:= CASE WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentBread()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+     vbBranchId:= zfGet_Branch_AccessKey (vbAccessKeyId);
 
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
-
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentOdessa()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa())
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
-
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKrRog()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog())
-
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentNikolaev()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportNikolaev())
-
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKharkov()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKharkov())
-
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentCherkassi()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportCherkassi())
-
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentLviv()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportLviv())
-
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentIrna()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportIrna())
-                  END;
      -- проверка
    /*IF COALESCE (vbBranchId, 0) = 0 AND (inContractId > 0 OR inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())
      THEN

@@ -67,6 +67,8 @@ BEGIN
    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 78489 AND UserId = vbUserId)
       -- не Админ
       AND NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+      -- Прайс-лист - просмотр БЕЗ ограничений
+      AND NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = 11941188 AND UserId = vbUserId)
       -- нет ограничений на Просмотр
       AND NOT EXISTS (SELECT 1 AS Id FROM Object_ViewPriceList_View WHERE Object_ViewPriceList_View.UserId = vbUserId)
       -- 
@@ -98,6 +100,9 @@ BEGIN
 
    -- есть ограничения на Просмотр
    IF EXISTS (SELECT 1 AS Id FROM Object_ViewPriceList_View WHERE Object_ViewPriceList_View.UserId = vbUserId)
+      -- Прайс-лист - просмотр БЕЗ ограничений
+      AND NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = 11941188 AND UserId = vbUserId)
+      --
       --EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10575455) -- Ограничение - Прайс-лист - просмотр с ограничениями
    THEN
        -- Ограничение

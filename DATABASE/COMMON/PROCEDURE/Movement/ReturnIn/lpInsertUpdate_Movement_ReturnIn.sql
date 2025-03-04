@@ -98,30 +98,7 @@ BEGIN
 
 
      -- определяем ключ доступа !!!то что захардкоженно - временно!!!
-     vbAccessKeyId:= CASE WHEN COALESCE (ioId, 0) = 0 AND inToId IN (8411, 428365) -- Склад ГП ф Киев + Склад возвратов ф.Киев
-                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
-                          WHEN COALESCE (ioId, 0) = 0 AND inToId IN (346093, 346094) -- Склад ГП ф.Одесса + Склад возвратов ф.Одесса
-                               THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
-                          WHEN COALESCE (ioId, 0) = 0 AND inToId IN (8413, 428366) -- Склад ГП ф.Кривой Рог + Склад возвратов ф.Кривой Рог
-                               THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
-                          WHEN COALESCE (ioId, 0) = 0 AND inToId IN (8417, 428364) -- Склад ГП ф.Николаев (Херсон) + Склад возвратов ф.Николаев (Херсон)
-                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
-                          WHEN COALESCE (ioId, 0) = 0 AND inToId IN (8425, 409007) -- Склад ГП ф.Харьков + Склад возвратов ф.Харьков
-                               THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
-                          WHEN COALESCE (ioId, 0) = 0 AND inToId IN (8415, 428363) -- Склад ГП ф.Черкассы (Кировоград) + Склад возвратов ф.Черкассы (Кировоград)
-                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
-
-                          WHEN COALESCE (ioId, 0) = 0 AND inToId IN (3080691, 3080696) -- Склад ГП ф.Львов + Склад возвратов ф.Львов
-                               THEN zc_Enum_Process_AccessKey_DocumentLviv() 
-                               
-                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inToId IN (301309, 309599) -- Склад ГП ф.Запорожье + Склад возвратов ф.Запорожье
-                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
-
-                          WHEN COALESCE (ioId, 0) = 0 AND inToId IN (8020714, 8020715) -- Склад База ГП (Ирна) + Склад Возвратов (Ирна)
-                               THEN zc_Enum_Process_AccessKey_DocumentIrna() 
-
-                          ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn())
-                     END;
+     vbAccessKeyId:= zfGet_AccessKey_onUnit (inToId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn(), inUserId);
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

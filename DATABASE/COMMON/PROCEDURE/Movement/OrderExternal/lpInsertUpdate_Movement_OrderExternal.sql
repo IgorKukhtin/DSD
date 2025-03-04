@@ -45,30 +45,10 @@ BEGIN
 
 
      -- определяем ключ доступа
-   --vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
      vbAccessKeyId:= CASE WHEN inFromId = 8411 -- Склад ГП ф Киев
                                THEN zc_Enum_Process_AccessKey_DocumentKiev()
-                          WHEN inToId = 8411 -- Склад ГП ф Киев
-                               THEN zc_Enum_Process_AccessKey_DocumentKiev()
-                          WHEN inToId = 346093 -- Склад ГП ф.Одесса
-                               THEN zc_Enum_Process_AccessKey_DocumentOdessa()
-                          WHEN inToId = 8413 -- Склад ГП ф.Кривой Рог
-                               THEN zc_Enum_Process_AccessKey_DocumentKrRog()
-                          WHEN inToId = 8417 -- Склад ГП ф.Николаев (Херсон)
-                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev()
-                          WHEN inToId = 8425 -- Склад ГП ф.Харьков
-                               THEN zc_Enum_Process_AccessKey_DocumentKharkov()
-                          WHEN inToId = 8415 -- Склад ГП ф.Черкассы (Кировоград)
-                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi()
-                          WHEN inToId = 301309 -- Склад ГП ф.Запорожье
-                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye()
-                          WHEN inToId = 3080691 -- Склад ГП ф.Львов
-                               THEN zc_Enum_Process_AccessKey_DocumentLviv()
 
-                          WHEN inToId = 8020714 -- Склад База ГП (Ирна)
-                               THEN zc_Enum_Process_AccessKey_DocumentIrna()
-
-                          ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_OrderExternal())
+                          ELSE zfGet_AccessKey_onUnit (inToId, zc_Enum_Process_InsertUpdate_Movement_OrderExternal(), inUserId)
                      END;
 
 

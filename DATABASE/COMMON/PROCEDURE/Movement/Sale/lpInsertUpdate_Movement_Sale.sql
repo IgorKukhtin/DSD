@@ -161,28 +161,7 @@ BEGIN
 
 
      -- определяем ключ доступа !!!то что захардкоженно - временно!!!
-     vbAccessKeyId:= CASE WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8411 -- Склад ГП ф Киев
-                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
-                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 346093 -- Склад ГП ф.Одесса
-                               THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
-                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8413 -- Склад ГП ф.Кривой Рог
-                               THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
-                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8417 -- Склад ГП ф.Николаев (Херсон)
-                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
-                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8425 -- Склад ГП ф.Харьков
-                               THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
-                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8415 -- Склад ГП ф.Черкассы (Кировоград)
-                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
-                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 3080691 -- Склад ГП ф.Львов
-                               THEN zc_Enum_Process_AccessKey_DocumentLviv()
-                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 301309 -- Склад ГП ф.Запорожье
-                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
-
-                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8020714 -- Склад База ГП (Ирна)
-                               THEN zc_Enum_Process_AccessKey_DocumentIrna() 
-
-                          ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner())
-                     END;
+     vbAccessKeyId:= zfGet_AccessKey_onUnit (inFromId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner(), inUserId);
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

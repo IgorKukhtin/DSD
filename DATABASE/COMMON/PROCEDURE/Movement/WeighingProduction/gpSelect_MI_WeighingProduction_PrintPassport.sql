@@ -72,6 +72,17 @@ BEGIN
                           ELSE  MovementItem.Amount
                      END ::TFloat AS Amount
 
+                   , CAST (CASE WHEN vbDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
+                                     THEN MovementItem.Amount
+                                WHEN vbDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND  OF_Weight.ValueData > 0
+                                     THEN MovementItem.Amount / COALESCE (OF_Weight.ValueData, 0)
+                                ELSE  0
+                           END AS NUMERIC (16, 0)
+                          )::TFloat AS Amount_sh
+
+                   , OL_Measure.ChildObjectId :: Integer AS MeasureId
+                   , zc_Measure_Sh()          :: Integer AS zc_Measure_Sh
+
                    , tmpBox.CountTare1    ::TFloat
                    , tmpBox.CountTare2    ::TFloat
                    , tmpBox.CountTare3    ::TFloat
