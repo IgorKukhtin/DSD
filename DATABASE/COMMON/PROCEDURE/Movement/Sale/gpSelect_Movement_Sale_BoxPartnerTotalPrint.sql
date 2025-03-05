@@ -43,7 +43,12 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpGetUserBySession (inSession);  
+     
+     IF COALESCE (inMovementId,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не определен.';
+     END IF;
 
      -- !!! для Киева + Львов
      vbIsKiev:= EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.ObjectId IN (8411, 3080691) AND MLO.DescId = zc_MovementLinkObject_From());

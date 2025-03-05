@@ -456,6 +456,43 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
         end>
       Caption = 'actGet_checkopen'
     end
+    object actPrintBoxTotalPartner: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintBox_PartnerTotal
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintBox_PartnerTotal
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086' '#1075#1086#1092#1088#1086#1090#1072#1088#1072' ('#1087#1086' '#1076#1072#1090#1077' '#1087#1086#1082'.)'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086' '#1075#1086#1092#1088#1086#1090#1072#1088#1072' ('#1087#1086' '#1076#1072#1090#1077' '#1087#1086#1082'.)'
+      ImageIndex = 19
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackWeightTotal'
+      ReportNameParam.Value = 'PrintMovement_SalePackWeightTotal'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Top = 144
@@ -552,6 +589,14 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintBoxTotalPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -567,6 +612,10 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
       Action = ExecuteDialog
       Category = 0
     end
+    object bbPrintBoxTotalPartner: TdxBarButton
+      Action = actPrintBoxTotalPartner
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -574,7 +623,7 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
       end>
   end
   inherited PeriodChoice: TPeriodChoice
-    Top = 176
+    Top = 184
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     Top = 184
@@ -691,5 +740,41 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
     PackSize = 1
     Left = 611
     Top = 218
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 270
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 217
+  end
+  object spSelectPrintBox_PartnerTotal: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_BoxPartnerTotalPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 639
+    Top = 296
   end
 end
