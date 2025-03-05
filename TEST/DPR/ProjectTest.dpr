@@ -1572,7 +1572,8 @@ uses
   Report_WeighingPartner_PassportDialog in '..\..\Forms\Report\Report_WeighingPartner_PassportDialog.pas' {Report_WeighingPartner_PassportDialogForm: TParentForm},
   Movement_Inventory_scale in '..\..\Forms\Report\Movement_Inventory_scale.pas' {Movement_Inventory_scaleForm: TParentForm},
   MessagePersonalService_Object in '..\..\Forms\Guides\MessagePersonalService_Object.pas' {MessagePersonalService_ObjectForm: TParentForm},
-  Unit_Personal in '..\..\Forms\Guides\Unit_Personal.pas' {Unit_PersonalForm: TParentForm};
+  Unit_Personal in '..\..\Forms\Guides\Unit_Personal.pas' {Unit_PersonalForm: TParentForm},
+  Report_WP_PassportPSWDialog in '..\..\Forms\Report\Report_WP_PassportPSWDialog.pas' {Report_WP_PassportPSWDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

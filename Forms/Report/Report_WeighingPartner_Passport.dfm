@@ -1,32 +1,32 @@
 inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1072#1089#1087#1086#1088#1090' '#1043#1055' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103')>'
-  ClientHeight = 526
+  ClientHeight = 466
   ClientWidth = 1018
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1034
-  ExplicitHeight = 565
+  ExplicitHeight = 505
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 155
     Width = 1018
-    Height = 371
+    Height = 311
     TabOrder = 3
-    ExplicitTop = 91
-    ExplicitWidth = 1064
-    ExplicitHeight = 257
-    ClientRectBottom = 371
+    ExplicitTop = 155
+    ExplicitWidth = 1018
+    ExplicitHeight = 311
+    ClientRectBottom = 311
     ClientRectRight = 1018
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1064
-      ExplicitHeight = 257
+      ExplicitWidth = 1018
+      ExplicitHeight = 311
       inherited cxGrid: TcxGrid
         Width = 1018
-        Height = 371
-        ExplicitWidth = 1064
-        ExplicitHeight = 257
+        Height = 311
+        ExplicitWidth = 1018
+        ExplicitHeight = 311
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -593,7 +593,6 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
   inherited Panel: TPanel
     Width = 1018
     Height = 129
-    ExplicitTop = -7
     ExplicitWidth = 1018
     ExplicitHeight = 129
     inherited deStart: TcxDateEdit
@@ -934,14 +933,114 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     object actUpdateDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = macUpDate_Count
+      BeforeAction = macGetCheckDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_CheckingPSW
+      StoredProcList = <
+        item
+          StoredProc = spGet_CheckingPSW
+        end>
+      Caption = 'actUpdateDS'
+      DataSource = MasterDS
+    end
+    object actContinueAction: TdsdContinueAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actContinueAction'
+      Continue.Value = False
+      Continue.Component = FormParams
+      Continue.ComponentItem = 'outisEdit'
+      Continue.DataType = ftBoolean
+      Continue.MultiSelectSeparator = ','
+    end
+    object macUpDate_Count: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actContinueAction
+        end
+        item
+          Action = actUpdate_Count
+        end>
+      Caption = 'macUpDate_Count'
+    end
+    object actExecuteDialogPSW: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1087#1072#1088#1086#1083#1100' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077'  '#1087#1086#1076#1076#1086#1085' 1'
+      Hint = #1087#1072#1088#1086#1083#1100' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1087#1086#1076#1076#1086#1085' 1'
+      ImageIndex = 35
+      FormName = 'TReport_WP_PassportPSWDialogForm'
+      FormNameParam.Value = 'TReport_WP_PassportPSWDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inPassword'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inPassword'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BoxName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BoxName'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_Count: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_Count
       StoredProcList = <
         item
           StoredProc = spUpdate_Count
         end>
-      Caption = 'actUpdateDS'
-      DataSource = MasterDS
+      Caption = 'acUpdate_Count'
+    end
+    object actGetBoxNamePSW: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetBoxNamePSW
+      StoredProcList = <
+        item
+          StoredProc = spGetBoxNamePSW
+        end>
+      Caption = 'actGetBoxNamePSW'
+    end
+    object actGet_CheckingPSW: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_CheckingPSW
+      StoredProcList = <
+        item
+          StoredProc = spGet_CheckingPSW
+        end>
+      Caption = 'actGet_CheckingPSW'
+    end
+    object macGetCheckDialog: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetBoxNamePSW
+        end
+        item
+          Action = actExecuteDialogPSW
+        end>
+      Caption = 'macGetCheckDialog'
     end
   end
   inherited MasterDS: TDataSource
@@ -1083,7 +1182,13 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     Top = 136
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Name = 'outisEdit'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 328
     Top = 170
   end
@@ -1256,5 +1361,124 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     PackSize = 1
     Left = 408
     Top = 280
+  end
+  object spGet_CheckingPSW: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_WeightPartner_CheckPSW'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountTare1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountTare1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountTare2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountTare2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPassword'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inPassword'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEdit'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'outisEdit'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountTare1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountTare1'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountTare2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountTare2'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 352
+  end
+  object spGetBoxNamePSW: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_WeightPartner_BoxNamePSW'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountTare1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountTare1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountTare2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountTare2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BoxName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPassword'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 576
+    Top = 368
   end
 end

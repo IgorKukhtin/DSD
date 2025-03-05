@@ -43,7 +43,12 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpGetUserBySession (inSession);  
+     
+     IF COALESCE (inMovementId,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не определен.';
+     END IF;
 
      -- !!! для Киева + Львов
      vbIsKiev:= EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.ObjectId IN (8411, 3080691) AND MLO.DescId = zc_MovementLinkObject_From());
@@ -377,35 +382,44 @@ BEGIN
       tmpGoods AS (SELECT lfSelect.GoodsId AS GoodsId
                    FROM lfSelect_Object_Goods_byGoodsGroup (1960) AS lfSelect
                    )
-    , tmpMI AS (SELECT tmp.GoodsId
+    , tmpMI AS (WITH
+                tmpMovement AS (SELECT Movement.Id
+                                FROM MovementDate AS MovementDate_OperDatePartner
+                                    INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
+                                                       AND Movement.DescId = zc_Movement_Sale()
+                                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                  ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                 AND MovementLinkObject_To.ObjectId = vbToId
+                                WHERE MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                  AND MovementDate_OperDatePartner.ValueData = vbOperDatePartner
+                                )
+               , tmpMI AS (SELECT *
+                          FROM MovementItem
+                          WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
+                          )
+    
+                SELECT tmp.GoodsId
                      , SUM (COALESCE (tmp.AmountPartner,0)) AS AmountPartner
                 FROM (SELECT MILinkObject_Box.ObjectId                     AS GoodsId
                            , SUM (COALESCE (MIFloat_BoxCount.ValueData,0)) AS AmountPartner
-                      FROM MovementItem
+                      FROM tmpMI AS MovementItem
                           INNER JOIN MovementItemLinkObject AS MILinkObject_Box
                                                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
                           LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                                       ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                                                      AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
-                      WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId     = zc_MI_Master()
-                        AND MovementItem.isErased   = FALSE
-                       GROUP BY MILinkObject_Box.ObjectId
-                     UNION
-                      SELECT MovementItem.ObjectId AS GoodsId
-                           , SUM (COALESCE (MovementItem.Amount,0)) AS AmountPartner
-                      FROM MovementItem
-                           INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-                      WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId     = zc_MI_Master()
-                        AND MovementItem.isErased   = FALSE
-                       GROUP BY MovementItem.ObjectId
+                      GROUP BY MILinkObject_Box.ObjectId
                       ) AS tmp
                 GROUP BY tmp.GoodsId
                )
      --выбираем данные из др. документов по _OperDatePartner и Partner
-     , tmpMI_ets AS (WITH
+    , tmpMI_ets AS (WITH
                      tmpMovement AS (SELECT Movement.Id
                                      FROM MovementDate AS MovementDate_OperDatePartner
                                          INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
@@ -497,6 +511,7 @@ BEGIN
            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
       WHERE tmpMI.GoodsId IS NULL
+
       ORDER BY 2
      ;
 
@@ -575,4 +590,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_BoxTotalPrint (inMovementId:= 18441615, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
+--SELECT * FROM gpSelect_Movement_Sale_BoxPartnerTotalPrint (inMovementId:= 18441615, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";

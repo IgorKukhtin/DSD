@@ -81,6 +81,15 @@ type
     cxLabel14: TcxLabel;
     edBoxName_10: TcxTextEdit;
     spGet_Box_NPP: TdsdStoredProc;
+    actContinueAction: TdsdContinueAction;
+    spGet_CheckingPSW: TdsdStoredProc;
+    actExecuteDialogPSW: TExecuteDialog;
+    macUpDate_Count: TMultiAction;
+    actGet_CheckingPSW: TdsdExecStoredProc;
+    actUpdate_Count: TdsdExecStoredProc;
+    spGetBoxNamePSW: TdsdStoredProc;
+    actGetBoxNamePSW: TdsdExecStoredProc;
+    macGetCheckDialog: TMultiAction;
   private
     { Private declarations }
   public

@@ -56,6 +56,11 @@ type
     actRefreshDet: TdsdDataSetRefresh;
     macOpenDocument: TMultiAction;
     actGet_checkopen: TdsdExecStoredProc;
+    PrintItemsCDS: TClientDataSet;
+    PrintHeaderCDS: TClientDataSet;
+    spSelectPrintBox_PartnerTotal: TdsdStoredProc;
+    actPrintBoxTotalPartner: TdsdPrintAction;
+    bbPrintBoxTotalPartner: TdxBarButton;
   private
     { Private declarations }
   public

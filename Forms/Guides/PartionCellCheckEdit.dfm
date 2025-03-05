@@ -156,7 +156,7 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 344
+    Left = 336
     Top = 8
   end
   object spGet: TdsdStoredProc
@@ -221,6 +221,6 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 24
-    Top = 94
+    Top = 86
   end
 end

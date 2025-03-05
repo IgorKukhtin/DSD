@@ -21,7 +21,7 @@ RETURNS TABLE(OperDate TDateTime, OperDatePartner TDateTime
             , GoodsGroupNameFull TVarChar
 			, Amount TFloat, BoxCount TFloat, BoxCount_calc TFloat
 			, MovementId Integer , InvNumber TVarChar
-    )
+)
 AS
 $BODY$
     DECLARE vbUserId Integer;
