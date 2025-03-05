@@ -17,7 +17,7 @@ BEGIN
 
     vbUserId:= lpGetUserBySession (inSession);
     
-    IF COALESCE (inPassword,'') <> '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'
+    IF COALESCE (inPassword,'') <> 'd'
     THEN
         RETURN QUERY 
           SELECT FALSE AS isEdit
