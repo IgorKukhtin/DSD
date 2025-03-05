@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpGet_MI_WeightPartner_CheckPSW (Integer, TFloat, TFloat
 
 CREATE OR REPLACE FUNCTION gpGet_MI_WeightPartner_CheckPSW(
     IN inId            Integer ,      --Ид строки
-    IN inCountTare1    TFloat,
-    IN inCountTare2    TFloat,
+    IN inCountTare1    TFloat  ,
+    IN inCountTare2    TFloat  ,
     IN inPassword      TVarChar,       -- проверка 
     IN inSession       TVarChar       -- сессия пользователя
 )
