@@ -122,6 +122,8 @@ type
     macMovementReComplete_list: TMultiAction;
     macMovementReComplete: TMultiAction;
     bbMovementReComplete: TdxBarButton;
+    OperDate_Protocol_mi: TcxGridDBColumn;
+    UserName_Protocol_mi: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1120,6 +1120,22 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1077#1082' ('#1076#1072'/'#1085#1077#1090')'
             Width = 60
           end
+          object OperDate_Protocol_mi: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'OperDate_Protocol_mi'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1090#1088#1086#1095#1085#1086#1081' '#1095#1072#1089#1090#1080')'
+            Width = 80
+          end
+          object UserName_Protocol_mi: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UserName_Protocol_mi'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1090#1088#1086#1095#1085#1086#1081' '#1095#1072#1089#1090#1080')'
+            Width = 70
+          end
         end
       end
       object cbSumm_branch: TcxCheckBox
