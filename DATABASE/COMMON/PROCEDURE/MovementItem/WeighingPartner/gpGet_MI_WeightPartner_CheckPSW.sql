@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_MI_WeightPartner_CheckPSW(
     IN inId            Integer ,      --Ид строки
     IN inCountTare1    TFloat,
     IN inCountTare2    TFloat,
-    IN inPSW           TVarChar,       -- Подразделение 
+    IN inPassword      TVarChar,       -- проверка 
     IN inSession       TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (isEdit Boolean, CountTare1 TFloat, CountTare2 TFloat) AS
@@ -17,7 +17,7 @@ BEGIN
 
     vbUserId:= lpGetUserBySession (inSession);
     
-    IF COALESCE (inPSW,'') <> '555'
+    IF COALESCE (inPassword,'') <> '123'
     THEN
         RETURN QUERY 
           SELECT FALSE AS isEdit
