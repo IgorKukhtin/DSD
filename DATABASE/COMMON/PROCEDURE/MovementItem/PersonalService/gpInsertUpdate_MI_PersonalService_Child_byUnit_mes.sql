@@ -192,7 +192,7 @@ BEGIN
                                                         AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
                            )
            SELECT tmpMovement.*
-           FROM tmpMovement
+           FROM tmpMovement                
            WHERE tmpMovement.Ord = 1
            ) AS tmp
      WHERE tmp.StatusId = zc_Enum_Status_Complete();
@@ -378,6 +378,30 @@ BEGIN
           ) AS tmp;
 
      --RAISE EXCEPTION 'Test6. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService);
+
+     -- 7  StaffListId
+     INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
+     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Не установлено значение <Штатное расписание>' ::TVarChar, 'проверка 7' ::TVarChar
+     FROM
+          (SELECT spReport.MemberId
+                , spReport.PersonalServiceListId
+           FROM _tmpReport AS spReport
+           WHERE COALESCE (spReport.StaffListId, 0) = 0
+          ) AS tmp;
+
+     -- 8 Модель начисления или типы сумм для штатного расписания
+     INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
+     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Не установлено значение <Модель начисления> или <Типы сумм для штатного расписания>.' ::TVarChar, 'проверка 28' ::TVarChar
+     FROM
+          (SELECT spReport.MemberId
+                , spReport.PersonalServiceListId
+           FROM _tmpReport AS spReport
+           WHERE COALESCE (spReport.ModelServiceId, 0) = 0 
+              OR COALESCE (spReport.StaffListSummKindId, 0) = 0
+          ) AS tmp;
+
+
+
 
      -- после проверок
      IF (SELECT COUNT (*) FROM _tmpMessagePersonalService) > 0
