@@ -28,7 +28,7 @@ BEGIN
 
      -- проверка по свойству подразделения
      IF COALESCE (vbisPersonalService, FALSE) = FALSE
-        AND vbUserId <> 5
+        -- AND vbUserId <> 5
      THEN
          RETURN;
      END IF;
@@ -43,7 +43,9 @@ BEGIN
 
      -- расчет за прошлый месяц
      vbStartDate := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);  --'01.02.2025' ::TDateTime; --
-     vbEndDate   := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 DAY')::TDateTime);    --'19.02.2025' ::TDateTime; --
+     vbEndDate   := DATE_TRUNC ('MONTH', CURRENT_DATE)  - INTERVAL '1 DAY';    --'19.02.2025' ::TDateTime; --
+
+-- RAISE EXCEPTION 'Test.Ok. <%>  <%>', vbStartDate,  vbEndDate;
 
      --
      CREATE TEMP TABLE _tmpMessagePersonalService (MemberId Integer
@@ -455,9 +457,12 @@ BEGIN
 
          -- Для Теста - только при формированиии
          if vbUserId IN (9457, 5) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
-         RAISE EXCEPTION 'Ошибок нет.Для тестового режима формирование данных в ведомости отключено.'; 
+         -- RAISE EXCEPTION 'Ошибок нет.Для тестового режима формирование данных в ведомости отключено.'; 
 
      END IF;
+
+    -- Для Теста
+    if vbUserId IN (9457, 5) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
 
     outPersonalServiceDate := CURRENT_TIMESTAMP;
 

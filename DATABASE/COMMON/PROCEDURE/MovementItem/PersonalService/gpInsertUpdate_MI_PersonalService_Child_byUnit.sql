@@ -35,7 +35,7 @@ BEGIN
      
      -- расчет за прошлый месяц
      vbStartDate := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);
-     vbEndDate   := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 DAY')::TDateTime); 
+     vbEndDate   := DATE_TRUNC ('MONTH', CURRENT_DATE)  - INTERVAL '1 DAY'; 
      
      ---- Создать таблицу, в которую будут залиты все данные для анализа
      CREATE TEMP TABLE _tmpReport (PersonalServiceListId Integer
