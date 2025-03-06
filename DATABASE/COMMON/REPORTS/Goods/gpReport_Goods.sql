@@ -62,6 +62,9 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , UserName_Protocol_auto TVarChar   
               , OperDate_Insert TDateTime
               , UserName_Insert TVarChar
+
+              , OperDate_Protocol_mi TDateTime
+              , UserName_Protocol_mi TVarChar
                )
 AS
 $BODY$
@@ -321,6 +324,10 @@ BEGIN
           
           , tmpProtocolInsert.OperDate ::TDateTime AS OperDate_Insert
           , tmpProtocolInsert.UserName ::TVarChar  AS UserName_Insert
+
+          , NULL ::TDateTime AS OperDate_Protocol_mi
+          , NULL ::TVarChar  AS UserName_Protocol_mi
+
      FROM gpReport
           LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = gpReport.MovementId 
           
@@ -883,6 +890,17 @@ BEGIN
                               INNER JOIN MovementProtocol ON MovementProtocol.MovementId = tmp.MovementId
                         GROUP BY MovementProtocol.MovementId
                        )
+, tmpMIProtocol_find AS (SELECT MovementItemProtocol.MovementItemId
+                              , MAX (MovementItemProtocol.Id) AS MaxId
+                         FROM (SELECT DISTINCT tmpMI_Id.MovementItemId 
+                               FROM tmpMI_Id
+                               WHERE tmpMI_Id.MovementItemId > 0
+                               ) AS tmp
+                               INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = tmp.MovementItemId
+                                                            --AND MovementItemProtocol.UserId NOT IN (zc_Enum_Process_Auto_PrimeCost())
+                                                            --AND MovementItemProtocol.OperDate BETWEEN '28.02.2025' AND '01.03.2025'
+                         GROUP BY MovementItemProtocol.MovementItemId
+                        )
      , tmpProtocol AS (SELECT MovementProtocol.MovementId
                             , MovementProtocol.UserId
                             , MovementProtocol.OperDate
@@ -899,6 +917,15 @@ BEGIN
                                                       AND MovementProtocol_auto.Id         = tmpProtocol1.MaxId_Auto_Auto
                             LEFT JOIN Object AS Object_User      ON Object_User.Id      = MovementProtocol.UserId
                             LEFT JOIN Object AS Object_User_auto ON Object_User_auto.Id = MovementProtocol_auto.UserId
+                      )
+   , tmpMIProtocol AS (SELECT MovementItemProtocol.MovementItemId
+                            , MovementItemProtocol.UserId
+                            , MovementItemProtocol.OperDate
+                            , Object_User.ValueData AS UserName
+                       FROM tmpMIProtocol_find
+                            INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = tmpMIProtocol_find.MovementItemId
+                                                           AND MovementItemProtocol.Id             = tmpMIProtocol_find.MaxId
+                            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
                       )
 
 
@@ -1141,6 +1168,9 @@ BEGIN
 
                         , tmpProtocolInsert.OperDate ::TDateTime AS OperDate_Insert
                         , tmpProtocolInsert.UserName ::TVarChar  AS UserName_Insert
+
+                        , tmpMIProtocol.OperDate     ::TDateTime AS OperDate_Protocol_mi
+                        , tmpMIProtocol.UserName     ::TVarChar  AS UserName_Protocol_mi
                         
                          --
                         , Object_Storage.Id                 AS StorageId
@@ -1286,6 +1316,7 @@ BEGIN
 
                         LEFT JOIN tmpProtocol ON tmpProtocol.MovementId =  tmpMIContainer_group.MovementId
                         LEFT JOIN tmpProtocolInsert ON tmpProtocolInsert.MovementId =  tmpMIContainer_group.MovementId
+                        LEFT JOIN tmpMIProtocol ON tmpMIProtocol.MovementItemId =  tmpMIContainer_group.MovementItemId
                         
                         -- LEFT JOIN tmpPartionCell ON tmpPartionCell.MovementItemId = tmpMIContainer_group.MovementItemId
                    )
@@ -1402,6 +1433,9 @@ BEGIN
         , tmpDataAll.OperDate_Insert ::TDateTime AS OperDate_Insert
         , tmpDataAll.UserName_Insert ::TVarChar  AS UserName_Insert
 
+        , tmpDataAll.OperDate_Protocol_mi
+        , tmpDataAll.UserName_Protocol_mi
+
    FROM tmpDataAll
         LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                               ON ObjectFloat_Weight.ObjectId = tmpDataAll.GoodsId
@@ -1471,6 +1505,8 @@ BEGIN
         , tmpDataAll.PartNumber_partion
         , tmpDataAll.PartionCellName
         , tmpDataAll.isPartionCell_Close 
+        , tmpDataAll.OperDate_Protocol_mi
+        , tmpDataAll.UserName_Protocol_mi
    ;
 
    END IF;
@@ -1499,4 +1535,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2022', inEndDate:= '01.01.2022', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * from gpReport_Goods(inStartDate := ('02.03.2022')::TDateTime , inEndDate := ('03.03.2022')::TDateTime , inUnitGroupId := 0 , inLocationId := 8451 , inGoodsGroupId := 1858 , inGoodsId := 341913 , inIsPartner := 'False' , inIsPartion := 'False', inSession := '5');
+-- SELECT * from gpReport_Goods(inStartDate := ('02.03.2025')::TDateTime , inEndDate := ('03.03.2025')::TDateTime , inUnitGroupId := 0 , inLocationId := 8451 , inGoodsGroupId := 1858 , inGoodsId := 341913 , inIsPartner := 'False' , inIsPartion := 'False', inSession := '5');
