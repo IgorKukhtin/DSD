@@ -114,8 +114,8 @@ BEGIN
                                     , inPositionId     := 0           ::Integer   --должность
                                     , inDetailDay                    := FALSE  ::Boolean   --детализировать по дням
                                     , inDetailMonth                  := FALSE  ::Boolean   --детализировать по месяцам
-                                    , inDetailModelService           := FALSE  ::Boolean   --детализировать по моделям
-                                    , inDetailModelServiceItemMaster := FALSE  ::Boolean   --детализировать по типам документов в модели
+                                    , inDetailModelService           := TRUE   ::Boolean   --детализировать по моделям
+                                    , inDetailModelServiceItemMaster := TRUE   ::Boolean   --детализировать по типам документов в модели
                                     , inDetailModelServiceItemChild  := FALSE  ::Boolean   --детализировать по товарам в типах документов
                                     , inSession        := inSession   ::TVarChar
                                     ) tmp;
