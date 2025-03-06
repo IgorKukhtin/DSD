@@ -201,15 +201,12 @@ BEGIN
 
      -- 2 в разрезе фио - заполнена графа "Ведомость начисления главная"
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
-     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Главная ведомость не установлена' ::TVarChar, 'проверка 2' ::TVarChar
+     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Не установлено значение <Ведомость Начисления>' ::TVarChar, 'проверка 2' ::TVarChar
      FROM
           (SELECT spReport.MemberId
                 , spReport.PersonalServiceListId
            FROM _tmpReport AS spReport
-                LEFT JOIN _tmpPersonal ON _tmpPersonal.MemberId = spReport.MemberId
-                                      AND _tmpPersonal.PositionId = spReport.PositionId
-                                      AND _tmpPersonal.PositionLevelId = spReport.PositionLevelId
-           WHERE _tmpPersonal.PersonalServiceListId IS NULL
+           WHERE COALESCE (spReport.PersonalServiceListId, 0) = 0
           ) AS tmp;
      ---RAISE EXCEPTION 'Test2. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService);
 
