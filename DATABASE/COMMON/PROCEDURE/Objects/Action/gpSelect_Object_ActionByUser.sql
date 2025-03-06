@@ -14,7 +14,7 @@ BEGIN
   vbUserId := lpGetUserBySession(inSession);
   -- Проверяем нет ли случайно у него прав Админа
   PERFORM 1 FROM ObjectLink_UserRole_View 
-           WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId IN (zc_Enum_Role_Admin(), 296580); -- Admin + Просмотр ВСЕ (управленцы)
+           WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId IN (zc_Enum_Role_Admin(), 296580); -- Admin + Просмотр ВСЕ (руководство)
   IF FOUND THEN
      -- возвращаем все 
      RETURN QUERY 
