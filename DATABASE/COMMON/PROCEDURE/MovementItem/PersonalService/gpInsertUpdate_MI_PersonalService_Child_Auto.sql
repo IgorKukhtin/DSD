@@ -74,7 +74,18 @@ BEGIN
      -- проверка
      IF COALESCE (inModelServiceId, 0) = 0 AND COALESCE (inStaffListSummKindId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не установлено значение <Модель начисления> или <Типы сумм для штатного расписания>.';
+          RAISE EXCEPTION 'Ошибка.%Не установлено значение <Модель начисления>%или <Типы сумм для штатного расписания>.%<%> %<%> %<%> %<%>'
+                      , CHR (13)
+                      , CHR (13)
+                      , CHR (13)
+                      , lfGet_Object_ValueData_sh (inUnitId)
+                      , CHR (13)
+                      , lfGet_Object_ValueData_sh (inPersonalServiceListId)
+                      , CHR (13)
+                      , lfGet_Object_ValueData_sh (inMemberId)
+                      , CHR (13)
+                      , lfGet_Object_ValueData_sh (inPositionId)
+                       ;
      END IF;
 
 
