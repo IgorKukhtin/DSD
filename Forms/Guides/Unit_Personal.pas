@@ -94,6 +94,7 @@ type
     bbMessagePersonalServiceForm: TdxBarButton;
     PersonalServiceListName: TcxGridDBColumn;
     isError_psl: TcxGridDBColumn;
+    DepartmentName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -92,6 +92,14 @@ object Unit_PersonalForm: TUnit_PersonalForm
         SortOrder = soAscending
         Width = 200
       end
+      object DepartmentName: TcxGridDBColumn
+        Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090
+        DataBinding.FieldName = 'DepartmentName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
+      end
       object PersonalServiceListName: TcxGridDBColumn
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
         DataBinding.FieldName = 'PersonalServiceListName'
