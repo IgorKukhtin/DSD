@@ -85,8 +85,6 @@ type
     bbInsertUpdate_PersonalService: TdxBarButton;
     PeriodChoice: TPeriodChoice;
     spInsert_MessagePersonalService: TdsdStoredProc;
-    cxLabel3: TcxLabel;
-    edSessionCode: TcxCurrencyEdit;
     dxLabel3: TdxBarControlContainerItem;
     bbSessionCode: TdxBarControlContainerItem;
     actInsert_MessagePersonalService: TdsdExecStoredProc;
@@ -95,6 +93,14 @@ type
     PersonalServiceListName: TcxGridDBColumn;
     isError_psl: TcxGridDBColumn;
     DepartmentName: TcxGridDBColumn;
+    spGet_Param: TdsdStoredProc;
+    Panel: TPanel;
+    deStart: TcxDateEdit;
+    deEnd: TcxDateEdit;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
+    cxLabel3: TcxLabel;
+    edSessionCode: TcxCurrencyEdit;
   private
     { Private declarations }
   public

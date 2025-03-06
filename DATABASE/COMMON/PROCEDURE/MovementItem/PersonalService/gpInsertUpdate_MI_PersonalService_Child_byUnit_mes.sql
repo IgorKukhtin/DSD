@@ -2,10 +2,11 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_byUnit (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_byUnit_mes (Integer,Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_byUnit (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Child_byUnit_mes(
-    --IN inStartDate            TDateTime , -- дата
-    --IN inEndDate              TDateTime , -- дата
+    IN inStartDate            TDateTime , -- дата
+    IN inEndDate              TDateTime , -- дата
     IN inSessionCode          Integer   , -- № Сессии MessagePersonalService
     IN inUnitId               Integer   , -- подразделение
     IN inisPersonalService    Boolean   , --
@@ -45,6 +46,11 @@ BEGIN
      vbStartDate := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);  --'01.02.2025' ::TDateTime; --
      vbEndDate   := DATE_TRUNC ('MONTH', CURRENT_DATE)  - INTERVAL '1 DAY';    --'19.02.2025' ::TDateTime; --
 
+     IF inStartDate <> vbStartDate OR inEndDate <> vbEndDate
+     THEN
+         RAISE EXCEPTION 'Ошибка.Расчетный период отличается от выбранного.';
+     END IF;
+     
 -- RAISE EXCEPTION 'Test.Ok. <%>  <%>', vbStartDate,  vbEndDate;
 
      --
@@ -499,4 +505,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_PersonalService_Child_byUnit_mes( inSessionCode := 1 ::Integer, inUnitId := 8449 ::Integer, inisPersonalService:= TRUE ::Boolean, inSession := '9457' ::TVarChar)
+-- SELECT * FROM gpInsertUpdate_MI_PersonalService_Child_byUnit_mes( inStartDate := '01.02.2025', inEndDate := '01.02.2025' , inSessionCode := 1 ::Integer, inUnitId := 8449 ::Integer, inisPersonalService:= TRUE ::Boolean, inSession := '9457' ::TVarChar)
