@@ -391,7 +391,7 @@ BEGIN
 
      -- 8 Модель начисления или типы сумм для штатного расписания
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
-     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Не установлено значение <Модель начисления> или <Типы сумм для штатного расписания>.' ::TVarChar, 'проверка 28' ::TVarChar
+     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Не установлено значение <Модель начисления> или <Типы сумм для штатного расписания>.' ::TVarChar, 'проверка 8' ::TVarChar
      FROM
           (SELECT spReport.MemberId
                 , spReport.PersonalServiceListId
@@ -499,4 +499,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_PersonalService_Child_byUnit_mes( inSessionCode := 1 ::Integer, inUnitId := 8449 ::Integer, inisPersonalService:= TRUE ::Boolean, inSession := '6561986' ::TVarChar)
+-- SELECT * FROM gpInsertUpdate_MI_PersonalService_Child_byUnit_mes( inSessionCode := 1 ::Integer, inUnitId := 8449 ::Integer, inisPersonalService:= TRUE ::Boolean, inSession := '9457' ::TVarChar)
