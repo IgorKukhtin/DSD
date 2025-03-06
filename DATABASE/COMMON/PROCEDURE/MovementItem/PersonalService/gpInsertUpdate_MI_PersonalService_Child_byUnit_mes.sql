@@ -403,7 +403,7 @@ BEGIN
                FROM _tmpMessagePersonalService
               ) AS tmp;
 
-     ELSEIF vbUserId NOT IN (5)
+     ELSEIF 1=1 -- vbUserId NOT IN (5)
      THEN
 
          -- сначала удаляем ранее сохраненные
