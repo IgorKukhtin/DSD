@@ -20,6 +20,11 @@ BEGIN
 
      -- if inUserId = 5 then return; end if;
      -- if inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer then return; end if;
+     
+
+     -- Автоматический пересорт
+     IF inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer THEN inUserId:= zc_Enum_Process_Auto_Peresort(); END IF;
+
 
      -- Временно захардкодил - !!!только для этого склада!!!
      IF inUnitId = zc_Unit_RK() -- Склад Реализации
