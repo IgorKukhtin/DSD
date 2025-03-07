@@ -36,6 +36,9 @@ CREATE OR REPLACE VIEW Container_Partner_View AS
        LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                             ON ObjectLink_Contract_Juridical.ObjectId = CLO_Contract.ObjectId
                            AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+       LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                            ON ObjectLink_Contract_PaidKind.ObjectId = CLO_Contract.ObjectId
+                           AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
 
        LEFT JOIN ContainerLinkObject AS CLO_Juridical
                                      ON CLO_Juridical.ContainerId = CLO_Partner.ContainerId
@@ -61,8 +64,12 @@ CREATE OR REPLACE VIEW Container_Partner_View AS
 
   WHERE CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
      AND (ObjectLink_Contract_Juridical.ChildObjectId = CLO_Juridical.ObjectId
+     --
           -- OR CLO_Juridical.ObjectId
          )
+     --
+     AND ObjectLink_Contract_PaidKind.ChildObjectId = CLO_PaidKind.ObjectId
+     --
      AND ObjectLink_Destination.ChildObjectId NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
                                                     , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                     , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
