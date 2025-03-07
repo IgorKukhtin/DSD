@@ -47,8 +47,8 @@ BEGIN
 
 
      IF COALESCE (ioId, 0) = 0 THEN
-        INSERT INTO Movement (DescId, InvNumber, OperDate, StatusId, ParentId, AccessKeyId)
-               VALUES (inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId, inAccessKeyId) RETURNING Id INTO ioId;
+        INSERT INTO Movement (DescId, InvNumber, OperDate, StatusId, StatusId_next, ParentId, AccessKeyId)
+               VALUES (inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), zc_Enum_Status_UnComplete(), inParentId, inAccessKeyId) RETURNING Id INTO ioId;
      ELSE
         --
         UPDATE Movement SET DescId = inDescId, InvNumber = inInvNumber, OperDate = inOperDate, ParentId = inParentId
@@ -70,8 +70,8 @@ BEGIN
         --
         IF NOT FOUND
         THEN
-            INSERT INTO Movement (Id, DescId, InvNumber, OperDate, StatusId, ParentId, AccessKeyId)
-                          VALUES (ioId, inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId, inAccessKeyId) RETURNING Id INTO ioId;
+            INSERT INTO Movement (Id, DescId, InvNumber, OperDate, StatusId, StatusId_next, ParentId, AccessKeyId)
+                          VALUES (ioId, inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), zc_Enum_Status_UnComplete(), inParentId, inAccessKeyId) RETURNING Id INTO ioId;
         END IF;
 
         --
