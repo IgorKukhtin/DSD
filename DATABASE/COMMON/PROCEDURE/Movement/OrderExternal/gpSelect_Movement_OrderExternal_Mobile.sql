@@ -156,8 +156,17 @@ BEGIN
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
            , Movement.OperDate                              AS OperDate
-           , Object_Status.ObjectCode                       AS StatusCode
-           , Object_Status.ValueData                        AS StatusName
+
+           , CASE WHEN vbUserId = 5
+                  THEN zfCalc_StatusCode_next (Movement.StatusId, Movement.StatusId_next)
+                  ELSE Object_Status.ObjectCode 
+             END :: Integer AS StatusCode
+
+           , CASE WHEN vbUserId = 5
+                  THEN zfCalc_StatusName_next (Object_Status.ValueData, Movement.StatusId, Movement.StatusId_next)
+                  ELSE Object_Status.ValueData
+             END :: TVarChar AS StatusName
+
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , (Movement.OperDate + ((COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) + COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0)) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
@@ -243,7 +252,7 @@ BEGIN
             INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
                                           ON MovementLinkObject_Insert.MovementId = Movement.Id
                                          AND MovementLinkObject_Insert.DescId     = zc_MovementLinkObject_Insert()
-            INNER JOIN tmpUser ON tmpUser.UserId = MovementLinkObject_Insert.ObjectId
+            LEFT JOIN tmpUser ON tmpUser.UserId = MovementLinkObject_Insert.ObjectId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN Object AS Object_User ON Object_User.Id     = MovementLinkObject_Insert.ObjectId
@@ -387,6 +396,7 @@ BEGIN
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
        -- WHERE (tmpUser.UserId >0
        --     OR vbUserId_Mobile = 0)
+       WHERE tmpUser.UserId > 0 OR vbUserId = 5
       ;
 
 END;
@@ -402,4 +412,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal_Mobile( instartdate:= '21.12.2017', inenddate:= '22.12.2017', inIsMobileDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 9399 , inMemberId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_OrderExternal_Mobile( instartdate:= '21.12.2025', inenddate:= '22.12.2025', inIsMobileDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 9399 , inMemberId:= 0, inSession:= zfCalc_UserAdmin());

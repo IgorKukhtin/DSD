@@ -176,7 +176,12 @@ BEGIN
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
-           , Object_Status.ValueData                    AS StatusName
+
+           , CASE WHEN vbUserId = 5
+                  THEN zfCalc_StatusName_next (Object_Status.ValueData, Movement.StatusId, Movement.StatusId_next)
+                  ELSE Object_Status.ValueData
+             END :: TVarChar AS StatusName
+
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
            , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
            , MovementDate_OperDateMark.ValueData        AS OperDateMark
