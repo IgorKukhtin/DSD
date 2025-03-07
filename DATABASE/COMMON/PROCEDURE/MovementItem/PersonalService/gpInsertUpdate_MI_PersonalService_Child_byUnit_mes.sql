@@ -2,10 +2,11 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_byUnit (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_byUnit_mes (Integer,Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_byUnit (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Child_byUnit_mes(
-    --IN inStartDate            TDateTime , -- дата
-    --IN inEndDate              TDateTime , -- дата
+    IN inStartDate            TDateTime , -- дата
+    IN inEndDate              TDateTime , -- дата
     IN inSessionCode          Integer   , -- № Сессии MessagePersonalService
     IN inUnitId               Integer   , -- подразделение
     IN inisPersonalService    Boolean   , --
@@ -45,6 +46,11 @@ BEGIN
      vbStartDate := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);  --'01.02.2025' ::TDateTime; --
      vbEndDate   := DATE_TRUNC ('MONTH', CURRENT_DATE)  - INTERVAL '1 DAY';    --'19.02.2025' ::TDateTime; --
 
+     IF inStartDate <> vbStartDate OR inEndDate <> vbEndDate
+     THEN
+         RAISE EXCEPTION 'Ошибка.Расчетный период отличается от выбранного.';
+     END IF;
+     
 -- RAISE EXCEPTION 'Test.Ok. <%>  <%>', vbStartDate,  vbEndDate;
 
      --
@@ -192,7 +198,7 @@ BEGIN
                                                         AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
                            )
            SELECT tmpMovement.*
-           FROM tmpMovement
+           FROM tmpMovement                
            WHERE tmpMovement.Ord = 1
            ) AS tmp
      WHERE tmp.StatusId = zc_Enum_Status_Complete();
@@ -379,6 +385,30 @@ BEGIN
 
      --RAISE EXCEPTION 'Test6. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService);
 
+     -- 7  StaffListId
+     INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
+     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Не установлено значение <Штатное расписание>' ::TVarChar, 'проверка 7' ::TVarChar
+     FROM
+          (SELECT spReport.MemberId
+                , spReport.PersonalServiceListId
+           FROM _tmpReport AS spReport
+           WHERE COALESCE (spReport.StaffListId, 0) = 0
+          ) AS tmp;
+
+     -- 8 Модель начисления или типы сумм для штатного расписания
+     INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
+     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Не установлено значение <Модель начисления> или <Типы сумм для штатного расписания>.' ::TVarChar, 'проверка 8' ::TVarChar
+     FROM
+          (SELECT spReport.MemberId
+                , spReport.PersonalServiceListId
+           FROM _tmpReport AS spReport
+           WHERE COALESCE (spReport.ModelServiceId, 0) = 0 
+              OR COALESCE (spReport.StaffListSummKindId, 0) = 0
+          ) AS tmp;
+
+
+
+
      -- после проверок
      IF (SELECT COUNT (*) FROM _tmpMessagePersonalService) > 0
      THEN
@@ -475,4 +505,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_PersonalService_Child_byUnit_mes( inSessionCode := 1 ::Integer, inUnitId := 8449 ::Integer, inisPersonalService:= TRUE ::Boolean, inSession := '6561986' ::TVarChar)
+-- SELECT * FROM gpInsertUpdate_MI_PersonalService_Child_byUnit_mes( inStartDate := '01.02.2025', inEndDate := '01.02.2025' , inSessionCode := 1 ::Integer, inUnitId := 8449 ::Integer, inisPersonalService:= TRUE ::Boolean, inSession := '9457' ::TVarChar)

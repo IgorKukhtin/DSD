@@ -194,9 +194,19 @@ type
     cdsInventoryListTopStatusCode: TIntegerField;
     cdsInventoryListErasedCode: TIntegerField;
     cdsInventoryListTopErasedCode: TIntegerField;
+    cdsInventoryListAmountCaption: TStringField;
+    cdsInventoryListTopAmountCaption: TStringField;
+    cdsInventoryListPartionGoodsDateCaption: TStringField;
+    cdsInventoryListTopPartionGoodsDateCaption: TStringField;
+    cdsInventoryListPartionNumCaption: TStringField;
+    cdsInventoryListTopPartionNumCaption: TStringField;
+    cdsInventoryListCountTare_calcCaption: TStringField;
+    cdsInventoryListTopCountTare_calcCaption: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure cdsChoiceCelListCalcFields(DataSet: TDataSet);
     procedure cdsChoiceCelListTopCalcFields(DataSet: TDataSet);
+    procedure cdsInventoryListCalcFields(DataSet: TDataSet);
+    procedure cdsInventoryListTopCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     // Ограничение количества строк для справочника
@@ -581,6 +591,22 @@ begin
   if not DataSet.FieldByName('PartionGoodsDate_next').IsNull then
     DataSet.FieldByName('PartionGoodsDate_nextLabel').AsString := 'Хранение: ' + FormatDateTime('dd' + FormatSettings.DateSeparator + 'mm', DataSet.FieldByName('PartionGoodsDate_next').AsDateTime)
   else DataSet.FieldByName('PartionGoodsDate_nextLabel').AsString := 'Хранение: ';
+end;
+
+procedure TDM.cdsInventoryListCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('AmountCaption').AsString := 'Вес нетто: ' + DataSet.FieldByName('Amount').AsString;
+  DataSet.FieldByName('PartionGoodsDateCaption').AsString := 'Партия: ' + DataSet.FieldByName('PartionGoodsDate').AsString;
+  DataSet.FieldByName('PartionNumCaption').AsString := '№ паспорта: ' + DataSet.FieldByName('PartionNum').AsString;
+  DataSet.FieldByName('CountTare_calcCaption').AsString := 'Кол-во Ящиков: ' + DataSet.FieldByName('CountTare_calc').AsString;
+end;
+
+procedure TDM.cdsInventoryListTopCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('AmountCaption').AsString := 'Вес нетто:' + DataSet.FieldByName('Amount').AsString;
+  DataSet.FieldByName('PartionGoodsDateCaption').AsString := 'Партия: ' + DataSet.FieldByName('PartionGoodsDate').AsString;
+  DataSet.FieldByName('PartionNumCaption').AsString := '№ паспорта: ' + DataSet.FieldByName('PartionNum').AsString;
+  DataSet.FieldByName('CountTare_calcCaption').AsString := 'Кол-во Ящиков: ' + DataSet.FieldByName('CountTare_calc').AsString;
 end;
 
 procedure TDM.CheckUpdate;

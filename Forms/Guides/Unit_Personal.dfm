@@ -19,15 +19,15 @@ object Unit_PersonalForm: TUnit_PersonalForm
   TextHeight = 13
   object cxSplitter1: TcxSplitter
     Left = 0
-    Top = 26
+    Top = 58
     Width = 8
-    Height = 362
+    Height = 330
   end
   object cxGrid: TcxGrid
     Left = 8
-    Top = 26
+    Top = 58
     Width = 972
-    Height = 362
+    Height = 330
     Align = alClient
     TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
@@ -283,19 +283,55 @@ object Unit_PersonalForm: TUnit_PersonalForm
       GridView = cxGridDBTableView
     end
   end
-  object cxLabel3: TcxLabel
-    Left = 528
-    Top = 151
-    Caption = #8470' '#1089#1077#1089#1089#1080#1080
-  end
-  object edSessionCode: TcxCurrencyEdit
-    Left = 587
-    Top = 150
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 7
-    Width = 130
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 980
+    Height = 32
+    Align = alTop
+    TabOrder = 6
+    object deStart: TcxDateEdit
+      Left = 107
+      Top = 5
+      EditValue = 45658d
+      Properties.ReadOnly = True
+      Properties.ShowTime = False
+      TabOrder = 0
+      Width = 82
+    end
+    object deEnd: TcxDateEdit
+      Left = 314
+      Top = 5
+      EditValue = 45658d
+      Properties.ReadOnly = True
+      Properties.ShowTime = False
+      TabOrder = 1
+      Width = 82
+    end
+    object cxLabel1: TcxLabel
+      Left = 10
+      Top = 6
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel2: TcxLabel
+      Left = 198
+      Top = 6
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel3: TcxLabel
+      Left = 412
+      Top = 6
+      Caption = #8470' '#1089#1077#1089#1089#1080#1080':'
+    end
+    object edSessionCode: TcxCurrencyEdit
+      Left = 473
+      Top = 5
+      EditValue = 0.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      TabOrder = 5
+      Width = 109
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -348,18 +384,6 @@ object Unit_PersonalForm: TUnit_PersonalForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxLabel3'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSessionCode'
-        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -473,14 +497,12 @@ object Unit_PersonalForm: TUnit_PersonalForm
       Category = 0
       Hint = 'edSessionCode_text'
       Visible = ivAlways
-      Control = cxLabel3
     end
     object bbSessionCode: TdxBarControlContainerItem
       Caption = 'edSessionCode'
       Category = 0
       Hint = 'edSessionCode'
       Visible = ivAlways
-      Control = edSessionCode
     end
     object bbMessagePersonalServiceForm: TdxBarButton
       Action = actOpenMessagePersonalServiceForm
@@ -494,8 +516,10 @@ object Unit_PersonalForm: TUnit_PersonalForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spGet_Param
       StoredProcList = <
         item
+          StoredProc = spGet_Param
         end
         item
           StoredProc = spSelect
@@ -700,9 +724,6 @@ object Unit_PersonalForm: TUnit_PersonalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsert_MessagePersonalService
-        end
-        item
           Action = macInsertUpdate_PersonalService_list
         end
         item
@@ -865,6 +886,22 @@ object Unit_PersonalForm: TUnit_PersonalForm
     OutputType = otResult
     Params = <
       item
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inSessionCode'
         Value = Null
         Component = edSessionCode
@@ -902,8 +939,8 @@ object Unit_PersonalForm: TUnit_PersonalForm
     Top = 160
   end
   object PeriodChoice: TPeriodChoice
-    Left = 464
-    Top = 24
+    Left = 24
+    Top = 208
   end
   object spInsert_MessagePersonalService: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_MessagePersonalService'
@@ -925,7 +962,6 @@ object Unit_PersonalForm: TUnit_PersonalForm
       item
         Name = 'ioCode'
         Value = '0'
-        Component = edSessionCode
         MultiSelectSeparator = ','
       end
       item
@@ -965,5 +1001,34 @@ object Unit_PersonalForm: TUnit_PersonalForm
     PackSize = 1
     Left = 528
     Top = 248
+  end
+  object spGet_Param: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Unit_PersonalParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'SessionCode'
+        Value = Null
+        Component = edSessionCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 256
   end
 end

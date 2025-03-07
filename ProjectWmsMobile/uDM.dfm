@@ -189,7 +189,7 @@ object DM: TDM
   object cdsInventoryListTop: TClientDataSet
     Aggregates = <>
     Params = <>
-    OnCalcFields = cdsChoiceCelListTopCalcFields
+    OnCalcFields = cdsInventoryListTopCalcFields
     Left = 720
     Top = 279
     object cdsInventoryListTopMovementItemId: TIntegerField
@@ -302,11 +302,35 @@ object DM: TDM
     object cdsInventoryListTopErasedCode: TIntegerField
       FieldName = 'ErasedCode'
     end
+    object cdsInventoryListTopAmountCaption: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountCaption'
+      Size = 50
+      Calculated = True
+    end
+    object cdsInventoryListTopPartionGoodsDateCaption: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'PartionGoodsDateCaption'
+      Size = 50
+      Calculated = True
+    end
+    object cdsInventoryListTopPartionNumCaption: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'PartionNumCaption'
+      Size = 50
+      Calculated = True
+    end
+    object cdsInventoryListTopCountTare_calcCaption: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'CountTare_calcCaption'
+      Size = 50
+      Calculated = True
+    end
   end
   object cdsInventoryList: TClientDataSet
     Aggregates = <>
     Params = <>
-    OnCalcFields = cdsChoiceCelListCalcFields
+    OnCalcFields = cdsInventoryListCalcFields
     Left = 504
     Top = 280
     object cdsInventoryListMovementItemId: TIntegerField
@@ -418,6 +442,30 @@ object DM: TDM
     end
     object cdsInventoryListErasedCode: TIntegerField
       FieldName = 'ErasedCode'
+    end
+    object cdsInventoryListAmountCaption: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountCaption'
+      Size = 50
+      Calculated = True
+    end
+    object cdsInventoryListPartionGoodsDateCaption: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'PartionGoodsDateCaption'
+      Size = 50
+      Calculated = True
+    end
+    object cdsInventoryListPartionNumCaption: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'PartionNumCaption'
+      Size = 50
+      Calculated = True
+    end
+    object cdsInventoryListCountTare_calcCaption: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'CountTare_calcCaption'
+      Size = 50
+      Calculated = True
     end
   end
   object cdsInventoryEdit: TClientDataSet

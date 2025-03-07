@@ -20756,6 +20756,7 @@ object frmMain: TfrmMain
               TextSettings.Font.Size = 15.000000000000000000
               TextSettings.FontColor = xFF005078
               TextSettings.Trimming = None
+              OnClick = bInventoryScanModeClick
             end
             object bViewInventory: TSpeedButton
               Anchors = [akTop, akRight]
@@ -20786,6 +20787,7 @@ object frmMain: TfrmMain
               TextSettings.Font.Size = 15.000000000000000000
               TextSettings.FontColor = xFF005078
               TextSettings.Trimming = None
+              OnClick = bInventoryScanModeClick
             end
           end
           object lwInventoryScan: TListView
@@ -20813,7 +20815,7 @@ object frmMain: TfrmMain
                 Appearance.Width = 60.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 2.000000000000000000
-                Appearance.PlaceOffset.Y = 1.000000000000000000
+                Appearance.PlaceOffset.Y = 22.000000000000000000
               end
               item
                 AppearanceObjectName = 'GoodsName'
@@ -20835,7 +20837,7 @@ object frmMain: TfrmMain
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
                 Appearance.WordWrap = True
-                Appearance.Width = 55.000000000000000000
+                Appearance.Width = 117.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 63.000000000000000000
                 Appearance.PlaceOffset.Y = 64.000000000000000000
@@ -20846,9 +20848,9 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 60.000000000000000000
+                Appearance.Width = 100.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 160.000000000000000000
+                Appearance.PlaceOffset.X = 184.000000000000000000
                 Appearance.PlaceOffset.Y = 86.000000000000000000
               end
               item
@@ -20857,7 +20859,7 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 100.000000000000000000
+                Appearance.Width = 222.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 62.000000000000000000
                 Appearance.PlaceOffset.Y = 107.000000000000000000
@@ -20879,9 +20881,9 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 90.000000000000000000
+                Appearance.Width = 100.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 131.000000000000000000
+                Appearance.PlaceOffset.X = 184.000000000000000000
                 Appearance.PlaceOffset.Y = 64.000000000000000000
               end
               item
@@ -20890,21 +20892,10 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 90.000000000000000000
+                Appearance.Width = 117.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 63.000000000000000000
                 Appearance.PlaceOffset.Y = 86.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'WeightTare_calc'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Leading
-                Appearance.TextVertAlign = Leading
-                Appearance.Width = 100.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 168.000000000000000000
-                Appearance.PlaceOffset.Y = 107.000000000000000000
               end
               item
                 AppearanceObjectName = 'ErasedCode'
@@ -20989,7 +20980,7 @@ object frmMain: TfrmMain
             end
             object Label5: TLabel
               StyledSettings = [Style]
-              Position.X = 6.000000000000000000
+              Position.X = 8.000000000000000000
               Position.Y = 112.000000000000000000
               Size.Width = 54.000000000000000000
               Size.Height = 23.000000000000000000
@@ -21371,7 +21362,7 @@ object frmMain: TfrmMain
                 Appearance.Width = 60.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 2.000000000000000000
-                Appearance.PlaceOffset.Y = 1.000000000000000000
+                Appearance.PlaceOffset.Y = 22.000000000000000000
               end
               item
                 AppearanceObjectName = 'GoodsName'
@@ -21393,7 +21384,7 @@ object frmMain: TfrmMain
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
                 Appearance.WordWrap = True
-                Appearance.Width = 55.000000000000000000
+                Appearance.Width = 117.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 63.000000000000000000
                 Appearance.PlaceOffset.Y = 64.000000000000000000
@@ -21404,9 +21395,9 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 60.000000000000000000
+                Appearance.Width = 100.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 160.000000000000000000
+                Appearance.PlaceOffset.X = 184.000000000000000000
                 Appearance.PlaceOffset.Y = 86.000000000000000000
               end
               item
@@ -21415,7 +21406,7 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 100.000000000000000000
+                Appearance.Width = 222.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 62.000000000000000000
                 Appearance.PlaceOffset.Y = 107.000000000000000000
@@ -21437,9 +21428,9 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 90.000000000000000000
+                Appearance.Width = 100.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 131.000000000000000000
+                Appearance.PlaceOffset.X = 184.000000000000000000
                 Appearance.PlaceOffset.Y = 64.000000000000000000
               end
               item
@@ -21448,21 +21439,10 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 90.000000000000000000
+                Appearance.Width = 117.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 63.000000000000000000
                 Appearance.PlaceOffset.Y = 86.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'WeightTare_calc'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Leading
-                Appearance.TextVertAlign = Leading
-                Appearance.Width = 100.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 168.000000000000000000
-                Appearance.PlaceOffset.Y = 107.000000000000000000
               end
               item
                 AppearanceObjectName = 'ErasedCode'
@@ -23921,22 +23901,6 @@ object frmMain: TfrmMain
           ControlMemberName = 'GoodsName'
         end
         item
-          SourceMemberName = 'Amount'
-          ControlMemberName = 'Amount'
-        end
-        item
-          SourceMemberName = 'PartionNum'
-          ControlMemberName = 'PartionNum'
-        end
-        item
-          SourceMemberName = 'CountTare_calc'
-          ControlMemberName = 'CountTare_calc'
-        end
-        item
-          SourceMemberName = 'WeightTare_calc'
-          ControlMemberName = 'WeightTare_calc'
-        end
-        item
           SourceMemberName = 'GoodsKindName'
           ControlMemberName = 'GoodsKindName'
         end
@@ -23945,16 +23909,28 @@ object frmMain: TfrmMain
           ControlMemberName = 'PartionCellName'
         end
         item
-          SourceMemberName = 'PartionGoodsDate'
-          ControlMemberName = 'PartionGoodsDate'
-        end
-        item
           SourceMemberName = 'StatusCode'
           ControlMemberName = 'StatusCode'
         end
         item
           SourceMemberName = 'ErasedCode'
           ControlMemberName = 'ErasedCode'
+        end
+        item
+          SourceMemberName = 'CountTare_calcCaption'
+          ControlMemberName = 'CountTare_calc'
+        end
+        item
+          SourceMemberName = 'AmountCaption'
+          ControlMemberName = 'Amount'
+        end
+        item
+          SourceMemberName = 'PartionNumCaption'
+          ControlMemberName = 'PartionNum'
+        end
+        item
+          SourceMemberName = 'PartionGoodsDateCaption'
+          ControlMemberName = 'PartionGoodsDate'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -23973,22 +23949,6 @@ object frmMain: TfrmMain
           ControlMemberName = 'GoodsName'
         end
         item
-          SourceMemberName = 'Amount'
-          ControlMemberName = 'Amount'
-        end
-        item
-          SourceMemberName = 'PartionNum'
-          ControlMemberName = 'PartionNum'
-        end
-        item
-          SourceMemberName = 'CountTare_calc'
-          ControlMemberName = 'CountTare_calc'
-        end
-        item
-          SourceMemberName = 'WeightTare_calc'
-          ControlMemberName = 'WeightTare_calc'
-        end
-        item
           SourceMemberName = 'GoodsKindName'
           ControlMemberName = 'GoodsKindName'
         end
@@ -23997,16 +23957,28 @@ object frmMain: TfrmMain
           ControlMemberName = 'PartionCellName'
         end
         item
-          SourceMemberName = 'PartionGoodsDate'
-          ControlMemberName = 'PartionGoodsDate'
-        end
-        item
           SourceMemberName = 'StatusCode'
           ControlMemberName = 'StatusCode'
         end
         item
           SourceMemberName = 'ErasedCode'
           ControlMemberName = 'ErasedCode'
+        end
+        item
+          SourceMemberName = 'AmountCaption'
+          ControlMemberName = 'Amount'
+        end
+        item
+          SourceMemberName = 'PartionGoodsDateCaption'
+          ControlMemberName = 'PartionGoodsDate'
+        end
+        item
+          SourceMemberName = 'PartionNumCaption'
+          ControlMemberName = 'PartionNum'
+        end
+        item
+          SourceMemberName = 'CountTare_calcCaption'
+          ControlMemberName = 'CountTare_calc'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
