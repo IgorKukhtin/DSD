@@ -10,7 +10,8 @@ BEGIN
 
    RETURN CASE inStatusId
                WHEN zc_Enum_Status_Complete()   THEN inStatusName
-               WHEN zc_Enum_Status_UnComplete() THEN '***' || inStatusName
+               WHEN zc_Enum_Status_UnComplete() THEN inStatusName
+             --WHEN zc_Enum_Status_UnComplete() THEN '***' || inStatusName
                WHEN zc_Enum_Status_Erased()     THEN inStatusName
                ELSE inStatusName
           END
