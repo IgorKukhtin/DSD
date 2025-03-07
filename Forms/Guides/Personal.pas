@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdGuides;
+  dxSkinXmas2008Blue, dsdGuides, dsdCommon;
 
 type
   TPersonalForm = class(TParentForm)
@@ -129,6 +129,7 @@ type
     PositionLevelCode: TcxGridDBColumn;
     PersonalServiceListAvanceF2: TOpenChoiceForm;
     ServiceListName_AvanceF2: TcxGridDBColumn;
+    DepartmentName: TcxGridDBColumn;
   private
     { Private declarations }
   public
