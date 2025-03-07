@@ -33,7 +33,7 @@ BEGIN
   IF vbStatusId_old = zc_Enum_Status_Complete() THEN PERFORM lpCheck_Movement_Status (inMovementId, inUserId); END IF;
 
   -- 1.2. Обязательно меняем статус документа
-  UPDATE Movement SET StatusId = zc_Enum_Status_Erased() WHERE Id = inMovementId
+  UPDATE Movement SET StatusId = zc_Enum_Status_Erased(), StatusId_next = zc_Enum_Status_Erased() WHERE Id = inMovementId
   RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
 
   -- 1.0.2.

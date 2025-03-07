@@ -45,7 +45,7 @@ BEGIN
   vbStatusId_old:= (SELECT StatusId FROM Movement WHERE Id = inMovementId);
 
   -- Обязательно меняем статус документа
-  UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+  UPDATE Movement SET StatusId = zc_Enum_Status_Complete(), StatusId_next = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
   RETURNING OperDate, DescId, AccessKeyId, StatusId INTO vbOperDate, vbDescId, vbAccessKeyId, vbStatusId;
 
   -- !!! zc_Enum_Process_Auto_PrimeCost
