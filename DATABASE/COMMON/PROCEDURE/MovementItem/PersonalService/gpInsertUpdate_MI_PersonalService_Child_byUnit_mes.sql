@@ -30,7 +30,7 @@ BEGIN
      -- проверка по свойству подразделения
      IF COALESCE (vbisPersonalService, FALSE) = FALSE
         -- AND vbUserId <> 5
-     THEN
+     THEN 
          RETURN;
      END IF;
 
@@ -64,7 +64,9 @@ BEGIN
                                    , PositionId Integer
                                    , PositionLevelId Integer
                                    , PersonalServiceListId Integer
-                                   , isMain Boolean) ON COMMIT DROP;
+                                   , UnitId Integer
+                                   , isMain Boolean
+                                   , isErased Boolean) ON COMMIT DROP;
 
      ---- Создать таблицу, в которую будут залиты все данные для анализа
      CREATE TEMP TABLE _tmpReport (PersonalServiceListId Integer
@@ -132,18 +134,22 @@ BEGIN
                              , PositionId
                              , PositionLevelId
                              , PersonalServiceListId
-                             , isMain)
+                             , UnitId
+                             , isMain
+                             , isErased)
      SELECT Object_Personal.Id                                            AS PersonalId
           , ObjectLink_Personal_Member.ChildObjectId                      AS MemberId
           , COALESCE (ObjectLink_Personal_Position.ChildObjectId, 0)      AS PositionId
           , COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId
-          , ObjectLink_Personal_PersonalServiceList.ChildObjectId         AS PersonalServiceListId
+          , ObjectLink_Personal_PersonalServiceList.ChildObjectId         AS PersonalServiceListId 
+          , ObjectLink_Personal_Unit.ChildObjectId                        AS UnitId
           , COALESCE (ObjectBoolean_Main.ValueData, FALSE)                AS isMain
+          , Object_Personal.isErased                                      AS isErased
      FROM Object AS Object_Personal
           INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                 ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                               AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                               --AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId
           LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
                               AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
@@ -161,8 +167,8 @@ BEGIN
                                   ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
                                  AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
      WHERE Object_Personal.DescId = zc_Object_Personal()
-       AND Object_Personal.isErased = FALSE;
-
+       AND Object_Personal.isErased = FALSE
+     ;
 
      --проверка
      --1) ведомость не проведена
@@ -292,7 +298,7 @@ BEGIN
                          )
         , tmpOperDate AS (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate)
 
-        , tmpWorkTimeKind AS (SELECT SUM (COALESCE (MI_SheetWorkTime.Amount, 0))    AS Amount
+        , tmpWorkTimeKind AS (SELECT SUM (COALESCE (MI_SheetWorkTime.Amount, 0))   AS Amount
                                    , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
                                    , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
                                    , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
@@ -366,21 +372,36 @@ BEGIN
 
              ) AS tmp;
 
-     -- 6) есть признак "Основное место работы" , если в разрезе фио проверка прошла
+     -- 6) есть признак "Основное место работы", если в разрезе фио проверка прошла
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
-     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Основное место работы не установлено' ::TVarChar, 'проверка 6' ::TVarChar
+     SELECT tmp.MemberId, tmp.PersonalServiceListId
+         , CASE WHEN tmp.isErased = TRUE THEN 'Основное место работы найдено только в удаленных'
+                ELSE'Основное место работы не найдено среди Всех'
+           END ::TVarChar
+         , 'проверка 6' ::TVarChar
      FROM
           (WITH
            --Определено ли для сотрудника Основное место работы
-           tmpMain AS (SELECT DISTINCT _tmpPersonal.MemberId
+           tmpMain AS (SELECT DISTINCT _tmpPersonal.MemberId, _tmpPersonal.isErased
                        FROM _tmpPersonal
                        WHERE _tmpPersonal.isMain = TRUE
-                      )
-           SELECT spReport.MemberId
-                , spReport.PersonalServiceListId
-           FROM _tmpReport AS spReport
-                LEFT JOIN tmpMain ON tmpMain.MemberId = spReport.MemberId
-           WHERE tmpMain.MemberId IS NULL
+                         --AND _tmpPersonal.isErased = FALSE
+                       )
+           --проверяем по неудаленным елементам
+         , tmp1 AS (SELECT spReport.MemberId
+                         , spReport.PersonalServiceListId
+                         , tmpMain.isErased
+                    FROM _tmpReport AS spReport
+                         LEFT JOIN tmpMain ON tmpMain.MemberId = spReport.MemberId
+                                          AND  tmpMain.isErased = FALSE
+                    WHERE tmpMain.MemberId IS NULL
+                    )
+           SELECT tmp1.MemberId
+                , tmp1.PersonalServiceListId
+                , COALESCE (tmp1.isErased, tmpMain.isErased) AS isErased
+           FROM tmp1 
+                LEFT JOIN tmpMain ON tmpMain.MemberId = tmp1.MemberId
+                                 AND tmpMain.isErased = TRUE        
           ) AS tmp;
 
      --RAISE EXCEPTION 'Test6. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService);
@@ -403,12 +424,11 @@ BEGIN
                 , spReport.PersonalServiceListId
            FROM _tmpReport AS spReport
            WHERE COALESCE (spReport.ModelServiceId, 0) = 0 
-              OR COALESCE (spReport.StaffListSummKindId, 0) = 0
+             AND COALESCE (spReport.StaffListSummKindId, 0) = 0
           ) AS tmp;
 
 
-
-
+     /*--*******************************--*/
      -- после проверок
      IF (SELECT COUNT (*) FROM _tmpMessagePersonalService) > 0
      THEN
@@ -506,3 +526,7 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MI_PersonalService_Child_byUnit_mes( inStartDate := '01.02.2025', inEndDate := '01.02.2025' , inSessionCode := 1 ::Integer, inUnitId := 8449 ::Integer, inisPersonalService:= TRUE ::Boolean, inSession := '9457' ::TVarChar)
+
+
+---  inSession        := '6561986'   ::TVarChar
+-- 3080681 

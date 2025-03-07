@@ -27,7 +27,6 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 793
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -135,16 +134,15 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
     Height = 53
     Align = alTop
     TabOrder = 4
-    ExplicitWidth = 793
     object cxLabel3: TcxLabel
       Left = 131
       Top = 5
-      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1088#1086#1090#1086#1082#1086#1083#1072':'
     end
     object cxLabel4: TcxLabel
-      Left = 254
+      Left = 273
       Top = 5
-      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1088#1086#1090#1086#1082#1086#1083#1072':'
     end
     object deStart: TcxDateEdit
       Left = 131
@@ -154,17 +152,17 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
-      Width = 117
+      Width = 134
     end
     object deEnd: TcxDateEdit
-      Left = 254
+      Left = 273
       Top = 28
       EditValue = 45658d
       Properties.Kind = ckDateTime
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 3
-      Width = 117
+      Width = 134
     end
     object cxLabel6: TcxLabel
       Left = 13
@@ -172,7 +170,7 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
       Caption = #8470' '#1089#1077#1089#1089#1080#1080':'
     end
     object cxLabel1: TcxLabel
-      Left = 404
+      Left = 426
       Top = 5
       Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
     end
@@ -189,7 +187,7 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
       Width = 100
     end
     object edPersonalServiceList: TcxButtonEdit
-      Left = 404
+      Left = 426
       Top = 28
       Properties.Buttons = <
         item
