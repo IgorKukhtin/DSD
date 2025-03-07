@@ -102,6 +102,14 @@ object PersonalUnit_ObjectForm: TPersonalUnit_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
+      object DepartmentName: TcxGridDBColumn
+        Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090
+        DataBinding.FieldName = 'DepartmentName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -517,6 +525,7 @@ object PersonalUnit_ObjectForm: TPersonalUnit_ObjectForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 328
     Top = 264
