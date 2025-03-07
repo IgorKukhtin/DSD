@@ -12,6 +12,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Send()         RETURNS Integer A
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_ReturnIn()     RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_ReturnIn'     AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Medoc()        RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Medoc'        AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Peresort()     RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Peresort'     AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+
 DO $$
 BEGIN
 
@@ -82,6 +84,13 @@ BEGIN
                                    , inName:= 'Medoc - Авто загрузка'
                                    , inEnumName:= 'zc_Enum_Process_Auto_Medoc');
  
+ -- для 
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Auto_Peresort()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 1011
+                                   , inName:= 'Автоматический пересорт'
+                                   , inEnumName:= 'zc_Enum_Process_Auto_Peresort');
+
 END $$;
 
 /*-------------------------------------------------------------------------------*/
