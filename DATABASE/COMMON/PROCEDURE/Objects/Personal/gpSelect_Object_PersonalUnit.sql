@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer,
                PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
                PersonalServiceListCardSecondId Integer, PersonalServiceListCardSecondName TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
+               DepartmentId Integer, DepartmentName TVarChar,
                DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean, isErased Boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -70,6 +71,9 @@ BEGIN
          , COALESCE (Object_SheetWorkTime.Id, COALESCE (Object_Position_SheetWorkTime.Id, COALESCE (Object_Unit_SheetWorkTime.Id, 0)) )  AS SheetWorkTimeId 
          , COALESCE (Object_SheetWorkTime.ValueData, COALESCE ('* '||Object_Position_SheetWorkTime.ValueData, COALESCE ('** '||Object_Unit_SheetWorkTime.ValueData, '')) ) ::TVarChar     AS SheetWorkTimeName
 
+         , Object_Department.Id              AS DepartmentId
+         , Object_Department.ValueData       AS DepartmentName
+
          , Object_Personal_View.DateIn
          , Object_Personal_View.DateOut_user AS DateOut
          , Object_Personal_View.isDateOut
@@ -117,6 +121,11 @@ BEGIN
                               AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
           LEFT JOIN Object AS Object_Unit_SheetWorkTime ON Object_Unit_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Department
+                               ON ObjectLink_Unit_Department.ObjectId = Object_Personal_View.UnitId
+                              AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
+          LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_Unit_Department.ChildObjectId
+
      WHERE (Object_Personal_View.isErased = FALSE OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE))
        AND (Object_Personal_View.UnitId = inUnitId OR inUnitId = 0)
     ;
@@ -132,4 +141,4 @@ $BODY$
  23.11.21         *
 */
 -- тест
---
+--  SELECT * FROM gpSelect_Object_PersonalUnit ( 8457, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())

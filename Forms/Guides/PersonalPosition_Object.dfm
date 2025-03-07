@@ -54,7 +54,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 45
+        Width = 46
       end
       object MemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
@@ -62,13 +62,13 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 200
+        Width = 206
       end
       object GLN: TcxGridDBColumn
         DataBinding.FieldName = 'GLN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 68
+        Width = 71
       end
       object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -76,7 +76,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 100
+        Width = 102
       end
       object PositionLevelName: TcxGridDBColumn
         Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
@@ -111,7 +111,15 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 155
+      end
+      object DepartmentName: TcxGridDBColumn
+        Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090
+        DataBinding.FieldName = 'DepartmentName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 93
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -574,6 +582,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 328
     Top = 264

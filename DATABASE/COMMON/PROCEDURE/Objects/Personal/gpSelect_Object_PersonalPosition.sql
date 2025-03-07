@@ -19,7 +19,8 @@ RETURNS TABLE (Id Integer, MemberId Integer, MemberCode Integer, MemberName TVar
                PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
                PersonalServiceListCardSecondId Integer, PersonalServiceListCardSecondName TVarChar,
                InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
-               SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
+               SheetWorkTimeId Integer, SheetWorkTimeName TVarChar, 
+               DepartmentId Integer, DepartmentName TVarChar,
                DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean, isErased Boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -66,8 +67,8 @@ BEGIN
 
          , Object_Personal_View.UnitId
          , Object_Personal_View.UnitCode
-         , Object_Personal_View.UnitName
-
+         , Object_Personal_View.UnitName 
+         
          , Object_Personal_View.PersonalGroupId
          , Object_Personal_View.PersonalGroupCode
          , Object_Personal_View.PersonalGroupName
@@ -91,6 +92,9 @@ BEGIN
  
          , COALESCE (Object_SheetWorkTime.Id, COALESCE (Object_Position_SheetWorkTime.Id, COALESCE (Object_Unit_SheetWorkTime.Id, 0)) )  AS SheetWorkTimeId 
          , COALESCE (Object_SheetWorkTime.ValueData, COALESCE ('* '||Object_Position_SheetWorkTime.ValueData, COALESCE ('** '||Object_Unit_SheetWorkTime.ValueData, '')) ) ::TVarChar     AS SheetWorkTimeName
+
+         , Object_Department.Id              AS DepartmentId
+         , Object_Department.ValueData       AS DepartmentName
 
          , Object_Personal_View.DateIn
          , Object_Personal_View.DateOut_user AS DateOut
@@ -142,6 +146,11 @@ BEGIN
                               AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
           LEFT JOIN Object AS Object_Unit_SheetWorkTime ON Object_Unit_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Department
+                               ON ObjectLink_Unit_Department.ObjectId = Object_Personal_View.UnitId
+                              AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
+          LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_Unit_Department.ChildObjectId
+
      WHERE (Object_Personal_View.isErased = FALSE OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE))
        AND (Object_Personal_View.PositionId IN (SELECT inPositionId UNION SELECT 81178 /*экспедитор*/  WHERE inPositionId = 8466 /*водитель*/ UNION SELECT 8466 WHERE inPositionId = 81178)
          OR vbAll = TRUE
@@ -177,7 +186,9 @@ BEGIN
          , CAST ('' as TVarChar)    AS InfoMoneyName
          , CAST ('' as TVarChar)    AS InfoMoneyName_all
          , 0                        AS SheetWorkTimeId 
-         , CAST ('' as TVarChar)    AS SheetWorkTimeName
+         , CAST ('' as TVarChar)    AS SheetWorkTimeName 
+         , 0                        AS DepartmentId
+         , CAST ('' as TVarChar)    AS DepartmentName
          , CAST (NULL as TDateTime) AS DateIn
          , CAST (NULL as TDateTime) AS DateOut
          , FALSE                    AS isDateOut
@@ -200,4 +211,4 @@ $BODY$
  28.11.16         *
 */
 -- тест
--- SELECT * FROM gpSelect_Object_PersonalPosition (inPositionId:= 8944, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_PersonalPosition (inPositionId:= 8944, inIsShowAll:= false, inSession:= zfCalc_UserAdmin())
