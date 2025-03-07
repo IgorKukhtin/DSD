@@ -22,7 +22,7 @@ BEGIN
                                                       , inStartDate := inStartDate
                                                       , inEndDate   := inEndDate
                                                       , inUnitId    := inUnitId
-                                                      , inUserId    := zc_Enum_Process_Auto_Defroster() -- vbUserId
+                                                      , inUserId    := vbUserId
                                                        );
 
 END;$BODY$
