@@ -73,7 +73,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummService           TFloat    , -- Сумма начислено
     IN inSummCardRecalc        TFloat    , -- Карта БН (ввод) - 1ф.
     IN inSummCardSecondRecalc  TFloat    , -- Карта БН (ввод) - 2ф.
-    IN inSummCardSecondCash    TFloat    , -- Карта БН (касса) - 2ф.  
+    IN inSummCardSecondCash    TFloat    , -- Карта БН (касса) - 2ф.
     IN inSummAvCardSecondRecalc  TFloat    , -- Карта БН (ввод) - 2ф. аванс
     IN inSummNalogRecalc       TFloat    , -- Налоги - удержания (ввод)
     IN inSummNalogRet          TFloat    , -- Налоги - возмещение к ЗП !!!НЕ ввод!!!
@@ -93,11 +93,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummAuditAdd           TFloat   , -- Сумма доплаты за аудит
     IN inSummHouseAdd           TFloat   , -- Сумма Компенсация жилья
     IN inSummAvanceRecalc       TFloat    , --  Aванс
-    IN inComment               TVarChar  , -- 
+    IN inComment               TVarChar  , --
     IN inInfoMoneyId           Integer   , -- Статьи назначения
     IN inUnitId                Integer   , -- Подразделение
     IN inPositionId            Integer   , -- Должность
-    IN inMemberId              Integer   , -- 
+    IN inMemberId              Integer   , --
     IN inPersonalServiceListId Integer   , -- Ведомость начисления
     IN inFineSubjectId         Integer   , -- Вид нарушения
     IN inUnitFineSubjectId     Integer   , -- Кем налагается взыскание
@@ -126,13 +126,13 @@ BEGIN
                                 );
      vbisDetail := COALESCE ((SELECT ObjectBoolean.ValueData
                               FROM ObjectBoolean
-                              WHERE ObjectBoolean.ObjectId = vbPersonalServiceListId 
+                              WHERE ObjectBoolean.ObjectId = vbPersonalServiceListId
                                 AND ObjectBoolean.DescId = zc_ObjectBoolean_PersonalServiceList_Detail())
                              , FALSE) ::Boolean;
      IF COALESCE (ioId,0) = 0
         AND vbisDetail = FALSE
         AND EXISTS (SELECT 1
-                    FROM MovementItem AS MI 
+                    FROM MovementItem AS MI
                     WHERE MI.MovementId = inMovementId
                       AND MI.DescId = zc_MI_Master()
                       AND MI.isErased = FALSE
@@ -141,22 +141,28 @@ BEGIN
          --
          RAISE EXCEPTION 'Ошибка.Для текущей ведомости Нет детализации данных.Дублирование запрещено.';
      END IF;
-     
+
+     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_isAuto() AND MB.ValueData = TRUE)
+     THEN
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), inMovementId, FALSE);
+     END IF;
+
+
      --находим значение макс суммы аванса для ведомости
-     vbSummAvanceMax := (SELECT COALESCE (ObjectFloat_SummAvanceMax.ValueData, 0) :: TFloat AS SummAvanceMax    
+     vbSummAvanceMax := (SELECT COALESCE (ObjectFloat_SummAvanceMax.ValueData, 0) :: TFloat AS SummAvanceMax
                          FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
                               INNER JOIN ObjectFloat AS ObjectFloat_SummAvanceMax
-                                                     ON ObjectFloat_SummAvanceMax.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId 
-                                                    AND ObjectFloat_SummAvanceMax.DescId = zc_ObjectFloat_PersonalServiceList_SummAvanceMax()  
+                                                     ON ObjectFloat_SummAvanceMax.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                                    AND ObjectFloat_SummAvanceMax.DescId = zc_ObjectFloat_PersonalServiceList_SummAvanceMax()
                          WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
                            AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                          );
-     --проверка 
+     --проверка
      IF COALESCE (inSummAvanceRecalc,0) > COALESCE (vbSummAvanceMax,0) AND COALESCE (vbSummAvanceMax,0) <> 0
      THEN
          RAISE EXCEPTION 'Ошибка.Сумма <%> превышает максимально допустимую <%> для данной ведомости.', inSummAvanceRecalc, vbSummAvanceMax;
-     END IF;    
-     
+     END IF;
+
      -- сохранили
      SELECT tmp.ioId, tmp.outAmount, tmp.outAmountToPay, tmp.outAmountCash
           , tmp.outSummTransport, tmp.outSummTransportAdd, tmp.outSummTransportAddLong, tmp.outSummTransportTaxi, tmp.outSummPhone
@@ -187,7 +193,7 @@ BEGIN
                                                      , inSummHospOthRecalc     := inSummHospOthRecalc
                                                      , inSummCompensationRecalc:= inSummCompensationRecalc
                                                      , inSummAuditAdd          := inSummAuditAdd
-                                                     , inSummHouseAdd          := inSummHouseAdd   
+                                                     , inSummHouseAdd          := inSummHouseAdd
                                                      , inSummAvanceRecalc      := inSummAvanceRecalc
                                                      , inNumber                := inNumber
                                                      , inComment               := inComment
