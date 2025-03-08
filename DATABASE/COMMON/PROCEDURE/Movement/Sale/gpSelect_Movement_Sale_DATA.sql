@@ -156,6 +156,7 @@ end if;
                                , Movement.OperDate
                                , Movement.InvNumber
                                , Movement.StatusId
+                               , Movement.StatusId_next
                                , COALESCE (Movement.AccessKeyId, 0) AS AccessKeyId
                        -- FROM tmpStatus
                        --      JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
@@ -169,6 +170,7 @@ end if;
                                , Movement.OperDate
                                , Movement.InvNumber
                                , Movement.StatusId
+                               , Movement.StatusId_next
                                , COALESCE (Movement.AccessKeyId, 0) AS AccessKeyId
                           FROM MovementDate AS MovementDate_OperDatePartner
                                JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_Sale()
@@ -205,6 +207,7 @@ end if;
              , Movement.OperDate
              , Movement.InvNumber
              , Movement.StatusId
+             , Movement.StatusId_next
              , tmpRoleAccessKey.AccessKeyId
         FROM tmpMovement_all AS Movement
              LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -799,8 +802,10 @@ end if;
            , Movement.InvNumber                             AS InvNumber
 --           , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
            , Movement.OperDate                              AS OperDate
-           , Object_Status.ObjectCode                       AS StatusCode
-           , Object_Status.ValueData                        AS StatusName
+           --, Object_Status.ObjectCode                       AS StatusCode
+           --, Object_Status.ValueData                        AS StatusName
+           , zfCalc_StatusCode_next (Movement.StatusId, Movement.StatusId_next)                          ::Integer  AS StatusCode
+           , zfCalc_StatusName_next (Object_Status.ValueData, Movement.StatusId, Movement.StatusId_next) ::TVarChar AS StatusName
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
 

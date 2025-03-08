@@ -6,7 +6,7 @@ inherited ProductionSeparateJournalChoiceForm: TProductionSeparateJournalChoiceF
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,8 +23,6 @@ inherited ProductionSeparateJournalChoiceForm: TProductionSeparateJournalChoiceF
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 478
-        ExplicitLeft = 10
-        ExplicitTop = -3
         ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -105,6 +103,28 @@ inherited ProductionSeparateJournalChoiceForm: TProductionSeparateJournalChoiceF
             Width = 130
           end
           inherited colStatus: TcxGridDBColumn
+            Caption = '*'#1057#1090#1072#1090#1091#1089
+            Properties.Items = <
+              item
+                Description = '***'#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 32
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end
+              item
+                Description = '***'#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 4
+              end>
             HeaderAlignmentHorz = taCenter
             Width = 100
           end
@@ -249,9 +269,6 @@ inherited ProductionSeparateJournalChoiceForm: TProductionSeparateJournalChoiceF
         end>
       Caption = 'actInsertUnion'
     end
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TProductionSeparateForm'
-    end
     object actUpdateUnion: TdsdInsertUpdateAction [4]
       Category = 'Union'
       MoveParams = <>
@@ -290,6 +307,9 @@ inherited ProductionSeparateJournalChoiceForm: TProductionSeparateJournalChoiceF
       DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TProductionSeparateForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TProductionSeparateForm'
@@ -579,7 +599,7 @@ inherited ProductionSeparateJournalChoiceForm: TProductionSeparateJournalChoiceF
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -726,9 +746,6 @@ inherited ProductionSeparateJournalChoiceForm: TProductionSeparateJournalChoiceF
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
     object bbPrint: TdxBarButton
       Action = actPrint

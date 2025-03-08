@@ -340,8 +340,8 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , Movement.ParentId                          AS ParentId
            , (Movement_Parent.InvNumber || ' от ' || Movement_Parent.OperDate :: Date :: TVarChar ) :: TVarChar AS InvNumber_Parent
-           , Object_Status.ObjectCode                   AS StatusCode
-           , Object_Status.ValueData                    AS StatusName
+           , zfCalc_StatusCode_next (Movement.StatusId, Movement.StatusId_next)                          ::Integer  AS StatusCode
+           , zfCalc_StatusName_next (Object_Status.ValueData, Movement.StatusId, Movement.StatusId_next) ::TVarChar AS StatusName
            , COALESCE (MovementBoolean_Checked.ValueData,   FALSE) :: Boolean AS Checked
            , COALESCE (MovementBoolean_isPartner.ValueData, FALSE) :: Boolean AS isPartner
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
