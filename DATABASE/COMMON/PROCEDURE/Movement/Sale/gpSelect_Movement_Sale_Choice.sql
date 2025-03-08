@@ -133,8 +133,10 @@ BEGIN
            , Movement.InvNumber                             AS InvNumber
 --           , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
            , Movement.OperDate                              AS OperDate
-           , Object_Status.ObjectCode                       AS StatusCode
-           , Object_Status.ValueData                        AS StatusName
+           --, Object_Status.ObjectCode                       AS StatusCode
+           --, Object_Status.ValueData                        AS StatusName
+           , zfCalc_StatusCode_next (Movement.StatusId, Movement.StatusId_next)                          ::Integer  AS StatusCode
+           , zfCalc_StatusName_next (Object_Status.ValueData, Movement.StatusId, Movement.StatusId_next) ::TVarChar AS StatusName
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
 

@@ -5,7 +5,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -161,6 +161,28 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            Caption = '*'#1057#1090#1072#1090#1091#1089
+            Properties.Items = <
+              item
+                Description = '***'#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 32
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end
+              item
+                Description = '***'#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 4
+              end>
             HeaderAlignmentHorz = taCenter
             Width = 55
           end

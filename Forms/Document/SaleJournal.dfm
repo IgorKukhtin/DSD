@@ -164,6 +164,28 @@ inherited SaleJournalForm: TSaleJournalForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            Caption = '*'#1057#1090#1072#1090#1091#1089
+            Properties.Items = <
+              item
+                Description = '***'#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 32
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end
+              item
+                Description = '***'#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 4
+              end>
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
@@ -7322,8 +7344,8 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1007
-    Top = 352
+    Left = 503
+    Top = 320
   end
   object spDelete_LockUnique: TdsdStoredProc
     StoredProcName = 'gpDelete_LockUnique_byPrint'
