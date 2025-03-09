@@ -245,7 +245,7 @@ BEGIN
                          )
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
-    INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, DocumentKindId, MovementItemId, MovementItemId_order, MovementId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount, isPartionDate, isOrderSecond)
+    INSERT INTO _tmpListMaster (MovementId, StatusId, StatusId_next, InvNumber, OperDate, DocumentKindId, MovementItemId, MovementItemId_order, MovementId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount, isPartionDate, isOrderSecond)
        SELECT COALESCE (tmpMI_production.MovementId, 0)                                          AS MovementId
             , COALESCE (tmpMI_production.StatusId, 0)                                            AS StatusId
             , COALESCE (tmpMI_production.StatusId_next, 0)                                       AS StatusId_next
