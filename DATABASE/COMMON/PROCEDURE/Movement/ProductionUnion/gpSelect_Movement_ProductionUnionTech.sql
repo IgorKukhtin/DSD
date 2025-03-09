@@ -36,7 +36,7 @@ BEGIN
      -- определяется
      vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
      -- 
-     CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, DocumentKindId integer,MovementItemId Integer, MovementItemId_order Integer, MovementId_order Integer
+     CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, StatusId_next Integer, InvNumber TVarChar, OperDate TDateTime, DocumentKindId integer,MovementItemId Integer, MovementItemId_order Integer, MovementId_order Integer
                                      , GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat, isPartionDate Boolean, isOrderSecond Boolean) ON COMMIT DROP;
 
      -- определяется - ЦЕХ колбаса+дел-сы
@@ -143,6 +143,7 @@ BEGIN
                          )
    , tmpMI_production AS (SELECT Movement.Id                                                    AS MovementId
                                , Movement.StatusId                                              AS StatusId
+                               , Movement.StatusId_next                                         AS StatusId_next
                                , Movement.InvNumber                                             AS InvNumber
                                , Movement.OperDate                                              AS OperDate
                                , MovementItem.ObjectId                                          AS GoodsId
@@ -247,6 +248,7 @@ BEGIN
     INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, DocumentKindId, MovementItemId, MovementItemId_order, MovementId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount, isPartionDate, isOrderSecond)
        SELECT COALESCE (tmpMI_production.MovementId, 0)                                          AS MovementId
             , COALESCE (tmpMI_production.StatusId, 0)                                            AS StatusId
+            , COALESCE (tmpMI_production.StatusId_next, 0)                                       AS StatusId_next
             , COALESCE (tmpMI_production.InvNumber, '')                                          AS InvNumber
             , COALESCE (tmpMI_production.OperDate, tmpMI_order.OperDate)                         AS OperDate
             , COALESCE (tmpMI_production.DocumentKindId, 0)                                      AS DocumentKindId
@@ -432,8 +434,8 @@ BEGIN
 
             , CASE WHEN _tmpListMaster.MovementItemId > 0 AND _tmpListMaster.MovementItemId <> _tmpListMaster.MovementItemId_order THEN COALESCE (MIBoolean_OrderSecond.ValueData, FALSE) ELSE _tmpListMaster.isOrderSecond END :: Boolean AS isOrderSecond
 
-            , Object_Status.ObjectCode            AS StatusCode
-            , Object_Status.ValueData             AS StatusName
+            , zfCalc_StatusCode_next (_tmpListMaster.StatusId, _tmpListMaster.StatusId_next)                          ::Integer  AS StatusCode
+            , zfCalc_StatusName_next (Object_Status.ValueData, _tmpListMaster.StatusId, _tmpListMaster.StatusId_next) ::TVarChar AS StatusName
 
             , Object_Insert.ValueData             AS InsertName
             , Object_Update.ValueData             AS UpdateName
