@@ -191,7 +191,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
                 Value = 3
               end
               item
-                Description = '***'#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
                 ImageIndex = 11
                 Value = 4
               end>
