@@ -502,6 +502,9 @@ BEGIN
          FROM (SELECT DISTINCT _tmpReport.PersonalServiceListId FROM _tmpReport) AS tmp;
 
 
+         -- сохранили свойство <> 
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_PersonalService(), inUnitId, CURRENT_TIMESTAMP ::TDateTime);
+
          -- Для Теста - только при формированиии
          if vbUserId IN (9457, 5) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
          -- RAISE EXCEPTION 'Ошибок нет.Для тестового режима формирование данных в ведомости отключено.'; 

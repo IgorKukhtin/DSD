@@ -207,7 +207,7 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object StatusCode: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1091#1089
+        Caption = '*'#1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
         Properties.Images = dmMain.ImageList
@@ -215,7 +215,7 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
           item
             Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
             ImageIndex = 11
-            Value = 1
+            Value = 4
           end
           item
             Description = #1055#1088#1086#1074#1077#1076#1077#1085
@@ -226,6 +226,11 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
             Description = #1059#1076#1072#1083#1077#1085
             ImageIndex = 13
             Value = 3
+          end
+          item
+            Description = '***'#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+            ImageIndex = 32
+            Value = 1
           end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
