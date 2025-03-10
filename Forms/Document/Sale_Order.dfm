@@ -566,7 +566,9 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     inherited cxLabel15: TcxLabel
       Top = 45
+      Caption = '*'#1057#1090#1072#1090#1091#1089
       ExplicitTop = 45
+      ExplicitWidth = 46
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
@@ -3625,8 +3627,9 @@ inherited Sale_OrderForm: TSale_OrderForm
     Top = 328
   end
   inherited StatusGuides: TdsdGuides
-    Left = 80
-    Top = 48
+    Tag = 123
+    Left = 48
+    Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'

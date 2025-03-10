@@ -2,7 +2,6 @@ inherited ReturnOutForm: TReturnOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 668
   ClientWidth = 838
-  ExplicitTop = -163
   ExplicitWidth = 854
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -285,8 +284,12 @@ inherited ReturnOutForm: TReturnOutForm
       ExplicitWidth = 71
     end
     inherited cxLabel15: TcxLabel
+      Left = 9
       Top = 45
+      Caption = '*'#1057#1090#1072#1090#1091#1089
+      ExplicitLeft = 9
       ExplicitTop = 45
+      ExplicitWidth = 46
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
@@ -1082,8 +1085,9 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 32
-    Top = 24
+    Tag = 123
+    Left = 24
+    Top = 64
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnOut'

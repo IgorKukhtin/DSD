@@ -369,7 +369,9 @@ inherited LossForm: TLossForm
     end
     inherited cxLabel15: TcxLabel
       Top = 45
+      Caption = '*'#1057#1090#1072#1090#1091#1089
       ExplicitTop = 45
+      ExplicitWidth = 46
     end
     inherited ceStatus: TcxButtonEdit
       Top = 61
@@ -1545,6 +1547,7 @@ inherited LossForm: TLossForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
+    Tag = 123
     Left = 56
     Top = 48
   end

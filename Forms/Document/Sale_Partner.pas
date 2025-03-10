@@ -267,6 +267,7 @@ type
     spSelectPrintBox_PartnerTotal: TdsdStoredProc;
     actPrintBoxTotalPartner: TdsdPrintAction;
     bbPrintBoxTotalPartner: TdxBarButton;
+    cxLabel30: TcxLabel;
   private
     { Private declarations }
   public

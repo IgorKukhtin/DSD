@@ -87,8 +87,8 @@ BEGIN
              Movement.Id                                        AS Id
            , Movement.InvNumber                                 AS InvNumber
            , Movement.OperDate                                  AS OperDate
-           , Object_Status.ObjectCode                           AS StatusCode
-           , Object_Status.ValueData                            AS StatusName
+           , zfCalc_StatusCode_next (Movement.StatusId, Movement.StatusId_next)                          ::Integer  AS StatusCode
+           , zfCalc_StatusName_next (Object_Status.ValueData, Movement.StatusId, Movement.StatusId_next) ::TVarChar AS StatusName
            , MovementFloat_TotalCount.ValueData                 AS TotalCount
            , Object_From.Id                                     AS FromId
            , (CASE WHEN Object_From.ValueData ILIKE Object_To.ValueData THEN '(' || Object_From.ObjectCode :: TVarChar ||') ' ELSE '' END || Object_From.ValueData) :: TVarChar AS FromName

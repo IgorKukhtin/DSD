@@ -1105,22 +1105,21 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome20202JournalForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-  exit;
-  //
- }
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
   //exit;
   {//
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangePriceUserDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangePriceUserDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeFuelForm');
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeFuelJournalForm');
@@ -1190,11 +1189,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionCellEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionCellEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-  exit;
-   }
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
   //exit;
@@ -1382,10 +1381,10 @@ begin
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPrice_ReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPrice_ReestrJournalForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceJournalForm');
    exit;
@@ -1743,16 +1742,16 @@ end;
 
 procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalChoiceForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
-  exit;
+  //exit;
   // возврат поставщику от покупателя
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerForm');
@@ -1764,24 +1763,22 @@ end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
-   exit;
-  {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalChoiceForm');
-
+  {
   //отчет
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_ReturnInBySaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_ReturnInBySaleForm');
@@ -1988,16 +1985,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateJournalChoiceForm');
-  {exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateItemJournalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateStorageLineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateStorageLineForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateJournalForm');
 
@@ -2007,10 +2004,10 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountFormDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAmountFormDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
 

@@ -5,7 +5,7 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -95,6 +95,27 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 4
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end
+              item
+                Description = '***'#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 32
+                Value = 1
+              end>
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 100
@@ -287,9 +308,6 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TProductionSeparateForm'
-    end
     object actStorageLine: TOpenChoiceForm [4]
       Category = 'DSDLib'
       MoveParams = <>
@@ -316,6 +334,9 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TProductionSeparateForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TProductionSeparateStorageLineForm'
@@ -649,9 +670,6 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
-    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
@@ -960,7 +978,7 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
       end
       item
         Name = 'inIsDescMaster'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

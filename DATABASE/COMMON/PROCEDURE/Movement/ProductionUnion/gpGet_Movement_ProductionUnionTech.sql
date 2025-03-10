@@ -39,7 +39,7 @@ BEGIN
           RETURN QUERY
           SELECT 0                                  AS MovementId
                , inOperDate                         AS OperDate
-               , MLO_To.ObjectId		    AS FromId
+               , MLO_To.ObjectId		            AS FromId
                , MLO_To.ObjectId                    AS ToId
 
                , 0                                   AS MovementItemId

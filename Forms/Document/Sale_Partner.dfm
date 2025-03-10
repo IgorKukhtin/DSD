@@ -1089,6 +1089,11 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       TabOrder = 64
       Width = 219
     end
+    object cxLabel30: TcxLabel
+      Left = 8
+      Top = 45
+      Caption = '*'#1057#1090#1072#1090#1091#1089
+    end
   end
   object cbPromo: TcxCheckBox [2]
     Left = 684
@@ -3444,8 +3449,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Top = 304
   end
   inherited StatusGuides: TdsdGuides
-    Left = 80
-    Top = 48
+    Tag = 123
+    Left = 56
+    Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'
@@ -3473,8 +3479,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 56
+    Left = 192
+    Top = 80
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'
@@ -5443,8 +5449,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 188
-    Top = 24
+    Left = 172
+    Top = 16
   end
   object spSelectPrint_Pack: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Pack_Print'

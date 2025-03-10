@@ -697,7 +697,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
     inherited cxLabel15: TcxLabel
       Top = 45
+      Caption = '*'#1057#1090#1072#1090#1091#1089
       ExplicitTop = 45
+      ExplicitWidth = 46
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
@@ -1956,7 +1958,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-      Visible = True
     end
     object bbPrintOut: TdxBarButton
       Action = actPrintOut
@@ -2117,6 +2118,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
+    Tag = 123
     Left = 80
     Top = 48
   end
@@ -3695,6 +3697,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         DataSummaryItemIndex = 5
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 1198
     Top = 305

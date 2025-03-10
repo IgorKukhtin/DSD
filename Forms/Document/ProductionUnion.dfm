@@ -758,13 +758,19 @@ inherited ProductionUnionForm: TProductionUnionForm
   inherited DataPanel: TPanel
     Width = 1128
     Height = 96
+    ExplicitLeft = -8
+    ExplicitTop = 8
     ExplicitWidth = 1128
     ExplicitHeight = 96
+    inherited cxLabel15: TcxLabel
+      Left = 10
+      Caption = '*'#1057#1090#1072#1090#1091#1089
+      ExplicitLeft = 10
+      ExplicitWidth = 46
+    end
     inherited ceStatus: TcxButtonEdit
       Left = 10
-      Top = 66
       ExplicitLeft = 10
-      ExplicitTop = 66
       ExplicitWidth = 200
       ExplicitHeight = 22
       Width = 200
@@ -1886,12 +1892,14 @@ inherited ProductionUnionForm: TProductionUnionForm
     Top = 272
   end
   inherited StatusGuides: TdsdGuides
+    Tag = 123
     Left = 88
     Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ProductionUnion'
-    Left = 40
+    Left = 48
+    Top = 64
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ProductionUnion'
