@@ -1162,6 +1162,14 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnlyEditingCellOnEnter = True
+    ColumnEnterList = <
+      item
+        Column = CountTare1
+      end
+      item
+        Column = CountTare2
+      end>
     Left = 320
     Top = 232
   end
