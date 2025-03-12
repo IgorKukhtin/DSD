@@ -1095,7 +1095,7 @@ END IF;
                             -- сумма для второго места
                           , tmpData.SummCard_2
 
-                            -- сумма для третьего места
+                            -- сумма для 3 - места
                           , CASE -- если уже распределили
                                  WHEN tmpData.SummCard_1 > 0 OR tmpData.SummCard_2 > 0
                                       THEN 0
@@ -1126,7 +1126,7 @@ END IF;
                      FROM
                     (SELECT tmpData.*
 
-                            -- сумма для второго места
+                            -- сумма для 2 - места
                           , CASE -- если уже распределили
                                  WHEN tmpData.SummCard_1 > 0
                                       THEN 0
@@ -1148,8 +1148,11 @@ END IF;
                             -- итого сумма по физ лицу - именно ее проверяем на минимум
                           , tmpData_check.SummCardSecondRecalc_check
 
-                            -- сумма для первого места
+                            -- сумма для 1 - места
                           , CASE -- есть условие и Мин и Макс
+                                 -- WHEN vbUserId = 5
+                                 -- THEN 200
+
                                  WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_max_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData_check.SummCardSecondRecalc_check, 1)
                                  THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) > tmpData.Sum_max_1
                                                 -- только сумма макс

@@ -230,6 +230,36 @@ BEGIN
                                      AND MIContainer.DescId     = zc_MIContainer_Summ()
                                      AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_PersonalService_Nalog())
                                   )
+      -- <Карта БН (округление) - 2ф>
+    , tmpMIContainer_find_diff AS (SELECT MIContainer.MovementItemId
+                                        , MIContainer.ContainerId
+                                        , ROW_NUMBER() OVER (PARTITION BY MIContainer.ContainerId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
+                                   FROM MovementItemContainer AS MIContainer
+                                        INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                       ON CLO_Unit.ContainerId = MIContainer.ContainerId
+                                                                      AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                        INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                       ON CLO_Personal.ContainerId = MIContainer.ContainerId
+                                                                      AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
+                                   WHERE MIContainer.MovementId = inMovementId
+                                     AND MIContainer.DescId     = zc_MIContainer_Summ()
+                                     AND (MIContainer.Amount <> 0) --  OR vbUserId = 5
+	                          )
+      -- <Карта БН (округление) - 2ф>
+    , tmpMIContainer_diff AS (SELECT SUM (MIContainer.Amount) AS AmountService_diff
+                                   , tmpMIContainer_find_diff.MovementItemId
+                              FROM tmpMIContainer_find_diff
+                                   INNER JOIN MovementItemContainer AS MIContainer
+                                                                    ON MIContainer.ContainerId    = tmpMIContainer_find_diff.ContainerId
+                                                                   AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                   AND MIContainer.MovementDescId = zc_Movement_PersonalService()
+                                                                   -- <Карта БН (округление) - 2ф>
+                                                                   AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_PersonalService_SummDiff()
+                                                                   --and 1=0
+                              WHERE tmpMIContainer_find_diff.Ord = 1
+                                -- AND vbUserId = 5
+                              GROUP BY tmpMIContainer_find_diff.MovementItemId
+                             )
           , tmpMI AS (SELECT MovementItem.Id                          AS MovementItemId
                            , MovementItem.Amount
                            , MovementItem.ObjectId                    AS PersonalId
@@ -786,7 +816,12 @@ BEGIN
             , COALESCE (tmpMIChild.StaffListSummKindName,'') ::TVarChar AS StaffListSummKindName
 
             , tmpAll.Amount :: TFloat           AS Amount
-            , MIFloat_SummToPay.ValueData       AS AmountToPay
+
+            , (COALESCE (MIFloat_SummToPay.ValueData, 0)
+               -- <Карта БН (округление) - 2ф>
+             - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+              ) :: TFloat AS AmountToPay
+
               -- К выплате (из кассы)
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)
             + (-1) *  CASE WHEN 1=0 AND vbUserId = 5
@@ -796,6 +831,8 @@ BEGIN
                              + COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
                              + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)
                       END
+               -- <Карта БН (округление) - 2ф>
+             - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
               ) :: TFloat AS AmountCash
               -- Остаток к выдаче (из кассы) грн
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)
@@ -808,6 +845,8 @@ BEGIN
                              + COALESCE (tmpMIContainer_pay.Amount_avance_all, 0)
                              + COALESCE (tmpMIContainer_pay.Amount_service, 0)
                       END
+               -- <Карта БН (округление) - 2ф>
+             - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
               ) :: TFloat AS AmountCash_rem   
 
             --к выплате из кассы для печати  
@@ -822,6 +861,8 @@ BEGIN
              - COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)
              - COALESCE (tmpMIContainer_pay.Amount_service, 0)
              ) - CASE WHEN tmpAll.PersonalId <> Object_PersonalTo.Id THEN -1 * COALESCE (tmpNoNalog_print.SummNalog,0) ELSE COALESCE (tmpNoNalog_print.SummNalog,0) END  --налог за другого сотрудника
+               -- <Карта БН (округление) - 2ф>
+             - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
              ) :: TFloat AS AmountCash_print
               
               -- выдадано из кассы
@@ -845,7 +886,12 @@ BEGIN
                           ELSE tmpMI_card_b2.Summ_calc + (tmpMI_card_b2.Summ_calc - 29999) * 0.005
                     END AS NUMERIC (16, 0)) :: TFloat AS SummCardSecondRecalc_005
 
-            , COALESCE (MIFloat_SummCardSecondDiff.ValueData, 0)    ::TFloat    AS SummCardSecondDiff
+              -- коп. корр. карта БН - 2ф.
+            , (COALESCE (MIFloat_SummCardSecondDiff.ValueData, 0)
+               -- <Карта БН (округление) - 2ф>
+             + COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+              ) ::TFloat    AS SummCardSecondDiff
+
             , COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)    ::TFloat    AS SummCardSecondCash
             , COALESCE (tmpMI_SummCardSecondRecalc.SummCardSecondRecalc, 0)    ::TFloat AS SummCardSecond_Avance    
             , COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)    ::TFloat       AS SummAvCardSecond
@@ -926,9 +972,13 @@ BEGIN
             , COALESCE (MIDate_BankOut.ValueData, vbOperDate)   :: TDateTime AS BankOutDate_export
             --, tmpAll.Ord :: Integer    
             , tmpNalog_print.SummNalog ::TFloat AS SummNalog_print
+
        FROM tmpAll
             LEFT JOIN tmpMI_card_b2 ON tmpMI_card_b2.MemberId_Personal = tmpAll.MemberId_Personal
                                    AND tmpAll.Ord = 1
+
+            -- <Карта БН (округление) - 2ф>
+            LEFT JOIN tmpMIContainer_diff ON tmpMIContainer_diff.MovementItemId = tmpAll.MovementItemId
 
             LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId
 
