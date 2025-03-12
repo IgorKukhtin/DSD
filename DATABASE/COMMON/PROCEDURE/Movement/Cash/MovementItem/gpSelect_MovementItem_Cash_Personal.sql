@@ -491,6 +491,7 @@ BEGIN
                                   OR MIFloat_SummTransportTaxi.ValueData <> 0
                                   OR MIFloat_SummPhone.ValueData <> 0
                                   OR MIFloat_SummCompensation.ValueData <> 0
+                                  -- OR vbUserId = 5
                                   --OR inShowAll = TRUE
                                     )
 
@@ -952,9 +953,9 @@ BEGIN
             , tmpData.Amount           :: TFloat AS Amount
             , tmpData.SummService      :: TFloat AS SummService
               -- К выплате (из кассы) минус Карта БН (округление) - 2ф
-            , (tmpData.SummToPay_cash  - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay_cash
+            , (COALESCE (tmpData.SummToPay_cash, 0)  - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay_cash
               -- К выплате (итог)
-            , (tmpData.SummToPay       - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay
+            , (COALESCE (tmpData.SummToPay, 0)       - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay
               --
             , tmpData.SummCard         :: TFloat AS SummCard
             , tmpData.SummCardSecond   :: TFloat AS SummCardSecond

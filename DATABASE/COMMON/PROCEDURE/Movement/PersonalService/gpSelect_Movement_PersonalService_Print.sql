@@ -104,7 +104,7 @@ BEGIN
 
            , MovementFloat_TotalSummCardSecondCash.ValueData AS TotalSummCardSecondCash
            , MovementFloat_TotalSummNalog.ValueData          AS TotalSummNalog
-           , MovementFloat_TotalSummNalogRet.ValueData       AS TotalSummNalogRet  
+           , MovementFloat_TotalSummNalogRet.ValueData       AS TotalSummNalogRet
            , MovementFloat_TotalSummChild.ValueData          AS TotalSummChild
            , MovementFloat_TotalSummMinusExt.ValueData       AS TotalSummMinusExt
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
@@ -120,8 +120,8 @@ BEGIN
            , MovementFloat_TotalSummTransportAddLong.ValueData AS TotalSummTransportAddLong
            , MovementFloat_TotalSummTransportTaxi.ValueData    AS TotalSummTransportTaxi
            , MovementFloat_TotalSummPhone.ValueData            AS TotalSummPhone
-           
-           , CASE WHEN Object_PersonalServiceList.Id  IN (293428, 301885) THEN 'Допл. за ревизию' ELSE 'Возмещ. налоги грн' END :: TVarChar AS AuditColumnName --293428;"Ведомость СБ  + 301885;"Ведомость охрана - заменить название колонки на "допл. за ревизию" 
+
+           , CASE WHEN Object_PersonalServiceList.Id  IN (293428, 301885) THEN 'Допл. за ревизию' ELSE 'Возмещ. налоги грн' END :: TVarChar AS AuditColumnName --293428;"Ведомость СБ  + 301885;"Ведомость охрана - заменить название колонки на "допл. за ревизию"
        FROM Movement
             LEFT JOIN MovementDate AS MovementDate_ServiceDate
                                    ON MovementDate_ServiceDate.MovementId = Movement.Id
@@ -289,6 +289,36 @@ BEGIN
                                      AND MIContainer.DescId     = zc_MIContainer_Summ()
                                      AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_PersonalService_Nalog(), zc_Enum_AnalyzerId_PersonalService_NalogRet())
 	                          )
+      -- <Карта БН (округление) - 2ф>
+    , tmpMIContainer_find_diff AS (SELECT MIContainer.MovementItemId
+                                        , MIContainer.ContainerId
+                                        , ROW_NUMBER() OVER (PARTITION BY MIContainer.ContainerId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
+                                   FROM MovementItemContainer AS MIContainer
+                                        INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                       ON CLO_Unit.ContainerId = MIContainer.ContainerId
+                                                                      AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                        INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                       ON CLO_Personal.ContainerId = MIContainer.ContainerId
+                                                                      AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
+                                   WHERE MIContainer.MovementId = inMovementId
+                                     AND MIContainer.DescId     = zc_MIContainer_Summ()
+                                     AND (MIContainer.Amount <> 0) --  OR vbUserId = 5
+	                          )
+      -- <Карта БН (округление) - 2ф>
+    , tmpMIContainer_diff AS (SELECT SUM (MIContainer.Amount) AS AmountService_diff
+                                   , tmpMIContainer_find_diff.MovementItemId
+                              FROM tmpMIContainer_find_diff
+                                   INNER JOIN MovementItemContainer AS MIContainer
+                                                                    ON MIContainer.ContainerId    = tmpMIContainer_find_diff.ContainerId
+                                                                   AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                   AND MIContainer.MovementDescId = zc_Movement_PersonalService()
+                                                                   -- <Карта БН (округление) - 2ф>
+                                                                   AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_PersonalService_SummDiff()
+                                                                   --and 1=0
+                              WHERE tmpMIContainer_find_diff.Ord = 1
+                                -- AND vbUserId = 5
+                              GROUP BY tmpMIContainer_find_diff.MovementItemId
+                             )
         , tmpMIContainer_find AS (SELECT tmpMIContainer_all.*
                                         , ROW_NUMBER() OVER (PARTITION BY tmpMIContainer_all.MemberId ORDER BY ABS (tmpMIContainer_all.SummNalog) DESC) AS Ord
                                    FROM tmpMIContainer_all
@@ -306,7 +336,7 @@ BEGIN
                                       ,*/ tmpMIContainer_all.MemberId
                                       , CASE WHEN inIsShowAll = TRUE THEN tmpMIContainer_all.PositionId ELSE 0 END
                               )
-                                               
+
       , tmpMI_all AS (SELECT MovementItem.Id                            AS MovementItemId
                            , MovementItem.Amount
                            , MovementItem.ObjectId                      AS PersonalId
@@ -321,14 +351,23 @@ BEGIN
 
                            , COALESCE (MIBoolean_Main.ValueData, FALSE) AS isMain
 
-                           , COALESCE (MIFloat_SummToPay.ValueData, 0)        AS SummToPay
+                           , COALESCE (MIFloat_SummToPay.ValueData, 0)
+                             -- <Карта БН (округление) - 2ф>
+                           - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+                             AS SummToPay
+
                            , COALESCE (MIFloat_SummNalog.ValueData, 0)        AS SummNalog
                            , COALESCE (MIFloat_SummNalogRet.ValueData, 0)     AS SummNalogRet
                            , COALESCE (MIFloat_SummCard.ValueData, 0)         AS SummCard
 
                            , COALESCE (MIFloat_SummCardSecond.ValueData, 0) + COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0) AS SummCardSecond
                            , COALESCE (MIFloat_SummCardSecondCash.ValueData, 0) AS SummCardSecondCash
-                           , COALESCE (MIFloat_SummService.ValueData, 0)      AS SummService
+
+                           , COALESCE (MIFloat_SummService.ValueData, 0)
+                             -- <Карта БН (округление) - 2ф>
+                           - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+                             AS SummService
+
                            , COALESCE (MIFloat_SummAdd.ValueData, 0)          AS SummAdd
                            , COALESCE (MIFloat_SummAddOth.ValueData, 0)       AS SummAddOth
                              --
@@ -361,6 +400,9 @@ BEGIN
                            , MIString_Comment.ValueData         AS Comment
 
                       FROM MovementItem
+                           -- <Карта БН (округление) - 2ф>
+                           LEFT JOIN tmpMIContainer_diff ON tmpMIContainer_diff.MovementItemId = MovementItem.Id
+
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -517,9 +559,9 @@ BEGIN
                              AND MovementItem.DescId = zc_MI_Child()
                              AND MovementItem.isErased = FALSE
                            GROUP BY MovementItem.ParentId
-                       ) 
-                       
-       --- все строки документа или выбранные, если печать из грида 
+                       )
+
+       --- все строки документа или выбранные, если печать из грида
       , tmpMI_list AS (SELECT DISTINCT
                               tmpMI_all.PersonalId
                             , tmpMI_all.UnitId
@@ -535,13 +577,13 @@ BEGIN
                             , tmpMI_all.PositionId
                             , tmpMI_all.MemberId
                             , tmpMI_all.PersonalServiceListId
-                       FROM tmpMI_all  
+                       FROM tmpMI_all
                             INNER JOIN (SELECT OP.ObjectId AS MovementItemId
                                         FROM Object_Print AS OP
                                         WHERE OP.UserId = vbUserId
                                           AND OP.ReportKindId = inMovementId) AS tmpOP ON tmpOP.MovementItemId = tmpMI_all.MovementItemId
                        WHERE inIsList = TRUE
-                       )  
+                       )
           , tmpMI AS (SELECT tmpMI_all_find.PersonalId
                            , tmpMI_all_find.UnitId
                            , tmpMI_all_find.PositionId
@@ -1089,7 +1131,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 13.03.22         * 
+ 13.03.22         *
  17.11.21         * add SummHouseAdd
  25.03.20         * add SummAuditAdd
  20.06.17         * add SummCardSecondCash
