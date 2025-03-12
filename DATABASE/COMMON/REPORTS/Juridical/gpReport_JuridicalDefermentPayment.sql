@@ -47,6 +47,19 @@ BEGIN
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inOperDate, inOperDate, NULL, NULL, NULL, vbUserId);
 
+
+     if vbUserId <> 5 AND 1=0
+     then
+         RAISE EXCEPTION 'Ошибка.Отчет веремнно отключен. Повторите действие через 30 мин.';
+     end if;
+
+/*IF inPaidKindId = 0 and vbUserId <> 5
+THEN
+    RAISE EXCEPTION 'Ошибка.Необходимо выбрать <Форма оплаты>.';
+END IF;*/
+
+
+
      -- Результат
      RETURN QUERY
      WITH
