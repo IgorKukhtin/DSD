@@ -2599,7 +2599,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleForm');
  // exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportDialogForm'));
@@ -2608,7 +2608,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WP_PassportPSWDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WP_PassportPSWDialogForm');
 
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Container_dataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Container_dataForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Container_dataDialogForm'));
@@ -2633,21 +2633,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateForm');
   exit;
 
-  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_GoodsHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_GoodsHistoryForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellForm');
   exit;
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellRemainsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellRemainsDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellRemainsForm'));
@@ -3045,7 +3044,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsTaxDialogForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
   exit;

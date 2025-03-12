@@ -124,6 +124,8 @@ type
     bbMovementReComplete: TdxBarButton;
     OperDate_Protocol_mi: TcxGridDBColumn;
     UserName_Protocol_mi: TcxGridDBColumn;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public
