@@ -205,7 +205,7 @@ object IncomeForm: TIncomeForm
     object cxLabel11: TcxLabel
       Left = 9
       Top = 45
-      Caption = #1057#1090#1072#1090#1091#1089
+      Caption = '*'#1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
       Left = 9
@@ -3821,6 +3821,7 @@ object IncomeForm: TIncomeForm
     Top = 392
   end
   object GuidesStatus: TdsdGuides
+    Tag = 123
     KeyField = 'Id'
     LookupControl = ceStatus
     FormNameParam.Value = ''
@@ -3853,8 +3854,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 20
-    Top = 32
+    Left = 100
+    Top = 48
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'

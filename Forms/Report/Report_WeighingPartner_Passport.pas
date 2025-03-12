@@ -90,6 +90,7 @@ type
     spGetBoxNamePSW: TdsdStoredProc;
     actGetBoxNamePSW: TdsdExecStoredProc;
     macGetCheckDialog: TMultiAction;
+    outMessageText: TShowMessageAction;
   private
     { Private declarations }
   public

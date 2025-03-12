@@ -2,8 +2,6 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 1049
-  ExplicitLeft = -46
-  ExplicitTop = -188
   ExplicitWidth = 1065
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -277,7 +275,9 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
     end
     inherited cxLabel15: TcxLabel
       Top = 45
+      Caption = '*'#1057#1090#1072#1090#1091#1089
       ExplicitTop = 45
+      ExplicitWidth = 46
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
@@ -587,6 +587,9 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       ReportNameParam.Value = 'PrintMovement_ReturnOut'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -668,6 +671,9 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -990,8 +996,9 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 32
-    Top = 24
+    Tag = 123
+    Left = 48
+    Top = 72
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnOut'
@@ -1011,7 +1018,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1049,7 +1056,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       end
       item
         Name = 'Checked'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -1068,7 +1075,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1302,7 +1309,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -1396,7 +1403,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       end
       item
         Name = 'inisIncome'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

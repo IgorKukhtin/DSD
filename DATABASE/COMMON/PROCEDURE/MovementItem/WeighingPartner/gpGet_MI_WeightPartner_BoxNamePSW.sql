@@ -19,7 +19,8 @@ BEGIN
    
     vbCountTare1_old := (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.DescId = zc_MIFloat_CountTare1() AND MIF.MovementItemId = inId) ::TFloat;
     vbCountTare2_old := (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.DescId = zc_MIFloat_CountTare2() AND MIF.MovementItemId = inId) ::TFloat;
-     
+                                                                                                                                                                 
+    
     IF COALESCE (inCountTare1,0) <> COALESCE (vbCountTare1_old,0)
     THEN
         RETURN QUERY 
@@ -31,9 +32,7 @@ BEGIN
           WHERE ObjectFloat_NPP.DescId = zc_ObjectFloat_Box_NPP()
             AND ObjectFloat_NPP.ValueData = 1
            ;
-    END IF;
-
-    IF COALESCE (inCountTare2,0) <> COALESCE (vbCountTare2_old,0)
+    ELSEIF COALESCE (inCountTare2,0) <> COALESCE (vbCountTare2_old,0)
     THEN
         RETURN QUERY 
           SELECT Object.ValueData ::TVarChar
@@ -44,8 +43,15 @@ BEGIN
           WHERE ObjectFloat_NPP.DescId = zc_ObjectFloat_Box_NPP()
             AND ObjectFloat_NPP.ValueData = 2
           ;
+    ELSE
+       RETURN QUERY 
+          SELECT NULL ::TVarChar AS BoxName
+               , NULL ::TVarChar AS Password
+          ;
     END IF;
 
+    
+    
 END;
 $BODY$
 

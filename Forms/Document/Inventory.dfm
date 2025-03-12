@@ -400,9 +400,6 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheet_PartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0
@@ -645,7 +642,9 @@ inherited InventoryForm: TInventoryForm
     end
     inherited cxLabel15: TcxLabel
       Top = 45
+      Caption = '*'#1057#1090#1072#1090#1091#1089
       ExplicitTop = 45
+      ExplicitWidth = 46
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
@@ -2391,6 +2390,7 @@ inherited InventoryForm: TInventoryForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
+    Tag = 123
     Left = 80
     Top = 48
   end

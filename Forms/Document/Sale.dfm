@@ -622,7 +622,9 @@ inherited SaleForm: TSaleForm
     end
     inherited cxLabel15: TcxLabel
       Top = 45
+      Caption = '*'#1057#1090#1072#1090#1091#1089
       ExplicitTop = 45
+      ExplicitWidth = 46
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
@@ -4059,6 +4061,7 @@ inherited SaleForm: TSaleForm
     Top = 344
   end
   inherited StatusGuides: TdsdGuides
+    Tag = 123
     Left = 80
     Top = 48
   end
@@ -4096,8 +4099,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 48
-    Top = 16
+    Left = 24
+    Top = 64
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'

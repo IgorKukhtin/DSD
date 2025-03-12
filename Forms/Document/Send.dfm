@@ -908,8 +908,6 @@ inherited SendForm: TSendForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 24
-        ExplicitTop = -32
         object cxGridDBTableView_PartionCell: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionCellDS
@@ -1943,7 +1941,9 @@ inherited SendForm: TSendForm
     end
     inherited cxLabel15: TcxLabel
       Top = 45
+      Caption = '*'#1057#1090#1072#1090#1091#1089
       ExplicitTop = 45
+      ExplicitWidth = 46
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
@@ -4811,6 +4811,7 @@ inherited SendForm: TSendForm
     Top = 464
   end
   inherited StatusGuides: TdsdGuides
+    Tag = 123
     Left = 80
     Top = 48
   end

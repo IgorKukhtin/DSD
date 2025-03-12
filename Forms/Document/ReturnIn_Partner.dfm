@@ -809,7 +809,9 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     end
     inherited cxLabel15: TcxLabel
       Top = 45
+      Caption = '*'#1057#1090#1072#1090#1091#1089
       ExplicitTop = 45
+      ExplicitWidth = 46
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
@@ -3798,6 +3800,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Top = 304
   end
   inherited StatusGuides: TdsdGuides
+    Tag = 123
     Left = 88
     Top = 40
   end
@@ -5685,6 +5688,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 775
     Top = 388
@@ -5972,6 +5976,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         DataSummaryItemIndex = -1
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 342

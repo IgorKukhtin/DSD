@@ -1042,6 +1042,10 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         end>
       Caption = 'macGetCheckDialog'
     end
+    object outMessageText: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1162,6 +1166,14 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnlyEditingCellOnEnter = True
+    ColumnEnterList = <
+      item
+        Column = CountTare1
+      end
+      item
+        Column = CountTare2
+      end>
     Left = 320
     Top = 232
   end
@@ -1424,6 +1436,14 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         Component = MasterCDS
         ComponentItem = 'CountTare2'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = outMessageText
+        ComponentItem = 'MessageText'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

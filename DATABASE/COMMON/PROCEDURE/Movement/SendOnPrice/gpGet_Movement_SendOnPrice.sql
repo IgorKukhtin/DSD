@@ -102,8 +102,8 @@ BEGIN
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
            , Movement.OperDate                              AS OperDate
-           , Object_Status.ObjectCode    		    AS StatusCode
-           , Object_Status.ValueData     		    AS StatusName
+           , zfCalc_StatusCode_next (Movement.StatusId, Movement.StatusId_next)                          ::Integer  AS StatusCode
+           , zfCalc_StatusName_next (Object_Status.ValueData, Movement.StatusId, Movement.StatusId_next) ::TVarChar AS StatusName
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData             AS VATPercent

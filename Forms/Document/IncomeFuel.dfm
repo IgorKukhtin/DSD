@@ -188,7 +188,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object cxLabel8: TcxLabel
       Left = 8
       Top = 45
-      Caption = #1057#1090#1072#1090#1091#1089
+      Caption = '*'#1057#1090#1072#1090#1091#1089
     end
     object cxLabel11: TcxLabel
       Left = 455
@@ -2139,6 +2139,7 @@ object IncomeFuelForm: TIncomeFuelForm
         DataSummaryItemIndex = 2
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 488
     Top = 287
@@ -2849,6 +2850,7 @@ object IncomeFuelForm: TIncomeFuelForm
     Top = 284
   end
   object StatusGuides: TdsdGuides
+    Tag = 123
     KeyField = 'Id'
     LookupControl = ceStatus
     FormNameParam.Value = ''
@@ -2926,6 +2928,7 @@ object IncomeFuelForm: TIncomeFuelForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 288
     Top = 431
@@ -3349,6 +3352,7 @@ object IncomeFuelForm: TIncomeFuelForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 256
     Top = 199
@@ -3381,6 +3385,7 @@ object IncomeFuelForm: TIncomeFuelForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 864
     Top = 335

@@ -411,6 +411,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Height = 96
     ExplicitWidth = 913
     ExplicitHeight = 96
+    inherited cxLabel15: TcxLabel
+      Caption = '*'#1057#1090#1072#1090#1091#1089
+      ExplicitWidth = 46
+    end
     inherited ceStatus: TcxButtonEdit
       ExplicitHeight = 22
     end
@@ -969,12 +973,13 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Top = 208
   end
   inherited StatusGuides: TdsdGuides
+    Tag = 123
     Left = 144
     Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ProductionSeparate'
-    Left = 96
+    Left = 80
     Top = 56
   end
   inherited spGet: TdsdStoredProc

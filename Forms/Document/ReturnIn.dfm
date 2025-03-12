@@ -2,7 +2,6 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 645
   ClientWidth = 1304
-  ExplicitLeft = -424
   ExplicitWidth = 1320
   ExplicitHeight = 684
   PixelsPerInch = 96
@@ -1823,7 +1822,9 @@ inherited ReturnInForm: TReturnInForm
     end
     inherited cxLabel15: TcxLabel
       Top = 45
+      Caption = '*'#1057#1090#1072#1090#1091#1089
       ExplicitTop = 45
+      ExplicitWidth = 46
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
@@ -5260,6 +5261,7 @@ inherited ReturnInForm: TReturnInForm
     Top = 240
   end
   inherited StatusGuides: TdsdGuides
+    Tag = 123
     Left = 56
     Top = 16
   end
@@ -7235,6 +7237,7 @@ inherited ReturnInForm: TReturnInForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 775
     Top = 388
@@ -7568,6 +7571,7 @@ inherited ReturnInForm: TReturnInForm
         DataSummaryItemIndex = -1
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 222
@@ -7910,6 +7914,7 @@ inherited ReturnInForm: TReturnInForm
         DataSummaryItemIndex = 5
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 1126
     Top = 297
@@ -8143,6 +8148,7 @@ inherited ReturnInForm: TReturnInForm
         DataSummaryItemIndex = -1
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 758
@@ -8185,6 +8191,7 @@ inherited ReturnInForm: TReturnInForm
         DataSummaryItemIndex = -1
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 598

@@ -1612,6 +1612,36 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 66
     end
+    object MovementProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1759,6 +1789,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1787,6 +1825,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
     end
     object bbMovementReComplete: TdxBarButton
       Action = macMovementReComplete
+      Category = 0
+    end
+    object bbMovementProtocolOpenForm: TdxBarButton
+      Action = MovementProtocolOpenForm
       Category = 0
     end
   end
@@ -1873,8 +1915,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 416
-    Top = 48
+    Left = 368
+    Top = 176
   end
   object GuidesUnitGroup: TdsdGuides
     KeyField = 'Id'
