@@ -26,15 +26,17 @@ BEGIN
     FROM
    (SELECT '<Field FieldName = "№ документа" FieldValue = "' || zfStrToXmlStr (Movement.InvNumber) || '"/>'
         || '<Field FieldName = "Дата документа" FieldValue = "' || zfConvert_DateToString (Movement.OperDate) || '"/>'
-        || '<Field FieldName = "Статус" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>'
+        || '<Field FieldName = "Статус" FieldValue = "' || COALESCE (Object_Status.ValueData, 'NULL') || '"/>'
+        || '<Field FieldName = "***Статус" FieldValue = "' || COALESCE (Object_Status_next.ValueData, Object_Status.ValueData, 'NULL') || '"/>'
         || CASE WHEN Movement.AccessKeyId <> 0 THEN '<Field FieldName = "Доступ" FieldValue = "' || Movement.AccessKeyId :: TVarChar || '"/>' ELSE '' END
         || CASE WHEN Movement.ParentId <> 0 THEN '<Field FieldName = "Главный" FieldValue = "' || COALESCE (Movement_parent.InvNumber, 'NULL') || '"/>' ELSE '' END
            AS FieldXML
          , 1 AS GroupId
          , Movement.DescId
     FROM Movement
-         LEFT JOIN Object ON Object.Id = Movement.StatusId
-         LEFT JOIN Movement AS Movement_parent ON Movement_parent.Id = Movement.ParentId
+         LEFT JOIN Object   AS Object_Status      ON Object_Status.Id = Movement.StatusId
+         LEFT JOIN Object   AS Object_Status_next ON Object_Status_next.Id = Movement.StatusId_next
+         LEFT JOIN Movement AS Movement_parent    ON Movement_parent.Id = Movement.ParentId
     WHERE Movement.Id = inMovementId    
    UNION
     SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementFloatDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
