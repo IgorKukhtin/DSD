@@ -1472,6 +1472,7 @@ BEGIN
 
 
      IF inUserId <> zfCalc_UserAdmin() :: Integer OR 1=1 THEN
+     -- IF inUserId <> zc_Enum_Process_Auto_PrimeCost() :: Integer THEN
        -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
        PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
                                               , inUnitId     := vbUnitId_From
