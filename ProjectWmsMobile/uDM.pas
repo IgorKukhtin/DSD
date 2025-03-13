@@ -598,7 +598,7 @@ begin
   DataSet.FieldByName('AmountCaption').AsString := 'Вес нетто: ' + DataSet.FieldByName('Amount').AsString;
   DataSet.FieldByName('PartionGoodsDateCaption').AsString := 'Партия: ' + DataSet.FieldByName('PartionGoodsDate').AsString;
   DataSet.FieldByName('PartionNumCaption').AsString := '№ паспорта: ' + DataSet.FieldByName('PartionNum').AsString;
-  DataSet.FieldByName('CountTare_calcCaption').AsString := 'Кол-во Ящиков: ' + DataSet.FieldByName('CountTare_calc').AsString;
+  DataSet.FieldByName('CountTare_calcCaption').AsString := 'Ящиков: ' + DataSet.FieldByName('CountTare_calc').AsString;
 end;
 
 procedure TDM.cdsInventoryListTopCalcFields(DataSet: TDataSet);
@@ -606,7 +606,7 @@ begin
   DataSet.FieldByName('AmountCaption').AsString := 'Вес нетто:' + DataSet.FieldByName('Amount').AsString;
   DataSet.FieldByName('PartionGoodsDateCaption').AsString := 'Партия: ' + DataSet.FieldByName('PartionGoodsDate').AsString;
   DataSet.FieldByName('PartionNumCaption').AsString := '№ паспорта: ' + DataSet.FieldByName('PartionNum').AsString;
-  DataSet.FieldByName('CountTare_calcCaption').AsString := 'Кол-во Ящиков: ' + DataSet.FieldByName('CountTare_calc').AsString;
+  DataSet.FieldByName('CountTare_calcCaption').AsString := 'Ящиков: ' + DataSet.FieldByName('CountTare_calc').AsString;
 end;
 
 procedure TDM.CheckUpdate;
