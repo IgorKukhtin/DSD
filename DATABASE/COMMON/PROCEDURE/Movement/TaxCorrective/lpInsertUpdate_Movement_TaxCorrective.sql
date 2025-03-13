@@ -65,8 +65,10 @@ BEGIN
 
           ELSEIF COALESCE (inContractId, 0) = 0 AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
           THEN
-              -- потом
+              -- потом ???
               vbAccessKeyId:= 0;
+              --
+              -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
 
           ELSE vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
           END IF;
@@ -75,7 +77,7 @@ BEGIN
      END IF;
 
      -- определяется филиал
-     vbBranchId:= zfGet_Branch_AccessKey (vbAccessKeyId);
+     vbBranchId:= CASE WHEN vbAccessKeyId > 0 THEN zfGet_Branch_AccessKey (vbAccessKeyId) ELSE 0 END;
 
      -- проверка
    /*IF COALESCE (vbBranchId, 0) = 0 AND (inContractId > 0 OR inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())
