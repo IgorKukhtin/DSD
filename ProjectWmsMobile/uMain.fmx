@@ -20859,7 +20859,7 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 222.000000000000000000
+                Appearance.Width = 117.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 62.000000000000000000
                 Appearance.PlaceOffset.Y = 107.000000000000000000
@@ -20911,6 +20911,17 @@ object frmMain: TfrmMain
                 Appearance.Width = 20.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.Y = 1.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'BoxName_1'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 100.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 184.000000000000000000
+                Appearance.PlaceOffset.Y = 107.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
               item
@@ -21406,9 +21417,9 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 222.000000000000000000
+                Appearance.Width = 117.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 62.000000000000000000
+                Appearance.PlaceOffset.X = 63.000000000000000000
                 Appearance.PlaceOffset.Y = 107.000000000000000000
               end
               item
@@ -21458,6 +21469,17 @@ object frmMain: TfrmMain
                 Appearance.Width = 20.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.Y = 1.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'BoxName_1'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 100.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 184.000000000000000000
+                Appearance.PlaceOffset.Y = 107.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
               item
@@ -23931,6 +23953,10 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'PartionGoodsDateCaption'
           ControlMemberName = 'PartionGoodsDate'
+        end
+        item
+          SourceMemberName = 'BoxName_1'
+          ControlMemberName = 'BoxName_1'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -23979,6 +24005,10 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'CountTare_calcCaption'
           ControlMemberName = 'CountTare_calc'
+        end
+        item
+          SourceMemberName = 'BoxName_1'
+          ControlMemberName = 'BoxName_1'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>

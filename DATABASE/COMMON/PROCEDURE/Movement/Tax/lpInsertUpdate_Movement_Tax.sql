@@ -62,11 +62,18 @@ BEGIN
                                                                    ), 0)
                                                        , zc_Enum_Process_InsertUpdate_Movement_Tax(), inUserId
                                                         );
+               -- проверка
+               IF COALESCE (vbAccessKeyId, 0) = 0
+               THEN
+                   RAISE EXCEPTION 'Ошибка.Ошибка для Договор = <%> (%).', lfGet_Object_ValueData (inContractId), inContractId;
+               END IF;
 
           ELSEIF COALESCE (inContractId, 0) = 0 AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
           THEN
-              -- потом
+              -- потом ????????
               vbAccessKeyId:= 0;
+              --
+              -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax());
 
           ELSE vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax());
           END IF;
@@ -75,7 +82,7 @@ BEGIN
      END IF;
 
      -- определяется филиал
-     vbBranchId:= zfGet_Branch_AccessKey (vbAccessKeyId);
+     vbBranchId:= CASE WHEN vbAccessKeyId > 0 THEN zfGet_Branch_AccessKey (vbAccessKeyId) ELSE 0 END;
 
      -- проверка
    /*IF COALESCE (vbBranchId, 0) = 0 AND (inContractId > 0 OR inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())

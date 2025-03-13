@@ -2218,22 +2218,26 @@ begin
     end else
     // Удаление позиции
     if TButton(Sender).Tag = 2 then
-      TDialogService.MessageDialog('Удалить Товар'#13#10'Товар = <' + DM.cdsInventoryListTopGoodsName.AsString + '>'#13#10 +
-                                   'количество = <' + DM.cdsInventoryListTopAmount.AsString + '>'#13#10 +
-                                   'дата партии = <' + DM.cdsInventoryListTopPartionGoodsDate.AsString + '>'#13#10 +
-                                   'кол итого ящиков = <' + DM.cdsInventoryListTopCountTare_calc.AsString + '>'#13#10 +
-                                   'поддон = <' + DM.cdsInventoryListTopBoxName_1.AsString + '>'#13#10 +
-                                   'вид товара <' + DM.cdsInventoryListTopGoodsKindName.AsString + '> ?',
+      TDialogService.MessageDialog('Удалить ?'#13#10'(' + DM.cdsInventoryListTopGoodsCode.AsString + ') ' +
+                                                          DM.cdsInventoryListTopGoodsName.AsString + #13#10 +
+                                   'вид <' + DM.cdsInventoryListTopGoodsKindName.AsString + '>' + #13#10 +
+                                   'вес нетто = <' + DM.cdsInventoryListTopAmount.AsString + '>'#13#10 +
+                                   'партия = <' + DM.cdsInventoryListTopPartionGoodsDate.AsString + '>'#13#10 +
+                                   '№ паспорта = <' + DM.cdsInventoryListTopPartionNum.AsString + '>'#13#10 +
+                                   'ящиков = <' + DM.cdsInventoryListTopCountTare_calc.AsString + '>'#13#10 +
+                                   '<' + DM.cdsInventoryListTopBoxName_1.AsString + '>'#13#10,
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedInventoryTop);
     // Востановление позиции
     if TButton(Sender).Tag = 3  then
     begin
-      TDialogService.MessageDialog('Отменить удаление Товара'#13#10'Товар = <' + DM.cdsInventoryListTopGoodsName.AsString + '>'#13#10 +
-                                   'количество = <' + DM.cdsInventoryListTopAmount.AsString + '>'#13#10 +
-                                   'дата партии = <' + DM.cdsInventoryListTopPartionGoodsDate.AsString + '>'#13#10 +
-                                   'кол итого ящиков = <' + DM.cdsInventoryListTopCountTare_calc.AsString + '>'#13#10 +
-                                   'поддон = <' + DM.cdsInventoryListTopBoxName_1.AsString + '>'#13#10 +
-                                   'вид товара <' + DM.cdsInventoryListTopGoodsKindName.AsString + '> ?',
+      TDialogService.MessageDialog('Отменить удаление ?'#13#10'(' + DM.cdsInventoryListTopGoodsCode.AsString + ') ' +
+                                                                    DM.cdsInventoryListTopGoodsName.AsString + #13#10 +
+                                   'вид <' + DM.cdsInventoryListTopGoodsKindName.AsString + '>' + #13#10 +
+                                   'вес нетто = <' + DM.cdsInventoryListTopAmount.AsString + '>'#13#10 +
+                                   'партия = <' + DM.cdsInventoryListTopPartionGoodsDate.AsString + '>'#13#10 +
+                                   '№ паспорта = <' + DM.cdsInventoryListTopPartionNum.AsString + '>'#13#10 +
+                                   'ящиков = <' + DM.cdsInventoryListTopCountTare_calc.AsString + '>'#13#10 +
+                                   '<' + DM.cdsInventoryListTopBoxName_1.AsString + '>'#13#10,
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedInventoryTop)
     end;
   end else if (tcMain.ActiveTab = tiInventoryList) then
@@ -2245,23 +2249,27 @@ begin
     end else
     // Удаление позиции
     if TButton(Sender).Tag = 2 then
-      TDialogService.MessageDialog('Удалить Товар'#13#10'Товар = <' + DM.cdsInventoryListGoodsName.AsString + '>'#13#10 +
-                                   'количество = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
-                                   'дата партии = <' + DM.cdsInventoryListPartionGoodsDate.AsString + '>'#13#10 +
-                                   'кол итого ящиков = <' + DM.cdsInventoryListCountTare_calc.AsString + '>'#13#10 +
-                                   'поддон = <' + DM.cdsInventoryListBoxName_1.AsString + '>'#13#10 +
-                                   'вид товара <' + DM.cdsInventoryListGoodsKindName.AsString + '> ?',
+      TDialogService.MessageDialog('Удалить ?'#13#10'(' + DM.cdsInventoryListGoodsCode.AsString + ') ' +
+                                                          DM.cdsInventoryListGoodsName.AsString + #13#10 +
+                                   'вид <' + DM.cdsInventoryListGoodsKindName.AsString + '>' + #13#10 +
+                                   'вес нетто = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
+                                   'партия = <' + DM.cdsInventoryListPartionGoodsDate.AsString + '>'#13#10 +
+                                   '№ паспорта = <' + DM.cdsInventoryListPartionNum.AsString + '>'#13#10 +
+                                   'ящиков = <' + DM.cdsInventoryListCountTare_calc.AsString + '>'#13#10 +
+                                   'поддон = <' + DM.cdsInventoryListBoxName_1.AsString + '>',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedInventoryList)
     else
     // Востановление позиции
     if TButton(Sender).Tag = 3  then
     begin
-      TDialogService.MessageDialog('Отменить удаление Товара'#13#10'Товар = <' + DM.cdsInventoryListGoodsName.AsString + '>'#13#10 +
-                                   'количество = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
-                                   'дата партии = <' + DM.cdsInventoryListPartionGoodsDate.AsString + '>'#13#10 +
-                                   'кол итого ящиков = <' + DM.cdsInventoryListCountTare_calc.AsString + '>'#13#10 +
-                                   'поддон = <' + DM.cdsInventoryListBoxName_1.AsString + '>'#13#10 +
-                                   'вид товара <' + DM.cdsInventoryListGoodsKindName.AsString + '> ?',
+      TDialogService.MessageDialog('Отменить удаление ?'#13#10'(' + DM.cdsInventoryListGoodsCode.AsString + ') ' +
+                                                                    DM.cdsInventoryListGoodsName.AsString + #13#10 +
+                                   'вид <' + DM.cdsInventoryListGoodsKindName.AsString + '>' + #13#10 +
+                                   'вес нетто = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
+                                   'партия = <' + DM.cdsInventoryListPartionGoodsDate.AsString + '>'#13#10 +
+                                   '№ паспорта = <' + DM.cdsInventoryListPartionNum.AsString + '>'#13#10 +
+                                   'ящиков = <' + DM.cdsInventoryListCountTare_calc.AsString + '>'#13#10 +
+                                   '<' + DM.cdsInventoryListBoxName_1.AsString + '>',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedInventoryList)
     end;
   end;

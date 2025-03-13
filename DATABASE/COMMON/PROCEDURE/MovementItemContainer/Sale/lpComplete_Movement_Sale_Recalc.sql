@@ -23,7 +23,7 @@ BEGIN
      
 
      -- Автоматический пересорт
-     IF inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer THEN inUserId:= zc_Enum_Process_Auto_Peresort(); END IF;
+     -- IF inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer THEN inUserId:= zc_Enum_Process_Auto_Peresort(); END IF;
 
 
      -- Временно захардкодил - !!!только для этого склада!!!
