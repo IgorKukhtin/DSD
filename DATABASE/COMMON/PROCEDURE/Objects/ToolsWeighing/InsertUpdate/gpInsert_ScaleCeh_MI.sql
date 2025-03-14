@@ -9,8 +9,14 @@
                                             , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                             , TDateTime, TVarChar, TVarChar, Integer, TVarChar
                                              );*/
-DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat
+/*DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat
                                             , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                            , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                            , TDateTime, TVarChar, TVarChar, Integer, TVarChar
+                                             );*/
+DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat
+                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                             , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                             , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                             , TDateTime, TVarChar, TVarChar, Integer, TVarChar
@@ -35,6 +41,7 @@ CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_MI(
     IN inHeadCount           TFloat    , -- Количество голов
     IN inCount               TFloat    , -- Количество батонов
     IN inCountPack           TFloat    , -- Количество упаковок
+    IN inWeightPack          TFloat    , -- Вес 1-ой упаковки
     IN inCountSkewer1        TFloat    , -- Количество шпажек/крючков вида1
     IN inWeightSkewer1       TFloat    , -- Вес одной шпажки/крючка вида1
     IN inCountSkewer2        TFloat    , -- Количество шпажек вида2
@@ -281,6 +288,7 @@ BEGIN
                                                           , inHeadCount           := inHeadCount
                                                           , inCount               := inCount
                                                           , inCountPack           := inCountPack
+                                                          , inWeightPack          := inWeightPack
                                                           , inCountSkewer1        := inCountSkewer1
                                                           , inWeightSkewer1       := inWeightSkewer1
                                                           , inCountSkewer2        := inCountSkewer2

@@ -18,7 +18,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, Goods
              , CountSkewer1_k TFloat, CountSkewer1 TFloat, CountSkewer2 TFloat
              , WeightSkewer1_k TFloat, WeightSkewer1 TFloat, WeightSkewer2 TFloat
              , TotalWeightSkewer1_k TFloat, TotalWeightSkewer1 TFloat, TotalWeightSkewer2 TFloat
-             , Count TFloat, CountPack TFloat, HeadCount TFloat, LiveWeight TFloat
+             , Count TFloat, CountPack TFloat, WeightPack TFloat, HeadCount TFloat, LiveWeight TFloat
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -60,7 +60,11 @@ BEGIN
                   , COALESCE (MIFloat_WeightSkewer2.ValueData, 0) AS WeightSkewer2
 
                   , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
+                    -- Количество упаковок
                   , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
+                    -- Вес 1-ой упаковки
+                  , COALESCE (MIFloat_WeightPack.ValueData, 0)          AS WeightPack
+                    --
                   , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
                   , COALESCE (MIFloat_LiveWeight.ValueData, 0)          AS LiveWeight
 
@@ -135,9 +139,14 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_Count
                                               ON MIFloat_Count.MovementItemId = MovementItem.Id
                                              AND MIFloat_Count.DescId = zc_MIFloat_Count()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                               ON MIFloat_CountPack.MovementItemId = MovementItem.Id
                                              AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+                  LEFT JOIN MovementItemFloat AS MIFloat_WeightPack
+                                              ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
+                                             AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -218,7 +227,12 @@ BEGIN
            , (tmpMI.CountSkewer2   * tmpMI.WeightSkewer2)   :: TFloat AS TotalWeightSkewer2
 
            , tmpMI.Count       :: TFloat AS Count
+
+             -- Количество упаковок
            , tmpMI.CountPack   :: TFloat AS CountPack
+             -- Вес 1-ой упаковки
+           , tmpMI.WeightPack   :: TFloat AS WeightPack
+
            , tmpMI.HeadCount   :: TFloat AS HeadCount
            , tmpMI.LiveWeight  :: TFloat AS LiveWeight
 
