@@ -103,21 +103,19 @@ inherited DialogTareForm: TDialogTareForm
           ParentFont = False
           ExplicitWidth = 19
         end
-        object PanelWeightTare1: TPanel
-          Left = 0
-          Top = 14
-          Width = 108
-          Height = 21
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'PanelWeightTare1'
-          Font.Charset = RUSSIAN_CHARSET
-          Font.Color = clNavy
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
+        object EditWeightTare1: TcxCurrencyEdit
+          Left = 9
+          Top = 12
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 4
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditWeightTare1KeyDown
+          Width = 95
         end
       end
     end
@@ -158,7 +156,11 @@ inherited DialogTareForm: TDialogTareForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 4
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditTare0KeyDown
           Width = 100
         end
       end
@@ -273,21 +275,19 @@ inherited DialogTareForm: TDialogTareForm
           ParentFont = False
           ExplicitWidth = 19
         end
-        object PanelWeightTare2: TPanel
-          Left = 0
-          Top = 14
-          Width = 108
-          Height = 21
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'PanelWeightTare2'
-          Font.Charset = RUSSIAN_CHARSET
-          Font.Color = clNavy
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
+        object EditWeightTare2: TcxCurrencyEdit
+          Left = 9
+          Top = 12
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 4
+          Properties.OnChange = EditTare1PropertiesChange
           TabOrder = 0
+          OnEnter = EditTare1Enter
+          OnExit = EditTare1Exit
+          OnKeyDown = EditWeightTare2KeyDown
+          Width = 95
         end
       end
     end
@@ -580,8 +580,7 @@ inherited DialogTareForm: TDialogTareForm
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitLeft = -6
-          ExplicitTop = 3
+          ExplicitWidth = 88
         end
         object EditTare6: TcxCurrencyEdit
           Left = 5
@@ -1058,8 +1057,7 @@ inherited DialogTareForm: TDialogTareForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = 5
-        ExplicitTop = 7
+        ExplicitWidth = 89
       end
       object PanelWeightTare_total: TPanel
         Left = 1
@@ -1176,7 +1174,6 @@ inherited DialogTareForm: TDialogTareForm
       Height = 49
       Align = alBottom
       TabOrder = 4
-      ExplicitTop = 321
       object Label3: TLabel
         Left = 1
         Top = 1
@@ -1208,8 +1205,6 @@ inherited DialogTareForm: TDialogTareForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitLeft = 5
-        ExplicitTop = 11
       end
     end
   end

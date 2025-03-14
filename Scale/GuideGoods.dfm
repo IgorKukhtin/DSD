@@ -682,6 +682,8 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1077#1089' '#1090#1072#1088#1099
         TabOrder = 1
+        ExplicitLeft = -2
+        ExplicitTop = 45
         object EditTareWeightEnter: TEdit
           Left = 5
           Top = 17
@@ -786,6 +788,22 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
+              ExplicitLeft = 6
+              ExplicitTop = 12
+            end
+            object EditWeightTare1: TcxCurrencyEdit
+              Left = 12
+              Top = 13
+              Properties.Alignment.Horz = taRightJustify
+              Properties.Alignment.Vert = taVCenter
+              Properties.AssignedValues.DisplayFormat = True
+              Properties.DecimalPlaces = 4
+              Properties.OnChange = EditTare1PropertiesChange
+              TabOrder = 1
+              OnEnter = EditTareCountEnter
+              OnExit = EditTare1Exit
+              OnKeyDown = EditWeightTare1KeyDown
+              Width = 80
             end
           end
         end
@@ -945,7 +963,8 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitWidth = 19
+              ExplicitLeft = -5
+              ExplicitTop = 1
             end
             object PanelWeightTare2: TPanel
               Left = 0
@@ -962,6 +981,20 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
+            end
+            object EditWeightTare2: TcxCurrencyEdit
+              Left = 12
+              Top = 12
+              Properties.Alignment.Horz = taRightJustify
+              Properties.Alignment.Vert = taVCenter
+              Properties.AssignedValues.DisplayFormat = True
+              Properties.DecimalPlaces = 4
+              Properties.OnChange = EditTare1PropertiesChange
+              TabOrder = 1
+              OnEnter = EditTareCountEnter
+              OnExit = EditTare1Exit
+              OnKeyDown = EditWeightTare2KeyDown
+              Width = 80
             end
           end
         end

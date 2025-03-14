@@ -173,8 +173,8 @@ type
     actPrint_reestr_income: TdsdPrintAction;
     spSelectMIPrintPassport: TdsdStoredProc;
     actSelectMIPrintPassport: TdsdPrintAction;
-    spSelectPrintBoxTotal: TdsdStoredProc;
-    actPrintBoxTotal: TdsdPrintAction;
+    spSelectPrintBox_PartnerTotal: TdsdStoredProc;
+    actPrintBoxTotalPartner: TdsdPrintAction;
   private
   end;
 
@@ -317,7 +317,7 @@ begin
      UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
      //
      UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
-     UtilPrintForm.actPrintBoxTotal.Execute;
+     UtilPrintForm.actPrintBoxTotalPartner.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 function Print_Income_Price_diff (MovementId: Integer):Boolean;

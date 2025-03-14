@@ -673,10 +673,15 @@ begin
          ParamAdd(Params,'CountTare4',ftFloat);          // Количество тары вида4
          ParamAdd(Params,'CountTare5',ftFloat);          // Количество тары вида5
          ParamAdd(Params,'CountTare6',ftFloat);          // Количество тары вида6
-         ParamAdd(Params,'CountTare7',ftFloat);          // Количество тары вида6
-         ParamAdd(Params,'CountTare8',ftFloat);          // Количество тары вида6
-         ParamAdd(Params,'CountTare9',ftFloat);          // Количество тары вида6
-         ParamAdd(Params,'CountTare10',ftFloat);          // Количество тары вида6
+         ParamAdd(Params,'CountTare7',ftFloat);          // Количество тары вида7
+         ParamAdd(Params,'CountTare8',ftFloat);          // Количество тары вида8
+         ParamAdd(Params,'CountTare9',ftFloat);          // Количество тары вида9
+         ParamAdd(Params,'CountTare10',ftFloat);         // Количество тары вида10
+
+         ParamAdd(Params,'CountPack',ftFloat);           // Количество упаковок - Флоупак +  Нар.180 + Нар. 200
+         ParamAdd(Params,'WeightPack',ftFloat);          // Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
+         ParamAdd(Params,'NamePack',ftString);           // Название 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
+
          ParamAdd(Params,'Amount_Goods',ftFloat);        //
 
          ParamAdd(Params,'PartionCellId',ftInteger);       //
@@ -729,14 +734,17 @@ begin
          ParamAdd(Params,'CountSkewer1',ftFloat);        // Количество шпажек/крючков вида1
          ParamAdd(Params,'CountSkewer2',ftFloat);        // Количество шпажек/крючков вида2
          ParamAdd(Params,'Count',ftFloat);               // Количество батонов
-         ParamAdd(Params,'CountPack',ftFloat);           // Количество пакетов
+
+         ParamAdd(Params,'CountPack',ftFloat);           // Количество упаковок - Флоупак +  Нар.180 + Нар. 200
+         ParamAdd(Params,'WeightPack',ftFloat);          // Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
+         ParamAdd(Params,'NamePack',ftString);           // Название 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
+
          ParamAdd(Params,'HeadCount',ftFloat);           // Количество голов
          ParamAdd(Params,'LiveWeight',ftFloat);          // Живой вес
          ParamAdd(Params,'PartionGoods',ftString);       //
          ParamAdd(Params,'PartionGoodsDate',ftDateTime); //
          ParamAdd(Params,'isStartWeighing',ftBoolean);   //локальный параметр
          ParamAdd(Params,'isEnterCount',ftBoolean);      //всегда ввод кол-ва - надо для тары
-
 
          ParamAdd(Params,'CountTare1',ftFloat);          // Количество тары вида1
          ParamAdd(Params,'CountTare2',ftFloat);          // Количество тары вида2
@@ -748,6 +756,7 @@ begin
          ParamAdd(Params,'CountTare8',ftFloat);          // Количество тары вида6
          ParamAdd(Params,'CountTare9',ftFloat);          // Количество тары вида6
          ParamAdd(Params,'CountTare10',ftFloat);          // Количество тары вида6
+
          ParamAdd(Params,'Amount_Goods',ftFloat);        //
 
          ParamAdd(Params,'PartionCellId',ftInteger);       //

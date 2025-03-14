@@ -214,6 +214,8 @@ type
     AssetPanel: TPanel;
     AssetLabel: TLabel;
     EditPartionCell: TcxButtonEdit;
+    EditWeightTare1: TcxCurrencyEdit;
+    EditWeightTare2: TcxCurrencyEdit;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -304,6 +306,10 @@ type
     procedure EditPartionCellKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure PartionDateEditKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditWeightTare2KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditWeightTare1KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   private
     oldParam1, oldParam2:Integer;
@@ -602,8 +608,8 @@ begin
            then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Return').Index].Visible:= false;
       end;
   //
-  EditTare1.Text:='';PanelWeightTare1.Caption:='';
-  EditTare2.Text:='';PanelWeightTare2.Caption:='';
+  EditTare1.Text:='';PanelWeightTare1.Caption:='';EditWeightTare1.Text:='';
+  EditTare2.Text:='';PanelWeightTare2.Caption:='';EditWeightTare2.Text:='';
   EditTare3.Text:='';PanelWeightTare3.Caption:='';
   EditTare4.Text:='';PanelWeightTare4.Caption:='';
   EditTare5.Text:='';PanelWeightTare5.Caption:='';
@@ -1921,11 +1927,29 @@ begin
               else ActiveControl:=EditTareCount;
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditWeightTare1KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+        ActiveControl:=EditTare2;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditWeightTare2KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+        ActiveControl:=EditTare3;
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTare1KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
     if Key=13
     then
+     if SettingMain.BranchCode = 115 then ActiveControl:=EditWeightTare1
+     else
      if infoPanelTare2.Visible then ActiveControl:=EditTare2
      else if infoPanelTare0.Visible then ActiveControl:=EditTare0
 end;
@@ -1935,6 +1959,8 @@ procedure TGuideGoodsForm.EditTare2KeyDown(Sender: TObject; var Key: Word;
 begin
     if Key=13
     then
+     if SettingMain.BranchCode = 115 then ActiveControl:=EditWeightTare2
+     else
      if infoPanelTare3.Visible then ActiveControl:=EditTare3
      else if infoPanelTare0.Visible then ActiveControl:=EditTare0
 end;
@@ -2787,6 +2813,15 @@ begin
   //
   if SettingMain.BranchCode = 115 then
   begin
+       infoPanelTare0.Visible:= TRUE;
+
+       PanelWeightTare1.Visible:= FALSE;
+       PanelWeightTare2.Visible:= FALSE;
+
+       EditWeightTare1.Visible:= TRUE;
+       EditWeightTare2.Visible:= TRUE;
+
+       infoPanelTare0.Height:=35 + 2;
        infoPanelTare1.Height:=35 + 2;
        infoPanelTare2.Height:=35 + 2;
        infoPanelTare3.Height:=35 + 2;
@@ -2839,6 +2874,9 @@ begin
       LabelTare0.Font.Style:=[fsBold];
   end
   else begin
+       EditWeightTare1.Visible:= FALSE;
+       EditWeightTare2.Visible:= FALSE;
+       //
        infoPanelPriceList.Visible:= true;
        infoPanelPriceList.Width:= 250;
        //
