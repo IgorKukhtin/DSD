@@ -23,7 +23,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxSplitter, cxButtonEdit, cxCurrencyEdit, cxContainer, Vcl.ComCtrls,
   dxCore, cxDateUtils, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
-  cxLabel;
+  cxLabel, dsdCommon;
 
 type
   TJuridicalForm = class(TParentForm)

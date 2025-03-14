@@ -42,7 +42,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , StartWeighingMI Boolean, isAutoMI Boolean
              , InsertDate TDateTime, UpdateDate TDateTime
              , RealWeight TFloat, WeightTare TFloat, LiveWeight TFloat
-             , HeadCount TFloat, Count TFloat, CountPack TFloat
+             , HeadCount TFloat, Count TFloat, CountPack TFloat, WeightPack TFloat
              , CountSkewer1 TFloat, WeightSkewer1 TFloat
              , CountSkewer2 TFloat, WeightSkewer2 TFloat,  WeightOther TFloat
              , PartionGoodsDate TDateTime, PartionGoodsMI TVarChar
@@ -192,7 +192,8 @@ BEGIN
            , MIFloat_HeadCount.ValueData    AS HeadCount
            , MIFloat_Count.ValueData        AS Count
 
-           , MIFloat_CountPack.ValueData      AS CountPack
+           , MIFloat_CountPack.ValueData      AS CountPack 
+           , MIFloat_WeightPack.ValueData  ::TFloat AS WeightPack
            , MIFloat_CountSkewer1.ValueData   AS CountSkewer1
            , MIFloat_WeightSkewer1.ValueData  AS WeightSkewer1
            , MIFloat_CountSkewer2.ValueData   AS CountSkewer2
@@ -385,6 +386,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                         ON MIFloat_CountPack.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightPack
+                                        ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
 
             LEFT JOIN MovementItemFloat AS MIFloat_CountSkewer1
                                         ON MIFloat_CountSkewer1.MovementItemId = MovementItem.Id
@@ -477,6 +481,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 14.03.25         *
  17.07.24         * isRePack
  15.11.22         *
  06.09.21         *

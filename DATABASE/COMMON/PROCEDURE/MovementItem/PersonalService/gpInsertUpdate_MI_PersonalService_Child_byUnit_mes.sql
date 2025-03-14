@@ -167,7 +167,7 @@ BEGIN
                                   ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
                                  AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
      WHERE Object_Personal.DescId = zc_Object_Personal()
-       AND Object_Personal.isErased = FALSE
+       --AND Object_Personal.isErased = FALSE
      ;
 
      --проверка
@@ -375,7 +375,7 @@ BEGIN
      -- 6) есть признак "Основное место работы", если в разрезе фио проверка прошла
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
      SELECT tmp.MemberId, tmp.PersonalServiceListId
-         , CASE WHEN tmp.isErased = TRUE THEN 'Основное место работы найдено только в удаленных'
+         , CASE WHEN tmp.isErased = TRUE THEN 'Працівника із довідника видалено, а в табелі є часи'
                 ELSE'Основное место работы не найдено среди Всех'
            END ::TVarChar
          , 'проверка 6' ::TVarChar

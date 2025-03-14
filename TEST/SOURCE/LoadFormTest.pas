@@ -1943,10 +1943,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_BasisForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_BasisForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
   }
@@ -2595,16 +2595,17 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleForm');
- // exit;
+  //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportDialogForm');
   exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WP_PassportPSWDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WP_PassportPSWDialogForm');
 
@@ -5009,14 +5010,14 @@ end;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
-  {exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
   exit;
-  //
+  {//
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionEditForm');
   //

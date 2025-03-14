@@ -605,6 +605,17 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Options.Editing = False
         Width = 55
       end
+      object WeightPack: TcxGridDBColumn
+        Caption = #1042#1077#1089'  1-'#1086#1081' '#1091#1087'.'
+        DataBinding.FieldName = 'WeightPack'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object CountSkewer1: TcxGridDBColumn
         Caption = #1050#1086#1083'. '#1096#1087'.1/'#1082#1088'.'
         DataBinding.FieldName = 'CountSkewer1'

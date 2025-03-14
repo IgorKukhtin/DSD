@@ -355,8 +355,6 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 450
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -285
-        ExplicitTop = -24
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -723,6 +721,17 @@ object WeighingProductionForm: TWeighingProductionForm
             Options.Editing = False
             Width = 49
           end
+          object WeightPack: TcxGridDBColumn
+            Caption = #1042#1077#1089'  1-'#1086#1081' '#1091#1087'.'
+            DataBinding.FieldName = 'WeightPack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -965,6 +974,9 @@ object WeighingProductionForm: TWeighingProductionForm
     object cxTabSheetPartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0
