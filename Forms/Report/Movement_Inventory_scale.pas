@@ -41,8 +41,8 @@ type
     OperDate: TcxGridDBColumn;
     StatusCode: TcxGridDBColumn;
     actRefresh_Detail: TdsdDataSetRefresh;
-    spSelectMIPrintPassport: TdsdStoredProc;
-    actSelectMIPrintPassport: TdsdPrintAction;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
     BoxName_1: TcxGridDBColumn;
     PrintItemsCDS: TClientDataSet;
     lbSearchName: TcxLabel;
@@ -57,6 +57,9 @@ type
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
     isErased: TcxGridDBColumn;
+    spSelectPrint_Mov: TdsdStoredProc;
+    actPrint_Mov: TdsdPrintAction;
+    bbPrint_Mov: TdxBarButton;
   private
     { Private declarations }
   public

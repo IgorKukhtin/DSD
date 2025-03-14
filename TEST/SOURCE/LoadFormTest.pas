@@ -2595,11 +2595,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleForm');
- // exit;
-
+  exit;
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportDialogForm'));
