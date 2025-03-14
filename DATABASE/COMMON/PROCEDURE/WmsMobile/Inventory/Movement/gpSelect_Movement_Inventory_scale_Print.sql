@@ -141,7 +141,11 @@ BEGIN
            , Object_PartionCell.ValueData ::TVarChar  AS PartionCellName
 
              -- Вес нетто
-           , MovementItem.Amount
+           , MovementItem.Amount   
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() 
+                  THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN MovementItem.Amount / ObjectFloat_Weight.ValueData ELSE 0 END
+                  ELSE 0
+             END ::TFloat AS Amount_sh
              -- ИТОГО Вес тары - факт
            , MIFloat_WeightTare.ValueData AS WeightTare
 
@@ -285,6 +289,14 @@ BEGIN
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_PartionNum_passport
                                          ON tmpMIFloat_PartionNum_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_PartionNum_passport.DescId         = zc_MIFloat_PartionNum()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight() 
+                    
         ORDER BY MIDate_Insert.ValueData 
           ;
      RETURN NEXT Cursor1;
@@ -300,6 +312,5 @@ $BODY$
 */
 
 -- тест
--- 
-select * from gpSelect_Movement_Inventory_scale_Print(inStartDate := ('02.12.2024')::TDateTime , inEndDate := ('28.02.2025')::TDateTime , inMovementId := 0 ,  inSession := '9457');
-FETCH ALL "<unnamed portal 7>";
+-- select * from gpSelect_Movement_Inventory_scale_Print(inStartDate := ('02.12.2024')::TDateTime , inEndDate := ('28.02.2025')::TDateTime , inMovementId := 0 ,  inSession := '9457');
+-- FETCH ALL "<unnamed portal 7>";
