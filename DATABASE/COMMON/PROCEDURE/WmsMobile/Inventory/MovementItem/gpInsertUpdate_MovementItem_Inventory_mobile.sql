@@ -15,6 +15,7 @@ $BODY$
    DECLARE vbOperDate     TDateTime;
 
    DECLARE vbMovementItemId_find Integer;
+   DECLARE vbId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory_mobile());
@@ -157,11 +158,14 @@ BEGIN
          -- сохранили - Автоматический
          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), vbMovementId, TRUE);
 
+         -- дописали свойство <Код Филиала>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_BranchCode(), vbMovementId, 1);
+
      END IF;
 
 
      -- сохранили
-     PERFORM gpInsertUpdate_MovementItem_WeighingProduction (ioId                  := 0
+     vbId:= gpInsertUpdate_MovementItem_WeighingProduction (ioId                  := 0
                                                           , inMovementId          := vbMovementId
                                                           , inGoodsId             := gpGet.GoodsId
                                                           , inAmount              := gpGet.Amount
@@ -188,6 +192,9 @@ BEGIN
                                                            )
      FROM gpGet_MovementItem_Inventory_mobile (zfFormat_BarCode (zc_BarCodePref_MI(), inMovementItemId) || '0', inSession) AS gpGet
     ;
+
+     -- Пользователь (создание)
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), vbId, vbUserId);
 
 
 IF vbUserId = 5 AND 1=0

@@ -52,7 +52,12 @@ RETURNS TABLE (MovementItemId    Integer
                -- ИТОГО Кол-во Ящиков
              , CountTare_calc    Integer
 
-               -- ИТОГО Вес всех Ящиков
+               -- Количество упаковок
+             , CountPack         Integer
+               -- Вес 1-ой упаковки
+             , WeightPack        TFloat
+
+               -- ИТОГО Вес всех Ящиков + Поддон + Упаковка
              , WeightTare_calc   TFloat
               )
 AS
@@ -107,6 +112,7 @@ BEGIN
                                                      , zc_MIFloat_CountTare3()
                                                      , zc_MIFloat_CountTare4()
                                                      , zc_MIFloat_CountTare5()
+                                                     , zc_MIFloat_CountPack()
                                                       )
                                  )
            , tmpMIF_WeightTare AS (SELECT MIF.*
@@ -117,6 +123,7 @@ BEGIN
                                                      , zc_MIFloat_WeightTare3()
                                                      , zc_MIFloat_WeightTare4()
                                                      , zc_MIFloat_WeightTare5()
+                                                     , zc_MIFloat_WeightPack()
                                                       )
                                  )
            , tmpMILO_Box AS (SELECT MILO.*
@@ -212,11 +219,21 @@ BEGIN
               + COALESCE (tmpMI_Tare_5.CountTare, 0)
                ) :: Integer AS CountTare_calc
 
-               -- ИТОГО Вес всех Ящиков
-             , (COALESCE (tmpMI_Tare_2.CountTare, 0) * COALESCE (tmpMI_Tare_2.WeightTare, 0)
+               -- Количество упаковок
+             , COALESCE (tmpMIF_CountPack.ValueData, 0)  :: Integer AS CountPack           
+               -- Вес 1-ой упаковки
+             , COALESCE (tmpMIF_WeightPack.ValueData, 0) :: TFloat  AS WeightPack
+
+               -- ИТОГО Вес
+             , (-- Поддон
+                COALESCE (tmpMI_Tare_1.CountTare, 0) * COALESCE (tmpMI_Tare_1.WeightTare, 0)
+                -- + все Ящики
+              + COALESCE (tmpMI_Tare_2.CountTare, 0) * COALESCE (tmpMI_Tare_2.WeightTare, 0)
               + COALESCE (tmpMI_Tare_3.CountTare, 0) * COALESCE (tmpMI_Tare_3.WeightTare, 0)
               + COALESCE (tmpMI_Tare_4.CountTare, 0) * COALESCE (tmpMI_Tare_4.WeightTare, 0)
               + COALESCE (tmpMI_Tare_5.CountTare, 0) * COALESCE (tmpMI_Tare_5.WeightTare, 0)
+                -- + Упаковка
+              + COALESCE (tmpMIF_CountPack.ValueData, 0) * COALESCE (tmpMIF_WeightPack.ValueData, 0)
                ) :: TFloat AS WeightTare_calc
 
         FROM MovementItem
@@ -239,6 +256,15 @@ BEGIN
                                               ON MILinkObject_PartionCell.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PartionCell.DescId = zc_MILinkObject_PartionCell()
              LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
+
+             -- Количество упаковок
+             LEFT JOIN tmpMIF_CountTare AS tmpMIF_CountPack
+                                        ON tmpMIF_CountPack.MovementItemId = MovementItem.Id
+                                       AND tmpMIF_CountPack.DescId         = zc_MIFloat_CountPack()
+             -- Вес 1-ой упаковки
+             LEFT JOIN tmpMIF_WeightTare AS tmpMIF_WeightPack
+                                         ON tmpMIF_WeightPack.MovementItemId = MovementItem.Id
+                                        AND tmpMIF_WeightPack.DescId         = zc_MIFloat_WeightPack()
 
              LEFT JOIN tmpMI_Tare AS tmpMI_Tare_1 ON tmpMI_Tare_1.MovementItemId = MovementItem.Id
                                                  AND tmpMI_Tare_1.DescId_box     = zc_MILinkObject_Box1()
@@ -267,4 +293,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_MovementItem_Inventory_mobile ('7', zfCalc_UserAdmin())
--- SELECT * FROM gpGet_MovementItem_Inventory_mobile ('2033173823490', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_MovementItem_Inventory_mobile ('2033193606719', zfCalc_UserAdmin())
