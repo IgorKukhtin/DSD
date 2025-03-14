@@ -123,6 +123,13 @@ BEGIN
                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                 LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
+                -- Без схемы Vchasno - EDI
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_VchasnoEdi
+                                        ON ObjectBoolean_Juridical_VchasnoEdi.ObjectId  = Object_JuridicalTo.Id
+                                       AND ObjectBoolean_Juridical_VchasnoEdi.DescId    = zc_ObjectBoolean_Juridical_VchasnoEdi()
+                                       AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
+
+
                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                      ON ObjectLink_Juridical_Retail.ObjectId = Object_JuridicalTo.Id
                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
@@ -131,6 +138,9 @@ BEGIN
            WHERE Movement.DescId   = zc_Movement_EDI_Send()
              AND Movement.StatusId = zc_Enum_Status_UnComplete()
              AND Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
+             -- Без схемы Vchasno - EDI
+             AND ObjectBoolean_Juridical_VchasnoEdi.ObjectId IS NULL
+             --
              AND ((Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
               AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
                   )
