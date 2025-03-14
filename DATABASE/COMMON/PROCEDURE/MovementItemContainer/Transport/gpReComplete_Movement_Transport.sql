@@ -15,6 +15,22 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Transport());
 
+
+     -- Проверка
+     IF vbUserId = zc_Enum_Process_Auto_PrimeCost()
+        AND EXISTS (SELECT 1
+                    FROM MovementItem
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                      -- Маршрут
+                      AND COALESCE (MovementItem.ObjectId, 0) = 0
+                   )
+     THEN
+         RETURN;
+     END IF;
+
+
      IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_UnComplete_Transport())
      THEN
          -- Распроводим Документ
