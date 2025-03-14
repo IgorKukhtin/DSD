@@ -285,6 +285,15 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 72
       end
+      object isVchasnoEdi: TcxGridDBColumn
+        Caption = #1042#1095#1072#1089#1085#1086' EDI'
+        DataBinding.FieldName = 'isVchasnoEdi'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1073#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1087#1083#1072#1090#1092#1086#1088#1084#1077' '#1042#1095#1072#1089#1085#1086' EDI'
+        Options.Editing = False
+        Width = 49
+      end
       object isBranchAll: TcxGridDBColumn
         Caption = #1044#1086#1089#1090#1091#1087' '#1091' '#1074#1089#1077#1093' '#1092#1080#1083#1080#1072#1083#1086#1074
         DataBinding.FieldName = 'isBranchAll'
@@ -1561,6 +1570,7 @@ object JuridicalForm: TJuridicalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 272

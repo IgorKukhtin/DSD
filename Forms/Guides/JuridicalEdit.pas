@@ -172,6 +172,7 @@ type
     bbSetUnErasedPartner: TdxBarButton;
     bbProtocolOpenFormContract: TdxBarButton;
     bbProtocolOpenFormPartner: TdxBarButton;
+    cbVchasnoEdi: TcxCheckBox;
   private
     { Private declarations }
   public
