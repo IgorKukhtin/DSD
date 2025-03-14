@@ -511,7 +511,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object CountPack: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1091#1087#1072#1082#1086#1074#1082#1080
+            Caption = #1050#1086#1083'. '#1091#1087#1072#1082#1086#1074#1086#1082
             DataBinding.FieldName = 'CountPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -728,6 +728,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
+          IndexFieldNames = 'InsertDate'
         end>
       Params = <
         item
@@ -741,6 +742,22 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           Name = 'EndDate'
           Value = Null
           Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
@@ -768,6 +785,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
+          IndexFieldNames = 'InsertDate'
         end>
       Params = <
         item
@@ -782,6 +800,18 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           Value = Null
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Inventory_Scale'

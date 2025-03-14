@@ -27,10 +27,10 @@ BEGIN
         -- Документы zc_Movement_WeighingProduction - здесь данные сканирование Паспорта - КПК
       , tmpMovement AS (SELECT
                              Movement.Id               AS Id
-                           , Movement.InvNumber        AS InvNumber
+                           , CASE WHEN Movement.StatusId <> zc_Enum_Status_Complete() THEN '***'||Movement.InvNumber ELSE Movement.InvNumber END AS InvNumber
                            , Movement.OperDate         AS OperDate
                         FROM Movement
-                             LEFT JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
+                             INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
                              -- Этот склад
                              INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                                       AND MLO_From.DescId     = zc_MovementLinkObject_From()
@@ -151,9 +151,9 @@ BEGIN
            , (tmpMIFloat_WeightTare1_passport.ValueData * tmpMIFloat_CountTare1_passport.ValueData)           AS WeightTare_1
            
              -- Все Ящики
-           , ( CASE WHEN COALESCE (Object_Box_2.ValueData,'') <> '' THEN Object_Box_2.ValueData ||', ' ELSE '' END
-             ||CASE WHEN COALESCE (Object_Box_3.ValueData,'') <> '' THEN chr(13)||Object_Box_3.ValueData ||', ' ELSE '' END
-             ||CASE WHEN COALESCE (Object_Box_4.ValueData,'') <> '' THEN chr(13)||Object_Box_4.ValueData ||', ' ELSE '' END
+           , ( CASE WHEN COALESCE (Object_Box_2.ValueData,'') <> '' THEN Object_Box_2.ValueData ELSE '' END
+             ||CASE WHEN COALESCE (Object_Box_3.ValueData,'') <> '' THEN chr(13)||Object_Box_3.ValueData ELSE '' END
+             ||CASE WHEN COALESCE (Object_Box_4.ValueData,'') <> '' THEN chr(13)||Object_Box_4.ValueData ELSE '' END
              ||CASE WHEN COALESCE (Object_Box_5.ValueData,'') <> '' THEN chr(13)||Object_Box_5.ValueData ELSE '' END
              ) ::TVarChar   AS BoxName_2_5   --выводим названия всех ящиков
 

@@ -30,6 +30,11 @@ RETURNS TABLE (MovementId Integer, ItemName TVarChar, ItemName_inf TVarChar
              , CountTare10  TFloat
              , BoxCountTotal  TFloat
              , BoxWeightTotal TFloat
+             
+               --упаковка
+             , CountPack         Integer
+             , WeightPack        TFloat
+             , WeightPack_calc   TFloat
 
              , BoxName_1   TVarChar
              , BoxName_2   TVarChar
@@ -179,6 +184,8 @@ BEGIN
                                                      , zc_MIFloat_CountTare5()
                                                      , zc_MIFloat_RealWeight()
                                                      , zc_MIFloat_PartionNum()
+                                                     , zc_MIFloat_CountPack()
+                                                     , zc_MIFloat_WeightPack()
                                                       )
                   )
 
@@ -271,15 +278,19 @@ BEGIN
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
                         END   ::TFloat AS CountTare10
                       , tmpBox.BoxWeight1 ::TFloat, tmpBox.BoxWeight2 ::TFloat, tmpBox.BoxWeight3 ::TFloat, tmpBox.BoxWeight4 ::TFloat, tmpBox.BoxWeight5 ::TFloat
-                      , tmpBox.BoxWeight6 ::TFloat, tmpBox.BoxWeight7 ::TFloat, tmpBox.BoxWeight8 ::TFloat, tmpBox.BoxWeight9 ::TFloat, tmpBox.BoxWeight10 ::TFloat
+                      , tmpBox.BoxWeight6 ::TFloat, tmpBox.BoxWeight7 ::TFloat, tmpBox.BoxWeight8 ::TFloat, tmpBox.BoxWeight9 ::TFloat, tmpBox.BoxWeight10 ::TFloat 
+                      
                       , tmpBox.BoxId_1, tmpBox.BoxId_2, tmpBox.BoxId_3, tmpBox.BoxId_4, tmpBox.BoxId_5
                       , tmpBox.BoxId_6, tmpBox.BoxId_7, tmpBox.BoxId_8, tmpBox.BoxId_9, tmpBox.BoxId_10
                       , tmpBox.BoxName_1 ::TVarChar, tmpBox.BoxName_2 ::TVarChar, tmpBox.BoxName_3 ::TVarChar, tmpBox.BoxName_4 ::TVarChar, tmpBox.BoxName_5 ::TVarChar
                       , tmpBox.BoxName_6 ::TVarChar, tmpBox.BoxName_7 ::TVarChar, tmpBox.BoxName_8 ::TVarChar, tmpBox.BoxName_9 ::TVarChar, tmpBox.BoxName_10 ::TVarChar
 
                       , MIFloat_RealWeight.ValueData ::TFloat AS RealWeight
-                      , MIFloat_PartionNum.ValueData          AS PartionNum
-
+                      , MIFloat_PartionNum.ValueData          AS PartionNum    
+                      
+                      , tmpMIFloat_CountPack.ValueData   ::Integer AS CountPack
+                      , tmpMIFloat_WeightPack.ValueData  ::TFloat  AS WeightPack
+      
                       , COALESCE (MIDate_PartionGoods.ValueData, MovementItem.OperDate) :: TDateTime AS PartionGoodsDate
                       , MIDate_Insert.ValueData  AS InsertDate
                       , MILO_Insert.ObjectId     AS InsertId
@@ -303,6 +314,14 @@ BEGIN
                      LEFT JOIN tmpMIFloat AS MIFloat_CountTare5
                                           ON MIFloat_CountTare5.MovementItemId = MovementItem.Id
                                          AND MIFloat_CountTare5.DescId = zc_MIFloat_CountTare5()
+
+                     --упаковка
+                     LEFT JOIN tmpMIFloat AS tmpMIFloat_CountPack
+                                          ON tmpMIFloat_CountPack.MovementItemId =  MovementItem.Id
+                                         AND tmpMIFloat_CountPack.DescId         = zc_MIFloat_CountPack()
+                     LEFT JOIN tmpMIFloat AS tmpMIFloat_WeightPack
+                                          ON tmpMIFloat_WeightPack.MovementItemId =  MovementItem.Id
+                                         AND tmpMIFloat_WeightPack.DescId         = zc_MIFloat_WeightPack()
 
                      LEFT JOIN tmpMIFloat AS MIFloat_PartionNum
                                           ON MIFloat_PartionNum.MovementItemId = MovementItem.Id
@@ -346,7 +365,7 @@ BEGIN
                                       AND MILinkObject_Box4.DescId = zc_MILinkObject_Box4()
                      LEFT JOIN tmpMILO AS MILinkObject_Box5
                                        ON MILinkObject_Box5.MovementItemId = MovementItem.Id
-                                      AND MILinkObject_Box5.DescId = zc_MILinkObject_Box5()
+                                      AND MILinkObject_Box5.DescId = zc_MILinkObject_Box5()  
                    )
 
 
@@ -406,7 +425,12 @@ BEGIN
                 + COALESCE (tmpData.CountTare7,0) * COALESCE (tmpData.BoxWeight7,0)
                 + COALESCE (tmpData.CountTare8,0) * COALESCE (tmpData.BoxWeight8,0)
                 + COALESCE (tmpData.CountTare9,0) * COALESCE (tmpData.BoxWeight9,0)
-                + COALESCE (tmpData.CountTare10,0) * COALESCE (tmpData.BoxWeight10,0)) ::TFloat AS BoxWeightTotal
+                + COALESCE (tmpData.CountTare10,0) * COALESCE (tmpData.BoxWeight10,0)) ::TFloat AS BoxWeightTotal 
+
+                --упаковка
+               , tmpData.CountPack         ::Integer
+               , tmpData.WeightPack        ::TFloat
+               , (tmpData.CountPack * tmpData.WeightPack) ::TFloat AS WeightPack_calc
 
                , tmpData.BoxName_1 ::TVarChar, tmpData.BoxName_2 ::TVarChar, tmpData.BoxName_3 ::TVarChar, tmpData.BoxName_4 ::TVarChar, tmpData.BoxName_5 ::TVarChar
                , tmpData.BoxName_6 ::TVarChar, tmpData.BoxName_7 ::TVarChar, tmpData.BoxName_8 ::TVarChar, tmpData.BoxName_9 ::TVarChar, tmpData.BoxName_10 ::TVarChar

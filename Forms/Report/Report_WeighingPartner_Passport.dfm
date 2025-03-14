@@ -98,6 +98,16 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
               Format = ',0.####'
               Kind = skSum
               Column = BoxWeightTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountPack
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightPack_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -174,6 +184,16 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
               Format = ',0.####'
               Kind = skSum
               Column = BoxWeightTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountPack
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightPack_calc
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -566,6 +586,39 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object CountPack: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1091#1087#1072#1082#1086#1074#1086#1082
+            DataBinding.FieldName = 'CountPack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object WeightPack: TcxGridDBColumn
+            Caption = #1042#1077#1089'  1-'#1086#1081' '#1091#1087'.'
+            DataBinding.FieldName = 'WeightPack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object WeightPack_calc: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1042#1077#1089' '#1091#1087#1072#1082'.'
+            DataBinding.FieldName = 'WeightPack_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
