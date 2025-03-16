@@ -216,6 +216,9 @@ type
     EditPartionCell: TcxButtonEdit;
     EditWeightTare1: TcxCurrencyEdit;
     EditWeightTare2: TcxCurrencyEdit;
+    Panel4: TPanel;
+    Label4: TLabel;
+    PanelShGoods_total: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -370,6 +373,8 @@ end;
 function TGuideGoodsForm.Execute (execParamsMovement : TParams; isModeSave, isDialog : Boolean) : Boolean;
 var OperDate_params:TDateTime;
 begin
+     if (SettingMain.BranchCode = 115)
+     then LabelTare0.Caption:= 'Нет Кол-во Флоупак';
      //
      if SettingMain.isOperDatePartner = TRUE
      then OperDate_params:= execParamsMovement.ParamByName('OperDatePartner').AsDateTime
@@ -417,6 +422,7 @@ begin
               EditPartionCell.Text:= ParamsMI.ParamByName('PartionCellName').AsString;
               PanelWeightTare_total.Caption:= FormatFloat(fmtWeight, 0);
               PanelWeightGoods_total.Caption:= FormatFloat(fmtWeight, ParamsMI.ParamByName('RealWeight_Get').AsFloat);
+              PanelShGoods_total.Caption:= FloatToStr(ParamsMI.ParamByName('Amount_Goods').asFloat);
      end;
      //
      if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202)
@@ -946,7 +952,9 @@ begin
                           if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
 
                      else if ActiveControl=EditTare0
-                          then ActiveControl:=EditChangePercentAmountCode
+                          then if infoPanelChangePercentAmount.Visible
+                               then ActiveControl:= EditChangePercentAmountCode
+                               else ActiveControl:= EditPartionCell
 
                 else if ActiveControl=EditTareWeightCode then if (rgTareWeight.ItemIndex=rgTareWeight.Items.Count-1)and(gbTareWeightEnter.Visible)
                                                         then ActiveControl:=EditTareWeightEnter
@@ -1076,11 +1084,20 @@ begin
         // Вес 1-ой тары - Fix
         if infoPanelTare0.Visible then
         begin
-               try ParamsMI.ParamByName('WeightTare').AsFloat:=StrToFloat(EditTare0.Text);
-               except ParamsMI.ParamByName('WeightTare').AsFloat:=0;
-               end;
-               //change Количество тары
-               ParamsMI.ParamByName('CountTare').AsFloat:=1;
+             if (SettingMain.BranchCode = 115)
+             then begin
+                 //Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
+                 ParamsMI.ParamByName('WeightTare').AsFloat:=ParamsMI.ParamByName('WeightPack').AsFloat;
+                 //Количество упаковок - Флоупак +  Нар.180 + Нар. 200
+                 ParamsMI.ParamByName('CountTare').AsFloat:= ParamsMI.ParamByName('CountPack').AsFloat;
+             end
+             else begin
+                 try ParamsMI.ParamByName('WeightTare').AsFloat:=StrToFloat(EditTare0.Text);
+                 except ParamsMI.ParamByName('WeightTare').AsFloat:=0;
+                 end;
+                 //change Количество тары
+                 ParamsMI.ParamByName('CountTare').AsFloat:=1;
+             end;
         end
         // Вес 1-ой тары
         else
@@ -1794,7 +1811,7 @@ procedure TGuideGoodsForm.EditPartionCellKeyDown(Sender: TObject; var Key: Word;
 begin
     if Key=13
     then
-     ActiveControl:=EditChangePercentAmountCode;
+        actSaveExecute(Self);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.PartionDateEditKeyDown(Sender: TObject; var Key: Word;
@@ -1802,7 +1819,7 @@ procedure TGuideGoodsForm.PartionDateEditKeyDown(Sender: TObject; var Key: Word;
 begin
     if Key=13
     then
-     ActiveControl:=EditChangePercentAmountCode;
+        ActiveControl:=EditPartionCell;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditPartionCellPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
@@ -2042,7 +2059,7 @@ procedure TGuideGoodsForm.EditTare0KeyDown(Sender: TObject; var Key: Word;
 begin
     if Key=13
     then
-     ActiveControl:=EditChangePercentAmountCode
+      ActiveControl:=EditPartionCell
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeChange(Sender: TObject);
@@ -2076,6 +2093,7 @@ begin
       if (rgGoodsKind.ItemIndex=-1)and (rgGoodsKind.Items.Count>1)
       then begin ShowMessage('Ошибка.Не определено значение <Код вида упаковки>.');
                  ActiveControl:=EditGoodsKindCode;
+                 exit;
            end
       else
         if CDS.RecordCount<>1
@@ -2083,10 +2101,12 @@ begin
              then begin
                        ShowMessage('Ошибка.Не определено значение <Код вида упаковки>.');
                        ActiveControl:=EditGoodsKindCode;
+                       exit;
                   end
              else begin
                        ShowMessage('Ошибка.Не выбран <Код товара>.');
                        ActiveControl:=EditGoodsCode;
+                       exit;
                   end
         else if (ParamsMI.ParamByName('RealWeight').AsFloat<=0.0001)
             and (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
@@ -2094,12 +2114,12 @@ begin
                   if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
                   and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
                   and(CDS.FieldByName('Weight').AsFloat > 0)
-                  then begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end
+                  then begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;exit;end
                   else
                        if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
                          or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
-                       then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');if gbWeightValue.Visible = TRUE then ActiveControl:=EditWeightValue;end
-                       else begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end;
+                       then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');if gbWeightValue.Visible = TRUE then ActiveControl:=EditWeightValue;exit;end
+                       else begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;exit;end;
 
       //
       if   (ParamsMovement.ParamByName('OrderExternalId').AsInteger = 0)
@@ -2114,8 +2134,33 @@ begin
                      //ShowMessage('Ошибка.Значение <Вид упаковки> может быть только таким: <' + CDS.FieldByName('GoodsKindName').AsString + '>.');
                      ShowMessage('Ошибка.Значение <Вид упаковки> может быть только таким: <' + CDS.FieldByName('GoodsKindName_max').AsString + '>.');
                      ActiveControl:=EditGoodsKindCode;
+                     exit;
                 end;
       end;
+      //
+     if (SettingMain.BranchCode = 115) and (CDS.RecordCount=1)
+     then begin
+              ParamsMI.ParamByName('GoodsId').AsInteger:= CDS.FieldByName('GoodsId').AsInteger;
+              //
+              if rgGoodsKind.Items.Count > 1
+              then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
+              else ParamsMI.ParamByName('GoodsKindId').AsInteger:= 0;
+              //
+              if not DMMainScaleForm.gpGet_Scale_Goods_gk(ParamsMI) then exit;
+              //
+              // Название 1-ой упаковки - Флоупак +  Нар.180 + Нар
+              if ParamsMI.ParamByName('NamePack').AsString <> ''
+              then if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+                   then LabelTare0.Caption:= 'Кол-во ' + ParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(ParamsMI.ParamByName('Weight_gd').AsFloat)+' кг.) + ('+FloatToStr(ParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
+                   else LabelTare0.Caption:= 'Кол-во ' + ParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(ParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
+              else if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+                   then LabelTare0.Caption:= 'Нет Кол-во Флоупак ('+FloatToStr(ParamsMI.ParamByName('Weight_gd').AsFloat)+' кг.) + ('+FloatToStr(ParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
+                   else LabelTare0.Caption:= 'Нет Кол-во Флоупак';
+              //
+              if ParamsMI.ParamByName('NamePack').AsString = ''
+              then ParamsMI.ParamByName('WeightPack').AsFloat:= 0;
+     end;
+
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeKeyPress(Sender: TObject;var Key: Char);
@@ -2155,18 +2200,37 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTare1PropertiesChange(Sender: TObject);
 begin
+     //0
+     if (SettingMain.BranchCode = 115) then
+     begin
+         try ParamsMI.ParamByName('CountPack').AsFloat:=StrToFloat(EditTare0.Text);
+         except
+               ParamsMI.ParamByName('CountPack').AsFloat:=0;
+         end;
+         PanelWeightTare0.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountPack').AsFloat * ParamsMI.ParamByName('WeightPack').AsFloat);
+     end;
      //1
      try ParamsMI.ParamByName('CountTare1').AsFloat:=StrToFloat(EditTare1.Text);
      except
            ParamsMI.ParamByName('CountTare1').AsFloat:=0;
      end;
+     try SettingMain.WeightTare1:=StrToFloat(EditWeightTare1.Text);
+     except
+           SettingMain.WeightTare1:=0;
+     end;
      PanelWeightTare1.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1);
+
      //2
      try ParamsMI.ParamByName('CountTare2').AsFloat:=StrToFloat(EditTare2.Text);
      except
            ParamsMI.ParamByName('CountTare2').AsFloat:=0;
      end;
+     try SettingMain.WeightTare2:=StrToFloat(EditWeightTare2.Text);
+     except
+           SettingMain.WeightTare2:=0;
+     end;
      PanelWeightTare2.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare2').AsFloat * SettingMain.WeightTare2);
+
      //3
      try ParamsMI.ParamByName('CountTare3').AsFloat:=StrToFloat(EditTare3.Text);
      except
@@ -2217,7 +2281,7 @@ begin
      PanelWeightTare10.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10);
      //
      //0
-     if infoPanelTare0.Visible then
+     if (infoPanelTare0.Visible) and (SettingMain.BranchCode <> 115) then
      begin
             try ParamsMI.ParamByName('WeightTare').AsFloat:=StrToFloat(EditTare0.Text);
             except ParamsMI.ParamByName('WeightTare').AsFloat:=0;
@@ -2229,7 +2293,8 @@ begin
      end;
 
      //Total
-     PanelWeightTare_total.Caption:= FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1
+     PanelWeightTare_total.Caption:= FormatFloat(fmtWeight, ParamsMI.ParamByName('CountPack').AsFloat * ParamsMI.ParamByName('WeightPack').AsFloat
+                                                          + ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1
                                                           + ParamsMI.ParamByName('CountTare2').AsFloat * SettingMain.WeightTare2
                                                           + ParamsMI.ParamByName('CountTare3').AsFloat * SettingMain.WeightTare3
                                                           + ParamsMI.ParamByName('CountTare4').AsFloat * SettingMain.WeightTare4
@@ -2241,6 +2306,7 @@ begin
                                                           + ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10
                                                           );
      PanelWeightGoods_total.Caption:= FormatFloat(fmtWeight, ParamsMI.ParamByName('RealWeight_Get').AsFloat
+                                                           - ParamsMI.ParamByName('CountPack').AsFloat * ParamsMI.ParamByName('WeightPack').AsFloat
                                                            - ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1
                                                            - ParamsMI.ParamByName('CountTare2').AsFloat * SettingMain.WeightTare2
                                                            - ParamsMI.ParamByName('CountTare3').AsFloat * SettingMain.WeightTare3
@@ -2252,12 +2318,29 @@ begin
                                                            - ParamsMI.ParamByName('CountTare9').AsFloat * SettingMain.WeightTare9
                                                            - ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10
                                                            );
+     //
+     if (fStartWrite = FALSE)
+     then PanelShGoods_total.Caption:= EditWeightValue.Text;
+     //
      if (SettingMain.BranchCode = 115) and (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh) and(CDS.RecordCount = 1)
+        and (fStartWrite = FALSE)
      then begin
           if (ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)and(CDS.FieldByName('Weight').AsFloat > 0)
           then begin
+                    ParamsMI.ParamByName('GoodsId').AsInteger:= CDS.FieldByName('GoodsId').AsInteger;
+                    //
+                    if rgGoodsKind.Items.Count > 1
+                    then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
+                    else ParamsMI.ParamByName('GoodsKindId').AsInteger:= 0;
+                    //
+                    if not DMMainScaleForm.gpGet_Scale_Goods_gk(ParamsMI) then exit;
+                    //
+                    if ParamsMI.ParamByName('NamePack').AsString = ''
+                    then ParamsMI.ParamByName('WeightPack').AsFloat:= 0;
+                    //
                     ParamsMI.ParamByName('RealWeight').AsFloat:=ParamsMI.ParamByName('RealWeight_Get').AsFloat;
-                    EditWeightValue.Text:= FloatToStr(ROUND ((ParamsMI.ParamByName('RealWeight_Get').AsFloat
+                    PanelShGoods_total.Caption:= FloatToStr(ROUND ((ParamsMI.ParamByName('RealWeight_Get').AsFloat
+                                                            - ParamsMI.ParamByName('CountPack').AsFloat * ParamsMI.ParamByName('WeightPack').AsFloat
                                                             - ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1
                                                             - ParamsMI.ParamByName('CountTare2').AsFloat * SettingMain.WeightTare2
                                                             - ParamsMI.ParamByName('CountTare3').AsFloat * SettingMain.WeightTare3
@@ -2269,7 +2352,10 @@ begin
                                                             - ParamsMI.ParamByName('CountTare9').AsFloat * SettingMain.WeightTare9
                                                             - ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10
                                                              )
-                                                           / CDS.FieldByName('Weight').AsFloat));
+                                                           / (ParamsMI.ParamByName('Weight_gd').AsFloat + ParamsMI.ParamByName('WeightPack').AsFloat)));
+                    //
+                    EditWeightValue.Text:= PanelShGoods_total.Caption;
+                    //
                     exit;
           end;
 
@@ -2808,12 +2894,16 @@ begin
   infoPanelTare9.Visible:= SettingMain.WeightTare9 > 0;infoPanelTare9.Height:=35;
   infoPanelTare10.Visible:= SettingMain.WeightTare10 > 0;infoPanelTare10.Height:=35;
   //вес тары (ручной режим)
-  infoPanelTare0.Visible:=((SettingMain.WeightTare1 > 0) or (SettingMain.WeightTare3 > 0))and(GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'));
+  infoPanelTare0.Visible:=(((SettingMain.WeightTare1 > 0) or (SettingMain.WeightTare3 > 0))and(GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE')))
+                       or (SettingMain.BranchCode = 115)
+                         ;
   infoPanelTare0.Height:=35;
   //
   if SettingMain.BranchCode = 115 then
   begin
        infoPanelTare0.Visible:= TRUE;
+
+       infoPanelChangePercentAmount.Visible:= FALSE;
 
        PanelWeightTare1.Visible:= FALSE;
        PanelWeightTare2.Visible:= FALSE;
@@ -2836,7 +2926,7 @@ begin
        infoPanelTare.Width:= 230 + 80;
        infoPanelPartion.Width:= 250 - 80;
        infoPanelPriceList.Visible:= false; //infoPanelPriceList.Width:= 250 - 80;
-       ParamsPanel.Height:= ParamsPanel.Height + infoPanelTare1.Height * 2;
+       ParamsPanel.Height:= ParamsPanel.Height + infoPanelTare1.Height * 2 + 20;
 
       EditTare1.Top:= 14;
       EditTare2.Top:= 14;

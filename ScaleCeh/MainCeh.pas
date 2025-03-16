@@ -945,6 +945,7 @@ begin
        //
            if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
            and(ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = TRUE)
+           and((cbPartionPasspor.Checked = FALSE) or (isPartionPassportPanel.Visible = FALSE))
            then begin
                 //
                 try
@@ -982,6 +983,27 @@ begin
             if (PanelGoodsKind_all.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
             then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
             else ParamsMI.ParamByName('GoodsKindId').AsInteger:= 0;
+
+            // доопределили ВЕС
+            if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+            and(ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = TRUE)
+            then begin
+                //
+                try
+                   Value_EnterCount:= StrToFloat (EditEnterCount.Text);
+                except
+                     Value_EnterCount:= 0;
+                end;
+                //
+                if Value_EnterCount = 0
+                then begin
+                    ParamsMI.ParamByName('RealWeight').AsFloat:=fGetScale_CurrentWeight_real;
+                    ParamsMI.ParamByName('RealWeight_Get').AsFloat:=ParamsMI.ParamByName('RealWeight').AsFloat;
+                end
+                else
+                    ParamsMI.ParamByName('RealWeight_Get').AsFloat:=0;
+            end;
+
             //
             //
             if not DialogTareForm.Execute (ParamsMovement,ParamsMI) then
@@ -3856,6 +3878,7 @@ begin
      then Result:=myStrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-4));
      if (System.Pos('ves=',ParamStr(3))>0)and(Result=0)
      then Result:=myStrToFloat(Copy(ParamStr(3), 5, LengTh(ParamStr(3))-4));
+
 //*****
      //
      PanelWeight_Scale.Caption:=FloatToStr(Result);

@@ -998,7 +998,7 @@ inherited DialogTareForm: TDialogTareForm
     TabOrder = 2
     object Panel1: TPanel
       Left = 0
-      Top = 370
+      Top = 321
       Width = 170
       Height = 49
       Align = alBottom
@@ -1038,7 +1038,7 @@ inherited DialogTareForm: TDialogTareForm
     end
     object Panel3: TPanel
       Left = 0
-      Top = 321
+      Top = 272
       Width = 170
       Height = 49
       Align = alBottom
@@ -1169,7 +1169,7 @@ inherited DialogTareForm: TDialogTareForm
     end
     object Panel2: TPanel
       Left = 0
-      Top = 272
+      Top = 223
       Width = 170
       Height = 49
       Align = alBottom
@@ -1198,6 +1198,47 @@ inherited DialogTareForm: TDialogTareForm
         Align = alClient
         BevelOuter = bvNone
         Caption = 'PanelCounttTare_total'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clNavy
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+      end
+    end
+    object Panel4: TPanel
+      Left = 0
+      Top = 370
+      Width = 170
+      Height = 49
+      Align = alBottom
+      TabOrder = 5
+      object Label4: TLabel
+        Left = 1
+        Top = 1
+        Width = 168
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1048#1058#1054#1043#1054' '#1096#1090'.'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitLeft = 5
+        ExplicitTop = 5
+      end
+      object PanelShGoods_total: TPanel
+        Left = 1
+        Top = 15
+        Width = 168
+        Height = 33
+        Align = alClient
+        BevelOuter = bvNone
+        Caption = 'PanelShGoods_total'
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clNavy
         Font.Height = -11

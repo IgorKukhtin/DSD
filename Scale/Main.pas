@@ -350,6 +350,8 @@ type
     err_count: Integer;
     fStartBarCode : Boolean;
 
+    oldGoodsId : Integer;
+
     function Save_Movement_all:Boolean;
     function Print_Movement_afterSave:Boolean;
     function Print_Movement_Income_afterSave:Boolean;
@@ -1268,6 +1270,7 @@ begin
                     WriteParamsMovement;
               end;
      Initialize_afterSave_MI;
+     oldGoodsId:=ParamsMI.ParamByName('GoodsId').AsInteger;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.bbChangeCountPackClick(Sender: TObject);
@@ -2605,6 +2608,7 @@ begin
      then Result:=myStrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-4));
      if (System.Pos('ves=',ParamStr(3))>0)and(Result=0)
      then Result:=myStrToFloat(Copy(ParamStr(3), 5, LengTh(ParamStr(3))-4));
+     //if oldGoodsId > 0 then Result:= oldGoodsId / 1000;
 //*****
      if Scale_Array[rgScale.ItemIndex].ScaleType = stAP
      then if Result = 0 then PanelWeight_Scale.Caption:= WeightStr

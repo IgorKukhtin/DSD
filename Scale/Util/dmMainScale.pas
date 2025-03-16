@@ -1271,8 +1271,9 @@ begin
          end;
        with execParams do
        begin
-         ParamByName('NameTare0').AsString := DataSet.FieldByName('GoodsKindName').AsString;
-         ParamByName('WeightTare0').AsFloat:= DataSet.FieldByName('WeightTare_0').asFloat;
+         ParamByName('NamePack').AsString := DataSet.FieldByName('GoodsKindName').AsString;
+         ParamByName('WeightPack').AsFloat:= DataSet.FieldByName('WeightTare_gd').asFloat;
+         ParamByName('Weight_gd').AsFloat := DataSet.FieldByName('Weight_gd').asFloat;
        end;
 
     end;

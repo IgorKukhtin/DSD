@@ -129,7 +129,7 @@ begin
        with execParams do
        begin
          ParamByName('NamePack').AsString := DataSet.FieldByName('GoodsKindName').AsString;
-         ParamByName('WeightPack').AsFloat:= DataSet.FieldByName('WeightTare_0').asFloat;
+         ParamByName('WeightPack').AsFloat:= DataSet.FieldByName('WeightTare_gd').asFloat;
          ParamByName('Weight_gd').AsFloat := DataSet.FieldByName('Weight_gd').asFloat;
        end;
 

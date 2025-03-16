@@ -119,6 +119,9 @@ type
     PanelCounttTare_total: TPanel;
     EditWeightTare1: TcxCurrencyEdit;
     EditWeightTare2: TcxCurrencyEdit;
+    Panel4: TPanel;
+    Label4: TLabel;
+    PanelShGoods_total: TPanel;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure EditTare1KeyDown(Sender: TObject; var Key: Word;
@@ -168,9 +171,21 @@ type
     CountTare9: Integer;
     CountTare10: Integer;
     CountTare_0: Integer;
+
+    // Вес Товара
+    Weight_gd  : Double;
+    // Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
+    WeightPack  : Double;
+    // ШТ
+    Sh_calc: Double;
+
+    // Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
     WeightTare_0: Double;
+    //
     WeightTare1 : Double;
     WeightTare2 : Double;
+
+    RealWeight  : Double;
     RealWeight_Get : Double;
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
@@ -191,12 +206,24 @@ begin
 
      //Количество упаковок - Флоупак +  Нар.180 + Нар. 200
      EditTare0.Text:=FloatToStr(execParamsMI.ParamByName('CountPack').AsFloat);
+     // Вес 1-ой упаковки
+     WeightPack:= execParamsMI.ParamByName('WeightPack').AsFloat;
      // Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
-     WeightTare_0:= execParamsMI.ParamByName('WeightPack').AsFloat;
+     if execParamsMI.ParamByName('NamePack').AsString <> ''
+     then WeightTare_0:= execParamsMI.ParamByName('WeightPack').AsFloat
+     else WeightTare_0:= 0;
+
+     // Вес товара для шт.
+     Weight_gd:= execParamsMI.ParamByName('Weight_gd').AsFloat;
+
      // Название 1-ой упаковки - Флоупак +  Нар.180 + Нар
      if execParamsMI.ParamByName('NamePack').AsString <> ''
-     then LabelTare0.Caption:= 'Кол-во ' + execParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(execParamsMI.ParamByName('WeightPack').AsFloat)+'кг.)'
-     else LabelTare0.Caption:= 'Нет Кол-во Флоупак ';
+     then if execParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh
+          then LabelTare0.Caption:= 'Кол-во ' + execParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(execParamsMI.ParamByName('Weight_gd').AsFloat)+' кг.) + ('+FloatToStr(execParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
+          else LabelTare0.Caption:= 'Кол-во ' + execParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(execParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
+     else if execParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh
+          then LabelTare0.Caption:= 'Нет Кол-во Флоупак ('+FloatToStr(execParamsMI.ParamByName('Weight_gd').AsFloat)+' кг.) + ('+FloatToStr(execParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
+          else LabelTare0.Caption:= 'Нет Кол-во Флоупак';
 
      EditTare1.Text:=FloatToStr(execParamsMI.ParamByName('CountTare1').AsFloat);
      EditWeightTare1.Text:=FloatToStr(SettingMain.WeightTare1);
@@ -217,6 +244,7 @@ begin
      //
      PartionDateEdit.Text:= DateToStr(execParamsMovement.ParamByName('OperDate').AsDateTime);
      //
+     RealWeight:= execParamsMI.ParamByName('RealWeight').AsFloat;
      RealWeight_Get:= execParamsMI.ParamByName('RealWeight_Get').AsFloat;
      MeasureId:= execParamsMI.ParamByName('MeasureId').AsInteger;
      //
@@ -245,6 +273,10 @@ begin
           execParamsMI.ParamByName('CountTare8').AsFloat:=CountTare8;
           execParamsMI.ParamByName('CountTare9').AsFloat:=CountTare9;
           execParamsMI.ParamByName('CountTare10').AsFloat:=CountTare10;
+
+          if (Sh_calc > 0) and (execParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh) and (RealWeight_Get > 0)
+          then execParamsMI.ParamByName('RealWeight').AsFloat:= Sh_calc;
+
      end;
 end;
 {------------------------------------------------------------------------------}
@@ -312,7 +344,7 @@ end;
 {------------------------------------------------------------------------------}
 procedure TDialogTareForm.EditTare1PropertiesChange(Sender: TObject);
 begin
-     //1
+     //0
      try CountTare_0:=StrToInt(EditTare0.Text);
      except
            CountTare_0:=0;
@@ -387,7 +419,7 @@ begin
 
      //
      PanelCounttTare_total.Caption:= FloatToStr(CountTare3 + CountTare4 + CountTare5 + CountTare6 + CountTare7 + CountTare8 + CountTare9 + CountTare10);
-     //Total
+     //Total Tare
      PanelWeightTare_total.Caption:= FormatFloat(fmtWeight, CountTare_0 * WeightTare_0
                                                           + CountTare1 * WeightTare1
                                                           + CountTare2 * WeightTare2
@@ -400,23 +432,63 @@ begin
                                                           + CountTare9 * SettingMain.WeightTare9
                                                           + CountTare10 * SettingMain.WeightTare10
                                                           );
+     //Total Netto
      if MeasureId = zc_Measure_Sh
+     then begin
+           if RealWeight_get > 0
+           then
+           PanelWeightGoods_total.Caption:= FormatFloat(fmtWeight, RealWeight_get
+                                                                 - CountTare_0 * WeightTare_0
+                                                                 - CountTare1 * WeightTare1
+                                                                 - CountTare2 * WeightTare2
+                                                                 - CountTare3 * SettingMain.WeightTare3
+                                                                 - CountTare4 * SettingMain.WeightTare4
+                                                                 - CountTare5 * SettingMain.WeightTare5
+                                                                 - CountTare6 * SettingMain.WeightTare6
+                                                                 - CountTare7 * SettingMain.WeightTare7
+                                                                 - CountTare8 * SettingMain.WeightTare8
+                                                                 - CountTare9 * SettingMain.WeightTare9
+                                                                 - CountTare10 * SettingMain.WeightTare10
+                                                                  )
+           else PanelWeightGoods_total.Caption:= '';
+     end
+     else begin
+           PanelWeightGoods_total.Caption:= FormatFloat(fmtWeight, RealWeight
+                                                                 - CountTare_0 * WeightTare_0
+                                                                 - CountTare1 * WeightTare1
+                                                                 - CountTare2 * WeightTare2
+                                                                 - CountTare3 * SettingMain.WeightTare3
+                                                                 - CountTare4 * SettingMain.WeightTare4
+                                                                 - CountTare5 * SettingMain.WeightTare5
+                                                                 - CountTare6 * SettingMain.WeightTare6
+                                                                 - CountTare7 * SettingMain.WeightTare7
+                                                                 - CountTare8 * SettingMain.WeightTare8
+                                                                 - CountTare9 * SettingMain.WeightTare9
+                                                                 - CountTare10 * SettingMain.WeightTare10
+                                                                  );
+     end;
+
+     //Расчет шт.
+     if (MeasureId = zc_Measure_Sh) and (RealWeight_get > 0) and ((Weight_gd + WeightPack) > 0)
      then
-     PanelWeightGoods_total.Caption:= FormatFloat(fmtWeight, 0)
-     else
-     PanelWeightGoods_total.Caption:= FormatFloat(fmtWeight, RealWeight_Get
-                                                           - CountTare_0 * WeightTare_0
-                                                           - CountTare1 * WeightTare1
-                                                           - CountTare2 * WeightTare2
-                                                           - CountTare3 * SettingMain.WeightTare3
-                                                           - CountTare4 * SettingMain.WeightTare4
-                                                           - CountTare5 * SettingMain.WeightTare5
-                                                           - CountTare6 * SettingMain.WeightTare6
-                                                           - CountTare7 * SettingMain.WeightTare7
-                                                           - CountTare8 * SettingMain.WeightTare8
-                                                           - CountTare9 * SettingMain.WeightTare9
-                                                           - CountTare10 * SettingMain.WeightTare10
-                                                            );
+         Sh_calc:= ROUND ((RealWeight_get
+                         - CountTare1 * WeightTare1
+                         - CountTare2 * WeightTare2
+                         - CountTare3 * SettingMain.WeightTare3
+                         - CountTare4 * SettingMain.WeightTare4
+                         - CountTare5 * SettingMain.WeightTare5
+                         - CountTare6 * SettingMain.WeightTare6
+                         - CountTare7 * SettingMain.WeightTare7
+                         - CountTare8 * SettingMain.WeightTare8
+                         - CountTare9 * SettingMain.WeightTare9
+                         - CountTare10 * SettingMain.WeightTare10
+                           )
+                         / (Weight_gd + WeightPack)
+                          )
+      else if (MeasureId = zc_Measure_Sh) and (RealWeight_get = 0)
+           then Sh_calc:= RealWeight
+           else Sh_calc:= 0;
+      PanelShGoods_total.Caption:= FormatFloat(fmtFloat, Sh_calc);
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogTareForm.EditWeightTare1KeyDown(Sender: TObject; var Key: Word;

@@ -681,6 +681,7 @@ begin
          ParamAdd(Params,'CountPack',ftFloat);           // Количество упаковок - Флоупак +  Нар.180 + Нар. 200
          ParamAdd(Params,'WeightPack',ftFloat);          // Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
          ParamAdd(Params,'NamePack',ftString);           // Название 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
+         ParamAdd(Params,'Weight_gd',ftFloat);           // Вес шт. товара
 
          ParamAdd(Params,'Amount_Goods',ftFloat);        //
 

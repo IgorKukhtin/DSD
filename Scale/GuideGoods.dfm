@@ -660,6 +660,8 @@ object GuideGoodsForm: TGuideGoodsForm
           Align = alTop
           Caption = #1050#1086#1076' '#1089#1082#1080#1076#1082#1080
           TabOrder = 0
+          ExplicitLeft = -5
+          ExplicitTop = 4
           object EditChangePercentAmountCode: TEdit
             Left = 5
             Top = 14
@@ -682,8 +684,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1077#1089' '#1090#1072#1088#1099
         TabOrder = 1
-        ExplicitLeft = -2
-        ExplicitTop = 45
         object EditTareWeightEnter: TEdit
           Left = 5
           Top = 17
@@ -788,8 +788,6 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
-              ExplicitLeft = 6
-              ExplicitTop = 12
             end
             object EditWeightTare1: TcxCurrencyEdit
               Left = 12
@@ -963,8 +961,7 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitLeft = -5
-              ExplicitTop = 1
+              ExplicitWidth = 19
             end
             object PanelWeightTare2: TPanel
               Left = 0
@@ -1643,7 +1640,8 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitWidth = 81
+              ExplicitLeft = -6
+              ExplicitTop = 1
             end
             object EditTare7: TcxCurrencyEdit
               Left = 5
@@ -2068,7 +2066,7 @@ object GuideGoodsForm: TGuideGoodsForm
       TabOrder = 4
       object Panel1: TPanel
         Left = 0
-        Top = 329
+        Top = 280
         Width = 170
         Height = 49
         Align = alBottom
@@ -2108,7 +2106,7 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object Panel3: TPanel
         Left = 0
-        Top = 280
+        Top = 231
         Width = 170
         Height = 49
         Align = alBottom
@@ -2235,6 +2233,48 @@ object GuideGoodsForm: TGuideGoodsForm
           Text = 'EditPartionCell'
           OnKeyDown = EditPartionCellKeyDown
           Width = 163
+        end
+      end
+      object Panel4: TPanel
+        Left = 0
+        Top = 329
+        Width = 170
+        Height = 49
+        Align = alBottom
+        TabOrder = 4
+        object Label4: TLabel
+          Left = 1
+          Top = 1
+          Width = 168
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1048#1058#1054#1043#1054' '#1096#1090'.'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 55
+        end
+        object PanelShGoods_total: TPanel
+          Left = 1
+          Top = 15
+          Width = 168
+          Height = 33
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelShGoods_total'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clNavy
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitLeft = 6
+          ExplicitTop = 18
         end
       end
     end
