@@ -1098,13 +1098,13 @@ object UtilPrintForm: TUtilPrintForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintBoxTotal: TdsdPrintAction
+    object actPrintBoxTotalPartner: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>
-      StoredProc = spSelectPrintBoxTotal
+      StoredProc = spSelectPrintBox_PartnerTotal
       StoredProcList = <
         item
-          StoredProc = spSelectPrintBoxTotal
+          StoredProc = spSelectPrintBox_PartnerTotal
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1088#1072#1089#1096'.)'
       Hint = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1088#1072#1089#1096'.)'
@@ -4256,8 +4256,8 @@ object UtilPrintForm: TUtilPrintForm
     Left = 167
     Top = 400
   end
-  object spSelectPrintBoxTotal: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_BoxTotalPrint'
+  object spSelectPrintBox_PartnerTotal: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_BoxPartnerTotalPrint'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

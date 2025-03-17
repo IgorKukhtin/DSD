@@ -317,6 +317,7 @@ type
     isPartionPassportPanel: TPanel;
     cbPartionPasspor: TCheckBox;
     bbPrint_MIPassport: TSpeedButton;
+    WeightPack: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -516,6 +517,8 @@ var
      oldStorageLineId: Integer;
      oldStorageLineName: String;
 begin
+     SettingMain.WeightTare1:= 0;
+     SettingMain.WeightTare2:= 0;
      //
      //lTimerWeight_1:= 0;
      //lTimerWeight_2:= 0;
@@ -973,8 +976,15 @@ begin
            end;
        //
        //
-       if (cbPartionPasspor.Checked = TRUE) and (isPartionPassportPanel.Visible = TRUE)
-       then if not DialogTareForm.Execute (ParamsMovement,ParamsMI) then
+       if (cbPartionPasspor.Checked = TRUE) and (isPartionPassportPanel.Visible = TRUE) then
+       begin
+            // доопределили параметр
+            if (PanelGoodsKind_all.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
+            then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
+            else ParamsMI.ParamByName('GoodsKindId').AsInteger:= 0;
+            //
+            //
+            if not DialogTareForm.Execute (ParamsMovement,ParamsMI) then
             begin
                  ActiveControl:=EditGoodsCode;
                  PanelMovementDesc.Font.Color:=clRed;
@@ -984,19 +994,25 @@ begin
             else begin
                    if ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh
                    then
-                   ParamsMI.ParamByName('WeightTare').AsFloat:= ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1
-                                                              + ParamsMI.ParamByName('CountTare2').AsFloat * SettingMain.WeightTare2
-                                                              + ParamsMI.ParamByName('CountTare3').AsFloat * SettingMain.WeightTare3
-                                                              + ParamsMI.ParamByName('CountTare4').AsFloat * SettingMain.WeightTare4
-                                                              + ParamsMI.ParamByName('CountTare5').AsFloat * SettingMain.WeightTare5
-                                                              + ParamsMI.ParamByName('CountTare6').AsFloat * SettingMain.WeightTare6
-                                                              + ParamsMI.ParamByName('CountTare7').AsFloat * SettingMain.WeightTare7
-                                                              + ParamsMI.ParamByName('CountTare8').AsFloat * SettingMain.WeightTare8
-                                                              + ParamsMI.ParamByName('CountTare9').AsFloat * SettingMain.WeightTare9
-                                                              + ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10
-                                                               ;
+                     ParamsMI.ParamByName('WeightOther').AsFloat:= ParamsMI.ParamByName('CountPack').AsFloat * ParamsMI.ParamByName('WeightPack').AsFloat;
+                     //
+                     ParamsMI.ParamByName('WeightTare').AsFloat:= ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1
+                                                                + ParamsMI.ParamByName('CountTare2').AsFloat * SettingMain.WeightTare2
+                                                                + ParamsMI.ParamByName('CountTare3').AsFloat * SettingMain.WeightTare3
+                                                                + ParamsMI.ParamByName('CountTare4').AsFloat * SettingMain.WeightTare4
+                                                                + ParamsMI.ParamByName('CountTare5').AsFloat * SettingMain.WeightTare5
+                                                                + ParamsMI.ParamByName('CountTare6').AsFloat * SettingMain.WeightTare6
+                                                                + ParamsMI.ParamByName('CountTare7').AsFloat * SettingMain.WeightTare7
+                                                                + ParamsMI.ParamByName('CountTare8').AsFloat * SettingMain.WeightTare8
+                                                                + ParamsMI.ParamByName('CountTare9').AsFloat * SettingMain.WeightTare9
+                                                                + ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10
+                                                                 ;
+                   //
                    EditWeightTare_enter.Text:= FloatToStr(ParamsMI.ParamByName('WeightTare').AsFloat);
+                   EditWeightOther.Text:= FloatToStr(ParamsMI.ParamByName('WeightOther').AsFloat);
+                   EditCountPack.Text:= FloatToStr(ParamsMI.ParamByName('CountPack').AsFloat);
                  end
+       end
        else begin
                  ParamsMI.ParamByName('CountTare1').AsFloat:= 0;
                  ParamsMI.ParamByName('CountTare2').AsFloat:= 0;
@@ -3055,6 +3071,7 @@ begin
   // or isModeSorting = LineCode
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=(SettingMain.isGoodsComplete = TRUE)  or (SettingMain.isModeSorting = TRUE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountPack').Index].Visible           :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightPack').Index].Visible          :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountOneWeight').Index].Visible     :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LiveWeight').Index].Visible          :=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);

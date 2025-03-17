@@ -27,6 +27,7 @@ type
     function gpSelect_Scale_GoodsKindWeighing: TArrayList;
     function gpSelect_Object_Language: TArrayList;
     function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
+    function gpGet_Scale_Goods_gk(var execParams:TParams): Boolean;
     // Scale + ScaleCeh
     function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
     function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
@@ -1246,6 +1247,34 @@ begin
          result.Name := '';
          ShowMessage('Ошибка получения - gpGet_Scale_Goods');
        end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_Goods_gk(var execParams:TParams): Boolean;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_Goods_gk';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inGoodsId', ftInteger, ptInput, execParams.ParamByName('GoodsId').AsInteger);
+       Params.AddParam('inGoodsKindId', ftInteger, ptInput, execParams.ParamByName('GoodsKindId').AsInteger);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       //try
+         Execute;
+         //
+         Result:=DataSet.RecordCount<>0;
+         if not Result then
+         begin
+              ShowMessage('Ошибка.'+#10+#13+'Данные для GoodsId = <'+execParams.ParamByName('GoodsId').AsString+'> + GoodsKindId = <'+execParams.ParamByName('GoodsKindId').AsString+'> не определены.');
+              exit;
+         end;
+       with execParams do
+       begin
+         ParamByName('NameTare0').AsString := DataSet.FieldByName('GoodsKindName').AsString;
+         ParamByName('WeightTare0').AsFloat:= DataSet.FieldByName('WeightTare_0').asFloat;
+       end;
+
     end;
 end;
 {------------------------------------------------------------------------}

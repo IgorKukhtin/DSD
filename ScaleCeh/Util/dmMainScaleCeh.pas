@@ -60,6 +60,8 @@ type
     // Scale + ScaleCeh
     function gpUpdate_Scale_Movement_Status_2(MovementId_parent:Integer): Boolean;
     //
+    function gpGet_Scale_Goods_gk(var execParams:TParams): Boolean;
+    //
     //ScaleCeh
     function gpGet_ScaleCeh_Movement_checkPartion(var ValueStep_obv : Integer; MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
     function gpGet_ScaleCeh_Movement_checkKVK (var ValueStep_kvk : Integer; MovementDescId, DocumentKindId, GoodsId : Integer; PartionGoodsDate : TDateTime) : Boolean;
@@ -104,6 +106,35 @@ begin
     //
     Result:=DMMainScaleCehForm.gpGet_ScaleCeh_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
 end;}
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpGet_Scale_Goods_gk(var execParams:TParams): Boolean;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_Goods_gk';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inGoodsId', ftInteger, ptInput, execParams.ParamByName('GoodsId').AsInteger);
+       Params.AddParam('inGoodsKindId', ftInteger, ptInput, execParams.ParamByName('GoodsKindId').AsInteger);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       //try
+         Execute;
+         //
+         Result:=DataSet.RecordCount<>0;
+         if not Result then
+         begin
+              ShowMessage('Ошибка.'+#10+#13+'Данные для GoodsId = <'+execParams.ParamByName('GoodsId').AsString+'> + GoodsKindId = <'+execParams.ParamByName('GoodsKindId').AsString+'> не определены.');
+              exit;
+         end;
+       with execParams do
+       begin
+         ParamByName('NamePack').AsString := DataSet.FieldByName('GoodsKindName').AsString;
+         ParamByName('WeightPack').AsFloat:= DataSet.FieldByName('WeightTare_0').asFloat;
+         ParamByName('Weight_gd').AsFloat := DataSet.FieldByName('Weight_gd').asFloat;
+       end;
+
+    end;
+end;
 {------------------------------------------------------------------------}
 function TDMMainScaleCehForm.gpGet_ScaleCeh_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
 begin
@@ -952,7 +983,11 @@ begin
            Params.AddParam('inLiveWeight', ftFloat, ptInput, execParamsMI.ParamByName('LiveWeight').AsFloat);
            Params.AddParam('inHeadCount', ftFloat, ptInput, execParamsMI.ParamByName('HeadCount').AsFloat);
            Params.AddParam('inCount', ftFloat, ptInput, execParamsMI.ParamByName('Count').AsFloat);
+           //Количество упаковок
            Params.AddParam('inCountPack', ftFloat, ptInput, execParamsMI.ParamByName('CountPack').AsFloat);
+           //Вес 1-ой упаковки
+           Params.AddParam('inWeightPack', ftFloat, ptInput, execParamsMI.ParamByName('WeightPack').AsFloat);
+           //
            Params.AddParam('inCountSkewer1', ftFloat, ptInput, execParamsMI.ParamByName('CountSkewer1').AsFloat);
            Params.AddParam('inWeightSkewer1', ftFloat, ptInput, SettingMain.WeightSkewer1);
            Params.AddParam('inCountSkewer2', ftFloat, ptInput, execParamsMI.ParamByName('CountSkewer2').AsFloat);

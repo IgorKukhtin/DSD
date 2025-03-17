@@ -1029,13 +1029,26 @@ object MainCehForm: TMainCehForm
           Width = 53
         end
         object CountPack: TcxGridDBColumn
-          Caption = #1050#1086#1083'. '#1087#1072#1082'.'
+          Caption = #1050#1086#1083'. '#1091#1087'.'
           DataBinding.FieldName = 'CountPack'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1087#1072#1082#1086#1074#1086#1082'/'#1087#1072#1082#1077#1090#1086#1074
+          Width = 45
+        end
+        object WeightPack: TcxGridDBColumn
+          Caption = #1042#1077#1089' 1 '#1091#1087'.'
+          DataBinding.FieldName = 'WeightPack'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1077#1089' 1-'#1086#1081' '#1091#1087#1072#1082#1086#1074#1082#1080
+          Options.Editing = False
           Width = 45
         end
         object HeadCount: TcxGridDBColumn
@@ -2384,7 +2397,7 @@ object MainCehForm: TMainCehForm
               ExplicitWidth = 100
             end
             object EditCountPack: TcxCurrencyEdit
-              Left = 5
+              Left = 7
               Top = 12
               Properties.Alignment.Horz = taRightJustify
               Properties.Alignment.Vert = taVCenter

@@ -151,8 +151,11 @@ BEGIN
          END IF;
          
 
-         --  Ячейка хранения 
+         -- Ячейка хранения 
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell(), ioId, inPartionCellId);
+
+         -- Пользователь (создание)
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), ioId, vbUserId);
          
 
          -- можно заполнить 5 параметров

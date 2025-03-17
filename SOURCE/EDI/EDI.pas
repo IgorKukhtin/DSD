@@ -1,4 +1,4 @@
-unit EDI;
+  unit EDI;
 
 {$I ..\dsdVer.inc}
 
@@ -4945,7 +4945,7 @@ begin
 
     FInsertEDIEvents.ParamByName('inMovementId').Value :=AEDIId;
     FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
-      'Отправка расходгой накладной';
+      'Отправка расходной накладной';
     FInsertEDIEvents.Execute;
   end;
 end;
@@ -5039,6 +5039,7 @@ begin
     end;
   end;
 
+  DESADV.OwnerDocument.SaveToFile('test_DESADV_VchasnoEDI.xml');
   DESADV.OwnerDocument.SaveToStream(Stream);
 end;
 
@@ -5123,6 +5124,7 @@ begin
     end;
   end;
 
+  ORDRSP.OwnerDocument.SaveToFile('test_ORDRSP_VchasnoEDI.xml');
   ORDRSP.OwnerDocument.SaveToStream(Stream);
 end;
 
@@ -5243,6 +5245,7 @@ begin
   // Загальна сума з ПДВ
   DESADV_fozz_Amount.InvoiceSummary.TotalGrossAmount := TotalGrossAmount;
 
+  DESADV_fozz_Amount.OwnerDocument.SaveToFile('test_ComDoc_VchasnoEDI.xml');
   DESADV_fozz_Amount.OwnerDocument.SaveToStream(Stream);
 end;
 

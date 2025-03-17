@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UserKey  TVarChar
              , NameExite  TBlob
              , NameFiscal  TBlob
+             , DealId    TVarCha
               )
 AS
 $BODY$
@@ -64,7 +65,7 @@ BEGIN
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
 
-   if vbUserId = 5 and inStartDate   = inEndDate     
+   if vbUserId = 5 and inStartDate   = inEndDate
    then inStartDate := DATE_TRUNC ('MONTH', inStartDate);
    end if;
 
@@ -75,19 +76,19 @@ BEGIN
             INTO vbUserSign, vbUserSeal, vbUserKey
      FROM Object AS Object_User
           LEFT JOIN ObjectString AS ObjectString_UserSign
-                                 ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
+                                 ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign()
                                 AND ObjectString_UserSign.ObjectId = Object_User.Id
           LEFT JOIN ObjectString AS ObjectString_UserSeal
-                                 ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal() 
+                                 ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal()
                                 AND ObjectString_UserSeal.ObjectId = Object_User.Id
-          LEFT JOIN ObjectString AS ObjectString_UserKey 
-                                 ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
+          LEFT JOIN ObjectString AS ObjectString_UserKey
+                                 ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key()
                                 AND ObjectString_UserKey.ObjectId = Object_User.Id
      WHERE Object_User.Id = vbUserId;
 
 
      --
-     RETURN QUERY 
+     RETURN QUERY
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -104,8 +105,8 @@ BEGIN
 
            , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
            , MovementFloat_TotalSumm.ValueData              AS TotalSumm
-          
-           , MovementString_OKPO.ValueData          AS OKPO 
+
+           , MovementString_OKPO.ValueData          AS OKPO
            , MovementString_JuridicalName.ValueData AS JuridicalName
 
            , MovementString_GLNCode.ValueData       AS GLNCode
@@ -169,6 +170,8 @@ BEGIN
            , 'O=ƒÂÊ‡‚Ì‡ Ù≥ÒÍ‡Î¸Ì‡ ÒÎÛÊ·‡ ”Í‡øÌË;CN=ƒÂÊ‡‚Ì‡ Ù≥ÒÍ‡Î¸Ì‡ ÒÎÛÊ·‡ ”Í‡øÌË.  Œ“–»Ã¿ÕŒ;Serial=2122385;C=UA;L= Ëø‚'
               :: TBlob AS NameFiscal
 
+           , MovementString_DealId.ValueData AS DealId
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -231,7 +234,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberTax
                                      ON MovementString_InvNumberTax.MovementId =  Movement.Id
                                     AND MovementString_InvNumberTax.DescId = zc_MovementString_InvNumberTax()
-                                   
+
             LEFT JOIN MovementString AS MovementString_MovementDesc
                                      ON MovementString_MovementDesc.MovementId =  Movement.Id
                                     AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
@@ -241,7 +244,7 @@ BEGIN
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
-           
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
@@ -263,10 +266,10 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = MovementLinkObject_GoodsProperty.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
-                                           ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
+                                           ON MovementLinkMovement_Sale.MovementChildId = Movement.Id
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
-                                           ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id 
+                                           ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id
                                           AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId)
                                                -- AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
@@ -292,7 +295,7 @@ BEGIN
             LEFT JOIN Object AS Object_To_Sale ON Object_To_Sale.Id = MovementLinkObject_To_Sale.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
-                                           ON MovementLinkMovement_ChildEDI.MovementChildId = Movement.Id 
+                                           ON MovementLinkMovement_ChildEDI.MovementChildId = Movement.Id
                                           AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TaxCorrective_Tax
@@ -307,7 +310,7 @@ BEGIN
                                     AND MovementString_InvNumberPartner_TaxCorrective.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
-                                           ON MovementLinkMovement_Tax.MovementChildId = Movement.Id 
+                                           ON MovementLinkMovement_Tax.MovementChildId = Movement.Id
                                           AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
             LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = COALESCE (MovementLinkMovement_Tax.MovementId, MovementLinkMovement_TaxCorrective_Tax.MovementChildId)
                                               AND Movement_Tax.StatusId = zc_Enum_Status_Complete()
@@ -316,7 +319,7 @@ BEGIN
                                     AND MovementString_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                           ON MovementLinkMovement_Order.MovementChildId = Movement.Id 
+                                           ON MovementLinkMovement_Order.MovementChildId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementId
                                               --AND Movement_Order.StatusId = zc_Enum_Status_Complete()
@@ -324,7 +327,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
                                  ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract_InvNumber.ContractId
                                 AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
-            LEFT JOIN Object AS Object_PersonalSigning ON Object_PersonalSigning.Id = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+            LEFT JOIN Object AS Object_PersonalSigning ON Object_PersonalSigning.Id = ObjectLink_Contract_PersonalSigning.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
                                          ON MovementLinkObject_Branch.MovementId = Movement_Tax.Id
@@ -334,11 +337,15 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                                  ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
                                 AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
-            LEFT JOIN Object AS Object_PersonalBookkeeper ON Object_PersonalBookkeeper.Id = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+            LEFT JOIN Object AS Object_PersonalBookkeeper ON Object_PersonalBookkeeper.Id = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
 
             LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
                                    ON ObjectString_PersonalBookkeeper.ObjectId = Object_Branch.Id
-                                  AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()  
+                                  AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()
+
+            LEFT JOIN MovementString AS MovementString_DealId
+                                     ON MovementString_DealId.MovementId = Movement.Id
+                                    AND MovementString_DealId.DescId     = zc_MovementString_DealId()
 
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -353,13 +360,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_EDI (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 16.02.15                         * 
+ 16.02.15                         *
  19.10.14                                        * add Contract... AND Unit...
  09.10.14                                        * rem --***
  20.07.14                                        * ALL
@@ -369,4 +374,3 @@ ALTER FUNCTION gpSelect_Movement_EDI (TDateTime, TDateTime, TVarChar) OWNER TO p
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Movement_EDI (inStartDate:= '23.11.2016', inEndDate:= '23.11.2016', inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Movement_EDI (inStartDate:= CURRENT_DATE - INTERVAL '7 DAY', inEndDate:= CURRENT_DATE, inSession:= '412575')
-

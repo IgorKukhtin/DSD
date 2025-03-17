@@ -30,7 +30,6 @@ type
     EditTare1: TcxCurrencyEdit;
     infoPanelWeightTare1: TPanel;
     LabelWeightTare1: TLabel;
-    PanelWeightTare1: TPanel;
     infoPanelTare0: TPanel;
     PanelTare0: TPanel;
     LabelTare0: TLabel;
@@ -44,7 +43,6 @@ type
     EditTare2: TcxCurrencyEdit;
     infoPanelWeightTare2: TPanel;
     LabelWeightTare2: TLabel;
-    PanelWeightTare2: TPanel;
     infoPanelTare5: TPanel;
     PanelTare5: TPanel;
     LabelTare5: TLabel;
@@ -119,6 +117,8 @@ type
     Panel2: TPanel;
     Label3: TLabel;
     PanelCounttTare_total: TPanel;
+    EditWeightTare1: TcxCurrencyEdit;
+    EditWeightTare2: TcxCurrencyEdit;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure EditTare1KeyDown(Sender: TObject; var Key: Word;
@@ -148,6 +148,12 @@ type
     procedure EditTare1PropertiesChange(Sender: TObject);
     procedure EditPartionCellPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure EditWeightTare2KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditWeightTare1KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditTare0KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     PartionCellId : Integer;
     MeasureId : Integer;
@@ -161,6 +167,10 @@ type
     CountTare8: Integer;
     CountTare9: Integer;
     CountTare10: Integer;
+    CountTare_0: Integer;
+    WeightTare_0: Double;
+    WeightTare1 : Double;
+    WeightTare2 : Double;
     RealWeight_Get : Double;
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
@@ -171,14 +181,28 @@ var
    DialogTareForm: TDialogTareForm;
 
 implementation
-uses UtilScale, DMMainScale, GuidePartionCell;
+uses UtilScale, GuidePartionCell, dmMainScaleCeh;
 {$R *.dfm}
 {------------------------------------------------------------------------------}
 function TDialogTareForm.Execute(var execParamsMovement:TParams;var execParamsMI:TParams): boolean;
 begin
      //
+     if not DMMainScaleCehForm.gpGet_Scale_Goods_gk(execParamsMI) then exit;
+
+     //Количество упаковок - Флоупак +  Нар.180 + Нар. 200
+     EditTare0.Text:=FloatToStr(execParamsMI.ParamByName('CountPack').AsFloat);
+     // Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
+     WeightTare_0:= execParamsMI.ParamByName('WeightPack').AsFloat;
+     // Название 1-ой упаковки - Флоупак +  Нар.180 + Нар
+     if execParamsMI.ParamByName('NamePack').AsString <> ''
+     then LabelTare0.Caption:= 'Кол-во ' + execParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(execParamsMI.ParamByName('WeightPack').AsFloat)+'кг.)'
+     else LabelTare0.Caption:= 'Нет Кол-во Флоупак ';
+
      EditTare1.Text:=FloatToStr(execParamsMI.ParamByName('CountTare1').AsFloat);
+     EditWeightTare1.Text:=FloatToStr(SettingMain.WeightTare1);
      EditTare2.Text:=FloatToStr(execParamsMI.ParamByName('CountTare2').AsFloat);
+     EditWeightTare2.Text:=FloatToStr(SettingMain.WeightTare2);
+
      EditTare3.Text:=FloatToStr(execParamsMI.ParamByName('CountTare3').AsFloat);
      EditTare4.Text:=FloatToStr(execParamsMI.ParamByName('CountTare4').AsFloat);
      EditTare5.Text:=FloatToStr(execParamsMI.ParamByName('CountTare5').AsFloat);
@@ -206,6 +230,11 @@ begin
           execParamsMI.ParamByName('PartionCellId').AsInteger:= PartionCellId;
           execParamsMI.ParamByName('PartionCellName').AsString:= EditPartionCell.Text;
           //
+          if CountTare1 > 0 then SettingMain.WeightTare1:= WeightTare1 else SettingMain.WeightTare1:= 0;
+          if CountTare2 > 0 then SettingMain.WeightTare2:= WeightTare2 else SettingMain.WeightTare2:= 0;
+
+          execParamsMI.ParamByName('CountPack').AsFloat:=CountTare_0;
+
           execParamsMI.ParamByName('CountTare1').AsFloat:=CountTare1;
           execParamsMI.ParamByName('CountTare2').AsFloat:=CountTare2;
           execParamsMI.ParamByName('CountTare3').AsFloat:=CountTare3;
@@ -250,10 +279,19 @@ end;
 {------------------------------------------------------------------------------}
 procedure TDialogTareForm.EditTare1Exit(Sender: TObject);
 begin
+     if (CountTare_0 < 0)
+     then ActiveControl:=EditTare0;
+
      if (CountTare1 < 0)
      then ActiveControl:=EditTare1;
+     if (WeightTare1 < 0)
+     then ActiveControl:=EditWeightTare1;
+
      if (CountTare2 < 0)
      then ActiveControl:=EditTare2;
+     if (WeightTare2 < 0)
+     then ActiveControl:=EditWeightTare2;
+
      if (CountTare3 < 0)
      then ActiveControl:=EditTare3;
      if (CountTare4 < 0)
@@ -272,27 +310,32 @@ begin
      then ActiveControl:=EditTare10;
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogTareForm.EditTare1KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditTare2;
-end;
-{------------------------------------------------------------------------------}
 procedure TDialogTareForm.EditTare1PropertiesChange(Sender: TObject);
 begin
+     //1
+     try CountTare_0:=StrToInt(EditTare0.Text);
+     except
+           CountTare_0:=0;
+     end;
+     PanelWeightTare0.Caption:=FormatFloat(fmtWeight, CountTare_0 * WeightTare_0);
      //1
      try CountTare1:=StrToInt(EditTare1.Text);
      except
            CountTare1:=0;
      end;
-     PanelWeightTare1.Caption:=FormatFloat(fmtWeight, CountTare1 * SettingMain.WeightTare1);
+     try WeightTare1:=StrToFloat(EditWeightTare1.Text);
+     except
+           WeightTare1:=0;
+     end;
      //2
      try CountTare2:=StrToInt(EditTare2.Text);
      except
            CountTare2:=0;
      end;
-     PanelWeightTare2.Caption:=FormatFloat(fmtWeight, CountTare2 * SettingMain.WeightTare2);
+     try WeightTare2:=StrToFloat(EditWeightTare2.Text);
+     except
+           WeightTare2:=0;
+     end;
      //3
      try CountTare3:=StrToInt(EditTare3.Text);
      except
@@ -345,8 +388,9 @@ begin
      //
      PanelCounttTare_total.Caption:= FloatToStr(CountTare3 + CountTare4 + CountTare5 + CountTare6 + CountTare7 + CountTare8 + CountTare9 + CountTare10);
      //Total
-     PanelWeightTare_total.Caption:= FormatFloat(fmtWeight, CountTare1 * SettingMain.WeightTare1
-                                                          + CountTare2 * SettingMain.WeightTare2
+     PanelWeightTare_total.Caption:= FormatFloat(fmtWeight, CountTare_0 * WeightTare_0
+                                                          + CountTare1 * WeightTare1
+                                                          + CountTare2 * WeightTare2
                                                           + CountTare3 * SettingMain.WeightTare3
                                                           + CountTare4 * SettingMain.WeightTare4
                                                           + CountTare5 * SettingMain.WeightTare5
@@ -361,8 +405,9 @@ begin
      PanelWeightGoods_total.Caption:= FormatFloat(fmtWeight, 0)
      else
      PanelWeightGoods_total.Caption:= FormatFloat(fmtWeight, RealWeight_Get
-                                                           - CountTare1 * SettingMain.WeightTare1
-                                                           - CountTare2 * SettingMain.WeightTare2
+                                                           - CountTare_0 * WeightTare_0
+                                                           - CountTare1 * WeightTare1
+                                                           - CountTare2 * WeightTare2
                                                            - CountTare3 * SettingMain.WeightTare3
                                                            - CountTare4 * SettingMain.WeightTare4
                                                            - CountTare5 * SettingMain.WeightTare5
@@ -374,11 +419,32 @@ begin
                                                             );
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogTareForm.EditTare2KeyDown(Sender: TObject; var Key: Word;
+procedure TDialogTareForm.EditWeightTare1KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then ActiveControl:=EditTare2;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogTareForm.EditWeightTare2KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
     if Key=13
     then ActiveControl:=EditTare3;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogTareForm.EditTare1KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then ActiveControl:=EditWeightTare1;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogTareForm.EditTare2KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then ActiveControl:=EditWeightTare2;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogTareForm.EditTare3KeyDown(Sender: TObject; var Key: Word;
@@ -434,6 +500,13 @@ procedure TDialogTareForm.EditTare10KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
     if Key=13
+    then ActiveControl:=EditTare0;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogTareForm.EditTare0KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
     then ActiveControl:=EditPartionCell;
 end;
 {------------------------------------------------------------------------------}
@@ -453,8 +526,6 @@ end;
 procedure TDialogTareForm.FormCreate(Sender: TObject);
 begin
   inherited;
-  //
-  infoPanelTare0.Visible:= FALSE;
   //
   with spSelect do
   begin
