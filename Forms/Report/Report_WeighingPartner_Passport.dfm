@@ -1477,8 +1477,8 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       item
         Column = CountTare2
       end>
-    Left = 320
-    Top = 232
+    Left = 248
+    Top = 248
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 56
@@ -1674,8 +1674,8 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 408
-    Top = 280
+    Left = 248
+    Top = 304
   end
   object spGet_CheckingPSW: TdsdStoredProc
     StoredProcName = 'gpGet_MI_WeightPartner_CheckPSW'
@@ -1750,8 +1750,8 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 488
-    Top = 352
+    Left = 384
+    Top = 248
   end
   object spGetBoxNamePSW: TdsdStoredProc
     StoredProcName = 'gpGet_MI_WeightPartner_BoxNamePSW'
@@ -1801,7 +1801,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 576
-    Top = 368
+    Left = 384
+    Top = 304
   end
 end

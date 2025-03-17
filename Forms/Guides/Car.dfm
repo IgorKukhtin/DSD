@@ -806,6 +806,7 @@ object CarForm: TCarForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 168
     Top = 216
@@ -824,8 +825,8 @@ object CarForm: TCarForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
-    Top = 208
+    Left = 312
+    Top = 232
   end
   object spUpdate_Car_size: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Car_size'
