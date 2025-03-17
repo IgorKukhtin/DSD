@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , WeightTare4  TFloat
              , WeightTare5  TFloat
              , WeightTare6  TFloat
+             , CountPack TFloat, WeightPack TFloat
              , Count TFloat, Count_mi TFloat, HeadCount TFloat, HeadCount_mi TFloat, BoxCount TFloat, BoxCount_mi TFloat
              , BoxNumber TFloat, LevelNumber TFloat
              , ChangePercentAmount TFloat, AmountChangePercent TFloat, ChangePercent TFloat
@@ -133,12 +134,15 @@ end if;*/
                   , COALESCE (MIFloat_CountTare6.ValueData, 0)                                             AS CountTare6
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MIFloat_WeightTare6.ValueData, 0) ELSE 0 END AS WeightTare6
 
-                  , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
+                  , CASE WHEN COALESCE (MIFloat_WeightPack.ValueData,0) > 0 THEN 0 ELSE COALESCE (MIFloat_CountPack.ValueData, 0) END AS CountPack
                   , 0 AS CountPack_mi
                   , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
                   , 0 AS HeadCount_mi
                   , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
                   , 0 AS BoxCount_mi
+
+                  , CASE WHEN COALESCE (MIFloat_WeightPack.ValueData,0) > 0 THEN MIFloat_CountPack.ValueData ELSE 0 END  AS CountPack_2
+                  , MIFloat_WeightPack.ValueData  ::TFloat AS WeightPack
 
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MIFloat_BoxNumber.ValueData, 0)   ELSE 0 END AS BoxNumber
                   , COALESCE (MIFloat_LevelNumber.ValueData, 0) AS LevelNumber
@@ -299,6 +303,9 @@ end if;*/
                   LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                               ON MIFloat_CountPack.MovementItemId = MovementItem.Id
                                              AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+                  LEFT JOIN MovementItemFloat AS MIFloat_WeightPack
+                                              ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
+                                             AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -376,11 +383,14 @@ end if;*/
                   , 0 AS WeightTare6
 
                   , 0                                         AS CountPack
-                  , COALESCE (MIFloat_CountPack.ValueData, 0) AS CountPack_mi
+                  , CASE WHEN COALESCE (MIFloat_WeightPack.ValueData,0) > 0 THEN 0 ELSE COALESCE (MIFloat_CountPack.ValueData, 0) END AS CountPack_mi
                   , 0                                         AS HeadCount
                   , COALESCE (MIFloat_HeadCount.ValueData, 0) AS HeadCount_mi
                   , 0                                         AS BoxCount
                   , COALESCE (MIFloat_BoxCount.ValueData, 0)  AS BoxCount_mi
+
+                  , 0 AS CountPack_2
+                  , 0 AS WeightPack
 
                   , 0 AS BoxNumber
                   , 0 AS LevelNumber
@@ -481,6 +491,9 @@ end if;*/
                   LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                               ON MIFloat_CountPack.MovementItemId = MovementItem.Id
                                              AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+                  LEFT JOIN MovementItemFloat AS MIFloat_WeightPack
+                                              ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
+                                             AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -560,7 +573,10 @@ end if;*/
            , tmpMI.WeightTare3  :: TFloat   AS WeightTare3
            , tmpMI.WeightTare4  :: TFloat   AS WeightTare4
            , tmpMI.WeightTare5  :: TFloat   AS WeightTare5
-           , tmpMI.WeightTare6  :: TFloat   AS WeightTare6
+           , tmpMI.WeightTare6  :: TFloat   AS WeightTare6 
+           
+           , tmpMI.CountPack_2  :: TFloat   AS CountPack
+           , tmpMI.WeightPack   :: TFloat   AS WeightPack
 
            , CASE WHEN tmpMI.CountPack = 0    THEN NULL ELSE tmpMI.CountPack    END :: TFloat AS Count
            , CASE WHEN tmpMI.CountPack_mi = 0 THEN NULL ELSE tmpMI.CountPack_mi END :: TFloat AS Count_mi
@@ -651,6 +667,9 @@ end if;*/
                   , SUM (tmpMI.HeadCount_mi)   AS HeadCount_mi
                   , SUM (tmpMI.BoxCount)       AS BoxCount
                   , SUM (tmpMI.BoxCount_mi)    AS BoxCount_mi
+                  
+                  , SUM (tmpMI.CountPack_2)    AS CountPack_2
+                  , SUM (tmpMI.WeightPack)     AS WeightPack
 
                   , tmpMI.BoxNumber            AS BoxNumber
                   , MAX (tmpMI.LevelNumber)    AS LevelNumber -- MAX
