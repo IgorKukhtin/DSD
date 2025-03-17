@@ -41,6 +41,17 @@ RETURNS TABLE (MovementId Integer, ItemName TVarChar, ItemName_inf TVarChar
              , WeightTare9   TFloat
              , WeightTare10  TFloat
 
+             , BoxWeight1   TFloat
+             , BoxWeight2   TFloat
+             , BoxWeight3   TFloat
+             , BoxWeight4   TFloat
+             , BoxWeight5   TFloat
+             , BoxWeight6   TFloat
+             , BoxWeight7   TFloat
+             , BoxWeight8   TFloat
+             , BoxWeight9   TFloat
+             , BoxWeight10  TFloat
+
              , BoxCountTotal  TFloat
              , BoxWeightTotal TFloat
              
@@ -513,6 +524,9 @@ BEGIN
                , tmpData.WeightTare8    ::TFloat
                , tmpData.WeightTare9    ::TFloat
                , tmpData.WeightTare10   ::TFloat
+
+               , tmpData.BoxWeight1 ::TFloat, tmpData.BoxWeight2 ::TFloat, tmpData.BoxWeight3 ::TFloat, tmpData.BoxWeight4 ::TFloat, tmpData.BoxWeight5 ::TFloat
+               , tmpData.BoxWeight6 ::TFloat, tmpData.BoxWeight7 ::TFloat, tmpData.BoxWeight8 ::TFloat, tmpData.BoxWeight9 ::TFloat, tmpData.BoxWeight10 ::TFloat
 
                , (-- COALESCE (tmpData.CountTare1,0)
                   --+ COALESCE (tmpData.CountTare2,0)
