@@ -217,9 +217,9 @@ BEGIN
     IF inReestrKindId = zc_Enum_ReestrKind_inBuh()
     THEN 
        -- сохранили <когда сформирована виза>
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Buh(), vbId_mi, CURRENT_TIMESTAMP);
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_inBuh(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу>
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), vbId_mi, vbMemberId_user);
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_inBuh(), vbId_mi, vbMemberId_user);
     END IF;
 
     -- <Снабжение (в работе)>
