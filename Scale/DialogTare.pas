@@ -225,6 +225,14 @@ begin
           then LabelTare0.Caption:= 'Нет Кол-во Флоупак ('+FloatToStr(execParamsMI.ParamByName('Weight_gd').AsFloat)+' кг.) + ('+FloatToStr(execParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
           else LabelTare0.Caption:= 'Нет Кол-во Флоупак';
 
+
+     // на старте этот поддон
+     if (execParamsMI.ParamByName('CountTare1').AsFloat = 0)
+    and (execParamsMI.ParamByName('CountTare1').AsFloat = 0)
+     then begin execParamsMI.ParamByName('CountTare1').AsFloat:= 1; ActiveControl:= EditWeightTare1; end
+     else ActiveControl:= EditTare1;
+
+
      EditTare1.Text:=FloatToStr(execParamsMI.ParamByName('CountTare1').AsFloat);
      EditWeightTare1.Text:=FloatToStr(SettingMain.WeightTare1);
      EditTare2.Text:=FloatToStr(execParamsMI.ParamByName('CountTare2').AsFloat);
@@ -248,7 +256,6 @@ begin
      RealWeight_Get:= execParamsMI.ParamByName('RealWeight_Get').AsFloat;
      MeasureId:= execParamsMI.ParamByName('MeasureId').AsInteger;
      //
-     ActiveControl:= EditTare1;
      EditTare1PropertiesChange(EditTare1);
      //
      result:=(ShowModal=mrOk);

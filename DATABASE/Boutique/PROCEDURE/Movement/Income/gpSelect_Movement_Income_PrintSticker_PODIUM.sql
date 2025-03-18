@@ -201,7 +201,7 @@ BEGIN
                                         tmpGoodsPrint.UnitId
                                       , tmpGoodsPrint.PartionId
                                       , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
-                                      , OL_currency.ChildObjectId                        AS CurrencyId
+                                      , COALESCE (ObjectHistoryLink_Currency.ObjectId, OL_currency.ChildObjectId) AS CurrencyId
                                  FROM tmpGoodsPrint
                                       LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList
                                                            ON ObjectLink_Unit_PriceList.ObjectId = tmpGoodsPrint.UnitId
@@ -228,6 +228,9 @@ BEGIN
                                       LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                                    ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                                   AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                      LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                                                  ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                 AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
                                 )
               -- первая цена из прайса
               , tmpPriceList_fp AS (SELECT DISTINCT
@@ -239,7 +242,7 @@ BEGIN
                                                  tmpGoodsPrint.UnitId
                                                , tmpGoodsPrint.PartionId
                                                , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
-                                               , OL_currency.ChildObjectId                        AS CurrencyId
+                                               , COALESCE (ObjectHistoryLink_Currency.ObjectId, OL_currency.ChildObjectId) AS CurrencyId
                                                , ObjectHistory_PriceListItem.StartDate
                                                , MIN (ObjectHistory_PriceListItem.StartDate) OVER (PARTITION BY tmpGoodsPrint.UnitId, tmpGoodsPrint.PartionId) AS FirstDate
                                           FROM tmpGoodsPrint
@@ -265,6 +268,11 @@ BEGIN
                                                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                                             ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                                            AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+
+                                               LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                                                           ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                          AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+
                                          ) AS tmp
                                     WHERE tmp.StartDate = tmp.FirstDate
                                    )

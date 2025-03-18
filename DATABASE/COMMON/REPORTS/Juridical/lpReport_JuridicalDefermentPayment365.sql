@@ -45,7 +45,7 @@ $BODY$
    DECLARE vbObjectId_Constraint_JuridicalGroup Integer;
 BEGIN
      -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
+     PERFORM lpCheckPeriodClose_auditor (inOperDate, inOperDate, NULL, NULL, NULL, inUserId);
 
 /*
 1-30 день

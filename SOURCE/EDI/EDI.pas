@@ -1,4 +1,4 @@
-  unit EDI;
+unit EDI;
 
 {$I ..\dsdVer.inc}
 
