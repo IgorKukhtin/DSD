@@ -68,6 +68,7 @@ BEGIN
                             , Movement.StatusId
                             , Movement.DescId
                             , MovementDesc.ItemName AS ItemName
+                            , NULL       :: Integer AS UserId
                         FROM Movement
                              INNER JOIN MovementFloat AS MovementFloat_BranchCode
                                                       ON MovementFloat_BranchCode.MovementId = Movement.Id
@@ -91,6 +92,7 @@ BEGIN
                             , Movement.StatusId
                             , Movement.DescId
                             , MovementDesc.ItemName AS ItemName
+                            , MLO_User.ObjectId     AS UserId
                         FROM Movement
                              -- Вид документа - Перемещение
                              INNER JOIN MovementFloat AS MovementFloat_MovementDesc
@@ -111,6 +113,10 @@ BEGIN
                                                            AND MIB_isAuto.ValueData      = TRUE
 
                              LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData :: Integer
+
+                             LEFT JOIN MovementLinkObject AS MLO_User
+                                                          ON MLO_User.MovementId = Movement.Id
+                                                         AND MLO_User.DescId     = zc_MovementLinkObject_User()
 
                        WHERE Movement.DescId IN (zc_Movement_WeighingProduction())
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -172,6 +178,13 @@ BEGIN
                      INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                             AND MovementItem.DescId     = zc_MI_Master()
                                             AND MovementItem.isErased   = FALSE
+                     -- с признаком Автоматически
+                     LEFT JOIN MovementItemBoolean AS MIB_isAuto
+                                                   ON MIB_isAuto.MovementItemId = MovementItem.Id
+                                                  AND MIB_isAuto.DescId         = zc_MIBoolean_isAuto()
+                                                   
+               WHERE tmpMovement.DescId   = zc_Movement_WeighingPartner()
+                  OR MIB_isAuto.ValueData = TRUE
               )
 
    , tmpMIFloat AS (SELECT *
@@ -293,7 +306,7 @@ BEGIN
       
                       , COALESCE (MIDate_PartionGoods.ValueData, MovementItem.OperDate) :: TDateTime AS PartionGoodsDate
                       , MIDate_Insert.ValueData  AS InsertDate
-                      , MILO_Insert.ObjectId     AS InsertId
+                      , COALESCE (MovementItem.UserId, MILO_Insert.ObjectId) AS InsertId
                       , MIDate_Update.ValueData  AS UpdateDate
 
                  FROM tmpMI AS MovementItem
@@ -342,7 +355,7 @@ BEGIN
 
                      LEFT JOIN tmpMILO AS MILO_Insert
                                        ON MILO_Insert.MovementItemId = MovementItem.Id
-                                      AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                                      AND MILO_Insert.DescId         = zc_MILinkObject_Insert()
 
                      LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -366,10 +379,8 @@ BEGIN
                      LEFT JOIN tmpMILO AS MILinkObject_Box5
                                        ON MILinkObject_Box5.MovementItemId = MovementItem.Id
                                       AND MILinkObject_Box5.DescId = zc_MILinkObject_Box5()  
-                   )
-
-
-          --РЕЗУЛЬТАТ
+                  )
+          -- РЕЗУЛЬТАТ
           SELECT tmpData.MovementId
                , tmpData.ItemName
                , MovementDesc.ItemName AS ItemName_inf

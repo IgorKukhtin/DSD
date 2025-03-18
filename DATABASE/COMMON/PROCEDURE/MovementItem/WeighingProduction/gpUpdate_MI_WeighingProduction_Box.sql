@@ -87,7 +87,17 @@ BEGIN
                              , ROW_NUMBER() OVER (ORDER BY tmpParamAll.npp) AS Ord 
                         FROM tmpParamAll
                         WHERE tmpParamAll.CountTare <> 0 AND COALESCE (tmpParamAll.BoxId,0) <> 0
-                        )
+                          -- только поддоны
+                          AND tmpParamAll.npp <= 2
+
+                       UNION ALL
+                        SELECT tmpParamAll.*
+                             , 2 + ROW_NUMBER() OVER (ORDER BY tmpParamAll.npp) AS Ord
+                        FROM tmpParamAll
+                        WHERE tmpParamAll.CountTare <> 0 AND tmpParamAll.BoxId <> 0
+                          -- без поддонов
+                          AND tmpParamAll.npp > 2
+                      )
          --- всегда 5 параметров если вдруг нужно что-то обнулить 
          , tmp AS (SELECT 0 AS BoxId, 0 AS CountTare, 1 AS npp 
          UNION ALL SELECT 0 AS BoxId, 0 AS CountTare, 2 AS npp

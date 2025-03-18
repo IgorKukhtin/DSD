@@ -49,25 +49,25 @@ BEGIN
                      , MAX (tmp.BoxId_10) AS BoxId_10, MAX (tmp.BoxName_10) AS BoxName_10
                 FROM (
                       SELECT CASE WHEN spSelect.NPP = 1 THEN spSelect.Id ELSE 0 END    AS BoxId_1
-                           , CASE WHEN spSelect.NPP = 1 THEN (spSelect.Name|| CASE WHEN COALESCE (spSelect.BoxWeight,0)<>0 THEN ' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')' ELSE '' END) ELSE '' END AS BoxName_1
+                           , CASE WHEN spSelect.NPP = 1 THEN (spSelect.Name|| CASE WHEN COALESCE (spSelect.BoxWeight,0)<>0 THEN ' ('||zfConvert_FloatToString (spSelect.BoxWeight)||' Í„.)' ELSE '' END) ELSE '' END AS BoxName_1
                            , CASE WHEN spSelect.NPP = 2 THEN spSelect.Id ELSE 0 END    AS BoxId_2
-                           , CASE WHEN spSelect.NPP = 2 THEN (spSelect.Name|| CASE WHEN COALESCE (spSelect.BoxWeight,0)<>0 THEN ' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')' ELSE '' END) ELSE '' END AS BoxName_2
+                           , CASE WHEN spSelect.NPP = 2 THEN (spSelect.Name|| CASE WHEN COALESCE (spSelect.BoxWeight,0)<>0 THEN ' ('||zfConvert_FloatToString (spSelect.BoxWeight)||' Í„.)' ELSE '' END) ELSE '' END AS BoxName_2
                            , CASE WHEN spSelect.NPP = 3 THEN spSelect.Id ELSE 0 END    AS BoxId_3
-                           , CASE WHEN spSelect.NPP = 3 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_3
+                           , CASE WHEN spSelect.NPP = 3 THEN (spSelect.Name||' ('||zfConvert_FloatToString (spSelect.BoxWeight)||' Í„.)') ELSE '' END AS BoxName_3
                            , CASE WHEN spSelect.NPP = 4 THEN spSelect.Id ELSE 0 END    AS BoxId_4
-                           , CASE WHEN spSelect.NPP = 4 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_4
+                           , CASE WHEN spSelect.NPP = 4 THEN (spSelect.Name||' ('||zfConvert_FloatToString (spSelect.BoxWeight)||' Í„.)') ELSE '' END AS BoxName_4
                            , CASE WHEN spSelect.NPP = 5 THEN spSelect.Id ELSE 0 END    AS BoxId_5
-                           , CASE WHEN spSelect.NPP = 5 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_5
+                           , CASE WHEN spSelect.NPP = 5 THEN (spSelect.Name||' ('||zfConvert_FloatToString (spSelect.BoxWeight)||' Í„.)') ELSE '' END AS BoxName_5
                            , CASE WHEN spSelect.NPP = 6 THEN spSelect.Id ELSE 0 END    AS BoxId_6
-                           , CASE WHEN spSelect.NPP = 6 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_6
+                           , CASE WHEN spSelect.NPP = 6 THEN (spSelect.Name||' ('||zfConvert_FloatToString (spSelect.BoxWeight)||' Í„.)') ELSE '' END AS BoxName_6
                            , CASE WHEN spSelect.NPP = 7 THEN spSelect.Id ELSE 0 END    AS BoxId_7
-                           , CASE WHEN spSelect.NPP = 7 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_7
+                           , CASE WHEN spSelect.NPP = 7 THEN (spSelect.Name||' ('||zfConvert_FloatToString (spSelect.BoxWeight)||' Í„.)') ELSE '' END AS BoxName_7
                            , CASE WHEN spSelect.NPP = 8 THEN spSelect.Id ELSE 0 END    AS BoxId_8
-                           , CASE WHEN spSelect.NPP = 8 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_8
+                           , CASE WHEN spSelect.NPP = 8 THEN (spSelect.Name||' ('||zfConvert_FloatToString (spSelect.BoxWeight)||' Í„.)') ELSE '' END AS BoxName_8
                            , CASE WHEN spSelect.NPP = 9 THEN spSelect.Id ELSE 0 END    AS BoxId_9
-                           , CASE WHEN spSelect.NPP = 9 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_9
+                           , CASE WHEN spSelect.NPP = 9 THEN (spSelect.Name||' ('||zfConvert_FloatToString (spSelect.BoxWeight)||' Í„.)') ELSE '' END AS BoxName_9
                            , CASE WHEN spSelect.NPP = 10 THEN spSelect.Id ELSE 0 END    AS BoxId_10
-                           , CASE WHEN spSelect.NPP = 10 THEN (spSelect.Name||' ('||CAST (spSelect.BoxWeight AS NUMERIC (16,2))||')') ELSE '' END AS BoxName_10
+                           , CASE WHEN spSelect.NPP = 10 THEN (spSelect.Name||' ('||zfConvert_FloatToString (spSelect.BoxWeight)||' Í„.)') ELSE '' END AS BoxName_10
 
                       FROM gpSelect_Object_Box (inSession) AS spSelect
                       ) AS tmp

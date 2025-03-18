@@ -17,6 +17,7 @@ RETURNS TABLE (GoodsId        Integer
              , MeasureId      Integer
              , MeasureName    TVarChar
              , WeightTare_0   TFloat
+             , WeightTare_gd  TFloat
              , Weight_gd      TFloat
               )
 AS
@@ -79,6 +80,7 @@ BEGIN
                    ELSE 0
               END :: TFloat AS WeightTare_0
 
+            , tmpGoodsByGoodsKind.WeightPackageSticker :: TFloat AS WeightTare_gd
             , ObjectFloat_Weight.ValueData AS Weight_gd
 
        FROM tmpGoodsByGoodsKind

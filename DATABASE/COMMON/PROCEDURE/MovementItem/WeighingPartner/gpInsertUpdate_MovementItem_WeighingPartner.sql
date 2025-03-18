@@ -124,10 +124,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeight(), ioId, inRealWeight);
      -- сохранили свойство <% скидки для кол-ва>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentAmount(), ioId, inChangePercentAmount);
-     -- сохранили свойство <Количество тары>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare(), ioId, inCountTare);
-     -- сохранили свойство <Вес тары>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare(), ioId, inWeightTare);
      -- сохранили свойство <Количество упаковок>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountPack(), ioId, inCountPack);
      -- сохранили свойство <Количество голов>
@@ -174,6 +170,11 @@ BEGIN
          END IF;
 
 
+         -- сохранили свойство <Количество упаковок>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountPack(), ioId, inCountTare);
+         -- сохранили свойство <Вес 1-ой упаковки>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightPack(), ioId, inWeightTare);
+
          PERFORM CASE WHEN tmp.Ord = 1 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box1(), ioId, tmp.BoxId)
                       WHEN tmp.Ord = 2 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box2(), ioId, tmp.BoxId)
                       WHEN tmp.Ord = 3 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box3(), ioId, tmp.BoxId)
@@ -209,6 +210,16 @@ BEGIN
                                          , ROW_NUMBER() OVER (ORDER BY tmpParamAll.npp) AS Ord
                                     FROM tmpParamAll
                                     WHERE tmpParamAll.CountTare <> 0 AND tmpParamAll.BoxId <> 0
+                                      -- только поддоны
+                                      AND tmpParamAll.npp <= 2
+
+                                  UNION ALL
+                                    SELECT tmpParamAll.*
+                                         , 2 + ROW_NUMBER() OVER (ORDER BY tmpParamAll.npp) AS Ord
+                                    FROM tmpParamAll
+                                    WHERE tmpParamAll.CountTare <> 0 AND tmpParamAll.BoxId <> 0
+                                      -- без поддонов
+                                      AND tmpParamAll.npp > 2
                                    )
                             -- всегда 5 параметров если вдруг нужно что-то обнулить
                           , tmp AS (SELECT 1 AS Ord
@@ -226,6 +237,11 @@ BEGIN
               ) AS tmp;
 
      ELSE
+
+         -- сохранили свойство <Количество тары>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare(), ioId, inCountTare);
+         -- сохранили свойство <Вес тары>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare(), ioId, inWeightTare);
 
          -- сохранили свойство <Количество ящ. вида1>
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare1(), ioId, inCountTare1);

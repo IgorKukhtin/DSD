@@ -18,7 +18,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , isAmountPartnerSecond_in  Boolean
               -- Цена с НДС (да/нет) - для цена поставщика
              , isPriceWithVAT_in  Boolean
-             --  Дата для цены возврат поставщику 
+             --  Дата для цены возврат поставщику
              , OperDate_ReturnOut  TDateTime
 
                --
@@ -71,33 +71,36 @@ BEGIN
                              -- Количество у поставщика для Сырья (из накладной)
                            , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) AS AmountPartner_in
                            , COALESCE (MIFloat_SummPartner.ValueData, 0)         AS SummPartner_in
-                           
+
 
                              -- Признак "без оплаты" - Кол-во поставщика
                            , COALESCE (MIBoolean_AmountPartnerSecond.ValueData, FALSE) AS isAmountPartnerSecond_in
                              -- Цена с НДС (да/нет) - для цена поставщика
                            , COALESCE (MIBoolean_PriceWithVAT.ValueData, FALSE) AS isPriceWithVAT_in
-                             --  Дата для цены возврат поставщику 
+                             --  Дата для цены возврат поставщику
                            , MIDate_PriceRetOut.ValueData AS OperDate_ReturnOut
 
                            , COALESCE (MIFloat_RealWeight.ValueData, 0)          AS RealWeight
-                           , COALESCE (MIFloat_CountTare.ValueData, 0)           AS CountTare
-                           , COALESCE (MIFloat_WeightTare.ValueData, 0)          AS WeightTare
+                             --  + Количество упаковок
+                           , COALESCE (MIFloat_CountTare.ValueData, 0)  + CASE WHEN MIFloat_WeightPack.ValueData > 0 THEN COALESCE (MIFloat_CountPack.ValueData, 0)  ELSE 0 END AS CountTare
+                             -- + Вес 1-ой упаковки
+                           , COALESCE (MIFloat_WeightTare.ValueData, 0) + CASE WHEN MIFloat_WeightPack.ValueData > 0 THEN COALESCE (MIFloat_WeightPack.ValueData, 0) ELSE 0 END AS WeightTare
 
-                          , COALESCE (MIFloat_CountTare1.ValueData, 0)  AS CountTare1
-                          , COALESCE (MIFloat_WeightTare1.ValueData, 0) AS WeightTare1
-                          , COALESCE (MIFloat_CountTare2.ValueData, 0)  AS CountTare2
-                          , COALESCE (MIFloat_WeightTare2.ValueData, 0) AS WeightTare2
-                          , COALESCE (MIFloat_CountTare3.ValueData, 0)  AS CountTare3
-                          , COALESCE (MIFloat_WeightTare3.ValueData, 0) AS WeightTare3
-                          , COALESCE (MIFloat_CountTare4.ValueData, 0)  AS CountTare4
-                          , COALESCE (MIFloat_WeightTare4.ValueData, 0) AS WeightTare4
-                          , COALESCE (MIFloat_CountTare5.ValueData, 0)  AS CountTare5
-                          , COALESCE (MIFloat_WeightTare5.ValueData, 0) AS WeightTare5
-                          , COALESCE (MIFloat_CountTare6.ValueData, 0)  AS CountTare6
-                          , COALESCE (MIFloat_WeightTare6.ValueData, 0) AS WeightTare6
+                           , COALESCE (MIFloat_CountTare1.ValueData, 0)  AS CountTare1
+                           , COALESCE (MIFloat_WeightTare1.ValueData, 0) AS WeightTare1
+                           , COALESCE (MIFloat_CountTare2.ValueData, 0)  AS CountTare2
+                           , COALESCE (MIFloat_WeightTare2.ValueData, 0) AS WeightTare2
+                           , COALESCE (MIFloat_CountTare3.ValueData, 0)  AS CountTare3
+                           , COALESCE (MIFloat_WeightTare3.ValueData, 0) AS WeightTare3
+                           , COALESCE (MIFloat_CountTare4.ValueData, 0)  AS CountTare4
+                           , COALESCE (MIFloat_WeightTare4.ValueData, 0) AS WeightTare4
+                           , COALESCE (MIFloat_CountTare5.ValueData, 0)  AS CountTare5
+                           , COALESCE (MIFloat_WeightTare5.ValueData, 0) AS WeightTare5
+                           , COALESCE (MIFloat_CountTare6.ValueData, 0)  AS CountTare6
+                           , COALESCE (MIFloat_WeightTare6.ValueData, 0) AS WeightTare6
 
-                           , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
+                           , CASE WHEN MIFloat_WeightPack.ValueData > 0 THEN 0 ELSE COALESCE (MIFloat_CountPack.ValueData, 0) END AS CountPack
+
                            , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
                            , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
 
@@ -163,7 +166,7 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummPartner
                                                        ON MIFloat_SummPartner.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummPartner.DescId = zc_MIFloat_SummPartner()
-                                                      
+
                            -- Признак "без оплаты"
                            LEFT JOIN MovementItemBoolean AS MIBoolean_AmountPartnerSecond
                                                          ON MIBoolean_AmountPartnerSecond.MovementItemId = MovementItem.Id
@@ -172,7 +175,7 @@ BEGIN
                            LEFT JOIN MovementItemBoolean AS MIBoolean_PriceWithVAT
                                                          ON MIBoolean_PriceWithVAT.MovementItemId = MovementItem.Id
                                                         AND MIBoolean_PriceWithVAT.DescId         = zc_MIBoolean_PriceWithVAT()
-                           --  Дата для цены возврат поставщику 
+                           --  Дата для цены возврат поставщику
                            LEFT JOIN MovementItemDate AS MIDate_PriceRetOut
                                                       ON MIDate_PriceRetOut.MovementItemId = MovementItem.Id
                                                      AND MIDate_PriceRetOut.DescId         = zc_MIDate_PriceRetOut()
@@ -183,6 +186,7 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_WeightTare
                                                        ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
                                                       AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_CountTare1
                                                        ON MIFloat_CountTare1.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountTare1.DescId = zc_MIFloat_CountTare1()
@@ -219,9 +223,16 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_WeightTare6
                                                        ON MIFloat_WeightTare6.MovementItemId = MovementItem.Id
                                                       AND MIFloat_WeightTare6.DescId = zc_MIFloat_WeightTare6()
+
+                           -- <Количество упаковок>
                            LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                                        ON MIFloat_CountPack.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+                           -- Вес 1-ой упаковки
+                           LEFT JOIN MovementItemFloat AS MIFloat_WeightPack
+                                                       ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -317,13 +328,13 @@ BEGIN
              -- Количество у поставщика для Сырья (из накладной)
            , tmpMI.AmountPartner_in :: TFloat
            , tmpMI.SummPartner_in   :: TFloat
-           
+
 
              -- Признак "без оплаты" - Кол-во поставщика
            , tmpMI.isAmountPartnerSecond_in :: Boolean
              -- Цена с НДС (да/нет) - для цена поставщика
            , tmpMI.isPriceWithVAT_in :: Boolean
-             --  Дата для цены возврат поставщику 
+             --  Дата для цены возврат поставщику
            , tmpMI.OperDate_ReturnOut :: TDateTime
 
 
@@ -403,7 +414,7 @@ BEGIN
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
 
             LEFT JOIN ObjectLink AS ObjectLink_ReturnKind
-                                 ON ObjectLink_ReturnKind.ObjectId = Object_Reason.Id 
+                                 ON ObjectLink_ReturnKind.ObjectId = Object_Reason.Id
                                 AND ObjectLink_ReturnKind.DescId = zc_ObjectLink_Reason_ReturnKind()
             LEFT JOIN Object AS Object_ReturnKind ON Object_ReturnKind.Id = ObjectLink_ReturnKind.ChildObjectId
 
