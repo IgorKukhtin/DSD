@@ -67,26 +67,6 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = CountTare_calc
             end
             item
@@ -159,26 +139,6 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
               Format = ',0.####'
               Kind = skSum
               Column = CountTare5
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
