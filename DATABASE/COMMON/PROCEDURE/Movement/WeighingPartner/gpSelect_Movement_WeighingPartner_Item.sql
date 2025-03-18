@@ -57,6 +57,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , RealWeight TFloat, RealWeight_Weight TFloat, CountTare TFloat, WeightTare TFloat
              , CountTare1   TFloat, CountTare2   TFloat, CountTare3   TFloat, CountTare4   TFloat, CountTare5   TFloat, CountTare6   TFloat
              , WeightTare1  TFloat, WeightTare2  TFloat, WeightTare3  TFloat, WeightTare4  TFloat, WeightTare5  TFloat, WeightTare6  TFloat
+             , CountPack TFloat, WeightPack TFloat
              , HeadCount TFloat, BoxCount TFloat, BoxNumber TFloat
              , LevelNumber TFloat, ChangePercentAmount TFloat, ChangePercent_mi TFloat
              , Price TFloat, CountForPrice TFloat
@@ -289,6 +290,9 @@ BEGIN
              , (COALESCE (MIFloat_CountTare5.ValueData, 0) * COALESCE (MIFloat_WeightTare5.ValueData, 0)) ::TFloat  AS WeightTare5
              , (COALESCE (MIFloat_CountTare6.ValueData, 0) * COALESCE (MIFloat_WeightTare6.ValueData, 0)) ::TFloat  AS WeightTare6
                   
+             , CASE WHEN COALESCE (MIFloat_WeightPack.ValueData,0) > 0 THEN MIFloat_CountPack.ValueData ELSE 0 END ::TFloat AS CountPack
+             , MIFloat_WeightPack.ValueData  ::TFloat AS WeightPack
+
              , MIFloat_HeadCount.ValueData                  AS HeadCount
              , MIFloat_BoxCount.ValueData                   AS BoxCount
 
@@ -658,6 +662,13 @@ BEGIN
                                         ON MIFloat_WeightTare6.MovementItemId = MovementItem.Id
                                        AND MIFloat_WeightTare6.DescId = zc_MIFloat_WeightTare6()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                        ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightPack
+                                        ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
+
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -721,6 +732,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.03.25         * CountPack, WeightPack
  14.11.24         * InvNumberPartner
  08.11.23         *
  12.04.22         *

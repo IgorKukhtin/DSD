@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_GoodsProperty()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_GoodsProperty(TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_GoodsProperty(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsProperty(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsProperty(
+    IN inIsErased    Boolean , 
     IN inSession     TVarChar       -- 
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -17,9 +19,9 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT 
-         Object_GoodsProperty.Id         AS Id 
-       , Object_GoodsProperty.ObjectCode AS Code
-       , Object_GoodsProperty.ValueData  AS Name
+         Object_GoodsProperty.Id             AS Id 
+       , Object_GoodsProperty.ObjectCode     AS Code
+       , Object_GoodsProperty.ValueData      AS Name
       
        , ObjectFloat_StartPosInt.ValueData   AS StartPosInt
        , ObjectFloat_EndPosInt.ValueData     AS EndPosInt
@@ -31,7 +33,7 @@ $BODY$BEGIN
 
        , ObjectFloat_TaxDoc.ValueData        AS TaxDoc
 
-       , Object_GoodsProperty.isErased   AS isErased
+       , Object_GoodsProperty.isErased       AS isErased
 
    FROM Object AS Object_GoodsProperty
         LEFT JOIN ObjectFloat AS ObjectFloat_StartPosInt 
@@ -62,7 +64,8 @@ $BODY$BEGIN
                               ON ObjectFloat_TaxDoc.ObjectId = Object_GoodsProperty.Id 
                              AND ObjectFloat_TaxDoc.DescId = zc_ObjectFloat_GoodsProperty_TaxDoc()
 
-   WHERE Object_GoodsProperty.DescId = zc_Object_GoodsProperty()
+   WHERE Object_GoodsProperty.DescId = zc_Object_GoodsProperty() 
+     AND (Object_GoodsProperty.isErased = inIsErased OR inIsErased = TRUE)
 
     UNION ALL
       SELECT 0               AS Id
@@ -97,4 +100,4 @@ ALTER FUNCTION gpSelect_Object_GoodsProperty(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsProperty('2')
+-- SELECT * FROM gpSelect_Object_GoodsProperty(false, '2')
