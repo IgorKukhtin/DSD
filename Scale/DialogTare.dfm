@@ -1228,8 +1228,7 @@ inherited DialogTareForm: TDialogTareForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = 5
-        ExplicitTop = 5
+        ExplicitWidth = 55
       end
       object PanelShGoods_total: TPanel
         Left = 1
