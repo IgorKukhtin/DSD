@@ -234,6 +234,7 @@ type
     function Get_ItemDescription: UnicodeString;
     function Get_InvoiceQuantity: Double;
     function Get_BuyerUnitOfMeasure: UnicodeString;
+    function Get_UnitOfMeasure: UnicodeString;
     function Get_InvoiceUnitNetPrice: Double;
     function Get_TaxRate: Integer;
     function Get_TaxCategoryCode: UnicodeString;
@@ -247,6 +248,7 @@ type
     procedure Set_ItemDescription(Value: UnicodeString);
     procedure Set_InvoiceQuantity(Value: Double);
     procedure Set_BuyerUnitOfMeasure(Value: UnicodeString);
+    procedure Set_UnitOfMeasure(Value: UnicodeString);
     procedure Set_InvoiceUnitNetPrice(Value: Double);
     procedure Set_TaxRate(Value: Integer);
     procedure Set_TaxCategoryCode(Value: UnicodeString);
@@ -261,6 +263,7 @@ type
     property ItemDescription: UnicodeString read Get_ItemDescription write Set_ItemDescription;
     property InvoiceQuantity: Double read Get_InvoiceQuantity write Set_InvoiceQuantity;
     property BuyerUnitOfMeasure: UnicodeString read Get_BuyerUnitOfMeasure write Set_BuyerUnitOfMeasure;
+    property UnitOfMeasure: UnicodeString read Get_UnitOfMeasure write Set_UnitOfMeasure;
     property InvoiceUnitNetPrice: Double read Get_InvoiceUnitNetPrice write Set_InvoiceUnitNetPrice;
     property TaxRate: Integer read Get_TaxRate write Set_TaxRate;
     property TaxCategoryCode: UnicodeString read Get_TaxCategoryCode write Set_TaxCategoryCode;
@@ -468,6 +471,7 @@ type
     function Get_ItemDescription: UnicodeString;
     function Get_InvoiceQuantity: Double;
     function Get_BuyerUnitOfMeasure: UnicodeString;
+    function Get_UnitOfMeasure: UnicodeString;
     function Get_InvoiceUnitNetPrice: Double;
     function Get_TaxRate: Integer;
     function Get_TaxCategoryCode: UnicodeString;
@@ -481,6 +485,7 @@ type
     procedure Set_ItemDescription(Value: UnicodeString);
     procedure Set_InvoiceQuantity(Value: Double);
     procedure Set_BuyerUnitOfMeasure(Value: UnicodeString);
+    procedure Set_UnitOfMeasure(Value: UnicodeString);
     procedure Set_InvoiceUnitNetPrice(Value: Double);
     procedure Set_TaxRate(Value: Integer);
     procedure Set_TaxCategoryCode(Value: UnicodeString);
@@ -978,6 +983,16 @@ end;
 function TXMLLineItemType.Get_BuyerUnitOfMeasure: UnicodeString;
 begin
   Result := ChildNodes['BuyerUnitOfMeasure'].Text;
+end;
+
+function TXMLLineItemType.Get_UnitOfMeasure: UnicodeString;
+begin
+  Result := ChildNodes['UnitOfMeasure'].Text;
+end;
+
+procedure TXMLLineItemType.Set_UnitOfMeasure(Value: UnicodeString);
+begin
+  ChildNodes['UnitOfMeasure'].NodeValue := Value;
 end;
 
 procedure TXMLLineItemType.Set_BuyerUnitOfMeasure(Value: UnicodeString);

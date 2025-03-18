@@ -5210,7 +5210,9 @@ begin
         // кількість, що поставляється
         LineItem.InvoiceQuantity := ItemsDataSet.FieldByName('AmountPartner').AsFloat;
         // BuyerUnitOfMeasure
-        LineItem.BuyerUnitOfMeasure := ItemsDataSet.FieldByName('MeasureName').asString;
+        //LineItem.BuyerUnitOfMeasure := ItemsDataSet.FieldByName('MeasureName').asString;
+        //Одиниця виміру
+        LineItem.UnitOfMeasure := ItemsDataSet.FieldByName('MeasureName').asString;
         // код УКТЗЕД
         LineItem.ExternalItemCode := ItemsDataSet.FieldByName('GoodsCodeUKTZED').asString;
         // Ціна однієї одиниці без ПДВ
@@ -5743,7 +5745,7 @@ begin
 
     if DataSetCDS.RecordCount = 0 then
     begin
-      ShowMessage('Нет накладных для загрузки.');
+      //ShowMessage('Нет накладных для загрузки.');
       Exit;
     end;
 
