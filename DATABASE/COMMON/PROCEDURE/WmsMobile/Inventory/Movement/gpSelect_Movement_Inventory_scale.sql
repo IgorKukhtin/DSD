@@ -14,6 +14,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
+             , MeasureName TVarChar
                -- партия - дата
              , PartionGoodsDate TDateTime
                -- Ш/К - паспорт
@@ -191,6 +192,7 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsKind.Id                         AS GoodsKindId
            , Object_GoodsKind.ValueData                  AS GoodsKindName
+           , Object_Measure.ValueData                    AS MeasureName
              -- партия - дата
            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
              -- Ш/К - паспорт
@@ -388,6 +390,11 @@ BEGIN
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_PartionNum_passport
                                          ON tmpMIFloat_PartionNum_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_PartionNum_passport.DescId         = zc_MIFloat_PartionNum()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
           ;
 
 
