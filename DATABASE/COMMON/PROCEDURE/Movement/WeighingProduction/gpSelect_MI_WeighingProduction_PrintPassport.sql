@@ -53,7 +53,26 @@ BEGIN
 
        -- Результат
    WITH
-   tmpBox AS (SELECT tmp.* FROM gpGet_MI_WeighingProduction_Box (inId, inSession) AS tmp)
+       tmpBox AS (SELECT tmp.* FROM gpGet_MI_WeighingProduction_Box (inId, inSession) AS tmp)
+     , tmpGoodsByGoodsKind AS (SELECT MovementItem.Id AS MovementItemId
+                                    , COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ValueData, 0) AS WeightPackageSticker
+                               FROM MovementItem
+                                    INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                          ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                          ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = MILinkObject_GoodsKind.ObjectId
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_GoodsByGoodsKind_WeightPackageSticker
+                                                          ON ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
+                               WHERE MovementItem.MovementId = inMovementId
+                                 AND MovementItem.Id         = inId
+                              )
 
   , tmpMI AS (SELECT MovementItem.Id              AS MovementItemId
                    , zfFormat_BarCode (zc_BarCodePref_MI(), MovementItem.Id )  AS BarCode
@@ -68,14 +87,14 @@ BEGIN
                    , vbStoreKeeperName  ::TVarChar AS StoreKeeperName
 
                    , CASE WHEN vbDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
-                               THEN MovementItem.Amount * COALESCE (OF_Weight.ValueData, 0)
+                               THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
                           ELSE  MovementItem.Amount
                      END ::TFloat AS Amount
 
                    , CAST (CASE WHEN vbDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
                                      THEN MovementItem.Amount
                                 WHEN vbDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND  OF_Weight.ValueData > 0
-                                     THEN MovementItem.Amount / COALESCE (OF_Weight.ValueData, 0)
+                                     THEN MovementItem.Amount / (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
                                 ELSE  0
                            END AS NUMERIC (16, 0)
                           )::TFloat AS Amount_sh
@@ -101,6 +120,7 @@ BEGIN
                    , Object_PartionCell.ValueData ::TVarChar AS PartionCellName
 
               FROM MovementItem
+                   LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = MovementItem.Id
 
                    LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
                    LEFT JOIN MovementItemFloat AS MIFloat_PartionNum
