@@ -78,7 +78,7 @@
 			<VerInfo_Build>121</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>4</VerInfo_Release>
-			<Debugger_RunParams>Scale_EXP.ini ves=341.123</Debugger_RunParams>
+			<Debugger_RunParams>Scale_obv.ini ves=341.123</Debugger_RunParams>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>

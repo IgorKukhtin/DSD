@@ -98,7 +98,7 @@ object MainForm: TMainForm
     end
     object StartButton: TcxButton
       Left = 592
-      Top = 0
+      Top = 2
       Width = 58
       Height = 25
       Anchors = [akTop, akRight]
@@ -11146,6 +11146,29 @@ object MainForm: TMainForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actVchasnoEDIOrdeLoad: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 44197d
+      DateFrom.Component = deStart
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 44197d
+      DateTo.Component = deEnd
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      spHeader = spHeaderOrder
+      spList = spListOrder
     end
   end
   object spHeaderOrder: TdsdStoredProc

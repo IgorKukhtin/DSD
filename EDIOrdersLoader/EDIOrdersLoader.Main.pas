@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
-  ,frxBarcode, FastReportAddOn;
+  ,frxBarcode, FastReportAddOn, dsdCommon;
 
 type
   TMainForm = class(TForm)
@@ -111,6 +111,7 @@ type
     spSelectPrint: TdsdStoredProc;
     actExport_fr3: TdsdPrintAction;
     mactExport_xls_2244900110: TMultiAction;
+    actVchasnoEDIOrdeLoad: TdsdVchasnoEDIAction;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -139,6 +140,7 @@ type
     procedure ProccessEmail;
     function fGet_Movement_Edi_stat : Integer;
     function fEdi_LoadData_from : Boolean;
+    function fEdi_LoadDataVchasno_from : Boolean;
     function fEdi_SendData_to : Boolean;
     function fSale_SendEmail : Boolean;
   public
@@ -356,7 +358,7 @@ begin
 
     AddToLog('Finish');
 
-    if cbPrevDay.Checked = true then begin cbPrevDay.Checked:= false; isPrevDay_begin:= true; end;
+    //if cbPrevDay.Checked = true then begin cbPrevDay.Checked:= false; isPrevDay_begin:= true; end;
 
     //
     Result:= TRUE;
@@ -368,6 +370,68 @@ begin
      end;
   end;
 end;
+
+
+function TMainForm.fEdi_LoadDataVchasno_from : Boolean;
+var Old_stat : Integer;
+    Present: TDateTime;
+    Year, Month, Day, Hour, Min, Sec, MSec: Word;
+begin
+  Present:=Now;
+  DecodeTime(Present, Hour, Min, Sec, MSec);
+
+  if isPrevDay_begin = false then cbPrevDay.Checked:= true;
+
+  try
+    Result:= false;
+    //
+    AddToLog('.....');
+    actSetDefaults.Execute;
+    AddToLog('Обновили Default для EDI-VCHASNO : ' + DateTimeToStr(now));
+
+
+    OptionsMemo.Lines.Clear;
+    OptionsMemo.Lines.Add('Старт: '+FormatDateTime('dd.mm.yy hh:mm', fStartTime));
+    OptionsMemo.Lines.Add('Текущий интервал: ' + IntToStr(IntervalVal) + ' : del = NO');
+    OptionsMemo.Lines.Add('Host: ' +  actVchasnoEDIOrdeLoad.Host.Value);
+    OptionsMemo.Lines.Add('UserName: Token' );
+    OptionsMemo.Lines.Add('Password: ' +  actVchasnoEDIOrdeLoad.Token.Value);
+
+     if cbLoad.Checked = FALSE then
+     begin
+          AddToLog('.....');
+          AddToLog('ОТКЛЮЧИЛИ Загрузку из EDI-VCHASNO');
+          Result:= true;
+          exit
+     end;
+
+    if cbPrevDay.Checked = TRUE
+    then deStart.EditValue := Date - 1
+    else deStart.EditValue := Date;
+    deEnd.EditValue := Date;
+
+    Old_stat:=fGet_Movement_Edi_stat;
+    AddToLog('Загрузка VCHASNO началась ... <'+IntToStr(Old_stat)+'>');
+
+    AddToLog(' - Период с ' + deStart.EditText + ' по ' + deEnd.EditText + ' : del = NO');
+
+    actVchasnoEDIOrdeLoad.Execute;
+    AddToLog('Загружено <'+IntToStr(fGet_Movement_Edi_stat - Old_stat)+'> Документов');
+
+    AddToLog('Finish');
+
+    if cbPrevDay.Checked = true then begin cbPrevDay.Checked:= false; isPrevDay_begin:= true; end;
+
+    //
+    Result:= TRUE;
+
+  except
+     on E: Exception do begin
+        AddToLog(E.Message);
+     end;
+  end;
+end;
+
 
 function TMainForm.fEdi_SendData_to : Boolean;
 var Err_str: String;
@@ -549,6 +613,13 @@ try
            AddToLog('**** Ошибка *** LoadData - from *** : ' + E.Message);
         end;
   end;
+  try fEdi_LoadDataVchasno_from;
+  except
+        on E: Exception do begin
+           AddToLog('**** Ошибка *** VCHASNO - LoadData - from *** : ' + E.Message);
+        end;
+  end;
+
   //
   // !!! Только Отправка !!!
   try fEdi_SendData_to;
