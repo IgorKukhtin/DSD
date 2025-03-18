@@ -126,6 +126,7 @@ BEGIN
            , Object_Goods.ValueData                      AS GoodsName
            , Object_GoodsKind.Id                         AS GoodsKindId
            , Object_GoodsKind.ValueData                  AS GoodsKindName
+           , Object_Measure.ValueData                    AS MeasureName
              -- партия - дата
            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
              -- Ш/К - паспорт
@@ -143,7 +144,7 @@ BEGIN
              -- Вес нетто
            , MovementItem.Amount   
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() 
-                  THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN MovementItem.Amount / ObjectFloat_Weight.ValueData ELSE 0 END
+                  THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN ROUND (MovementItem.Amount / ObjectFloat_Weight.ValueData, 0) ELSE 0 END
                   ELSE 0
              END ::TFloat AS Amount_sh
              -- ИТОГО Вес тары - факт
@@ -293,6 +294,7 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight() 
