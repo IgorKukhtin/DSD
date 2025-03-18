@@ -98,6 +98,16 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
               Format = ',0.####'
               Kind = skSum
               Column = WeightTare_5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountPack
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -174,6 +184,16 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
               Format = ',0.####'
               Kind = skSum
               Column = WeightTare_5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountPack
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -305,9 +325,11 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           object RealWeight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080' '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'RealWeight'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object CountTare_calc: TcxGridDBColumn
@@ -991,7 +1013,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
   end
   object FormParams: TdsdFormParams
     Params = <>
-    Left = 328
+    Left = 352
     Top = 170
   end
   object spSelectPrint: TdsdStoredProc
