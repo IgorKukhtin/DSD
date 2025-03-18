@@ -252,7 +252,10 @@ type
     bbMICellProtocol: TdxBarButton;
     spUpdate_isRePack: TdsdStoredProc;
     actUpdate_isRePack: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    bbUpdate_isRePack: TdxBarButton;
+    spSelectPrint_Pack: TdsdStoredProc;
+    actPrintPackGross: TdsdPrintAction;
+    bbPrintPackGross: TdxBarButton;
   private
     { Private declarations }
   public

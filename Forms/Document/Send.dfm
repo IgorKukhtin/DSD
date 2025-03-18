@@ -4300,6 +4300,40 @@ inherited SendForm: TSendForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1077#1088#1077#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1077#1088#1077#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
     end
+    object actPrintPackGross: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Pack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Pack
+        end>
+      Caption = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      Hint = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;WeighingNumber;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SendPackGross'
+      ReportNameParam.Value = 'PrintMovement_SendPackGross'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -4464,7 +4498,7 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdate_isRePack'
         end
         item
           Visible = True
@@ -4716,6 +4750,14 @@ inherited SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbPrintSaleOrderTax'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPackGross'
         end>
     end
     object dxBarSeparator1: TdxBarSeparator
@@ -4729,10 +4771,14 @@ inherited SendForm: TSendForm
       Action = actMICellProtocolOpenForm
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdate_isRePack: TdxBarButton
       Action = actUpdate_isRePack
       Category = 0
       ImageIndex = 77
+    end
+    object bbPrintPackGross: TdxBarButton
+      Action = actPrintPackGross
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -6788,5 +6834,32 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 730
     Top = 296
+  end
+  object spSelectPrint_Pack: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Send_Pack_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_by'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 847
+    Top = 178
   end
 end
