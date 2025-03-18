@@ -2058,8 +2058,11 @@ procedure TGuideGoodsForm.EditTare0KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
     if Key=13
-    then
-      ActiveControl:=EditPartionCell
+       then
+         if infoPanelPartion.Visible
+         then ActiveControl:=EditPartionCell
+         else  ActiveControl:=EditChangePercentAmountCode
+
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeChange(Sender: TObject);
@@ -2214,10 +2217,12 @@ begin
      except
            ParamsMI.ParamByName('CountTare1').AsFloat:=0;
      end;
-     try SettingMain.WeightTare1:=StrToFloat(EditWeightTare1.Text);
-     except
-           SettingMain.WeightTare1:=0;
-     end;
+     if EditWeightTare1.Visible
+     then
+         try SettingMain.WeightTare1:=StrToFloat(EditWeightTare1.Text);
+         except
+               SettingMain.WeightTare1:=0;
+         end;
      PanelWeightTare1.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1);
 
      //2
@@ -2225,10 +2230,12 @@ begin
      except
            ParamsMI.ParamByName('CountTare2').AsFloat:=0;
      end;
-     try SettingMain.WeightTare2:=StrToFloat(EditWeightTare2.Text);
-     except
-           SettingMain.WeightTare2:=0;
-     end;
+     if EditWeightTare1.Visible
+     then
+         try SettingMain.WeightTare2:=StrToFloat(EditWeightTare2.Text);
+         except
+               SettingMain.WeightTare2:=0;
+         end;
      PanelWeightTare2.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare2').AsFloat * SettingMain.WeightTare2);
 
      //3

@@ -660,8 +660,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Align = alTop
           Caption = #1050#1086#1076' '#1089#1082#1080#1076#1082#1080
           TabOrder = 0
-          ExplicitLeft = -5
-          ExplicitTop = 4
           object EditChangePercentAmountCode: TEdit
             Left = 5
             Top = 14
@@ -1640,8 +1638,7 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitLeft = -6
-              ExplicitTop = 1
+              ExplicitWidth = 81
             end
             object EditTare7: TcxCurrencyEdit
               Left = 5
@@ -2273,8 +2270,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 6
-          ExplicitTop = 18
         end
       end
     end
