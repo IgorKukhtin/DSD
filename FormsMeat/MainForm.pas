@@ -1553,6 +1553,8 @@ type
     miCashOperationVinnica: TMenuItem;
     actPersonalCashVinnica: TdsdOpenForm;
     miPersonalCashVinnica: TMenuItem;
+    actReport_Inventory_WeighingFact: TdsdOpenForm;
+    miReport_Inventory_WeighingFact: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

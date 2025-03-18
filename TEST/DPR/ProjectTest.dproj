@@ -5527,6 +5527,14 @@
 				<Form>Report_WP_PassportPSWDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Inventory_WeighingFact.pas">
+				<Form>Report_Inventory_WeighingFactForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Inventory_WeighingFactDialog.pas">
+				<Form>Report_Inventory_WeighingFactDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
