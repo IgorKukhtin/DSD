@@ -57,6 +57,11 @@ type
     bbPrintSaleOrderTax: TdxBarButton;
     PersonalGroupName: TcxGridDBColumn;
     isRePack: TcxGridDBColumn;
+    actPrintPackGross: TdsdPrintAction;
+    spSelectPrint_Pack: TdsdStoredProc;
+    bbPrintPackGross: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    Separator: TdxBarSeparator;
   private
     { Private declarations }
   public

@@ -2664,8 +2664,8 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 535
-    Top = 184
+    Left = 551
+    Top = 152
   end
   object spChecked: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_CheckedProtocol'

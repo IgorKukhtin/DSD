@@ -139,10 +139,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+  {
   LoadReportFromFile('PrintMovement_Inventory_Scale', ReportPath + '\Товарный Учет\PrintMovement_Inventory_Scale.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_Income_Reestr', ReportPath + '\Товарный Учет\PrintMovement_Income_Reestr.fr3');
   exit;
 
@@ -615,16 +615,12 @@ begin
   LoadReportFromFile('PrintMovement_Sale2DiscountPrice', ReportPath + '\Товарный Учет\PrintMovement_Sale2DiscountPrice.fr3');
   LoadReportFromFile('PrintMovement_Sale2PriceWithVAT', ReportPath + '\Товарный Учет\PrintMovement_Sale2PriceWithVAT.fr3');
   exit;
-  }
+
   LoadReportFromFile('PrintMovement_SalePackWeightTotal', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeightTotal.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_SalePackWeight', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeight.fr3');
   LoadReportFromFile('PrintMovement_SalePackWeight_Fozzy', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeight_Fozzy.fr3');
-
-
-
-
 
   LoadReportFromFile('PrintMovement_Sale2_3683763', ReportPath + '\Товарный Учет\PrintMovement_Sale2_3683763.fr3');
   exit;
@@ -721,19 +717,21 @@ begin
 
   LoadReportFromFile('PrintMovement_TTN_43233918', ReportPath + '\Товарный Учет\PrintMovement_TTN_43233918.fr3');
   exit;
-  }
+
   LoadReportFromFile('PrintMovement_TTN_03012025', ReportPath + '\Товарный Учет\PrintMovement_TTN_03012025.fr3');
   LoadReportFromFile('PrintMovement_TTN_43233918_03012025', ReportPath + '\Товарный Учет\PrintMovement_TTN_43233918_03012025.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_TTN_071021', ReportPath + '\Товарный Учет\PrintMovement_TTN_071021.fr3');
 
   LoadReportFromFile('PrintMovement_TTN', ReportPath + '\Товарный Учет\PrintMovement_TTN.fr3');
   exit;
-
   LoadReportFromFile('PrintMovement_SalePackGross', ReportPath + '\Товарный Учет\PrintMovement_SalePackGross.fr3');
   exit;
-
+  }
+  LoadReportFromFile('PrintMovement_SendPackGross', ReportPath + '\Товарный Учет\PrintMovement_SendPackGross.fr3');
+  exit;
+  {
   LoadReportFromFile('PrintMovement_SalePack21', ReportPath + '\Товарный Учет\PrintMovement_SalePack21.fr3');
 
   LoadReportFromFile('PrintMovement_Sale32294926', ReportPath + '\Товарный Учет\PrintMovement_Sale32294926.fr3');
