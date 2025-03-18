@@ -13,6 +13,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_EDIComdoc_Order(
 RETURNS Text
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+
    DECLARE vbIsFind_InvNumberPartner Boolean;
 
    DECLARE vbMovementId_Order Integer;
@@ -45,6 +47,8 @@ $BODY$
 
    DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
@@ -325,7 +329,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> не установлено <Подразделение(EDI)>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
      END IF;
      -- Проверка
-     IF COALESCE (vbOKPO, '') = ''
+     IF COALESCE (vbOKPO, '') = '' AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено ОКПО у юридического лица <%>.', lfGet_Object_ValueData (vbJuridicalId);
      END IF;

@@ -101,6 +101,59 @@ end if;
      END IF;
 
 
+     -- Проверка
+     IF 0 < (SELECT COUNT (*)
+             FROM Movement
+                  INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                            ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                           AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                           AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                  INNER JOIN MovementString AS MovementString_DealId
+                                            ON MovementString_DealId.MovementId = Movement.Id
+                                           AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+                                           AND MovementString_DealId.ValueData  <> ''
+             WHERE Movement.DescId = zc_Movement_EDI()
+               AND Movement.OperDate = inOrderOperDate
+               AND Movement.InvNumber = inOrderInvNumber
+               AND Movement.StatusId <> zc_Enum_Status_Erased()
+            )
+     THEN
+         -- Выход т.к. документ уже загружен
+         RETURN QUERY
+            SELECT Movement.Id
+                 , MLO_GoodsProperty.ObjectId AS GoodsPropertyID
+                 , CASE WHEN MLO_GoodsProperty.ObjectId = 83954 -- Метро
+                             THEN TRUE
+                        ELSE FALSE
+                   END :: Boolean AS isMetro
+                 , TRUE       AS isLoad
+            FROM Movement
+                  INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                            ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                           AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                           AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                  INNER JOIN MovementString AS MovementString_DealId
+                                            ON MovementString_DealId.MovementId = Movement.Id
+                                           AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+                                           AND MovementString_DealId.ValueData  <> ''
+
+                  LEFT JOIN MovementLinkObject AS MLO_GoodsProperty
+                                               ON MLO_GoodsProperty.MovementId = Movement.Id
+                                              AND MLO_GoodsProperty.DescId     = zc_MovementLinkObject_GoodsProperty()
+
+            WHERE Movement.DescId = zc_Movement_EDI()
+              AND Movement.OperDate = inOrderOperDate
+              AND Movement.InvNumber = inOrderInvNumber
+              AND Movement.StatusId <> zc_Enum_Status_Erased()
+            LIMIT 1
+           ;
+
+         -- Выход
+         RETURN;
+
+     END IF;
+
+
      -- находим документ (по идее один товар - один GLN-код) + !!!по точке доставки!!!
      vbMovementId:= (SELECT Movement.Id
                      FROM Movement
@@ -112,7 +165,7 @@ end if;
                        AND Movement.OperDate = inOrderOperDate
                        AND Movement.InvNumber = inOrderInvNumber
                        AND Movement.StatusId <> zc_Enum_Status_Erased()
-                       AND vbUserId <> 5
+                     --AND vbUserId <> 5
                     );
 
      IF COALESCE(vbMovementId, 0) = 0 OR
@@ -226,6 +279,12 @@ end if;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, vbIsInsert);
+
+
+IF vbUserId = 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.Test PartnerId = %', vbPartnerId;
+END IF;
 
      RETURN QUERY
      SELECT vbMovementId

@@ -27,6 +27,21 @@ BEGIN
 
 
      -- Проверка
+     IF 0 < (SELECT COUNT (*)
+             FROM Movement
+                  INNER JOIN MovementString AS MovementString_DealId
+                                            ON MovementString_DealId.MovementId = Movement.Id
+                                           AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+                                           AND MovementString_DealId.ValueData  <> ''
+             WHERE Movement.Id = inMovementId
+            )
+     THEN
+         -- Выход т.к. документ уже загружен
+         RETURN;
+     END IF;
+
+
+     -- Проверка
      IF 1 < (WITH tmpMI AS (SELECT MovementItem.Id
                             FROM MovementItem
                             WHERE MovementItem.MovementId = inMovementId
@@ -193,7 +208,7 @@ BEGIN
 
 IF vbUserId = 5 AND 1=0
 THEN
-    RAISE EXCEPTION 'Ошибка.Test-ok-end';
+    RAISE EXCEPTION 'Ошибка.Test-ok-end % ', vbGoodsKindId;
 END IF;
 
 END;

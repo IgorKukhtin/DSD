@@ -46,9 +46,6 @@ $BODY$
     
     DECLARE vbPartneFromId Integer;
 BEGIN
-
-     -- RETURN;
-
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
@@ -382,6 +379,7 @@ END IF;
                                   WHERE MovementString.MovementId = inMovementId
                                     AND MovementString.DescId IN (zc_MovementString_InvNumberOrder()
                                                                 , zc_MovementString_InvNumberPartner()
+                                                                , zc_MovementString_DealId()
                                                                 )
                                  )
                     
@@ -631,13 +629,13 @@ END IF;
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_order
                                      ON MovementString_InvNumberPartner_order.MovementId = Movement_order.Id
                                     AND MovementString_InvNumberPartner_order.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_DealId
+                                     ON MovementString_DealId.MovementId = Movement_order.Id
+                                    AND MovementString_DealId.DescId = zc_MovementString_DealId()
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_edi
                                            ON MovementLinkMovement_Order_edi.MovementId = Movement_order.Id
                                           AND MovementLinkMovement_Order_edi.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_EDI ON Movement_EDI.Id = MovementLinkMovement_Order_edi.MovementChildId
-            LEFT JOIN MovementString AS MovementString_DealId
-                                     ON MovementString_DealId.MovementId = Movement_EDI.Id
-                                    AND MovementString_DealId.DescId     = zc_MovementString_DealId()
 
             LEFT JOIN tmpMovementString AS MovementString_InvNumberOrder
                                         ON MovementString_InvNumberOrder.MovementId = Movement.Id
