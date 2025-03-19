@@ -54,7 +54,7 @@ RETURNS TABLE (MovementId Integer, ItemName TVarChar, ItemName_inf TVarChar
 
              , BoxCountTotal  TFloat
              , BoxWeightTotal TFloat
-             
+
                --упаковка
              , CountPack         Integer
              , WeightPack        TFloat
@@ -206,7 +206,7 @@ BEGIN
                      LEFT JOIN MovementItemBoolean AS MIB_isAuto
                                                    ON MIB_isAuto.MovementItemId = MovementItem.Id
                                                   AND MIB_isAuto.DescId         = zc_MIBoolean_isAuto()
-                                                   
+
                WHERE tmpMovement.DescId   = zc_Movement_WeighingPartner()
                   OR MIB_isAuto.ValueData = TRUE
               )
@@ -382,19 +382,19 @@ BEGIN
                         END   ::TFloat AS WeightTare10
 
                       , tmpBox.BoxWeight1 ::TFloat, tmpBox.BoxWeight2 ::TFloat, tmpBox.BoxWeight3 ::TFloat, tmpBox.BoxWeight4 ::TFloat, tmpBox.BoxWeight5 ::TFloat
-                      , tmpBox.BoxWeight6 ::TFloat, tmpBox.BoxWeight7 ::TFloat, tmpBox.BoxWeight8 ::TFloat, tmpBox.BoxWeight9 ::TFloat, tmpBox.BoxWeight10 ::TFloat 
-                      
+                      , tmpBox.BoxWeight6 ::TFloat, tmpBox.BoxWeight7 ::TFloat, tmpBox.BoxWeight8 ::TFloat, tmpBox.BoxWeight9 ::TFloat, tmpBox.BoxWeight10 ::TFloat
+
                       , tmpBox.BoxId_1, tmpBox.BoxId_2, tmpBox.BoxId_3, tmpBox.BoxId_4, tmpBox.BoxId_5
                       , tmpBox.BoxId_6, tmpBox.BoxId_7, tmpBox.BoxId_8, tmpBox.BoxId_9, tmpBox.BoxId_10
                       , tmpBox.BoxName_1 ::TVarChar, tmpBox.BoxName_2 ::TVarChar, tmpBox.BoxName_3 ::TVarChar, tmpBox.BoxName_4 ::TVarChar, tmpBox.BoxName_5 ::TVarChar
                       , tmpBox.BoxName_6 ::TVarChar, tmpBox.BoxName_7 ::TVarChar, tmpBox.BoxName_8 ::TVarChar, tmpBox.BoxName_9 ::TVarChar, tmpBox.BoxName_10 ::TVarChar
 
                       , MIFloat_RealWeight.ValueData ::TFloat AS RealWeight
-                      , MIFloat_PartionNum.ValueData          AS PartionNum    
-                      
+                      , MIFloat_PartionNum.ValueData          AS PartionNum
+
                       , tmpMIFloat_CountPack.ValueData   ::Integer AS CountPack
                       , tmpMIFloat_WeightPack.ValueData  ::TFloat  AS WeightPack
-      
+
                       , COALESCE (MIDate_PartionGoods.ValueData, MovementItem.OperDate) :: TDateTime AS PartionGoodsDate
                       , MIDate_Insert.ValueData  AS InsertDate
                       , COALESCE (MovementItem.UserId, MILO_Insert.ObjectId) AS InsertId
@@ -485,7 +485,7 @@ BEGIN
                                       AND MILinkObject_Box4.DescId = zc_MILinkObject_Box4()
                      LEFT JOIN tmpMILO AS MILinkObject_Box5
                                        ON MILinkObject_Box5.MovementItemId = MovementItem.Id
-                                      AND MILinkObject_Box5.DescId = zc_MILinkObject_Box5()  
+                                      AND MILinkObject_Box5.DescId = zc_MILinkObject_Box5()
                   )
      , tmpGoodsByGoodsKind AS (SELECT MovementItem.Id AS MovementItemId
                                     , COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ValueData, 0) AS WeightPackageSticker
@@ -532,23 +532,23 @@ BEGIN
                , CASE WHEN tmpData.DescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
                            -- если Перемещение с Упак -> РК = переводим из ШТ в ВЕС
                            THEN tmpData.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
-  
+
                       -- Иначе Инвентаризация - Подготовка = здесь всегда ВЕС
                       ELSE tmpData.Amount
-  
+
                  END :: TFloat AS Amount
 
                  -- Шт
              , CAST (CASE WHEN tmpData.DescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
                                -- если Перемещение с Упак -> РК = здесь всегда ШТ
                                THEN tmpData.Amount
-      
+
                           WHEN tmpData.DescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND OF_Weight.ValueData > 0
                                -- если Инвентаризация - Подготовка = переводим из ВЕС в ШТ
                                THEN tmpData.Amount / (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
-      
+
                           ELSE 0
-      
+
                      END AS NUMERIC (16, 0)
                     ) :: TFloat AS Amount_sh
 
@@ -564,6 +564,7 @@ BEGIN
                , tmpData.CountTare9     ::TFloat
                , tmpData.CountTare10    ::TFloat
 
+                 -- факт вес 1-ого Поддона / Ящика
                , tmpData.WeightTare1    ::TFloat
                , tmpData.WeightTare2    ::TFloat
                , tmpData.WeightTare3    ::TFloat
@@ -575,6 +576,7 @@ BEGIN
                , tmpData.WeightTare9    ::TFloat
                , tmpData.WeightTare10   ::TFloat
 
+                 -- информативно вес 1-ого Поддона / Ящика
                , tmpData.BoxWeight1 ::TFloat, tmpData.BoxWeight2 ::TFloat, tmpData.BoxWeight3 ::TFloat, tmpData.BoxWeight4 ::TFloat, tmpData.BoxWeight5 ::TFloat
                , tmpData.BoxWeight6 ::TFloat, tmpData.BoxWeight7 ::TFloat, tmpData.BoxWeight8 ::TFloat, tmpData.BoxWeight9 ::TFloat, tmpData.BoxWeight10 ::TFloat
 
@@ -590,16 +592,21 @@ BEGIN
                 + COALESCE (tmpData.CountTare9,0)
                 + COALESCE (tmpData.CountTare10,0)) ::TFloat AS BoxCountTotal
 
-               , (COALESCE (tmpData.CountTare1,0) * COALESCE (tmpData.BoxWeight1,0)
-                + COALESCE (tmpData.CountTare2,0) * COALESCE (tmpData.BoxWeight2,0)
-                + COALESCE (tmpData.CountTare3,0) * COALESCE (tmpData.BoxWeight3,0)
-                + COALESCE (tmpData.CountTare4,0) * COALESCE (tmpData.BoxWeight4,0)
-                + COALESCE (tmpData.CountTare5,0) * COALESCE (tmpData.BoxWeight5,0)
-                + COALESCE (tmpData.CountTare6,0) * COALESCE (tmpData.BoxWeight6,0)
-                + COALESCE (tmpData.CountTare7,0) * COALESCE (tmpData.BoxWeight7,0)
-                + COALESCE (tmpData.CountTare8,0) * COALESCE (tmpData.BoxWeight8,0)
-                + COALESCE (tmpData.CountTare9,0) * COALESCE (tmpData.BoxWeight9,0)
-                + COALESCE (tmpData.CountTare10,0) * COALESCE (tmpData.BoxWeight10,0)) ::TFloat AS BoxWeightTotal 
+               , (-- Поддоны
+                + COALESCE (tmpData.CountTare1,0) * COALESCE (tmpData.WeightTare1,0)
+                + COALESCE (tmpData.CountTare2,0) * COALESCE (tmpData.WeightTare2,0)
+                 -- + Ящики
+                + COALESCE (tmpData.CountTare3,0) * COALESCE (tmpData.WeightTare3,0)
+                + COALESCE (tmpData.CountTare4,0) * COALESCE (tmpData.WeightTare4,0)
+                + COALESCE (tmpData.CountTare5,0) * COALESCE (tmpData.WeightTare5,0)
+                + COALESCE (tmpData.CountTare6,0) * COALESCE (tmpData.WeightTare6,0)
+                + COALESCE (tmpData.CountTare7,0) * COALESCE (tmpData.WeightTare7,0)
+                + COALESCE (tmpData.CountTare8,0) * COALESCE (tmpData.WeightTare8,0)
+                + COALESCE (tmpData.CountTare9,0) * COALESCE (tmpData.WeightTare9,0)
+                + COALESCE (tmpData.CountTare10,0) * COALESCE (tmpData.WeightTare10,0)
+                 -- + Упаковка
+                + COALESCE (tmpData.CountPack, 0) * COALESCE (tmpData.WeightPack, 0)
+                 ) ::TFloat AS BoxWeightTotal
 
                 --упаковка
                , tmpData.CountPack         ::Integer
