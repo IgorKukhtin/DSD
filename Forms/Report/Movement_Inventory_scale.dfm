@@ -98,6 +98,16 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
               Format = ',0.####'
               Kind = skSum
               Column = WeightTare_5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountPack
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -174,6 +184,16 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
               Format = ',0.####'
               Kind = skSum
               Column = WeightTare_5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountPack
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -305,9 +325,11 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           object RealWeight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080' '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'RealWeight'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object CountTare_calc: TcxGridDBColumn
@@ -842,6 +864,38 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object actSelectMIPrintPassport: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMIPrintPassport
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIPrintPassport
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1072#1089#1087#1086#1088#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1055#1072#1089#1087#1086#1088#1090#1072
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMI_WeighingProductionPassport'
+      ReportNameParam.Value = 'PrintMI_WeighingProductionPassport'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -941,6 +995,14 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintPassport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -968,6 +1030,10 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
       Action = actPrint_Mov
       Category = 0
     end
+    object bbPrintPassport: TdxBarButton
+      Action = actSelectMIPrintPassport
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -991,7 +1057,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
   end
   object FormParams: TdsdFormParams
     Params = <>
-    Left = 328
+    Left = 352
     Top = 170
   end
   object spSelectPrint: TdsdStoredProc
@@ -1092,5 +1158,34 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
     PackSize = 1
     Left = 736
     Top = 200
+  end
+  object spSelectMIPrintPassport: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_WeighingProduction_PrintPassport'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 512
+    Top = 224
   end
 end
