@@ -81,7 +81,7 @@ BEGIN
                    , Object_Goods.ValueData       AS GoodsName
                    , Object_GoodsKind.Id          AS GoodsKindId
                    , Object_GoodsKind.ValueData   AS GoodsKindName
-                   , MIFloat_PartionNum.ValueData AS PartionNum
+                   , CASE WHEN COALESCE (MIFloat_PartionNum.ValueData,0) <> 0 THEN MIFloat_PartionNum.ValueData ELSE MIFloat_PartionNum_partion.ValueData END ::Integer AS PartionNum
                    , COALESCE (MIDate_PartionGoods.ValueData, vbOperDate) :: TDateTime AS PartionGoodsDate
 
                    , vbStoreKeeperName  ::TVarChar AS StoreKeeperName
@@ -138,7 +138,8 @@ BEGIN
               FROM MovementItem
                    LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = MovementItem.Id
 
-                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId  
+                   
                    LEFT JOIN MovementItemFloat AS MIFloat_PartionNum
                                                ON MIFloat_PartionNum.MovementItemId = MovementItem.Id
                                               AND MIFloat_PartionNum.DescId = zc_MIFloat_PartionNum()
@@ -165,6 +166,14 @@ BEGIN
                    LEFT JOIN ObjectFloat AS OF_Weight
                                          ON OF_Weight.ObjectId = MovementItem.ObjectId
                                         AND OF_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+
+                   -- Партия - Паспорт
+                   LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                               ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                              AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+                   LEFT JOIN MovementItemFloat AS MIFloat_PartionNum_partion
+                                               ON MIFloat_PartionNum_partion.MovementItemId = MIFloat_MovementItemId.valuedata ::Integer
+                                              AND MIFloat_PartionNum_partion.DescId = zc_MIFloat_PartionNum()
 
               WHERE MovementItem.MovementId = inMovementId
                 AND MovementItem.Id         = inId

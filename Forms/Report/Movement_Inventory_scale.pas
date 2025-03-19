@@ -60,6 +60,9 @@ type
     spSelectPrint_Mov: TdsdStoredProc;
     actPrint_Mov: TdsdPrintAction;
     bbPrint_Mov: TdxBarButton;
+    spSelectMIPrintPassport: TdsdStoredProc;
+    actSelectMIPrintPassport: TdsdPrintAction;
+    bbPrintPassport: TdxBarButton;
   private
     { Private declarations }
   public
