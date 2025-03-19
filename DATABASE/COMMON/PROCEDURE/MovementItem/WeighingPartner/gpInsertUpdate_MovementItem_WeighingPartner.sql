@@ -168,6 +168,23 @@ BEGIN
          THEN
              RAISE EXCEPTION 'Ошибка.Заполнено более 5 значений';
          END IF;
+         
+         -- можно заполнить
+         IF inCountTare1 > 0 AND inCountTare2 > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Может быть указан только один вид поддона.';
+         END IF;
+
+         -- можно заполнить
+         IF inCountTare1 NOT IN (0, 1)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Кол-во поддонов может быть только = 1.';
+         END IF;
+         -- можно заполнить
+         IF inCountTare2 NOT IN (0, 1)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Кол-во поддонов может быть только = 1.';
+         END IF;
 
 
          -- сохранили свойство <Количество упаковок>

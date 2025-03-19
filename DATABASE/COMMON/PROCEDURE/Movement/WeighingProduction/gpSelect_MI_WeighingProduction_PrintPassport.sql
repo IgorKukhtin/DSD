@@ -86,18 +86,34 @@ BEGIN
 
                    , vbStoreKeeperName  ::TVarChar AS StoreKeeperName
 
-                   , CASE WHEN vbDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
-                               THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
-                          ELSE  MovementItem.Amount
-                     END ::TFloat AS Amount
+-- ************
+-- если Перемещение с Упак -> РК = здесь всегда ШТ
+-- если Инвентаризация - Подготовка = здесь всегда ВЕС
+-- ************
 
+                     -- Вес Нетто
+                   , CASE WHEN vbDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
+                               -- если Перемещение с Упак -> РК = переводим из ШТ в ВЕС
+                               THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+
+                          -- Иначе Инвентаризация - Подготовка = здесь всегда ВЕС
+                          ELSE MovementItem.Amount
+
+                     END :: TFloat AS Amount
+
+                     -- ШТ
                    , CAST (CASE WHEN vbDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
+                                     -- если Перемещение с Упак -> РК = здесь всегда ШТ
                                      THEN MovementItem.Amount
-                                WHEN vbDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND  OF_Weight.ValueData > 0
+
+                                WHEN vbDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND OF_Weight.ValueData > 0
+                                     -- если Инвентаризация - Подготовка = переводим из ВЕС в ШТ
                                      THEN MovementItem.Amount / (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+
                                 ELSE  0
+
                            END AS NUMERIC (16, 0)
-                          )::TFloat AS Amount_sh
+                          ) :: TFloat AS Amount_sh
 
                    , OL_Measure.ChildObjectId :: Integer AS MeasureId
                    , zc_Measure_Sh()          :: Integer AS zc_Measure_Sh

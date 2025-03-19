@@ -2256,6 +2256,59 @@ begin
        bbSale_Order_all.Visible:= FALSE;
        bbSale_Order_diff.Visible:= FALSE;
        bbSale_Order_diffTax.Visible:= FALSE;
+       //FALSE
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc').Index].Visible             := FALSE;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc_calc').Index].Visible        := FALSE;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PriceListName').Index].Visible      := FALSE;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Visible              := FALSE;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPromo').Index].Visible            := FALSE;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('ChangePercentAmount').Index].Visible:= FALSE;
+       //TRUE
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           := TRUE;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare5').Index].Visible         := TRUE;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare5').Index].Visible          := TRUE;
+       //
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Caption      := 'Кол-во шт.';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].HeaderHint   := 'Кол-во шт.';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountPartner').Index].Caption      := 'Вес Нетто';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountPartner').Index].HeaderHint   := 'Вес Нетто (без поддона+ящиков+упаковки)';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTareTotal').Index].Caption      := 'Кол. ящ. Итог';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTareTotal').Index].HeaderHint   := 'Кол-во ящиков Итого';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare').Index].Caption      := 'Кол. упак.';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].Caption     := 'Вес одной упак.';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare1').Index].Caption      := 'Кол. подд.';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare1').Index].HeaderHint   := 'Кол-во поддонов';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare1').Index].Caption      := 'Вес подд.';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare1').Index].HeaderHint   := 'Вес поддонов';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare2').Index].Caption      := 'Кол. тары в.1';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare2').Index].HeaderHint   := 'Кол-во тары вид 1';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare3').Index].Caption      := 'Кол. тары в.2';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare3').Index].HeaderHint   := 'Кол-во тары вид 2';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare4').Index].Caption      := 'Кол. тары в.3';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare4').Index].HeaderHint   := 'Кол-во тары вид 3';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare5').Index].Caption      := 'Кол. тары в.4';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare5').Index].HeaderHint   := 'Кол-во тары вид 4';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare2').Index].Caption      := 'Вес тары в.1';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare2').Index].HeaderHint   := 'Вес тары вид 1';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare3').Index].Caption      := 'Вес тары в.2';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare3').Index].HeaderHint   := 'Вес тары вид 2';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare4').Index].Caption      := 'Вес тары в.3';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare4').Index].HeaderHint   := 'Вес тары вид 3';
+
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare5').Index].Caption      := 'Вес тары в.4';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare5').Index].HeaderHint   := 'Вес тары вид 4';
   end
   else
        bbPrint_MIPassport.Visible:= FALSE;

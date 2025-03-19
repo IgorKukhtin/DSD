@@ -50,9 +50,13 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
 AS
 $BODY$
     DECLARE vbGoodsPropertyId Integer;
+    DECLARE vbBranchCode Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Scale_MI());
+     
+     vbBranchCode:= (SELECT MF.ValueData :: Integer FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_BranchCode());
+
 
      -- определяется
      vbGoodsPropertyId:= zfCalc_GoodsPropertyId ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
@@ -310,6 +314,25 @@ BEGIN
                                            AND tmpMI.isBarCode   = TRUE
                       WHERE ObjectFloat_AmountDoc.ValueData > 0
                      )
+        , tmpGoodsByGoodsKind AS (SELECT DISTINCT
+                                         tmpMI.GoodsId
+                                       , tmpMI.GoodsKindId
+                                       , COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ValueData, 0) AS WeightPackageSticker
+                                  FROM tmpMI
+                                       INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                             ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = tmpMI.GoodsId
+                                                            AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                       INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = tmpMI.GoodsKindId
+                                       INNER JOIN Object AS Object_GoodsByGoodsKind
+                                                         ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND Object_GoodsByGoodsKind.isErased = FALSE
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_GoodsByGoodsKind_WeightPackageSticker
+                                                             ON ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ObjectId  = Object_GoodsByGoodsKind.Id
+                                                            AND ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
+                                 )
        -- Результат
        SELECT
              tmpMI.MovementItemId
@@ -342,8 +365,18 @@ BEGIN
            , (tmpMI.RealWeight * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS RealWeightWeight
            , tmpMI.CountTare   :: TFloat      AS CountTare
            , tmpMI.WeightTare  :: TFloat      AS WeightTare
-           , (tmpMI.CountTare + tmpMI.CountTare1 + tmpMI.CountTare2 + tmpMI.CountTare3 + tmpMI.CountTare4 + tmpMI.CountTare5 + tmpMI.CountTare6) :: TFloat AS CountTareTotal
+
+             -- Кол-во тары Итого or Кол-во ящиков Итого
+           , CASE WHEN vbBranchCode = 115
+                       THEN tmpMI.CountTare2 + tmpMI.CountTare3 + tmpMI.CountTare4 + tmpMI.CountTare5
+
+                  ELSE tmpMI.CountTare + tmpMI.CountTare1 + tmpMI.CountTare2 + tmpMI.CountTare3 + tmpMI.CountTare4 + tmpMI.CountTare5 + tmpMI.CountTare6
+
+             END :: TFloat AS CountTareTotal
+
+             -- Вес тары Итог
            , (tmpMI.WeightTare * tmpMI.CountTare + tmpMI.WeightTare1 * tmpMI.CountTare1 + tmpMI.WeightTare2 * tmpMI.CountTare2 + tmpMI.WeightTare3 * tmpMI.CountTare3 + tmpMI.WeightTare4 * tmpMI.CountTare4 + tmpMI.WeightTare5 * tmpMI.CountTare5 + tmpMI.WeightTare6 * tmpMI.CountTare6) :: TFloat AS WeightTareTotal
+
            , tmpMI.CountTare1   :: TFloat   AS CountTare1
            , tmpMI.CountTare2   :: TFloat   AS CountTare2
            , tmpMI.CountTare3   :: TFloat   AS CountTare3
@@ -358,8 +391,15 @@ BEGIN
            , tmpMI.WeightTare5  :: TFloat   AS WeightTare5
            , tmpMI.WeightTare6  :: TFloat   AS WeightTare6
 
+             -- Кол. пакетов
            , tmpMI.CountPack   :: TFloat AS Count
-           , tmpMI.HeadCount   :: TFloat AS HeadCount
+
+             -- Кол. голов OR Кол-во шт.
+           , CASE WHEN vbBranchCode = 115 AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0
+                       THEN (tmpMI.AmountPartner / (ObjectFloat_Weight.ValueData + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))) :: Integer
+                  ELSE tmpMI.HeadCount
+             END :: TFloat AS HeadCount
+
            , tmpMI.BoxCount    :: TFloat AS BoxCount
 
            , tmpMI.BoxNumber   :: TFloat AS BoxNumber
@@ -404,8 +444,12 @@ BEGIN
            , tmpMI.isErased
 
        FROM tmpMI
+            LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = tmpMI.GoodsId
+                                         AND tmpGoodsByGoodsKind.GoodsKindId = tmpMI.GoodsKindId
+
             LEFT JOIN tmpAmountDoc ON tmpAmountDoc.GoodsId     = tmpMI.GoodsId
                                   AND tmpAmountDoc.GoodsKindId = tmpMI.GoodsKindId
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
             LEFT JOIN Object AS Object_Box ON Object_Box.Id = tmpMI.BoxId

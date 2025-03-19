@@ -73,12 +73,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingProduction(
     IN inPartionGoodsDate    TDateTime , -- Партия товара (дата)
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inNumberKVK           TVarChar  , -- № КВК
-    IN inMovementItemId      Integer   , -- 
+    IN inMovementItemId      Integer   , --
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inStorageLineId       Integer   , -- Линия пр-ва
-    IN inPersonalId_KVK      Integer   , -- 
+    IN inPersonalId_KVK      Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS Integer
 AS
 $BODY$
@@ -97,7 +97,7 @@ BEGIN
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-   
+
      -- сохранили свойство <Режим начала взвешивания>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_StartWeighing(), ioId, inIsStartWeighing);
 
@@ -118,7 +118,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountPack(), ioId, inCountPack);
      -- сохранили свойство <Вес 1-ой упаковки>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightPack(), ioId, inWeightPack);
-     
+
 
 
      -- сохранили свойство <Количество шпажек/крючков вида1>
@@ -148,8 +148,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_StorageLine(), ioId, inStorageLineId);
      -- сохранили связь с <Оператор КВК(Ф.И.О)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalKVK(), ioId, inPersonalId_KVK);
-     
-    
+
+
      IF inCountTare1  > 0
         OR inCountTare2  > 0
         OR inCountTare3  > 0
@@ -166,10 +166,10 @@ BEGIN
          THEN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionNum(), ioId, CAST (NEXTVAL ('MI_PartionPassport_seq') AS TFloat));
          END IF;
-         
-         -- Ячейка хранения 
+
+         -- Ячейка хранения
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell(), ioId, inPartionCellId);
-         
+
          -- Автоматически
          PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), ioId, TRUE);
 
@@ -187,6 +187,23 @@ BEGIN
            + CASE WHEN inCountTare10 > 0 THEN 1 ELSE 0 END) > 5
          THEN
              RAISE EXCEPTION 'Ошибка.Заполнено более 5 значений';
+         END IF;
+
+         -- можно заполнить
+         IF inCountTare1 > 0 AND inCountTare2 > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Может быть указан только один вид поддона.';
+         END IF;
+
+         -- можно заполнить
+         IF inCountTare1 NOT IN (0, 1)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Кол-во поддонов может быть только = 1.';
+         END IF;
+         -- можно заполнить
+         IF inCountTare2 NOT IN (0, 1)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Кол-во поддонов может быть только = 1.';
          END IF;
 
 
@@ -227,7 +244,7 @@ BEGIN
                                     WHERE tmpParamAll.CountTare <> 0 AND tmpParamAll.BoxId <> 0
                                       -- только поддоны
                                       AND tmpParamAll.npp <= 2
- 
+
                                   UNION ALL
                                     SELECT tmpParamAll.*
                                          , 2 + ROW_NUMBER() OVER (ORDER BY tmpParamAll.npp) AS Ord

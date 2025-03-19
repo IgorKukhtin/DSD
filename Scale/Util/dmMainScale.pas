@@ -1271,9 +1271,15 @@ begin
          end;
        with execParams do
        begin
-         ParamByName('NamePack').AsString := DataSet.FieldByName('GoodsKindName').AsString;
-         ParamByName('WeightPack').AsFloat:= DataSet.FieldByName('WeightTare_gd').asFloat;
-         ParamByName('Weight_gd').AsFloat := DataSet.FieldByName('Weight_gd').asFloat;
+         ParamByName('NamePack').AsString    := DataSet.FieldByName('GoodsKindName').AsString;
+         // Вес шт. товара
+         ParamByName('Weight_gd').AsFloat    := DataSet.FieldByName('Weight_gd').asFloat;
+         // Вес 1-ой упаковки
+         ParamByName('WeightPack_gd').AsFloat:= DataSet.FieldByName('WeightTare_gd').asFloat;
+         // Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
+         if ParamByName('NamePack').AsString <> ''
+         then ParamByName('WeightPack').AsFloat:= DataSet.FieldByName('WeightTare_gd').asFloat
+         else ParamByName('WeightPack').AsFloat:= 0;
        end;
 
     end;

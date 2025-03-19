@@ -104,6 +104,7 @@ object MemberPswDialogForm: TMemberPswDialogForm
       end
       item
         Name = 'ScalePSW'
+        Value = Null
         Component = edScalePSW
         DataType = ftString
         ParamType = ptInputOutput
