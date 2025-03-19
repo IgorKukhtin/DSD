@@ -23,8 +23,12 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , PartionNum        Integer
                -- Ячейка хранения
              , PartionCellId Integer, PartionCellName TVarChar
+
                -- Вес нетто
              , Amount            TFloat
+               -- Шт                
+             , Amount_sh         TFloat
+
                -- ИТОГО Вес тары - факт
              , WeightTare    TFloat
 
@@ -137,7 +141,7 @@ BEGIN
                                                         , zc_MIFloat_WeightTare()
                                                          )
                       )
-        -- данные в Партии - Паспорта
+        -- данные в Партии Паспорта
       , tmpMIFloat_passport AS (SELECT *
                                 FROM MovementItemFloat
                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIFloat.ValueData :: Integer FROM tmpMIFloat WHERE tmpMIFloat.DescId IN (zc_MIFloat_MovementItemId()))
@@ -177,6 +181,23 @@ BEGIN
                                                                    , zc_MILinkObject_PartionCell()
                                                                     )
                             )
+     , tmpGoodsByGoodsKind AS (SELECT MovementItem.Id AS MovementItemId
+                                    , COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ValueData, 0) AS WeightPackageSticker
+                               FROM tmpMI AS MovementItem
+                                    INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                          ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                          ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = MILinkObject_GoodsKind.ObjectId
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_GoodsByGoodsKind_WeightPackageSticker
+                                                          ON ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
+                              )
         -- Результат
         SELECT
              Movement.Id                     AS Id
@@ -195,6 +216,7 @@ BEGIN
            , Object_Measure.ValueData                    AS MeasureName
              -- партия - дата
            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
+
              -- Ш/К - паспорт
            , (zfFormat_BarCode (zc_BarCodePref_MI(), MIFloat_MovementItemId.ValueData :: Integer)
            || zfCalc_SummBarCode (zfFormat_BarCode (zc_BarCodePref_MI(), MIFloat_MovementItemId.ValueData :: Integer)) :: TVarChar
@@ -209,6 +231,7 @@ BEGIN
 
              -- Вес нетто
            , MovementItem.Amount
+
              -- ИТОГО Вес тары - факт
            , MIFloat_WeightTare.ValueData AS WeightTare
 
@@ -267,6 +290,8 @@ BEGIN
         FROM tmpMovement AS Movement
             INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 
+            LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = MovementItem.Id
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -311,6 +336,10 @@ BEGIN
             LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
                                  ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                 AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+
+           -- данные в Партии - Паспорта
+           LEFT JOIN MovementItem AS MovementItem_passport ON MovementItem_passport.Id = MIFloat_MovementItemId.ValueData :: Integer
+           LEFT JOIN Movement AS Movement_passport ON Movement_passport.Id = MovementItem_passport.MovementId
 
            -- данные в Партии - Паспорта
            LEFT JOIN tmpMILO_passport AS tmpMILO_Box1_passport
