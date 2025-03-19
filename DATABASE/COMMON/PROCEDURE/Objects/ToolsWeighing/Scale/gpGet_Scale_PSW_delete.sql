@@ -33,12 +33,96 @@ BEGIN
                                               END :: TFloat
                   AND ObjectFloat.DescId = zc_ObjectFloat_Member_ScalePSW()) -- zc_ObjectFloat_User_ScalePSW
      THEN
+
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        -- для тест
+        SELECT vbUserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , 0 AS Value1
+             , 0 AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , NULL :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , NULL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpGet_Scale_PSW_delete' :: TVarChar
+               -- ProtocolData
+             , 'PSW = ok = {' || COALESCE (inPSW, '') || '}'
+              ;
+
+
          -- Результат
          RETURN QUERY
            SELECT Id, ObjectCode, ValueData, '' :: TVarChar
            FROM Object 
            WHERE Id = vbUserId;
      ELSE 
+
+        -- для тест
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        SELECT vbUserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , 0 AS Value1
+             , 0 AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , NULL :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , NULL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpGet_Scale_PSW_delete' :: TVarChar
+               -- ProtocolData
+             , 'PSW = ERROR = {' || COALESCE (inPSW, '') || '}'
+              ;
+
          -- Результат
          RETURN QUERY
            SELECT Id, ObjectCode, ValueData, 'ERROR' :: TVarChar
@@ -49,7 +133,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Scale_PSW_delete (TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -59,4 +142,6 @@ ALTER FUNCTION gpGet_Scale_PSW_delete (TVarChar, TVarChar) OWNER TO postgres;
 */
 
 -- тест
+-- SELECT * FROM ResourseProtocol where OperDate > CURRENT_DATE - INTERVAL '7 DAY' and ProcName ilike '%gpGet_Scale_PSW_delete%' ORDER BY id DESC LIMIT 100
+
 -- SELECT * FROM gpGet_Scale_PSW_delete (inPSW:= '123', inSession:=zfCalc_UserAdmin())
