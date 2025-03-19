@@ -487,6 +487,20 @@ BEGIN
                                        ON MILinkObject_Box5.MovementItemId = MovementItem.Id
                                       AND MILinkObject_Box5.DescId = zc_MILinkObject_Box5()  
                   )
+     , tmpGoodsByGoodsKind AS (SELECT MovementItem.Id AS MovementItemId
+                                    , COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ValueData, 0) AS WeightPackageSticker
+                               FROM tmpData AS MovementItem
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                          ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                          ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = MovementItem.GoodsKindId
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_GoodsByGoodsKind_WeightPackageSticker
+                                                          ON ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
+                              )
           -- РЕЗУЛЬТАТ
           SELECT tmpData.MovementId
                , tmpData.ItemName
@@ -508,11 +522,36 @@ BEGIN
                , Object_Insert.ValueData  ::TVarChar AS InsertName
                , Object_PartionCell.ValueData ::TVarChar AS PartionCellName
                , tmpData.PartionNum     ::TFloat
-               , tmpData.Amount         ::TFloat
-               , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                      THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN tmpData.Amount / ObjectFloat_Weight.ValueData ELSE 0 END
-                      ELSE 0
-                 END ::TFloat AS Amount_sh
+
+-- ************
+-- если Перемещение с Упак -> РК = здесь всегда ШТ
+-- если Инвентаризация - Подготовка = здесь всегда ВЕС
+-- ************
+
+                 -- Вес нетто
+               , CASE WHEN tmpData.DescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
+                           -- если Перемещение с Упак -> РК = переводим из ШТ в ВЕС
+                           THEN tmpData.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+  
+                      -- Иначе Инвентаризация - Подготовка = здесь всегда ВЕС
+                      ELSE tmpData.Amount
+  
+                 END :: TFloat AS Amount
+
+                 -- Шт
+             , CAST (CASE WHEN tmpData.DescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
+                               -- если Перемещение с Упак -> РК = здесь всегда ШТ
+                               THEN tmpData.Amount
+      
+                          WHEN tmpData.DescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND OF_Weight.ValueData > 0
+                               -- если Инвентаризация - Подготовка = переводим из ВЕС в ШТ
+                               THEN tmpData.Amount / (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+      
+                          ELSE 0
+      
+                     END AS NUMERIC (16, 0)
+                    ) :: TFloat AS Amount_sh
+
                , tmpData.RealWeight     ::TFloat
                , tmpData.CountTare1     ::TFloat
                , tmpData.CountTare2     ::TFloat
@@ -551,9 +590,8 @@ BEGIN
                 + COALESCE (tmpData.CountTare9,0)
                 + COALESCE (tmpData.CountTare10,0)) ::TFloat AS BoxCountTotal
 
-               , (-- COALESCE (tmpData.CountTare1,0) * COALESCE (tmpData.BoxWeight1,0)
-                  --+ COALESCE (tmpData.CountTare2,0) * COALESCE (tmpData.BoxWeight2,0)
-                  0
+               , (COALESCE (tmpData.CountTare1,0) * COALESCE (tmpData.BoxWeight1,0)
+                + COALESCE (tmpData.CountTare2,0) * COALESCE (tmpData.BoxWeight2,0)
                 + COALESCE (tmpData.CountTare3,0) * COALESCE (tmpData.BoxWeight3,0)
                 + COALESCE (tmpData.CountTare4,0) * COALESCE (tmpData.BoxWeight4,0)
                 + COALESCE (tmpData.CountTare5,0) * COALESCE (tmpData.BoxWeight5,0)
@@ -572,6 +610,8 @@ BEGIN
                , tmpData.BoxName_6 ::TVarChar, tmpData.BoxName_7 ::TVarChar, tmpData.BoxName_8 ::TVarChar, tmpData.BoxName_9 ::TVarChar, tmpData.BoxName_10 ::TVarChar
 
           FROM tmpData
+               LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = tmpData.Id
+
                LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId
                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.ObjectId
                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
@@ -582,14 +622,13 @@ BEGIN
                                       ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                      AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                    ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                   AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-               LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-               LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                     ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
-                                    AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+               LEFT JOIN ObjectFloat AS OF_Weight
+                                     ON OF_Weight.ObjectId = Object_Goods.Id
+                                    AND OF_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+               LEFT JOIN ObjectLink AS OL_Measure
+                                    ON OL_Measure.ObjectId = Object_Goods.Id
+                                   AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure()
+               LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Measure.ChildObjectId
 
                LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.DescId
               ;
