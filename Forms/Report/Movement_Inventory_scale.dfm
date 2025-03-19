@@ -42,27 +42,27 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare1
+              Column = CountTare_1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare2
+              Column = CountTare_2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare3
+              Column = CountTare_3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare4
+              Column = CountTare_4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare5
+              Column = CountTare_5
             end
             item
               Format = ',0.####'
@@ -113,7 +113,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare1
+              Column = CountTare_1
             end
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
@@ -123,22 +123,22 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare2
+              Column = CountTare_2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare3
+              Column = CountTare_3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare4
+              Column = CountTare_4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountTare5
+              Column = CountTare_5
             end
             item
               Format = ',0.####'
@@ -341,12 +341,12 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object CountTare1: TcxGridDBColumn
+          object CountTare_1: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'1'
-            DataBinding.FieldName = 'CountTare1'
+            DataBinding.FieldName = 'CountTare_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -370,12 +370,12 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object CountTare2: TcxGridDBColumn
+          object CountTare_2: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'2'
-            DataBinding.FieldName = 'CountTare2'
+            DataBinding.FieldName = 'CountTare_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -399,12 +399,12 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object CountTare3: TcxGridDBColumn
+          object CountTare_3: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'3'
-            DataBinding.FieldName = 'CountTare3'
+            DataBinding.FieldName = 'CountTare_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -428,12 +428,12 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object CountTare4: TcxGridDBColumn
+          object CountTare_4: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'4'
-            DataBinding.FieldName = 'CountTare4'
+            DataBinding.FieldName = 'CountTare_4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -457,12 +457,12 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object CountTare5: TcxGridDBColumn
+          object CountTare_5: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'5'
-            DataBinding.FieldName = 'CountTare5'
+            DataBinding.FieldName = 'CountTare_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -484,7 +484,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             DataBinding.FieldName = 'CountPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -495,7 +495,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             DataBinding.FieldName = 'WeightPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
