@@ -14,6 +14,7 @@ RETURNS TABLE (MovementItemId       Integer
               -- Вид                
              , GoodsKindId          Integer
              , GoodsKindName        TVarChar
+               --
              , MeasureId            Integer
              , MeasureName          TVarChar
                                     
