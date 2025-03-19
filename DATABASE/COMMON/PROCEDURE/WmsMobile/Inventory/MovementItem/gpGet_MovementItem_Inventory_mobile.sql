@@ -6,64 +6,75 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_Inventory_mobile(
     IN inBarCode             TVarChar  , -- штрихкод
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementItemId    Integer
-              -- Товар
-             , GoodsId           Integer
-             , GoodsCode         Integer
-             , GoodsName         TVarChar
-              -- Вид
-             , GoodsKindId       Integer
-             , GoodsKindName     TVarChar
+RETURNS TABLE (MovementItemId       Integer
+              -- Товар              
+             , GoodsId              Integer
+             , GoodsCode            Integer
+             , GoodsName            TVarChar
+              -- Вид                
+             , GoodsKindId          Integer
+             , GoodsKindName        TVarChar
+             , MeasureId            Integer
+             , MeasureName          TVarChar
+                                    
+               -- Вес 1 шт
+             , Weight               TFloat
+               -- Вес 1-ой упаковки - справочно
+             , WeightPackageSticker TFloat
+
                -- Вес нетто
-             , Amount            TFloat
+             , Amount               TFloat
+               -- Шт                
+             , Amount_sh            TFloat
                -- Ячейка хранения
-             , PartionCellId     Integer
-             , PartionCellName   TVarChar
-               -- партия
-             , PartionGoodsDate  TDateTime
-               -- № паспорта
-             , PartionNum        Integer
-               -- Поддон
-             , BoxId_1           Integer
-             , BoxName_1         TVarChar
-             , CountTare_1       Integer
-             , WeightTare_1      TFloat
-               -- Ящик
-             , BoxId_2           Integer
-             , BoxName_2         TVarChar
-             , CountTare_2       Integer
-             , WeightTare_2      TFloat
-               -- Ящик
-             , BoxId_3           Integer
-             , BoxName_3         TVarChar
-             , CountTare_3       Integer
-             , WeightTare_3      TFloat
-               -- Ящик
-             , BoxId_4           Integer
-             , BoxName_4         TVarChar
-             , CountTare_4       Integer
-             , WeightTare_4      TFloat
-               -- Ящик
-             , BoxId_5           Integer
-             , BoxName_5         TVarChar
-             , CountTare_5       Integer
-             , WeightTare_5      TFloat
+             , PartionCellId        Integer
+             , PartionCellName      TVarChar
+               -- партия            
+             , PartionGoodsDate     TDateTime
+               -- № паспорта        
+             , PartionNum           Integer
+               -- Поддон            
+             , BoxId_1              Integer
+             , BoxName_1            TVarChar
+             , CountTare_1          Integer
+             , WeightTare_1         TFloat
+               -- Ящик              
+             , BoxId_2              Integer
+             , BoxName_2            TVarChar
+             , CountTare_2          Integer
+             , WeightTare_2         TFloat
+               -- Ящик              
+             , BoxId_3              Integer
+             , BoxName_3            TVarChar
+             , CountTare_3          Integer
+             , WeightTare_3         TFloat
+               -- Ящик              
+             , BoxId_4              Integer
+             , BoxName_4            TVarChar
+             , CountTare_4          Integer
+             , WeightTare_4         TFloat
+               -- Ящик              
+             , BoxId_5              Integer
+             , BoxName_5            TVarChar
+             , CountTare_5          Integer
+             , WeightTare_5         TFloat
 
                -- ИТОГО Кол-во Ящиков
-             , CountTare_calc    Integer
+             , CountTare_calc       Integer
 
                -- Количество упаковок
-             , CountPack         Integer
+             , CountPack            Integer
                -- Вес 1-ой упаковки
-             , WeightPack        TFloat
+             , WeightPack           TFloat
 
                -- ИТОГО Вес всех Ящиков + Поддон + Упаковка
-             , WeightTare_calc   TFloat
+             , WeightTare_calc      TFloat
               )
 AS
 $BODY$
    DECLARE vbUserId         Integer;
    DECLARE vbMovementItemId Integer;
+   DECLARE vbMovementDescId Integer;
    DECLARE vbPartionNum     TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -82,7 +93,7 @@ BEGIN
               --
               vbMovementItemId:= (SELECT MIF.MovementItemId FROM MovementItemFloat AS MIF WHERE MIF.DescId = zc_MIFloat_PartionNum() AND MIF.ValueData = vbPartionNum);
 
-         -- по штрих коду
+         -- иначе по штрихкоду
          ELSE
              --
              vbMovementItemId:= (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, LENGTH (zc_BarCodePref_MI()) + 1, 13-LENGTH (zc_BarCodePref_MI()) - 1)));
@@ -90,13 +101,16 @@ BEGIN
 
      END IF;
 
+     -- надо найти
+     vbMovementDescId:= (SELECT Movement.DescId FROM MovementItem JOIN Movement ON Movement.Id = MovementItem.MovementId WHERE MovementItem.Id = vbMovementItemId);
+
 
      -- Проверка
      IF COALESCE (vbMovementItemId, 0) = 0 OR NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = vbMovementItemId /*AND MovementItem.isErased = FALSE*/)
      THEN
         --
          RAISE EXCEPTION 'Ошибка.Паспорт  с % = <%> не найден.'
-                        , CASE WHEN CHAR_LENGTH (inBarCode) < 12 THEN 'Номером' ELSE 'штрихкодом' END
+                        , CASE WHEN CHAR_LENGTH (inBarCode) < 12 THEN 'Номером' ELSE 'штрих кодом' END
                         , inBarCode;
      END IF;
 
@@ -165,16 +179,69 @@ BEGIN
                                  LEFT JOIN Object AS Object_Box ON Object_Box.Id = tmpMILO_Box.ObjectId
                             WHERE tmpMILO_Box.ObjectId > 0
                            )
+     , tmpGoodsByGoodsKind AS (SELECT MovementItem.Id AS MovementItemId
+                                    , COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ValueData, 0) AS WeightPackageSticker
+                               FROM MovementItem
+                                    INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                          ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                          ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = MILinkObject_GoodsKind.ObjectId
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_GoodsByGoodsKind_WeightPackageSticker
+                                                          ON ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
+                               WHERE MovementItem.Id = vbMovementItemId
+                              )
         -- Результат
         SELECT
-               MovementItem.Id                           AS MovementItemId
-             , Object_Goods.Id                           AS GoodsId
-             , Object_Goods.ObjectCode                   AS GoodsCode
-             , Object_Goods.ValueData                    AS GoodsName
-             , Object_GoodsKind.Id                       AS GoodsKindId
-             , Object_GoodsKind.ValueData                AS GoodsKindName
+               MovementItem.Id                                     AS MovementItemId
+             , Object_Goods.Id                                     AS GoodsId
+             , Object_Goods.ObjectCode                             AS GoodsCode
+             , Object_Goods.ValueData                              AS GoodsName
+             , Object_GoodsKind.Id                                 AS GoodsKindId
+             , Object_GoodsKind.ValueData                          AS GoodsKindName
+             , Object_Measure.Id                                   AS MeasureId
+             , Object_Measure.ValueData                            AS MeasureName
+                                                                   
+               -- Вес 1 шт
+             , OF_Weight.ValueData                                 AS Weight 
+               -- Вес 1-ой упаковки - справочно
+             , tmpGoodsByGoodsKind.WeightPackageSticker :: TFloat  AS WeightPackageSticker
+
+-- ************
+-- если Перемещение с Упак -> РК = здесь всегда ШТ
+-- если Инвентаризация - Подготовка = здесь всегда ВЕС
+-- ************
+
                -- Вес нетто
-             , MovementItem.Amount                       AS Amount
+             , CASE WHEN vbMovementDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
+                         -- если Перемещение с Упак -> РК = переводим из ШТ в ВЕС
+                         THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+
+                    -- Иначе Инвентаризация - Подготовка = здесь всегда ВЕС
+                    ELSE MovementItem.Amount
+
+               END :: TFloat AS Amount
+
+               -- Шт
+             , CAST (CASE WHEN vbMovementDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
+                               -- если Перемещение с Упак -> РК = здесь всегда ШТ
+                               THEN MovementItem.Amount
+      
+                          WHEN vbMovementDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND OF_Weight.ValueData > 0
+                               -- если Инвентаризация - Подготовка = переводим из ВЕС в ШТ
+                               THEN MovementItem.Amount / (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+      
+                          ELSE 0
+      
+                     END AS NUMERIC (16, 0)
+                    ) :: TFloat AS Amount_sh
+
                -- Ячейка хранения
              , Object_PartionCell.Id                     AS PartionCellId
              , Object_PartionCell.ValueData              AS PartionCellName
@@ -220,7 +287,7 @@ BEGIN
                ) :: Integer AS CountTare_calc
 
                -- Количество упаковок
-             , COALESCE (tmpMIF_CountPack.ValueData, 0)  :: Integer AS CountPack           
+             , COALESCE (tmpMIF_CountPack.ValueData, 0)  :: Integer AS CountPack
                -- Вес 1-ой упаковки
              , COALESCE (tmpMIF_WeightPack.ValueData, 0) :: TFloat  AS WeightPack
 
@@ -237,6 +304,8 @@ BEGIN
                ) :: TFloat AS WeightTare_calc
 
         FROM MovementItem
+             LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = MovementItem.Id
+
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
              LEFT JOIN MovementItemFloat AS MIFloat_PartionNum
                                          ON MIFloat_PartionNum.MovementItemId = MovementItem.Id
@@ -256,6 +325,14 @@ BEGIN
                                               ON MILinkObject_PartionCell.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PartionCell.DescId = zc_MILinkObject_PartionCell()
              LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
+
+             LEFT JOIN ObjectFloat AS OF_Weight
+                                   ON OF_Weight.ObjectId = Object_Goods.Id
+                                  AND OF_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+             LEFT JOIN ObjectLink AS OL_Measure
+                                  ON OL_Measure.ObjectId = Object_Goods.Id
+                                 AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Measure.ChildObjectId
 
              -- Количество упаковок
              LEFT JOIN tmpMIF_CountTare AS tmpMIF_CountPack
@@ -293,4 +370,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_MovementItem_Inventory_mobile ('7', zfCalc_UserAdmin())
--- SELECT * FROM gpGet_MovementItem_Inventory_mobile ('2033193606719', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_MovementItem_Inventory_mobile ('2033196375483', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_MovementItem_Inventory_mobile ('2033196671547', zfCalc_UserAdmin())
