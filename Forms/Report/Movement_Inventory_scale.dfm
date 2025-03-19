@@ -108,6 +108,11 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
               Format = ',0.####'
               Kind = skSum
               Column = CountPack
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -194,6 +199,11 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
               Format = ',0.####'
               Kind = skSum
               Column = CountPack
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -317,6 +327,20 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           object Amount: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1085#1077#1090#1090#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Amount_sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1096#1090
+            DataBinding.FieldName = 'Amount_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -329,7 +353,6 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 60
           end
           object CountTare_calc: TcxGridDBColumn
@@ -357,14 +380,14 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object BoxName_1: TcxGridDBColumn
-            Caption = #1071#1097'. '#1074#1080#1076#1072'1'
+            Caption = #1055#1086#1076#1076#1086#1085
             DataBinding.FieldName = 'BoxName_1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object CountTare_1: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'1'
+            Caption = #1050#1086#1083'. '#1087#1086#1076#1076#1086#1085#1086#1074
             DataBinding.FieldName = 'CountTare_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -375,7 +398,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object WeightTare_1: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076#1072'1'
+            Caption = #1042#1077#1089' '#1087#1086#1076#1076#1086#1085#1072
             DataBinding.FieldName = 'WeightTare_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -386,14 +409,14 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object BoxName_2: TcxGridDBColumn
-            Caption = #1071#1097'. '#1074#1080#1076#1072'2'
+            Caption = #1071#1097'. '#1074#1080#1076'-1'
             DataBinding.FieldName = 'BoxName_2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object CountTare_2: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'2'
+            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076'-1'
             DataBinding.FieldName = 'CountTare_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -404,7 +427,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object WeightTare_2: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076#1072'2'
+            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076'-1'
             DataBinding.FieldName = 'WeightTare_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -415,14 +438,14 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object BoxName_3: TcxGridDBColumn
-            Caption = #1071#1097'. '#1074#1080#1076#1072'3'
+            Caption = #1071#1097'. '#1074#1080#1076'-2'
             DataBinding.FieldName = 'BoxName_3'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object CountTare_3: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'3'
+            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076'-2'
             DataBinding.FieldName = 'CountTare_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -433,7 +456,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object WeightTare_3: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076#1072'3'
+            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076'-2'
             DataBinding.FieldName = 'WeightTare_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -444,14 +467,14 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object BoxName_4: TcxGridDBColumn
-            Caption = #1071#1097'. '#1074#1080#1076#1072'4'
+            Caption = #1071#1097'. '#1074#1080#1076'-3'
             DataBinding.FieldName = 'BoxName_4'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object CountTare_4: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'4'
+            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076'-3'
             DataBinding.FieldName = 'CountTare_4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -462,7 +485,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object WeightTare_4: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076#1072'4'
+            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076'-3'
             DataBinding.FieldName = 'WeightTare_4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -473,14 +496,14 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object BoxName_5: TcxGridDBColumn
-            Caption = #1071#1097'. '#1074#1080#1076#1072'5'
+            Caption = #1071#1097'. '#1074#1080#1076'-4'
             DataBinding.FieldName = 'BoxName_5'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object CountTare_5: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076#1072'5'
+            Caption = #1050#1086#1083'. '#1103#1097'. '#1074#1080#1076'-4'
             DataBinding.FieldName = 'CountTare_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -491,7 +514,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object WeightTare_5: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076#1072'5'
+            Caption = #1042#1077#1089' '#1103#1097'. '#1074#1080#1076'-4'
             DataBinding.FieldName = 'WeightTare_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1172,7 +1195,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
         Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MovementId'
+        ComponentItem = 'MovementId_pas'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1180,7 +1203,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
         Name = 'inId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MovementItemId'
+        ComponentItem = 'MovementItemId_pas'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

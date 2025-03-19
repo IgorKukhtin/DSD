@@ -409,7 +409,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1042#1077#1089' '#1085#1077#1090#1090#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
@@ -449,7 +449,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object BoxWeightTotal: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1103#1097#1080#1082#1086#1074
+            Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1090#1072#1088#1099
             DataBinding.FieldName = 'BoxWeightTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
@@ -612,121 +612,121 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object WeightTare1: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-1'
+            Caption = #1042#1077#1089' '#1055#1086#1076#1076#1086#1085' 80'#1093'120'
             DataBinding.FieldName = 'WeightTare1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
           object WeightTare2: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-2'
+            Caption = #1042#1077#1089' '#1055#1086#1076#1076#1086#1085' '#1045#1042#1056#1054
             DataBinding.FieldName = 'WeightTare2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
           object WeightTare3: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-3'
+            Caption = #1042#1077#1089' '#1103#1097'.-1'
             DataBinding.FieldName = 'WeightTare3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
           object WeightTare4: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-4'
+            Caption = #1042#1077#1089' '#1103#1097'.-2'
             DataBinding.FieldName = 'WeightTare4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
           object WeightTare5: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-5'
+            Caption = #1042#1077#1089' '#1103#1097'.-3'
             DataBinding.FieldName = 'WeightTare5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
           object WeightTare6: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-6'
+            Caption = #1042#1077#1089' '#1103#1097'.-4'
             DataBinding.FieldName = 'WeightTare6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
           object WeightTare7: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-7'
+            Caption = #1042#1077#1089' '#1103#1097'.-5'
             DataBinding.FieldName = 'WeightTare7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
           object WeightTare8: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-8'
+            Caption = #1042#1077#1089' '#1103#1097'.-6'
             DataBinding.FieldName = 'WeightTare8'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
           object WeightTare9: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-9'
+            Caption = #1042#1077#1089' '#1103#1097'.-7'
             DataBinding.FieldName = 'WeightTare9'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
           object WeightTare10: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-10'
+            Caption = #1042#1077#1089' '#1103#1097'.-8'
             DataBinding.FieldName = 'WeightTare10'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
           object BoxWeight1: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-1 ('#1080#1085#1092')'
+            Caption = #1042#1077#1089' '#1055#1086#1076#1076#1086#1085' 80'#1093'120 ('#1080#1085#1092')'
             DataBinding.FieldName = 'BoxWeight1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -734,11 +734,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object BoxWeight2: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-2 ('#1080#1085#1092')'
+            Caption = #1042#1077#1089' '#1055#1086#1076#1076#1086#1085' '#1045#1042#1056#1054' ('#1080#1085#1092')'
             DataBinding.FieldName = 'BoxWeight2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -746,11 +746,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object BoxWeight3: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-3 ('#1080#1085#1092')'
+            Caption = #1042#1077#1089' '#1103#1097'.-1 ('#1080#1085#1092')'
             DataBinding.FieldName = 'BoxWeight3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -758,11 +758,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object BoxWeight4: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-4 ('#1080#1085#1092')'
+            Caption = #1042#1077#1089' '#1103#1097'.-2 ('#1080#1085#1092')'
             DataBinding.FieldName = 'BoxWeight4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -770,11 +770,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object BoxWeight5: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-5 ('#1080#1085#1092')'
+            Caption = #1042#1077#1089' '#1103#1097'.-3 ('#1080#1085#1092')'
             DataBinding.FieldName = 'BoxWeight5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -782,11 +782,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object BoxWeight6: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-6 ('#1080#1085#1092')'
+            Caption = #1042#1077#1089' '#1103#1097'.-4 ('#1080#1085#1092')'
             DataBinding.FieldName = 'BoxWeight6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -794,11 +794,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object BoxWeight7: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-7 ('#1080#1085#1092')'
+            Caption = #1042#1077#1089' '#1103#1097'.-5 ('#1080#1085#1092')'
             DataBinding.FieldName = 'BoxWeight7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -806,11 +806,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object BoxWeight8: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-8 ('#1080#1085#1092')'
+            Caption = #1042#1077#1089' '#1103#1097'.-6 ('#1080#1085#1092')'
             DataBinding.FieldName = 'BoxWeight8'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -818,11 +818,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object BoxWeight9: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-9 ('#1080#1085#1092')'
+            Caption = #1042#1077#1089' '#1103#1097'.-7 ('#1080#1085#1092')'
             DataBinding.FieldName = 'BoxWeight9'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -830,11 +830,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             Width = 60
           end
           object BoxWeight10: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.-10 ('#1080#1085#1092')'
+            Caption = #1042#1077#1089' '#1103#1097'.-8 ('#1080#1085#1092')'
             DataBinding.FieldName = 'BoxWeight10'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -846,7 +846,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'CountPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -857,7 +857,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'WeightPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -868,7 +868,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             DataBinding.FieldName = 'WeightPack_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

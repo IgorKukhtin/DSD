@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory_scale(
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , MovementItemId Integer
+             , MovementId_pas Integer, MovementItemId_pas Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
@@ -28,6 +29,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , Amount            TFloat
                -- Шт
              , Amount_sh         TFloat
+             
+             , RealWeight        TFloat
 
                -- ИТОГО Вес тары - факт
              , WeightTare    TFloat
@@ -138,7 +141,8 @@ BEGIN
                        FROM MovementItemFloat
                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                          AND MovementItemFloat.DescId IN (zc_MIFloat_MovementItemId()
-                                                        , zc_MIFloat_WeightTare()
+                                                        , zc_MIFloat_WeightTare() 
+                                                        , zc_MIFloat_RealWeight()
                                                          )
                       )
         -- данные в Партии Паспорта
@@ -207,6 +211,10 @@ BEGIN
            , Movement.StatusName             AS StatusName
 
            , MovementItem.Id                             AS MovementItemId
+            -- данные Партии - Паспорта
+           , MovementItem_passport.MovementId            AS MovementId_pas
+           , MIFloat_MovementItemId.ValueData ::Integer  AS MovementItemId_pas
+
            , Object_Goods.Id                             AS GoodsId
            , Object_Goods.ObjectCode                     AS GoodsCode
            , Object_Goods.ValueData                      AS GoodsName
@@ -244,7 +252,9 @@ BEGIN
                   ELSE 0
              END :: TFloat AS Amount_sh
 
-
+           --
+           , MIFloat_RealWeight.ValueData              ::TFloat   AS RealWeight
+           
              -- ИТОГО Вес тары - факт
            , MIFloat_WeightTare.ValueData AS WeightTare
 
@@ -345,13 +355,17 @@ BEGIN
                                  ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
                                 AND MIFloat_WeightTare.DescId         = zc_MIFloat_WeightTare()
 
+            LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
+                                 ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
+                                AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
+
             -- Партия - Паспорт
             LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
                                  ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                 AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
 
            -- данные в Партии - Паспорта
-           -- LEFT JOIN MovementItem AS MovementItem_passport ON MovementItem_passport.Id = MIFloat_MovementItemId.ValueData :: Integer
+           LEFT JOIN MovementItem AS MovementItem_passport ON MovementItem_passport.Id = MIFloat_MovementItemId.ValueData :: Integer
            -- LEFT JOIN Movement AS Movement_passport ON Movement_passport.Id = MovementItem_passport.MovementId
 
            -- данные в Партии - Паспорта
