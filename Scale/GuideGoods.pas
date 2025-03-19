@@ -2154,14 +2154,11 @@ begin
               // Название 1-ой упаковки - Флоупак +  Нар.180 + Нар
               if ParamsMI.ParamByName('NamePack').AsString <> ''
               then if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
-                   then LabelTare0.Caption:= 'Кол-во ' + ParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(ParamsMI.ParamByName('Weight_gd').AsFloat)+' кг.) + ('+FloatToStr(ParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
-                   else LabelTare0.Caption:= 'Кол-во ' + ParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(ParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
+                   then LabelTare0.Caption:= 'Кол-во ' + ParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(ParamsMI.ParamByName('Weight_gd').AsFloat)+' кг.) + ('+FloatToStr(ParamsMI.ParamByName('WeightPack_gd').AsFloat)+' кг.)'
+                   else LabelTare0.Caption:= 'Кол-во ' + ParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(ParamsMI.ParamByName('WeightPack_gd').AsFloat)+' кг.)'
               else if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
-                   then LabelTare0.Caption:= 'Нет Кол-во Флоупак ('+FloatToStr(ParamsMI.ParamByName('Weight_gd').AsFloat)+' кг.) + ('+FloatToStr(ParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
+                   then LabelTare0.Caption:= 'Нет Кол-во Флоупак ('+FloatToStr(ParamsMI.ParamByName('Weight_gd').AsFloat)+' кг.) + ('+FloatToStr(ParamsMI.ParamByName('WeightPack_gd').AsFloat)+' кг.)'
                    else LabelTare0.Caption:= 'Нет Кол-во Флоупак';
-              //
-              if ParamsMI.ParamByName('NamePack').AsString = ''
-              then ParamsMI.ParamByName('WeightPack').AsFloat:= 0;
      end;
 
 end;
@@ -2342,9 +2339,6 @@ begin
                     //
                     if not DMMainScaleForm.gpGet_Scale_Goods_gk(ParamsMI) then exit;
                     //
-                    if ParamsMI.ParamByName('NamePack').AsString = ''
-                    then ParamsMI.ParamByName('WeightPack').AsFloat:= 0;
-                    //
                     ParamsMI.ParamByName('RealWeight').AsFloat:=ParamsMI.ParamByName('RealWeight_Get').AsFloat;
                     PanelShGoods_total.Caption:= FloatToStr(ROUND ((ParamsMI.ParamByName('RealWeight_Get').AsFloat
                                                             - ParamsMI.ParamByName('CountPack').AsFloat * ParamsMI.ParamByName('WeightPack').AsFloat
@@ -2359,7 +2353,7 @@ begin
                                                             - ParamsMI.ParamByName('CountTare9').AsFloat * SettingMain.WeightTare9
                                                             - ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10
                                                              )
-                                                           / (ParamsMI.ParamByName('Weight_gd').AsFloat + ParamsMI.ParamByName('WeightPack').AsFloat)));
+                                                           / (ParamsMI.ParamByName('Weight_gd').AsFloat + ParamsMI.ParamByName('WeightPack_gd').AsFloat)));
                     //
                     EditWeightValue.Text:= PanelShGoods_total.Caption;
                     //
