@@ -168,7 +168,7 @@ BEGIN
      vbId:= gpInsertUpdate_MovementItem_WeighingProduction (ioId                  := 0
                                                           , inMovementId          := vbMovementId
                                                           , inGoodsId             := gpGet.GoodsId
-                                                          , inAmount              := gpGet.Amount
+                                                          , inAmount              := CASE WHEN gpGet.MeasureId = zc_Measure_Sh() THEN gpGet.Amount_sh ELSE gpGet.Amount END
                                                           , inIsStartWeighing     := TRUE
                                                           , inRealWeight          := gpGet.Amount + gpGet.WeightTare_calc
                                                           , inWeightTare          := gpGet.WeightTare_calc

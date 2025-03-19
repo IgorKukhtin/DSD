@@ -14,7 +14,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
-             , MeasureName TVarChar
+             , MeasureId Integer, MeasureName TVarChar
                -- партия - дата
              , PartionGoodsDate TDateTime
                -- Ш/К - паспорт
@@ -26,7 +26,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
 
                -- Вес нетто
              , Amount            TFloat
-               -- Шт                
+               -- Шт
              , Amount_sh         TFloat
 
                -- ИТОГО Вес тары - факт
@@ -61,12 +61,12 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
                -- ИТОГО Кол-во Ящиков
              , CountTare_calc    Integer
                -- ИТОГО Вес всех Ящиков - расчет
-             , WeightTare_calc   TFloat 
+             , WeightTare_calc   TFloat
                --упаковка
              , CountPack         Integer
              , WeightPack        TFloat
              , WeightPack_calc   TFloat
-             
+
                --
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -213,7 +213,9 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsKind.Id                         AS GoodsKindId
            , Object_GoodsKind.ValueData                  AS GoodsKindName
+           , Object_Measure.Id                           AS MeasureId
            , Object_Measure.ValueData                    AS MeasureName
+
              -- партия - дата
            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
 
@@ -230,7 +232,18 @@ BEGIN
            , Object_PartionCell.ValueData ::TVarChar  AS PartionCellName
 
              -- Вес нетто
-           , MovementItem.Amount
+           , CASE WHEN OL_Measure.ChildObjectId = zc_Measure_Sh()
+                       -- переводим из ШТ в ВЕС
+                       THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+                  ELSE MovementItem.Amount
+             END :: TFloat AS Amount
+
+             -- Шт
+           , CASE WHEN OL_Measure.ChildObjectId = zc_Measure_Sh()
+                       THEN MovementItem.Amount
+                  ELSE 0
+             END :: TFloat AS Amount_sh
+
 
              -- ИТОГО Вес тары - факт
            , MIFloat_WeightTare.ValueData AS WeightTare
@@ -338,8 +351,8 @@ BEGIN
                                 AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
 
            -- данные в Партии - Паспорта
-           LEFT JOIN MovementItem AS MovementItem_passport ON MovementItem_passport.Id = MIFloat_MovementItemId.ValueData :: Integer
-           LEFT JOIN Movement AS Movement_passport ON Movement_passport.Id = MovementItem_passport.MovementId
+           -- LEFT JOIN MovementItem AS MovementItem_passport ON MovementItem_passport.Id = MIFloat_MovementItemId.ValueData :: Integer
+           -- LEFT JOIN Movement AS Movement_passport ON Movement_passport.Id = MovementItem_passport.MovementId
 
            -- данные в Партии - Паспорта
            LEFT JOIN tmpMILO_passport AS tmpMILO_Box1_passport
@@ -407,7 +420,7 @@ BEGIN
                                          ON tmpMIFloat_WeightTare5_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_WeightTare5_passport.DescId         = zc_MIFloat_WeightTare5()
 
-           --упаковка
+           -- упаковка
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_CountPack
                                          ON tmpMIFloat_CountPack.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_CountPack.DescId         = zc_MIFloat_CountPack()
@@ -419,11 +432,14 @@ BEGIN
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_PartionNum_passport
                                          ON tmpMIFloat_PartionNum_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_PartionNum_passport.DescId         = zc_MIFloat_PartionNum()
-
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+           --
+           LEFT JOIN ObjectFloat AS OF_Weight
+                                 ON OF_Weight.ObjectId = Object_Goods.Id
+                                AND OF_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+           LEFT JOIN ObjectLink AS OL_Measure
+                                ON OL_Measure.ObjectId = Object_Goods.Id
+                               AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure()
+           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Measure.ChildObjectId
           ;
 
 

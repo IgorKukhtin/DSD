@@ -16,6 +16,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
+             , MeasureId Integer, MeasureName TVarChar
                -- партия - дата
              , PartionGoodsDate TDateTime
                -- Ш/К - паспорт
@@ -24,8 +25,12 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , PartionNum        Integer
                -- Ячейка хранения
              , PartionCellId Integer, PartionCellName TVarChar
+
                -- Вес нетто
              , Amount            TFloat
+               -- Шт                
+             , Amount_sh         TFloat
+
                -- ИТОГО Вес тары - факт
              , WeightTare    TFloat
 
@@ -172,6 +177,23 @@ BEGIN
                                                                    , zc_MILinkObject_PartionCell()
                                                                     )
                             )
+     , tmpGoodsByGoodsKind AS (SELECT MovementItem.Id AS MovementItemId
+                                    , COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ValueData, 0) AS WeightPackageSticker
+                               FROM tmpMI AS MovementItem
+                                    INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                          ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                          ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = MILinkObject_GoodsKind.ObjectId
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_GoodsByGoodsKind_WeightPackageSticker
+                                                          ON ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
+                              )
         -- Результат
         SELECT
              Movement.Id                     AS Id
@@ -187,8 +209,12 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsKind.Id                         AS GoodsKindId
            , Object_GoodsKind.ValueData                  AS GoodsKindName
+           , Object_Measure.Id                           AS MeasureId
+           , Object_Measure.ValueData                    AS MeasureName
+
              -- партия - дата
            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
+
              -- Ш/К - паспорт
            , (zfFormat_BarCode (zc_BarCodePref_MI(), MIFloat_MovementItemId.ValueData :: Integer)
            || zfCalc_SummBarCode (zfFormat_BarCode (zc_BarCodePref_MI(), MIFloat_MovementItemId.ValueData :: Integer)) :: TVarChar
@@ -202,7 +228,18 @@ BEGIN
            , Object_PartionCell.ValueData ::TVarChar  AS PartionCellName
 
              -- Вес нетто
-           , MovementItem.Amount
+           , CASE WHEN OL_Measure.ChildObjectId = zc_Measure_Sh()
+                       -- переводим из ШТ в ВЕС
+                       THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+                  ELSE MovementItem.Amount
+             END :: TFloat AS Amount
+
+             -- Шт
+           , CASE WHEN OL_Measure.ChildObjectId = zc_Measure_Sh()
+                       THEN MovementItem.Amount
+                  ELSE 0
+             END :: TFloat AS Amount_sh
+
              -- ИТОГО Вес тары - факт
            , MIFloat_WeightTare.ValueData AS WeightTare
 
@@ -256,6 +293,8 @@ BEGIN
 
         FROM tmpMovement AS Movement
             INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+
+            LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = MovementItem.Id
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
@@ -372,6 +411,15 @@ BEGIN
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_PartionNum_passport
                                          ON tmpMIFloat_PartionNum_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_PartionNum_passport.DescId         = zc_MIFloat_PartionNum()
+
+           --
+           LEFT JOIN ObjectFloat AS OF_Weight
+                                 ON OF_Weight.ObjectId = Object_Goods.Id
+                                AND OF_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+           LEFT JOIN ObjectLink AS OL_Measure
+                                ON OL_Measure.ObjectId = Object_Goods.Id
+                               AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure()
+           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Measure.ChildObjectId
 
         WHERE (MILO_Insert.ObjectId = vbUserId OR inIsAllUser = TRUE)
           AND (COALESCE(inFilter, '') = '' -- Назв. товара
