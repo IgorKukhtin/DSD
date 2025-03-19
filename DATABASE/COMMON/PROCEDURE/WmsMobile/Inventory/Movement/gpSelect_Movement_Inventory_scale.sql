@@ -26,7 +26,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
 
                -- Вес нетто
              , Amount            TFloat
-               -- Шт                
+               -- Шт
              , Amount_sh         TFloat
 
                -- ИТОГО Вес тары - факт
@@ -61,12 +61,12 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
                -- ИТОГО Кол-во Ящиков
              , CountTare_calc    Integer
                -- ИТОГО Вес всех Ящиков - расчет
-             , WeightTare_calc   TFloat 
+             , WeightTare_calc   TFloat
                --упаковка
              , CountPack         Integer
              , WeightPack        TFloat
              , WeightPack_calc   TFloat
-             
+
                --
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -432,7 +432,7 @@ BEGIN
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_PartionNum_passport
                                          ON tmpMIFloat_PartionNum_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_PartionNum_passport.DescId         = zc_MIFloat_PartionNum()
-
+           --
            LEFT JOIN ObjectFloat AS OF_Weight
                                  ON OF_Weight.ObjectId = Object_Goods.Id
                                 AND OF_Weight.DescId = zc_ObjectFloat_Goods_Weight()
