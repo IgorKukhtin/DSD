@@ -43,8 +43,10 @@ BEGIN
      */
 
      -- расчет за прошлый мес€ц
-     vbStartDate := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);  --'01.02.2025' ::TDateTime; --
-     vbEndDate   := DATE_TRUNC ('MONTH', CURRENT_DATE)  - INTERVAL '1 DAY';    --'19.02.2025' ::TDateTime; --
+     --vbStartDate := DATE_TRUNC ('MONTH', (CURRENT_DATE - INTERVAL '1 MONTH')::TDateTime);  --'01.02.2025' ::TDateTime; --
+     --vbEndDate   := DATE_TRUNC ('MONTH', CURRENT_DATE)  - INTERVAL '1 DAY';    --'19.02.2025' ::TDateTime; --        
+     vbStartDate := inStartDate;
+     vbEndDate   := inEndDate;
 
      IF inStartDate <> vbStartDate OR inEndDate <> vbEndDate
      THEN

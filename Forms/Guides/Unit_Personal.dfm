@@ -294,7 +294,6 @@ object Unit_PersonalForm: TUnit_PersonalForm
       Left = 107
       Top = 5
       EditValue = 45658d
-      Properties.ReadOnly = True
       Properties.ShowTime = False
       TabOrder = 0
       Width = 82
@@ -303,7 +302,6 @@ object Unit_PersonalForm: TUnit_PersonalForm
       Left = 314
       Top = 5
       EditValue = 45658d
-      Properties.ReadOnly = True
       Properties.ShowTime = False
       TabOrder = 1
       Width = 82
