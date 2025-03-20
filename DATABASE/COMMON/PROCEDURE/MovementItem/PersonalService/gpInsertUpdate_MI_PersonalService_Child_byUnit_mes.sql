@@ -227,7 +227,7 @@ BEGIN
      -- 3 соответствие должности в табеле и в "Справочнике Штатное расписание (данные)
      -- получаем данные из спр. Штатное расписание по должностям, и проверяем все ли соотв. полученнім при формировнии отчета
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
-     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Должность '|| Object_Position.ValueData ||' не соответствует штатному расписанию' ::TVarChar, 'проверка 3' ::TVarChar
+     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Должность ('||Object_Position.ObjectCode :: TVarChar||')'|| Object_Position.ValueData ||' не соответствует штатному расписанию' ::TVarChar, 'проверка 3' ::TVarChar
      FROM
           (WITH
            tmpStaffList AS (SELECT
@@ -442,7 +442,7 @@ BEGIN
                                                              , inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer      --
                                                              , inMemberId              := tmp.MemberId               ::Integer      --
                                                                -- Примечание
-                                                             , inComment               := (tmp.Comment || zfConvert_DateToString (inStartDate) || '> по <' || zfConvert_DateToString (inStartDate) || '>') :: TVarChar
+                                                             , inComment               := (tmp.Comment || ' за период с <'  || zfConvert_DateToString (inStartDate) || '> по <' || zfConvert_DateToString (inStartDate) || '>') :: TVarChar
                                                              , inSession               := inSession                  ::TVarChar
                                                               )
          FROM (SELECT DISTINCT 
@@ -516,7 +516,7 @@ BEGIN
      END IF;
 
     -- Для Теста
-    if vbUserId IN (9457, 5) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
+    if vbUserId IN (9457) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
 
     outPersonalServiceDate := CURRENT_TIMESTAMP;
 
