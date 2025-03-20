@@ -524,6 +524,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -743,12 +744,27 @@ object Unit_PersonalForm: TUnit_PersonalForm
           Action = macInsertUpdate_PersonalService_list
         end
         item
+          Action = actComplete_Mov
+        end
+        item
           Action = actOpenMessagePersonalServiceForm
         end>
       QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
       Caption = #1040#1074#1090#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1047#1055' '#1057#1090#1072#1088#1090
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103#1084' '#1047#1055
+    end
+    object actComplete_Mov: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spComplete_Mov
+      StoredProcList = <
+        item
+          StoredProc = spComplete_Mov
+        end>
+      Caption = 'actComplete_Mov'
+      ImageIndex = 66
     end
     object actGet_Param_next: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1075,5 +1091,37 @@ object Unit_PersonalForm: TUnit_PersonalForm
     PackSize = 1
     Left = 56
     Top = 312
+  end
+  object spComplete_Mov: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_PersonalService_byMessage_auto'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 45658d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 45658d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSessionCode'
+        Value = 0.000000000000000000
+        Component = edSessionCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 352
+    Top = 272
   end
 end

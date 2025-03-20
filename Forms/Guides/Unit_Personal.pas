@@ -104,6 +104,8 @@ type
     spGet_Param_next: TdsdStoredProc;
     actGet_Param_next: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spComplete_Mov: TdsdStoredProc;
+    actComplete_Mov: TdsdExecStoredProc;
   private
     { Private declarations }
   public
