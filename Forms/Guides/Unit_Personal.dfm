@@ -13,7 +13,7 @@ object Unit_PersonalForm: TUnit_PersonalForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
