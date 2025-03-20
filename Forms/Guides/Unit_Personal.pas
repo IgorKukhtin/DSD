@@ -101,6 +101,9 @@ type
     cxLabel2: TcxLabel;
     cxLabel3: TcxLabel;
     edSessionCode: TcxCurrencyEdit;
+    spGet_Param_next: TdsdStoredProc;
+    actGet_Param_next: TdsdExecStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
