@@ -441,7 +441,8 @@ BEGIN
                                                              , inUnitId                := inUnitId
                                                              , inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer      --
                                                              , inMemberId              := tmp.MemberId               ::Integer      --
-                                                             , inComment               := tmp.Comment                ::TVarChar     -- Примечание
+                                                               -- Примечание
+                                                             , inComment               := (tmp.Comment || zfConvert_DateToString (inStartDate) || '> по <' || zfConvert_DateToString (inStartDate) || '>') :: TVarChar
                                                              , inSession               := inSession                  ::TVarChar
                                                               )
          FROM (SELECT DISTINCT 
@@ -498,7 +499,8 @@ BEGIN
                                                              , inUnitId                := inUnitId
                                                              , inPersonalServiceListId := tmp.PersonalServiceListId  ::Integer       --
                                                              , inMemberId              := NULL                       ::Integer       --
-                                                             , inComment               := 'Выполнено'                ::TVarChar      -- Примечание
+                                                               -- Примечание
+                                                             , inComment               := ('Выполнено за период с <' || zfConvert_DateToString (inStartDate) || '> по <' || zfConvert_DateToString (inStartDate) || '>') :: TVarChar
                                                              , inSession               := inSession                  ::TVarChar
                                                               )
          FROM (SELECT DISTINCT _tmpReport.PersonalServiceListId FROM _tmpReport) AS tmp;
