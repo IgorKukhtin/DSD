@@ -497,8 +497,8 @@ BEGIN
                                                               )
          FROM _tmpReport AS tmp;
 
-         --проводим документы
-         PERFORM gpComplete_Movement_PersonalService (tmp.Id, inSession)
+         -- не проводим документы
+        /* PERFORM gpComplete_Movement_PersonalService (tmp.Id, inSession)
          FROM
              (WITH
               tmpMovement AS (SELECT Movement.Id
@@ -522,7 +522,7 @@ BEGIN
               FROM tmpMovement                
               WHERE tmpMovement.Ord = 1
               ) AS tmp;
-
+          */
 
          -- если НЕТ ошибок то записываем в MessagePersonalService ведомости по отчету, которые обработаны
          PERFORM gpInsertUpdate_Object_MessagePersonalService (ioId                    := 0                          ::Integer       -- ключ объекта
