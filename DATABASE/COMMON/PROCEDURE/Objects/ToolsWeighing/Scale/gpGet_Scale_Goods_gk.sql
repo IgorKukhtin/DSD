@@ -33,7 +33,12 @@ BEGIN
        WITH -- список
           tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                           AS GoodsId
                                        , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId                       AS GoodsKindId
-                                       , COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ValueData, 0) AS WeightPackageSticker
+                                         --
+                                       , CASE WHEN ObjectFloat_GoodsByGoodsKind_WeightPackageKorob.ValueData > 0
+                                                   THEN ObjectFloat_GoodsByGoodsKind_WeightPackageKorob.ValueData
+                                              ELSE COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ValueData, 0)
+                                         END AS WeightPackageSticker
+
                                   FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                                              ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
@@ -45,6 +50,9 @@ BEGIN
                                        LEFT JOIN ObjectFloat AS ObjectFloat_GoodsByGoodsKind_WeightPackageSticker
                                                              ON ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ObjectId  = Object_GoodsByGoodsKind.Id
                                                             AND ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_GoodsByGoodsKind_WeightPackageKorob
+                                                             ON ObjectFloat_GoodsByGoodsKind_WeightPackageKorob.ObjectId  = Object_GoodsByGoodsKind.Id
+                                                            AND ObjectFloat_GoodsByGoodsKind_WeightPackageKorob.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageKorob()
                                   WHERE ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = inGoodsId
                                     AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
                                  )

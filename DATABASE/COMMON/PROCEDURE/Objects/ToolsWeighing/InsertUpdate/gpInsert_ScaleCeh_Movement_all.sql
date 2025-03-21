@@ -1277,7 +1277,7 @@ BEGIN
                      UNION ALL
                       -- элементы взвешивания - ТАРА
                       SELECT 0 AS MovementItemId
-                           , MILO_Box.ObjectId AS GoodsId
+                           , OL_Box_Goods.ChildObjectId AS GoodsId
 
                            , 0 AS GoodsKindId
 
@@ -1323,9 +1323,12 @@ BEGIN
                             INNER JOIN MovementItemLinkObject AS MILO_Box
                                                               ON MILO_Box.MovementItemId = MIF_MovementItemId.ValueData :: Integer
                                                              AND MILO_Box.DescId         = tmpDesc.DescId_MILO
+                            INNER JOIN ObjectLink AS OL_Box_Goods
+                                                  ON OL_Box_Goods.ObjectId = MILO_Box.ObjectId
+                                                 AND OL_Box_Goods.DescId   = zc_ObjectLink_Box_Goods()
 
                       WHERE tmpMI_ScaleCeh.MovementItemId_find > 0
-                      GROUP BY MILO_Box.ObjectId
+                      GROUP BY OL_Box_Goods.ChildObjectId
 
                      UNION ALL
                       -- элементы документа (были сохранены раньше)

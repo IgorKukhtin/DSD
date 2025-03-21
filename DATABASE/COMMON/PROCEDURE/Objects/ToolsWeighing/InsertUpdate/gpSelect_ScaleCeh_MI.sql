@@ -33,6 +33,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Scale_MI());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     -- Еще проверка
+     IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_WeighingProduction())
+     THEN
+         RETURN;
+     END IF;
+
 
      RETURN QUERY
        WITH tmpMI AS
