@@ -207,7 +207,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 134
   end
   object edisBankOut: TcxCheckBox
-    Left = 314
+    Left = 308
     Top = 12
     Caption = #1076#1083#1103' '#1059#1074#1086#1083#1077#1085#1085#1099#1093' ('#1073#1072#1085#1082')'
     TabOrder = 24
@@ -392,7 +392,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cbCompensationNot: TcxCheckBox
     Left = 458
-    Top = 12
+    Top = 10
     Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1076#1083#1103' '#1086#1090#1087#1091#1089#1082#1072
     Caption = #1048#1089#1082#1083'. '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
     ParentShowHint = False
@@ -409,6 +409,16 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     ShowHint = True
     TabOrder = 48
     Width = 161
+  end
+  object cbisNotAuto: TcxCheckBox
+    Left = 308
+    Top = 37
+    Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1076#1083#1103' '#1086#1090#1087#1091#1089#1082#1072
+    Caption = #1048#1089#1082#1083'.'#1080#1079' '#1072#1074#1090#1086'.'#1085#1072#1095#1080#1089#1083'.'#1047#1055
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 49
+    Width = 147
   end
   object ActionList: TActionList
     Left = 88
@@ -650,6 +660,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'inisCompensationNot'
         Value = Null
         Component = cbCompensationNot
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotAuto'
+        Value = Null
+        Component = cbisNotAuto
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -971,6 +989,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'isBankNot'
         Value = Null
         Component = cbBankNot
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotAuto'
+        Value = Null
+        Component = cbisNotAuto
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

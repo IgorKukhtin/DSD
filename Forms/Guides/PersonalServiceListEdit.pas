@@ -19,7 +19,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TPersonalServiceListEditForm = class(TParentForm)
@@ -92,6 +92,7 @@ type
     GuidesPersonalServiceList_AvanceF2: TdsdGuides;
     cbCompensationNot: TcxCheckBox;
     cbBankNot: TcxCheckBox;
+    cbisNotAuto: TcxCheckBox;
   private
     { Private declarations }
   public

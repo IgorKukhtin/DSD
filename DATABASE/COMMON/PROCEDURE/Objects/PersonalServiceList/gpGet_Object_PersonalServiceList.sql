@@ -30,8 +30,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isDetail Boolean
              , isAvanceNot Boolean
              , isBankNot Boolean   
-             , isCompensationNot Boolean
-             , isErased Boolean) AS
+             , isCompensationNot Boolean 
+             , isNotAuto Boolean
+             , isErased Boolean
+             ) AS
 $BODY$
 BEGIN
 
@@ -92,6 +94,7 @@ BEGIN
            , CAST(FALSE AS Boolean) AS isAvanceNot 
            , CAST(FALSE AS Boolean) AS isBankNot
            , CAST(FALSE AS Boolean) AS isCompensationNot
+           , CAST(FALSE AS Boolean) AS isNotAuto
 
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -150,6 +153,7 @@ BEGIN
            , COALESCE (ObjectBoolean_AvanceNot.ValueData, FALSE) ::Boolean AS isAvanceNot
            , COALESCE (ObjectBoolean_BankNot.ValueData, FALSE)   ::Boolean AS isBankNot
            , COALESCE (ObjectBoolean_CompensationNot.ValueData, FALSE) ::Boolean AS isCompensationNot
+           , COALESCE (ObjectBoolean_NotAuto.ValueData, FALSE)   ::Boolean AS isNotAuto
 
            , Object_PersonalServiceList.isErased   AS isErased
 
@@ -180,6 +184,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_BankNot
                                    ON ObjectBoolean_BankNot.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_BankNot.DescId = zc_ObjectBoolean_PersonalServiceList_BankNot()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_NotAuto
+                                   ON ObjectBoolean_NotAuto.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_NotAuto.DescId = zc_ObjectBoolean_PersonalServiceList_NotAuto()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -280,6 +288,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.03.25         * isNotAuto
  12.02.24         * isBankNot
  29.01.24         * isCompensationNot
  27.04.23         *

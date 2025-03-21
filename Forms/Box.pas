@@ -22,7 +22,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdCommon;
+  dxSkinXmas2008Blue, dsdCommon, cxButtonEdit;
 
 type
   TBoxForm = class(TParentForm)
@@ -62,6 +62,11 @@ type
     NPP: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
+    actOpenChoiceFormGoods: TOpenChoiceForm;
+    spUpdate_Goods: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

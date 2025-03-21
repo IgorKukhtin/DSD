@@ -3,7 +3,7 @@ object BoxForm: TBoxForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1097#1080#1082#1086#1074'>'
   ClientHeight = 376
-  ClientWidth = 502
+  ClientWidth = 614
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object BoxForm: TBoxForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 502
+    Width = 614
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 502
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -37,7 +38,6 @@ object BoxForm: TBoxForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -48,6 +48,7 @@ object BoxForm: TBoxForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 37
       end
       object clName: TcxGridDBColumn
@@ -55,6 +56,7 @@ object BoxForm: TBoxForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 166
       end
       object clErased: TcxGridDBColumn
@@ -64,6 +66,7 @@ object BoxForm: TBoxForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 78
       end
       object NPP: TcxGridDBColumn
@@ -84,6 +87,7 @@ object BoxForm: TBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 47
       end
       object BoxWeight: TcxGridDBColumn
@@ -94,6 +98,7 @@ object BoxForm: TBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 48
       end
       object BoxHeight: TcxGridDBColumn
@@ -141,9 +146,16 @@ object BoxForm: TBoxForm
       object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenChoiceFormGoods
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 120
       end
     end
@@ -174,8 +186,8 @@ object BoxForm: TBoxForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 128
+    Left = 208
+    Top = 152
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -240,6 +252,10 @@ object BoxForm: TBoxForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -247,7 +263,15 @@ object BoxForm: TBoxForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           Visible = True
           ItemName = 'bbChoice'
         end>
@@ -289,6 +313,10 @@ object BoxForm: TBoxForm
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = ProtocolOpenForm
       Category = 0
     end
   end
@@ -430,6 +458,75 @@ object BoxForm: TBoxForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actOpenChoiceFormGoods: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TGoods_ObjectForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Goods
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Box'
@@ -495,5 +592,101 @@ object BoxForm: TBoxForm
     PropertiesCellList = <>
     Left = 136
     Top = 224
+  end
+  object spUpdate_Goods: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Box'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxVolume'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxVolume'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxWeight'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxWeight'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxHeight'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxHeight'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxLength'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxLength'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxWidth'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxWidth'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'NPP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 112
   end
 end

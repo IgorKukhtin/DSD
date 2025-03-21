@@ -605,6 +605,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PersonalServiceList_User() RETURNS I
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_PersonalServiceList(), 'zc_ObjectBoolean_PersonalServiceList_User', 'Ограниченный доступ' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PersonalServiceList_User');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PersonalServiceList_NotAuto() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PersonalServiceList_NotAuto'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PersonalServiceList(), 'zc_ObjectBoolean_PersonalServiceList_NotAuto', 'Исключить из авто-начисления ЗП' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PersonalServiceList_NotAuto');
+
+
+
 
 
 
@@ -1520,6 +1526,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 21.03.25         * zc_ObjectBoolean_PersonalServiceList_NotAuto
  20.08.24         * zc_ObjectBoolean_ReceiptChild_Etiketka
  13.06.24         * zc_ObjectBoolean_StickerProperty_NormInDays_not
  29.05.24         * zc_ObjectBoolean_Cash_notCurrencyDiff

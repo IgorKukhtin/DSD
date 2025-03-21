@@ -133,6 +133,11 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                ON ObjectLink_Personal_Member.ObjectId = tmp.MemberId
                               AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_NotAuto
+                                  ON ObjectBoolean_NotAuto.ObjectId  = tmp.PersonalServiceListId
+                                 AND ObjectBoolean_NotAuto.DescId    = zc_ObjectBoolean_PersonalServiceList_NotAuto()
+     WHERE COALESCE (ObjectBoolean_NotAuto.ValueData, FALSE) = FALSE 
      ;
 
 
