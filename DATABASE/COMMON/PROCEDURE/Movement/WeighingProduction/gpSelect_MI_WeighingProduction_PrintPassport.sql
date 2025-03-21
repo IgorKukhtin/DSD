@@ -49,6 +49,17 @@ BEGIN
         END IF;
     END IF;
 
+    IF NOT EXISTS (SELECT 1 FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_PartionNum() AND MIF.ValueData > 0)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Не сформировано значение Паспорт №.';
+    END IF;
+
+    IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = inId AND MovementItem.isErased = TRUE)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Паспорт № <%> удален.', (SELECT MIF.ValueData :: Integer FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_PartionNum());
+    END IF;
+
+
     OPEN Cursor1 FOR
 
     -- Результат

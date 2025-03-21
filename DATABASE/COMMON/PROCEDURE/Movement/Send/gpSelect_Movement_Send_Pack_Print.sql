@@ -67,12 +67,13 @@ BEGIN
                               AND Movement.DescId = zc_Movement_WeighingProduction()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                            )
-       -- список Артикулы покупателя для товаров + GoodsKindId
+       -- список Вес гофроящика для товар + GoodsKindId
      , tmpObject_GoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
-                                             , Object_GoodsPropertyValue.ValueData  AS Name
+                                               -- Товар(гофроящик)
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId, 0)  AS GoodsBoxId
+                                               -- Вес гофроящика
                                              , COALESCE (ObjectFloat_Weight.ValueData, 0)                          AS GoodsBox_Weight
                                         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
                                              ) AS tmpGoodsProperty
@@ -87,10 +88,11 @@ BEGIN
                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
-
+                                             -- нашли гофроящик
                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
                                                                   ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = Object_GoodsPropertyValue.Id
                                                                  AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+                                             -- Вес гофроящика
                                              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                                    ON ObjectFloat_Weight.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
                                                                   AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
@@ -250,15 +252,17 @@ BEGIN
 
            , ObjectString_Goods_GoodsGroupFull.ValueData                            AS GoodsGroupNameFull
            , Object_Goods.ObjectCode                                                AS GoodsCode
-           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
-           , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName_two
+           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+           , Object_Goods.ValueData :: TVarChar AS GoodsName_two
 
            , Object_GoodsKind.ValueData                                             AS GoodsKindName
            , Object_Measure.ValueData                                               AS MeasureName
 
            , tmpMovementItem.LevelNumber                                            AS LevelNumber
-           , CASE WHEN COALESCE (tmpMovementItem.BoxCount, 0) = 0 AND tmpMovementItem.BoxCount_calc > 0 THEN tmpMovementItem.BoxCount_calc ELSE tmpMovementItem.BoxCount END :: Integer AS BoxCount
+           , CASE /*WHEN 1=1 THEN COALESCE (tmpMovementItem.BoxCount, 0)*/ WHEN COALESCE (tmpMovementItem.BoxCount, 0) = 0 AND tmpMovementItem.BoxCount_calc > 0 THEN tmpMovementItem.BoxCount_calc ELSE tmpMovementItem.BoxCount END :: Integer AS BoxCount
            , tmpMovementItem.BoxNumber
+
+             -- Вес Товара - гофроящик
            , (COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)):: TFloat AS BoxWeight
 
            , tmpMovementItem.Amount                                       :: TFloat AS Amount
@@ -346,7 +350,7 @@ BEGIN
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovementItem.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMovementItem.GoodsKindId
 
-          LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = Object_Goods.Id
+          LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId     = Object_Goods.Id
                                                 AND tmpObject_GoodsPropertyValue.GoodsKindId = Object_GoodsKind.Id
 
           LEFT JOIN tmpObjectString AS ObjectString_Goods_GoodsGroupFull
