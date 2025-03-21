@@ -264,7 +264,7 @@ BEGIN
                , Object_Goods.ObjectCode        AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
                , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-               , Object_Measure.ValueData       AS MeasureName
+               , (CASE WHEN tmpMI_find.GoodsId > 0 THEN '***' ELSE '' END || Object_Measure.ValueData) :: TVarChar AS MeasureName
                , Object_Composition.ValueData   AS CompositionName
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
                , Object_LineFabrica.ValueData   AS LineFabricaName
@@ -344,6 +344,9 @@ BEGIN
                                      AND tmpDiscount_To.GoodsId = tmpPartion.GoodsId
 
                 LEFT JOIN tmpReportOLAP ON tmpReportOLAP.PartionId = tmpPartion.PartionId
+                
+                LEFT JOIN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmpMI_find ON tmpMI_find.GoodsId = tmpPartion.GoodsId
+
            WHERE tmpMI.PartionId IS NULL
 
     UNION ALL
@@ -358,7 +361,7 @@ BEGIN
                , Object_Goods.ObjectCode        AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
                , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-               , Object_Measure.ValueData       AS MeasureName
+               , ('***' || Object_Measure.ValueData) :: TVarChar AS MeasureName
     
                , Object_Composition.ValueData   AS CompositionName
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
