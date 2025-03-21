@@ -105,7 +105,29 @@ BEGIN
                      -- Вес Нетто
                    , CASE WHEN vbDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
                                -- если Перемещение с Упак -> РК = переводим из ШТ в ВЕС
-                               THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+                               THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0)
+                                                         + CASE WHEN Object_Goods.ObjectCode IN (1286 -- Сосиски ДИТЯЧІ вар п/а в/ґ 330 г/шт ТМ ТОКЕРИ
+                                                                                               , 1728 -- Сосиски ДИТЯЧІ вар п/а в/ґ 330 г/шт ТМ TRIXI
+                                                                                               , 2153 -- Сосиски ШКІЛЬНІ вар в/ґ 350 г/шт ТМ Алан
+                                                                                               , 2156 -- Сосиски З ВЕРШКАМИ КАРАПУЗ вар в/ґ 240 г/шт ТМ Алан
+                                                                                               , 2157 -- Сосиски ДИТЯЧІ вар п/а в/ґ 330 г/шт ТМ Алан
+                                                                                               , 2159 -- Сосиски МОЛОЧНІ вар в/ґ 330 г/шт ТМ Алан
+                                                                                               , 2161 -- Сосиски З СИРОМ вар в/ґ 330 г/шт ТМ Алан
+                                                                                               , 2163 -- Сосиски КРОХА вар в/ґ 290 г/шт ТМ Алан
+                                                                                               , 2164 -- Сосиски ВІДЕНСЬКІ вар в/ґ 376 г/шт ТМ Алан
+                                                                                               , 2189 -- СОСИСКИ МОЛОЧНІ В/Г ТМ Варто 330 г
+                                                                                               , 2330 -- Сосиски ФРАНКФУРТСЬКІ вар в/ґ 320 г/шт ТМ Алан
+                                                                                               , 2475 -- Сосиски З ЯЛОВИЧИНИ вар в/ґ 300 г/шт ТМ Алан
+                                                                                                )
+                                                                 AND Object_GoodsKind.Id = 8349 -- Флоу-пак
+                                                                     THEN 0
+                                                                -- коробка
+                                                                WHEN Object_GoodsKind.Id =  412895 
+                                                                     THEN 0
+
+                                                                ELSE COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0)
+                                                           END
+                                                          )
 
                           -- Иначе Инвентаризация - Подготовка = здесь всегда ВЕС
                           ELSE MovementItem.Amount
