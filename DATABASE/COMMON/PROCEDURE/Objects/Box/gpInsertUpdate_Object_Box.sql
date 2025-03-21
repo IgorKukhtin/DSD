@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Box(Integer,Integer,TVarChar,TFloat,TFloat,TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Box(Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Box(Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Box(Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Box(Integer,Integer,TVarChar, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Box(
  INOUT ioId	      Integer,   	-- ключ объекта <Единица измерения>
     IN inCode         Integer,      -- свойство <Код Единицы измерения>
-    IN inName         TVarChar,     -- главное Название Единицы измерения
+    IN inName         TVarChar,     -- главное Название Единицы измерения 
+    IN inGoodsId      Integer,
     IN inBoxVolume    TFloat,       --
     IN inBoxWeight    TFloat,       --
     IN inBoxHeight    TFloat  ,     -- 
@@ -53,6 +55,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Box_NPP(), ioId, inNPP);
 
+   -- сохранили связь с <Товар>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Box_Goods(), ioId, inGoodsId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -64,6 +69,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.03.25         *
  18.02.25         *
  24.06.18         *
  09.10.14                                                       *

@@ -4847,10 +4847,6 @@
 				<Form>GoodsKindNew_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind.pas">
-				<Form>GoodsByGoodsKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\GoogleOTPDialogPsw.pas">
 				<Form>GoogleOTPDialogPswForm</Form>
 			</DCCReference>
@@ -5533,6 +5529,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Inventory_WeighingFactDialog.pas">
 				<Form>Report_Inventory_WeighingFactDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind.pas">
+				<Form>GoodsByGoodsKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

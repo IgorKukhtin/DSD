@@ -2263,10 +2263,14 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_MessagePersonalService_Unit', 'Подразделение', zc_Object_MessagePersonalService(), zc_Object_PersonalServiceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MessagePersonalService_Unit');
            
-
+  CREATE OR REPLACE FUNCTION zc_ObjectLink_Box_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Box_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Box_Goods', 'Товар', zc_Object_Box(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Box_Goods');
+  
     
     
     
+       
     
     
     
@@ -3159,6 +3163,7 @@ SELECT 'zc_ObjectLink_GoodsGroupProperty_Parent', 'Аналитический классификатор',
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 21.03.25         * zc_ObjectLink_Box_Goods
  19.02.25         * zc_ObjectLink_MessagePersonalService_PersonalServiceList
                     zc_ObjectLink_MessagePersonalService_Member
  11.12.24         * zc_ObjectLink_BankAccount_PaidKind

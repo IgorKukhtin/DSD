@@ -133,6 +133,11 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                ON ObjectLink_Personal_Member.ObjectId = tmp.MemberId
                               AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_NotAuto
+                                  ON ObjectBoolean_NotAuto.ObjectId  = tmp.PersonalServiceListId
+                                 AND ObjectBoolean_NotAuto.DescId    = zc_ObjectBoolean_PersonalServiceList_NotAuto()
+     WHERE COALESCE (ObjectBoolean_NotAuto.ValueData, FALSE) = FALSE 
      ;
 
 
@@ -239,6 +244,7 @@ BEGIN
                                   ObjectLink_StaffList_Unit.ObjectId               AS StaffListId
                                 , ObjectLink_StaffList_Position.ChildObjectId      AS PositionId
                                 , ObjectLink_StaffList_PositionLevel.ChildObjectId AS PositionLevelId
+                                , Coalesce(ObjectBoolean_PositionLevel.ValueData,False)  AS isPositionLevel
                             FROM ObjectLink AS ObjectLink_StaffList_Unit
                                  LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
                                                       ON ObjectLink_StaffList_Position.ObjectId = ObjectLink_StaffList_Unit.ObjectId
@@ -247,6 +253,10 @@ BEGIN
                                  LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
                                                       ON ObjectLink_StaffList_PositionLevel.ObjectId = ObjectLink_StaffList_Unit.ObjectId
                                                      AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()
+
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_PositionLevel
+                                                         ON ObjectBoolean_PositionLevel.ObjectId = ObjectLink_StaffList_Unit.ObjectId
+                                                        AND ObjectBoolean_PositionLevel.DescId = zc_ObjectBoolean_StaffList_PositionLevel()
 
                             WHERE ObjectLink_StaffList_Unit.ChildObjectId = inUnitId
                               AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
@@ -258,7 +268,7 @@ BEGIN
            FROM _tmpReport AS spReport
                 LEFT JOIN tmpStaffList ON tmpStaffList.StaffListId = spReport.StaffListId
                                       AND tmpStaffList.PositionId = spReport.PositionId
-                                      AND COALESCE (tmpStaffList.PositionLevelId,0) = COALESCE (spReport.PositionLevelId,0)
+                                      AND (COALESCE (tmpStaffList.PositionLevelId,0) = COALESCE (spReport.PositionLevelId,0) OR tmpStaffList.isPositionLevel = TRUE)
            WHERE tmpStaffList.PositionId IS NULL
           ) AS tmp
           LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmp.PositionId

@@ -18,7 +18,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
   TBoxEditForm = class(TParentForm)
@@ -49,6 +50,9 @@ type
     edWidth: TcxCurrencyEdit;
     edNPP: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
+    cxLabel8: TcxLabel;
+    ceGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
   private
     { Private declarations }
   public

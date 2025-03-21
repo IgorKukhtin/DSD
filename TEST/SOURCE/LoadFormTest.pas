@@ -643,7 +643,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_ScaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_ScaleDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyForm');
 
@@ -658,7 +658,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyParentEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyParentEditForm');
    exit;
-  {
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
@@ -688,26 +688,26 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindForm');
     exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_NormForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_NormForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_OrderForm');
    exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_ScaleCehForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_ScaleCehForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_StickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_StickerForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_lineVMCForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_lineVMCForm');
 

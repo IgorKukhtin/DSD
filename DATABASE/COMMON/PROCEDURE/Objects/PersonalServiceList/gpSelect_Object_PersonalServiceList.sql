@@ -33,7 +33,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isAvanceNot Boolean
              , isBankNot Boolean
              , isCompensationNot Boolean
-             , isUser Boolean
+             , isUser Boolean  
+             , isNotAuto Boolean
              , isErased Boolean
               )
 AS
@@ -126,6 +127,7 @@ BEGIN
            , COALESCE (ObjectBoolean_BankNot.ValueData, FALSE)         ::Boolean AS isBankNot
            , COALESCE (ObjectBoolean_CompensationNot.ValueData, FALSE) ::Boolean AS isCompensationNot
            , COALESCE (ObjectBoolean_User.ValueData, FALSE)            ::Boolean AS isUser
+           , COALESCE (ObjectBoolean_NotAuto.ValueData, FALSE)         ::Boolean AS isNotAuto
 
            , Object_PersonalServiceList.isErased  AS isErased
 
@@ -161,6 +163,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_User
                                    ON ObjectBoolean_User.ObjectId  = Object_PersonalServiceList.Id
                                   AND ObjectBoolean_User.DescId    = zc_ObjectBoolean_PersonalServiceList_User()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_NotAuto
+                                   ON ObjectBoolean_NotAuto.ObjectId  = Object_PersonalServiceList.Id
+                                  AND ObjectBoolean_NotAuto.DescId    = zc_ObjectBoolean_PersonalServiceList_NotAuto()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -316,7 +322,7 @@ BEGIN
            , FALSE ::Boolean AS isBankNot
            , FALSE ::Boolean AS isCompensationNot
            , FALSE ::Boolean AS isUser
-
+           , FALSE ::Boolean AS isNotAuto
            , TRUE :: Boolean AS isErased
 
    ;
@@ -329,6 +335,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.03.25          * isNotAuto
  08.07.24          * isUser
  12.02.24          * isBankNot
  27.04.23          *
