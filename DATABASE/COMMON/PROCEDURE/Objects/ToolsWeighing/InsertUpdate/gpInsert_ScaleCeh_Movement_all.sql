@@ -31,6 +31,7 @@ $BODY$
    DECLARE vbIsUpak_UnComplete Boolean;
    DECLARE vbIsCloseInventory  Boolean;
    DECLARE vbIsRePack          Boolean;
+   DECLARE vbIsAuto            Boolean;
 
    DECLARE vbOperDate_invent TDateTime;
 
@@ -57,6 +58,8 @@ BEGIN
 
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId AND MovementFloat.DescId = zc_MovementFloat_MovementDesc()) :: Integer;
+     -- определили <Автоматический>
+     vbIsAuto:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_isAuto());
      -- определили
      vbUnitId:= (SELECT CASE -- отправитель = РК
                              WHEN vbMovementDescId IN (zc_Movement_Inventory(), zc_Movement_Loss())
@@ -906,6 +909,181 @@ BEGIN
                                                       AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
 
                     )
+
+ , tmpMI_ScaleCeh AS (SELECT 0 AS MovementItemId
+                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
+                                       THEN CASE WHEN vbGoodsId_ReWork > 0 THEN vbGoodsId_ReWork ELSE zc_Goods_ReWork() END
+
+                                  WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
+                                       THEN _tmpScale_receipt.GoodsId_to
+
+                                  ELSE MovementItem.ObjectId
+                             END AS GoodsId
+
+                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
+                                       THEN zc_GoodsKind_Basis() -- NULL
+
+                                  WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
+                                       THEN COALESCE (_tmpScale_receipt.GoodsKindId_to, 0)
+
+                                  ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                             END AS GoodsKindId
+
+                           , COALESCE (MILinkObject_StorageLine.ObjectId, 0) AS StorageLineId
+
+                           , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
+                           , COALESCE (MILinkObject_Asset_two.ObjectId, 0)   AS AssetId_two
+
+                           , 0 :: Integer AS PartionCellId
+
+                           , MIString_PartNumber.ValueData                   AS PartNumber
+
+                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
+                                       THEN NULL
+                                  WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
+                                       THEN NULL
+                                  WHEN vbUnitId = zc_Unit_RK() -- Розподільчий комплекс
+                                       AND 1=1
+                                       --AND vbUserId <> 5 -- !!!tmp
+                                       THEN COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
+
+                                  ELSE MIDate_PartionGoods.ValueData
+                             END AS PartionGoodsDate
+
+                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
+                                       THEN NULL
+                                  WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
+                                       THEN ''
+                                  ELSE COALESCE (MIString_PartionGoods.ValueData, '')
+                             END AS PartionGoods
+
+                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId = zc_Enum_DocumentKind_PackDiff()
+                                       THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                  WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
+                                       THEN 0
+                                  ELSE MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                             END AS Amount -- !!! вес только для пересортицы в переработку!!
+                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
+
+                                       THEN 0
+                                  ELSE COALESCE (MIFloat_Count.ValueData, 0)
+                             END AS Count
+                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
+                                       THEN 0
+                                  ELSE COALESCE (MIFloat_CountPack.ValueData, 0)
+                             END AS CountPack
+                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
+                                       THEN 0
+                                  ELSE COALESCE (MIFloat_HeadCount.ValueData, 0)
+                             END AS HeadCount
+                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
+                                       THEN 0
+                                  ELSE COALESCE (MIFloat_LiveWeight.ValueData, 0)
+                             END AS LiveWeight
+
+                           , MovementItem.Amount AS Amount_mi
+                           , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
+                                       THEN 0 -- надо суммировать
+
+                                  WHEN inBranchCode = 101 -- если Упаковка
+                                   AND vbMovementDescId = zc_Movement_Send()
+                                       THEN MovementItem.Id -- не надо суммировать
+
+                                  WHEN inBranchCode BETWEEN 201 AND 210 -- если Обвалка
+                                   AND vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
+                                       THEN 0 -- надо суммировать
+
+                                  WHEN inBranchCode NOT BETWEEN 201 AND 210 -- если НЕ Обвалка
+                                       THEN 0 -- можно суммировать
+                                  -- !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
+                                  -- WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
+                                  --      THEN 0 -- надо суммировать
+                                  ELSE MovementItem.Id -- пока не надо суммировать
+                             END AS myId
+                             
+                             -- нужен чтоб найти ящики для инвентаризации
+                           , CASE WHEN vbUnitId = zc_Unit_RK() AND vbMovementDescId = zc_Movement_Inventory()
+                                   AND inBranchCode = 1
+                                   AND vbIsAuto = TRUE
+                                       THEN MovementItem.Id
+                                  ELSE 0
+                             END AS MovementItemId_find
+
+                           , COALESCE (MIFloat_MovementItemId.ValueData, 0) :: Integer AS MovementItemId_Partion
+
+                      FROM MovementItem
+                           LEFT JOIN _tmpScale_receipt ON _tmpScale_receipt.GoodsId_from = MovementItem.ObjectId
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                                       ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                           LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                                       ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+                           LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                       ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                           LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
+                                                       ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                       ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+
+                           LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                      ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                     AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
+                           LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                        ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                       AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                                       AND vbMovementDescId <> zc_Movement_ProductionSeparate() -- !!!надо убрать партии, т.к. в UNION их нет!!!
+                                                       AND vbMovementDescId <> zc_Movement_ProductionUnion() -- !!!надо убрать партии, т.к. в UNION их нет!!!
+
+                           LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                        ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                       AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+
+                           LEFT JOIN MovementItemString AS MIString_KVK
+                                                        ON MIString_KVK.MovementItemId = MovementItem.Id
+                                                       AND MIString_KVK.DescId = zc_MIString_KVK()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
+                                                            ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_PersonalKVK.DescId         = zc_MILinkObject_PersonalKVK()
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                                            ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+                                                           AND vbMovementDescId                <> zc_Movement_Inventory()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                            ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Asset.DescId         = zc_MILinkObject_Asset()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
+                                                            ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Asset_two.DescId         = zc_MILinkObject_Asset_two()
+                           LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
+                                                       ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
+
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                               AND vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE -- !!!важно!!!
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                 ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                                AND vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE -- !!!важно!!!
+
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                     )
+
            -- Результат
            SELECT CASE WHEN vbMovementDescId = zc_Movement_Loss()
                                  -- <Списание>
@@ -1066,168 +1244,89 @@ BEGIN
                      , SUM (tmp.LiveWeight)   AS LiveWeight
                 FROM (-- элементы взвешивания
                       SELECT 0 AS MovementItemId
-                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
-                                       THEN CASE WHEN vbGoodsId_ReWork > 0 THEN vbGoodsId_ReWork ELSE zc_Goods_ReWork() END
+                           , tmpMI_ScaleCeh.GoodsId
 
-                                  WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
-                                       THEN _tmpScale_receipt.GoodsId_to
+                           , tmpMI_ScaleCeh.GoodsKindId
 
-                                  ELSE MovementItem.ObjectId
-                             END AS GoodsId
+                           , tmpMI_ScaleCeh.StorageLineId
 
-                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
-                                       THEN zc_GoodsKind_Basis() -- NULL
+                           , tmpMI_ScaleCeh.AssetId
+                           , tmpMI_ScaleCeh.AssetId_two
 
-                                  WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
-                                       THEN COALESCE (_tmpScale_receipt.GoodsKindId_to, 0)
+                           , tmpMI_ScaleCeh.PartionCellId
 
-                                  ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                             END AS GoodsKindId
+                           , tmpMI_ScaleCeh.PartNumber
 
-                           , COALESCE (MILinkObject_StorageLine.ObjectId, 0) AS StorageLineId
+                           , tmpMI_ScaleCeh.PartionGoodsDate
 
-                           , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
-                           , COALESCE (MILinkObject_Asset_two.ObjectId, 0)   AS AssetId_two
+                           , tmpMI_ScaleCeh.PartionGoods
 
-                           , 0 :: Integer AS PartionCellId
+                           , tmpMI_ScaleCeh.Amount -- !!! вес только для пересортицы в переработку!!
+                           , tmpMI_ScaleCeh.Count
+                           , tmpMI_ScaleCeh.CountPack
+                           , tmpMI_ScaleCeh.HeadCount
+                           , tmpMI_ScaleCeh.LiveWeight
 
-                           , MIString_PartNumber.ValueData                   AS PartNumber
+                           , tmpMI_ScaleCeh.Amount_mi
+                           , tmpMI_ScaleCeh.myId
 
-                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
-                                       THEN NULL
-                                  WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
-                                       THEN NULL
-                                  WHEN vbUnitId = zc_Unit_RK() -- Розподільчий комплекс
-                                       AND 1=1
-                                       --AND vbUserId <> 5 -- !!!tmp
-                                       THEN COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
+                           , tmpMI_ScaleCeh.MovementItemId_Partion
 
-                                  ELSE MIDate_PartionGoods.ValueData
-                             END AS PartionGoodsDate
+                      FROM tmpMI_ScaleCeh
 
-                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
-                                       THEN NULL
-                                  WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
-                                       THEN ''
-                                  ELSE COALESCE (MIString_PartionGoods.ValueData, '')
-                             END AS PartionGoods
+                     UNION ALL
+                      -- элементы взвешивания - ТАРА
+                      SELECT 0 AS MovementItemId
+                           , MILO_Box.ObjectId AS GoodsId
 
-                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId = zc_Enum_DocumentKind_PackDiff()
-                                       THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
-                                  WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
-                                       THEN 0
-                                  ELSE MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
-                             END AS Amount -- !!! вес только для пересортицы в переработку!!
-                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
-                                       THEN 0
-                                  ELSE COALESCE (MIFloat_Count.ValueData, 0)
-                             END AS Count
-                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
-                                       THEN 0
-                                  ELSE COALESCE (MIFloat_CountPack.ValueData, 0)
-                             END AS CountPack
-                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
-                                       THEN 0
-                                  ELSE COALESCE (MIFloat_HeadCount.ValueData, 0)
-                             END AS HeadCount
-                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
-                                       THEN 0
-                                  ELSE COALESCE (MIFloat_LiveWeight.ValueData, 0)
-                             END AS LiveWeight
+                           , 0 AS GoodsKindId
 
-                           , MovementItem.Amount AS Amount_mi
-                           , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
-                                       THEN 0 -- надо суммировать
+                           , 0 AS StorageLineId
 
-                                  WHEN inBranchCode = 101 -- если Упаковка
-                                   AND vbMovementDescId = zc_Movement_Send()
-                                       THEN MovementItem.Id -- не надо суммировать
+                           , 0 AS AssetId
+                           , 0 AS AssetId_two
 
-                                  WHEN inBranchCode BETWEEN 201 AND 210 -- если Обвалка
-                                   AND vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
-                                       THEN 0 -- надо суммировать
+                           , 0 AS PartionCellId
 
-                                  WHEN inBranchCode NOT BETWEEN 201 AND 210 -- если НЕ Обвалка
-                                       THEN 0 -- можно суммировать
-                                  -- !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
-                                  -- WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
-                                  --      THEN 0 -- надо суммировать
-                                  ELSE MovementItem.Id -- пока не надо суммировать
-                             END AS myId
+                           , '' AS PartNumber
 
-                           , COALESCE (MIFloat_MovementItemId.ValueData, 0) :: Integer AS MovementItemId_Partion
+                           , NULL :: TDateTime AS PartionGoodsDate
 
-                      FROM MovementItem
-                           LEFT JOIN _tmpScale_receipt ON _tmpScale_receipt.GoodsId_from = MovementItem.ObjectId
+                           , '' AS PartionGoods
 
-                           LEFT JOIN MovementItemFloat AS MIFloat_Count
-                                                       ON MIFloat_Count.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_Count.DescId = zc_MIFloat_Count()
-                           LEFT JOIN MovementItemFloat AS MIFloat_CountPack
-                                                       ON MIFloat_CountPack.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
-                           LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
-                                                       ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-                           LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
-                                                       ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
+                           , SUM (MIF_CountTare.ValueData) AS Amount
+                           , 0 AS Count
+                           , 0 AS CountPack
+                           , 0 AS HeadCount
+                           , 0 AS LiveWeight
 
-                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
-                                                       ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+                           , SUM (MIF_CountTare.ValueData) AS Amount_mi
+                           , 0 AS myId
 
-                           LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                                      ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
-                                                     AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                           , 0 AS MovementItemId_Partion
 
-                           LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                        ON MIString_PartionGoods.MovementItemId = MovementItem.Id
-                                                       AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                                                       AND vbMovementDescId <> zc_Movement_ProductionSeparate() -- !!!надо убрать партии, т.к. в UNION их нет!!!
-                                                       AND vbMovementDescId <> zc_Movement_ProductionUnion() -- !!!надо убрать партии, т.к. в UNION их нет!!!
+                      FROM tmpMI_ScaleCeh
+                            INNER JOIN MovementItemFloat AS MIF_MovementItemId
+                                                         ON MIF_MovementItemId.MovementItemId = tmpMI_ScaleCeh.MovementItemId_find
+                                                        AND MIF_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
 
-                           LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                        ON MIString_PartNumber.MovementItemId = MovementItem.Id
-                                                       AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                           INNER JOIN (SELECT zc_MIFloat_CountTare1() AS DescId_MIF, zc_MILinkObject_Box1() AS DescId_MILO
+                                 UNION SELECT zc_MIFloat_CountTare2() AS DescId_MIF, zc_MILinkObject_Box2() AS DescId_MILO
+                                 UNION SELECT zc_MIFloat_CountTare3() AS DescId_MIF, zc_MILinkObject_Box3() AS DescId_MILO
+                                 UNION SELECT zc_MIFloat_CountTare4() AS DescId_MIF, zc_MILinkObject_Box4() AS DescId_MILO
+                                 UNION SELECT zc_MIFloat_CountTare5() AS DescId_MIF, zc_MILinkObject_Box5() AS DescId_MILO
+                                      ) AS tmpDesc ON tmpDesc.DescId_MIF > 0
+                            INNER JOIN MovementItemFloat AS MIF_CountTare
+                                                         ON MIF_CountTare.MovementItemId = MIF_MovementItemId.ValueData :: Integer
+                                                        AND MIF_CountTare.DescId         = tmpDesc.DescId_MIF
+                                                        AND MIF_CountTare.ValueData      > 0
+                            INNER JOIN MovementItemLinkObject AS MILO_Box
+                                                              ON MILO_Box.MovementItemId = MIF_MovementItemId.ValueData :: Integer
+                                                             AND MILO_Box.DescId         = tmpDesc.DescId_MILO
 
-                           LEFT JOIN MovementItemString AS MIString_KVK
-                                                        ON MIString_KVK.MovementItemId = MovementItem.Id
-                                                       AND MIString_KVK.DescId = zc_MIString_KVK()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
-                                                            ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_PersonalKVK.DescId         = zc_MILinkObject_PersonalKVK()
+                      WHERE tmpMI_ScaleCeh.MovementItemId_find > 0
+                      GROUP BY MILO_Box.ObjectId
 
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
-                                                            ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
-                                                           AND vbMovementDescId                <> zc_Movement_Inventory()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                                            ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_Asset.DescId         = zc_MILinkObject_Asset()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
-                                                            ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_Asset_two.DescId         = zc_MILinkObject_Asset_two()
-                           LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
-                                                       ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
-
-                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                                ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
-                                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                                               AND vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE -- !!!важно!!!
-                           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                                 ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
-                                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                                                AND vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE -- !!!важно!!!
-
-                      WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId     = zc_MI_Master()
-                        AND MovementItem.isErased   = FALSE
                      UNION ALL
                       -- элементы документа (были сохранены раньше)
                       SELECT tmpMI.MovementItemId
