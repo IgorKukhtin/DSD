@@ -204,7 +204,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Width = 45
           end
           object WeightPackageKorob: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1087#1072#1082'. '#1076#1083#1103' '#1082#1086#1088'.'
+            Caption = #1042#1077#1089' '#1087#1072#1082'. '#1076#1083#1103' '#1082#1086#1088#1086#1073'.'
             DataBinding.FieldName = 'WeightPackageKorob'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Box(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , GoodsId Integer, GoodsName TVarChar
              , BoxVolume TFloat, BoxWeight TFloat
              , BoxHeight TFloat, BoxLength TFloat, BoxWidth TFloat
              , NPP TFloat
@@ -23,6 +24,8 @@ $BODY$BEGIN
              CAST (0 as Integer)    AS Id
            , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
+           , 0                      AS GoodsId
+           , CAST ('' as TVarChar)  AS GoodsName
            , CAST (NULL as TFLOAT)  AS BoxVolume
            , CAST (NULL as TFLOAT)  AS BoxWeight
            , CAST (NULL as TFLOAT)  AS BoxHeight
@@ -39,6 +42,8 @@ $BODY$BEGIN
              Object.Id         AS Id
            , Object.ObjectCode AS Code
            , Object.ValueData  AS Name
+           , Object_Goods.Id          AS GoodsId
+           , Object_Goods.ValueData   AS GoodsName
            , OF_Box_Volume.ValueData  AS BoxVolume
            , OF_Box_Weight.ValueData  AS BoxWeight
            , COALESCE (ObjectFloat_Height.ValueData,0) ::TFloat  AS BoxHeight
@@ -70,6 +75,11 @@ $BODY$BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_NPP
                               ON ObjectFloat_NPP.ObjectId = Object.Id
                              AND ObjectFloat_NPP.DescId = zc_ObjectFloat_Box_NPP()                             
+
+        LEFT JOIN ObjectLink AS ObjectLink_Goods
+                             ON ObjectLink_Goods.ObjectId = Object.Id
+                            AND ObjectLink_Goods.DescId = zc_ObjectLink_Box_Goods()
+        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
        WHERE Object.Id = inId;
    END IF;
 

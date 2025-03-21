@@ -2,7 +2,7 @@ object BoxEditForm: TBoxEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1071#1097#1080#1082'>'
-  ClientHeight = 291
+  ClientHeight = 340
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object BoxEditForm: TBoxEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 256
+    Left = 28
+    Top = 300
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object BoxEditForm: TBoxEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 256
+    Left = 172
+    Top = 300
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -148,6 +148,23 @@ object BoxEditForm: TBoxEditForm
     Top = 8
     Caption = #8470' '#1087'/'#1087
   end
+  object cxLabel8: TcxLabel
+    Left = 10
+    Top = 242
+    Caption = #1058#1086#1074#1072#1088
+  end
+  object ceGoods: TcxButtonEdit
+    Left = 10
+    Top = 261
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 19
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 152
     Top = 56
@@ -205,6 +222,14 @@ object BoxEditForm: TBoxEditForm
         Value = ''
         Component = edName
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -339,6 +364,21 @@ object BoxEditForm: TBoxEditForm
         Component = edNPP
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 104
@@ -362,5 +402,34 @@ object BoxEditForm: TBoxEditForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
     Top = 104
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGoods
+    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoods_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 139
+    Top = 247
   end
 end

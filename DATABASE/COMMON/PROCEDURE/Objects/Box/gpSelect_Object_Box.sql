@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Box(
     IN inSession     TVarChar            -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , BoxVolume TFloat, BoxWeight TFloat
              , BoxHeight TFloat, BoxLength TFloat, BoxWidth TFloat
              , NPP TFloat
@@ -23,6 +24,11 @@ BEGIN
                  Object.Id         AS Id
                , Object.ObjectCode AS Code
                , Object.ValueData  AS Name
+               
+               , Object_Goods.Id          AS GoodsId
+               , Object_Goods.ObjectCode  AS GoodsCode
+               , Object_Goods.ValueData   AS GoodsName
+
                , OF_Box_Volume.ValueData  AS BoxVolume
                , OF_Box_Weight.ValueData  AS BoxWeight
 
@@ -57,11 +63,19 @@ BEGIN
                                   ON ObjectFloat_NPP.ObjectId = Object.Id
                                  AND ObjectFloat_NPP.DescId = zc_ObjectFloat_Box_NPP()
 
+           LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                ON ObjectLink_Goods.ObjectId = Object.Id
+                               AND ObjectLink_Goods.DescId = zc_ObjectLink_Box_Goods()
+           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
        WHERE Object.DescId = zc_Object_Box()
       UNION ALL
        SELECT 0 AS Id
             , 0 AS Code
             , 'УДАЛИТЬ' :: TVarChar AS Name
+
+            , 0           AS GoodId
+            , 0           AS GoodsCode
+            , '' :: TVarChar AS GoodsName
             , 0 :: TFloat AS BoxVolume
             , 0 :: TFloat AS BoxWeight
 
@@ -81,6 +95,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.03.25         *
  18.02.25         *
  24.06.18         *
  09.10.14                                                       *

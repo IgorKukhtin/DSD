@@ -60,6 +60,8 @@ type
     BoxVolume: TcxGridDBColumn;
     BoxWeight: TcxGridDBColumn;
     NPP: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
   private
     { Private declarations }
   public

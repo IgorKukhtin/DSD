@@ -39,7 +39,6 @@ object BoxForm: TBoxForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -129,6 +128,23 @@ object BoxForm: TBoxForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 36
+      end
+      object GoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
+      end
+      object GoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
       end
     end
     object cxGridLevel: TcxGridLevel
