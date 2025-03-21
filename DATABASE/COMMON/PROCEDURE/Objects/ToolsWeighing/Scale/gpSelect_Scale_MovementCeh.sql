@@ -96,7 +96,7 @@ BEGIN
              , Object_User.ValueData              AS UserName
 
        FROM tmpStatus
-            JOIN Movement ON Movement.DescId IN (zc_Movement_WeighingProduction(), zc_Movement_WeighingPartner())
+            JOIN Movement ON Movement.DescId IN (zc_Movement_WeighingProduction())
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                          AND Movement.StatusId = tmpStatus.StatusId
 
