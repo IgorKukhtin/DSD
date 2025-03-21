@@ -13,7 +13,6 @@ $BODY$
     DECLARE vbUserId Integer;
 
     DECLARE vbGoodsPropertyId Integer;
-    DECLARE vbIsContract_30201 Boolean;
 
     DECLARE Cursor1 refcursor;
     DECLARE vbOperDate TDateTime;
@@ -29,23 +28,6 @@ BEGIN
                    WHERE Movement.Id = inMovementId
                   );
                          
-     vbIsContract_30201:= (SELECT CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
-                                            THEN TRUE
-                                       ELSE FALSE
-                                  END
-                           FROM Movement
-                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                            AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
-                                LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
-                                                     ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
-                                                    AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
-                                LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
-                           WHERE Movement.Id = inMovementId
-                          );
-
-
-
      -- определяется параметр
      vbGoodsPropertyId:= 83955;   --Алан
      
