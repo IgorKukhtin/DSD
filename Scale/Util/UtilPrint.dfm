@@ -2923,6 +2923,40 @@ object UtilPrintForm: TUtilPrintForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_PackGross_send: TdsdPrintAction
+      Category = 'Print_Fozzy'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Pack_send
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Pack_send
+        end>
+      Caption = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      Hint = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;WeighingNumber;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SendPackGross'
+      ReportNameParam.Value = 'PrintMovement_SendPackGross'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
@@ -4279,5 +4313,34 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 183
     Top = 224
+  end
+  object spSelectPrint_Pack_send: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Send_Pack_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_by'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_by'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 559
+    Top = 90
   end
 end

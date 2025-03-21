@@ -136,7 +136,7 @@ begin
      cbPrintSpec.Enabled:=cbPrintAccount.Enabled;
      cbPrintTax.Enabled:=cbPrintAccount.Enabled;
      cbPrintDiffOrder.Enabled:=cbPrintAccount.Enabled;
-     cbPrintPackGross.Enabled:=cbPrintAccount.Enabled;
+     //cbPrintPackGross.Enabled:=cbPrintAccount.Enabled;
      //
      cbPrintAccount.Checked:=(isAccount) and (cbPrintAccount.Enabled);
      cbPrintTransport.Checked:=(isTransport) and (cbPrintTransport.Enabled);

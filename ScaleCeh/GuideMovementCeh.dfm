@@ -34,7 +34,6 @@ object GuideMovementCehForm: TGuideMovementCehForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitTop = 2
       object ButtonExit: TSpeedButton
         Left = 326
         Top = 4
@@ -91,7 +90,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
       end
       object bbPrint: TSpeedButton
         Left = 433
-        Top = 3
+        Top = 4
         Width = 31
         Height = 29
         Hint = #1055#1077#1095#1072#1090#1100
@@ -527,6 +526,8 @@ object GuideMovementCehForm: TGuideMovementCehForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitLeft = -48
+    ExplicitTop = -2
     object gbInvNumber_parent: TGroupBox
       Left = 280
       Top = 0
@@ -587,7 +588,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
     end
     object cbPrintMovement: TCheckBox
       Left = 560
-      Top = 20
+      Top = 22
       Width = 86
       Height = 17
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
@@ -602,7 +603,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
     end
     object cbPrintTransport: TCheckBox
       Left = 656
-      Top = 20
+      Top = 22
       Width = 48
       Height = 17
       Caption = #1058#1058#1053
@@ -617,7 +618,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
     end
     object cbPrintPreview: TCheckBox
       Left = 433
-      Top = 20
+      Top = 22
       Width = 121
       Height = 17
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1077#1095#1072#1090#1080
@@ -628,6 +629,20 @@ object GuideMovementCehForm: TGuideMovementCehForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 5
+    end
+    object cbPrintPackGross: TCheckBox
+      Left = 560
+      Top = 3
+      Width = 123
+      Height = 17
+      Caption = #1059#1087#1072#1082'. '#1076#1083#1103' '#1054#1061#1056#1040#1053#1067
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clBlue
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 6
     end
   end
   object DS: TDataSource

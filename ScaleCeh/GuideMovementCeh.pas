@@ -84,6 +84,7 @@ type
     bbChangeOperDatePartner: TSpeedButton;
     actUpdateStatus: TAction;
     bbUpdateStatus: TSpeedButton;
+    cbPrintPackGross: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -415,6 +416,7 @@ begin
      myCheckPrintMovement;
      //
      if    not(cbPrintMovement.Checked)
+       and not(cbPrintPackGross.Checked)
      then begin
                ShowMessage('Ошибка.Не выбран вариант печати.');
                exit;
@@ -429,6 +431,14 @@ begin
                         , TRUE // isPreview
                         , FALSE // DialogMovementDescForm.Get_isSendOnPriceIn(CDS.FieldByName('MovementDescNumber').AsInteger)
                          );
+     //
+     if cbPrintPackGross.Checked
+     then Print_PackGross_Send (CDS.FieldByName('MovementDescId').AsInteger
+                              , CDS.FieldByName('MovementId_parent').AsInteger
+                              , CDS.FieldByName('Id').AsInteger               // MovementId_by
+                              , 1    // myPrintCount
+                              , TRUE // isPreview
+                               );
 end;
 {------------------------------------------------------------------------------}
 end.

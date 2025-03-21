@@ -1351,6 +1351,15 @@ begin
                                 , DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
                                  );
      //
+     //PackGross
+     if (DialogPrintForm.cbPrintPackGross.Checked) and (Result = TRUE)
+     then Result:=Print_PackGross_Send (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                      , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId
+                                      , ParamsMovement.ParamByName('MovementId').AsInteger       // MovementId_by
+                                      , ParamsMovement.ParamByName('CountPack').AsInteger
+                                      , DialogPrintForm.cbPrintPreview.Checked
+                                       );
+     //
      if not Result then ShowMessage('Документ сохранен.');
 
 end;
