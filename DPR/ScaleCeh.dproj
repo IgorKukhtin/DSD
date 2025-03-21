@@ -74,11 +74,11 @@
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
 			<DCC_RangeChecking>true</DCC_RangeChecking>
 			<Icon_MainIcon>0201.ico</Icon_MainIcon>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.122;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>122</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.123;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>123</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>4</VerInfo_Release>
-			<Debugger_RunParams>Scale_obv.ini ves=341.123</Debugger_RunParams>
+			<Debugger_RunParams>Scale_EXP.ini ves=341.123</Debugger_RunParams>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
