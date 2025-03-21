@@ -68,7 +68,10 @@ CREATE OR REPLACE VIEW Container_Partner_View AS
           -- OR CLO_Juridical.ObjectId
          )
      --
-     AND ObjectLink_Contract_PaidKind.ChildObjectId = CLO_PaidKind.ObjectId
+     AND (ObjectLink_Contract_PaidKind.ChildObjectId = CLO_PaidKind.ObjectId
+       OR ObjectLink_Destination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_40700() -- Лиол
+                                                  )
+         )
      --
      AND ObjectLink_Destination.ChildObjectId NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
                                                     , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
