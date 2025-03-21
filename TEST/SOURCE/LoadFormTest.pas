@@ -643,7 +643,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_ScaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_ScaleDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyForm');
 
@@ -658,7 +658,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyParentEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyParentEditForm');
    exit;
-  {
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');

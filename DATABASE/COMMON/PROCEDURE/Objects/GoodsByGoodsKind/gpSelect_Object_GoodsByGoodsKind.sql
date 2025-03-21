@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , MeasureName TVarChar
              , Weight TFloat
-             , WeightPackage TFloat, WeightPackageSticker TFloat
+             , WeightPackageKorob TFloat, WeightPackage TFloat, WeightPackageSticker TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
              , WeightMin TFloat, WeightMax TFloat
              , Height TFloat, Length TFloat, Width TFloat
@@ -189,6 +189,7 @@ BEGIN
 
            , ObjectFloat_Weight.ValueData    AS Weight
 
+           , COALESCE (ObjectFloat_WeightPackageKorob.ValueData,0)  ::TFloat  AS WeightPackageKorob
            , COALESCE (ObjectFloat_WeightPackage.ValueData,0)       ::TFloat  AS WeightPackage
            , COALESCE (ObjectFloat_WeightPackageSticker.ValueData,0)::TFloat  AS WeightPackageSticker
            , COALESCE (ObjectFloat_WeightTotal.ValueData,0)         ::TFloat  AS WeightTotal
@@ -337,6 +338,10 @@ BEGIN
                                  ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves()
             */
+            LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackageKorob
+                                  ON ObjectFloat_WeightPackageKorob.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_WeightPackageKorob.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageKorob()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
                                   ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
@@ -633,6 +638,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.03.25        * WeightPackageKorob 
  20.01.25        * isEtiketka
  11.11.24        * GoodsSubDate
  04.11.24        * GoodsIncomeId, GoodsKindIncomeId

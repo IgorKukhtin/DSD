@@ -203,6 +203,17 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 45
           end
+          object WeightPackageKorob: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087#1072#1082'. '#1076#1083#1103' '#1082#1086#1088'.'
+            DataBinding.FieldName = 'WeightPackageKorob'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' 1-'#1086#1075#1086' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1050#1054#1056#1054#1041#1050#1048
+            Width = 70
+          end
           object WeightPackage: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1087#1072#1082'. '#1076#1083#1103' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'WeightPackage'
@@ -2123,6 +2134,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ReceiptGPId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightPackageKorob'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightPackageKorob'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
