@@ -169,6 +169,7 @@ END IF;
 
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+       AND vbUserId <> 5
     THEN
         IF vbStatusId = zc_Enum_Status_Erased() -- AND inSession <> zfCalc_UserAdmin()
         THEN
@@ -402,7 +403,7 @@ END IF;
                                                                         )
                                      )
 
-          , tmpMovement AS (SELECT * FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+          , tmpMovement AS (SELECT * FROM Movement WHERE Movement.Id = inMovementId AND (Movement.StatusId = zc_Enum_Status_Complete() OR vbUserId = 5))
        -- Результат
        SELECT
              Movement.Id                                AS Id
@@ -629,13 +630,13 @@ END IF;
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_order
                                      ON MovementString_InvNumberPartner_order.MovementId = Movement_order.Id
                                     AND MovementString_InvNumberPartner_order.DescId = zc_MovementString_InvNumberPartner()
-            LEFT JOIN MovementString AS MovementString_DealId
-                                     ON MovementString_DealId.MovementId = Movement_order.Id
-                                    AND MovementString_DealId.DescId = zc_MovementString_DealId()
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_edi
                                            ON MovementLinkMovement_Order_edi.MovementId = Movement_order.Id
                                           AND MovementLinkMovement_Order_edi.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_EDI ON Movement_EDI.Id = MovementLinkMovement_Order_edi.MovementChildId
+            LEFT JOIN MovementString AS MovementString_DealId
+                                     ON MovementString_DealId.MovementId = Movement_EDI.Id
+                                    AND MovementString_DealId.DescId = zc_MovementString_DealId()
 
             LEFT JOIN tmpMovementString AS MovementString_InvNumberOrder
                                         ON MovementString_InvNumberOrder.MovementId = Movement.Id
@@ -895,7 +896,7 @@ END IF;
                                   AND ObjectString_CityKind_ShortName_To.ValueData <> ''
 
        WHERE Movement.Id = inMovementId
-         AND Movement.StatusId = zc_Enum_Status_Complete()
+         AND (Movement.StatusId = zc_Enum_Status_Complete() OR vbUserId = 5)
       ;
     RETURN NEXT Cursor1;
 
