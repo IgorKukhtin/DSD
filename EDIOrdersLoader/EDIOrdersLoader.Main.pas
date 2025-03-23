@@ -112,6 +112,12 @@ type
     actExport_fr3: TdsdPrintAction;
     mactExport_xls_2244900110: TMultiAction;
     actVchasnoEDIOrdeLoad: TdsdVchasnoEDIAction;
+    actVchasnoEDIOrdrsp: TdsdVchasnoEDIAction;
+    actVchasnoEDIDesadv: TdsdVchasnoEDIAction;
+    actVchasnoEDIComDoc: TdsdVchasnoEDIAction;
+    mactVchasnoEDIDesadv: TMultiAction;
+    mactVchasnoEDIOrdrsp: TMultiAction;
+    mactVchasnoEDIComDoc: TMultiAction;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -471,9 +477,36 @@ begin
           Application.ProcessMessages;
           // Попробовали отправить
           try
-              if FieldByName('isEdiOrdspr').AsBoolean  = true then mactOrdspr.Execute;
-              if FieldByName('isEdiInvoice').AsBoolean = true then mactInvoice.Execute;
-              if FieldByName('isEdiDesadv').AsBoolean  = true then mactDesadv.Execute;
+              if (FieldByName('isEdiOrdspr').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactOrdspr.Execute;
+              if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactDesadv.Execute;
+              if (FieldByName('isEdiInvoice').AsBoolean = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactInvoice.Execute;
+              //
+              if (FieldByName('isEdiOrdspr').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
+              then begin
+                       actExecPrintStoredProc.Execute;
+                       if actVchasnoEDIOrdrsp.Execute
+                       then actUpdateEdiOrdsprTrue.Execute
+                       else // Ошибку показать в логе
+                            ;
+              end;
+              if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
+              then begin
+                       actExecPrintStoredProc.Execute;
+                       if actVchasnoEDIDesadv.Execute
+                       then actUpdateEdiDesadvTrue.Execute
+                       else // Ошибку показать в логе
+                            ;
+              end;
+              // еще раз, но уже ComDoc
+              if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
+              then begin
+                       actExecPrintStoredProc.Execute;
+                       if actVchasnoEDIComDoc.Execute
+                       then actUpdateEdiInvoiceTrue.Execute
+                       else // Ошибку показать в логе
+                            ;
+              end;
+              //
               FormParams.ParamByName('Err_str_toEDI').Value := '';
               //
               Application.ProcessMessages;
@@ -482,9 +515,15 @@ begin
               actUpdate_EDI_Send.Execute;
           except
               FormParams.ParamByName('Err_str_toEDI').Value := 'Ошибка при отправке';
-              if FieldByName('isEdiOrdspr').AsBoolean  = true then AddToLog('isEdiOrdspr  =  <true>');
-              if FieldByName('isEdiInvoice').AsBoolean = true then AddToLog('isEdiInvoice =  <true>');
-              if FieldByName('isEdiDesadv').AsBoolean  = true then AddToLog('isEdiDesadv  =  <true>');
+              //
+              if (FieldByName('isEdiOrdspr').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then AddToLog('isEdiOrdspr  =  <true>');
+              if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then AddToLog('isEdiDesadv  =  <true>');
+              if (FieldByName('isEdiInvoice').AsBoolean = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then AddToLog('isEdiInvoice =  <true>');
+              //
+              if (FieldByName('isEdiOrdspr').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true) then AddToLog('isEdiVchasnoOrdspr  =  <true>');
+              if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true) then AddToLog('isEdiVchasnoDesadv  =  <true>');
+              if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true) then AddToLog('isEdiVchasnoComDoc  =  <true>');
+              //
               AddToLog('Ошибка при отправке № : <' + IntToStr(i) + '> <' + FieldByName('Id').AsString + '>');
               //
               Application.ProcessMessages;
@@ -604,15 +643,16 @@ try
   end;
 
   //
-  // !!! Только Загрузка !!!
+  // !!! Только Загрузка EDI !!!
   gErr:= FALSE;
-  try fEdi_LoadData_from;
+  try //fEdi_LoadData_from;
   except
         on E: Exception do begin
            gErr:= Pos('--- ignore file',E.Message) = 0;
            AddToLog('**** Ошибка *** LoadData - from *** : ' + E.Message);
         end;
   end;
+  // !!! Только Загрузка - VCHASNO !!!
   try fEdi_LoadDataVchasno_from;
   except
         on E: Exception do begin
@@ -667,7 +707,7 @@ var Present: TDateTime;
     IntervalStr: string;
 begin
   ActiveControl:= cbPrevDay;
-
+exit;
   Present:=Now;
   DecodeTime(Present, Hour, Min, Sec, MSec);
 
