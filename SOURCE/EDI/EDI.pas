@@ -5798,7 +5798,7 @@ begin
      finally
        Stream.Free;
      end;
-     EDI.UpdateOrderORDERSPSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger);
+     if Result then EDI.UpdateOrderORDERSPSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger);
   end;
 
 end;
@@ -5821,7 +5821,7 @@ begin
      finally
        Stream.Free;
      end;
-     EDI.UpdateOrderDESADVSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger);
+     if Result then EDI.UpdateOrderDESADVSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger);
   end;
 
 end;
@@ -5844,7 +5844,7 @@ begin
      finally
        Stream.Free;
      end;
-     EDI.UpdateOrderDELNOTSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger);
+     if Result then EDI.UpdateOrderDELNOTSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger);
   end;
 
 end;
