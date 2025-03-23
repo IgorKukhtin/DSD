@@ -4,22 +4,22 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
   ClientWidth = 1368
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1390
-  ExplicitHeight = 509
+  ExplicitWidth = 1384
+  ExplicitHeight = 492
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 66
+    Top = 57
     Width = 1368
-    Height = 387
-    ExplicitTop = 66
+    Height = 396
+    ExplicitTop = 57
     ExplicitWidth = 1368
-    ExplicitHeight = 387
-    ClientRectBottom = 387
+    ExplicitHeight = 396
+    ClientRectBottom = 396
     ClientRectRight = 1368
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1368
-      ExplicitHeight = 387
+      ExplicitHeight = 396
       inherited cxGrid: TcxGrid
         Width = 1368
         Height = 209
@@ -479,7 +479,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         Left = 0
         Top = 214
         Width = 1368
-        Height = 173
+        Height = 182
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
@@ -487,7 +487,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Left = 0
           Top = 0
           Width = 953
-          Height = 173
+          Height = 182
           Align = alLeft
           PopupMenu = PopupMenu
           TabOrder = 0
@@ -767,7 +767,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Left = 957
           Top = 0
           Width = 411
-          Height = 173
+          Height = 182
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
@@ -829,7 +829,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Left = 953
           Top = 0
           Width = 4
-          Height = 173
+          Height = 182
           Control = cxChildGrid
         end
       end
@@ -1796,6 +1796,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       DateTo.DataType = ftDateTime
       DateTo.MultiSelectSeparator = ','
       EDI = EDI
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
       spHeader = spHeaderOrder
       spList = spListOrder
     end
@@ -1841,6 +1847,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       DateTo.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediDesadv
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
@@ -1886,6 +1898,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       DateTo.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediOrdrsp
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
@@ -1931,6 +1949,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       DateTo.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediComDocSave
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
@@ -2019,6 +2043,58 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       Hint = #1047#1074#1075#1088#1091#1079#1082#1072' "'#1053#1072#1082#1083#1072#1076#1085#1080#1093' '#1085#1072' '#1087#1086#1074#1077#1088#1085#1077#1085#1085#1103'"'
       ImageIndex = 85
     end
+    object mactVchasnoEDISignDeclar: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actVchasnoEDISignDeclar
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1086#1076#1087#1080#1089#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' ' +
+        'EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1087#1086#1076#1087#1080#1089#1072#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1055#1086#1076#1087#1080#1089#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1055#1086#1076#1087#1080#1089#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDISignDeclar: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = 'actVchasnoEDISignDeclar'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediComDocSign
+      KeyFileName.Value = ''
+      KeyFileName.Component = FormParams
+      KeyFileName.ComponentItem = 'FileNameKey'
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.Component = FormParams
+      KeyUserName.ComponentItem = 'UserNameKey'
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -2053,7 +2129,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     DockControlHeights = (
       0
       0
-      35
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2339,6 +2415,10 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton3'
         end>
     end
@@ -2369,6 +2449,10 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     end
     object dxBarButton3: TdxBarButton
       Action = mactLoadInvoiceNR
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = mactVchasnoEDISignDeclar
       Category = 0
     end
   end

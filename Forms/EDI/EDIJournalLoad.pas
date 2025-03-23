@@ -227,6 +227,9 @@ type
     actLoadInvoiceNR: TdsdEDINAction;
     mactLoadInvoiceNR: TMultiAction;
     dxBarButton3: TdxBarButton;
+    mactVchasnoEDISignDeclar: TMultiAction;
+    actVchasnoEDISignDeclar: TdsdVchasnoEDIAction;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

@@ -11,7 +11,7 @@ type
 
   TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave,
     ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice, ediError,
-    ediRecadv, ediTTN);
+    ediRecadv, ediTTN, ediComDocSign, ediComDocSendSign);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -168,6 +168,9 @@ type
     FResultParam: TdsdParam;
     FFileNameParam: TdsdParam;
 
+    FKeyFileNameParam: TdsdParam;
+    FKeyUserNameParam: TdsdParam;
+
     FPairParams: TOwnedCollection;
     FHeaderDataSet: TDataSet;
     FListDataSet: TDataSet;
@@ -183,10 +186,13 @@ type
     function LocalExecute: Boolean; override;
     function GetVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
     function POSTVchasnoEDI(ATypeExchange : Integer; AStream: TMemoryStream): Boolean;
+    function SignData(UserSign : String): Boolean;
     function OrderLoad : Boolean;
     function OrdrspSave : Boolean;
     function DESADVSave : Boolean;
     function ComDocSave : Boolean;
+    function DoSignComDoc: Boolean;
+    function DoSendSignComDoc: Boolean;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -211,6 +217,8 @@ type
     property EDI: TEDI read FEDI write FEDI;
     property EDIDocType: TEDIDocType read FEDIDocType write FEDIDocType default ediOrder;
 
+    property KeyFileName: TdsdParam read FKeyFileNameParam write FKeyFileNameParam;
+    property KeyUserName: TdsdParam read FKeyUserNameParam write FKeyUserNameParam;
 //    property Result: TdsdParam read FResultParam write FResultParam;
 //    property FileName: TdsdParam read FFileNameParam write FFileNameParam;
     // Содержимое массива Json для формирования DataSet
@@ -5423,6 +5431,14 @@ begin
   FFileNameParam.DataType := ftString;
   FFileNameParam.Value := '';
 
+  FKeyFileNameParam := TdsdParam.Create(nil);
+  FKeyFileNameParam.DataType := ftString;
+  FKeyFileNameParam.Value := '';
+
+  FKeyUserNameParam := TdsdParam.Create(nil);
+  FKeyUserNameParam.DataType := ftString;
+  FKeyUserNameParam.Value := '';
+
   FEDIDocType:= ediOrder;
 end;
 
@@ -5728,6 +5744,196 @@ begin
   end;
 end;
 
+function TdsdVchasnoEDIAction.SignData(UserSign : String) : boolean;
+var
+  apath: String;
+{$IFDEF WIN64}
+  StartInfo: TStartupInfo;
+  ProcInfo: TProcessInformation;
+  CmdLine, SignFile, FileKeyName, FileName: String;
+  f: TIniFile;
+{$ELSE}
+  FileName: AnsiString;
+  CPInterface: PEUSignCP;
+  CertOwnerInfo : TEUCertOwnerInfo;
+  Param : DWORD;
+  nError : integer;
+{$ENDIF WIN64}
+begin
+
+  Result := False;
+
+  apath := 'c:\Program Files (x86)\Institute of Informational Technologies\Certificate Authority-1.3\End User\';
+  if not FileExists(apath + String(EUDLLName)) then
+  begin
+    apath := 'c:\Program Files\Institute of Informational Technologies\Certificate Authority-1.3\End User\';
+    if not FileExists(apath + String(EUDLLName)) then
+    begin
+      ShowMessage('Ошибка Не найден файл библиотеки подписи: ' + EUDLLName);
+    end;
+  end;
+
+{$IFDEF WIN64}
+
+  SignFile := ExtractFilePath(ParamStr(0)) + 'SignFile.exe';
+
+  if not FileExists(SignFile) then
+  begin
+    ShowMessage('Ошибка Не найдена программа шифрования: ' + SignFile);
+  end;
+
+  // 1.Установка ключей
+  if ExtractFilePath(UserSign) <> ''
+  then FileKeyName := AnsiString(UserSign)
+  else FileKeyName := AnsiString(ExtractFilePath(ParamStr(0)) + UserSign);
+
+  // проверка
+  if not FileExists(String(FileKeyName)) then ShowError('Файл не найден : <'+String(FileKeyName)+'>');
+
+  FKeyFileNameParam.Value := ExtractFileName(String(FileKeyName));
+
+  FileName := AnsiString(ExtractFilePath(ParamStr(0)) + FResultParam.Value);
+  // проверка
+  if not FileExists(String(FileName)) then ShowError('Файл tTTN не найден : <'+String(FileName)+'>');
+
+  CmdLine := '"' + SignFile + '" "' + apath + '" "' + FileKeyName + '" "24447183" "' + FileName + '"';
+
+  FillChar(StartInfo, SizeOf(StartInfo), #0);
+  with StartInfo do
+  begin
+    cb := SizeOf(TStartupInfo);
+    dwFlags := STARTF_USESHOWWINDOW;
+    wShowWindow := SW_HIDE;
+  end;
+
+  // Запускаем процесс подписи
+  // Ожидаем завершения приложения
+  if CreateProcess(nil, PChar( String( CmdLine ) ), nil, nil, false,
+                   CREATE_NEW_CONSOLE or NORMAL_PRIORITY_CLASS, nil,
+                   PChar(ExtractFilePath(FileName)), StartInfo, ProcInfo) then
+  begin
+    WaitForSingleObject(ProcInfo.hProcess, INFINITE);
+    // Free the Handles
+    CloseHandle(ProcInfo.hProcess);
+    CloseHandle(ProcInfo.hThread);
+  end;
+
+  FileName := ExtractFilePath(ParamStr(0)) + 'SignFileResult.dat';
+
+  if not FileExists(FileName) then
+  begin
+    ShowMessage('Ошибка Не найдена результат работы программы шифрования: ' + FileName);
+  end;
+
+  f := TiniFile.Create(FileName);
+
+  try
+    try
+      if F.ReadString('SignResult', 'Ошибка', '') = '' then
+      begin
+        FKeyUserNameParam.Value := F.ReadString('SignResult', 'UserName', '');
+        Result := True;
+      end else ShowError('Ошибка ' + F.ReadString('SignResult', 'Ошибка', ''));;
+    Except
+    end;
+  finally
+    f.Free;
+  end;
+  DeleteFile(FileName);
+
+{$ELSE}
+
+  if not EULoadDLL(apath) then
+  begin
+    ShowMessage('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
+  end;
+  CPInterface := EUGetInterface();
+  if CPInterface = nil then
+  begin
+    EUUnloadDLL();
+    ShowMessage('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
+  end;
+  CPInterface.SetUIMode(false);
+  EUInitializeOwnUI(CPInterface, true);
+  try
+
+    nError := CPInterface.Initialize();
+    if nError <> EU_ERROR_NONE then
+    begin
+      ShowMessage('Ошибка Инициализации библиотеки подписи: ' + EUDLLName);
+    end;
+    if ShiftDown then
+    begin
+       CPInterface.SetUIMode(true);
+       CPInterface.SetSettings;
+    end;
+
+    CPInterface.SetUIMode(false);
+
+    Param := EU_SIGN_TYPE_CADES_X_LONG;
+    CPInterface.SetRuntimeParameter(PAnsiChar(EU_SIGN_TYPE_PARAMETER), @Param, sizeof(Param));
+
+    try
+      CPInterface.ResetPrivateKey;
+    except
+      on E: Exception do
+      begin
+        ShowMessage('Ошибка В библиотеке подписи: ' + E.Message);
+      end;
+    end;
+
+    try
+      // 1.Установка ключей
+      if ExtractFilePath(UserSign) <> ''
+      then FileName := AnsiString(UserSign)
+      else FileName := AnsiString(ExtractFilePath(ParamStr(0)) + UserSign);
+
+      // проверка
+      if not FileExists(String(FileName)) then ShowMessage('Файл не найден : <'+String(FileName)+'>');
+
+      FKeyFileNameParam.Value := ExtractFileName(String(FileName));
+
+      nError := CPInterface.ReadPrivateKeyFile (PAnsiChar(FileName), PAnsiChar('24447183'), @CertOwnerInfo); // бухгалтер
+      if nError <> EU_ERROR_NONE then
+      begin
+        ShowMessage('Ошибка В библиотеке при загрузке электронного ключа: ' + CPInterface.GetErrorDesc(nError));
+      end;
+
+      FKeyUserNameParam.Value := String(CertOwnerInfo.SubjectFullName);
+    except
+      on E: Exception do
+      begin
+        ShowMessage('Ошибка В библиотеке при загрузке электронного ключа:' + E.Message);
+      end;
+    end;
+
+    try
+      // 2.Неарспедственно подпись
+      FileName := AnsiString(ExtractFilePath(ParamStr(0)) + FResultParam.Value);
+      // проверка
+      if not FileExists(String(FileName)) then ShowMessage('Файл документа не найден : <'+String(FileName)+'>');
+
+      nError := CPInterface.SignFile(PAnsiChar(FileName), PAnsiChar(FileName + '.p7s'), True);
+      if nError <> EU_ERROR_NONE then
+      begin
+        ShowMessage('Ошибка В библиотеке при надожении подписи: ' + CPInterface.GetErrorDesc(nError));
+      end;
+    except
+      on E: Exception do
+      begin
+        ShowMessage('Ошибка В библиотеке при надожении подписи:' + E.Message);
+      end;
+    end;
+
+    Result := True;
+  finally
+    CPInterface.Finalize;
+    EUUnloadDLL();
+  end;
+{$ENDIF WIN64}
+
+end;
+
 function TdsdVchasnoEDIAction.OrderLoad : Boolean;
   var DataSetCDS: TClientDataSet;
 begin
@@ -5849,6 +6055,76 @@ begin
 
 end;
 
+function TdsdVchasnoEDIAction.DoSignComDoc: Boolean;
+  var GLN_Sign : String;
+begin
+  Result := False;
+  if HeaderDataSet.FieldByName('DealId').asInteger = 0 then Exit;
+
+  FOrderParam.Value := HeaderDataSet.FieldByName('DealId').AsString;
+  try
+
+    // Получим файл документа
+    Result := GetVchasnoEDI(3);
+    //Result := GetDocETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
+
+//    // Подпись файла 1
+//    if Result and (HeaderDataSet.FieldByName('UserSign').asString <> '') then
+//    begin
+//      if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s');
+//      if Result then Result := SignData(HeaderDataSet.FieldByName('UserSign').asString);
+//
+//      // Отправка подписанного файла eTTN
+//      if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
+//    end;
+//
+//    // Подпись файла 2
+//    if Result and (HeaderDataSet.FieldByName('UserSeal').asString <> '') then
+//    begin
+//      if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s');
+//      if Result then Result := SignData(HeaderDataSet.FieldByName('UserSeal').asString);
+//
+//      // Отправка подписанного файла eTTN
+//      if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
+//    end;
+//
+//    // Подпись файла 3
+//    if Result and (HeaderDataSet.FieldByName('UserKey').asString <> '') then
+//    begin
+//      if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s');
+//      if Result then Result := SignData(HeaderDataSet.FieldByName('UserKey').asString);
+//
+//      // Отправка подписанного файла eTTN
+//      if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
+//    end;
+//
+//    // Запишем в базу чей ключ и дату
+//    if Result and Assigned(FUpdateSign) then FUpdateSign.Execute;
+
+  finally
+    // удалим временные файлы
+    if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value) then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value);
+    if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s');
+  end;
+
+end;
+
+function TdsdVchasnoEDIAction.DoSendSignComDoc: Boolean;
+  var cXML : String;
+begin
+  Result := ComDocSave;
+  if Result then
+  begin
+    if (FResultParam.Value <> HeaderDataSet.FieldByName('EDIId').AsString) then
+    begin
+      HeaderDataSet.Edit;
+      HeaderDataSet.FieldByName('EDIId').AsString := FResultParam.Value;
+      HeaderDataSet.Post;
+    end;
+    Result := DoSignComDoc;
+  end;
+end;
+
 function TdsdVchasnoEDIAction.LocalExecute: Boolean;
 begin
 
@@ -5857,6 +6133,9 @@ begin
     ediOrdrsp : Result := OrdrspSave;
     ediDesadv : Result := DESADVSave;
     ediComDocSave : Result := ComDocSave;
+
+    ediComDocSign : Result := DoSignComDoc;
+    ediComDocSendSign : Result := DoSendSignComDoc;
 
   else raise Exception.Create('Не описано метод обработки типа документов.');
   end;
