@@ -270,7 +270,6 @@
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
-    ExplicitHeight = 711
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -1004,7 +1003,7 @@
     Caption = #1060#1080#1079'. '#1086#1073#1084#1077#1085
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 83
+    TabOrder = 82
     Width = 92
   end
   object cbNotVat: TcxCheckBox [83]
@@ -1014,7 +1013,7 @@
     Caption = #1073#1077#1079' '#1053#1044#1057' (0%)'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 87
+    TabOrder = 86
     Width = 92
   end
   object cbMarketNot: TcxCheckBox [84]
@@ -1398,6 +1397,36 @@
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object ProtocolOpenFormCondition: TdsdOpenForm
+      Category = 'Condition'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ContractConditionCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ContractConditionCDS
+          ComponentItem = 'ContractConditionKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object PaidKindChoiceFormСС: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2774,6 +2803,14 @@
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -2868,6 +2905,10 @@
     end
     object bbShowErasedCC: TdxBarButton
       Action = actShowErasedCC
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = ProtocolOpenFormCondition
       Category = 0
     end
   end
