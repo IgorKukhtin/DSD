@@ -128,6 +128,7 @@ BEGIN
                                                      , zc_MIFloat_CountTare4()
                                                      , zc_MIFloat_CountTare5()
                                                      , zc_MIFloat_CountPack()
+                                                     , zc_MIFloat_HeadCount()
                                                       )
                                  )
            , tmpMIF_WeightTare AS (SELECT MIF.*
@@ -224,6 +225,10 @@ BEGIN
                          -- если Перемещение с Упак -> РК = переводим из ШТ в ВЕС
                          THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
 
+                    WHEN vbMovementDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND MIFloat_HeadCount.ValueData > 0
+                         -- если Инвентаризация - Подготовка = здесь сохранено в ШТ и переводим в ВЕС
+                         THEN MIFloat_HeadCount.ValueData * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+
                     -- Иначе Инвентаризация - Подготовка = здесь всегда ВЕС
                     ELSE MovementItem.Amount
 
@@ -233,6 +238,10 @@ BEGIN
              , CAST (CASE WHEN vbMovementDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
                                -- если Перемещение с Упак -> РК = здесь всегда ШТ
                                THEN MovementItem.Amount
+      
+                          WHEN vbMovementDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND MIFloat_HeadCount.ValueData > 0
+                               -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
+                               THEN MIFloat_HeadCount.ValueData
       
                           WHEN vbMovementDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND OF_Weight.ValueData > 0
                                -- если Инвентаризация - Подготовка = переводим из ВЕС в ШТ
@@ -335,6 +344,10 @@ BEGIN
                                  AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Measure.ChildObjectId
 
+             -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
+             LEFT JOIN tmpMIF_CountTare AS MIFloat_HeadCount
+                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_HeadCount.DescId         = zc_MIFloat_HeadCount()
              -- Количество упаковок
              LEFT JOIN tmpMIF_CountTare AS tmpMIF_CountPack
                                         ON tmpMIF_CountPack.MovementItemId = MovementItem.Id
