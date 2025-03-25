@@ -129,6 +129,32 @@ BEGIN
                                                            END
                                                           )
 
+                          WHEN vbDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND MIFloat_HeadCount.ValueData > 0
+                               -- если Инвентаризация - Подготовка = здесь сохранено в ШТ и переводим в ВЕС
+                               THEN MIFloat_HeadCount.ValueData * (COALESCE (OF_Weight.ValueData, 0)
+                                                                 + CASE WHEN Object_Goods.ObjectCode IN (1286 -- Сосиски ДИТЯЧІ вар п/а в/ґ 330 г/шт ТМ ТОКЕРИ
+                                                                                                       , 1728 -- Сосиски ДИТЯЧІ вар п/а в/ґ 330 г/шт ТМ TRIXI
+                                                                                                       , 2153 -- Сосиски ШКІЛЬНІ вар в/ґ 350 г/шт ТМ Алан
+                                                                                                       , 2156 -- Сосиски З ВЕРШКАМИ КАРАПУЗ вар в/ґ 240 г/шт ТМ Алан
+                                                                                                       , 2157 -- Сосиски ДИТЯЧІ вар п/а в/ґ 330 г/шт ТМ Алан
+                                                                                                       , 2159 -- Сосиски МОЛОЧНІ вар в/ґ 330 г/шт ТМ Алан
+                                                                                                       , 2161 -- Сосиски З СИРОМ вар в/ґ 330 г/шт ТМ Алан
+                                                                                                       , 2163 -- Сосиски КРОХА вар в/ґ 290 г/шт ТМ Алан
+                                                                                                       , 2164 -- Сосиски ВІДЕНСЬКІ вар в/ґ 376 г/шт ТМ Алан
+                                                                                                       , 2189 -- СОСИСКИ МОЛОЧНІ В/Г ТМ Варто 330 г
+                                                                                                       , 2330 -- Сосиски ФРАНКФУРТСЬКІ вар в/ґ 320 г/шт ТМ Алан
+                                                                                                       , 2475 -- Сосиски З ЯЛОВИЧИНИ вар в/ґ 300 г/шт ТМ Алан
+                                                                                                        )
+                                                                         AND Object_GoodsKind.Id = 8349 -- Флоу-пак
+                                                                             THEN 0
+                                                                        -- коробка
+                                                                        WHEN Object_GoodsKind.Id =  412895 
+                                                                             THEN 0
+        
+                                                                        ELSE COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0)
+                                                                   END
+                                                                  )
+
                           -- Иначе Инвентаризация - Подготовка = здесь всегда ВЕС
                           ELSE MovementItem.Amount
 
@@ -138,6 +164,10 @@ BEGIN
                    , CAST (CASE WHEN vbDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
                                      -- если Перемещение с Упак -> РК = здесь всегда ШТ
                                      THEN MovementItem.Amount
+
+                                WHEN vbDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND MIFloat_HeadCount.ValueData > 0
+                                     -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
+                                     THEN MIFloat_HeadCount.ValueData
 
                                 WHEN vbDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND OF_Weight.ValueData > 0
                                      -- если Инвентаризация - Подготовка = переводим из ВЕС в ШТ
@@ -176,6 +206,10 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_PartionNum
                                                ON MIFloat_PartionNum.MovementItemId = MovementItem.Id
                                               AND MIFloat_PartionNum.DescId = zc_MIFloat_PartionNum()
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                              AND MIFloat_HeadCount.DescId         = zc_MIFloat_HeadCount()
 
                    LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                               ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id

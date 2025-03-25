@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, MovementId Integer
              , JuridicalName_To TVarChar
              , StatusCode Integer, StatusName TVarChar
              , Comment TVarChar
+             , isVchasnoEDI Boolean
               )
 AS
 $BODY$
@@ -68,6 +69,9 @@ BEGIN
                , Object_Status.ObjectCode    		        AS StatusCode
                , Object_Status.ValueData     		        AS StatusName
                , MovementString_Comment.ValueData               AS Comment
+                 -- схема Vchasno - EDI
+               , COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE) :: Boolean AS isVchasnoEDI
+
 
            FROM Movement
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -127,7 +131,7 @@ BEGIN
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_VchasnoEdi
                                         ON ObjectBoolean_Juridical_VchasnoEdi.ObjectId  = Object_JuridicalTo.Id
                                        AND ObjectBoolean_Juridical_VchasnoEdi.DescId    = zc_ObjectBoolean_Juridical_VchasnoEdi()
-                                       AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
+                                     --AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
 
 
                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
@@ -139,10 +143,11 @@ BEGIN
              AND Movement.StatusId = zc_Enum_Status_UnComplete()
              AND Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
              -- Без схемы Vchasno - EDI
-             AND ObjectBoolean_Juridical_VchasnoEdi.ObjectId IS NULL
+             -- AND ObjectBoolean_Juridical_VchasnoEdi.ObjectId IS NULL
              --
              AND ((Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
-              AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
+              AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
+                < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
                   )
                -- Этих Отправляем Сразу
                OR (Object_Retail.Id IN (310855 -- !!!Варус!!!

@@ -2264,6 +2264,7 @@ begin
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPromo').Index].Visible            := FALSE;
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('ChangePercentAmount').Index].Visible:= FALSE;
        //TRUE
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               := FALSE;
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           := TRUE;
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare5').Index].Visible         := TRUE;
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare5').Index].Visible          := TRUE;
