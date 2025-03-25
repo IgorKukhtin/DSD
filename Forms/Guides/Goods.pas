@@ -187,6 +187,10 @@ type
     Comment: TcxGridDBColumn;
     isHeadCount: TcxGridDBColumn;
     isPartionDate: TcxGridDBColumn;
+    spGetImportSettingId_Stat: TdsdStoredProc;
+    actGetImportSetting_Stat: TdsdExecStoredProc;
+    macStartLoad_Stat: TMultiAction;
+    bbStartLoad_Stat: TdxBarButton;
   private
     { Private declarations }
   public
