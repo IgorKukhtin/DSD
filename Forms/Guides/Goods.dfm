@@ -853,6 +853,10 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad_Stat'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -920,6 +924,10 @@ object GoodsForm: TGoodsForm
       Action = macStartLoad_Direct
       Category = 0
     end
+    object bbStartLoad_Stat: TdxBarButton
+      Action = macStartLoad_Stat
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -946,6 +954,17 @@ object GoodsForm: TGoodsForm
           StoredProc = spGetImportSettingId_Name
         end>
       Caption = 'actGetImportSetting_Goods_Name'
+    end
+    object actGetImportSetting_Stat: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_Stat
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_Stat
+        end>
+      Caption = 'actGetImportSetting_Goods_Stat'
     end
     object actImportSettingId_Direct: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -1013,6 +1032,25 @@ object GoodsForm: TGoodsForm
       InfoAfterExecute = '<'#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1072#1103' '#1075#1088#1091#1087#1087#1072' '#1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'> '#1079#1072#1075#1088#1091#1078#1077#1085#1099
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1072#1103' '#1075#1088#1091#1087#1087#1072' '#1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'>'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1069#1082#1089#1077#1083#1103' <'#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1072#1103' '#1075#1088#1091#1087#1087#1072' '#1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'>'
+      ImageIndex = 41
+    end
+    object macStartLoad_Stat: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Stat
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' <'#1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080'> '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' <'#1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080'> '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1069#1082#1089#1077#1083#1103' <'#1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080'>'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1069#1082#1089#1077#1083#1103' <'#1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080'>'
       ImageIndex = 41
     end
     object actGetImportSetting_Goods_BUH: TdsdExecStoredProc
@@ -2441,8 +2479,8 @@ object GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 968
-    Top = 136
+    Left = 992
+    Top = 120
   end
   object spUpdate_Scale: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Goods_Scale'
@@ -2507,8 +2545,8 @@ object GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 944
-    Top = 275
+    Left = 992
+    Top = 235
   end
   object spGetImportSettingId_Name: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2572,7 +2610,7 @@ object GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 728
-    Top = 288
+    Top = 304
   end
   object spGetImportSettingId_Direct: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2604,6 +2642,38 @@ object GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 1000
-    Top = 192
+    Top = 176
+  end
+  object spGetImportSettingId_Stat: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsForm;zc_Object_ImportSetting_Goods_GroupStat'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 304
+    Top = 312
   end
 end
