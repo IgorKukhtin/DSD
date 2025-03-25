@@ -253,11 +253,11 @@ INSERT INTO MovementStringDesc (Code, ItemName)
   
 CREATE OR REPLACE FUNCTION zc_MovementString_DocumentId_vch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_DocumentId_vch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)
-  SELECT 'zc_MovementString_DocumentId_vch', 'Внутрішній DocumentId замовлення Вчасно-EDI' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_DocumentId_vch');
+  SELECT 'zc_MovementString_DocumentId_vch', 'Внутрішній DocumentId Вчасно-EDI' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_DocumentId_vch');
 
 CREATE OR REPLACE FUNCTION zc_MovementString_VchasnoId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_VchasnoId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)
-  SELECT 'zc_MovementString_VchasnoId', 'Внутрішній VchasnoId замовлення Вчасно-EDI' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_VchasnoId');
+  SELECT 'zc_MovementString_VchasnoId', 'Внутрішній VchasnoId Вчасно-EDI' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_VchasnoId');
 
 CREATE OR REPLACE FUNCTION zc_MovementString_Uuid() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_Uuid'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)
