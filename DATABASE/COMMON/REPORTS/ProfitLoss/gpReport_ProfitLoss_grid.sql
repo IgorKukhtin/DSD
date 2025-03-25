@@ -39,6 +39,7 @@ RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, P
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsUserRole_8813637 Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_ProfitLoss());
@@ -46,10 +47,6 @@ BEGIN
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
-
-
-     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
-     PERFORM lpCheck_UserRole_8813637 (vbUserId);
 
 
      -- Ограниченние - нет доступа к ОПиУ
