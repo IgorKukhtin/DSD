@@ -11345,6 +11345,12 @@ object MainForm: TMainForm
         Value = Null
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isLoad'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -11544,7 +11550,7 @@ object MainForm: TMainForm
     Top = 54
   end
   object spSelectSend_toEDI: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_EDI_Send_UnComplete'
+    StoredProcName = 'gpSelect_Movement_EDI_Send_UnComplete_two'
     DataSet = Send_toEDICDS
     DataSets = <
       item

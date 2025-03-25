@@ -1043,6 +1043,7 @@ end;
 function TGuideGoodsForm.Checked: boolean; //Проверка корректного ввода в Edit
 var WeightReal_check:Double;
     calcPricePartner:Double;
+    EditValue : Double;
 begin
      Result:=(CDS.RecordCount=1)
           and(rgGoodsKind.ItemIndex>=0)
@@ -1090,6 +1091,17 @@ begin
                  ParamsMI.ParamByName('WeightTare').AsFloat:=ParamsMI.ParamByName('WeightPack').AsFloat;
                  //Количество упаковок - Флоупак +  Нар.180 + Нар. 200
                  ParamsMI.ParamByName('CountTare').AsFloat:= ParamsMI.ParamByName('CountPack').AsFloat;
+
+                 if (ParamByName('RealWeight_Get').AsFloat = 0)and(ParamByName('Weight_gd').AsFloat > 0)
+                 then begin
+                          try EditValue:= StrToFloat(trim(EditWeightValue.Text))
+                          except
+                                EditValue:= 0;
+                          end;
+                          ParamByName('RealWeight').AsFloat:=EditValue * (ParamByName('Weight_gd').AsFloat + ParamByName('WeightPack_gd').AsFloat);
+                          ParamByName('HeadCount').AsFloat:=EditValue;
+                       end
+                  else ParamByName('HeadCount').AsFloat:= 0;
              end
              else begin
                  try ParamsMI.ParamByName('WeightTare').AsFloat:=StrToFloat(EditTare0.Text);
@@ -1762,7 +1774,6 @@ begin
                     EditWeightValue.Text:= FloatToStr(ROUND (ParamsMI.ParamByName('RealWeight_Get').AsFloat / CDS.FieldByName('Weight').AsFloat));
                     exit;
           end;
-
      end;
 
 
@@ -2924,8 +2935,8 @@ begin
        infoPanelTare9.Height:=35 + 2;
        infoPanelTare10.Height:=35 + 2;
 
-       infoPanelTare.Width:= 230 + 80;
-       infoPanelPartion.Width:= 250 - 80;
+       infoPanelTare.Width:= 230 + 80+30;
+       infoPanelPartion.Width:= 250 - 80-20;
        infoPanelPriceList.Visible:= false; //infoPanelPriceList.Width:= 250 - 80;
        ParamsPanel.Height:= ParamsPanel.Height + infoPanelTare1.Height * 2 + 20;
 
