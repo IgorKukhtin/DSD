@@ -202,6 +202,8 @@ type
     cbNotVat: TcxCheckBox;
     cbisNotTareReturning: TcxCheckBox;
     cbMarketNot: TcxCheckBox;
+    ProtocolOpenFormCondition: TdsdOpenForm;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
