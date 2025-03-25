@@ -330,9 +330,9 @@
   end
   object edComment: TcxTextEdit
     Left = 40
-    Top = 537
+    Top = 539
     TabOrder = 40
-    Width = 449
+    Width = 210
   end
   object cbCountCount: TcxCheckBox
     Left = 272
@@ -437,6 +437,23 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 55
+    Width = 209
+  end
+  object cxLabel25: TcxLabel
+    Left = 280
+    Top = 521
+    Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2-'#1075#1086' '#1091#1088#1086#1074#1085#1103
+  end
+  object deDepartment_two: TcxButtonEdit
+    Left = 280
+    Top = 539
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 57
     Width = 209
   end
   object ActionList: TActionList
@@ -651,6 +668,14 @@
         Name = 'inDepartmentId'
         Value = Null
         Component = GuidesDepartment
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDepartment_twoId'
+        Value = Null
+        Component = GuidesDepartment_two
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1050,6 +1075,21 @@
         Name = 'DepartmentName'
         Value = Null
         Component = GuidesDepartment
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Department_twoId'
+        Value = Null
+        Component = GuidesDepartment_two
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Department_twoName'
+        Value = Null
+        Component = GuidesDepartment_two
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1593,5 +1633,34 @@
       end>
     Left = 368
     Top = 488
+  end
+  object GuidesDepartment_two: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = deDepartment_two
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesDepartment_two
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesDepartment_two
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 368
+    Top = 533
   end
 end

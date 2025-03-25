@@ -20,7 +20,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PartnerCode Integer, PartnerName TVarChar,
                
                FounderId Integer, FounderName TVarChar,
-               DepartmentId Integer, DepartmentName TVarChar,    
+               DepartmentId Integer, DepartmentName TVarChar,
+               Department_twoId Integer, Department_twoName TVarChar,    
 
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
               
@@ -124,6 +125,8 @@ BEGIN
 
            , Object_Unit.DepartmentId
            , Object_Unit.DepartmentName
+           , Object_Unit.Department_twoId
+           , Object_Unit.Department_twoName
 
            , Object_Unit.SheetWorkTimeId
            , Object_Unit.SheetWorkTimeName

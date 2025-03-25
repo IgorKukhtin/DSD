@@ -105,6 +105,9 @@ type
     cxLabel24: TcxLabel;
     deDepartment: TcxButtonEdit;
     GuidesDepartment: TdsdGuides;
+    cxLabel25: TcxLabel;
+    deDepartment_two: TcxButtonEdit;
+    GuidesDepartment_two: TdsdGuides;
   private
     { Private declarations }
   public
