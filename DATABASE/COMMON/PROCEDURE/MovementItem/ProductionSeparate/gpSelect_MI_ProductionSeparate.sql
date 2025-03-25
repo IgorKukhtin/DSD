@@ -336,7 +336,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
                                  ON ObjectLink_GoodsGroup.ObjectId = Object_GoodsGroup.Id
                                 AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
-            LEFT JOIN Object AS GoodsGroup ON GoodsGroup.Id = ObjectLink_GoodsGroup.ChildObjectId
+
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;

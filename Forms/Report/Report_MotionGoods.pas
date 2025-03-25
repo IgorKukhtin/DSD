@@ -252,6 +252,7 @@ type
     cbPartionCell: TcxCheckBox;
     actisPartionCell: TdsdDataSetRefresh;
     actisOperDate_Partion: TdsdDataSetRefresh;
+    GoodsGroupCode: TcxGridDBColumn;
   private
   public
   end;
