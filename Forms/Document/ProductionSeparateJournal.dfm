@@ -469,7 +469,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GoodsGroupCode;GoodsGroupNameFull;GoodsName'
         end
         item
           DataSet = PrintItemsTwoCDS

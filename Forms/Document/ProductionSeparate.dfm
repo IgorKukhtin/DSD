@@ -2,6 +2,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
   ClientHeight = 678
   ClientWidth = 913
+  ExplicitTop = -68
   ExplicitWidth = 929
   ExplicitHeight = 717
   PixelsPerInch = 96
@@ -247,7 +248,15 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Column = chSummIn_hist
             end>
           Styles.Content = nil
-          object CholdGoodsGroupNameFull: TcxGridDBColumn [0]
+          object GoodsGroupCode: TcxGridDBColumn [0]
+            Caption = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099
+            DataBinding.FieldName = 'GoodsGroupCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099' '#1076#1083#1103' '#1089#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1087#1077#1095#1072#1090#1080
+            Width = 70
+          end
+          object CholdGoodsGroupNameFull: TcxGridDBColumn [1]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
@@ -258,7 +267,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           inherited colChildGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
           end
-          object ChildGoodsKindName: TcxGridDBColumn [3]
+          object ChildGoodsKindName: TcxGridDBColumn [4]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -273,7 +282,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 122
           end
-          object CholdMeasureName: TcxGridDBColumn [4]
+          object CholdMeasureName: TcxGridDBColumn [5]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -281,7 +290,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 45
           end
-          object ChildStorageLineName: TcxGridDBColumn [5]
+          object ChildStorageLineName: TcxGridDBColumn [6]
             Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
             DataBinding.FieldName = 'StorageLineName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -296,7 +305,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object ChildAmount: TcxGridDBColumn [6]
+          object ChildAmount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -306,7 +315,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object chPriceIn_hist: TcxGridDBColumn [7]
+          object chPriceIn_hist: TcxGridDBColumn [8]
             Caption = #1062#1077#1085#1072' '#1089'/'#1089' ('#1080#1089#1090#1086#1088#1080#1103')'
             DataBinding.FieldName = 'PriceIn_hist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -318,7 +327,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 55
           end
-          object chPriceIn: TcxGridDBColumn [8]
+          object chPriceIn: TcxGridDBColumn [9]
             Caption = #1062#1077#1085#1072' '#1089'/'#1089
             DataBinding.FieldName = 'PriceIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -330,7 +339,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 55
           end
-          object chSummIn: TcxGridDBColumn [9]
+          object chSummIn: TcxGridDBColumn [10]
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089
             DataBinding.FieldName = 'SummIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -342,7 +351,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 55
           end
-          object chSummIn_hist: TcxGridDBColumn [10]
+          object chSummIn_hist: TcxGridDBColumn [11]
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' ('#1080#1089#1090#1086#1088#1080#1103')'
             DataBinding.FieldName = 'SummIn_hist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -353,7 +362,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object ChildLiveWeight: TcxGridDBColumn [11]
+          object ChildLiveWeight: TcxGridDBColumn [12]
             Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
             DataBinding.FieldName = 'LiveWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -364,7 +373,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object ChildHeadCount: TcxGridDBColumn [12]
+          object ChildHeadCount: TcxGridDBColumn [13]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -374,7 +383,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object ChildPartionGoods: TcxGridDBColumn [13]
+          object ChildPartionGoods: TcxGridDBColumn [14]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -383,7 +392,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 80
           end
-          object chIsCalculated: TcxGridDBColumn [14]
+          object chIsCalculated: TcxGridDBColumn [15]
             Caption = #1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'isCalculated'
             HeaderAlignmentHorz = taCenter
@@ -538,7 +547,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GoodsGroupCode;GoodsGroupNameFull;GoodsName'
         end
         item
           DataSet = PrintItemsTwoCDS

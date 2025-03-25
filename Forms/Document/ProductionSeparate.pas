@@ -73,6 +73,7 @@ type
     dxBarButton1: TdxBarButton;
     actPrint_4001: TdsdPrintAction;
     bbPrint_4001: TdxBarButton;
+    GoodsGroupCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
