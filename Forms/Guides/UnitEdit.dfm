@@ -325,7 +325,7 @@
   end
   object cxLabel18: TcxLabel
     Left = 41
-    Top = 519
+    Top = 521
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
@@ -425,7 +425,7 @@
   object cxLabel24: TcxLabel
     Left = 280
     Top = 476
-    Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090
+    Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103
   end
   object deDepartment: TcxButtonEdit
     Left = 280
@@ -442,7 +442,7 @@
   object cxLabel25: TcxLabel
     Left = 280
     Top = 521
-    Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2-'#1075#1086' '#1091#1088#1086#1074#1085#1103
+    Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2 '#1088#1110#1074#1085#1103
   end
   object deDepartment_two: TcxButtonEdit
     Left = 280

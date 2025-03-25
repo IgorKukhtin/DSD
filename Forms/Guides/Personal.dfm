@@ -185,7 +185,7 @@ object PersonalForm: TPersonalForm
         Width = 80
       end
       object DepartmentName: TcxGridDBColumn
-        Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090
+        Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103
         DataBinding.FieldName = 'DepartmentName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -193,7 +193,7 @@ object PersonalForm: TPersonalForm
         Width = 80
       end
       object Department_twoName: TcxGridDBColumn
-        Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2-'#1075#1086' '#1091#1088#1086#1074#1085#1103
+        Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2 '#1088#1110#1074#1085#1103
         DataBinding.FieldName = 'Department_twoName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
