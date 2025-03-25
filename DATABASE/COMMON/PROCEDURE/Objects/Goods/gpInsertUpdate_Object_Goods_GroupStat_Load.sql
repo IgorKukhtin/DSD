@@ -27,6 +27,10 @@ BEGIN
         --RETURN; -- !!!ВЫХОД!!!
      END IF;
 
+     -- !!!Пустая группа статистики - Пропустили!!!
+     IF COALESCE (TRIM (inGroupStatName), '') = '' THEN
+        RETURN; -- !!!ВЫХОД!!!
+     END IF;
 
      -- !!!поиск ИД товара!!!
      vbGoodsId:= (SELECT Object_Goods.Id
