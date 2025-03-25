@@ -100,6 +100,14 @@ object Unit_PersonalForm: TUnit_PersonalForm
         Options.Editing = False
         Width = 150
       end
+      object Department_twoName: TcxGridDBColumn
+        Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2-'#1075#1086' '#1091#1088#1086#1074#1085#1103
+        DataBinding.FieldName = 'Department_twoName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 88
+      end
       object PersonalServiceListName: TcxGridDBColumn
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
         DataBinding.FieldName = 'PersonalServiceListName'

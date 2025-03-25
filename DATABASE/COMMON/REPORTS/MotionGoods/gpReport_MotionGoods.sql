@@ -24,7 +24,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , AccountId Integer, AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
              , LocationDescName TVarChar, LocationId Integer, LocationCode Integer, LocationName TVarChar
              , CarCode Integer, CarName TVarChar
-             , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , GoodsGroupId Integer, GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
              , NormInDays_gk TFloat
@@ -958,7 +958,8 @@ BEGIN
         , CAST (COALESCE(Object_Location.ValueData,'') AS TVarChar)     AS LocationName
         , Object_Car.ObjectCode          AS CarCode
         , Object_Car.ValueData           AS CarName
-        , Object_GoodsGroup.Id           AS GoodsGroupId
+        , Object_GoodsGroup.Id           AS GoodsGroupId 
+        , CASE WHEN ObjectLink_GoodsGroup.ChildObjectId = 1918 THEN Object_GoodsGroup.ObjectCode ELSE 0 END ::Integer AS GoodsGroupCode  --для сортировки в печати
         , Object_GoodsGroup.ValueData    AS GoodsGroupName
         , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
 
@@ -1250,6 +1251,10 @@ BEGIN
                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
         LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
+                             ON ObjectLink_GoodsGroup.ObjectId = Object_GoodsGroup.Id
+                            AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
 
         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

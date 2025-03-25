@@ -10,16 +10,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     Width = 702
     Height = 372
     ExplicitWidth = 702
-    ExplicitHeight = 394
+    ExplicitHeight = 372
     ClientRectBottom = 372
     ClientRectRight = 702
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 702
-      ExplicitHeight = 394
+      ExplicitHeight = 372
       inherited cxGrid: TcxGrid
         Width = 702
         Height = 372
-        ExplicitLeft = 3
         ExplicitWidth = 702
         ExplicitHeight = 372
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -139,6 +138,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
+          end
+          object Department_twoName: TcxGridDBColumn
+            Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2-'#1075#1086' '#1091#1088#1086#1074#1085#1103
+            DataBinding.FieldName = 'Department_twoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
           end
           object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090

@@ -14,7 +14,9 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, INN TVarChar
              , DriverCertificate TVarChar, Card TVarChar, CardSecond TVarChar, BankName TVarChar, BankSecondName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar, BranchCode Integer, BranchName TVarChar, DepartmentId Integer, DepartmentName TVarChar,    
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar, BranchCode Integer, BranchName TVarChar
+             , DepartmentId Integer, DepartmentName TVarChar
+             , Department_twoId Integer, Department_twoName TVarChar    
              , PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar
              , StorageLineId Integer, StorageLineCode Integer, StorageLineName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
@@ -156,6 +158,8 @@ BEGIN
 
          , Object_Department.Id              AS DepartmentId
          , Object_Department.ValueData       AS DepartmentName
+         , Object_Department_two.Id          AS Department_twoId
+         , Object_Department_two.ValueData   AS Department_twoName
 
          , Object_Personal_View.PersonalGroupId
          , Object_Personal_View.PersonalGroupCode
@@ -267,6 +271,10 @@ BEGIN
                               AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
           LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_Unit_Department.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Department_two
+                               ON ObjectLink_Unit_Department_two.ObjectId = Object_Personal_View.UnitId
+                              AND ObjectLink_Unit_Department_two.DescId = zc_ObjectLink_Unit_Department_two()
+          LEFT JOIN Object AS Object_Department_two ON Object_Department_two.Id = ObjectLink_Unit_Department_two.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
@@ -385,7 +393,8 @@ BEGIN
          , CAST ('' as TVarChar) AS BranchName
          , 0                     AS DepartmentId
          , CAST ('' as TVarChar) AS DepartmentName
-
+         , CAST (0 as Integer)    AS Department_twoId
+         , CAST ('' as TVarChar)  AS Department_twoName
          , 0                     AS PersonalGroupId
          , 0                     AS PersonalGroupCode
          , CAST ('' as TVarChar) AS PersonalGroupName

@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer,
                PersonalServiceListCardSecondId Integer, PersonalServiceListCardSecondName TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                DepartmentId Integer, DepartmentName TVarChar,
+               Department_twoId Integer, Department_twoName TVarChar,
                DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean, isErased Boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -73,6 +74,8 @@ BEGIN
 
          , Object_Department.Id              AS DepartmentId
          , Object_Department.ValueData       AS DepartmentName
+         , Object_Department_two.Id          AS Department_twoId
+         , Object_Department_two.ValueData   AS Department_twoName
 
          , Object_Personal_View.DateIn
          , Object_Personal_View.DateOut_user AS DateOut
@@ -126,6 +129,10 @@ BEGIN
                               AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
           LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_Unit_Department.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Department_two
+                               ON ObjectLink_Unit_Department_two.ObjectId = Object_Personal_View.UnitId
+                              AND ObjectLink_Unit_Department_two.DescId = zc_ObjectLink_Unit_Department_two()
+          LEFT JOIN Object AS Object_Department_two ON Object_Department_two.Id = ObjectLink_Unit_Department_two.ChildObjectId
      WHERE (Object_Personal_View.isErased = FALSE OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE))
        AND (Object_Personal_View.UnitId = inUnitId OR inUnitId = 0)
     ;
