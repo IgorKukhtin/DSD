@@ -45,17 +45,69 @@ $BODY$
     DECLARE vbStoreKeeperName TVarChar;
     
     DECLARE vbPartneFromId Integer;
+
+    DECLARE vbUserSign TVarChar;
+    DECLARE vbUserSeal TVarChar;
+    DECLARE vbUserKey  TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
-     vbPartneFromId := 258612;
-
 if vbUserId <> 5 AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.Нет прав.';
 END IF;
+
+     -- определяется - Крыхта Владимир Николаевич * м. Дніпро вул. Стартова 26
+     vbPartneFromId := 258612;
+
+     -- определяется
+     SELECT -- UserSign
+            CASE WHEN vbUserId <> 5
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\Петренко Є.С\24447183_3110604434_SU231123104254.ZS2'
+                 WHEN vbUserId = 5 AND 1=1
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\Петренко Є.С\24447183_3110604434_SU231123104254.ZS2'
+                 WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData
+                 ELSE '24447183_3110604434_SU231123104254.ZS2'
+            END AS UserSign
+
+            -- UserSeal
+          , CASE WHEN vbUserId <> 5
+                    --THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                 WHEN vbUserId = 5 AND 1=1
+                    --THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                 WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData
+                 ELSE '24447183_U221220114928.ZS2'
+            END AS UserSeal
+
+            -- UserKey
+          , CASE WHEN vbUserId <> 5
+                    --THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                 WHEN vbUserId = 5 AND 1=1
+                    --THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                 WHEN ObjectString_UserKey.ValueData <> '' THEN ObjectString_UserKey.ValueData
+                 ELSE '24447183_U221220114928.ZS2'
+            END AS UserKey
+
+            INTO vbUserSign, vbUserSeal, vbUserKey
+
+     FROM Object AS Object_User
+          LEFT JOIN ObjectString AS ObjectString_UserSign
+                                 ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
+                                AND ObjectString_UserSign.ObjectId = Object_User.Id
+          LEFT JOIN ObjectString AS ObjectString_UserSeal
+                                 ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal() 
+                                AND ObjectString_UserSeal.ObjectId = Object_User.Id
+          LEFT JOIN ObjectString AS ObjectString_UserKey 
+                                 ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
+                                AND ObjectString_UserKey.ObjectId = Object_User.Id
+     WHERE Object_User.Id = vbUserId;
+
 
      -- параметры
      vbOperDate_insert:= (WITH tmp AS (SELECT MovementProtocol.Id, MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId)
@@ -380,8 +432,7 @@ END IF;
                                   WHERE MovementString.MovementId = inMovementId
                                     AND MovementString.DescId IN (zc_MovementString_InvNumberOrder()
                                                                 , zc_MovementString_InvNumberPartner()
-                                                                , zc_MovementString_DealId()
-                                                                )
+                                                                 )
                                  )
                     
           , tmpMovementDate AS (SELECT *
@@ -419,6 +470,8 @@ END IF;
 
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementString_DealId.ValueData            AS DealId
+           , MovementString_DocumentId_vch.ValueData    AS DocumentId_vch
+           , MovementString_VchasnoId.ValueData         AS VchasnoId
 
            , CASE WHEN MovementString_InvNumberPartner_order.ValueData <> ''
                        THEN MovementString_InvNumberPartner_order.ValueData
@@ -618,6 +671,10 @@ END IF;
                                    ELSE ''
                               END  AS StreetName_From
 
+           , vbUserSign AS UserSign
+           , vbUserSeal AS UserSeal
+           , vbUserKey  AS UserKey
+
        FROM tmpMovement AS Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
@@ -637,6 +694,12 @@ END IF;
             LEFT JOIN MovementString AS MovementString_DealId
                                      ON MovementString_DealId.MovementId = Movement_EDI.Id
                                     AND MovementString_DealId.DescId = zc_MovementString_DealId()
+            LEFT JOIN MovementString AS MovementString_DocumentId_vch
+                                     ON MovementString_DocumentId_vch.MovementId = Movement_EDI.Id
+                                    AND MovementString_DocumentId_vch.DescId = zc_MovementString_DocumentId_vch()
+            LEFT JOIN MovementString AS MovementString_VchasnoId
+                                     ON MovementString_VchasnoId.MovementId = Movement_EDI.Id
+                                    AND MovementString_VchasnoId.DescId = zc_MovementString_VchasnoId()
 
             LEFT JOIN tmpMovementString AS MovementString_InvNumberOrder
                                         ON MovementString_InvNumberOrder.MovementId = Movement.Id
