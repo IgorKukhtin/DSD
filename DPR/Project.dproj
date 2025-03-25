@@ -436,10 +436,10 @@
 						</Platform>
 					</DeployClass>
 					<DeployClass Name="ProjectiOSResource">
-						<Platform Name="iOSDevice64">
+						<Platform Name="iOSSimulator">
 							<Operation>1</Operation>
 						</Platform>
-						<Platform Name="iOSSimulator">
+						<Platform Name="iOSDevice64">
 							<Operation>1</Operation>
 						</Platform>
 						<Platform Name="iOSDevice32">
@@ -466,26 +466,6 @@
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
-					<DeployClass Name="UWP_DelphiLogo150">
-						<Platform Name="Win64">
-							<RemoteDir>Assets</RemoteDir>
-							<Operation>1</Operation>
-						</Platform>
-						<Platform Name="Win32">
-							<RemoteDir>Assets</RemoteDir>
-							<Operation>1</Operation>
-						</Platform>
-					</DeployClass>
-					<DeployClass Name="Android_LauncherIcon96">
-						<Platform Name="Android64">
-							<RemoteDir>res\drawable-xhdpi</RemoteDir>
-							<Operation>1</Operation>
-						</Platform>
-						<Platform Name="Android">
-							<RemoteDir>res\drawable-xhdpi</RemoteDir>
-							<Operation>1</Operation>
-						</Platform>
-					</DeployClass>
 					<DeployClass Name="UWP_DelphiLogo44">
 						<Platform Name="Win64">
 							<RemoteDir>Assets</RemoteDir>
@@ -503,6 +483,26 @@
 						</Platform>
 						<Platform Name="Android">
 							<RemoteDir>res\drawable-xxhdpi</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="UWP_DelphiLogo150">
+						<Platform Name="Win64">
+							<RemoteDir>Assets</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<RemoteDir>Assets</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="Android_LauncherIcon96">
+						<Platform Name="Android64">
+							<RemoteDir>res\drawable-xhdpi</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Android">
+							<RemoteDir>res\drawable-xhdpi</RemoteDir>
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
@@ -576,10 +576,10 @@
 						</Platform>
 					</DeployClass>
 					<DeployClass Name="ProjectiOSInfoPList">
-						<Platform Name="iOSDevice64">
+						<Platform Name="iOSSimulator">
 							<Operation>1</Operation>
 						</Platform>
-						<Platform Name="iOSSimulator">
+						<Platform Name="iOSDevice64">
 							<Operation>1</Operation>
 						</Platform>
 						<Platform Name="iOSDevice32">
@@ -885,7 +885,7 @@
 						</Platform>
 					</DeployClass>
 					<DeployClass Name="ProjectOutput" Required="true">
-						<Platform Name="iOSSimulator">
+						<Platform Name="Linux64">
 							<Operation>1</Operation>
 						</Platform>
 						<Platform Name="Android">
@@ -910,7 +910,7 @@
 							<RemoteDir>Contents\MacOS</RemoteDir>
 							<Operation>1</Operation>
 						</Platform>
-						<Platform Name="Linux64">
+						<Platform Name="iOSSimulator">
 							<Operation>1</Operation>
 						</Platform>
 						<Platform Name="iOSDevice32">
@@ -995,16 +995,16 @@
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
-					<ProjectRoot Name="$(PROJECTNAME)" Platform="Linux64"/>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win64"/>
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Android"/>
 					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSDevice32"/>
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win32"/>
 					<ProjectRoot Name="$(PROJECTNAME).app" Platform="OSX64"/>
 					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSDevice64"/>
-					<ProjectRoot Name="$(PROJECTNAME)" Platform="Android64"/>
-					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win64"/>
-					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSSimulator"/>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="Linux64"/>
 					<ProjectRoot Name="$(PROJECTNAME).app" Platform="OSX32"/>
+					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSSimulator"/>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="Android64"/>
 				</Deployment>
 				<Platforms>
 					<Platform value="Win64">True</Platform>

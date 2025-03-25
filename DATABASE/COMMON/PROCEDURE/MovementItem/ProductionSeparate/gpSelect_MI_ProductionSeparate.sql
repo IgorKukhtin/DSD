@@ -252,6 +252,8 @@ BEGIN
                                      FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= CASE WHEN vbIs_pl = TRUE THEN zc_PriceList_ProductionSeparateHist() ELSE zc_PriceList_ProductionSeparate() END
                                                                               , inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
                                                                                ))
+
+          
        SELECT
              MovementItem.Id			         AS Id
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
@@ -259,6 +261,8 @@ BEGIN
            , Object_Goods.Id          			 AS GoodsId
            , Object_Goods.ObjectCode  			 AS GoodsCode
            , Object_Goods.ValueData   			 AS GoodsName
+
+           , CASE WHEN ObjectLink_GoodsGroup.ChildObjectId = 1918 THEN Object_GoodsGroup.ObjectCode ELSE 0 END ::Integer AS GoodsGroupCode
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -323,7 +327,16 @@ BEGIN
             LEFT JOIN tmpPriceSeparateHist AS tmpPriceSeparateHist_kind
                                            ON tmpPriceSeparateHist_kind.GoodsId   = MovementItem.ObjectId 
                                           AND COALESCE (tmpPriceSeparateHist_kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+            --сортировка по коду группы
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
+                                 ON ObjectLink_GoodsGroup.ObjectId = Object_GoodsGroup.Id
+                                AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
+            LEFT JOIN Object AS GoodsGroup ON GoodsGroup.Id = ObjectLink_GoodsGroup.ChildObjectId
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;

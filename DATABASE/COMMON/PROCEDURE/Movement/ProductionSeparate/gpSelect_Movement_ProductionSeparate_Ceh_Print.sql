@@ -207,7 +207,8 @@ BEGIN
                          )
        -- Результат - Все элементы
        SELECT Object_Goods.ObjectCode  			  AS GoodsCode
-            , Object_Goods.ValueData   			  AS GoodsName
+            , Object_Goods.ValueData   			  AS GoodsName    
+            , CASE WHEN ObjectLink_GoodsGroup.ChildObjectId = 1918 THEN Object_GoodsGroup.ObjectCode ELSE 0 END ::Integer AS GoodsGroupCode
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_StorageLine.ObjectCode               AS StorageLineCode
             , Object_StorageLine.ValueData                AS StorageLineName
@@ -271,6 +272,16 @@ BEGIN
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
+            --сортировка по коду группы
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
+                                 ON ObjectLink_GoodsGroup.ObjectId = Object_GoodsGroup.Id
+                                AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
+            LEFT JOIN Object AS GoodsGroup ON GoodsGroup.Id = ObjectLink_GoodsGroup.ChildObjectId
 
       ;
 
