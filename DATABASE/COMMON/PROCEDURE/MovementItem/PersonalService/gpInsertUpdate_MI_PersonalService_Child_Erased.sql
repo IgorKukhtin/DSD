@@ -214,7 +214,8 @@ end if;
           -- удалим
           PERFORM lpSetErased_MovementItem (inMovementItemId:= tmp.Id
                                           , inUserId        := vbUserId
-                                           )
+                                           ) 
+                , lpInsert_MovementItemProtocol (tmp.Id, vbUserId, FALSE)
           FROM (WITH tmpMI_Master AS (SELECT MovementItem.Id
                                       FROM MovementItem
                                            -- удаляем только чайлды у которых в мастере тек. подразделение

@@ -43,54 +43,54 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
- INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId             Integer   , -- Ключ объекта <Документ>
-    IN inPersonalId             Integer   , -- Сотрудники
-    IN inisMain                 Boolean   , -- Основное место работы
-   OUT outAmount                TFloat    , -- ***Сумма (затраты)
-   OUT outAmountToPay           TFloat    , -- ***Сумма к выплате (итог)
-   OUT outAmountCash            TFloat    , -- ***Сумма к выплате из кассы
-   OUT outSummTransport         TFloat    , -- ***Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
-   OUT outSummTransportAdd      TFloat    , -- ***Сумма командировочные (доплата)
-   OUT outSummTransportAddLong  TFloat    , -- ***Сумма дальнобойные (доплата, тоже командировочные)
-   OUT outSummTransportTaxi     TFloat    , -- ***Сумма на такси (доплата)
-   OUT outSummPhone             TFloat    , -- ***Сумма Моб.связь (удержание)
+ INOUT ioId                     Integer   , -- пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ>
+    IN inMovementId             Integer   , -- пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ>
+    IN inPersonalId             Integer   , -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inisMain                 Boolean   , -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+   OUT outAmount                TFloat    , -- ***пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+   OUT outAmountToPay           TFloat    , -- ***пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)
+   OUT outAmountCash            TFloat    , -- ***пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+   OUT outSummTransport         TFloat    , -- ***пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ...)
+   OUT outSummTransportAdd      TFloat    , -- ***пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+   OUT outSummTransportAddLong  TFloat    , -- ***пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+   OUT outSummTransportTaxi     TFloat    , -- ***пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+   OUT outSummPhone             TFloat    , -- ***пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
 
-    IN inSummService            TFloat    , -- Сумма начислено
-    IN inSummCardRecalc         TFloat    , -- Карта БН (ввод) - 1ф.
-    IN inSummCardSecondRecalc   TFloat    , -- Карта БН (ввод) - 2ф.
-    IN inSummCardSecondCash     TFloat    , -- Карта БН (касса) - 2ф.
-    IN inSummAvCardSecondRecalc TFloat    , -- Карта БН (ввод) - 2ф. аванс
-    IN inSummNalogRecalc        TFloat    , -- Налоги - удержания с ЗП (ввод)
-    IN inSummNalogRetRecalc     TFloat    , -- Налоги - возмещение к ЗП (ввод)
-    IN inSummMinus              TFloat    , -- Сумма удержания
-    IN inSummAdd                TFloat    , -- Сумма премия
-    IN inSummAddOthRecalc       TFloat    , -- Сумма премия (ввод для распределения)
+    IN inSummService            TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inSummCardRecalc         TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅ) - 1пїЅ.
+    IN inSummCardSecondRecalc   TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅ) - 2пїЅ.
+    IN inSummCardSecondCash     TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅпїЅ) - 2пїЅ.
+    IN inSummAvCardSecondRecalc TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅ) - 2пїЅ. пїЅпїЅпїЅпїЅпїЅ
+    IN inSummNalogRecalc        TFloat    , -- пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅ)
+    IN inSummNalogRetRecalc     TFloat    , -- пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅ)
+    IN inSummMinus              TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inSummAdd                TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inSummAddOthRecalc       TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
     
-    IN inSummHoliday            TFloat    , -- Сумма отпускные    
-    IN inSummSocialIn           TFloat    , -- Сумма соц выплаты (из зарплаты)
-    IN inSummSocialAdd          TFloat    , -- Сумма соц выплаты (доп. зарплате)
-    IN inSummChildRecalc        TFloat    , -- Алименты - удержание (ввод)
-    IN inSummMinusExtRecalc     TFloat    , -- Удержания сторон. юр.л. (ввод)
-    IN inSummFine               TFloat    , -- штраф
-    IN inSummFineOthRecalc      TFloat    , -- штраф (ввод для распределения)
-    IN inSummHosp               TFloat    , -- больничный
-    IN inSummHospOthRecalc      TFloat    , -- больничный (ввод для распределения)
-    IN inSummCompensationRecalc TFloat    , -- Компенсация ввод (ввод)
-    IN inSummAuditAdd           TFloat    , -- Сумма доплата за аудит
-    IN inSummHouseAdd           TFloat    , -- Сумма Компенсация жилья 
-    IN inSummAvanceRecalc       TFloat    , -- сумма аванса
+    IN inSummHoliday            TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ    
+    IN inSummSocialIn           TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+    IN inSummSocialAdd          TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+    IN inSummChildRecalc        TFloat    , -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)
+    IN inSummMinusExtRecalc     TFloat    , -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅ.пїЅ. (пїЅпїЅпїЅпїЅ)
+    IN inSummFine               TFloat    , -- пїЅпїЅпїЅпїЅпїЅ
+    IN inSummFineOthRecalc      TFloat    , -- пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+    IN inSummHosp               TFloat    , -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inSummHospOthRecalc      TFloat    , -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+    IN inSummCompensationRecalc TFloat    , -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)
+    IN inSummAuditAdd           TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+    IN inSummHouseAdd           TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ 
+    IN inSummAvanceRecalc       TFloat    , -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     
-    IN inNumber                 TVarChar  , -- № исполнительного листа
+    IN inNumber                 TVarChar  , -- пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     IN inComment                TVarChar  , --
-    IN inInfoMoneyId            Integer   , -- Статьи назначения
-    IN inUnitId                 Integer   , -- Подразделение
-    IN inPositionId             Integer   , -- Должность
-    IN inMemberId               Integer   , -- Физ лицо (кому начисляют алименты)
-    IN inPersonalServiceListId  Integer   , -- Ведомость начисления
-    IN inFineSubjectId          Integer   , -- вид нарушения
-    IN inUnitFineSubjectId      Integer   , -- Кем налагается взыскание
-    IN inUserId                 Integer     -- пользователь
+    IN inInfoMoneyId            Integer   , -- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inUnitId                 Integer   , -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inPositionId             Integer   , -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inMemberId               Integer   , -- пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+    IN inPersonalServiceListId  Integer   , -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inFineSubjectId          Integer   , -- пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inUnitFineSubjectId      Integer   , -- пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inUserId                 Integer     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 )                               
 RETURNS RECORD AS               
 $BODY$
@@ -101,34 +101,34 @@ $BODY$
    DECLARE vbisDetail Boolean;
    DECLARE vbPersonalServiceListId Integer;
 BEGIN
-     -- проверка
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      IF COALESCE (inMovementId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
+         RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.';
      END IF;
-     -- проверка
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      IF COALESCE (inPersonalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <ФИО (сотрудник)> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
+         RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)> пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ = <%>.', zfConvert_FloatToString (inSummService);
      END IF;
-     -- проверка
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      IF COALESCE (inInfoMoneyId, 0) = 0 -- AND inSummService <> 0
      THEN
          IF inSummService = 0 THEN RETURN; END IF;
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <УП статья> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
+         RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ> пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ = <%>.', zfConvert_FloatToString (inSummService);
      END IF;
-     -- проверка
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      IF COALESCE (inUnitId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Подразделение> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
+         RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ> пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ = <%>.', zfConvert_FloatToString (inSummService);
      END IF;
-     -- проверка
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      IF COALESCE (inPositionId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Должность> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
+         RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ> пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ = <%>.', zfConvert_FloatToString (inSummService);
      END IF;
 
-     -- проверка - распределение !!!если это БН!!!
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ !!!пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ!!!
      IF NOT EXISTS (SELECT ObjectLink_PersonalServiceList_PaidKind.ChildObjectId
                 FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
                      INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
@@ -141,34 +141,34 @@ BEGIN
      THEN
          IF inSummCardRecalc <> 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Поле <Карта БН (ввод) - 1ф.> заполняется только для Ведомости БН.';
+             RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅ) - 1пїЅ.> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ.';
          END IF;
          IF inSummCardSecondRecalc <> 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Поле <Карта БН (ввод) - 2ф.> заполняется только для Ведомости БН.';
+             RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅ) - 2пїЅ.> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ.';
          END IF;
          IF inSummAvCardSecondRecalc <> 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Поле <Карта БН (ввод) - 2ф. Аванс> заполняется только для Ведомости БН.';
+             RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅ) - 2пїЅ. пїЅпїЅпїЅпїЅпїЅ> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ.';
          END IF;
          IF inSummNalogRecalc <> 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Поле <Налоги - удержания (ввод)> заполняется только для Ведомости БН.';
+             RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ.';
          END IF;
          IF inSummChildRecalc <> 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Поле <Алименты - удержание (ввод)> заполняется только для Ведомости БН.';
+             RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ.';
          END IF;
          IF inSummMinusExtRecalc <> 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Поле <Удержания сторон. юр.л. (ввод)> заполняется только для Ведомости БН.';
+             RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅ.пїЅ. (пїЅпїЅпїЅпїЅ)> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ.';
          END IF;
      END IF;
 
 
 
-     -- проверка записываем zc_MILinkObject_FineSubject - но только для ведомости с признаком zc_ObjectBoolean_PersonalServiceList_Detail  = TRUE 
-     -- получаем свойство PersonalServiceList
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ zc_MILinkObject_FineSubject - пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ zc_ObjectBoolean_PersonalServiceList_Detail  = TRUE 
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ PersonalServiceList
      vbPersonalServiceListId:= (SELECT MovementLinkObject.ObjectId
                                 FROM MovementLinkObject
                                 WHERE MovementLinkObject.MovementId = inMovementId
@@ -181,12 +181,12 @@ BEGIN
                              , FALSE) ::Boolean;
      IF (COALESCE (inFineSubjectId,0) <> 0 OR COALESCE (inUnitFineSubjectId,0) <> 0) AND vbisDetail = FALSE
      THEN
-         RAISE EXCEPTION 'Ошибка.Для текущей ведомости Нет детализации данных.';
+         RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.';
      END IF;
 
 
-     -- !!!ВАЖНО!!!
-     -- определяем ключ доступа
+     -- !!!пїЅпїЅпїЅпїЅпїЅ!!!
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      vbAccessKeyId:= CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
                                AND NOT EXISTS (SELECT 1
                                                FROM ObjectLink
@@ -210,21 +210,21 @@ BEGIN
                                    , vbPersonalServiceListId
                                     )
                      END;
-     -- !!!ВАЖНО!!!
+     -- !!!пїЅпїЅпїЅпїЅпїЅ!!!
      UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Id = inMovementId;
 
-     -- Поиск
+     -- пїЅпїЅпїЅпїЅпїЅ
      vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate()));
-     -- Поиск
-     SELECT -- Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
+     -- пїЅпїЅпїЅпїЅпїЅ
+     SELECT -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ...)
             SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS SummTransport
-            -- Сумма командировочные (доплата)
+            -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
           , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()        THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAdd
-            -- Сумма дальнобойные (доплата, тоже командировочные)
+            -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
           , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong()    THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAddLong
-            -- Сумма на такси (доплата)
+            -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
           , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()       THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportTaxi
-            -- Сумма Моб.связь (удержание)
+            -- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
           , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_MobileBills_Personal() THEN  1 * MIContainer.Amount ELSE 0 END) AS SummPhone
             INTO outSummTransport, outSummTransportAdd, outSummTransportAddLong, outSummTransportTaxi, outSummPhone
      FROM ContainerLinkObject AS CLO_ServiceDate
@@ -257,74 +257,74 @@ BEGIN
        AND CLO_ServiceDate.DescId = zc_ContainerLinkObject_ServiceDate();
 
 
-     -- рассчитываем сумму (затраты)
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
      outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFine, 0)
                + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0) + COALESCE (inSummHosp, 0) + COALESCE (inSummAuditAdd, 0)-- - COALESCE (inSummSocialIn, 0);
-               + COALESCE (inSummHouseAdd, 0)  -- "плюс" компенсация жилья
-                 -- "плюс" <Премия (распределено)>
+               + COALESCE (inSummHouseAdd, 0)  -- "пїЅпїЅпїЅпїЅ" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+                 -- "пїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummAddOth()), 0)
-                 -- "минус" <штраф (распределено)>
+                 -- "пїЅпїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
                - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummFineOth()), 0)
-                 -- "плюс" <больничн (распределено)>
+                 -- "пїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHospOth()), 0)
-                 -- "плюс" <компенсация(распределено)>
+                 -- "пїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCompensation()), 0)
-                 -- "плюс" <за санобработка>
+                 -- "пїЅпїЅпїЅпїЅ" <пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ>
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummMedicdayAdd()), 0)
-                 -- "минус" <за прогул>
+                 -- "пїЅпїЅпїЅпїЅпїЅ" <пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ>
                - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummSkip()), 0)
                 ;
-     -- рассчитываем сумму к выплате
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFine, 0)
                     + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0)  + COALESCE (inSummHosp, 0) + COALESCE (inSummSocialAdd, 0) + COALESCE (inSummAuditAdd, 0)
-                    + COALESCE (inSummHouseAdd, 0)  -- "плюс" компенсация жилья
+                    + COALESCE (inSummHouseAdd, 0)  -- "пїЅпїЅпїЅпїЅ" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
                     - COALESCE (outSummTransport, 0) + COALESCE (outSummTransportAdd, 0) + COALESCE (outSummTransportAddLong, 0) + COALESCE (outSummTransportTaxi, 0)
                     - COALESCE (outSummPhone, 0)
-                      -- "плюс" <Премия (распределено)>
+                      -- "пїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummAddOth()), 0)
-                      -- "минус" <Налоги - удержания с ЗП>
+                      -- "пїЅпїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ>
                     - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummNalog()), 0)
-                      -- "плюс" <Налоги - возмещение к ЗП>
+                      -- "пїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ>
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummNalogRet()), 0)    --
-                      -- "минус" <Алименты - удержание>
+                      -- "пїЅпїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ>
                     - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummChild()), 0)
-                      -- "минус" <Удержания сторон. юр.л.>
+                      -- "пїЅпїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅ.пїЅ.>
                     - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummMinusExt()), 0)
-                      -- "минус" <штраф (распределено)>
+                      -- "пїЅпїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
                     - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummFineOth()), 0)
-                      -- "плюс" <больничн (распределено)>
+                      -- "пїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHospOth()), 0)
-                      -- "плюс"" <компенсация(распределено)>
+                      -- "пїЅпїЅпїЅпїЅ"" <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCompensation()), 0)
-                      -- "плюс" <за санобработка>
+                      -- "пїЅпїЅпїЅпїЅ" <пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ>
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummMedicdayAdd()), 0)
-                      -- "минус" <за прогул>
+                      -- "пїЅпїЅпїЅпїЅпїЅ" <пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ>
                     - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummSkip()), 0)
                      ;
-     -- рассчитываем сумму к выплате из кассы
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
      outAmountCash:= outAmountToPay
-                     -- "минус" <Карта БН - 1ф.>
+                     -- "пїЅпїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ - 1пїЅ.>
                    - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCard()), 0)
-                     -- "минус" <Карта БН - 2ф.>
+                     -- "пїЅпїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ - 2пїЅ.>
                    - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCardSecond()), 0)
-                     -- "минус" <Карта БН (касса) - 2ф.>
+                     -- "пїЅпїЅпїЅпїЅпїЅ" <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅпїЅ) - 2пїЅ.>
                    - inSummCardSecondCash
                     ;
 
-     -- определяется признак Создание/Корректировка
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     -- сохранили <Элемент документа>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inPersonalId, inMovementId, outAmount, NULL);
 
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummToPay(), ioId, outAmountToPay);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummService(), ioId, inSummService);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardRecalc(), ioId, inSummCardRecalc);
 
-     -- сохранили свойство <Карта БН (ввод) - 2ф.>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅ) - 2пїЅ.>
    --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondRecalc(), ioId, inSummCardSecondRecalc);
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondRecalc(), ioId, ROUND (inSummCardSecondRecalc, 1));
      IF COALESCE (inSummCardSecondRecalc, 0) = 0
@@ -334,90 +334,90 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ_BankSecondDiff_num(), ioId, 0);
      END IF;
 
-     -- сохранили свойство <Карта БН (округление) - 2ф>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) - 2пїЅ>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondDiff(), ioId, inSummCardSecondRecalc - ROUND (inSummCardSecondRecalc, 1));
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondCash(), ioId, inSummCardSecondCash);
-     -- сохранили свойство <Карта БН (ввод) - 2ф.> аванс
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅ) - 2пїЅ.> пїЅпїЅпїЅпїЅпїЅ
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAvCardSecondRecalc(), ioId, inSummAvCardSecondRecalc);
 
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRecalc(), ioId, inSummNalogRecalc);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRetRecalc(), ioId, inSummNalogRetRecalc);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinus(), ioId, inSummMinus);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAdd(), ioId, inSummAdd );
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAuditAdd(), ioId, inSummAuditAdd );
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAddOthRecalc(), ioId, inSummAddOthRecalc);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHoliday(), ioId, inSummHoliday );
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSocialIn(), ioId, inSummSocialIn);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSocialAdd(), ioId, inSummSocialAdd);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHouseAdd(), ioId, inSummHouseAdd);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Main(), ioId, inisMain);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChildRecalc(), ioId, inSummChildRecalc);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinusExtRecalc(), ioId, inSummMinusExtRecalc);
-     -- сохранили свойство <компенсация (ввод для распределения)>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCompensationRecalc(), ioId, inSummCompensationRecalc);
 
-     -- сохранили свойство <Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ...)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransport(), ioId, COALESCE (outSummTransport, 0));
-     -- сохранили свойство <Сумма командировочные (доплата)>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportAdd(), ioId, COALESCE (outSummTransportAdd, 0));
-     -- сохранили свойство <Сумма дальнобойные (доплата, тоже командировочные)>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportAddLong(), ioId, COALESCE (outSummTransportAddLong, 0));
-     -- сохранили свойство <Сумма на такси (доплата)>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportTaxi(), ioId, COALESCE (outSummTransportTaxi, 0));
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone(), ioId, COALESCE (outSummPhone, 0));
 
-     -- сохранили свойство <штраф>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummFine(), ioId, inSummFine);
-     -- сохранили свойство <штраф (ввод для распределения)>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummFineOthRecalc(), ioId, inSummFineOthRecalc);
-     -- сохранили свойство <больничный>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHosp(), ioId, inSummHosp);
-     -- сохранили свойство <больничный (ввод для распределения)>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHospOthRecalc(), ioId, inSummHospOthRecalc);
 
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAvanceRecalc(), ioId, COALESCE (inSummAvanceRecalc, 0));
 
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Number(), ioId, inNumber);
-     -- сохранили свойство <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
-     -- сохранили связь с <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioId, inInfoMoneyId);
-     -- сохранили связь с <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
-     -- сохранили связь с <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), ioId, inPositionId);
-     -- сохранили связь с <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Member(), ioId, inMemberId);
-     -- сохранили связь с <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), ioId, inPersonalServiceListId);
 
-     -- сохранили связь с <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_FineSubject(), ioId, inFineSubjectId);
-     -- сохранили связь с <>
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_UnitFineSubject(), ioId, inUnitFineSubjectId);
      
-     -- пересчитали Итоговые суммы по накладной
+     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-      -- сохранили протокол
+      -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
       PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
@@ -425,14 +425,14 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ
+               пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ.пїЅ.   пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ.пїЅ.   пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ.пїЅ.   пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ.пїЅ.
  23.12.21         * inNumber
  06.05.21         * inUnitFineSubjectId
  28.04.21         * inFineSubjectId
  25.03.20         * inSummAuditAdd
  27.01.20         * add inSummCompensationRecalc
- 15.10.19         * замена inSummFine, inSummHosp на inSummFineRecalc, inSummHospRecalc
+ 15.10.19         * пїЅпїЅпїЅпїЅпїЅпїЅ inSummFine, inSummHosp пїЅпїЅ inSummFineRecalc, inSummHospRecalc
  29.07.19         * inSummFine, inSummHosp
  25.06.18         * inSummAddOthRecalc
  05.01.18         * add inSummNalogRetRecalc
@@ -447,5 +447,5 @@ $BODY$
  11.09.14         *
 */
 
--- тест
+-- пїЅпїЅпїЅпїЅ
 -- 

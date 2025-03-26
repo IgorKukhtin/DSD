@@ -694,7 +694,7 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
       item
         Name = 'PersonalServiceListId'
         Value = ''
-        Component = edPersonalServiceList
+        Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
@@ -734,7 +734,7 @@ object MessagePersonalServiceLastForm: TMessagePersonalServiceLastForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 464
+    Left = 544
     Top = 21
   end
 end

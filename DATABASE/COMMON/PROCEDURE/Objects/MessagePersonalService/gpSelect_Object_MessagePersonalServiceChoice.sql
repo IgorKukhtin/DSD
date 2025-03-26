@@ -42,7 +42,7 @@ BEGIN
                   , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
                   , (Object_Insert.ValueData)                  AS InsertName
                   , ObjectDate_Insert.ValueData                AS InsertDate
-                  , ROW_NUMBER () OVER (PARTITION BY Object_MessagePersonalService.ObjectCode, Object_PersonalServiceList.Id ORDER BY ObjectDate_Insert.ValueData DESC) AS Ord
+                  , ROW_NUMBER () OVER (PARTITION BY Object_Unit.Id, Object_MessagePersonalService.ObjectCode, Object_PersonalServiceList.Id ORDER BY ObjectDate_Insert.ValueData DESC) AS Ord
                   , MIN (ObjectDate_Insert.ValueData) OVER (PARTITION BY Object_MessagePersonalService.ObjectCode, Object_PersonalServiceList.Id) AS InsertDate_min
                   , MAX (ObjectDate_Insert.ValueData) OVER (PARTITION BY Object_MessagePersonalService.ObjectCode, Object_PersonalServiceList.Id) AS InsertDate_max
               FROM Object AS Object_MessagePersonalService

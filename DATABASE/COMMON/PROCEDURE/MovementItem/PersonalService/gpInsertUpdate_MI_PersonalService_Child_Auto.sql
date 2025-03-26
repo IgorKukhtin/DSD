@@ -250,7 +250,7 @@ end if;
 
       -- поиск zc_MI_Master (ключ - документ + сотрудник + подразделение)
       SELECT MovementItem.Id                              AS Id_Master
-           , COALESCE (MIBoolean_isAuto.ValueData, FALSE) AS isAuto
+           , COALESCE (MIBoolean_isAuto.ValueData, TRUE) AS isAuto
              INTO vbId_Master, vbIsAuto
       FROM MovementItem
            INNER JOIN MovementItemLinkObject AS MILinkObject_Unit

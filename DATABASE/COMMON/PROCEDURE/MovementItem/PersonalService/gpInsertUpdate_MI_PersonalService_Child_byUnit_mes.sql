@@ -507,33 +507,7 @@ BEGIN
                                                               )
          FROM _tmpReport AS tmp;
 
-         -- не проводим документы
-        /* PERFORM gpComplete_Movement_PersonalService (tmp.Id, inSession)
-         FROM
-             (WITH
-              tmpMovement AS (SELECT Movement.Id
-                                   , ROW_NUMBER () OVER (PARTITION BY tmpPSL.PersonalServiceListId ORDER BY CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN 0 ELSE 1 END, MovementDate_ServiceDate.MovementId) AS Ord
-                              FROM (SELECT DISTINCT _tmpReport.PersonalServiceListId FROM _tmpReport) AS tmpPSL
-                                  INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
-                                                                ON MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
-                                                               AND MLO_PersonalServiceList.ObjectId   = tmpPSL.PersonalServiceListId
-                                  INNER JOIN Movement ON Movement.Id = MLO_PersonalServiceList.MovementId
-                                                     AND Movement.DescId   = zc_Movement_PersonalService()
-                                                     AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                  INNER JOIN MovementDate AS MovementDate_ServiceDate
-                                                          ON MovementDate_ServiceDate.MovementId = Movement.Id
-                                                         AND MovementDate_ServiceDate.ValueData = DATE_TRUNC ('MONTH', vbEndDate)
-                                                         AND MovementDate_ServiceDate.DescId    = zc_MovementDate_ServiceDate()
-                                  LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
-                                                            ON MovementBoolean_isAuto.MovementId = Movement.Id
-                                                           AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
-                              )
-              SELECT tmpMovement.Id
-              FROM tmpMovement                
-              WHERE tmpMovement.Ord = 1
-              ) AS tmp;
-          */
-
+ 
          -- если НЕТ ошибок то записываем в MessagePersonalService ведомости по отчету, которые обработаны
          PERFORM gpInsertUpdate_Object_MessagePersonalService (ioId                    := 0                          ::Integer       -- ключ объекта
                                                              , ioCode                  := inSessionCode              ::Integer       -- № Сессии
