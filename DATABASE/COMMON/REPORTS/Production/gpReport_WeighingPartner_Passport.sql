@@ -15,50 +15,53 @@ RETURNS TABLE (MovementId Integer, ItemName TVarChar, ItemName_inf TVarChar
              , PartionGoodsDate TDateTime
              , UpdateDate TDateTime, InsertDate TDateTime, InsertName TVarChar
              , PartionCellName TVarChar
-             , PartionNum   TFloat
-             , Amount       TFloat
-             , Amount_sh    TFloat
-             , RealWeight   TFloat
-             , CountTare1   TFloat
-             , CountTare2   TFloat
-             , CountTare3   TFloat
-             , CountTare4   TFloat
-             , CountTare5   TFloat
-             , CountTare6   TFloat
-             , CountTare7   TFloat
-             , CountTare8   TFloat
-             , CountTare9   TFloat
-             , CountTare10  TFloat
+             , PartionNum      TFloat
+             , Amount          TFloat
+             , Amount_sh       TFloat
+               -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
+             , Amount_sh_inv   TFloat
 
-             , WeightTare1   TFloat
-             , WeightTare2   TFloat
-             , WeightTare3   TFloat
-             , WeightTare4   TFloat
-             , WeightTare5   TFloat
-             , WeightTare6   TFloat
-             , WeightTare7   TFloat
-             , WeightTare8   TFloat
-             , WeightTare9   TFloat
-             , WeightTare10  TFloat
+             , RealWeight      TFloat
+             , CountTare1      TFloat
+             , CountTare2      TFloat
+             , CountTare3      TFloat
+             , CountTare4      TFloat
+             , CountTare5      TFloat
+             , CountTare6      TFloat
+             , CountTare7      TFloat
+             , CountTare8      TFloat
+             , CountTare9      TFloat
+             , CountTare10     TFloat
 
-             , BoxWeight1   TFloat
-             , BoxWeight2   TFloat
-             , BoxWeight3   TFloat
-             , BoxWeight4   TFloat
-             , BoxWeight5   TFloat
-             , BoxWeight6   TFloat
-             , BoxWeight7   TFloat
-             , BoxWeight8   TFloat
-             , BoxWeight9   TFloat
-             , BoxWeight10  TFloat
+             , WeightTare1     TFloat
+             , WeightTare2     TFloat
+             , WeightTare3     TFloat
+             , WeightTare4     TFloat
+             , WeightTare5     TFloat
+             , WeightTare6     TFloat
+             , WeightTare7     TFloat
+             , WeightTare8     TFloat
+             , WeightTare9     TFloat
+             , WeightTare10    TFloat
 
-             , BoxCountTotal  TFloat
-             , BoxWeightTotal TFloat
+             , BoxWeight1      TFloat
+             , BoxWeight2      TFloat
+             , BoxWeight3      TFloat
+             , BoxWeight4      TFloat
+             , BoxWeight5      TFloat
+             , BoxWeight6      TFloat
+             , BoxWeight7      TFloat
+             , BoxWeight8      TFloat
+             , BoxWeight9      TFloat
+             , BoxWeight10     TFloat
+
+             , BoxCountTotal   TFloat
+             , BoxWeightTotal  TFloat
 
                --упаковка
-             , CountPack         Integer
-             , WeightPack        TFloat
-             , WeightPack_calc   TFloat
+             , CountPack       Integer
+             , WeightPack      TFloat
+             , WeightPack_calc TFloat
 
              , BoxName_1   TVarChar
              , BoxName_2   TVarChar
@@ -146,7 +149,7 @@ BEGIN
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                      )
-   --данные по таре в строку
+     -- данные по таре в строку
    , tmpBox AS (SELECT MAX (tmp.BoxId_1) AS BoxId_1, MAX (tmp.BoxName_1) AS BoxName_1, MAX (tmp.BoxWeight1) AS BoxWeight1
                      , MAX (tmp.BoxId_2) AS BoxId_2, MAX (tmp.BoxName_2) AS BoxName_2, MAX (tmp.BoxWeight2) AS BoxWeight2
                      , MAX (tmp.BoxId_3) AS BoxId_3, MAX (tmp.BoxName_3) AS BoxName_3, MAX (tmp.BoxWeight3) AS BoxWeight3
@@ -221,6 +224,7 @@ BEGIN
                                                      , zc_MIFloat_CountTare5()
                                                      , zc_MIFloat_RealWeight()
                                                      , zc_MIFloat_PartionNum()
+                                                     , zc_MIFloat_HeadCount()
                                                      , zc_MIFloat_CountPack()
                                                      , zc_MIFloat_WeightPack()
                                                      , zc_MIFloat_WeightTare1()
@@ -392,8 +396,13 @@ BEGIN
                       , MIFloat_RealWeight.ValueData ::TFloat AS RealWeight
                       , MIFloat_PartionNum.ValueData          AS PartionNum
 
+                        -- Количество упаковок
                       , tmpMIFloat_CountPack.ValueData   ::Integer AS CountPack
+                        -- Вес 1-ой упаковки
                       , tmpMIFloat_WeightPack.ValueData  ::TFloat  AS WeightPack
+                        -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
+                      , tmpMIFloat_HeadCount.ValueData   ::Integer AS HeadCount
+                      
 
                       , COALESCE (MIDate_PartionGoods.ValueData, MovementItem.OperDate) :: TDateTime AS PartionGoodsDate
                       , MIDate_Insert.ValueData  AS InsertDate
@@ -435,7 +444,11 @@ BEGIN
                                           ON MIFloat_WeightTare5.MovementItemId = MovementItem.Id
                                          AND MIFloat_WeightTare5.DescId = zc_MIFloat_WeightTare5()
 
-                     --упаковка
+                     -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
+                     LEFT JOIN tmpMIFloat AS tmpMIFloat_HeadCount
+                                          ON tmpMIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                         AND tmpMIFloat_HeadCount.DescId         = zc_MIFloat_HeadCount()
+                     -- упаковка
                      LEFT JOIN tmpMIFloat AS tmpMIFloat_CountPack
                                           ON tmpMIFloat_CountPack.MovementItemId =  MovementItem.Id
                                          AND tmpMIFloat_CountPack.DescId         = zc_MIFloat_CountPack()
@@ -533,6 +546,11 @@ BEGIN
                            -- если Перемещение с Упак -> РК = переводим из ШТ в ВЕС
                            THEN tmpData.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
 
+
+                      WHEN tmpData.DescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND tmpData.HeadCount > 0
+                           -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
+                           THEN tmpData.HeadCount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+
                       -- Иначе Инвентаризация - Подготовка = здесь всегда ВЕС
                       ELSE tmpData.Amount
 
@@ -543,6 +561,10 @@ BEGIN
                                -- если Перемещение с Упак -> РК = здесь всегда ШТ
                                THEN tmpData.Amount
 
+                          WHEN tmpData.DescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND tmpData.HeadCount > 0
+                               -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
+                               THEN tmpData.HeadCount
+
                           WHEN tmpData.DescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND OF_Weight.ValueData > 0
                                -- если Инвентаризация - Подготовка = переводим из ВЕС в ШТ
                                THEN tmpData.Amount / (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
@@ -551,6 +573,9 @@ BEGIN
 
                      END AS NUMERIC (16, 0)
                     ) :: TFloat AS Amount_sh
+                    
+                 -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
+               , tmpData.HeadCount      :: TFloat AS Amount_sh_inv
 
                , tmpData.RealWeight     ::TFloat
                , tmpData.CountTare1     ::TFloat
