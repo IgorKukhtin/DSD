@@ -23,19 +23,7 @@ BEGIN
 
 
      -- Дата в зависимости от смены
-     vbOperDate:= gpGet_Scale_OperDate (inIsCeh:= FALSE, inBranchCode:= 1, inSession:= inSession);
-
-
-
-     -- Проверка
-     IF 1 < (SELECT COUNT(*) FROM Movement WHERE Movement.DescId = zc_Movement_ChoiceCell() AND Movement.OperDate = vbOperDate AND Movement.StatusId <> zc_Enum_Status_Erased())
-     THEN
-         --
-         RAISE EXCEPTION 'Ошибка.Найдено несколько документов <%> за <%>.Лишний можно удалить.'
-                       , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_ChoiceCell())
-                       , vbOperDate
-                        ;
-     END IF;
+     vbOperDate:= CURRENT_DATE; -- gpGet_Scale_OperDate (inIsCeh:= FALSE, inBranchCode:= 1, inSession:= inSession);
 
 
      -- Проверка что еще не сканировали Паспорт
@@ -67,7 +55,7 @@ BEGIN
                                                                AND MIFloat_MovementItemId.ValueData      = inMovementItemId :: TFloat
 
                               WHERE Movement.DescId = zc_Movement_WeighingProduction()
-                                AND Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate - INTERVAL '5 DAY')
+                                AND Movement.OperDate >= vbOperDate -- DATE_TRUNC ('MONTH', vbOperDate - INTERVAL '0 DAY')
                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
                               LIMIT 1
                              );
@@ -106,6 +94,12 @@ BEGIN
                                                                  AND MB_isAuto.DescId     = zc_MovementBoolean_isAuto()
                                                                  -- Автоматический, значит с КПК
                                                                  AND MB_isAuto.ValueData  = TRUE
+
+                          -- Пользователь
+                          INNER JOIN MovementLinkObject AS MLO_User
+                                                        ON MLO_User.MovementId = Movement.Id
+                                                       AND MLO_User.DescId     = zc_MovementLinkObject_User()
+                                                       AND MLO_User.ObjectId   = vbUserId
 
                      WHERE Movement.DescId = zc_Movement_WeighingProduction()
                        AND Movement.OperDate = vbOperDate
@@ -215,4 +209,3 @@ $BODY$
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_Inventory_mobile (317323409, zfCalc_UserAdmin())
 -- SELECT * FROM gpInsertUpdate_MovementItem_Inventory_mobile (317382349, zfCalc_UserAdmin())
-

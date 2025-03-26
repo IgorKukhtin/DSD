@@ -103,7 +103,11 @@ BEGIN
 -- ************
 
                      -- Вес Нетто
-                   , CASE WHEN vbDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
+                   , CASE WHEN OL_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30102()
+                               -- если Тушенка
+                               THEN 0
+
+                          WHEN vbDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
                                -- если Перемещение с Упак -> РК = переводим из ШТ в ВЕС
                                THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0)
                                                          + CASE WHEN Object_Goods.ObjectCode IN (1286 -- Сосиски ДИТЯЧІ вар п/а в/ґ 330 г/шт ТМ ТОКЕРИ
@@ -207,6 +211,7 @@ BEGIN
                                                ON MIFloat_PartionNum.MovementItemId = MovementItem.Id
                                               AND MIFloat_PartionNum.DescId = zc_MIFloat_PartionNum()
 
+                   -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
                    LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                               AND MIFloat_HeadCount.DescId         = zc_MIFloat_HeadCount()
@@ -226,6 +231,10 @@ BEGIN
                    LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
 
                    LEFT JOIN tmpBox ON 1 = 1
+
+                   LEFT JOIN ObjectLink AS OL_InfoMoney
+                                        ON OL_InfoMoney.ObjectId = MovementItem.ObjectId
+                                       AND OL_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
 
                    LEFT JOIN ObjectLink AS OL_Measure
                                         ON OL_Measure.ObjectId = MovementItem.ObjectId
