@@ -113,6 +113,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
               Format = ',0.####'
               Kind = skSum
               Column = Amount_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh_inv
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -204,6 +209,11 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
               Format = ',0.####'
               Kind = skSum
               Column = Amount_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh_inv
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -426,7 +436,18 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 55
+          end
+          object Amount_sh_inv: TcxGridDBColumn
+            Caption = '***'#1050#1086#1083'-'#1074#1086' ('#1096#1090'.)'
+            DataBinding.FieldName = 'Amount_sh_inv'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1055#1086#1076#1075#1086#1090#1086#1074#1082#1072' = '#1079#1076#1077#1089#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1086' '#1074' '#1064#1058
+            Options.Editing = False
+            Width = 55
           end
           object RealWeight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080' '#1074#1079#1074#1077#1096'.'

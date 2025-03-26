@@ -91,6 +91,7 @@ type
     actGetBoxNamePSW: TdsdExecStoredProc;
     macGetCheckDialog: TMultiAction;
     outMessageText: TShowMessageAction;
+    Amount_sh_inv: TcxGridDBColumn;
   private
     { Private declarations }
   public
