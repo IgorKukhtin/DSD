@@ -2380,7 +2380,7 @@ begin
 }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDIJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEDIJournalForm');
-
+   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDIJournalLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEDIJournalLoadForm');
 end;

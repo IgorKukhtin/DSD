@@ -4,7 +4,6 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientWidth = 1368
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -187
   ExplicitWidth = 1384
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -467,7 +466,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Width = 55
           end
           object DealId: TcxGridDBColumn
-            Caption = #1042#1085'. DealId ('#1042#1095#1072#1089#1085#1086'-EDI)'
+            Caption = 'DealId ('#1042#1095#1072#1089#1085#1086'-EDI)'
             DataBinding.FieldName = 'DealId'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -476,7 +475,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Width = 89
           end
           object DocumentId_vch: TcxGridDBColumn
-            Caption = #1042#1085'. DocumentId ('#1042#1095#1072#1089#1085#1086'-EDI)'
+            Caption = 'DocumentId ('#1042#1095#1072#1089#1085#1086'-EDI)'
             DataBinding.FieldName = 'DocumentId_vch'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -485,7 +484,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Width = 103
           end
           object VchasnoId: TcxGridDBColumn
-            Caption = #1042#1085'. VchasnoId ('#1042#1095#1072#1089#1085#1086'-EDI)'
+            Caption = 'VchasnoId ('#1042#1095#1072#1089#1085#1086'-EDI)'
             DataBinding.FieldName = 'VchasnoId'
             Visible = False
             HeaderAlignmentHorz = taCenter
