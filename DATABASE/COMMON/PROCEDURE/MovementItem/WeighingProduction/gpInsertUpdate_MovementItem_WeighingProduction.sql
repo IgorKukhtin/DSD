@@ -247,7 +247,7 @@ BEGIN
 
                                   UNION ALL
                                     SELECT tmpParamAll.*
-                                         , 2 + ROW_NUMBER() OVER (ORDER BY tmpParamAll.npp) AS Ord
+                                         , 1 + ROW_NUMBER() OVER (ORDER BY tmpParamAll.npp) AS Ord
                                     FROM tmpParamAll
                                     WHERE tmpParamAll.CountTare <> 0 AND tmpParamAll.BoxId <> 0
                                       -- без поддонов
