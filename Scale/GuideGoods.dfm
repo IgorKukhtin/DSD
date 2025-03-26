@@ -561,7 +561,6 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitLeft = 482
       object rgTareWeight: TRadioGroup
         Left = 0
         Top = 234
@@ -580,7 +579,6 @@ object GuideGoodsForm: TGuideGoodsForm
         ParentFont = False
         TabOrder = 2
         OnClick = rgTareWeightClick
-        ExplicitWidth = 230
       end
       object PanelTare: TPanel
         Left = 0
@@ -590,7 +588,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 230
         object gbTareCount: TGroupBox
           Left = 0
           Top = 0
@@ -599,7 +596,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Align = alClient
           Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
           TabOrder = 0
-          ExplicitWidth = 155
           object EditTareCount: TEdit
             Left = 5
             Top = 17
@@ -620,7 +616,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Align = alRight
           Caption = #1050#1086#1076' '#1074#1077#1089
           TabOrder = 1
-          ExplicitLeft = 155
           object EditTareWeightCode: TEdit
             Left = 5
             Top = 17
@@ -643,7 +638,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 3
-        ExplicitWidth = 230
         object rgChangePercentAmount: TRadioGroup
           Left = 0
           Top = 38
@@ -657,7 +651,6 @@ object GuideGoodsForm: TGuideGoodsForm
           TabOrder = 1
           OnClick = rgChangePercentAmountClick
           OnEnter = rgChangePercentAmountClick
-          ExplicitWidth = 230
         end
         object gbChangePercentAmountCode: TGroupBox
           Left = 0
@@ -667,7 +660,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Align = alTop
           Caption = #1050#1086#1076' '#1089#1082#1080#1076#1082#1080
           TabOrder = 0
-          ExplicitWidth = 230
           object EditChangePercentAmountCode: TEdit
             Left = 5
             Top = 14
@@ -690,7 +682,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1077#1089' '#1090#1072#1088#1099
         TabOrder = 1
-        ExplicitWidth = 230
         object EditTareWeightEnter: TEdit
           Left = 5
           Top = 17
@@ -710,7 +701,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 4
-        ExplicitWidth = 230
         object infoPanelTare1: TPanel
           Left = 0
           Top = 0
@@ -718,7 +708,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 0
-          ExplicitWidth = 230
           object PanelTare1: TPanel
             Left = 1
             Top = 1
@@ -727,7 +716,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 120
             object LabelTare1: TLabel
               Left = 0
               Top = 0
@@ -767,7 +755,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 121
             object LabelWeightTare1: TLabel
               Left = 0
               Top = 0
@@ -782,8 +769,7 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitLeft = -1
-              ExplicitTop = 1
+              ExplicitWidth = 19
             end
             object PanelWeightTare1: TPanel
               Left = 0
@@ -824,7 +810,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 1
-          ExplicitWidth = 230
           object PanelTare0: TPanel
             Left = 1
             Top = 1
@@ -833,7 +818,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 120
             object LabelTare0: TLabel
               Left = 0
               Top = 0
@@ -873,7 +857,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 121
             object LabelWeightTare0: TLabel
               Left = 0
               Top = 0
@@ -915,7 +898,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 2
-          ExplicitWidth = 230
           object PanelTare2: TPanel
             Left = 1
             Top = 1
@@ -924,7 +906,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 120
             object LabelTare2: TLabel
               Left = 0
               Top = 0
@@ -964,7 +945,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 121
             object LabelWeightTare2: TLabel
               Left = 0
               Top = 0
@@ -1020,7 +1000,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 3
-          ExplicitWidth = 230
           object PanelTare5: TPanel
             Left = 1
             Top = 1
@@ -1029,7 +1008,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 120
             object LabelTare5: TLabel
               Left = 0
               Top = 0
@@ -1069,7 +1047,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 121
             object LabelWeightTare5: TLabel
               Left = 0
               Top = 0
@@ -1111,7 +1088,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 4
-          ExplicitWidth = 230
           object PanelTare4: TPanel
             Left = 1
             Top = 1
@@ -1120,7 +1096,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 120
             object LabelTare4: TLabel
               Left = 0
               Top = 0
@@ -1160,7 +1135,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 121
             object LabelWeightTare4: TLabel
               Left = 0
               Top = 0
@@ -1202,7 +1176,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 5
-          ExplicitWidth = 230
           object PanelTare3: TPanel
             Left = 1
             Top = 1
@@ -1211,7 +1184,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 120
             object LabelTare3: TLabel
               Left = 0
               Top = 0
@@ -1251,7 +1223,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 121
             object LabelWeightTare3: TLabel
               Left = 0
               Top = 0
@@ -1293,7 +1264,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 6
-          ExplicitWidth = 230
           object PanelTare6: TPanel
             Left = 1
             Top = 1
@@ -1302,7 +1272,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 120
             object LabelTare6: TLabel
               Left = 0
               Top = 0
@@ -1342,7 +1311,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 121
             object LabelWeightTare6: TLabel
               Left = 0
               Top = 0
@@ -1384,7 +1352,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 7
-          ExplicitWidth = 230
           object PanelTare10: TPanel
             Left = 1
             Top = 1
@@ -1393,7 +1360,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 120
             object LabelTare10: TLabel
               Left = 0
               Top = 0
@@ -1433,7 +1399,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 121
             object LabelWeightTare10: TLabel
               Left = 0
               Top = 0
@@ -1475,7 +1440,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 8
-          ExplicitWidth = 230
           object PanelTare9: TPanel
             Left = 1
             Top = 1
@@ -1484,7 +1448,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 120
             object LabelTare9: TLabel
               Left = 0
               Top = 0
@@ -1524,7 +1487,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 121
             object LabelWeightTare9: TLabel
               Left = 0
               Top = 0
@@ -1566,7 +1528,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 9
-          ExplicitWidth = 230
           object PanelTare8: TPanel
             Left = 1
             Top = 1
@@ -1575,7 +1536,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 120
             object LabelTare8: TLabel
               Left = 0
               Top = 0
@@ -1615,7 +1575,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 121
             object LabelWeightTare8: TLabel
               Left = 0
               Top = 0
@@ -1657,7 +1616,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 10
-          ExplicitWidth = 230
           object PanelTare7: TPanel
             Left = 1
             Top = 1
@@ -1666,7 +1624,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 120
             object LabelTare7: TLabel
               Left = 0
               Top = 0
@@ -1706,7 +1663,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 121
             object LabelWeightTare7: TLabel
               Left = 0
               Top = 0
@@ -2112,7 +2068,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Height = 49
         Align = alBottom
         TabOrder = 0
-        ExplicitWidth = 170
         object Label1: TLabel
           Left = 1
           Top = 1
@@ -2129,14 +2084,14 @@ object GuideGoodsForm: TGuideGoodsForm
           ParentFont = False
           ExplicitWidth = 93
         end
-        object PanelWeightGoods_total: TPanel
+        object PanelWeightNettolGoods_total: TPanel
           Left = 1
           Top = 15
           Width = 148
           Height = 33
           Align = alClient
           BevelOuter = bvNone
-          Caption = 'PanelWeightGoods_total'
+          Caption = 'PanelWeightNettolGoods_total'
           Font.Charset = RUSSIAN_CHARSET
           Font.Color = clNavy
           Font.Height = -11
@@ -2144,7 +2099,8 @@ object GuideGoodsForm: TGuideGoodsForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 168
+          ExplicitLeft = -4
+          ExplicitTop = 11
         end
       end
       object Panel3: TPanel
@@ -2154,7 +2110,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Height = 49
         Align = alBottom
         TabOrder = 1
-        ExplicitWidth = 170
         object Label2: TLabel
           Left = 1
           Top = 1
@@ -2186,7 +2141,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 168
         end
       end
       object PanelPartionDate: TPanel
@@ -2198,7 +2152,6 @@ object GuideGoodsForm: TGuideGoodsForm
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitWidth = 170
         object LabelPartionDate: TLabel
           Left = 1
           Top = 1
@@ -2242,7 +2195,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Alignment = taLeftJustify
         TabOrder = 3
-        ExplicitWidth = 170
         object AssetLabel: TLabel
           Left = 1
           Top = 1
@@ -2257,7 +2209,7 @@ object GuideGoodsForm: TGuideGoodsForm
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitLeft = 6
+          ExplicitWidth = 95
         end
         object EditPartionCell: TcxButtonEdit
           Left = 4
@@ -2289,7 +2241,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Height = 49
         Align = alBottom
         TabOrder = 4
-        ExplicitWidth = 170
         object Label4: TLabel
           Left = 1
           Top = 1
@@ -2321,7 +2272,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 168
         end
       end
     end

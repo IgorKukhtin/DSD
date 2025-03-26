@@ -204,7 +204,7 @@ type
     infoPanelPartion: TPanel;
     Panel1: TPanel;
     Label1: TLabel;
-    PanelWeightGoods_total: TPanel;
+    PanelWeightNettolGoods_total: TPanel;
     Panel3: TPanel;
     Label2: TLabel;
     PanelWeightTare_total: TPanel;
@@ -421,7 +421,7 @@ begin
               PartionDateEdit.Text:= DateToStr(ParamsMI.ParamByName('PartionGoodsDate').AsDateTime);
               EditPartionCell.Text:= ParamsMI.ParamByName('PartionCellName').AsString;
               PanelWeightTare_total.Caption:= FormatFloat(fmtWeight, 0);
-              PanelWeightGoods_total.Caption:= FormatFloat(fmtWeight, ParamsMI.ParamByName('RealWeight_Get').AsFloat);
+              PanelWeightNettolGoods_total.Caption:= FormatFloat(fmtWeight, ParamsMI.ParamByName('RealWeight_Get').AsFloat);
               PanelShGoods_total.Caption:= FloatToStr(ParamsMI.ParamByName('Amount_Goods').asFloat);
      end;
      //
@@ -2210,6 +2210,7 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTare1PropertiesChange(Sender: TObject);
+var EditValue : Double;
 begin
      //0
      if (SettingMain.BranchCode = 115) then
@@ -2320,19 +2321,33 @@ begin
                                                           + ParamsMI.ParamByName('CountTare9').AsFloat * SettingMain.WeightTare9
                                                           + ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10
                                                           );
-     PanelWeightGoods_total.Caption:= FormatFloat(fmtWeight, ParamsMI.ParamByName('RealWeight_Get').AsFloat
-                                                           - ParamsMI.ParamByName('CountPack').AsFloat * ParamsMI.ParamByName('WeightPack').AsFloat
-                                                           - ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1
-                                                           - ParamsMI.ParamByName('CountTare2').AsFloat * SettingMain.WeightTare2
-                                                           - ParamsMI.ParamByName('CountTare3').AsFloat * SettingMain.WeightTare3
-                                                           - ParamsMI.ParamByName('CountTare4').AsFloat * SettingMain.WeightTare4
-                                                           - ParamsMI.ParamByName('CountTare5').AsFloat * SettingMain.WeightTare5
-                                                           - ParamsMI.ParamByName('CountTare6').AsFloat * SettingMain.WeightTare6
-                                                           - ParamsMI.ParamByName('CountTare7').AsFloat * SettingMain.WeightTare7
-                                                           - ParamsMI.ParamByName('CountTare8').AsFloat * SettingMain.WeightTare8
-                                                           - ParamsMI.ParamByName('CountTare9').AsFloat * SettingMain.WeightTare9
-                                                           - ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10
-                                                           );
+     if ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0
+     then
+       PanelWeightNettolGoods_total.Caption:= FormatFloat(fmtWeight, ParamsMI.ParamByName('RealWeight_Get').AsFloat
+                                                             - ParamsMI.ParamByName('CountPack').AsFloat * ParamsMI.ParamByName('WeightPack').AsFloat
+                                                             - ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1
+                                                             - ParamsMI.ParamByName('CountTare2').AsFloat * SettingMain.WeightTare2
+                                                             - ParamsMI.ParamByName('CountTare3').AsFloat * SettingMain.WeightTare3
+                                                             - ParamsMI.ParamByName('CountTare4').AsFloat * SettingMain.WeightTare4
+                                                             - ParamsMI.ParamByName('CountTare5').AsFloat * SettingMain.WeightTare5
+                                                             - ParamsMI.ParamByName('CountTare6').AsFloat * SettingMain.WeightTare6
+                                                             - ParamsMI.ParamByName('CountTare7').AsFloat * SettingMain.WeightTare7
+                                                             - ParamsMI.ParamByName('CountTare8').AsFloat * SettingMain.WeightTare8
+                                                             - ParamsMI.ParamByName('CountTare9').AsFloat * SettingMain.WeightTare9
+                                                             - ParamsMI.ParamByName('CountTare10').AsFloat * SettingMain.WeightTare10
+                                                             )
+     else
+        if SettingMain.BranchCode = 115 then
+        begin
+
+            try EditValue:= StrToFloat(trim(EditWeightValue.Text))
+            except
+                  EditValue:= 0;
+            end;
+            PanelShGoods_total.Caption:= FloatToStr(EditValue);
+            PanelWeightNettolGoods_total.Caption:= FormatFloat(fmtWeight, EditValue * (ParamsMI.ParamByName('Weight_gd').AsFloat + ParamsMI.ParamByName('WeightPack_gd').AsFloat));
+        end;
+
      //
      if (fStartWrite = FALSE)
      then PanelShGoods_total.Caption:= EditWeightValue.Text;
