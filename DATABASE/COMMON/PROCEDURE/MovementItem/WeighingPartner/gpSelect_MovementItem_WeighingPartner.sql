@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , Price TFloat, CountForPrice TFloat
              , PricePartner TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
+             , PartionNum TFloat
              , GoodsKindName TVarChar, MeasureName TVarChar
              , BoxName TVarChar
              , PriceListName  TVarChar
@@ -154,7 +155,7 @@ end if;*/
                   , COALESCE (MIFloat_Price.ValueData, 0)                 AS Price
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0)         AS CountForPrice
                   , COALESCE (MIFloat_PricePartner.ValueData, 0)          AS PricePartner
-                  
+
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
                   , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
                   
@@ -185,7 +186,7 @@ end if;*/
                   , COALESCE (MIFloat_SummPartner.ValueData,0)                ::TFloat    AS SummPartner 
                   , COALESCE (MIString_Comment.ValueData, '')                 :: TVarChar AS Comment
                   
-
+                  , tmpMIFloat_PartionNum.ValueData                  ::TFloat    AS PartionNum
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                          AND MovementItem.DescId     = zc_MI_Master()
@@ -354,6 +355,11 @@ end if;*/
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
                                                    ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
+
+                  -- № паспорта
+                  LEFT JOIN MovementItemFloat AS tmpMIFloat_PartionNum
+                                              ON tmpMIFloat_PartionNum.MovementItemId = MovementItem.Id
+                                             AND tmpMIFloat_PartionNum.DescId         = zc_MIFloat_PartionNum()
             UNION ALL
              SELECT CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END :: Integer AS MovementItemId
                   , MovementItem.ObjectId AS GoodsId
@@ -434,6 +440,7 @@ end if;*/
                   , COALESCE (MIFloat_SummPartner.ValueData,0)                ::TFloat    AS SummPartner 
                   , COALESCE (MIString_Comment.ValueData, '')                 :: TVarChar AS Comment
 
+                  , tmpMIFloat_PartionNum.ValueData                  ::TFloat    AS PartionNum
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN Movement ON Movement.Id = inMovementId
                                      AND inShowAll = FALSE
@@ -539,6 +546,11 @@ end if;*/
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
                                                    ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
+
+                  -- № паспорта
+                  LEFT JOIN MovementItemFloat AS tmpMIFloat_PartionNum
+                                              ON tmpMIFloat_PartionNum.MovementItemId = MovementItem.Id
+                                             AND tmpMIFloat_PartionNum.DescId         = zc_MIFloat_PartionNum()
             ) 
 
        -- Результат     
@@ -598,6 +610,7 @@ end if;*/
            
            , CASE WHEN tmpMI.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpMI.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
            , tmpMI.PartionGoods :: TVarChar AS PartionGoods
+           , tmpMI.PartionNum   ::TFloat    AS PartionNum
 
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
@@ -686,7 +699,8 @@ end if;*/
                   , tmpMI.GoodsKindId
                   , tmpMI.BoxId
                   , tmpMI.PriceListId
-                  , tmpMI.ReasonId
+                  , tmpMI.ReasonId 
+                  , tmpMI.PartionNum
 
                   , tmpMI.AssetId
                   , tmpMI.AssetId_two
@@ -706,7 +720,7 @@ end if;*/
                   , tmpMI.isReturnOut
                   , tmpMI.PriceRetOutDate 
                   , STRING_AGG (DISTINCT tmpMI.Comment, ';') ::TVarChar AS Comment
-                 , tmpMI.isErased
+                  , tmpMI.isErased
              FROM tmpMI_1 AS tmpMI
             GROUP BY tmpMI.MovementItemId
                    , tmpMI.GoodsId
@@ -722,7 +736,8 @@ end if;*/
                    , tmpMI.GoodsKindId
                    , tmpMI.BoxId
                    , tmpMI.PriceListId
-                   , tmpMI.ReasonId   
+                   , tmpMI.ReasonId
+                   , tmpMI.PartionNum   
                    , tmpMI.AssetId
                    , tmpMI.AssetId_two
                    , tmpMI.InsertDate
@@ -783,6 +798,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.03.25         *
  18.10.24         * 
  18.10.22         * Asset
  04.11.19         *

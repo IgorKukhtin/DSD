@@ -213,6 +213,7 @@ type
     actRefreshMI: TdsdDataSetRefresh;
     bbSelectMIPrintPassport: TdxBarButton;
     bbUpdateBox: TdxBarButton;
+    PartionNum: TcxGridDBColumn;
   private
   public
   end;

@@ -668,6 +668,13 @@ object WeighingPartnerForm: TWeighingPartnerForm
             Options.Editing = False
             Width = 45
           end
+          object PartionNum: TcxGridDBColumn
+            Caption = #8470' '#1055#1072#1089#1087#1086#1088#1090#1072
+            DataBinding.FieldName = 'PartionNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object isBarCode: TcxGridDBColumn
             Caption = #1057#1082#1072#1085
             DataBinding.FieldName = 'isBarCode'
