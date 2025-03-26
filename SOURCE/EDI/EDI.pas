@@ -67,6 +67,7 @@ type
     procedure UpdateOrderDESADVSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
     procedure UpdateOrderORDERSPSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
     procedure UpdateOrderDELNOTSaveVchasnoEDI(AEDIId: Integer; DocumentId, VchasnoId: String; isError : Boolean);
+    procedure UpdateOrderDELNOTSignVchasnoEDI(AEDIId: Integer; isError : Boolean);
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -188,6 +189,7 @@ type
     function LocalExecute: Boolean; override;
     function GetVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
     function POSTVchasnoEDI(ATypeExchange : Integer; AStream: TMemoryStream): Boolean;
+    function POSTSignVchasnoEDI: Boolean;
     function SignData(UserSign : String): Boolean;
     function OrderLoad : Boolean;
     function OrdrspSave : Boolean;
@@ -443,6 +445,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Документ сформирован и подписан';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
 
@@ -467,6 +471,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Документ отправлен на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -503,6 +509,8 @@ begin
 
   FInsertEDIEvents := TdsdStoredProc.Create(nil);
   FInsertEDIEvents.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FInsertEDIEvents.Params.AddParam('inDocumentId', ftString, ptInput, '');
+  FInsertEDIEvents.Params.AddParam('inVchasnoId', ftString, ptInput, '');
   FInsertEDIEvents.Params.AddParam('inEDIEvent', ftString, ptInput, '');
   FInsertEDIEvents.StoredProcName := 'gpInsert_Movement_EDIEvents';
   FInsertEDIEvents.OutputType := otResult;
@@ -1019,6 +1027,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Корректировка сформирована и подписана';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
     // перекинуть на FTP
@@ -1042,6 +1052,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Корректировка отправлена на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -1368,6 +1380,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Корректировка сформирована и подписана';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
     // перекинуть на FTP
@@ -1391,6 +1405,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Корректировка отправлена на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -1726,6 +1742,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Налоговая сформирована и подписана';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
     // перекинуть на FTP
@@ -1749,6 +1767,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Корректировочная налоговая отправлена на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -2046,6 +2066,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Налоговая сформирована и подписана';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
     // перекинуть на FTP
@@ -2074,6 +2096,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Налоговая отправлена на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -2354,6 +2378,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Налоговая сформирована и подписана';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
     // перекинуть на FTP
@@ -2382,6 +2408,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Налоговая отправлена на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -2652,6 +2680,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Налоговая сформирована и подписана';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
     // перекинуть на FTP
@@ -2680,6 +2710,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Налоговая отправлена на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -3159,6 +3191,8 @@ begin
       else
         FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
           'Документ DESADV отправлен на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -3199,6 +3233,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
         FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
           'Документ DESADV отправлен на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -3238,6 +3274,8 @@ begin
       then
         FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
           'Документ DOCUMENTINVOICE_PRN отправлен на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -3420,6 +3458,8 @@ begin
     //
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
     FInsertEDIEvents.ParamByName('inEDIEvent').Value :='{'+IntToStr(i)+'}Загрузка ORDER из EDI завершена _'+lFileName+'_';
+    FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+    FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
     FInsertEDIEvents.Execute;
 end;
 
@@ -3596,6 +3636,8 @@ begin
             HeaderDataSet.FieldByName('EDIId').asInteger;
           FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
             'Документ DOCUMENTINVOICE отправлен на FTP';
+          FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+          FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
           FInsertEDIEvents.Execute;
         end;
       finally
@@ -3719,6 +3761,8 @@ begin
           HeaderDataSet.FieldByName('EDIId').asInteger;
         FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
           'Документ INVOICE отправлен на FTP';
+        FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+        FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
         FInsertEDIEvents.Execute;
       end;
     finally
@@ -3829,6 +3873,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Документ IFTMIN отправлен на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -4498,6 +4544,8 @@ begin
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
         'Документ ORDRSP отправлен на FTP';
+      FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+      FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
       FInsertEDIEvents.Execute;
     end;
   finally
@@ -4770,6 +4818,8 @@ begin
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
     FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
       'Документ сформирован и подписан';
+    FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+    FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
     FInsertEDIEvents.Execute;
 
     // перекинуть на FTP
@@ -4778,6 +4828,8 @@ begin
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
     FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
       'Документ отправлен на FTP';
+    FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+    FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
     FInsertEDIEvents.Execute;
   finally
     // Удаляем
@@ -4907,6 +4959,8 @@ begin
     //
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
     FInsertEDIEvents.ParamByName('inEDIEvent').Value :='{'+IntToStr(i)+'}Загрузка ORDER из Вчасно EDI завершена _'+lFileName+'_';
+    FInsertEDIEvents.ParamByName('inDocumentId').Value := '';
+    FInsertEDIEvents.ParamByName('inVchasnoId').Value := '';
     FInsertEDIEvents.Execute;
     //
     FUpdateEDIVchasnoEDI.ParamByName('inMovementId').Value := MovementId;
@@ -4961,11 +5015,30 @@ begin
     FUpdateEDIErrorState.Execute;
 
     FInsertEDIEvents.ParamByName('inMovementId').Value :=AEDIId;
-    FInsertEDIEvents.ParamByName('DocumentId').Value :=DocumentId;
-    FInsertEDIEvents.ParamByName('VchasnoId').Value :=VchasnoId;
+    FInsertEDIEvents.ParamByName('inDocumentId').Value :=DocumentId;
+    FInsertEDIEvents.ParamByName('inVchasnoId').Value :=VchasnoId;
     if isError = TRUE
     then FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно Расходная накладная'
     else FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Расходная накладная';
+    FInsertEDIEvents.Execute;
+  end;
+end;
+
+procedure TEDI.UpdateOrderDELNOTSignVchasnoEDI(AEDIId: Integer; isError : Boolean);
+begin
+  if AEDIId <> 0 then
+  begin
+
+    FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
+    FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
+    FUpdateEDIErrorState.Execute;
+
+    FInsertEDIEvents.ParamByName('inMovementId').Value :=AEDIId;
+    FInsertEDIEvents.ParamByName('inDocumentId').Value :='';
+    FInsertEDIEvents.ParamByName('inVchasnoId').Value :='';
+    if isError = TRUE
+    then FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Подписи Вчасно Расходная накладная'
+    else FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Подпись Вчасно Расходная накладная';
     FInsertEDIEvents.Execute;
   end;
 end;
@@ -5785,6 +5858,101 @@ begin
   end;
 end;
 
+function TdsdVchasnoEDIAction.POSTSignVchasnoEDI: Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      S, Params: String;
+      fileStreamSing: TFileStream;
+      base64StreamSing: TStringStream;
+      fileStreamStamp: TFileStream;
+      base64StreamStamp: TStringStream;
+      StrStream: TStringStream;
+      Stream: TIdMultiPartFormDataStream;
+begin
+  inherited;
+  Result := False;
+
+  if (FTokenParam.Value = '') or
+     (FHostParam.Value = '') then
+  begin
+    ShowMessage('Не заполнены Host или Токен.');
+    Exit;
+  end;
+
+  if not FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_sign.p7s') then
+  begin
+    ShowMessage('Файл ' + ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_sign.p7s' + ' не найден.');
+    Exit;
+  end;
+
+  // Непосредственно загрузка файла для подписи
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  Stream := TIdMultiPartFormDataStream.Create;
+  try
+
+    fileStreamSing := TFileStream.Create(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_sign.p7s', fmOpenRead);
+    base64StreamSing := TStringStream.Create('', TEncoding.UTF8);
+    if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_stamp.p7s') then
+    begin
+      fileStreamStamp := TFileStream.Create(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_stamp.p7s', fmOpenRead);
+      base64StreamStamp := TStringStream.Create('', TEncoding.UTF8);
+    end;
+
+    try
+      try
+        EncodeStream(fileStreamSing, base64StreamSing);
+        if Assigned(fileStreamStamp) then
+        begin
+          EncodeStream(fileStreamStamp, base64StreamStamp);
+          StrStream := TStringStream.Create('{"signature":' + base64StreamSing.DataString +
+                       ', "stamp":' + base64StreamStamp.DataString + '}', TEncoding.UTF8);
+        end else StrStream := TStringStream.Create('{"signature":' + base64StreamSing.DataString + '}', TEncoding.UTF8);
+        try
+          Stream.AddFormField('file', '', '',  StrStream, 'file');
+        finally
+          FreeAndNil(StrStream);
+        end;
+      except on E:EIdHTTPProtocolException  do
+                  ShowMessage('Ошибка: ' + e.ErrorMessage);
+      end;
+    finally
+      FreeAndNil(fileStreamStamp);
+      FreeAndNil(base64StreamStamp);
+      FreeAndNil(fileStreamSing);
+      FreeAndNil(base64StreamSing);
+    end;
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'multipart/form-data; boundary=' + Stream.Boundary;
+    IdHTTP.Request.ContentLength := Stream.Size;
+    IdHTTP.Request.ContentEncoding := 'UTF-8';
+    IdHTTP.Request.Accept := '*/*';
+    IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    IdHTTP.Request.Connection := 'keep-alive';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '';
+    Params := 'documents=' + FDocumentIdParam.Value + '/signatures';
+    if Params <> '' then Params := '?' + Params;
+
+    try
+      S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
+    except on E:EIdHTTPProtocolException  do
+                ShowMessage('Ошибка: ' + e.ErrorMessage);
+    end;
+
+    if IdHTTP.ResponseCode = 200 then
+    begin
+      Result := True;
+    end;
+  finally
+    Stream.Free;
+    IdHTTP.Free;
+  end;
+end;
+
 function TdsdVchasnoEDIAction.SignData(UserSign : String) : boolean;
 var
   apath: String;
@@ -5864,6 +6032,7 @@ begin
   if not FileExists(FileName) then
   begin
     ShowMessage('Ошибка Не найдена результат работы программы шифрования: ' + FileName);
+    Exit;
   end;
 
   f := TiniFile.Create(FileName);
@@ -5887,12 +6056,14 @@ begin
   if not EULoadDLL(apath) then
   begin
     ShowMessage('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
+    Exit;
   end;
   CPInterface := EUGetInterface();
   if CPInterface = nil then
   begin
     EUUnloadDLL();
     ShowMessage('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
+    Exit;
   end;
   CPInterface.SetUIMode(false);
   EUInitializeOwnUI(CPInterface, true);
@@ -5902,6 +6073,7 @@ begin
     if nError <> EU_ERROR_NONE then
     begin
       ShowMessage('Ошибка Инициализации библиотеки подписи: ' + EUDLLName);
+      Exit;
     end;
     if ShiftDown then
     begin
@@ -5920,6 +6092,7 @@ begin
       on E: Exception do
       begin
         ShowMessage('Ошибка В библиотеке подписи: ' + E.Message);
+        Exit;
       end;
     end;
 
@@ -5930,7 +6103,11 @@ begin
       else FileName := AnsiString(ExtractFilePath(ParamStr(0)) + UserSign);
 
       // проверка
-      if not FileExists(String(FileName)) then ShowMessage('Файл не найден : <'+String(FileName)+'>');
+      if not FileExists(String(FileName)) then
+      begin
+        ShowMessage('Файл не найден : <'+String(FileName)+'>');
+        Exit;
+      end;
 
       FKeyFileNameParam.Value := ExtractFileName(String(FileName));
 
@@ -5938,6 +6115,7 @@ begin
       if nError <> EU_ERROR_NONE then
       begin
         ShowMessage('Ошибка В библиотеке при загрузке электронного ключа: ' + CPInterface.GetErrorDesc(nError));
+        Exit;
       end;
 
       FKeyUserNameParam.Value := String(CertOwnerInfo.SubjectFullName);
@@ -5945,6 +6123,7 @@ begin
       on E: Exception do
       begin
         ShowMessage('Ошибка В библиотеке при загрузке электронного ключа:' + E.Message);
+        Exit;
       end;
     end;
 
@@ -5952,17 +6131,23 @@ begin
       // 2.Неарспедственно подпись
       FileName := FFileNameParam.Value;
       // проверка
-      if not FileExists(String(FileName)) then ShowMessage('Файл документа не найден : <'+String(FileName)+'>');
+      if not FileExists(String(FileName)) then
+      begin
+        ShowMessage('Файл документа не найден : <'+String(FileName)+'>');
+        Exit;
+      end;
 
       nError := CPInterface.SignFile(PAnsiChar(FileName), PAnsiChar(FileName + '.p7s'), True);
       if nError <> EU_ERROR_NONE then
       begin
         ShowMessage('Ошибка В библиотеке при надожении подписи: ' + CPInterface.GetErrorDesc(nError));
+        Exit;
       end;
     except
       on E: Exception do
       begin
         ShowMessage('Ошибка В библиотеке при надожении подписи:' + E.Message);
+        Exit;
       end;
     end;
 
@@ -6103,61 +6288,53 @@ begin
 end;
 
 function TdsdVchasnoEDIAction.DoSignComDoc: Boolean;
-  var FileSign1, FileSign2, FileSign3 : String;
 begin
   Result := False;
-  //if HeaderDataSet.FieldByName('').AsString = '' then Exit;
+  if HeaderDataSet.FieldByName('DocumentId_vch').AsString = '' then Exit;
 
   FOrderParam.Value := HeaderDataSet.FieldByName('DealId').AsString;
-  FDocumentIdParam.Value := '0fd9e4ae-b6cb-c34e-2627-c736fb148024'; // HeaderDataSet.FieldByName('').AsString;
-  FVchasnoIdParam.Value := '54e4ad26-4995-4c74-9ff2-9eed70ee061f'; // HeaderDataSet.FieldByName('').AsString;
+  FDocumentIdParam.Value := HeaderDataSet.FieldByName('DocumentId_vch').AsString;
+  FVchasnoIdParam.Value := HeaderDataSet.FieldByName('VchasnoId').AsString;
   try
 
     // Получим файл документа
     Result := GetVchasnoEDI(5);
     //Result := GetDocETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
 
-    FileSign1 := StringReplace(FFileNameParam.Value, '.xml', '_1.p7s', [rfReplaceAll, rfIgnoreCase]);
-    FileSign2 := StringReplace(FFileNameParam.Value, '.xml', '_2.p7s', [rfReplaceAll, rfIgnoreCase]);
-    FileSign3 := StringReplace(FFileNameParam.Value, '.xml', '_3.p7s', [rfReplaceAll, rfIgnoreCase]);
+    if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s');
+    if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_sign.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_sign.p7s');
+    if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_stamp.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_stamp.p7s');
 
     // Подпись файла 1
     if Result and (HeaderDataSet.FieldByName('UserSign').asString <> '') then
     begin
-      if FileExists(FileSign1) then DeleteFile(FileSign1);
       if Result then Result := SignData(HeaderDataSet.FieldByName('UserSign').asString);
-
-      // Отправка подписанного файла eTTN
-      // if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
+      if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then
+        RenameFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s', ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_sign.p7s');
     end;
 
-//    // Подпись файла 2
-//    if Result and (HeaderDataSet.FieldByName('UserSeal').asString <> '') then
-//    begin
-//      if FileExists(FileSign2) then DeleteFile(FileSign2);
-//      if Result then Result := SignData(HeaderDataSet.FieldByName('UserSeal').asString);
-//
-//      // Отправка подписанного файла eTTN
-//      if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
-//    end;
-//
-//    // Подпись файла 3
-//    if Result and (HeaderDataSet.FieldByName('UserKey').asString <> '') then
-//    begin
-//      if FileExists(FileSign3) then DeleteFile(FileSign3);
-//      if Result then Result := SignData(HeaderDataSet.FieldByName('UserKey').asString);
-//
-//      // Отправка подписанного файла eTTN
-//      if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
-//    end;
+    // Подпись файла 2
+    if Result and (HeaderDataSet.FieldByName('UserSeal').asString <> '') then
+    begin
+      if Result then Result := SignData(HeaderDataSet.FieldByName('UserSeal').asString);
+      if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then
+        RenameFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s', ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_stamp.p7s');
+    end;
 
-//    // Запишем в базу чей ключ и дату
-//    if Result and Assigned(FUpdateSign) then FUpdateSign.Execute;
+    // Отправка подписанных файлов eTTN
+    if Result then Result := POSTSignVchasnoEDI;
+
+    // Запишем в базу чей ключ и дату
+    EDI.UpdateOrderDELNOTSignVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger
+                                       , not Result
+                                        );
 
   finally
     // удалим временные файлы
     if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value) then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value);
     if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s');
+    if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_sign.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_sign.p7s');
+    if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_stamp.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '_stamp.p7s');
   end;
 
 end;
