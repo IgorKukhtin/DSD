@@ -49,11 +49,12 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
               )
 AS
 $BODY$
+    DECLARE vbUserId Integer;
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbBranchCode Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Scale_MI());
+     vbUserId := lpGetUserBySession (inSession);
      
      vbBranchCode:= (SELECT MF.ValueData :: Integer FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_BranchCode());
 
@@ -395,9 +396,14 @@ BEGIN
            , tmpMI.CountPack   :: TFloat AS Count
 
              -- Кол. голов OR Кол-во шт.
-           , CASE WHEN vbBranchCode = 115 AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0
+           , CASE WHEN vbBranchCode = 115 AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND tmpMI.HeadCount > 0
+                       THEN tmpMI.HeadCount
+
+                  WHEN vbBranchCode = 115 AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0
                        THEN (tmpMI.AmountPartner / (ObjectFloat_Weight.ValueData + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))) :: Integer
+
                   ELSE tmpMI.HeadCount
+
              END :: TFloat AS HeadCount
 
            , tmpMI.BoxCount    :: TFloat AS BoxCount
