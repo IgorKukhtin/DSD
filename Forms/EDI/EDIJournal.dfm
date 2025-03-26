@@ -4,27 +4,28 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientWidth = 1368
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1390
-  ExplicitHeight = 509
+  ExplicitLeft = -187
+  ExplicitWidth = 1384
+  ExplicitHeight = 492
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 66
+    Top = 57
     Width = 1368
-    Height = 387
-    ExplicitTop = 66
-    ExplicitWidth = 1362
-    ExplicitHeight = 387
-    ClientRectBottom = 387
+    Height = 396
+    ExplicitTop = 57
+    ExplicitWidth = 1368
+    ExplicitHeight = 396
+    ClientRectBottom = 396
     ClientRectRight = 1368
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1362
-      ExplicitHeight = 387
+      ExplicitWidth = 1368
+      ExplicitHeight = 396
       inherited cxGrid: TcxGrid
         Width = 1368
         Height = 209
         Align = alTop
-        ExplicitWidth = 1362
+        ExplicitWidth = 1368
         ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -448,7 +449,7 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 86
           end
           object Id: TcxGridDBColumn
             Caption = #1050#1083#1102#1095
@@ -465,6 +466,33 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object DealId: TcxGridDBColumn
+            Caption = #1042#1085'. DealId ('#1042#1095#1072#1089#1085#1086'-EDI)'
+            DataBinding.FieldName = 'DealId'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1110#1096#1085#1110#1081' DealId '#1079#1072#1084#1086#1074#1083#1077#1085#1085#1103' '#1042#1095#1072#1089#1085#1086'-EDI'
+            Width = 89
+          end
+          object DocumentId_vch: TcxGridDBColumn
+            Caption = #1042#1085'. DocumentId ('#1042#1095#1072#1089#1085#1086'-EDI)'
+            DataBinding.FieldName = 'DocumentId_vch'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1110#1096#1085#1110#1081' DocumentId '#1042#1095#1072#1089#1085#1086'-EDI'
+            Width = 103
+          end
+          object VchasnoId: TcxGridDBColumn
+            Caption = #1042#1085'. VchasnoId ('#1042#1095#1072#1089#1085#1086'-EDI)'
+            DataBinding.FieldName = 'VchasnoId'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1110#1096#1085#1110#1081' VchasnoId '#1042#1095#1072#1089#1085#1086'-EDI'
+            Width = 107
+          end
         end
       end
       object Splitter: TcxSplitter
@@ -474,22 +502,20 @@ inherited EDIJournalForm: TEDIJournalForm
         Height = 5
         AlignSplitter = salTop
         Control = cxGrid
-        ExplicitWidth = 1362
       end
       object BottomPanel: TPanel
         Left = 0
         Top = 214
         Width = 1368
-        Height = 173
+        Height = 182
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitWidth = 1362
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
           Width = 953
-          Height = 173
+          Height = 182
           Align = alLeft
           PopupMenu = PopupMenu
           TabOrder = 0
@@ -769,11 +795,10 @@ inherited EDIJournalForm: TEDIJournalForm
           Left = 957
           Top = 0
           Width = 411
-          Height = 173
+          Height = 182
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
-          ExplicitWidth = 405
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -832,7 +857,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Left = 953
           Top = 0
           Width = 4
-          Height = 173
+          Height = 182
           Control = cxChildGrid
         end
       end
@@ -845,7 +870,6 @@ inherited EDIJournalForm: TEDIJournalForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 1362
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -1847,7 +1871,7 @@ inherited EDIJournalForm: TEDIJournalForm
     DockControlHeights = (
       0
       0
-      35
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2500,6 +2524,7 @@ inherited EDIJournalForm: TEDIJournalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 168
     Top = 344
@@ -2553,6 +2578,7 @@ inherited EDIJournalForm: TEDIJournalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 808
     Top = 328

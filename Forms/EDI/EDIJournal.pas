@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TEDIJournalForm = class(TAncestorDBGridForm)
@@ -212,6 +212,9 @@ type
     bbmacUpdateMI_EDIComdoc: TdxBarButton;
     actUpdateMI_EDIComdoc_list: TdsdExecStoredProc;
     spInsertUpdate_SaleLinkEDI_list: TdsdStoredProc;
+    DealId: TcxGridDBColumn;
+    DocumentId_vch: TcxGridDBColumn;
+    VchasnoId: TcxGridDBColumn;
   private
     { Private declarations }
   public

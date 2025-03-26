@@ -47,7 +47,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UserKey  TVarChar
              , NameExite  TBlob
              , NameFiscal  TBlob
-             , DealId    TVarCha
+             , DealId         TVarChar
+             , DocumentId_vch TVarChar
+             , VchasnoId      TVarChar
               )
 AS
 $BODY$
@@ -170,7 +172,9 @@ BEGIN
            , 'O=Державна фіскальна служба України;CN=Державна фіскальна служба України.  ОТРИМАНО;Serial=2122385;C=UA;L=Київ'
               :: TBlob AS NameFiscal
 
-           , MovementString_DealId.ValueData AS DealId
+           , MovementString_DealId.ValueData         ::TVarChar AS DealId
+           , MovementString_DocumentId_vch.ValueData ::TVarChar AS DocumentId_vch
+           , MovementString_VchasnoId.ValueData      ::TVarChar AS VchasnoId
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -346,7 +350,12 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_DealId
                                      ON MovementString_DealId.MovementId = Movement.Id
                                     AND MovementString_DealId.DescId     = zc_MovementString_DealId()
-
+            LEFT JOIN MovementString AS MovementString_DocumentId_vch
+                                     ON MovementString_DocumentId_vch.MovementId = Movement.Id
+                                    AND MovementString_DocumentId_vch.DescId     = zc_MovementString_DocumentId_vch()
+            LEFT JOIN MovementString AS MovementString_VchasnoId
+                                     ON MovementString_VchasnoId.MovementId = Movement.Id
+                                    AND MovementString_VchasnoId.DescId     = zc_MovementString_VchasnoId()
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND Movement.StatusId <> zc_Enum_Status_Erased()
