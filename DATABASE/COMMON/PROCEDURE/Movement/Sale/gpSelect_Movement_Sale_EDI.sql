@@ -64,31 +64,21 @@ END IF;
 
      -- определяется
      SELECT -- UserSign
-            CASE WHEN vbUserId <> 5
-                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\Петренко Є.С\24447183_3110604434_SU231123104254.ZS2'
-                 WHEN vbUserId = 5 AND 1=1
-                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\Петренко Є.С\24447183_3110604434_SU231123104254.ZS2'
+            CASE WHEN vbUserId = 5 AND 1=0
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\НАГОРНОВА Т.С\24447183_2992217209_SU231208103427.ZS2'
                  WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData
-                 ELSE '24447183_3110604434_SU231123104254.ZS2'
+                 ELSE '24447183_2992217209_SU231208103427.ZS2'
             END AS UserSign
 
             -- UserSeal
-          , CASE WHEN vbUserId <> 5
-                    --THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
-                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
-                 WHEN vbUserId = 5 AND 1=1
-                    --THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+          , CASE WHEN vbUserId = 5 AND 1=0
                       THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
                  WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData
                  ELSE '24447183_U221220114928.ZS2'
             END AS UserSeal
 
             -- UserKey
-          , CASE WHEN vbUserId <> 5
-                    --THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
-                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
-                 WHEN vbUserId = 5 AND 1=1
-                    --THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+          , CASE WHEN vbUserId = 5 AND 1=0
                       THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
                  WHEN ObjectString_UserKey.ValueData <> '' THEN ObjectString_UserKey.ValueData
                  ELSE '24447183_U221220114928.ZS2'
