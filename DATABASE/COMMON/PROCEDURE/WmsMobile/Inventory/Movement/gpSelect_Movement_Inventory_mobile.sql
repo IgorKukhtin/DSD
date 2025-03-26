@@ -205,10 +205,10 @@ BEGIN
            , MovementItem.Id                             AS MovementItemId
            , Object_Goods.Id          		         AS GoodsId
            , Object_Goods.ObjectCode  		         AS GoodsCode
-           , Object_Goods.ValueData   		         AS GoodsName
+           , (Object_Goods.ValueData || CASE WHEN 1=1 THEN CHR (13) || zfConvert_TimeShortToString (MIDate_Insert.ValueData) ELSE '' END) :: TVarChar AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsKind.Id                         AS GoodsKindId
-           , Object_GoodsKind.ValueData                  AS GoodsKindName
+           , (Object_GoodsKind.ValueData || CASE WHEN inLimit > 10 AND inIsAllUser = TRUE THEN '  ' || Object_Insert.ValueData ELSE '' END) :: TVarChar AS GoodsKindName
            , Object_Measure.Id                           AS MeasureId
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -431,10 +431,13 @@ BEGIN
                                            -- № паспорта
                                            OR (tmpMIFloat_PartionNum_passport.ValueData :: Integer) ::TVarChar ILIKE '%'||COALESCE(inFilter, '')||'%'
               )
+          AND Movement.OperDate >= CURRENT_DATE
+
+          AND (MILO_Insert.ObjectId = vbUserId OR inLimit > 10 OR vbUserId = 5)
 
         ORDER BY CASE WHEN inIsOrderBy = TRUE THEN Object_Goods.ValueData   ELSE NULL END ASC
                , CASE WHEN inIsOrderBy = FALSE THEN MIDate_Insert.ValueData ELSE NULL END DESC
-        LIMIT inLimit
+        LIMIT CASE WHEN inLimit < 10 THEN inLimit ELSE 10000 END
      ;
 
 END;
