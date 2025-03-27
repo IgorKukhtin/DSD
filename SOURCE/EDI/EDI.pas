@@ -4977,8 +4977,8 @@ begin
     FUpdateEDIErrorState.Execute;
 
     FInsertEDIEvents.ParamByName('inMovementId').Value := AEDIId;
-    FInsertEDIEvents.ParamByName('DocumentId').Value :='';
-    FInsertEDIEvents.ParamByName('VchasnoId').Value :='';
+    FInsertEDIEvents.ParamByName('inDocumentId').Value :='';
+    FInsertEDIEvents.ParamByName('inVchasnoId').Value :='';
     if isError = TRUE
     then FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно Уведомление об отгрузке'
     else FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Уведомление об отгрузке';
@@ -4996,8 +4996,8 @@ begin
     FUpdateEDIErrorState.Execute;
 
     FInsertEDIEvents.ParamByName('inMovementId').Value :=AEDIId;
-    FInsertEDIEvents.ParamByName('DocumentId').Value :='';
-    FInsertEDIEvents.ParamByName('VchasnoId').Value :='';
+    FInsertEDIEvents.ParamByName('inDocumentId').Value :='';
+    FInsertEDIEvents.ParamByName('inVchasnoId').Value :='';
     if isError = TRUE
     then FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно Подтверждение заказа'
     else FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Подтверждение заказа';
