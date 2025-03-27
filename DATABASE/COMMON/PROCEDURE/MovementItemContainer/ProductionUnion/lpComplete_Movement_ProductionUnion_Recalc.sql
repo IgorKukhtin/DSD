@@ -44,6 +44,9 @@ BEGIN
               FROM _tmpItemChild 
               WHERE _tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье Прочее сырье
                                                             )
+                 OR _tmpItemChild.InfoMoneyId IN (zc_Enum_InfoMoney_10106() -- Основное сырье + Мясное сырье + Сыр
+                                                 )
+                                                            
               GROUP BY _tmpItemChild.GoodsId
              ) AS _tmpItem
              INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
