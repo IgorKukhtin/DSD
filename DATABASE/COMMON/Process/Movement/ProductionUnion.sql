@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech_C
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_MI_ProductionUnion_AmountForm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_MI_ProductionUnion_AmountForm' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_MI_ProductionUnion_AmountNext_out() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_MI_ProductionUnion_AmountNext_out' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_MI_ProductionUnion_isWeightMain() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_MI_ProductionUnion_isWeightMain' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_MI_ProductionUnion_AmountForm_two() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_MI_ProductionUnion_AmountForm_two' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 
 
@@ -91,6 +92,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_MI_ProductionU
                                   , inCode:= 7
                                   , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ProductionUnion())||'(приход)> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Update_MI_ProductionUnion_isWeightMain');
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_MI_ProductionUnion_AmountForm_two()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 8
+                                  , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ProductionUnion())||'(приход)> - сохранение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_MI_ProductionUnion_AmountForm_two');
 
                                   
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_MI_ProductionUnion()

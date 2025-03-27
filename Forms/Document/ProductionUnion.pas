@@ -133,6 +133,11 @@ type
     bbUpdate_AmountNext_out: TdxBarButton;
     bbsUpdate: TdxBarSubItem;
     cbisEtiketka: TcxCheckBox;
+    actExecuteDialog_AmountForm_two: TExecuteDialog;
+    actUpdate_AmountForm_two: TdsdUpdateDataSet;
+    spUpdate_AmountForm_two: TdsdStoredProc;
+    mactUpdate_AmountForm_two: TMultiAction;
+    bbUpdate_AmountForm_two: TdxBarButton;
   private
     { Private declarations }
   public

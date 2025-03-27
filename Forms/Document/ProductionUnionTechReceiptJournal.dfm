@@ -117,6 +117,11 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
               Format = ',0.####'
               Kind = skSum
               Column = AmountNext_out
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForm_two
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -208,6 +213,11 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
               Format = ',0.####'
               Kind = skSum
               Column = AmountNext_out
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForm_two
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -406,7 +416,19 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 69
           end
-          object Amount: TcxGridDBColumn [19]
+          object AmountForm_two: TcxGridDBColumn [19]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1092#1086#1088#1084#1086#1074#1082#1072'+2'#1076#1077#1085#1100', '#1082#1075
+            DataBinding.FieldName = 'AmountForm_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1092#1086#1088#1084#1086#1074#1082#1072'+2'#1076#1077#1085#1100','#1082#1075
+            Options.Editing = False
+            Width = 69
+          end
+          object Amount: TcxGridDBColumn [20]
             Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -417,7 +439,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 60
           end
-          object Amount_calc: TcxGridDBColumn [20]
+          object Amount_calc: TcxGridDBColumn [21]
             Caption = #1056#1072#1089#1095#1077#1090' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -428,7 +450,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 60
           end
-          object Count: TcxGridDBColumn [21]
+          object Count: TcxGridDBColumn [22]
             Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -438,7 +460,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object Amount_order: TcxGridDBColumn [22]
+          object Amount_order: TcxGridDBColumn [23]
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'Amount_order'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -449,7 +471,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 50
           end
-          object CuterCount_order: TcxGridDBColumn [23]
+          object CuterCount_order: TcxGridDBColumn [24]
             Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'CuterCount_order'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -460,7 +482,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 60
           end
-          object AmountNext_out: TcxGridDBColumn [24]
+          object AmountNext_out: TcxGridDBColumn [25]
             Caption = #1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'AmountNext_out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -470,7 +492,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 70
           end
-          object IsMain: TcxGridDBColumn [25]
+          object IsMain: TcxGridDBColumn [26]
             Caption = #1043#1083#1072#1074#1085'.'
             DataBinding.FieldName = 'isMain'
             HeaderAlignmentHorz = taCenter
@@ -478,7 +500,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 45
           end
-          object ReceiptCode: TcxGridDBColumn [26]
+          object ReceiptCode: TcxGridDBColumn [27]
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
             DataBinding.FieldName = 'ReceiptCode'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -493,7 +515,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object ReceiptName: TcxGridDBColumn [27]
+          object ReceiptName: TcxGridDBColumn [28]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
             DataBinding.FieldName = 'ReceiptName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -508,7 +530,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object PartionGoods: TcxGridDBColumn [28]
+          object PartionGoods: TcxGridDBColumn [29]
             Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -517,7 +539,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 60
           end
-          object Comment_receipt: TcxGridDBColumn [29]
+          object Comment_receipt: TcxGridDBColumn [30]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1088#1077#1094#1077#1087#1090#1091#1088#1072')'
             DataBinding.FieldName = 'Comment_receipt'
             HeaderAlignmentHorz = taCenter
@@ -525,14 +547,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 100
           end
-          object Comment: TcxGridDBColumn [30]
+          object Comment: TcxGridDBColumn [31]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object InsertName: TcxGridDBColumn [31]
+          object InsertName: TcxGridDBColumn [32]
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -540,7 +562,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 100
           end
-          object UpdateName: TcxGridDBColumn [32]
+          object UpdateName: TcxGridDBColumn [33]
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
@@ -548,7 +570,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 110
           end
-          object InsertDate: TcxGridDBColumn [33]
+          object InsertDate: TcxGridDBColumn [34]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -556,7 +578,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 90
           end
-          object UpdateDate: TcxGridDBColumn [34]
+          object UpdateDate: TcxGridDBColumn [35]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
@@ -564,7 +586,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 110
           end
-          object CuterWeight: TcxGridDBColumn [35]
+          object CuterWeight: TcxGridDBColumn [36]
             Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090'('#1082#1091#1090#1090#1077#1088')'
             DataBinding.FieldName = 'CuterWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -575,7 +597,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 60
           end
-          object CuterCount: TcxGridDBColumn [36]
+          object CuterCount: TcxGridDBColumn [37]
             Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
             DataBinding.FieldName = 'CuterCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -586,7 +608,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 60
           end
-          object CountReal: TcxGridDBColumn [37]
+          object CountReal: TcxGridDBColumn [38]
             Caption = #1050#1086#1083'. '#1096#1090'. '#1092#1072#1082#1090' ('#1090#1091#1096#1077#1085#1082#1072')'
             DataBinding.FieldName = 'CountReal'
             HeaderAlignmentHorz = taCenter

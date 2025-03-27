@@ -66,6 +66,8 @@ type
     ceCountReal: TcxCurrencyEdit;
     cxLabel19: TcxLabel;
     ceAmountForm: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    ceAmountForm_two: TcxCurrencyEdit;
   private
     { Private declarations }
   public

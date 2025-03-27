@@ -77,9 +77,9 @@
   end
   object ceComment: TcxTextEdit [9]
     Left = 8
-    Top = 259
+    Top = 261
     TabOrder = 5
-    Width = 549
+    Width = 342
   end
   object ceGooods: TcxButtonEdit [10]
     Left = 8
@@ -302,6 +302,21 @@
     TabOrder = 39
     Width = 187
   end
+  object cxLabel20: TcxLabel [40]
+    Left = 370
+    Top = 241
+    Caption = #1050#1086#1083'-'#1074#1086' '#1092#1086#1088#1084#1086#1074#1082#1072'+2'#1076#1077#1085#1100','#1082#1075
+  end
+  object ceAmountForm_two: TcxCurrencyEdit [41]
+    Left = 370
+    Top = 261
+    ParentShowHint = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    ShowHint = True
+    TabOrder = 41
+    Width = 187
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 11
     Top = 258
@@ -522,6 +537,14 @@
         Name = 'inAmountForm'
         Value = Null
         Component = ceAmountForm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountForm_two'
+        Value = Null
+        Component = ceAmountForm_two
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

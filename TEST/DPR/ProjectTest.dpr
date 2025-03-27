@@ -1575,7 +1575,8 @@ uses
   Report_WP_PassportPSWDialog in '..\..\Forms\Report\Report_WP_PassportPSWDialog.pas' {Report_WP_PassportPSWDialogForm: TParentForm},
   Report_Inventory_WeighingFact in '..\..\Forms\Report\Report_Inventory_WeighingFact.pas' {Report_Inventory_WeighingFactForm: TParentForm},
   Report_Inventory_WeighingFactDialog in '..\..\Forms\Report\Report_Inventory_WeighingFactDialog.pas' {Report_Inventory_WeighingFactDialogForm: TParentForm},
-  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm};
+  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
+  AmountForm_twoDialog in '..\..\Forms\Document\AmountForm_twoDialog.pas' {AmountForm_twoDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

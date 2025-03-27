@@ -22,7 +22,7 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime
              , Amount_order TFloat, CuterCount_order TFloat
              , RealWeight TFloat, RealWeightMsg TFloat, RealWeightShp TFloat
              , CuterCount TFloat, CuterWeight TFloat, Count TFloat, CountReal TFloat
-             , Amount TFloat, AmountForm TFloat
+             , Amount TFloat, AmountForm TFloat, AmountForm_two TFloat
              , Comment TVarChar
                )
 AS
@@ -66,6 +66,7 @@ BEGIN
                , 0 :: TFloat		           AS CountReal
                , 0 :: TFloat		           AS Amount
                , 0 :: TFloat                   AS AmountForm
+               , 0 :: TFloat                   AS AmountForm_two
                , '' :: TVarChar                AS Comment
 
           FROM MovementItem
@@ -136,7 +137,8 @@ BEGIN
                , MIFloat_Count.ValueData	       AS Count
                , MIFloat_CountReal.ValueData       AS CountReal
                , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MovementItem.Amount ELSE 0 END :: TFloat AS Amount
-               , MIFloat_AmountForm.ValueData ::TFloat AS AmountForm
+               , MIFloat_AmountForm.ValueData     ::TFloat AS AmountForm
+               , MIFloat_AmountForm_two.ValueData ::TFloat AS AmountForm_two
                , MIString_Comment.ValueData        AS Comment
 
           FROM MovementItem
@@ -194,6 +196,9 @@ BEGIN
                LEFT JOIN MovementItemFloat AS MIFloat_AmountForm
                                            ON MIFloat_AmountForm.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountForm.DescId = zc_MIFloat_AmountForm()
+               LEFT JOIN MovementItemFloat AS MIFloat_AmountForm_two
+                                           ON MIFloat_AmountForm_two.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountForm_two.DescId = zc_MIFloat_AmountForm_two()
 
                LEFT JOIN MovementItemString AS MIString_Comment
                                             ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -240,6 +245,7 @@ BEGIN
                , 0 :: TFloat		             AS CountReal
                , 0 :: TFloat		             AS Amount
                , 0 :: TFloat                     AS AmountForm
+               , 0 :: TFloat                     AS AmountForm_two
                , '' :: TVarChar                  AS Comment
          ;
 
@@ -253,6 +259,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.03.25         * AmountForm_two
  30.07.24         * AmountForm
  13.02.22         *
  02.12.20         *

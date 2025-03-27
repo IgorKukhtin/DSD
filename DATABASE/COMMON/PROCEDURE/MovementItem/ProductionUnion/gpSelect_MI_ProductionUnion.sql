@@ -53,6 +53,7 @@ BEGIN
             , CAST (NULL AS TFloat)                 AS RealWeightMsg  
             , CAST (NULL AS TFloat)                 AS Amount_Remains 
             , CAST (NULL AS TFloat)                 AS AmountForm
+            , CAST (NULL AS TFloat)                 AS AmountForm_two
             , CAST (NULL AS TFloat)                 AS AmountNext_out
 
             , CAST (NULL AS Integer)                AS GoodsKindId
@@ -150,11 +151,12 @@ BEGIN
             , MIFloat_CuterCount.ValueData      AS CuterCount
             , MIFloat_CuterWeight.ValueData     AS CuterWeight
             
-            , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
-            , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg 
-            , MIFloat_Remains.ValueData       ::TFloat  AS Amount_Remains
-            , MIFloat_AmountForm.ValueData    ::TFloat  AS AmountForm
-            , MIFloat_AmountNext_out.ValueData ::TFloat AS AmountNext_out
+            , MIFloat_RealWeightShp.ValueData  ::TFloat  AS RealWeightShp
+            , MIFloat_RealWeightMsg.ValueData  ::TFloat  AS RealWeightMsg 
+            , MIFloat_Remains.ValueData        ::TFloat  AS Amount_Remains
+            , MIFloat_AmountForm.ValueData     ::TFloat  AS AmountForm
+            , MIFloat_AmountForm_two.ValueData ::TFloat  AS AmountForm_two
+            , MIFloat_AmountNext_out.ValueData ::TFloat  AS AmountNext_out
 
             , Object_GoodsKind.Id                 AS GoodsKindId
             , Object_GoodsKind.ObjectCode         AS GoodsKindCode
@@ -272,6 +274,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountForm
                                          ON MIFloat_AmountForm.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountForm.DescId = zc_MIFloat_AmountForm()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountForm_two
+                                         ON MIFloat_AmountForm_two.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountForm_two.DescId = zc_MIFloat_AmountForm_two()
 
              LEFT JOIN MovementItemFloat AS MIFloat_AmountNext_out
                                          ON MIFloat_AmountNext_out.MovementItemId = MovementItem.Id
@@ -356,11 +361,12 @@ BEGIN
             , MIFloat_CuterCount.ValueData      AS CuterCount
             , MIFloat_CuterWeight.ValueData     AS CuterWeight
 
-            , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
-            , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg
-            , MIFloat_Remains.ValueData       ::TFloat  AS Amount_Remains
-            , MIFloat_AmountForm.ValueData    ::TFloat  AS AmountForm 
-            , MIFloat_AmountNext_out.ValueData ::TFloat AS AmountNext_out
+            , MIFloat_RealWeightShp.ValueData  ::TFloat  AS RealWeightShp
+            , MIFloat_RealWeightMsg.ValueData  ::TFloat  AS RealWeightMsg
+            , MIFloat_Remains.ValueData        ::TFloat  AS Amount_Remains
+            , MIFloat_AmountForm.ValueData     ::TFloat  AS AmountForm
+            , MIFloat_AmountForm_two.ValueData ::TFloat  AS AmountForm_two 
+            , MIFloat_AmountNext_out.ValueData ::TFloat  AS AmountNext_out
 
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
@@ -480,6 +486,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountForm
                                          ON MIFloat_AmountForm.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountForm.DescId = zc_MIFloat_AmountForm()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountForm_two
+                                         ON MIFloat_AmountForm_two.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountForm_two.DescId = zc_MIFloat_AmountForm_two()
 
              LEFT JOIN MovementItemFloat AS MIFloat_AmountNext_out
                                          ON MIFloat_AmountNext_out.MovementItemId = MovementItem.Id
@@ -703,6 +712,7 @@ ALTER FUNCTION gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar)
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 27.03.25         * AmountForm_two
  13.08.24         * AmountNext_out
  30.07.24         * AmountForm
  19.05.23         *
