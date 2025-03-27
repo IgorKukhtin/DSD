@@ -12,10 +12,10 @@ CREATE OR REPLACE FUNCTION gpReport_Transport(
     IN inisMonth       Boolean   , --
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
+RETURNS TABLE (MovementId Integer, InvNumberTransport Integer, OperDate TDateTime
              , BranchName TVarChar, UnitName_car TVarChar, UnitName_route TVarChar
              , CarModelName TVarChar, CarName TVarChar
-             , PersonalDriverName TVarChar, PositionName TVarChar, PositionLevelName TVarChar
+             , PersonalDriverId Integer, PersonalDriverName TVarChar, PositionName TVarChar, PositionLevelName TVarChar
              , RouteName TVarChar, RouteKindName TVarChar
              , RateFuelKindName TVarChar
              , FuelName TVarChar
@@ -39,6 +39,7 @@ RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
              , HoursPartner      TFloat -- время в точке, часов
              , Speed     TFloat
              , CommentStop TVarChar
+             , PersonalServiceListName_find TVarChar
               )
 AS
 $BODY$
@@ -59,7 +60,7 @@ BEGIN
                                  , Movement.OperDate
                                  , MovementLinkObject_Car.ObjectId AS CarId
                                  , MovementLinkObject_PersonalDriver.ObjectId AS PersonalDriverId
-                                 -- , MovementItem.Id AS MovementItemId
+                                 , MovementItem.Id AS MovementItemId_calc
                                  -- , MovementItem.Amount AS DistanceFuelMaster
 
                                  , ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
@@ -320,7 +321,7 @@ BEGIN
                                  , Movement.OperDate
                                  , MovementLinkObject_Car.ObjectId AS CarId
                                  , MovementLinkObject_PersonalDriver.ObjectId AS PersonalDriverId
-                                 -- , MovementItem.Id AS MovementItemId
+                                 , MovementItem.Id AS MovementItemId_calc
                                  -- , MovementItem.Amount AS DistanceFuelMaster
 
                                  , ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
@@ -504,6 +505,7 @@ BEGIN
                                  , Movement.OperDate
                                  , MovementLinkObject_Car.ObjectId AS CarId
                                  , MovementLinkObject_Personal.ObjectId AS PersonalDriverId
+                                 , 0 AS MovementItemId_calc
 
                                  , 1 AS Ord
 
@@ -633,7 +635,62 @@ BEGIN
                              GROUP BY tmp.MovementId
                              )
 
+ , tmpList_1 AS (SELECT DISTINCT lpInsertFind_Object_ServiceDate (GENERATE_SERIES) AS ServiceDateId FROM GENERATE_SERIES (inStartDate, inEndDate, '1 MONTH' :: INTERVAL)
+                )
+ , tmpList_2 AS (SELECT DISTINCT CLO_Personal.ContainerId
+                 FROM (SELECT DISTINCT tmpTransport.PersonalDriverId FROM tmpTransport) AS tmpTransport
+                      INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                     ON CLO_Personal.ObjectId  = tmpTransport.PersonalDriverId
+                                                    AND CLO_Personal.DescId    = zc_ContainerLinkObject_Personal()
+                      INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                     ON CLO_ServiceDate.ContainerId = CLO_Personal.ContainerId
+                                                    AND CLO_ServiceDate.ObjectId    IN (SELECT DISTINCT tmpList_1.ServiceDateId FROM tmpList_1)
+                                                    AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+                )
 
+ , tmpList_MIC AS (SELECT MIContainer.*
+                   FROM tmpList_2
+                        INNER JOIN MovementItemContainer AS MIContainer
+                                                         ON MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                        AND MIContainer.ContainerId = tmpList_2.ContainerId -- IN (SELECT DISTINCT tmpList_2.ContainerId FROM tmpList_2)
+                                                        AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                        AND MIContainer.MovementDescId = zc_Movement_Transport()
+                  )
+
+ , tmpPersonalServiceList_find_all AS (SELECT DISTINCT tmpTransport.MovementId
+                                                     , tmpTransport.PersonalDriverId
+                                                     , MIContainer.ContainerId
+                                       FROM (SELECT DISTINCT tmpTransport.MovementId, tmpTransport.MovementItemId_calc, tmpTransport.PersonalDriverId FROM tmpTransport
+                                            ) AS tmpTransport
+                                            JOIN tmpList_MIC AS MIContainer
+                                                             ON MIContainer.MovementId     = tmpTransport.MovementId
+                                                            AND MIContainer.MovementItemId = tmpTransport.MovementItemId_calc
+                                                            AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                            AND MIContainer.Amount         <> 0
+                                      )
+ , tmpPersonalServiceList_find_add AS (SELECT DISTINCT tmpPersonalServiceList_find_all.MovementId
+                                                     , tmpPersonalServiceList_find_all.PersonalDriverId
+                                                     , CLO_PersonalServiceList.ObjectId AS PersonalServiceListId
+                                       FROM tmpPersonalServiceList_find_all
+                                            INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                           ON CLO_Personal.ContainerId = tmpPersonalServiceList_find_all.ContainerId
+                                                                          AND CLO_Personal.ObjectId    = tmpPersonalServiceList_find_all.PersonalDriverId
+                                                                          AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
+                                            INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                                           ON CLO_PersonalServiceList.ContainerId = tmpPersonalServiceList_find_all.ContainerId
+                                                                          AND CLO_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
+                                            INNER JOIN Object AS Object_PersonalServiceList
+                                                              ON Object_PersonalServiceList.Id     = CLO_PersonalServiceList.ObjectId
+                                                             AND Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                      )
+  , tmpPersonalServiceList_find AS (SELECT tmpPersonalServiceList_find_add.MovementId
+                                         , tmpPersonalServiceList_find_add.PersonalDriverId
+                                         , STRING_AGG (DISTINCT Object_PersonalServiceList.ValueData, ';') AS PersonalServiceListName
+                                    FROM tmpPersonalServiceList_find_add
+                                         LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpPersonalServiceList_find_add.PersonalServiceListId
+                                    GROUP BY tmpPersonalServiceList_find_add.MovementId
+                                           , tmpPersonalServiceList_find_add.PersonalDriverId
+                                   )
        , tmpFuel AS(SELECT tmpAll.MovementId
                          , tmpAll.InvNumber
                          , tmpAll.OperDate
@@ -806,13 +863,17 @@ BEGIN
                                 )
 
         -- результат
-        SELECT CASE WHEN inisMonth = FALSE THEN zfConvert_StringToNumber (tmpFuel.InvNumber) ELSE NULL END       ::Integer  AS InvNumberTransport
+        SELECT CASE WHEN inisMonth = FALSE THEN tmpFuel.MovementId ELSE 0 END :: Integer
+             , CASE WHEN inisMonth = FALSE THEN zfConvert_StringToNumber (tmpFuel.InvNumber) ELSE NULL END       ::Integer  AS InvNumberTransport
              , CASE WHEN inisMonth = FALSE THEN tmpFuel.OperDate ELSE DATE_TRUNC ('Month', tmpFuel.OperDate) END ::TDateTime AS OperDate
+
              , ViewObject_Unit.BranchName
              , ViewObject_Unit.Name             AS UnitName_car
              , STRING_AGG (DISTINCT Object_Unit_route.ValueData, ';') :: TVarChar AS UnitName_route
              , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
              , Object_Car.ValueData             AS CarName
+
+             , tmpFuel.PersonalDriverId :: Integer
              --, View_PersonalDriver.PersonalName AS PersonalDriverName 
              , View_PersonalDriver.PersonalName       :: TVarChar AS PersonalDriverName 
              , View_PersonalDriver.PositionName       :: TVarChar AS PositionName
@@ -880,6 +941,8 @@ BEGIN
                END :: TFloat AS Speed
              , MovementString_CommentStop.ValueData ::TVarChar    AS CommentStop
 
+             , tmpPersonalServiceList_find.PersonalServiceListName ::TVarChar AS PersonalServiceListName_find
+
               -- группировка по всем
         FROM tmpFuel
              LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpFuel.CarId
@@ -897,6 +960,9 @@ BEGIN
              LEFT JOIN Object AS Object_RouteKind ON Object_RouteKind.Id = tmpFuel.RouteKindId
              LEFT JOIN Object AS Object_RateFuelKind ON Object_RateFuelKind.Id = tmpFuel.RateFuelKindId
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = tmpFuel.FuelId
+
+             LEFT JOIN tmpPersonalServiceList_find ON tmpPersonalServiceList_find.MovementId       = tmpFuel.MovementId
+                                                  AND tmpPersonalServiceList_find.PersonalDriverId = tmpFuel.PersonalDriverId
 
            --LEFT JOIN ObjectBoolean AS OB_NotPayForWeight
            --                        ON OB_NotPayForWeight.ObjectId = tmpFuel.RouteId
@@ -952,6 +1018,7 @@ BEGIN
                , CASE WHEN inisMonth = FALSE THEN tmpFuel.OperDate ELSE DATE_TRUNC ('Month', tmpFuel.OperDate) END
                , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') )
                , Object_Car.ValueData
+               , tmpFuel.PersonalDriverId
                , View_PersonalDriver.PersonalName 
                , View_PersonalDriver.PositionName
                , View_PersonalDriver.PositionLevelName
@@ -976,7 +1043,8 @@ BEGIN
                
              , (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60)
              , MovementString_CommentStop.ValueData
-       ;
+             , tmpPersonalServiceList_find.PersonalServiceListName
+              ;
 
 END;
 $BODY$
@@ -999,4 +1067,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Transport (inStartDate:= '06.03.2021', inEndDate:= '10.03.2021', inCarId:= null,  inBranchId:= 1, inSession:= zfCalc_UserAdmin());
--- select * from gpReport_Transport(inStartDate := ('04.08.2023')::TDateTime , inEndDate := ('10.08.2023')::TDateTime , inCarId := 0 , inBranchId := 8380 ,  inisMonth:= false, inSession := '5');
+-- SELECT * FROM gpReport_Transport (inStartDate:= '19.02.2025', inEndDate:= '19.02.2025', inCarId:= 0, inBranchId := 8380 , inIsMonth:= FALSE, inSession:= '5');
