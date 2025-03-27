@@ -5798,12 +5798,14 @@ begin
          (jsonObj.Get('document_id') <> nil)  then
         begin
           FDocumentIdParam.Value := jsonObj.Get('document_id').JsonValue.Value;
-          FVchasnoIdParam.Value := jsonObj.Get('vchasno_id').JsonValue.Value;
-          Result := True;
+          if jsonObj.Get('vchasno_id') <> nil then
+            FVchasnoIdParam.Value := jsonObj.Get('vchasno_id').JsonValue.Value
+          else FVchasnoIdParam.Value := '';
         end;
       finally
         FreeAndNil(jsonObj);
       end;
+      Result := True;
     end;
   finally
     Stream.Free;
