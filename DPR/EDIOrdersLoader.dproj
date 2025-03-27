@@ -74,7 +74,7 @@
 			<DCC_UnitSearchPath>..\SOURCE\DBF;..\SOURCE\COMPONENT;..\SOURCE\DevAddOn;..\SOURCE\EDI;..\SOURCE;..\SOURCE\MeDOC;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<Icon_MainIcon>EDIOrdersLoader_Icon.ico</Icon_MainIcon>
-			<Debugger_RunParams>alan_dp_ua /log</Debugger_RunParams>
+			<Debugger_RunParams>/log</Debugger_RunParams>
 			<DCC_RangeChecking>true</DCC_RangeChecking>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
 			<VerInfo_Locale>1033</VerInfo_Locale>

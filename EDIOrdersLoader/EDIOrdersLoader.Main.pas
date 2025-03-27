@@ -151,6 +151,7 @@ type
     function fSale_SendEmail : Boolean;
   public
     { Public declarations }
+    procedure MyDelay_two(mySec:Integer);
     property IntervalVal: Integer read FIntervalVal;
     property Proccessing: Boolean read FProccessing write FProccessing;
     property ProccessingEmail: Boolean read FProccessingEmail write FProccessingEmail;
@@ -163,6 +164,28 @@ implementation
 
 {$R *.dfm}
 
+procedure TMainForm.MyDelay_two(mySec:Integer);
+var
+  Present: TDateTime;
+  Year, Month, Day, Hour, Min, Sec, MSec: Word;
+  calcSec,calcSec2:LongInt;
+begin
+     Present:=Now;
+     DecodeDate(Present, Year, Month, Day);
+     DecodeTime(Present, Hour, Min, Sec, MSec);
+     //calcSec:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+     //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+     calcSec:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     while abs(calcSec-calcSec2)<mySec do
+     begin
+          Present:=Now;
+          DecodeDate(Present, Year, Month, Day);
+          DecodeTime(Present, Hour, Min, Sec, MSec);
+          //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+          calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     end;
+end;
 
 procedure TMainForm.actAfterInvoiceExecute(Sender: TObject);
 begin
@@ -254,7 +277,7 @@ begin
   cbEmail.Checked:= TRUE; // ParamStr(3) = '';
 
   // При запуске считаем что пред день НЕ надо, т.е. он уже обработан
-  isPrevDay_begin:= True;
+  isPrevDay_begin:= false;
 
   if FindCmdLineSwitch('interval', IntervalStr) then
     FIntervalVal := StrToIntDef(IntervalStr, 1)
@@ -488,6 +511,7 @@ begin
                        then actUpdateEdiOrdsprTrue.Execute
                        else // Ошибку показать в логе
                             ;
+                       MyDelay_two(3000);
               end;
               // Vchasno-Desadv
               if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
@@ -498,6 +522,7 @@ begin
                        then actUpdateEdiDesadvTrue.Execute
                        else // Ошибку показать в логе
                             ;
+                       MyDelay_two(3000);
               end;
               // еще раз, но Vchasno-ComDoc
               if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
@@ -618,6 +643,8 @@ var Present: TDateTime;
     Hour, Min, Sec, MSec: Word;
     IntervalStr: string;
 begin
+if ParamStr(1) = '*' then exit;
+
   ActiveControl:= cbPrevDay;
 
   Present:=Now;
@@ -709,6 +736,8 @@ var Present: TDateTime;
     Hour, Min, Sec, MSec: Word;
     IntervalStr: string;
 begin
+if ParamStr(1) = '*' then exit;
+
   ActiveControl:= cbPrevDay;
 exit;
   Present:=Now;
