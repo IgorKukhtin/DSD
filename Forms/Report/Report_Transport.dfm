@@ -422,7 +422,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 71
+        Width = 78
       end
       object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
@@ -430,11 +430,12 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 78
       end
       object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083' ('#1040#1074#1090#1086')'
         DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 53
       end
@@ -451,14 +452,14 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 58
+        Width = 75
       end
       object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 75
       end
       object PositionLevelName: TcxGridDBColumn
         Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
@@ -467,13 +468,21 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object PersonalServiceListName_find: TcxGridDBColumn
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
+        DataBinding.FieldName = 'PersonalServiceListName_find'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object RouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 57
+        Width = 58
       end
       object RouteKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
@@ -481,7 +490,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 57
+        Width = 70
       end
       object RouteName_order: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1079#1072#1103#1074#1082#1072')'
@@ -821,7 +830,7 @@ object Report_TransportForm: TReport_TransportForm
         Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 55
       end
       object HoursMove: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' '#1076#1074#1080#1078#1077#1085#1080#1103
@@ -831,7 +840,7 @@ object Report_TransportForm: TReport_TransportForm
         Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 53
       end
       object HoursPartner_all: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' '#1074' '#1090#1086#1095#1082#1072#1093
@@ -840,7 +849,7 @@ object Report_TransportForm: TReport_TransportForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 55
       end
       object HoursPartner: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' (1 '#1058#1086#1095#1082#1072')'
@@ -849,7 +858,7 @@ object Report_TransportForm: TReport_TransportForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 55
       end
       object Speed: TcxGridDBColumn
         Caption = #1057#1082#1086#1088#1086#1089#1090#1100' '#1076#1074#1080#1078#1077#1085#1080#1103' '#1074' '#1087#1091#1090#1080
@@ -859,7 +868,7 @@ object Report_TransportForm: TReport_TransportForm
         Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 49
+        Width = 64
       end
       object CommentStop: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1087#1088#1080#1095#1080#1085#1072' '#1087#1088#1086#1089#1090#1086#1103')'
@@ -1079,6 +1088,7 @@ object Report_TransportForm: TReport_TransportForm
       Caption = #1087#1086' Me'#1089#1103#1094#1072#1084
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -1224,6 +1234,7 @@ object Report_TransportForm: TReport_TransportForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 304
     Top = 296

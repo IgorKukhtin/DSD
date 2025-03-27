@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox;
+  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox, dsdCommon;
 
 type
   TReport_TransportForm = class(TParentForm)
@@ -93,6 +93,7 @@ type
     TotalCountKg_Reestr_zp: TcxGridDBColumn;
     cbIsMonth: TcxCheckBox;
     actRefreshMonth: TdsdDataSetRefresh;
+    PersonalServiceListName_find: TcxGridDBColumn;
   private
   public
   end;
