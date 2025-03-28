@@ -142,7 +142,11 @@ BEGIN
                                                     -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
                                                     ORDER BY -- !!!ТОЛЬКО если уволен!!!
                                                              CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) <= vbEndDate THEN 0 ELSE 1 END
-                                                             -- если НЕ основное место работы
+
+                                                           -- если удален + НЕ УВОЛЕН, последним
+                                                           -- , CASE WHEN Object_Personal.isErased = TRUE AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN 1 ELSE 0 END
+
+                                                             -- сначала если НЕ основное место работы
                                                            , CASE WHEN COALESCE (ObjectBoolean_Main.ValueData, FALSE) = FALSE THEN 0 ELSE 1 END
                                                              -- с максимальной датой увольнения
                                                            , COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) DESC
@@ -175,12 +179,14 @@ BEGIN
                                                    AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
                                LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
-                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
-                                                       ON ObjectBoolean_Official.ObjectId = ObjectLink_Personal_Member.ObjectId
-                                                      AND ObjectBoolean_Official.DescId   = zc_ObjectBoolean_Member_Official()
+                               -- Для Сотрудника
                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
                                                        ON ObjectBoolean_Main.ObjectId = ObjectLink_Personal_Member.ObjectId
                                                       AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
+                               -- Для Физ Лица
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
+                                                       ON ObjectBoolean_Official.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                      AND ObjectBoolean_Official.DescId   = zc_ObjectBoolean_Member_Official()
 
                                LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                                                     ON ObjectLink_Personal_PersonalGroup.ObjectId = ObjectLink_Personal_Member.ObjectId
