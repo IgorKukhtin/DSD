@@ -127,6 +127,7 @@ BEGIN
            , Object_GoodsKind.Id                         AS GoodsKindId
            , Object_GoodsKind.ValueData                  AS GoodsKindName
            , Object_Measure.ValueData                    AS MeasureName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
              -- партия - дата
            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
              -- Ш/К - паспорт
@@ -298,6 +299,10 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight() 
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
                     
         ORDER BY MIDate_Insert.ValueData 
           ;
