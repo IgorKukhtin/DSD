@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_Position(TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Position(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Position (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Position (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Position(
+    IN inIsShowAll   Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
@@ -37,17 +39,20 @@ BEGIN
                                ON ObjectLink_Position_PositionProperty.ObjectId = Object_Position.Id
                               AND ObjectLink_Position_PositionProperty.DescId = zc_ObjectLink_Position_PositionProperty()
           LEFT JOIN Object AS Object_PositionProperty ON Object_PositionProperty.Id = ObjectLink_Position_PositionProperty.ChildObjectId
-     WHERE Object_Position.DescId = zc_Object_Position();
+     WHERE Object_Position.DescId = zc_Object_Position()
+       AND (Object_Position.isErased = inIsShowAll OR inIsShowAll = TRUE)
+     ;
   
 END;
 $BODY$
  
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Position(TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Position(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.03.25         *
  28.10.24         *
  16.11.16         * add SheetWorkTime
  01.07.13         *              

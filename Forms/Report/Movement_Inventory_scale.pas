@@ -63,6 +63,12 @@ type
     spSelectMIPrintPassport: TdsdStoredProc;
     actSelectMIPrintPassport: TdsdPrintAction;
     bbPrintPassport: TdxBarButton;
+    actPrintGroup: TdsdPrintAction;
+    actPrint_MovGroup: TdsdPrintAction;
+    bbsPrint: TdxBarSubItem;
+    dxBarSeparator1: TdxBarSeparator;
+    bbPrint_MovGroup: TdxBarButton;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

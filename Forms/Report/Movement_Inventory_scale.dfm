@@ -727,6 +727,63 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrint_MovGroup: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Mov
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Mov
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;InsertDate'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 45658d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 45658d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Inventory_Scale_group'
+      ReportNameParam.Value = 'PrintMovement_Inventory_Scale_group'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint_Mov: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -777,6 +834,59 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
         end>
       ReportName = 'PrintMovement_Inventory_Scale'
       ReportNameParam.Value = 'PrintMovement_Inventory_Scale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintGroup: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100'  '#1079#1072' '#1087#1077#1088#1080#1086#1076' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081
+      Hint = #1055#1077#1095#1072#1090#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081' '
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;InsertDate'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 45658d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 45658d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Inventory_Scale_group'
+      ReportNameParam.Value = 'PrintMovement_Inventory_Scale_group'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1002,23 +1112,11 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Mov'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintPassport'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -1055,6 +1153,51 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
     end
     object bbPrintPassport: TdxBarButton
       Action = actSelectMIPrintPassport
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Mov'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPassport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_MovGroup'
+        end>
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbPrint_MovGroup: TdxBarButton
+      Action = actPrint_MovGroup
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actPrintGroup
       Category = 0
     end
   end
