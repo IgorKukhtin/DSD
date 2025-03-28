@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , StatusCode_sale Integer, StatusName_sale TVarChar
              , MovementDescName TVarChar
              , Comment TVarChar
+             , isVchasno Boolean
               )
 AS
 $BODY$
@@ -51,22 +52,23 @@ BEGIN
                , Movement_Parent.InvNumber                      AS InvNumber_Parent
                , Movement_Parent.OperDate                       AS OperDate_Parent
                , MovementDate_OperDatePartner_Parent.ValueData  AS OperDatePartner_Parent
-               , Object_From.Id                    		AS FromId
-               , Object_From.ValueData             		AS FromName
-               , Object_To.Id                      		AS ToId
-               , Object_To.ValueData               		AS ToName
+               , Object_From.Id                         AS FromId
+               , Object_From.ValueData                  AS FromName
+               , Object_To.Id                           AS ToId
+               , Object_To.ValueData                    AS ToName
                , Object_Retail.Id                               AS RetailId
                , Object_Retail.ValueData                        AS RetailName
-               , Object_PaidKind.Id                		AS PaidKindId
-               , Object_PaidKind.ValueData         		AS PaidKindName
+               , Object_PaidKind.Id                     AS PaidKindId
+               , Object_PaidKind.ValueData              AS PaidKindName
                , Object_JuridicalTo.ValueData                   AS JuridicalName_To
 
-               , Object_Status.ObjectCode    		        AS StatusCode
-               , Object_Status.ValueData     		        AS StatusName
-               , Object_Status_sale.ObjectCode    		AS StatusCode_sale
-               , Object_Status_sale.ValueData     		AS StatusName_sale
-               , MovementDesc.ItemName     		        AS MovementDescName
-               , MovementString_Comment.ValueData               AS Comment
+               , Object_Status.ObjectCode               AS StatusCode
+               , Object_Status.ValueData                AS StatusName
+               , Object_Status_sale.ObjectCode          AS StatusCode_sale
+               , Object_Status_sale.ValueData           AS StatusName_sale
+               , MovementDesc.ItemName     	            AS MovementDescName
+               , MovementString_Comment.ValueData       AS Comment
+               , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '') <> '' THEN TRUE ELSE FALSE END ::Boolean AS isVchasno
 
            FROM (SELECT Movement.*
                  FROM tmpStatus
@@ -127,6 +129,20 @@ BEGIN
                                      ON ObjectLink_Juridical_Retail.ObjectId = Object_JuridicalTo.Id
                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
                 LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+                --получить zc_Movement_EDI через заказ покупателя 
+                --заявка покупателя
+                LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                               ON MovementLinkMovement_Order.MovementId = Movement_Parent.Id
+                                              AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                --EDI
+                LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_EDI
+                                               ON MovementLinkMovement_Order_EDI.MovementId = MovementLinkMovement_Order.MovementChildId     
+                                              AND MovementLinkMovement_Order_EDI.DescId = zc_MovementLinkMovement_Order()
+                                          
+                LEFT JOIN MovementString AS MovementString_DealId
+                                         ON MovementString_DealId.MovementId = MovementLinkMovement_Order_EDI.MovementChildId
+                                        AND MovementString_DealId.DescId     = zc_MovementString_DealId()
           ;
 
 END;
@@ -140,4 +156,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_EDI_Send (inStartDate:= '01.01.2018', inEndDate:= '01.02.2018', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_EDI_Send (inStartDate:= '28.03.2025', inEndDate:= '29.03.2025', inIsErased := FALSE, inSession:= '2')

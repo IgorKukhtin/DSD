@@ -230,6 +230,7 @@ type
     mactVchasnoEDISignDeclar: TMultiAction;
     actVchasnoEDISignDeclar: TdsdVchasnoEDIAction;
     dxBarButton4: TdxBarButton;
+    isVchasno: TcxGridDBColumn;
   private
     { Private declarations }
   public

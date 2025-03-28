@@ -4,7 +4,7 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
   ClientWidth = 941
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 957
-  ExplicitHeight = 466
+  ExplicitHeight = 470
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -209,6 +209,14 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 71
+          end
+          object isVchasno: TcxGridDBColumn
+            Caption = #1042#1095#1072#1089#1085#1086'-EDI ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isVchasno'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
