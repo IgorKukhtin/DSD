@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , SubjectDocId Integer, SubjectDocName TVarChar
              , isAuto Boolean, InsertDate TDateTime
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
+             , MovementId_Peresort Integer, InvNumber_PeresortFull TVarChar
              , MovementId_Order Integer, InvNumber_Order_Full TVarChar
              , isPeresort Boolean
              , isClosed Boolean
@@ -86,6 +87,16 @@ BEGIN
               END
            || zfCalc_PartionMovementName (Movement_Sale.DescId, MovementDesc_Sale.ItemName, Movement_Sale.InvNumber, Movement_Sale.OperDate) || COALESCE (' - ' || Object_From_Sale.ValueData, '')
              ) :: TVarChar AS InvNumber_ProductionFull
+
+         , COALESCE(Movement_Peresort.Id, -1)                         AS MovementId_Peresort
+         , COALESCE(CASE WHEN Movement_Peresort.StatusId = zc_Enum_Status_Erased()
+                     THEN '***'
+                 WHEN Movement_Peresort.StatusId = zc_Enum_Status_UnComplete()
+                     THEN '*'
+                 ELSE ''
+            END
+         || zfCalc_PartionMovementName (Movement_Peresort.DescId, MovementDesc_Peresort.ItemName, Movement_Peresort.InvNumber, Movement_Peresort.OperDate)
+           , ' ')                     :: TVarChar      AS InvNumber_PeresortFull
 
            , Movement_Order.Id                      AS MovementId_Order
            , ('№ ' || Movement_Order.InvNumber || ' от ' || Movement_Order.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Order_Full
@@ -186,6 +197,12 @@ BEGIN
                                          ON MovementLinkMovement_Order.MovementId = Movement.Id
                                         AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
           LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+          --пересортица
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Peresort
+                                         ON MovementLinkMovement_Peresort.MovementChildId = Movement.Id
+                                        AND MovementLinkMovement_Peresort.DescId          = zc_MovementLinkMovement_Production()
+          LEFT JOIN Movement AS Movement_Peresort ON Movement_Peresort.Id = MovementLinkMovement_Peresort.MovementId
+          LEFT JOIN MovementDesc AS MovementDesc_Peresort ON MovementDesc_Peresort.Id = Movement_Peresort.DescId
     ;
 
 END;

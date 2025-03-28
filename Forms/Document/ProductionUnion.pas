@@ -138,6 +138,11 @@ type
     spUpdate_AmountForm_two: TdsdStoredProc;
     mactUpdate_AmountForm_two: TMultiAction;
     bbUpdate_AmountForm_two: TdxBarButton;
+    cxLabel27: TcxLabel;
+    edInvNumberPeresort: TcxButtonEdit;
+    GuidesProductionPeresort: TdsdGuides;
+    actOpenProductionPeresortForm: TdsdOpenForm;
+    bbOpenProductionPeresortForm: TdxBarButton;
   private
     { Private declarations }
   public
