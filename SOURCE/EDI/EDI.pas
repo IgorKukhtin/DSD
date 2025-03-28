@@ -2716,7 +2716,8 @@ var
   VATPercent_fozz: Integer;
 begin
   if (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
-     and (1=0)
+   and (HeaderDataSet.FieldByName('isSchema_fozz_desadv').asBoolean = TRUE)
+     and (1=1)
   then begin
             // Создать XML
             DESADV_fozz := DesadvFozzXML.NewDESADV;
@@ -2797,6 +2798,14 @@ begin
                     StringReplace(FormatFloat('0.00##',
                     ItemsDataSet.FieldByName('AmountOrder').AsFloat),
                     FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+                  // Кількість ящиків
+                  if ItemsDataSet.FieldByName('Count_Box_fozz').AsFloat > 0
+                  then
+                      BOXESQUANTITY :=
+                        StringReplace(FormatFloat('0.##',
+                        ItemsDataSet.FieldByName('Count_Box_fozz').AsFloat),
+                        FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
                   // Сума товару без ПДВ
                   AMOUNT :=
@@ -2900,6 +2909,7 @@ begin
                   LineItem.InvoiceQuantity := ItemsDataSet.FieldByName('AmountPartner').AsFloat;
                   // BuyerUnitOfMeasure
                   LineItem.BuyerUnitOfMeasure := ItemsDataSet.FieldByName('MeasureName').asString;
+
 
                   // Ставка податку (ПДВ,%):
                   LineItem.TaxRate := ItemsDataSet.FieldByName('VATPercent').AsInteger;
@@ -5063,10 +5073,20 @@ begin
           ItemsDataSet.FieldByName('AmountPartner').AsFloat),
           FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
         DELIVEREDUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
+
+        // Замовлена кількість
         ORDEREDQUANTITY :=
           StringReplace(FormatFloat('0.000',
           ItemsDataSet.FieldByName('AmountOrder').AsFloat),
           FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+        // Кількість ящиків
+        if ItemsDataSet.FieldByName('Count_Box_fozz').AsFloat > 0
+        then
+            BOXESQUANTITY :=
+              StringReplace(FormatFloat('0.##',
+              ItemsDataSet.FieldByName('Count_Box_fozz').AsFloat),
+              FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
         COUNTRYORIGIN := 'UA';
         PRICE := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('Price').AsFloat),
@@ -5128,6 +5148,7 @@ begin
         PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
         PRODUCTIDBUYER := ItemsDataSet.FieldByName
           ('ArticleGLN_Juridical').asString;
+        DESCRIPTION := ItemsDataSet.FieldByName('GoodsName').asString;
         ORDRSPUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
         if ItemsDataSet.FieldByName('AmountOrder')
           .AsFloat = ItemsDataSet.FieldByName('AmountPartner').AsFloat then

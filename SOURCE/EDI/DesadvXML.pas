@@ -99,6 +99,7 @@ type
     function Get_DELIVEREDQUANTITY: UnicodeString;
     function Get_DELIVEREDUNIT: UnicodeString;
     function Get_ORDEREDQUANTITY: UnicodeString;
+    function Get_BOXESQUANTITY: UnicodeString;
     function Get_COUNTRYORIGIN: UnicodeString;
     function Get_PRICE: UnicodeString;
     function Get_PRICEWITHVAT: UnicodeString;
@@ -112,6 +113,7 @@ type
     procedure Set_DELIVEREDQUANTITY(Value: UnicodeString);
     procedure Set_DELIVEREDUNIT(Value: UnicodeString);
     procedure Set_ORDEREDQUANTITY(Value: UnicodeString);
+    procedure Set_BOXESQUANTITY(Value: UnicodeString);
     procedure Set_COUNTRYORIGIN(Value: UnicodeString);
     procedure Set_PRICE(Value: UnicodeString);
     procedure Set_PRICEWITHVAT(Value: UnicodeString);
@@ -126,6 +128,7 @@ type
     property DELIVEREDQUANTITY: UnicodeString read Get_DELIVEREDQUANTITY write Set_DELIVEREDQUANTITY;
     property DELIVEREDUNIT: UnicodeString read Get_DELIVEREDUNIT write Set_DELIVEREDUNIT;
     property ORDEREDQUANTITY: UnicodeString read Get_ORDEREDQUANTITY write Set_ORDEREDQUANTITY;
+    property BOXESQUANTITY: UnicodeString read Get_BOXESQUANTITY write Set_BOXESQUANTITY;
     property COUNTRYORIGIN: UnicodeString read Get_COUNTRYORIGIN write Set_COUNTRYORIGIN;
     property PRICE: UnicodeString read Get_PRICE write Set_PRICE;
     property PRICEWITHVAT: UnicodeString read Get_PRICEWITHVAT write Set_PRICEWITHVAT;
@@ -225,6 +228,7 @@ type
     function Get_DELIVEREDQUANTITY: UnicodeString;
     function Get_DELIVEREDUNIT: UnicodeString;
     function Get_ORDEREDQUANTITY: UnicodeString;
+    function Get_BOXESQUANTITY: UnicodeString;
     function Get_COUNTRYORIGIN: UnicodeString;
     function Get_PRICE: UnicodeString;
     function Get_PRICEWITHVAT: UnicodeString;
@@ -237,6 +241,7 @@ type
     procedure Set_DELIVEREDQUANTITY(Value: UnicodeString);
     procedure Set_DELIVEREDUNIT(Value: UnicodeString);
     procedure Set_ORDEREDQUANTITY(Value: UnicodeString);
+    procedure Set_BOXESQUANTITY(Value: UnicodeString);
     procedure Set_COUNTRYORIGIN(Value: UnicodeString);
     procedure Set_PRICE(Value: UnicodeString);
     procedure Set_PRICEWITHVAT(Value: UnicodeString);
@@ -547,6 +552,17 @@ procedure TXMLPOSITIONType.Set_ORDEREDQUANTITY(Value: UnicodeString);
 begin
   ChildNodes['ORDEREDQUANTITY'].NodeValue := Value;
 end;
+
+function TXMLPOSITIONType.Get_BOXESQUANTITY: UnicodeString;
+begin
+  Result := ChildNodes['BOXESQUANTITY'].Text;
+end;
+
+procedure TXMLPOSITIONType.Set_BOXESQUANTITY(Value: UnicodeString);
+begin
+  ChildNodes['BOXESQUANTITY'].NodeValue := Value;
+end;
+
 
 function TXMLPOSITIONType.Get_COUNTRYORIGIN: UnicodeString;
 begin
