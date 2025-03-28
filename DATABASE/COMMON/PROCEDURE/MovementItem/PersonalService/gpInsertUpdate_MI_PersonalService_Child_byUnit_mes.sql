@@ -240,7 +240,7 @@ BEGIN
      -- 3 соответствие должности в табеле и в "Справочнике Штатное расписание (данные)
      -- получаем данные из спр. Штатное расписание по должностям, и проверяем все ли соотв. полученнім при формировнии отчета
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
-     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Должность ('||Object_Position.ObjectCode :: TVarChar||')'|| Object_Position.ValueData|| '  Тип суммы' ||tmp.ServiceModelName ||' не соответствует штатному расписанию' ::TVarChar, 'проверка 3' ::TVarChar
+     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Должность ('||Object_Position.ObjectCode :: TVarChar||')'|| Object_Position.ValueData|| '  для Тип суммы ' ||tmp.ServiceModelName ||' не соответствует штатному расписанию' ::TVarChar, 'проверка 3' ::TVarChar
      FROM
           (WITH
            tmpStaffList AS (SELECT
