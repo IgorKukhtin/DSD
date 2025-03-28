@@ -1,24 +1,24 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
-  ClientWidth = 1128
-  ExplicitWidth = 1144
+  ClientWidth = 1181
+  ExplicitWidth = 1197
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 122
-    Width = 1128
+    Width = 1181
     Height = 552
     TabOrder = 2
     ExplicitTop = 122
     ExplicitWidth = 1128
     ExplicitHeight = 552
     ClientRectBottom = 552
-    ClientRectRight = 1128
+    ClientRectRight = 1181
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1128
       ExplicitHeight = 528
       inherited cxGrid: TcxGrid
-        Width = 1128
+        Width = 1181
         Height = 220
         ExplicitWidth = 1128
         ExplicitHeight = 220
@@ -563,7 +563,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       inherited cxGridChild: TcxGrid
         Top = 225
-        Width = 1128
+        Width = 1181
         ExplicitTop = 225
         ExplicitWidth = 1128
         inherited cxGridDBTableViewChild: TcxGridDBTableView
@@ -771,21 +771,23 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       inherited cxBottomSplitter: TcxSplitter
         Top = 220
-        Width = 1128
+        Width = 1181
         ExplicitTop = 220
         ExplicitWidth = 1128
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1128
+    Width = 1181
     Height = 96
     ExplicitWidth = 1128
     ExplicitHeight = 96
     inherited cxLabel15: TcxLabel
       Left = 10
+      Top = 44
       Caption = '*'#1057#1090#1072#1090#1091#1089
       ExplicitLeft = 10
+      ExplicitTop = 44
       ExplicitWidth = 46
     end
     inherited ceStatus: TcxButtonEdit
@@ -822,7 +824,7 @@ inherited ProductionUnionForm: TProductionUnionForm
     end
     object cxLabel6: TcxLabel
       Left = 618
-      Top = 43
+      Top = 44
       Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edDocumentKind: TcxButtonEdit
@@ -839,7 +841,7 @@ inherited ProductionUnionForm: TProductionUnionForm
     end
     object cxLabel17: TcxLabel
       Left = 414
-      Top = 43
+      Top = 44
       Caption = #1047#1072#1103#1074#1082#1072
     end
     object edInvNumberOrder: TcxButtonEdit
@@ -869,7 +871,7 @@ inherited ProductionUnionForm: TProductionUnionForm
     end
     object cbClosed: TcxCheckBox
       Left = 1039
-      Top = 61
+      Top = 25
       Hint = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
       Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072
       Properties.ReadOnly = True
@@ -894,11 +896,29 @@ inherited ProductionUnionForm: TProductionUnionForm
     end
     object cbisEtiketka: TcxCheckBox
       Left = 1039
-      Top = 23
+      Top = 4
       Caption = #1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 19
       Width = 148
+    end
+    object cxLabel27: TcxLabel
+      Left = 1044
+      Top = 44
+      Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
+    end
+    object edInvNumberPeresort: TcxButtonEdit
+      Left = 1044
+      Top = 61
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 21
+      Width = 133
     end
   end
   object edIsAuto: TcxCheckBox [2]
@@ -924,7 +944,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   end
   object cbisPeresort: TcxCheckBox [4]
     Left = 216
-    Top = 38
+    Top = 43
     Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 8
@@ -932,7 +952,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   end
   object cxLabel7: TcxLabel [5]
     Left = 858
-    Top = 43
+    Top = 44
     Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
   end
   object edProductionMov: TcxButtonEdit [6]
@@ -948,8 +968,8 @@ inherited ProductionUnionForm: TProductionUnionForm
     Width = 175
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 787
-    Top = 24
+    Left = 555
+    Top = 0
   end
   inherited ActionList: TActionList
     object actUpdate_AmountNext_out: TdsdUpdateDataSet [0]
@@ -1306,6 +1326,41 @@ inherited ProductionUnionForm: TProductionUnionForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actOpenProductionPeresortForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
+      ImageIndex = 26
+      FormName = 'TProductionPeresortForm'
+      FormNameParam.Value = 'TProductionPeresortForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = GuidesProductionPeresort
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42086d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actPrintCeh: TdsdPrintAction
       Category = 'DSDLib'
@@ -1826,6 +1881,14 @@ inherited ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenProductionPeresortForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -1970,6 +2033,10 @@ inherited ProductionUnionForm: TProductionUnionForm
     end
     object bbUpdate_AmountForm_two: TdxBarButton
       Action = mactUpdate_AmountForm_two
+      Category = 0
+    end
+    object bbOpenProductionPeresortForm: TdxBarButton
+      Action = actOpenProductionPeresortForm
       Category = 0
     end
   end
@@ -2175,6 +2242,21 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = cbisEtiketka
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Peresort'
+        Value = Null
+        Component = GuidesProductionPeresort
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_PeresortFull'
+        Value = Null
+        Component = GuidesProductionPeresort
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 328
@@ -2772,8 +2854,8 @@ inherited ProductionUnionForm: TProductionUnionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 792
-    Top = 48
+    Left = 640
+    Top = 56
   end
   object spSelectPrintCeh: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnion_Ceh_Print'
@@ -3049,7 +3131,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 964
+    Left = 908
     Top = 56
   end
   object getMovementForm: TdsdStoredProc
@@ -3143,8 +3225,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 904
-    Top = 8
+    Left = 944
   end
   object spUpdate_AmountForm: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_ProductionUnion_AmountForm'
@@ -3214,5 +3295,33 @@ inherited ProductionUnionForm: TProductionUnionForm
     PackSize = 1
     Left = 1000
     Top = 507
+  end
+  object GuidesProductionPeresort: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberPeresort
+    Key = '0'
+    FormNameParam.Value = 'TProductionPeresortJournalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProductionPeresortJournalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesProductionPeresort
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesProductionPeresort
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 1084
+    Top = 64
   end
 end

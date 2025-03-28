@@ -77,6 +77,7 @@ BEGIN
                                  , PositionLevelId Integer
                                  , StaffListId Integer
                                  , ModelServiceId Integer
+                                 , ServiceModelName TVarChar
                                  , StaffListSummKindId Integer
                                  , AmountOnOneMember TFloat
                                  , Count_Member TFloat
@@ -92,6 +93,7 @@ BEGIN
                            , PositionLevelId
                            , StaffListId
                            , ModelServiceId
+                           , ServiceModelName
                            , StaffListSummKindId
                            , AmountOnOneMember
                            , Count_Member
@@ -107,6 +109,7 @@ BEGIN
           , tmp.PositionLevelId
           , tmp.StaffListId
           , tmp.ModelServiceId
+          , tmp.ServiceModelName
           , tmp.StaffListSummKindId
           , tmp.AmountOnOneMember
           , tmp.Count_Member
@@ -237,7 +240,7 @@ BEGIN
      -- 3 соответствие должности в табеле и в "Справочнике Штатное расписание (данные)
      -- получаем данные из спр. Штатное расписание по должностям, и проверяем все ли соотв. полученнім при формировнии отчета
      INSERT INTO _tmpMessagePersonalService (MemberId, PersonalServiceListId, Name, Comment)
-     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Должность ('||Object_Position.ObjectCode :: TVarChar||')'|| Object_Position.ValueData ||' не соответствует штатному расписанию' ::TVarChar, 'проверка 3' ::TVarChar
+     SELECT tmp.MemberId, tmp.PersonalServiceListId, 'Должность ('||Object_Position.ObjectCode :: TVarChar||')'|| Object_Position.ValueData|| '  для Тип суммы ' ||tmp.ServiceModelName ||' не соответствует штатному расписанию' ::TVarChar, 'проверка 3' ::TVarChar
      FROM
           (WITH
            tmpStaffList AS (SELECT
@@ -265,6 +268,7 @@ BEGIN
                   spReport.MemberId
                 , spReport.PersonalServiceListId
                 , spReport.PositionId
+                , spReport.ServiceModelName
            FROM _tmpReport AS spReport
                 LEFT JOIN tmpStaffList ON tmpStaffList.StaffListId = spReport.StaffListId
                                       AND tmpStaffList.PositionId = spReport.PositionId

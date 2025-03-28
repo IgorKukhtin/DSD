@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , SubjectDocId Integer, SubjectDocName TVarChar
              , isAuto Boolean, InsertDate TDateTime
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
+             , MovementId_Peresort Integer, InvNumber_PeresortFull TVarChar
              , MovementId_Order Integer, InvNumber_Order TVarChar
              , isPeresort Boolean
              , isClosed Boolean
@@ -62,7 +63,8 @@ BEGIN
 
              , 0                                              AS MovementId_Production
              , CAST ('' AS TVarChar)                          AS InvNumber_ProductionFull
-
+             , 0                                              AS MovementId_Peresort
+             , CAST ('' AS TVarChar)                          AS InvNumber_PeresortFull
              , 0                                              AS MovementId_Order
              , '' :: TVarChar                                 AS InvNumber_Order
              , FALSE  :: Boolean                              AS isPeresort
@@ -93,6 +95,16 @@ BEGIN
 
          , Movement_DocumentProduction.Id           AS MovementId_Production
          , zfCalc_PartionMovementName (Movement_DocumentProduction.DescId, MovementDesc_Production.ItemName, Movement_DocumentProduction.InvNumber, Movement_DocumentProduction.OperDate) AS InvNumber_ProductionFull
+
+         , COALESCE(Movement_Peresort.Id, -1)                         AS MovementId_Peresort
+         , COALESCE(CASE WHEN Movement_Peresort.StatusId = zc_Enum_Status_Erased()
+                     THEN '***'
+                 WHEN Movement_Peresort.StatusId = zc_Enum_Status_UnComplete()
+                     THEN '*'
+                 ELSE ''
+            END
+         || zfCalc_PartionMovementName (Movement_Peresort.DescId, MovementDesc_Peresort.ItemName, Movement_Peresort.InvNumber, Movement_Peresort.OperDate)
+           , ' ')                     :: TVarChar      AS InvNumber_PeresortFull
 
 
          , Movement_Order.Id                        AS MovementId_Order
@@ -149,6 +161,12 @@ BEGIN
                                         AND MovementLinkMovement_Production.DescId = zc_MovementLinkMovement_Production()
           LEFT JOIN Movement AS Movement_DocumentProduction ON Movement_DocumentProduction.Id = MovementLinkMovement_Production.MovementChildId
           LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_DocumentProduction.DescId
+          --пересортица
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Peresort
+                                         ON MovementLinkMovement_Peresort.MovementChildId = Movement.Id
+                                        AND MovementLinkMovement_Peresort.DescId          = zc_MovementLinkMovement_Production()
+          LEFT JOIN Movement AS Movement_Peresort ON Movement_Peresort.Id = MovementLinkMovement_Peresort.MovementId
+          LEFT JOIN MovementDesc AS MovementDesc_Peresort ON MovementDesc_Peresort.Id = Movement_Peresort.DescId
 
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                          ON MovementLinkMovement_Order.MovementId = Movement.Id
@@ -175,6 +193,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.03.25         *
  21.08.23         * 
  30.10.23         *
  29.03.22         * isClosed

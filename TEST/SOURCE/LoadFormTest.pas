@@ -2004,16 +2004,16 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountFormDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAmountFormDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountForm_twoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAmountForm_twoDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
   //exit;
@@ -2021,7 +2021,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
   exit;
@@ -2029,11 +2029,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortForm');
   //
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechReceiptJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechReceiptJournalForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadTransportFormTest;

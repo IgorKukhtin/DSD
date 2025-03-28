@@ -233,7 +233,15 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             DataBinding.FieldName = 'InvNumber_ProductionFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 150
+            Width = 135
+          end
+          object InvNumber_PeresortFull: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090
+            DataBinding.FieldName = 'InvNumber_PeresortFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
           end
           object InvNumber_Order_Full: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
