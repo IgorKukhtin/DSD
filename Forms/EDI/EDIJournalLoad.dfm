@@ -845,7 +845,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
-      EditValue = 43313d
+      EditValue = 45658d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -854,7 +854,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 43313d
+      EditValue = 45658d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1

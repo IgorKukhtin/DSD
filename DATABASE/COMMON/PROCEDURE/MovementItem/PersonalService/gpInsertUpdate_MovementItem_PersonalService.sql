@@ -241,9 +241,16 @@ BEGIN
      END IF;
 
 
-     -- сохранили свойство строки <создан автоматически>
      outisAuto := FALSE;
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), ioId, FALSE);
+
+     -- сохранили свойство строки <создан автоматически>
+     IF NOT EXISTS (SELECT 1 FROM MovementItemBoolean WHERE MovementItemBoolean.DescId = zc_MIBoolean_isAuto() AND MovementItemBoolean.MovementItemId = ioId AND MovementItemBoolean.ValueData = FALSE)
+     THEN
+         -- Сохранили
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), ioId, FALSE);
+         -- Протокол
+         PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, FALSE);
+     END IF;
 
 
 END;
