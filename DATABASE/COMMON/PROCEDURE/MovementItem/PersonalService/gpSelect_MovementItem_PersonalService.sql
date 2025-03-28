@@ -966,7 +966,7 @@ BEGIN
             , MIString_Number.ValueData   ::TVarChar AS Number
             , MIString_Comment.ValueData             AS Comment
             , tmpAll.isErased
-            , COALESCE (MIBoolean_isAuto.ValueData, FALSE)      :: Boolean   AS isAuto
+            , COALESCE (MIBoolean_isAuto.ValueData, TRUE)       :: Boolean   AS isAuto
             , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE) :: Boolean   AS isBankOut
             , MIDate_BankOut.ValueData                          :: TDateTime AS BankOutDate
             , COALESCE (MIDate_BankOut.ValueData, vbOperDate)   :: TDateTime AS BankOutDate_export
