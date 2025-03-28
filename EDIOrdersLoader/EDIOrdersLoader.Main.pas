@@ -643,7 +643,7 @@ var Present: TDateTime;
     Hour, Min, Sec, MSec: Word;
     IntervalStr: string;
 begin
-if ParamStr(1) = '*' then exit;
+if ParamStr(1) <> 'alan_dp_ua' then exit;
 
   ActiveControl:= cbPrevDay;
 
@@ -736,7 +736,7 @@ var Present: TDateTime;
     Hour, Min, Sec, MSec: Word;
     IntervalStr: string;
 begin
-if ParamStr(1) = '*' then exit;
+if ParamStr(1) <> 'alan_dp_ua' then exit;
 
   ActiveControl:= cbPrevDay;
 exit;

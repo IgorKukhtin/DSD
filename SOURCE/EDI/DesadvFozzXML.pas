@@ -134,6 +134,7 @@ type
     function Get_PRODUCTIDBUYER: UnicodeString;
     function Get_DELIVEREDQUANTITY: UnicodeString;
     function Get_ORDEREDQUANTITY: UnicodeString;
+    function Get_BOXESQUANTITY: UnicodeString;
     function Get_AMOUNT: UnicodeString;
     function Get_PRICE: UnicodeString;
     function Get_TAXRATE: UnicodeString;
@@ -142,6 +143,7 @@ type
     procedure Set_PRODUCTIDBUYER(Value: UnicodeString);
     procedure Set_DELIVEREDQUANTITY(Value: UnicodeString);
     procedure Set_ORDEREDQUANTITY(Value: UnicodeString);
+    procedure Set_BOXESQUANTITY(Value: UnicodeString);
     procedure Set_AMOUNT(Value: UnicodeString);
     procedure Set_PRICE(Value: UnicodeString);
     procedure Set_TAXRATE(Value: UnicodeString);
@@ -151,6 +153,7 @@ type
     property PRODUCTIDBUYER: UnicodeString read Get_PRODUCTIDBUYER write Set_PRODUCTIDBUYER;
     property DELIVEREDQUANTITY: UnicodeString read Get_DELIVEREDQUANTITY write Set_DELIVEREDQUANTITY;
     property ORDEREDQUANTITY: UnicodeString read Get_ORDEREDQUANTITY write Set_ORDEREDQUANTITY;
+    property BOXESQUANTITY: UnicodeString read Get_BOXESQUANTITY write Set_BOXESQUANTITY;
     property AMOUNT: UnicodeString read Get_AMOUNT write Set_AMOUNT;
     property PRICE: UnicodeString read Get_PRICE write Set_PRICE;
     property TAXRATE: UnicodeString read Get_TAXRATE write Set_TAXRATE;
@@ -264,6 +267,7 @@ type
     function Get_PRODUCTIDBUYER: UnicodeString;
     function Get_DELIVEREDQUANTITY: UnicodeString;
     function Get_ORDEREDQUANTITY: UnicodeString;
+    function Get_BOXESQUANTITY: UnicodeString;
     function Get_AMOUNT: UnicodeString;
     function Get_PRICE: UnicodeString;
     function Get_TAXRATE: UnicodeString;
@@ -272,6 +276,7 @@ type
     procedure Set_PRODUCTIDBUYER(Value: UnicodeString);
     procedure Set_DELIVEREDQUANTITY(Value: UnicodeString);
     procedure Set_ORDEREDQUANTITY(Value: UnicodeString);
+    procedure Set_BOXESQUANTITY(Value: UnicodeString);
     procedure Set_AMOUNT(Value: UnicodeString);
     procedure Set_PRICE(Value: UnicodeString);
     procedure Set_TAXRATE(Value: UnicodeString);
@@ -637,6 +642,17 @@ procedure TXMLPOSITIONType.Set_ORDEREDQUANTITY(Value: UnicodeString);
 begin
   ChildNodes['ORDEREDQUANTITY'].NodeValue := Value;
 end;
+
+function TXMLPOSITIONType.Get_BOXESQUANTITY: UnicodeString;
+begin
+  Result := ChildNodes['BOXESQUANTITY'].Text;
+end;
+
+procedure TXMLPOSITIONType.Set_BOXESQUANTITY(Value: UnicodeString);
+begin
+  ChildNodes['BOXESQUANTITY'].NodeValue := Value;
+end;
+
 
 function TXMLPOSITIONType.Get_AMOUNT: UnicodeString;
 begin
