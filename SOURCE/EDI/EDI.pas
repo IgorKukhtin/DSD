@@ -2716,8 +2716,7 @@ var
   VATPercent_fozz: Integer;
 begin
   if (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
-   and (HeaderDataSet.FieldByName('isSchema_fozz_desadv').asBoolean = TRUE)
-     and (1=1)
+     and (1=0)
   then begin
             // Создать XML
             DESADV_fozz := DesadvFozzXML.NewDESADV;
@@ -2831,6 +2830,7 @@ begin
   end
   else
   if (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
+ and (HeaderDataSet.FieldByName('isSchema_fozz_desadv').asBoolean = FALSE)
      and (1=1)
   then begin
             // 1.1. Создать XML - fozzy - Amount
@@ -3058,9 +3058,10 @@ begin
 
 
   end;
+
   //else
       begin
-            // Создать XML
+            // Создать XML - Desadv - ВСЕГДА
             DESADV := DesadvXML.NewDESADV;
             //
             DESADV.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
@@ -3110,10 +3111,18 @@ begin
                     ItemsDataSet.FieldByName('AmountPartner').AsFloat),
                     FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
                   DELIVEREDUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
+                  // Замовлена кількість
                   ORDEREDQUANTITY :=
                     StringReplace(FormatFloat('0.000',
                     ItemsDataSet.FieldByName('AmountOrder').AsFloat),
                     FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                  // Кількість ящиків
+                  if ItemsDataSet.FieldByName('Count_Box_fozz').AsFloat > 0
+                  then
+                      BOXESQUANTITY :=
+                        StringReplace(FormatFloat('0.##',
+                        ItemsDataSet.FieldByName('Count_Box_fozz').AsFloat),
+                        FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
                   COUNTRYORIGIN := 'UA';
                   PRICE := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('Price').AsFloat),
@@ -3137,6 +3146,8 @@ begin
   // 1. Send
   Stream := TMemoryStream.Create;
   try
+   if (HeaderDataSet.FieldByName('isSchema_fozz_desadv').asBoolean = FALSE) then
+   begin
     if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
     then begin
               DESADV_fozz_Amount.OwnerDocument.SaveToStream(Stream);
@@ -3170,9 +3181,8 @@ begin
       FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
       FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
       FUpdateEDIErrorState.Execute;
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=HeaderDataSet.FieldByName('EDIId').asInteger;
 
-      FInsertEDIEvents.ParamByName('inMovementId').Value :=
-        HeaderDataSet.FieldByName('EDIId').asInteger;
       if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
       then
         FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
@@ -3182,6 +3192,7 @@ begin
           'Документ DESADV отправлен на FTP';
       FInsertEDIEvents.Execute;
     end;
+   end;
   finally
     Stream.Free;
     //
@@ -3190,7 +3201,7 @@ begin
   end;
   //
   //
-  // 2.Send XML - fozzy - DESADV
+  // 2.Send XML - only fozzy - DESADV
   if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
   then
   try
@@ -3229,7 +3240,8 @@ begin
   end;
 
   // 3.Send XML - fozzy - Price
-  if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+  if (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
+ and (HeaderDataSet.FieldByName('isSchema_fozz_desadv').asBoolean = FALSE)
   then
   try
     Stream := TMemoryStream.Create;
@@ -3759,7 +3771,7 @@ var
   lNumber: string;
 begin
   //
-  if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = FALSE
+  if  (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = FALSE)
   then exit;
   //
             // Создать XML
