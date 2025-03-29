@@ -65,6 +65,7 @@ type
     // VchasnoEDI
     procedure InsertUpdateOrderVchasnoEDI(ORDER: OrderXML.IXMLORDERType;
       spHeader, spList: TdsdStoredProc; lFileName, ADealId : String);
+    procedure UpdateOrderErrorVchasnoEDI(AEDIId: Integer; Error : String);
     procedure UpdateOrderDESADVSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
     procedure UpdateOrderORDERSPSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
     procedure UpdateOrderDELNOTSaveVchasnoEDI(AEDIId: Integer; DocumentId, VchasnoId: String; isError : Boolean);
@@ -168,6 +169,7 @@ type
     FDateToParam: TdsdParam;
     FDefaultFilePathParam: TdsdParam;
     FDefaultFileNameParam: TdsdParam;
+    FShowErrorMessagesParam: TdsdParam;
 
     FResultParam: TdsdParam;
     FFileNameParam: TdsdParam;
@@ -198,6 +200,7 @@ type
     function ComDocSave : Boolean;
     function DoSignComDoc: Boolean;
     function DoSendSignComDoc: Boolean;
+    procedure ShowMessages(AMessage: String);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -224,6 +227,7 @@ type
 
     property KeyFileName: TdsdParam read FKeyFileNameParam write FKeyFileNameParam;
     property KeyUserName: TdsdParam read FKeyUserNameParam write FKeyUserNameParam;
+    property ShowErrorMessages: TdsdParam read FShowErrorMessagesParam write FShowErrorMessagesParam;
 //    property Result: TdsdParam read FResultParam write FResultParam;
 //    property FileName: TdsdParam read FFileNameParam write FFileNameParam;
     // Содержимое массива Json для формирования DataSet
@@ -4937,6 +4941,20 @@ begin
     FUpdateEDIVchasnoEDI.Execute;
 end;
 
+procedure TEDI.UpdateOrderErrorVchasnoEDI(AEDIId: Integer; Error : String);
+begin
+  if AEDIId <> 0 then
+  begin
+    FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
+    FUpdateEDIErrorState.ParamByName('inIsError').Value := True;
+    FUpdateEDIErrorState.Execute;
+
+    FInsertEDIEvents.ParamByName('inMovementId').Value := AEDIId;
+    FInsertEDIEvents.ParamByName('inEDIEvent').Value := Error;
+    FInsertEDIEvents.Execute;
+  end;
+end;
+
 procedure TEDI.UpdateOrderDESADVSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
 begin
   if AEDIId <> 0 then
@@ -5506,11 +5524,16 @@ begin
   FKeyUserNameParam.DataType := ftString;
   FKeyUserNameParam.Value := '';
 
+  FShowErrorMessagesParam := TdsdParam.Create(nil);
+  FShowErrorMessagesParam.DataType := ftBoolean;
+  FShowErrorMessagesParam.Value := True;
+
   FEDIDocType:= ediOrder;
 end;
 
 destructor TdsdVchasnoEDIAction.Destroy;
 begin
+  FreeAndNil(FShowErrorMessagesParam);
   FreeAndNil(FKeyUserNameParam);
   FreeAndNil(FKeyFileNameParam);
   FreeAndNil(FDefaultFilePathParam);
@@ -5555,7 +5578,7 @@ begin
   if (FTokenParam.Value = '') or
      (FHostParam.Value = '') then
   begin
-    ShowMessage('Не заполнены Host или Токен.');
+    ShowMessages('Не заполнены Host или Токен.');
     Exit;
   end;
 
@@ -5563,13 +5586,13 @@ begin
   begin
     if not Assigned(ADataSet) then
     begin
-      ShowMessage('Не указан DataSet.');
+      ShowMessages('Не указан DataSet.');
       Exit;
     end;
 
     if FPairParams.Count = 0 then
     begin
-      ShowMessage('Не определены данные в PairParams для формирования DataSet.');
+      ShowMessages('Не определены данные в PairParams для формирования DataSet.');
       Exit;
     end;
   end;
@@ -5616,7 +5639,7 @@ begin
     try
       try
         IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
-      except on E:EIdHTTPProtocolException  do ShowMessage(e.ErrorMessage);
+      except on E:EIdHTTPProtocolException  do ShowMessages(e.ErrorMessage);
       end;
 
       if IdHTTP.ResponseCode = 200 then
@@ -5776,7 +5799,7 @@ begin
   if (FTokenParam.Value = '') or
      (FHostParam.Value = '') then
   begin
-    ShowMessage('Не заполнены Host или Токен.');
+    ShowMessages('Не заполнены Host или Токен.');
     Exit;
   end;
 
@@ -5808,7 +5831,7 @@ begin
     try
       S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
     except on E:EIdHTTPProtocolException  do
-                ShowMessage(e.ErrorMessage);
+                ShowMessages(e.ErrorMessage);
     end;
 
     if IdHTTP.ResponseCode in [200,201] then
@@ -5850,13 +5873,13 @@ begin
   if (FTokenParam.Value = '') or
      (FHostParam.Value = '') then
   begin
-    ShowMessage('Не заполнены Host или Токен.');
+    ShowMessages('Не заполнены Host или Токен.');
     Exit;
   end;
 
   if not FileExists(FFileNameParam.Value + '_sign.p7s') then
   begin
-    ShowMessage('Файл ' + FFileNameParam.Value + '_sign.p7s' + ' не найден.');
+    ShowMessages('Файл ' + FFileNameParam.Value + '_sign.p7s' + ' не найден.');
     Exit;
   end;
 
@@ -5887,7 +5910,7 @@ begin
         end;
         Body := Body + #13 + '}';
       except on E:EIdHTTPProtocolException  do
-                  ShowMessage('Ошибка: ' + e.ErrorMessage);
+                  ShowMessages('Ошибка: ' + e.ErrorMessage);
       end;
     finally
       FreeAndNil(fileStreamStamp);
@@ -5914,7 +5937,7 @@ begin
       try
         S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
       except on E:EIdHTTPProtocolException  do
-                  ShowMessage('Ошибка: ' + e.ErrorMessage);
+                  ShowMessages('Ошибка: ' + e.ErrorMessage);
       end;
     finally
       FreeAndNil(Stream);
@@ -5954,7 +5977,7 @@ begin
     apath := 'c:\Program Files\Institute of Informational Technologies\Certificate Authority-1.3\End User\';
     if not FileExists(apath + String(EUDLLName)) then
     begin
-      ShowMessage('Ошибка Не найден файл библиотеки подписи: ' + EUDLLName);
+      ShowMessages('Ошибка Не найден файл библиотеки подписи: ' + EUDLLName);
     end;
   end;
 
@@ -5964,7 +5987,7 @@ begin
 
   if not FileExists(SignFile) then
   begin
-    ShowMessage('Ошибка Не найдена программа шифрования: ' + SignFile);
+    ShowMessages('Ошибка Не найдена программа шифрования: ' + SignFile);
   end;
 
   // 1.Установка ключей
@@ -6007,7 +6030,7 @@ begin
 
   if not FileExists(FileName) then
   begin
-    ShowMessage('Ошибка Не найдена результат работы программы шифрования: ' + FileName);
+    ShowMessages('Ошибка Не найдена результат работы программы шифрования: ' + FileName);
     Exit;
   end;
 
@@ -6031,14 +6054,14 @@ begin
 
   if not EULoadDLL(apath) then
   begin
-    ShowMessage('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
+    ShowMessages('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
     Exit;
   end;
   CPInterface := EUGetInterface();
   if CPInterface = nil then
   begin
     EUUnloadDLL();
-    ShowMessage('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
+    ShowMessages('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
     Exit;
   end;
   CPInterface.SetUIMode(false);
@@ -6048,7 +6071,7 @@ begin
     nError := CPInterface.Initialize();
     if nError <> EU_ERROR_NONE then
     begin
-      ShowMessage('Ошибка Инициализации библиотеки подписи: ' + EUDLLName);
+      ShowMessages('Ошибка Инициализации библиотеки подписи: ' + EUDLLName);
       Exit;
     end;
     if ShiftDown then
@@ -6067,7 +6090,7 @@ begin
     except
       on E: Exception do
       begin
-        ShowMessage('Ошибка В библиотеке подписи: ' + E.Message);
+        ShowMessages('Ошибка В библиотеке подписи: ' + E.Message);
         Exit;
       end;
     end;
@@ -6081,7 +6104,7 @@ begin
       // проверка
       if not FileExists(String(FileName)) then
       begin
-        ShowMessage('Файл не найден : <'+String(FileName)+'>');
+        ShowMessages('Файл не найден : <'+String(FileName)+'>');
         Exit;
       end;
 
@@ -6090,7 +6113,7 @@ begin
       nError := CPInterface.ReadPrivateKeyFile (PAnsiChar(FileName), PAnsiChar('24447183'), @CertOwnerInfo); // бухгалтер
       if nError <> EU_ERROR_NONE then
       begin
-        ShowMessage('Ошибка В библиотеке при загрузке электронного ключа: ' + CPInterface.GetErrorDesc(nError));
+        ShowMessages('Ошибка В библиотеке при загрузке электронного ключа: ' + CPInterface.GetErrorDesc(nError));
         Exit;
       end;
 
@@ -6098,7 +6121,7 @@ begin
     except
       on E: Exception do
       begin
-        ShowMessage('Ошибка В библиотеке при загрузке электронного ключа:' + E.Message);
+        ShowMessages('Ошибка В библиотеке при загрузке электронного ключа:' + E.Message);
         Exit;
       end;
     end;
@@ -6109,20 +6132,20 @@ begin
       // проверка
       if not FileExists(String(FileName)) then
       begin
-        ShowMessage('Файл документа не найден : <'+String(FileName)+'>');
+        ShowMessages('Файл документа не найден : <'+String(FileName)+'>');
         Exit;
       end;
 
       nError := CPInterface.SignFile(PAnsiChar(FileName), PAnsiChar(FileName + '.p7s'), True);
       if nError <> EU_ERROR_NONE then
       begin
-        ShowMessage('Ошибка В библиотеке при надожении подписи: ' + CPInterface.GetErrorDesc(nError));
+        ShowMessages('Ошибка В библиотеке при надожении подписи: ' + CPInterface.GetErrorDesc(nError));
         Exit;
       end;
     except
       on E: Exception do
       begin
-        ShowMessage('Ошибка В библиотеке при надожении подписи:' + E.Message);
+        ShowMessages('Ошибка В библиотеке при надожении подписи:' + E.Message);
         Exit;
       end;
     end;
@@ -6153,7 +6176,7 @@ begin
 
     if DataSetCDS.RecordCount = 0 then
     begin
-      //ShowMessage('Нет накладных для загрузки.');
+      //ShowMessages('Нет накладных для загрузки.');
       Exit;
     end;
 
@@ -6329,6 +6352,12 @@ begin
     end;
     Result := DoSignComDoc;
   end;
+end;
+
+procedure TdsdVchasnoEDIAction.ShowMessages(AMessage: String);
+begin
+  if FShowErrorMessagesParam.Value then ShowMessage(AMessage)
+  else EDI.UpdateOrderErrorVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger, AMessage);
 end;
 
 function TdsdVchasnoEDIAction.LocalExecute: Boolean;
