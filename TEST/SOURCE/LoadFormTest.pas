@@ -2376,14 +2376,14 @@ end;
 
 procedure TLoadFormTest.LoadEDIForm;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDI_SendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEDI_SendJournalForm');
 //  exit;
-}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDIJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEDIJournalForm');
-   exit;
+  // exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDIJournalLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEDIJournalLoadForm');
 end;
@@ -4419,10 +4419,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ChoiceForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalPosition_ObjectForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPosition_ObjectForm');
 
@@ -4432,10 +4432,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   exit;
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectDescForm');
 

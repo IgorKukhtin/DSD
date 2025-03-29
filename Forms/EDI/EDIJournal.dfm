@@ -492,6 +492,14 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderHint = #1042#1085#1091#1090#1088#1110#1096#1085#1110#1081' VchasnoId '#1042#1095#1072#1089#1085#1086'-EDI'
             Width = 107
           end
+          object isVchasno: TcxGridDBColumn
+            Caption = #1042#1095#1072#1089#1085#1086'-EDI ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isVchasno'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
       object Splitter: TcxSplitter

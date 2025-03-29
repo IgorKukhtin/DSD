@@ -50,6 +50,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DealId         TVarChar
              , DocumentId_vch TVarChar
              , VchasnoId      TVarChar
+             , isVchasno      Boolean
               )
 AS
 $BODY$
@@ -175,6 +176,7 @@ BEGIN
            , MovementString_DealId.ValueData         ::TVarChar AS DealId
            , MovementString_DocumentId_vch.ValueData ::TVarChar AS DocumentId_vch
            , MovementString_VchasnoId.ValueData      ::TVarChar AS VchasnoId
+           , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '') <> '' THEN TRUE ELSE FALSE END ::Boolean AS isVchasno
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
