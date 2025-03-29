@@ -76,6 +76,8 @@ BEGIN
        -- Проверка
        IF COALESCE (vbPrice_check, 0) = 0 AND EXTRACT (HOURS FROM CURRENT_TIMESTAMP) >= 9 AND EXTRACT (HOURS FROM CURRENT_TIMESTAMP) < 23
           AND inPrice > 0
+          --
+          AND inUserId <> 5
        THEN
            RAISE EXCEPTION 'Ошибка.Не установлена цена в прайсе <%> для <%>.'
                          , lfGet_Object_ValueData_sh (vbPriceListId)
@@ -92,6 +94,8 @@ BEGIN
           AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View AS RoleAccessKeyView WHERE RoleAccessKeyView.UserId = inUserId AND RoleAccessKeyView.AccessKeyId = zc_Enum_Process_Update_MI_OperPrice())
           -- Проведение документов - нет проверки по филиалу
           AND NOT EXISTS  (SELECT 1 FROM Object_Role_Process_View WHERE Object_Role_Process_View.ProcessId = zc_Enum_Process_UpdateMovement_Branch() AND Object_Role_Process_View.UserId = inUserId)
+          --
+          AND inUserId <> 5
        THEN
            RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав ручного регулирования цены <%>.%Для <%>%Можно ввести цену <%> из прайса <%>.'
                          , lfGet_Object_ValueData_sh (inUserId)

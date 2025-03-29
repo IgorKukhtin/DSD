@@ -49,6 +49,8 @@ $BODY$
     DECLARE vbUserSign TVarChar;
     DECLARE vbUserSeal TVarChar;
     DECLARE vbUserKey  TVarChar;
+
+    DECLARE vbIsSchema_fozz_desadv Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
@@ -61,6 +63,23 @@ END IF;
 
      -- определяется - Крыхта Владимир Николаевич * м. Дніпро вул. Стартова 26
      vbPartneFromId := 258612;
+     
+
+     -- определяется Новая схема Сильпо - Desadv = BOXESQUANTITY (Кількість ящиків)
+     vbIsSchema_fozz_desadv:= EXISTS (SELECT
+                                      FROM MovementLinkObject AS MLO
+                                      WHERE MLO.MovementId = inMovementId
+                                        AND MLO.DescId = zc_MovementLinkObject_To()
+                                        AND MLO.ObjectId IN (877319  -- 233022 - СІЛЬПО-ФУД ТОВ м. Запоріжжя вул. Базова буд.11
+                                                           , 6523410 -- 242897 - СІЛЬПО-ФУД ТОВ с. Зимна Вода вул. Яворівська буд.30
+                                                           , 877320  -- 233023 - СІЛЬПО-ФУД ТОВ с. Перемога вул. Б. Хмельницького буд.1
+                                                           , 4498211 -- 239868 - СІЛЬПО-ФУД ТОВ с. Квітневе вул. Гоголівська буд.1 корп.А
+                                                           , 877321  -- 233024 - СІЛЬПО-ФУД ТОВ п.р. Нерубайське вул. ***** буд.№11,№12,№13
+                                                            )
+                                     )
+                          AND vbUserId <> 1329039  -- Авто-Загрузка EDI
+                         ;
+
 
      -- определяется
      SELECT -- UserSign
@@ -633,6 +652,10 @@ END IF;
                   THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isSchema_fozz
+
+             -- Новая схема Сильпо - Desadv = BOXESQUANTITY (Кількість ящиків)
+           , vbIsSchema_fozz_desadv :: Boolean AS isSchema_fozz_desadv
+
              --  новая схема
            , (OH_JuridicalDetails_To.OKPO = '32490244' -- ЕПІЦЕНТР К ТОВ
            OR OH_JuridicalDetails_To.OKPO = '44140683' -- Турбо. ЮА
@@ -1072,6 +1095,10 @@ END IF;
                               ELSE MovementItem.Amount
 
                          END) AS AmountPartner
+
+                    -- Новая схема Сильпо - Desadv = BOXESQUANTITY (Кількість ящиків)
+                  , SUM (CASE WHEN vbIsSchema_fozz_desadv = TRUE THEN COALESCE (MIFloat_BoxCount.ValueData, 0) ELSE 0 END) AS Count_Box_fozz
+
              FROM MovementItem
                   INNER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -1085,6 +1112,10 @@ END IF;
                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                  -- Новая схема Сильпо - Desadv = BOXESQUANTITY (Кількість ящиків)
+                  LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
+                                              ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                             AND MIFloat_BoxCount.DescId         = zc_MIFloat_BoxCount()
 
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -1140,7 +1171,11 @@ END IF;
 
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner
+             -- Замовлена кількість
            , tmpMI_Order.Amount              AS AmountOrder
+             -- Новая схема Сильпо - Desadv = BOXESQUANTITY (Кількість ящиків)
+           , tmpMI.Count_Box_fozz :: TFloat AS Count_Box_fozz
+
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 

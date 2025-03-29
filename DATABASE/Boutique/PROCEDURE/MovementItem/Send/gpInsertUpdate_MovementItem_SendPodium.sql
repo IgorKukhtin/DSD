@@ -188,12 +188,37 @@ BEGIN
           , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
           , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
           , COALESCE (Object_PartionGoods.MovementItemId,0)                AS PartionId
-    INTO outCountForPrice, outOperPrice, vbCurrencyId, vbPartionId
+            INTO outCountForPrice, outOperPrice, vbCurrencyId, vbPartionId
      FROM Object_PartionGoods
+          JOIN Container ON Container.PartionId     = Object_PartionGoods.MovementItemId
+                        AND Container.Amount        > 0 
+                        AND Container.WhereObjectId = vbFromId
+          LEFT JOIN ContainerLinkObject AS CLO_Client
+                                        ON CLO_Client.ContainerId = Container.Id
+                                       AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
      WHERE Object_PartionGoods.GoodsId = vbGoodsId
-       AND Object_PartionGoods.GoodsSizeId = vbGoodsSizeId; --Object_PartionGoods.MovementItemId = inPartionId;
+       AND Object_PartionGoods.GoodsSizeId = vbGoodsSizeId --Object_PartionGoods.MovementItemId = inPartionId;
+       -- !!!отбросили ƒолги ѕокупателей!!!
+       AND CLO_Client.ContainerId IS NULL
+    ;
      
-     -- ≈сли размер пусто и парти€ не найдена, тогда находим первый размер, что есть на остатке и подставл€ем его
+     IF COALESCE (vbPartionId,0) = 0
+     THEN
+         -- данные из партии : OperPrice и CountForPrice и CurrencyId
+         SELECT COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
+              , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
+              , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
+              , COALESCE (Object_PartionGoods.MovementItemId,0)                AS PartionId
+                INTO outCountForPrice, outOperPrice, vbCurrencyId, vbPartionId
+         FROM Object_PartionGoods
+         WHERE Object_PartionGoods.GoodsId = vbGoodsId
+           AND Object_PartionGoods.GoodsSizeId = vbGoodsSizeId --Object_PartionGoods.MovementItemId = inPartionId;
+        ;
+         
+     END IF;
+
+
+
      -- берем партию котора€ есть на остатке
      IF COALESCE (vbPartionId,0) = 0
      THEN

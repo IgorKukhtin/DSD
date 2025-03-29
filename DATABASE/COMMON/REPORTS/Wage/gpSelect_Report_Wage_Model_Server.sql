@@ -929,7 +929,7 @@ BEGIN
            , CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() --  ол-во упаковок приход (расчет)
                   THEN
                       CAST (SUM (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
-                                           THEN (CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
+                                           THEN CAST ((CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
                                                            -- формовка
                                                            THEN tmpMovement.Amount_form
                                                       ELSE tmpMovement.Amount
@@ -937,9 +937,10 @@ BEGIN
                                                * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
                                                 )
                                               / ObjectFloat_WeightTotal.ValueData
+                                                 AS  NUMERIC (16, 0))
                                       ELSE 0
                                  END
-                                ) AS  NUMERIC (16, 4))
+                                ) AS  NUMERIC (16, 0))
                   ELSE
                       SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
                                 AND tmpMovement.OperDate_num <> 6 -- суббота
@@ -974,7 +975,7 @@ BEGIN
            * CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() --  ол-во упаковок приход (расчет)
                   THEN
                       CAST (SUM (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
-                                           THEN (CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
+                                           THEN CAST ((CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
                                                            -- формовка
                                                            THEN tmpMovement.Amount_form
                                                       ELSE tmpMovement.Amount
@@ -982,9 +983,10 @@ BEGIN
                                                * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
                                                 )
                                               / ObjectFloat_WeightTotal.ValueData
+                                                 AS  NUMERIC (16, 0))
                                       ELSE 0
                                  END
-                                ) AS  NUMERIC (16, 4))
+                                ) AS  NUMERIC (16, 0))
                   ELSE
                       SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
                                 AND tmpMovement.OperDate_num <> 6 -- суббота
@@ -1808,7 +1810,15 @@ BEGIN
                WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
                     THEN Movement_Sheet.AmountInDay / NULLIF (Movement_Sheet.Amount, 0)
 
-               -- 3.
+               -- 3.0. за мес€ц итого табель.
+               WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_MonthTotalSheet() AND Movement_SheetGroup.Amount = 0
+                    THEN 0
+
+               -- 3.1. за мес€ц итого табель.
+               WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_MonthTotalSheet()
+                    THEN Movement_SheetGroup.AmountInMonth / NULLIF (Movement_SheetGroup.Amount, 0)
+
+               -- 3.2. за мес€ц табель
                ELSE COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay)
 
           END, 0) END) :: TFloat AS GrossOnOneMember
@@ -1859,7 +1869,15 @@ BEGIN
                      WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
                           THEN Movement_Sheet.AmountInDay / NULLIF (Movement_Sheet.Amount, 0)
 
-                     -- 3.
+                     -- 3.0. за мес€ц итого табель.
+                     WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_MonthTotalSheet() AND Movement_SheetGroup.Amount = 0
+                          THEN 0
+      
+                     -- 3.1. за мес€ц итого табель.
+                     WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_MonthTotalSheet()
+                          THEN Movement_SheetGroup.AmountInMonth / NULLIF (Movement_SheetGroup.Amount, 0)
+
+                     -- 3.2. за мес€ц табель
                      ELSE COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay) * CASE WHEN Movement_Sheet.Tax_Trainee > 0 THEN 100 / Movement_Sheet.Tax_Trainee ELSE 1 END
 
                 END, 0)
@@ -1916,7 +1934,9 @@ BEGIN
                                               OR (COALESCE (Setting.StorageLineId_From, 0)        = 0
                                               AND COALESCE (Setting.StorageLineId_To, 0)          = 0)
                                                 )*/
-                                            AND Setting.ServiceModelKindId                        = zc_Enum_ModelServiceKind_MonthSheetWorkTime() -- за мес€ц табель
+                                            AND Setting.ServiceModelKindId                        IN (zc_Enum_ModelServiceKind_MonthSheetWorkTime() -- за мес€ц табель
+                                                                                                    , zc_Enum_ModelServiceKind_MonthTotalSheet()    -- за мес€ц итого табель
+                                                                                                     )
 
          LEFT OUTER JOIN Movement_Sheet ON COALESCE (Movement_Sheet.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
                                        AND COALESCE (Movement_Sheet.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)

@@ -599,6 +599,8 @@ END IF;*/
 
      -- проверка
      IF COALESCE (vbJuridicalId_To, 0) <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbContractId AND OL.DescId = zc_ObjectLink_Contract_Juridical()), 0)
+    AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
+    AND inUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.В документе выбран договор%для Юридического лица = <%>.%Необходимо выбрать договор%для Юридического лица = <%>.'
                        , CHR (13)

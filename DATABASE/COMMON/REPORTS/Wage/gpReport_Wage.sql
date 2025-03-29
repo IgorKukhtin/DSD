@@ -56,7 +56,7 @@ RETURNS TABLE(
     ,GoodsKindComplete_FromName     TVarChar
     ,GoodsKind_ToName               TVarChar
     ,GoodsKindComplete_ToName       TVarChar
-    ,OperDate                       TDateTime -- TVarChar -- TDateTime
+    ,OperDate                       TVarChar -- TVarChar -- TDateTime
     ,Count_Day                      Integer   -- Отраб. дн. 1 чел (инф.)
     ,Count_MemberInDay              Integer   -- Кол-во человек (за 1 д.)
     ,Gross                          TFloat
@@ -183,6 +183,21 @@ BEGIN
         , Ord Integer
          ) ON COMMIT DROP;*/
 
+
+-- Голота К.О.
+IF vbUserId = 6604558
+   AND inStartDate BETWEEN '01.09.2024' AND '30.09.2024'
+   AND inEndDate   BETWEEN '01.09.2024' AND '30.09.2024'
+   AND inDetailDay = TRUE
+   AND inDetailModelServiceItemChild = TRUE
+   AND inUnitId    = 8451
+   AND 1=1
+THEN
+    RETURN QUERY
+      SELECT * FROM _gpReport_Wage_golota WHERE _gpReport_Wage_golota.OperDate BETWEEN inStartDate AND inEndDate
+     ;
+
+ELSE
 
     -- Результат
     RETURN QUERY
@@ -608,6 +623,8 @@ BEGIN
                 ELSE NULL::Integer END                    AS Count_MemberInDay -- Кол-во человек (за 1 д.)
                ,CASE WHEN inDetailDay = TRUE
                      THEN Res.Gross
+                     WHEN vbUserId = 5
+                     THEN Res.Gross
                 ELSE NULL::TFloat END                     AS Gross
                ,SUM(Res.GrossOnOneMember)::TFloat         AS GrossOnOneMember
                ,CASE WHEN inDetailDay = TRUE
@@ -716,6 +733,8 @@ BEGIN
                 ELSE NULL::Integer END
                ,CASE WHEN inDetailDay = TRUE
                      THEN Res.Gross
+                     WHEN vbUserId = 5
+                     THEN Res.Gross
                 ELSE NULL::TFloat END
                ,CASE WHEN inDetailDay = TRUE
                      THEN Res.Amount
@@ -813,8 +832,8 @@ BEGIN
            ,tmpRes.GoodsKind_ToName
            ,tmpRes.GoodsKindComplete_ToName
 
---           ,CASE WHEN vbUserId in (/*5, 6561986*/ 0) THEN NULL :: TVarChar ELSE tmpRes.OperDate :: TVarChar END  :: TVarChar AS OperDate
-           ,CASE WHEN vbUserId in (-6561986) THEN NULL :: TDateTime ELSE tmpRes.OperDate :: TDateTime END  :: TDateTime AS OperDate
+           ,CASE WHEN vbUserId in (/*5, 6561986*/ 0) THEN NULL :: TVarChar ELSE zfConvert_DateToString (tmpRes.OperDate) END  :: TVarChar AS OperDate
+--           ,CASE WHEN vbUserId in (-6561986) THEN NULL :: TDateTime ELSE tmpRes.OperDate :: TDateTime END  :: TDateTime AS OperDate
 
             -- Отраб. дн. 1 чел (инф.)
            ,tmpRes.Count_Day
@@ -953,8 +972,8 @@ BEGIN
            ,'' :: TVarChar AS GoodsKind_ToName
            ,'' :: TVarChar AS GoodsKindComplete_ToName
 
---           ,NULL :: TVarChar AS OperDate
-           ,NULL :: TDateTime AS OperDate
+           ,NULL :: TVarChar AS OperDate
+--           ,NULL :: TDateTime AS OperDate
 
             -- Отраб. дн. 1 чел (инф.)
            ,0  :: Integer  AS Count_Day
@@ -1052,7 +1071,7 @@ BEGIN
 
          -- Результат
          vb1:= (SELECT *
-                FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+                FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
                                    -- Результат
                                 , vbScript));
 
@@ -1062,6 +1081,10 @@ BEGIN
     --RAISE EXCEPTION 'ok = %', vb1;
 
     --RAISE EXCEPTION 'ok';
+
+
+    END IF; -- else _gpReport_Wage_golota
+
 
 END;
 $BODY$

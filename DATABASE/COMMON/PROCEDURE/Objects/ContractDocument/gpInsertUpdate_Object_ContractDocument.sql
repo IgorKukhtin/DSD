@@ -23,7 +23,7 @@ BEGIN
    END IF;
    
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_ContractDocument(), 0, inDocumentName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_ContractDocument(), 0, zfCalc_Text_replace(inDocumentName, CHR (39), '') :: TVarChar);
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBlob (zc_ObjectBlob_ContractDocument_Data(), ioId, inContractDocumentData);
@@ -37,7 +37,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ContractDocument (Integer, TVarChar, Integer, TBlob, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
