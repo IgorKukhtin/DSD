@@ -65,7 +65,6 @@ type
     // VchasnoEDI
     procedure InsertUpdateOrderVchasnoEDI(ORDER: OrderXML.IXMLORDERType;
       spHeader, spList: TdsdStoredProc; lFileName, ADealId : String);
-    procedure UpdateOrderErrorVchasnoEDI(AEDIId: Integer; Error : String);
     procedure UpdateOrderDESADVSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
     procedure UpdateOrderORDERSPSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
     procedure UpdateOrderDELNOTSaveVchasnoEDI(AEDIId: Integer; DocumentId, VchasnoId: String; isError : Boolean);
@@ -170,6 +169,7 @@ type
     FDefaultFilePathParam: TdsdParam;
     FDefaultFileNameParam: TdsdParam;
     FShowErrorMessagesParam: TdsdParam;
+    FErrorTextParam: TdsdParam;
 
     FResultParam: TdsdParam;
     FFileNameParam: TdsdParam;
@@ -228,6 +228,7 @@ type
     property KeyFileName: TdsdParam read FKeyFileNameParam write FKeyFileNameParam;
     property KeyUserName: TdsdParam read FKeyUserNameParam write FKeyUserNameParam;
     property ShowErrorMessages: TdsdParam read FShowErrorMessagesParam write FShowErrorMessagesParam;
+    property ErrorText: TdsdParam read FErrorTextParam write FErrorTextParam;
 //    property Result: TdsdParam read FResultParam write FResultParam;
 //    property FileName: TdsdParam read FFileNameParam write FFileNameParam;
     // Содержимое массива Json для формирования DataSet
@@ -4953,20 +4954,6 @@ begin
     FUpdateEDIVchasnoEDI.Execute;
 end;
 
-procedure TEDI.UpdateOrderErrorVchasnoEDI(AEDIId: Integer; Error : String);
-begin
-  if AEDIId <> 0 then
-  begin
-    FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
-    FUpdateEDIErrorState.ParamByName('inIsError').Value := True;
-    FUpdateEDIErrorState.Execute;
-
-    FInsertEDIEvents.ParamByName('inMovementId').Value := AEDIId;
-    FInsertEDIEvents.ParamByName('inEDIEvent').Value := Error;
-    FInsertEDIEvents.Execute;
-  end;
-end;
-
 procedure TEDI.UpdateOrderDESADVSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
 begin
   if AEDIId <> 0 then
@@ -5540,11 +5527,15 @@ begin
   FShowErrorMessagesParam.DataType := ftBoolean;
   FShowErrorMessagesParam.Value := True;
 
+  FErrorTextParam := TdsdParam.Create(nil);
+  FErrorTextParam.DataType := ftString;
+  FErrorTextParam.Value := '';
   FEDIDocType:= ediOrder;
 end;
 
 destructor TdsdVchasnoEDIAction.Destroy;
 begin
+  FreeAndNil(FErrorTextParam);
   FreeAndNil(FShowErrorMessagesParam);
   FreeAndNil(FKeyUserNameParam);
   FreeAndNil(FKeyFileNameParam);
@@ -6368,13 +6359,14 @@ end;
 
 procedure TdsdVchasnoEDIAction.ShowMessages(AMessage: String);
 begin
-  if FShowErrorMessagesParam.Value then ShowMessage(AMessage)
-  else EDI.UpdateOrderErrorVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger, AMessage);
+  FErrorTextParam.Value := AMessage;
+  if FShowErrorMessagesParam.Value then ShowMessage(AMessage);
 end;
 
 function TdsdVchasnoEDIAction.LocalExecute: Boolean;
 begin
 
+  FErrorTextParam.Value := '';
   case FEDIDocType of
     ediOrder : Result := OrderLoad;
     ediOrdrsp : Result := OrdrspSave;
