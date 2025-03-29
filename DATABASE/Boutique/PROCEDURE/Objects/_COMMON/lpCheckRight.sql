@@ -15,6 +15,12 @@ BEGIN
   --
   vbUserId := lpGetUserBySession (inSession);
 
+     IF inSession = '1234551'
+     THEN
+         RAISE EXCEPTION 'Ошибка.';
+     END IF;
+
+
   -- для Админа  - Все Права
   IF EXISTS (SELECT 1
              FROM ObjectLink AS Object_UserRole_User -- Связь пользователя с объектом роли пользователя

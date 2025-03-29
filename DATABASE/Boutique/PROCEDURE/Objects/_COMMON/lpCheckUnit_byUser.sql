@@ -17,6 +17,12 @@ BEGIN
      vbUnitId:= lpGetUnit_byUser (inUserId);
 
 
+     IF inUserId = 1234551 
+     THEN
+         RAISE EXCEPTION 'Ошибка.';
+     END IF;
+
+
      -- Вернули - Подразделение которое проверили
      IF inUserId = 1234551 AND inUnitId_by IN (1550 -- магазин Chado-Outlet
                                              , 1539 -- магазин CHADO

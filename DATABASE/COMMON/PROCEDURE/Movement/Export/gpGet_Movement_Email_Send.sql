@@ -87,9 +87,9 @@ END IF;
                --WHEN tmp.outExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110()) THEN 'ashtu@ua.fm'
                --WHEN vbUserId = 1329039 AND 1=1 THEN 'ashtu@ua.fm'
 
-                 WHEN tmpExportJuridical.ContactPersonMail <> '' THEN tmpExportJuridical.ContactPersonMail || ';24447183@ukr.net'
+                 WHEN tmpExportJuridical.ContactPersonMail <> '' THEN tmpExportJuridical.ContactPersonMail || ';24447183@ukr.net' || ';ashtu@ua.fm' 
 
-                 ELSE '24447183@ukr.net' -- || ';ashtu@ua.fm' 
+                 ELSE '24447183@ukr.net' || ';ashtu@ua.fm' 
             END :: TVarChar AS AddressTo
 
           , gpGet_Host.Value                     AS Host

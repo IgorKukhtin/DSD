@@ -103,6 +103,22 @@ end if;
     PERFORM lpCheck_UserRole_8813637 (vbUserId);
 
 
+
+-- Голота К.О.
+IF vbUserId = 6604558
+   AND inStartDate BETWEEN '01.09.2024' AND '30.09.2024'
+   AND inEndDate   BETWEEN '01.09.2024' AND '30.09.2024'
+   AND inDetailDay = TRUE
+   AND inDetailModelServiceItemChild = TRUE
+   AND inUnitId    = 8451
+   AND 1=1
+THEN
+    RETURN QUERY
+      SELECT * FROM _gpReport_Wage_golota WHERE _gpReport_Wage_golota.OperDate BETWEEN inStartDate AND inEndDate
+     ;
+
+ELSE
+
     -- определяется уровень доступа
     vbObjectId_Constraint_Branch:= COALESCE ((SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0), 0);
     -- определяется уровень доступа
@@ -315,6 +331,7 @@ end if;
    );
 
     -- Результат
+--  insert into _gpReport_Wage_golota
     RETURN QUERY
         WITH tmpPersonal AS (SELECT *
                                , ROW_NUMBER(*) OVER (PARTITION BY Object_Personal.MemberId
@@ -652,7 +669,6 @@ end if;
                                                  ON ObjectLink_Personal_Member_find.ObjectId = tmpRes_all.MemberId
                                                 AND ObjectLink_Personal_Member_find.DescId   = zc_ObjectLink_Personal_Member()
                       )
-
         -- Результат
         SELECT
             tmpRes.StaffListId
@@ -912,6 +928,9 @@ end if;
         WHERE tmpRes.MemberId_find IS NULL AND 1=0
        ;
 
+--    RETURN QUERY
+-- select * from _gpReport_Wage_golota where 1=0
+
    -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
    INSERT INTO ResourseProtocol (UserId
                                  , OperDate
@@ -964,6 +983,9 @@ end if;
     || ', ' || inDetailModelServiceItemChild            :: TVarChar
     || ', ' || inSession
               ;
+
+
+    END IF; -- else _gpReport_Wage_golota
 
 END;
 $BODY$

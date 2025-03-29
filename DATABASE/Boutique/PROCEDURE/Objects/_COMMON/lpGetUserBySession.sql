@@ -9,6 +9,13 @@ RETURNS Integer
 AS
 $BODY$  
 BEGIN
+
+     IF inSession = '1234551'
+     THEN
+         RAISE EXCEPTION 'Ошибка.';
+     END IF;
+     
+
      IF inSession <> ''
      THEN RETURN to_number (inSession, '00000000000');   
      ELSE RETURN 0;
