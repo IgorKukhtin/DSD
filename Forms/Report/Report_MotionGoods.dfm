@@ -3356,9 +3356,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
+            'GoodsGroupCode;GoodsGroupNameFull;GoodsGroupName;GoodsName;Goods' +
+            'KindName;PartionGoodsName;AssetToName;InfoMoneyName_all;InfoMone' +
+            'yName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -3455,9 +3455,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
+            'GoodsGroupCode;GoodsGroupNameFull;GoodsGroupName;GoodsName;Goods' +
+            'KindName;PartionGoodsName;AssetToName;InfoMoneyName_all;InfoMone' +
+            'yName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -3553,9 +3553,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'LocationName;GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKi' +
-            'ndName;PartionGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyN' +
-            'ame_all_Detail'
+            'LocationName;GoodsGroupCode;GoodsGroupNameFull;GoodsGroupName;Go' +
+            'odsName;GoodsKindName;PartionGoodsName;AssetToName;InfoMoneyName' +
+            '_all;InfoMoneyName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -3960,9 +3960,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
+            'GoodsGroupCode;GoodsGroupNameFull;GoodsGroupName;GoodsName;Goods' +
+            'KindName;PartionGoodsName;AssetToName;InfoMoneyName_all;InfoMone' +
+            'yName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -4081,9 +4081,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
+            'GoodsGroupCode;GoodsGroupNameFull;GoodsGroupName;GoodsName;Goods' +
+            'KindName;PartionGoodsName;AssetToName;InfoMoneyName_all;InfoMone' +
+            'yName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -4179,9 +4179,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
+            'GoodsGroupCode;GoodsGroupNameFull;GoodsGroupName;GoodsName;Goods' +
+            'KindName;PartionGoodsName;AssetToName;InfoMoneyName_all;InfoMone' +
+            'yName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -4299,9 +4299,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
+            'GoodsGroupCode;GoodsGroupNameFull;GoodsGroupName;GoodsName;Goods' +
+            'KindName;PartionGoodsName;AssetToName;InfoMoneyName_all;InfoMone' +
+            'yName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -4417,9 +4417,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'LocationDescName;LocationName;GoodsGroupNameFull;GoodsGroupName;' +
-            'GoodsName;GoodsKindName;PartionGoodsName;AssetToName;InfoMoneyNa' +
-            'me_all;InfoMoneyName_all_Detail'
+            'LocationDescName;LocationName;GoodsGroupCode;GoodsGroupNameFull;' +
+            'GoodsGroupName;GoodsName;GoodsKindName;PartionGoodsName;AssetToN' +
+            'ame;InfoMoneyName_all;InfoMoneyName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -4515,9 +4515,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'LocationDescName;LocationName;GoodsGroupNameFull;GoodsGroupName;' +
-            'GoodsName;GoodsKindName;PartionGoodsName;AssetToName;InfoMoneyNa' +
-            'me_all;InfoMoneyName_all_Detail'
+            'LocationDescName;LocationName;GoodsGroupCode;GoodsGroupNameFull;' +
+            'GoodsGroupName;GoodsName;GoodsKindName;PartionGoodsName;AssetToN' +
+            'ame;InfoMoneyName_all;InfoMoneyName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
