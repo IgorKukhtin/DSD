@@ -139,9 +139,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('PrintMovement_Inventory_Scale_group', ReportPath + '\Товарный Учет\PrintMovement_Inventory_Scale_group.fr3');
+  {LoadReportFromFile('PrintMovement_Inventory_Scale_group', ReportPath + '\Товарный Учет\PrintMovement_Inventory_Scale_group.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_Inventory_Scale', ReportPath + '\Товарный Учет\PrintMovement_Inventory_Scale.fr3');
   exit;
 
@@ -262,10 +262,10 @@ begin
   LoadReportFromFile('PrintMovement_WeighingProductionWmsSticker', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionWmsSticker.fr3');
   exit;
 
-   }
+
   LoadReportFromFile('PrintMI_WeighingProductionPassport', ReportPath + '\Товарный Учет\PrintMI_WeighingProductionPassport.fr3');
   exit;
-  {
+
   LoadReportFromFile('Обороты по подотчету', ReportPath + '\Отчеты (финансы)\Обороты по подотчету.fr3');
   exit;
 
@@ -609,6 +609,10 @@ begin
    exit;
 
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');
+  }
+  LoadReportFromFile('PrintMovement_Sale38017026', ReportPath + '\Товарный Учет\PrintMovement_Sale38017026.fr3');
+  exit;
+  {
   LoadReportFromFile('PrintMovement_Sale1', ReportPath + '\Товарный Учет\PrintMovement_Sale1.fr3');
 
   LoadReportFromFile('PrintMovement_Sale43094673', ReportPath + '\Товарный Учет\PrintMovement_Sale43094673.fr3');
