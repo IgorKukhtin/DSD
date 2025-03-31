@@ -509,7 +509,7 @@ AS
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
-           , CAST ('01.04.2025' AS TDateTime)
+           , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
