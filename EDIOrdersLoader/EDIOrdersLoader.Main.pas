@@ -505,6 +505,7 @@ begin
               if (FieldByName('isEdiInvoice').AsBoolean = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactInvoice.Execute;
               // Vchasno-Ordspr
               if (FieldByName('isEdiOrdspr').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
+               //and (1=0)
               then begin
                        actExecPrintStoredProc.Execute;
                        if actVchasnoEDIOrdrsp.Execute
@@ -515,7 +516,7 @@ begin
               end;
               // Vchasno-Desadv
               if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
-              //and (1=0)
+               //and (1=0)
               then begin
                        actExecPrintStoredProc.Execute;
                        if actVchasnoEDIDesadv.Execute
@@ -526,7 +527,7 @@ begin
               end;
               // еще раз, но Vchasno-ComDoc
               if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
-              //and (1=0)
+               //and (1=0)
               then begin
                        actExecPrintStoredProc.Execute;
                        if actVchasnoEDIComDoc.Execute
