@@ -2211,19 +2211,18 @@ begin
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellCheckEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellCheckEditForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellChoiceForm');
-
-exit;
-
+  exit;
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellForm');
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCell_listForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCell_listForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCell_listForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellEditForm'));
+ // TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellEditForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TPartionCellEditForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellChoiceForm');
 

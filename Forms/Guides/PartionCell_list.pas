@@ -73,6 +73,8 @@ type
     Ord: TcxGridDBColumn;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    actOpenPartionCell: TdsdOpenForm;
+    bbOpenPartionCell: TdxBarButton;
   private
     { Private declarations }
   public

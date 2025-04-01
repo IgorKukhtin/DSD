@@ -1461,8 +1461,8 @@ type
     N258: TMenuItem;
     actReport_WageWarehouseBranch: TdsdOpenForm;
     miReport_WageWarehouseBranch: TMenuItem;
-    actPartionCell: TdsdOpenForm;
-    miPartionCell: TMenuItem;
+    actPartionCell_list: TdsdOpenForm;
+    miPartionCell_list: TMenuItem;
     actReport_Send_PartionCell: TdsdOpenForm;
     miReport_Send_PartionCell: TMenuItem;
     actContractPartner: TdsdOpenForm;
