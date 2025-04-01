@@ -42,7 +42,7 @@ BEGIN
                                                   , inPrice              := 0
                                                   , inSumm               := 0
                                                   , inHeadCount          := 0
-                                                  , inCount              := 0
+                                                  , inCount              := COALESCE (tmp.Count_End,0)
                                                   , inPartionGoods       := tmp.PartionGoods   
                                                   , inPartNumber         := NULL
                                                   , inPartionGoodsId     := tmp.PartionGoodsId
@@ -74,7 +74,39 @@ BEGIN
                                    , Container.ObjectId
                                    , Container.Amount
                             HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0)) <> 0
-                           )
+                           ) 
+
+         , tmpContainerCount AS (SELECT CLO_Unit.ContainerId                                       AS ContainerId
+                                      , Container.ObjectId                                         AS GoodsId
+                                      , Container.Amount  - SUM (COALESCE (MIContainer.Amount, 0)) AS Count_End
+                                 FROM ContainerLinkObject AS CLO_Unit
+                                      INNER JOIN Container ON Container.ParentId = CLO_Unit.ContainerId
+                                                          AND Container.DescId = zc_Container_CountCount()
+                                      LEFT JOIN MovementItemContainer AS MIContainer 
+                                                                      ON MIContainer.ContainerId = Container.Id
+                                                                     AND MIContainer.DescId = zc_MIContainer_CountCount()
+                                                                     AND MIContainer.OperDate > vbOperDate
+                                 WHERE CLO_Unit.ObjectId = vbUnitId
+                                   AND CLO_Unit.DescId = vbCLODescId
+                                 GROUP BY CLO_Unit.ContainerId  --Container.Id
+                                        , Container.ObjectId
+                                        , Container.Amount
+                                 HAVING (Container.Amount  - SUM (COALESCE (MIContainer.Amount, 0))) <> 0
+                                ) 
+                                                                  
+         , tmpContainerAll AS (SELECT tmp.ContainerId
+                                    , tmp.GoodsId
+                                    , tmp.Amount_End
+                                    , 0 AS Count_End
+                               FROM tmpContainer AS tmp
+                               UNION
+                               SELECT tmp.ContainerId
+                                    , tmp.GoodsId
+                                    , 0 AS Amount_End
+                                    , tmp.Count_End
+                               FROM tmpContainerCount AS tmp
+                               )                                                               
+
          , tmpMI AS (SELECT MovementItem.Id                                          AS MovementItemId
                           , MovementItem.ObjectId                                    AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)            AS GoodsKindId
@@ -114,7 +146,7 @@ BEGIN
                     )
 
          , tmpGoodsByPartion AS (SELECT tmp.GoodsId
-                                 FROM (SELECT DISTINCT tmpContainer.GoodsId FROM tmpContainer
+                                 FROM (SELECT DISTINCT tmpContainerAll.GoodsId FROM tmpContainerAll
                                        UNION
                                        SELECT DISTINCT tmpMI.GoodsId FROM tmpMI
                                        ) AS tmp
@@ -137,6 +169,7 @@ BEGIN
                 , COALESCE (tmpContainer.PartionGoods, tmpMI.PartionGoods)               AS PartionGoods
                 , COALESCE (tmpContainer.PartionGoodsDate, tmpMI.PartionGoodsDate)       AS PartionGoodsDate
                 , COALESCE (tmpContainer.Amount_End,0)                                   AS Amount_End
+                , COALESCE (tmpContainer.Count_End,0)                                    AS Count_End
 
            FROM (SELECT tmpContainer.GoodsId
                       , COALESCE (CLO_GoodsKind.ObjectId, 0)                               AS GoodsKindId
@@ -144,9 +177,10 @@ BEGIN
                       , COALESCE (Object_PartionGoods.Id, 0)                               AS PartionGoodsId
                       , CASE WHEN Object_PartionGoods.ValueData <> '0' THEN Object_PartionGoods.ValueData ELSE '' END AS PartionGoods
                       , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
-                      , SUM (tmpContainer.Amount_End)                                      AS Amount_End
+                      , SUM (COALESCE (tmpContainer.Amount_End,0))                         AS Amount_End
+                      , SUM (COALESCE (tmpContainer.Count_End,0))                          AS Count_End
 
-                 FROM tmpContainer
+                 FROM tmpContainerAll AS tmpContainer
                       LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                     ON CLO_GoodsKind.ContainerId = tmpContainer.ContainerId
                                                    AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
