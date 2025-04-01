@@ -86,8 +86,17 @@ BEGIN
                                                                       ON MIContainer.ContainerId = Container.Id
                                                                      AND MIContainer.DescId = zc_MIContainer_CountCount()
                                                                      AND MIContainer.OperDate > vbOperDate
+
+                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                          ON ObjectLink_Goods_InfoMoney.ObjectId = Container.ObjectId
+                                                         AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                      LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_Destination
+                                                           ON ObjectLink_InfoMoney_Destination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                          AND ObjectLink_InfoMoney_Destination.DescId   = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
                                  WHERE CLO_Unit.ObjectId = vbUnitId
                                    AND CLO_Unit.DescId = vbCLODescId
+                                   -- Готовая продукция + Тушенка + Ирна
+                                   AND ObjectLink_InfoMoney_Destination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_20900())
                                  GROUP BY CLO_Unit.ContainerId  --Container.Id
                                         , Container.ObjectId
                                         , Container.Amount
