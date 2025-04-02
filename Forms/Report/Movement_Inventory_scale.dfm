@@ -358,6 +358,8 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           object CountTare_calc: TcxGridDBColumn
             Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1071#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'CountTare_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -366,6 +368,9 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           object WeightTare_calc: TcxGridDBColumn
             Caption = #1048#1058#1054#1043#1054' '#1042#1077#1089' '#1074#1089#1077#1093' '#1071#1097#1080#1082#1086#1074' - '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'WeightTare_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -374,6 +379,9 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           object WeightTare: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1090#1072#1088#1099' - '#1092#1072#1082#1090
             DataBinding.FieldName = 'WeightTare'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
