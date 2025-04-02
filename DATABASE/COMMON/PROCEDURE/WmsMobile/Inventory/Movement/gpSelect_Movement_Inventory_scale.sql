@@ -664,11 +664,11 @@ BEGIN
            , 0  ::TFloat  AS WeightPack
            , 0  ::TFloat AS WeightPack_calc
 
-             -- Протокол
-           , '' ::TVarChar    AS InsertName
-           , '' ::TVarChar    AS UpdateName
+             -- Протокол       
+           , '' ::TVarChar       AS InsertName
+           , '' ::TVarChar       AS UpdateName
            , NULL ::TDateTime    AS InsertDate
-           , MIDate_Update.ValueData    AS UpdateDate
+           , NULL ::TDateTime    AS UpdateDate
 
            , MovementItem.isErased      AS isErased
 
