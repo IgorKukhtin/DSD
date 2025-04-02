@@ -223,6 +223,8 @@ BEGIN
                               LEFT JOIN tmpMIDate AS MIDate_PartionGoods
                                                   ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                  AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
+                                                 --не нужно
+                                                 AND 1=0
                               -- Партия - Паспорт
                               LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
                                                    ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
@@ -233,11 +235,15 @@ BEGIN
                              -- № паспорта
                              LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_PartionNum_passport
                                                            ON tmpMIFloat_PartionNum_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
-                                                          AND tmpMIFloat_PartionNum_passport.DescId         = zc_MIFloat_PartionNum()
+                                                          AND tmpMIFloat_PartionNum_passport.DescId         = zc_MIFloat_PartionNum() 
+                                                          --не нужно
+                                                          AND 1=0
                              -- Ячейка хранения
                              LEFT JOIN tmpMILO_passport AS tmpMILO_PartionCell_passport
                                                         ON tmpMILO_PartionCell_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                                        AND tmpMILO_PartionCell_passport.DescId         = zc_MILinkObject_PartionCell()
+                                                       --не нужно
+                                                       AND 1=0
                              LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMILO_PartionCell_passport.ObjectId
                          )
 
@@ -617,36 +623,36 @@ BEGIN
            , tmpMI_Tara.CountTare :: TFloat AS Amount_sh
 
            --
-           , MIFloat_RealWeight.ValueData  ::TFloat   AS RealWeight
+           , 0 ::TFloat   AS RealWeight
            
              -- ИТОГО Вес тары - факт
-           , MIFloat_WeightTare.ValueData AS WeightTare
+           , 0 ::TFloat AS WeightTare
 
              -- Поддон
            , 0               AS BoxId_1
-           , '':::TVarChar   AS BoxName_1
+           , ''::TVarChar   AS BoxName_1
            , 0  :: Integer   AS CountTare_1
-           , 0               AS WeightTare_1
+           , 0  ::TFloat             AS WeightTare_1
              -- Ящик
            , 0                AS BoxId_2
-           , '':::TVarChar    AS BoxName_2
+           , ''::TVarChar    AS BoxName_2
            , 0  :: Integer    AS CountTare_2
-           , 0                AS WeightTare_2
+           , 0  ::TFloat              AS WeightTare_2
              -- Ящик
            , 0                AS BoxId_3
-           , '':::TVarChar    AS BoxName_3
+           , ''::TVarChar    AS BoxName_3
            , 0  :: Integer    AS CountTare_3
-           , 0                AS WeightTare_3
+           , 0  ::TFloat              AS WeightTare_3
              -- Ящик
            , 0                AS BoxId_4
-           , '':::TVarChar    AS BoxName_4
+           , ''::TVarChar    AS BoxName_4
            , 0  :: Integer    AS CountTare_4
-           , 0                AS WeightTare_4
+           , 0  ::TFloat              AS WeightTare_4
              -- Ящик
            , 0                AS BoxId_5
-           , '':::TVarChar    AS BoxName_5
+           , '' ::TVarChar    AS BoxName_5
            , 0  :: Integer    AS CountTare_5
-           , 0                AS WeightTare_5
+           , 0  ::TFloat              AS WeightTare_5
 
              -- ИТОГО Кол-во Ящиков
            , 0 :: Integer AS CountTare_calc
@@ -659,9 +665,9 @@ BEGIN
            , 0  ::TFloat AS WeightPack_calc
 
              -- Протокол
-           , Object_Insert.ValueData    AS InsertName
-           , Object_Update.ValueData    AS UpdateName
-           , MIDate_Insert.ValueData    AS InsertDate
+           , '' ::TVarChar    AS InsertName
+           , '' ::TVarChar    AS UpdateName
+           , NULL ::TDateTime    AS InsertDate
            , MIDate_Update.ValueData    AS UpdateDate
 
            , MovementItem.isErased      AS isErased
@@ -676,7 +682,7 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
             -- Протокол
-            LEFT JOIN tmpMIDate AS MIDate_Insert
+            /*LEFT JOIN tmpMIDate AS MIDate_Insert
                                 ON MIDate_Insert.MovementItemId = MovementItem.Id
                                AND MIDate_Insert.DescId         = zc_MIDate_Insert()
             LEFT JOIN tmpMIDate AS MIDate_Update
@@ -694,15 +700,16 @@ BEGIN
                               ON MILO_Update.MovementItemId = MovementItem.Id
                              AND MILO_Update.DescId         = zc_MILinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+            */
+ 
+           LEFT JOIN ObjectFloat AS OF_Weight
+                                 ON OF_Weight.ObjectId = Object_Goods.Id
+                                AND OF_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+           LEFT JOIN ObjectLink AS OL_Measure
+                                ON OL_Measure.ObjectId = Object_Goods.Id
+                               AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure()
+           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Measure.ChildObjectId
 
-            -- ИТОГО Вес тары - факт
-            LEFT JOIN tmpMIFloat AS MIFloat_WeightTare
-                                 ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
-                                AND MIFloat_WeightTare.DescId         = zc_MIFloat_WeightTare()
-
-            LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
-                                 ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
-                                AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
           ;
 
 
