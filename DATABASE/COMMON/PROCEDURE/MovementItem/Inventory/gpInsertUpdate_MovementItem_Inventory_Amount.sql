@@ -93,7 +93,7 @@ BEGIN
                                       LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_Destination
                                                            ON ObjectLink_InfoMoney_Destination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                                           AND ObjectLink_InfoMoney_Destination.DescId   = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-                                 WHERE CLO_Unit.ObjectId = vbUnitId
+                                 WHERE CLO_Unit.ObjectId = 8449  -- -Только для Цех сирокопчених ковбас  -vbUnitId
                                    AND CLO_Unit.DescId = vbCLODescId
                                    -- Готовая продукция + Тушенка + Ирна
                                    AND ObjectLink_InfoMoney_Destination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_20900())
