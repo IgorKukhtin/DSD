@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isCompensationNot Boolean
              , isUser Boolean  
              , isNotAuto Boolean
+             , isNotRound Boolean
              , isErased Boolean
               )
 AS
@@ -128,6 +129,7 @@ BEGIN
            , COALESCE (ObjectBoolean_CompensationNot.ValueData, FALSE) ::Boolean AS isCompensationNot
            , COALESCE (ObjectBoolean_User.ValueData, FALSE)            ::Boolean AS isUser
            , COALESCE (ObjectBoolean_NotAuto.ValueData, FALSE)         ::Boolean AS isNotAuto
+           , COALESCE (ObjectBoolean_NotRound.ValueData, FALSE)        ::Boolean AS isNotRound
 
            , Object_PersonalServiceList.isErased  AS isErased
 
@@ -167,6 +169,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_NotAuto
                                    ON ObjectBoolean_NotAuto.ObjectId  = Object_PersonalServiceList.Id
                                   AND ObjectBoolean_NotAuto.DescId    = zc_ObjectBoolean_PersonalServiceList_NotAuto()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_NotRound
+                                   ON ObjectBoolean_NotRound.ObjectId  = Object_PersonalServiceList.Id
+                                  AND ObjectBoolean_NotRound.DescId    = zc_ObjectBoolean_PersonalServiceList_NotRound()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -323,6 +329,7 @@ BEGIN
            , FALSE ::Boolean AS isCompensationNot
            , FALSE ::Boolean AS isUser
            , FALSE ::Boolean AS isNotAuto
+           , FALSE ::Boolean AS isNotRound
            , TRUE :: Boolean AS isErased
 
    ;
@@ -335,6 +342,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.03.25          * isNotRound
  21.03.25          * isNotAuto
  08.07.24          * isUser
  12.02.24          * isBankNot

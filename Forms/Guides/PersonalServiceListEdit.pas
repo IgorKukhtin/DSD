@@ -93,6 +93,7 @@ type
     cbCompensationNot: TcxCheckBox;
     cbBankNot: TcxCheckBox;
     cbisNotAuto: TcxCheckBox;
+    cbisNotRound: TcxCheckBox;
   private
     { Private declarations }
   public
