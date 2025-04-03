@@ -2030,10 +2030,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortForm');
   //
 
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechReceiptJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechReceiptJournalForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadTransportFormTest;
@@ -2211,19 +2211,18 @@ begin
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellCheckEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellCheckEditForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellChoiceForm');
-
-exit;
-
+  exit;
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellForm');
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCell_listForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCell_listForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCell_listForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellEditForm'));
+ // TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellEditForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TPartionCellEditForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellChoiceForm');
 
@@ -2604,11 +2603,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Inventory_WeighingFactDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Inventory_WeighingFactDialogForm');
   ///exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleForm');
   exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportDialogForm'));
@@ -5016,10 +5015,11 @@ end;
 
  procedure TLoadFormTest.LoadWeighingProductionFormTest;
  begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
   //exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
 

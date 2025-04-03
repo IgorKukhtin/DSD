@@ -324,6 +324,18 @@ object PartionCell_listForm: TPartionCell_listForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenPartionCell'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
@@ -391,6 +403,10 @@ object PartionCell_listForm: TPartionCell_listForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = actProtocolOpenForm
+      Category = 0
+    end
+    object bbOpenPartionCell: TdxBarButton
+      Action = actOpenPartionCell
       Category = 0
     end
   end
@@ -578,6 +594,19 @@ object PartionCell_listForm: TPartionCell_listForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+      isShowModal = False
+    end
+    object actOpenPartionCell: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'> ('#1074#1089#1077')'
+      Hint = #1086#1090#1082#1088#1099#1090#1100' '#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'> ('#1074#1089#1077')'
+      ImageIndex = 26
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
       isShowModal = False
     end
   end

@@ -25,6 +25,11 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService_Child());
      vbUserId:= lpGetUserBySession (inSession);
 
+     --тест проведения
+     if vbUserId IN (9457) then RETURN; end if; 
+     
+     
+
      vbisPersonalService := (SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_Unit_PersonalService() AND OB.ObjectId = inUnitId);
 
      -- проверка по свойству подразделения
@@ -471,8 +476,8 @@ BEGIN
                     , _tmpMessagePersonalService.MemberId
                     , _tmpMessagePersonalService.Comment
                FROM _tmpMessagePersonalService
-              ) AS tmp;
-
+              ) AS tmp; 
+         
      ELSEIF 1=1 -- vbUserId NOT IN (5)
      THEN
 

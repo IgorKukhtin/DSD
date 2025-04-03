@@ -785,12 +785,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actPartionCell: TdsdOpenForm [43]
+    object actPartionCell_list: TdsdOpenForm [43]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1071#1095#1077#1081#1082#1080' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-      FormName = 'TPartionCellForm'
-      FormNameParam.Value = 'TPartionCellForm'
+      Caption = #1071#1095#1077#1081#1082#1080' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072') '#1089#1087#1080#1089#1086#1082
+      FormName = 'TPartionCell_listForm'
+      FormNameParam.Value = 'TPartionCell_listForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -12145,8 +12145,8 @@ inherited MainForm: TMainForm
       object N73: TMenuItem
         Action = actStorageLine
       end
-      object miPartionCell: TMenuItem
-        Action = actPartionCell
+      object miPartionCell_list: TMenuItem
+        Action = actPartionCell_list
       end
       object N261: TMenuItem
         Action = actChoiceCell

@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isBankNot Boolean   
              , isCompensationNot Boolean 
              , isNotAuto Boolean
+             , isNotRound Boolean
              , isErased Boolean
              ) AS
 $BODY$
@@ -95,6 +96,7 @@ BEGIN
            , CAST(FALSE AS Boolean) AS isBankNot
            , CAST(FALSE AS Boolean) AS isCompensationNot
            , CAST(FALSE AS Boolean) AS isNotAuto
+           , CAST(FALSE AS Boolean) AS isNotRound
 
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -154,7 +156,7 @@ BEGIN
            , COALESCE (ObjectBoolean_BankNot.ValueData, FALSE)   ::Boolean AS isBankNot
            , COALESCE (ObjectBoolean_CompensationNot.ValueData, FALSE) ::Boolean AS isCompensationNot
            , COALESCE (ObjectBoolean_NotAuto.ValueData, FALSE)   ::Boolean AS isNotAuto
-
+           , COALESCE (ObjectBoolean_NotRound.ValueData, FALSE)  ::Boolean AS isNotRound
            , Object_PersonalServiceList.isErased   AS isErased
 
        FROM Object AS Object_PersonalServiceList
@@ -188,6 +190,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_NotAuto
                                    ON ObjectBoolean_NotAuto.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_NotAuto.DescId = zc_ObjectBoolean_PersonalServiceList_NotAuto()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_NotRound
+                                   ON ObjectBoolean_NotRound.ObjectId  = Object_PersonalServiceList.Id
+                                  AND ObjectBoolean_NotRound.DescId    = zc_ObjectBoolean_PersonalServiceList_NotRound()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -288,6 +294,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.03.25         * isNotRound
  21.03.25         * isNotAuto
  12.02.24         * isBankNot
  29.01.24         * isCompensationNot

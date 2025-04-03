@@ -420,6 +420,16 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 49
     Width = 147
   end
+  object cbisNotRound: TcxCheckBox
+    Left = 8
+    Top = 389
+    Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1076#1083#1103' '#1086#1090#1087#1091#1089#1082#1072
+    Caption = #1048#1089#1082#1083'. '#1080#1079' '#1086#1082#1088#1091#1075#1083'. '#1087#1086' '#1082#1072#1089#1089#1077
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 50
+    Width = 170
+  end
   object ActionList: TActionList
     Left = 88
     Top = 48
@@ -668,6 +678,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'inisNotAuto'
         Value = Null
         Component = cbisNotAuto
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotRound'
+        Value = Null
+        Component = cbisNotRound
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -996,6 +1014,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'isNotAuto'
         Value = Null
         Component = cbisNotAuto
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotRound'
+        Value = Null
+        Component = cbisNotRound
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

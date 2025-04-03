@@ -609,6 +609,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PersonalServiceList_NotAuto() RETURN
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_PersonalServiceList(), 'zc_ObjectBoolean_PersonalServiceList_NotAuto', 'Исключить из авто-начисления ЗП' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PersonalServiceList_NotAuto');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PersonalServiceList_NotRound() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PersonalServiceList_NotRound'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PersonalServiceList(), 'zc_ObjectBoolean_PersonalServiceList_NotRound', 'Исключить из округлений по кассе' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PersonalServiceList_NotRound');
 
 
 
