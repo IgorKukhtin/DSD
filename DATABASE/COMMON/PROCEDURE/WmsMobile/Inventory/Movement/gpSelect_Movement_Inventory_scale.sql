@@ -204,8 +204,7 @@ BEGIN
                               )
 
        -- данные по таре
-       
-, tmpMI_Tara AS (WITH
+     , tmpMI_Tara AS (WITH
                  tmp AS (SELECT MovementItem.MovementId
                               , MovementItem.Id
                               -- партия - дата

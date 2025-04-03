@@ -139,12 +139,12 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  {LoadReportFromFile('PrintMovement_Inventory_Scale_group', ReportPath + '\Товарный Учет\PrintMovement_Inventory_Scale_group.fr3');
-  exit;
+  LoadReportFromFile('PrintMovement_Inventory_Scale_group', ReportPath + '\Товарный Учет\PrintMovement_Inventory_Scale_group.fr3');
+  //exit;
 
   LoadReportFromFile('PrintMovement_Inventory_Scale', ReportPath + '\Товарный Учет\PrintMovement_Inventory_Scale.fr3');
   exit;
-
+  {
   LoadReportFromFile('PrintMovement_Income_Reestr', ReportPath + '\Товарный Учет\PrintMovement_Income_Reestr.fr3');
   exit;
 

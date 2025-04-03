@@ -69,6 +69,8 @@ type
     dxBarSeparator1: TdxBarSeparator;
     bbPrint_MovGroup: TdxBarButton;
     bb: TdxBarButton;
+    spSelectPrint_gr: TdsdStoredProc;
+    spSelectPrint_Mov_gr: TdsdStoredProc;
   private
     { Private declarations }
   public

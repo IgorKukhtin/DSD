@@ -1,30 +1,30 @@
 inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
   Caption = #1054#1090#1095#1077#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' ('#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1072#1089#1087#1086#1088#1090#1072')>'
-  ClientHeight = 348
+  ClientHeight = 416
   ClientWidth = 1064
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1080
-  ExplicitHeight = 387
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
     Width = 1064
-    Height = 257
+    Height = 325
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1064
     ExplicitHeight = 257
-    ClientRectBottom = 257
+    ClientRectBottom = 325
     ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1064
       ExplicitHeight = 257
       inherited cxGrid: TcxGrid
         Width = 1064
-        Height = 257
+        Height = 325
         ExplicitWidth = 1064
         ExplicitHeight = 257
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -738,10 +738,10 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
     object actPrint_MovGroup: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint_Mov
+      StoredProc = spSelectPrint_Mov_gr
       StoredProcList = <
         item
-          StoredProc = spSelectPrint_Mov
+          StoredProc = spSelectPrint_Mov_gr
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081
       Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081
@@ -852,10 +852,10 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
     object actPrintGroup: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint_gr
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_gr
         end>
       Caption = #1055#1077#1095#1072#1090#1100'  '#1079#1072' '#1087#1077#1088#1080#1086#1076' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081
       Hint = #1055#1077#1095#1072#1090#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081' '
@@ -1264,10 +1264,17 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTara'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 664
-    Top = 168
+    Left = 840
+    Top = 184
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -1328,10 +1335,17 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
         ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTara'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 736
-    Top = 200
+    Left = 840
+    Top = 240
   end
   object spSelectMIPrintPassport: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_WeighingProduction_PrintPassport'
@@ -1361,5 +1375,91 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
     PackSize = 1
     Left = 512
     Top = 224
+  end
+  object spSelectPrint_gr: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Inventory_scale_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 45658d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 45658d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTara'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 912
+    Top = 184
+  end
+  object spSelectPrint_Mov_gr: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Inventory_scale_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 45658d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 45658d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTara'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 240
   end
 end
