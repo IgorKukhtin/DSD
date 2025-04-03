@@ -74,14 +74,6 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = Amount
         end
         item
@@ -140,14 +132,6 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
           Column = diffBegin_sec
         end>
       DataController.Summary.FooterSummaryItems = <
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
         item
           Format = ',0.####'
           Kind = skSum
