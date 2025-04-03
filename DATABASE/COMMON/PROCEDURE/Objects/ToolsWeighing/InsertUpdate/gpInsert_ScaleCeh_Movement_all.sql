@@ -832,7 +832,7 @@ BEGIN
                                   ELSE COALESCE (MIString_PartionGoods.ValueData, '')
                              END AS PartionGoods
 
-                           , MIString_PartNumber.ValueData                       AS PartNumber
+                           , COALESCE (MIString_PartNumber.ValueData, '')        AS PartNumber
                            , MovementItem.Amount                                 AS Amount
                            , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
                            , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
@@ -936,7 +936,7 @@ BEGIN
 
                            , 0 :: Integer AS PartionCellId
 
-                           , MIString_PartNumber.ValueData                   AS PartNumber
+                           , COALESCE (MIString_PartNumber.ValueData, '')    AS PartNumber
 
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
                                        THEN NULL
@@ -1290,7 +1290,7 @@ BEGIN
 
                            , '' AS PartNumber
 
-                           , NULL :: TDateTime AS PartionGoodsDate
+                           , zc_DateStart() :: TDateTime AS PartionGoodsDate
 
                            , '' AS PartionGoods
 
