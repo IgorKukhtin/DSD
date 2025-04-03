@@ -145,6 +145,8 @@ BEGIN
              -- Без схемы Vchasno - EDI
              -- AND ObjectBoolean_Juridical_VchasnoEdi.ObjectId IS NULL
              --
+             AND COALESCE (Movement_Parent.StatusId, 0) <> zc_Enum_Status_UnComplete()
+             --
              AND ((Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
               AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
                 < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
@@ -160,6 +162,7 @@ BEGIN
                AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '5 MIN'
                AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '5 MIN'
                   )*/
+                  
                 )
            ORDER BY COALESCE (MovementDate_Update.ValueData, Movement.OperDate)
           ;
