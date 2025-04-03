@@ -1,4 +1,4 @@
-  -- По штатному расписанию - из Модели + из Табеля - По проводкам кол-во
+-- По штатному расписанию - из Модели + из Табеля - По проводкам кол-во
 -- Function: gpSelect_Report_Wage_Model ()
 
 DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Model (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
@@ -442,8 +442,30 @@ AS  (SELECT
                           END)::TFloat as Amount
 
                     ,SUM (CASE  WHEN MovementItemContainer.IsActive = TRUE
-                                     THEN MovementItemContainer.Amount - COALESCE (MIF_AmountForm.ValueData, 0)
-                                ELSE -1 * MovementItemContainer.Amount - COALESCE (MIF_AmountForm.ValueData, 0)
+                                     THEN MovementItemContainer.Amount
+                                          -- формовка 1день,кг
+                                        - CASE WHEN MovementItemContainer.OperDate BETWEEN inEndDate AND inEndDate
+                                                   THEN COALESCE (MIF_AmountForm.ValueData, 0)
+                                              ELSE 0
+                                          END
+                                          -- формовка 2день,кг
+                                        - CASE WHEN MovementItemContainer.OperDate BETWEEN inEndDate - INTERVAL '1 DAY' AND inEndDate
+                                                   THEN COALESCE (MIF_AmountForm_two.ValueData, 0)
+                                              ELSE 0
+                                          END
+
+                                ELSE -1 * MovementItemContainer.Amount
+                                      -- формовка 1день,кг
+                                    - CASE WHEN MovementItemContainer.OperDate BETWEEN inEndDate AND inEndDate
+                                                THEN COALESCE (MIF_AmountForm.ValueData, 0)
+                                           ELSE 0
+                                      END
+                                      -- формовка 2день,кг
+                                    - CASE WHEN MovementItemContainer.OperDate BETWEEN inEndDate - INTERVAL '1 DAY' AND inEndDate
+                                                THEN COALESCE (MIF_AmountForm_two.ValueData, 0)
+                                           ELSE 0
+                                      END
+
                           END)::TFloat as Amount_form
 
                     , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
@@ -509,11 +531,16 @@ AS  (SELECT
                                                       AND MovementItemContainer.MovementId NOT IN (SELECT Movement_Report_Wage_Model_View.Id FROM Movement_Report_Wage_Model_View)
                                                     --AND (MovementItemContainer.MovementId = 15479819 OR inSession <> '5')
                                                     
-                      -- формовка 
+                      -- формовка 1день,кг
                       LEFT OUTER JOIN MovementItemFloat AS MIF_AmountForm ON MIF_AmountForm.MovementItemId = MovementItemContainer.MovementItemId
                                                                          AND MIF_AmountForm.DescId         = zc_MIFloat_AmountForm()
                                                                          AND MIF_AmountForm.ValueData      > 0
                                                                          AND SettingDesc.SelectKindId      = zc_Enum_SelectKind_InAmountForm()
+                      -- формовка 2день,кг
+                      LEFT OUTER JOIN MovementItemFloat AS MIF_AmountForm_two ON MIF_AmountForm_two.MovementItemId = MovementItemContainer.MovementItemId
+                                                                             AND MIF_AmountForm_two.DescId         = zc_MIFloat_AmountForm_two()
+                                                                             AND MIF_AmountForm_two.ValueData      > 0
+                                                                             AND SettingDesc.SelectKindId      = zc_Enum_SelectKind_InAmountForm()
 
                       LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods_master ON CLO_PartionGoods_master.ContainerId = MovementItemContainer.ContainerId
                                                                                     AND CLO_PartionGoods_master.DescId      = zc_ContainerLinkObject_PartionGoods()
@@ -624,9 +651,27 @@ AS  (SELECT
 
                     ,0 ::TFloat as Amount
 
-                    ,SUM (CASE  WHEN MovementItemContainer.IsActive = TRUE
-                                     THEN COALESCE (MIF_AmountForm.ValueData, 0)
-                                ELSE COALESCE (MIF_AmountForm.ValueData, 0)
+                    ,SUM (CASE WHEN MovementItemContainer.IsActive = TRUE
+                                    THEN CASE WHEN MovementItemContainer.OperDate BETWEEN inStartDate - INTERVAL '1 DAY' AND inStartDate - INTERVAL '1 DAY' 
+                                                   -- формовка 1день,кг
+                                                   THEN COALESCE (MIF_AmountForm.ValueData, 0)
+                                              ELSE 0
+                                         END
+                                       + CASE WHEN MovementItemContainer.OperDate BETWEEN inStartDate - INTERVAL '2 DAY' AND inStartDate - INTERVAL '1 DAY' 
+                                                   -- формовка 2день,кг
+                                                   THEN COALESCE (MIF_AmountForm_two.ValueData, 0)
+                                              ELSE 0
+                                         END
+                               ELSE CASE WHEN MovementItemContainer.OperDate BETWEEN inStartDate - INTERVAL '1 DAY' AND inStartDate - INTERVAL '1 DAY' 
+                                              -- формовка 1день,кг
+                                              THEN COALESCE (MIF_AmountForm.ValueData, 0)
+                                         ELSE 0
+                                    END
+                                  + CASE WHEN MovementItemContainer.OperDate BETWEEN inStartDate - INTERVAL '2 DAY' AND inStartDate - INTERVAL '1 DAY' 
+                                              -- формовка 2день,кг
+                                              THEN COALESCE (MIF_AmountForm_two.ValueData, 0)
+                                         ELSE 0
+                                    END
                           END)::TFloat AS Amount_form
 
                     , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
@@ -677,9 +722,12 @@ AS  (SELECT
                                                     --AND (MovementItemContainer.MovementId = 15479819 OR inSession <> '5')
                                                     
                       -- формовка 
-                      INNER JOIN MovementItemFloat AS MIF_AmountForm ON MIF_AmountForm.MovementItemId = MovementItemContainer.MovementItemId
-                                                                    AND MIF_AmountForm.DescId         = zc_MIFloat_AmountForm()
-                                                                    AND MIF_AmountForm.ValueData      > 0
+                      LEFT JOIN MovementItemFloat AS MIF_AmountForm ON MIF_AmountForm.MovementItemId = MovementItemContainer.MovementItemId
+                                                                   AND MIF_AmountForm.DescId         = zc_MIFloat_AmountForm()
+                                                                   AND MIF_AmountForm.ValueData      > 0
+                      LEFT JOIN MovementItemFloat AS MIF_AmountForm_two ON MIF_AmountForm_two.MovementItemId = MovementItemContainer.MovementItemId
+                                                                       AND MIF_AmountForm_two.DescId         = zc_MIFloat_AmountForm_two()
+                                                                       AND MIF_AmountForm_two.ValueData      > 0
 
                       LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods_master ON CLO_PartionGoods_master.ContainerId = MovementItemContainer.ContainerId
                                                                                     AND CLO_PartionGoods_master.DescId      = zc_ContainerLinkObject_PartionGoods()
@@ -705,6 +753,9 @@ AS  (SELECT
                                                AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
                                                AND MovementBoolean_Peresort.ValueData  = TRUE
                  WHERE MovementBoolean_Peresort.MovementId IS NULL
+                   AND (MIF_AmountForm.ValueData     > 0
+                     OR MIF_AmountForm_two.ValueData > 0
+                       )
                  GROUP BY
                      MovementItemContainer.OperDate
                     ,MovementItemContainer.MovementId
