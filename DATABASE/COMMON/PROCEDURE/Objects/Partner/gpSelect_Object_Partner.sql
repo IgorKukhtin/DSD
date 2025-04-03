@@ -35,7 +35,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                MemberSaler1Id Integer, MemberSaler1Code Integer, MemberSaler1Name TVarChar,
                MemberSaler2Id Integer, MemberSaler2Code Integer, MemberSaler2Name TVarChar,
                
-               PersonalId Integer, PersonalCode Integer, PersonalName TVarChar,
+               PersonalId Integer, PersonalCode Integer, PersonalName TVarChar, BranchName_Personal TVarChar, UnitName_Personal TVarChar,
                PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar, BranchName_PersonalTrade TVarChar, UnitName_PersonalTrade TVarChar,
                PersonalMerchId Integer, PersonalMerchCode Integer, PersonalMerchName TVarChar,
                PersonalSigningId Integer, PersonalSigningCode Integer, PersonalSigningName TVarChar,
@@ -193,10 +193,14 @@ BEGIN
          , Object_MemberSaler2.ObjectCode     AS MemberSaler2Code
          , Object_MemberSaler2.ValueData      AS MemberSaler2Name
 
+           -- ФИО сотрудник (супервайзер)
          , Object_Personal.PersonalId        AS PersonalId
          , Object_Personal.PersonalCode      AS PersonalCode
          , Object_Personal.PersonalName      AS PersonalName
+         , Object_Personal.BranchName        AS BranchName_Personal
+         , Object_Personal.UnitName          AS UnitName_Personal
 
+           -- ФИО сотрудник (ТП)
          , Object_PersonalTrade.PersonalId   AS PersonalTradeId
          , Object_PersonalTrade.PersonalCode AS PersonalTradeCode
          , Object_PersonalTrade.PersonalName AS PersonalTradeName
@@ -448,11 +452,13 @@ BEGIN
                              AND ObjectLink_Partner_MemberSaler2.DescId = zc_ObjectLink_Partner_MemberSaler2()
          LEFT JOIN Object AS Object_MemberSaler2 ON Object_MemberSaler2.Id = ObjectLink_Partner_MemberSaler2.ChildObjectId
 
+         -- ФИО сотрудник (супервайзер)
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                               ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
          LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
 
+         -- ФИО сотрудник (ТП)
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                               ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
@@ -641,6 +647,8 @@ BEGIN
          , Object_Personal.PersonalId        AS PersonalId
          , Object_Personal.PersonalCode      AS PersonalCode
          , Object_Personal.PersonalName      AS PersonalName
+         , Object_Personal.BranchName        AS BranchName_Personal
+         , Object_Personal.UnitName          AS UnitName_Personal
 
          , Object_PersonalTrade.PersonalId   AS PersonalTradeId
          , Object_PersonalTrade.PersonalCode AS PersonalTradeCode
