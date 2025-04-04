@@ -606,9 +606,19 @@ BEGIN
 	|| ';' || COALESCE (OH_JuridicalDetails_From.OKPO, '')
 	--Номер РН
 	|| ';' || Movement.InvNumber
+
 	-- Адрес доставки (в ObjectString_RoomNumber.ValueData хранится номер магазина)
 	--|| ';' || 'DP:V'||ObjectString_RoomNumber.ValueData||' - НЕКТАР №'||ObjectString_RoomNumber.ValueData||' '||COALESCE(Object_PartnerAdress.ValueData, '')
-	|| ';' || 'DP:V' || COALESCE (ObjectString_ShortName.ValueData, '')
+	|| ';' || CASE WHEN View_Contract.JuridicalId = 11978558 -- Деметра Рітейл ТОВ
+                            THEN 'V'
+                       ELSE 'DP:V'
+                  END
+                || COALESCE (ObjectString_ShortName.ValueData, '')
+              --|| CASE WHEN vbUserId = 5
+              --             THEN '*' || COALESCE (View_Contract.JuridicalId, 0)  :: TVarChar
+              --        ELSE ''
+              --    END
+
 	-- Версия формата
 	|| ';' || '14'
 	-- Вид документа : RN – расходная накладная or VN – возвратная накладная or SP - спецификация
