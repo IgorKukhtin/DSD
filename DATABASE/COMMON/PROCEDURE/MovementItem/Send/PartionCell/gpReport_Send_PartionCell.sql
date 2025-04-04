@@ -607,8 +607,15 @@ BEGIN
                            , CASE WHEN inIsMovement = TRUE THEN Movement.FromId ELSE 0 END                   AS FromId
                            , Movement.ToId                                                                   AS ToId              -- ***
                            , CASE WHEN inIsMovement = TRUE THEN MovementItem.MovementItemId ELSE 0 END       AS MovementItemId    -- ***
+
                            , MovementItem.GoodsId                                                            AS GoodsId           -- ***
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId,0)                                    AS GoodsKindId       -- ***
+                             --
+                           , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30102()
+                                   AND 1=0
+                                       -- Тушенка
+                                       THEN 0
+                                  ELSE COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+                             END AS GoodsKindId
 
                              -- ***Дата партии
                            , CASE WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE -- AND vbUserId = 5
@@ -639,6 +646,12 @@ BEGIN
 
                       FROM tmpMovement AS Movement
                            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+
+                           -- Тушенка
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.GoodsId
+                                               AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+
                            -- пропорционально
                            LEFT JOIN tmpMILO_PC_count AS tmpMILO_PC_count ON tmpMILO_PC_count.MovementItemId = MovementItem.MovementItemId
                            -- по ячейкам
@@ -665,7 +678,12 @@ BEGIN
                              , Movement.ToId
                              , CASE WHEN inIsMovement = TRUE THEN MovementItem.MovementItemId ELSE 0 END
                              , MovementItem.GoodsId
-                             , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+                             , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30102()
+                                     AND 1=0
+                                         -- Тушенка
+                                         THEN 0
+                                    ELSE COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+                               END
                              , CASE WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE -- AND vbUserId = 5
                                          THEN  zc_DateStart()
                                     ELSE COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
@@ -1616,8 +1634,6 @@ BEGIN
         LEFT JOIN tmpChoiceCell_mi ON tmpChoiceCell_mi.GoodsId = tmpResult.GoodsId
                                   AND COALESCE (tmpChoiceCell_mi.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
                                   AND tmpChoiceCell.Ord = 1
-
-
         ;
 
     ELSE
@@ -1711,25 +1727,34 @@ BEGIN
      RETURN QUERY
      WITH
        -- товары из 2-х групп
-       tmpGoods AS (SELECT lfSelect.GoodsId
+       tmpGoods AS (-- "ГП"
+                    SELECT lfSelect.GoodsId
                     FROM lfSelect_Object_Goods_byGoodsGroup (1832) AS lfSelect
                    UNION
+                    -- "ТУШЕНКА"
                     SELECT lfSelect.GoodsId
                     FROM lfSelect_Object_Goods_byGoodsGroup (1979) AS lfSelect
                    )
 
  , tmpRemains_all AS (SELECT Container.ObjectId                                                 AS GoodsId
-                           , COALESCE (CLO_GoodsKind.ObjectId, zc_GoodsKind_Basis())            AS GoodsKindId
+                           , CASE WHEN CLO_GoodsKind.ObjectId = 0 THEN zc_GoodsKind_Basis() ELSE COALESCE (CLO_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END AS GoodsKindId
                            , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
                            , MIN (COALESCE (ObjectLink_PartionCell.ChildObjectId, 0))           AS PartionCellId
                            , SUM (COALESCE (Container.Amount,0))                                AS Amount
                       FROM ContainerLinkObject AS CLO_Unit
                            INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
-                           INNER JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                          ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
-                                                         AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-                                                         AND CLO_GoodsKind.ObjectId    > 0
+                           LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                         ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
+                                                        AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                                      --AND CLO_GoodsKind.ObjectId    > 0
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                ON ObjectLink_Goods_InfoMoney.ObjectId = Container.ObjectId
+                                               AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                           LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_Destination
+                                                ON ObjectLink_InfoMoney_Destination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                               AND ObjectLink_InfoMoney_Destination.DescId   = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+
                            LEFT JOIN ContainerLinkObject AS CLO_Account
                                                          ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                         AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
@@ -1749,8 +1774,10 @@ BEGIN
                       WHERE CLO_Unit.ObjectId = inUnitId
                         AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                         AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                        -- Готовая продукция + Тушенка + Ирна
+                        AND ObjectLink_InfoMoney_Destination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_20900())
                       GROUP BY Container.ObjectId
-                           , COALESCE (CLO_GoodsKind.ObjectId, zc_GoodsKind_Basis())
+                           , CASE WHEN CLO_GoodsKind.ObjectId = 0 THEN zc_GoodsKind_Basis() ELSE COALESCE (CLO_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END
                            , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart())
                       HAVING SUM (COALESCE (Container.Amount,0)) <> 0
                      )

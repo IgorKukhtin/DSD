@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1082#1072#1079#1086#1074' EDI'
-  ClientHeight = 463
+  ClientHeight = 763
   ClientWidth = 722
   Color = clBtnFace
   Constraints.MinHeight = 400
@@ -41,7 +41,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 126
     Width = 722
-    Height = 252
+    Height = 210
     Align = alClient
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
@@ -159,7 +159,7 @@ object MainForm: TMainForm
   end
   object ExportXmlGrid: TcxGrid
     Left = 0
-    Top = 378
+    Top = 678
     Width = 722
     Height = 85
     Align = alBottom
@@ -189,6 +189,56 @@ object MainForm: TMainForm
     end
     object ExportXmlGridLevel: TcxGridLevel
       GridView = ExportXmlGridDBTableView
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 336
+    Width = 722
+    Height = 342
+    Align = alBottom
+    BevelOuter = bvNone
+    Caption = 'PanelVchasno'
+    TabOrder = 4
+    object LogVchasno_InMsgMemo: TMemo
+      Left = 0
+      Top = 0
+      Width = 369
+      Height = 342
+      Align = alLeft
+      Color = clBlack
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clCream
+      Font.Height = -15
+      Font.Name = 'Courier New'
+      Font.Style = []
+      Lines.Strings = (
+        'LogVchasno_InMsgMemo')
+      ParentFont = False
+      ReadOnly = True
+      ScrollBars = ssVertical
+      TabOrder = 0
+      WordWrap = False
+    end
+    object LogVchasno_OutMsgMemo: TMemo
+      Left = 369
+      Top = 0
+      Width = 353
+      Height = 342
+      Align = alClient
+      Color = clBlack
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clCream
+      Font.Height = -15
+      Font.Name = 'Courier New'
+      Font.Style = []
+      Lines.Strings = (
+        'LogVchasno_OutMsgMemo')
+      ParentFont = False
+      ReadOnly = True
+      ScrollBars = ssVertical
+      TabOrder = 1
+      WordWrap = False
     end
   end
   object TrayIcon: TTrayIcon
@@ -11598,7 +11648,7 @@ object MainForm: TMainForm
     Top = 54
   end
   object spSelectSend_toEDI: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_EDI_Send_UnComplete_two'
+    StoredProcName = 'gpSelect_Movement_EDI_Send_UnComplete'
     DataSet = Send_toEDICDS
     DataSets = <
       item

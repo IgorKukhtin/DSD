@@ -31,7 +31,14 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummAvance TFloat
              , AmountService_diff TFloat
 
-             , Amount_current TFloat, Amount_avance TFloat, Amount_avance_ret TFloat, Amount_service TFloat
+             , Amount_current TFloat
+               -- Аванс (выплачено)
+             , Amount_avance TFloat
+               -- Аванс (возврат)
+             , Amount_avance_ret TFloat
+               -- Другие (выплачено)
+             , Amount_service TFloat
+               -- 
              , SummRemains TFloat, SummCardSecondRemains TFloat
              , AmountCardSecond_avance TFloat
              , isCalculated Boolean
@@ -923,6 +930,31 @@ BEGIN
                                                        AND tmpService.PositionId  = tmpMI.PositionId
                                                        AND tmpService.InfoMoneyId = tmpMI.InfoMoneyId
                              )
+
+          -- определяем - !!!аванс - факт (другой алгоритм)!!!
+        , tmpAvance_find AS (SELECT MovementItem.ObjectId     AS PersonalId
+                                  , SUM (MovementItem.Amount) AS Amount
+                             FROM Movement
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId = zc_MI_Master()
+                                                         AND MovementItem.isErased = FALSE
+                                  INNER JOIN MovementItemLinkObject AS MLO_PersonalServiceList
+                                                                    ON MLO_PersonalServiceList.MovementItemId = MovementItem.Id
+                                                                   AND MLO_PersonalServiceList.DescId         = zc_MILinkObject_MoneyPlace()
+                                                                   AND MLO_PersonalServiceList.ObjectId       = vbPersonalServiceListId
+                                  INNER JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MLO_PersonalServiceList.ObjectId
+                                                                                 AND Object_PersonalServiceList.ValueData ILIKE '%Аванс%'
+                                  /*INNER JOIN MovementItemDate AS MIDate_ServiceDate
+                                                              ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
+                                                             AND MIDate_ServiceDate.DescId        = zc_MIDate_ServiceDate()
+                                                             AND MIDate_ServiceDate.ValueData     = vbServiceDate*/
+
+                             WHERE Movement.ParentId = inParentId
+                               AND Movement.DescId   = zc_Movement_Cash()
+                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                             GROUP BY MovementItem.ObjectId
+                            )
+
        -- Результат
        SELECT tmpData.MovementItemId                  AS Id
             , Object_Personal.Id                      AS PersonalId
@@ -1013,9 +1045,16 @@ BEGIN
             , tmpData.AmountService_diff   :: TFloat AS AmountService_diff
 
             , tmpData.Amount_current     :: TFloat AS Amount_current
-            , CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END :: TFloat AS Amount_avance
+ 
+              -- Аванс (выплачено)
+            , (CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END
+             + COALESCE (tmpAvance_find.Amount, 0)
+              ) :: TFloat AS Amount_avance
+
+              -- Аванс (возврат)
             , tmpData.Amount_avance_ret  :: TFloat AS Amount_avance_ret
 
+              -- Другие (выплачено)
             , (COALESCE (tmpData.Amount_service, 0) + COALESCE (tmpAvance_Only.Amount, 0)) :: TFloat AS Amount_service
 
               -- Ост. к выпл. из кассы
@@ -1059,6 +1098,10 @@ BEGIN
 
             LEFT JOIN tmpAvance_Only ON tmpAvance_Only.PersonalId = tmpData.PersonalId
                                     AND tmpData.Ord               = 1
+
+            -- !!!аванс - факт (другой алгоритм)!!!
+            LEFT JOIN tmpAvance_find ON tmpAvance_find.PersonalId = tmpData.PersonalId
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpData.MovementItemId
                                         AND MIString_Comment.DescId         = zc_MIString_Comment()

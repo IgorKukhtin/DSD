@@ -77,27 +77,27 @@ END IF;
                                                            , 877321  -- 233024 - СІЛЬПО-ФУД ТОВ п.р. Нерубайське вул. ***** буд.№11,№12,№13
                                                             )
                                      )
-                          AND vbUserId <> 1329039  -- Авто-Загрузка EDI
+                          -- AND vbUserId <> 1329039  -- Авто-Загрузка EDI
                          ;
 
 
      -- определяется
      SELECT -- UserSign
-            CASE WHEN vbUserId = 5 AND 1=0
+            CASE WHEN vbUserId = 5 AND 1=1
                       THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\НАГОРНОВА Т.С\24447183_2992217209_SU231208103427.ZS2'
                  WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData
                  ELSE '24447183_2992217209_SU231208103427.ZS2'
             END AS UserSign
 
             -- UserSeal
-          , CASE WHEN vbUserId = 5 AND 1=0
+          , CASE WHEN vbUserId = 5 AND 1=1
                       THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
                  WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData
                  ELSE '24447183_U221220114928.ZS2'
             END AS UserSeal
 
             -- UserKey
-          , CASE WHEN vbUserId = 5 AND 1=0
+          , CASE WHEN vbUserId = 5 AND 1=1
                       THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
                  WHEN ObjectString_UserKey.ValueData <> '' THEN ObjectString_UserKey.ValueData
                  ELSE '24447183_U221220114928.ZS2'
@@ -552,23 +552,31 @@ END IF;
            --, ObjectString_Partner_GLNCode.ValueData AS DeliveryPlaceGLNCode
            --, ObjectString_Partner_GLNCode.ValueData AS RecipientGLNCode
 
+             -- GLN місця доставки
            , ObjectString_Partner_GLNCode.ValueData     AS DeliveryPlaceGLNCode
+
            /*, CASE WHEN ObjectString_Partner_GLNCodeJuridical.ValueData <> '' THEN ObjectString_Partner_GLNCodeJuridical.ValueData ELSE ObjectString_Juridical_GLNCode.ValueData END AS BuyerGLNCode
            , CASE WHEN ObjectString_Partner_GLNCodeRetail.ValueData <> '' THEN ObjectString_Partner_GLNCodeRetail.ValueData WHEN ObjectString_Retail_GLNCode.ValueData <> '' THEN ObjectString_Retail_GLNCode.ValueData ELSE ObjectString_Juridical_GLNCode.ValueData END AS RecipientGLNCode
 
            , CASE WHEN ObjectString_Partner_GLNCodeCorporate.ValueData <> '' THEN ObjectString_Partner_GLNCodeCorporate.ValueData ELSE ObjectString_JuridicalFrom_GLNCode.ValueData END AS SupplierGLNCode
            , CASE WHEN ObjectString_Partner_GLNCodeCorporate.ValueData <> '' THEN ObjectString_Partner_GLNCodeCorporate.ValueData ELSE ObjectString_JuridicalFrom_GLNCode.ValueData END AS SenderGLNCode*/
 
+             -- GLN покупця
            , zfCalc_GLNCodeJuridical (inGLNCode                  := ObjectString_Partner_GLNCode.ValueData
                                     , inGLNCodeJuridical_partner := ObjectString_Partner_GLNCodeJuridical.ValueData
                                     , inGLNCodeJuridical         := ObjectString_Juridical_GLNCode.ValueData
                                      ) AS BuyerGLNCode
 
-           , zfCalc_GLNCodeRetail (inGLNCode               := ObjectString_Partner_GLNCode.ValueData
+             -- GLN одержувача повідомлення
+           , CASE WHEN Movement.InvNumber IN ('2183965', '2183964', '2183929', '2183925')
+                       THEN '9991027029468'
+                  ELSE zfCalc_GLNCodeRetail
+                                  (inGLNCode               := ObjectString_Partner_GLNCode.ValueData
                                  , inGLNCodeRetail_partner := ObjectString_Partner_GLNCodeRetail.ValueData
                                  , inGLNCodeRetail         := ObjectString_Retail_GLNCode.ValueData
                                  , inGLNCodeJuridical      := ObjectString_Juridical_GLNCode.ValueData
-                                  ) AS RecipientGLNCode
+                                  )
+             END :: TVarChar AS RecipientGLNCode
 
            , CASE WHEN 1=0 AND OH_JuridicalDetails_To.JuridicalId = 15158 -- МЕТРО Кеш енд Кері Україна ТОВ
                        THEN '' -- если Метро, тогда наш = "пусто"
@@ -648,6 +656,7 @@ END IF;
                   --OR vbUserId = 5
                     OR (ObjectLink_Partner_Juridical.ChildObjectId = 862910 -- СІЛЬПО-ФУД ТОВ
                     AND vbUserId <> 1329039  -- Авто-Загрузка EDI
+                    AND vbUserId <> 5 -- ???
                        )
                   THEN TRUE
                   ELSE FALSE
@@ -1333,4 +1342,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 30730480, inSession:=  '5'); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 30866920, inSession:=  '5'); -- FETCH ALL "<unnamed portal 1>";

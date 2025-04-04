@@ -2834,9 +2834,11 @@ begin
             end;
   end
   else
+
+  // Создать XML - DESADV_fozz_Amount - дог.№ 7183Р AND vbUserId <> 1329039  -- Авто-Загрузка EDI
   if (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
  and (HeaderDataSet.FieldByName('isSchema_fozz_desadv').asBoolean = FALSE)
-     and (1=1)
+ and (1=1)
   then begin
             // 1.1. Создать XML - fozzy - Amount
             DESADV_fozz_Amount := DOCUMENTINVOICE_TN_XML.NewDocumentInvoice;
@@ -3066,7 +3068,7 @@ begin
 
   //else
       begin
-            // Создать XML - Desadv - ВСЕГДА
+            // Создать XML - Desadv - ВСЕГДА + может быть BOXESQUANTITY
             DESADV := DesadvXML.NewDESADV;
             //
             DESADV.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
@@ -3094,6 +3096,7 @@ begin
               ('DELIVERYPLACEGLNCode').asString;
             DESADV.HEAD.SENDER := HeaderDataSet.FieldByName
               ('SenderGLNCode').asString;
+            // GLN одержувача повідомлення
             DESADV.HEAD.RECIPIENT := HeaderDataSet.FieldByName
               ('RecipientGLNCode').asString;
             DESADV.HEAD.PACKINGSEQUENCE.HIERARCHICALID := '1';
@@ -3151,6 +3154,7 @@ begin
   // 1. Send
   Stream := TMemoryStream.Create;
   try
+   // не для BOXESQUANTITY
    if (HeaderDataSet.FieldByName('isSchema_fozz_desadv').asBoolean = FALSE) then
    begin
     if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
@@ -3198,6 +3202,7 @@ begin
       FInsertEDIEvents.Execute;
     end;
    end;
+
   finally
     Stream.Free;
     //
@@ -3206,8 +3211,9 @@ begin
   end;
   //
   //
-  // 2.Send XML - only fozzy - DESADV
-  if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+  // 2.Send XML - only fozzy - ВСЕГДА DESADV  + если BOXESQUANTITY
+  if (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
+  or (HeaderDataSet.FieldByName('isSchema_fozz_desadv').asBoolean = TRUE)
   then
   try
     Stream := TMemoryStream.Create;
@@ -3777,6 +3783,7 @@ var
 begin
   //
   if  (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = FALSE)
+   OR (HeaderDataSet.FieldByName('isSchema_fozz_desadv').asBoolean = TRUE)
   then exit;
   //
             // Создать XML
@@ -6180,6 +6187,7 @@ begin
     if DataSetCDS.RecordCount = 0 then
     begin
       //ShowMessages('Нет накладных для загрузки.');
+      Result := true;
       Exit;
     end;
 

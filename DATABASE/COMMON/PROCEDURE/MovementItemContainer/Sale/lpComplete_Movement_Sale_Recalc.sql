@@ -20,10 +20,17 @@ BEGIN
 
      -- if inUserId = 5 then return; end if;
      -- if inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer then return; end if;
+
+     IF inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer
+        AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND  Movement.OperDate <= '25.03.2025')
+     THEN
+         return;
+     END IF;
      
 
      -- Автоматический пересорт
      -- IF inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer THEN inUserId:= zc_Enum_Process_Auto_Peresort(); END IF;
+
 
 
      -- Временно захардкодил - !!!только для этого склада!!!

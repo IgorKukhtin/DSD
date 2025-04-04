@@ -209,6 +209,8 @@ type
     bbUpdate_Personal: TdxBarButton;
     bbUpdate_PersonalTrade: TdxBarButton;
     bbUpdate_PersonalMerch: TdxBarButton;
+    BranchName_Personal: TcxGridDBColumn;
+    UnitName_Personal: TcxGridDBColumn;
   private
     { Private declarations }
   public

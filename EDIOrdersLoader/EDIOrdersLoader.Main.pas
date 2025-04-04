@@ -118,6 +118,9 @@ type
     mactVchasnoEDIDesadv: TMultiAction;
     mactVchasnoEDIOrdrsp: TMultiAction;
     mactVchasnoEDIComDoc: TMultiAction;
+    Panel1: TPanel;
+    LogVchasno_InMsgMemo: TMemo;
+    LogVchasno_OutMsgMemo: TMemo;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -140,6 +143,7 @@ type
     Hour_onSendEmail: Integer;
     fStartTime: TDateTime;
     procedure AddToLog(S: string);
+    procedure AddToLog_Vchasno(isOutMsg : Boolean; S: string; isError : Boolean);
     procedure StartEDI;
     procedure StopEDI;
     procedure ProccessEDI;
@@ -226,6 +230,46 @@ begin
 //  actStopEDI.Enabled := Timer.Enabled;
 end;
 
+procedure TMainForm.AddToLog_Vchasno(isOutMsg : Boolean; S: string; isError : Boolean);
+var
+  LogStr: string;
+  LogFileName: string;
+  LogFile: TextFile;
+begin
+  Application.ProcessMessages;
+  LogStr := FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ' ' + S;
+  // в этом окне
+  if isError = true
+  then if isOutMsg = true
+       // ошибка - исходящий пакет
+       then LogVchasno_OutMsgMemo.Lines.Add(LogStr)
+       // ошибка - входящий пакет
+       else LogVchasno_InMsgMemo.Lines.Add(LogStr)
+  // нет ошибки - в общем окне
+  else LogMemo.Lines.Add(LogStr);
+
+  // в этот файл
+  if isError = true
+  then if isOutMsg = true
+       // ошибка - исходящий пакет
+       then LogFileName := ChangeFileExt(Application.ExeName, '') + '_Vch_err_out_' + FormatDateTime('yyyymmdd', Date) + '.log'
+       // ошибка - входящий пакет
+       else LogFileName := ChangeFileExt(Application.ExeName, '') + '_Vch_err_out_' + FormatDateTime('yyyymmdd', Date) + '.log'
+  // нет ошибки - стандарт файл Vchasno
+  else LogFileName := ChangeFileExt(Application.ExeName, '') + '_Vchasno_' + FormatDateTime('yyyymmdd', Date) + '.log';
+
+  AssignFile(LogFile, LogFileName);
+
+  if FileExists(LogFileName) then
+    Append(LogFile)
+  else
+    Rewrite(LogFile);
+
+  Writeln(LogFile, LogStr);
+  CloseFile(LogFile);
+  Application.ProcessMessages;
+end;
+
 procedure TMainForm.AddToLog(S: string);
 var
   LogStr: string;
@@ -270,7 +314,12 @@ begin
   ProccessingEmail := False;
   Hour_onDel := -1;
   Hour_onSendEmail:= -1;
-
+  //
+  actVchasnoEDIOrdeLoad.ShowErrorMessages.Value:= FALSE;
+  actVchasnoEDIOrdrsp.ShowErrorMessages.Value:= FALSE;
+  actVchasnoEDIDesadv.ShowErrorMessages.Value:= FALSE;
+  actVchasnoEDIComDoc.ShowErrorMessages.Value:= FALSE;
+  //
   cbEmailExcel.Checked:= TRUE; // ParamStr(3) = 'Excel';
   cbLoad.Checked:=  TRUE; // ParamStr(3) = '';
   cbSend.Checked:=  TRUE; // ParamStr(3) = '';
@@ -298,7 +347,10 @@ begin
   deEnd.Enabled := False;
   fStartTime:= Now;
   OptionsMemo.Lines.Text := 'Текущий интервал: ' + IntToStr(IntervalVal) + ' мин.';
+  //
   LogMemo.Clear;
+  LogVchasno_InMsgMemo.Clear;
+  LogVchasno_OutMsgMemo.Clear;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
@@ -387,6 +439,7 @@ begin
 
     AddToLog('Finish');
 
+    // теперь после Vchasno
     //if cbPrevDay.Checked = true then begin cbPrevDay.Checked:= false; isPrevDay_begin:= true; end;
 
     //
@@ -414,9 +467,9 @@ begin
   try
     Result:= false;
     //
-    AddToLog('.....');
+    AddToLog_Vchasno(false, '.....', false);
     actSetDefaults.Execute;
-    AddToLog('Обновили Default для EDI-VCHASNO : ' + DateTimeToStr(now));
+    AddToLog_Vchasno(false, 'Обновили Default для EDI-VCHASNO : ' + DateTimeToStr(now), false);
 
 
     OptionsMemo.Lines.Clear;
@@ -428,8 +481,8 @@ begin
 
      if cbLoad.Checked = FALSE then
      begin
-          AddToLog('.....');
-          AddToLog('ОТКЛЮЧИЛИ Загрузку из EDI-VCHASNO');
+          AddToLog_Vchasno(false, '.....', false);
+          AddToLog_Vchasno(false, 'ОТКЛЮЧИЛИ Загрузку из EDI-VCHASNO', false);
           Result:= true;
           exit
      end;
@@ -440,14 +493,18 @@ begin
     deEnd.EditValue := Date;
 
     Old_stat:=fGet_Movement_Edi_stat;
-    AddToLog('Загрузка VCHASNO началась ... <'+IntToStr(Old_stat)+'>');
+    AddToLog_Vchasno(false, 'Загрузка VCHASNO началась ... <'+IntToStr(Old_stat)+'>', false);
 
-    AddToLog(' - Период с ' + deStart.EditText + ' по ' + deEnd.EditText + ' : del = NO');
+    AddToLog_Vchasno(false, ' - Период с ' + deStart.EditText + ' по ' + deEnd.EditText + ' : del = NO', false);
 
-    actVchasnoEDIOrdeLoad.Execute;
-    AddToLog('Загружено <'+IntToStr(fGet_Movement_Edi_stat - Old_stat)+'> Документов');
+    if not actVchasnoEDIOrdeLoad.Execute
+    then begin
+              AddToLog_Vchasno(false, actVchasnoEDIOrdeLoad.ErrorText.Value, true);
+    end;
 
-    AddToLog('Finish');
+    AddToLog_Vchasno(false, 'Загружено <'+IntToStr(fGet_Movement_Edi_stat - Old_stat)+'> Документов', false);
+
+    AddToLog_Vchasno(false, 'Finish', false);
 
     if cbPrevDay.Checked = true then begin cbPrevDay.Checked:= false; isPrevDay_begin:= true; end;
 
@@ -456,7 +513,7 @@ begin
 
   except
      on E: Exception do begin
-        AddToLog(E.Message);
+        AddToLog_Vchasno(false, E.Message, true);
      end;
   end;
 end;
@@ -510,8 +567,13 @@ begin
                        actExecPrintStoredProc.Execute;
                        if actVchasnoEDIOrdrsp.Execute
                        then actUpdateEdiOrdsprTrue.Execute
-                       else // Ошибку показать в логе
+                       else begin
+                            // Ошибку показать в логе
+                            AddToLog_Vchasno(true, 'Ошибка при отправке Ordspr Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
+                            AddToLog_Vchasno(true, actVchasnoEDIDesadv.ErrorText.Value, true);
+                            AddToLog_Vchasno(true, '', true);
                             ;
+                       end;
                        MyDelay_two(3000);
               end;
               // Vchasno-Desadv
@@ -521,8 +583,12 @@ begin
                        actExecPrintStoredProc.Execute;
                        if actVchasnoEDIDesadv.Execute
                        then actUpdateEdiDesadvTrue.Execute
-                       else // Ошибку показать в логе
-                            ;
+                       else begin
+                            // Ошибку показать в логе
+                            AddToLog_Vchasno(true, 'Ошибка при отправке Desadv Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
+                            AddToLog_Vchasno(true, actVchasnoEDIDesadv.ErrorText.Value, true);
+                            AddToLog_Vchasno(true, '', true);
+                       end;
                        MyDelay_two(3000);
               end;
               // еще раз, но Vchasno-ComDoc
@@ -532,16 +598,24 @@ begin
                        actExecPrintStoredProc.Execute;
                        if actVchasnoEDIComDoc.Execute
                        then actUpdateEdiInvoiceTrue.Execute
-                       else // Ошибку показать в логе
-                            ;
+                       else begin
+                            // Ошибку показать в логе
+                            AddToLog_Vchasno(true, 'Ошибка при отправке ComDoc Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
+                            AddToLog_Vchasno(true, actVchasnoEDIDesadv.ErrorText.Value, true);
+                            AddToLog_Vchasno(true, '', true);
+                       end;
               end;
               //
               FormParams.ParamByName('Err_str_toEDI').Value := '';
               //
               Application.ProcessMessages;
               // Сохранили что отправка прошла
-              AddToLog('отправилось без ошибки № : <' + IntToStr(i) + '>');
-              actUpdate_EDI_Send.Execute;
+              if  (FieldByName('isVchasnoEDI').AsBoolean  = false)
+               or (1=1)
+              then begin
+                AddToLog('отправилось без ошибки № : <' + IntToStr(i) + '>');
+                actUpdate_EDI_Send.Execute;
+              end;
           except
               FormParams.ParamByName('Err_str_toEDI').Value := 'Ошибка при отправке';
               //
@@ -553,14 +627,16 @@ begin
               if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true) then AddToLog('isEdiVchasnoDesadv  =  <true>');
               if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true) then AddToLog('isEdiVchasnoComDoc  =  <true>');
               //
-              AddToLog('Ошибка при отправке № : <' + IntToStr(i) + '> <' + FieldByName('Id').AsString + '>');
+              AddToLog('Ошибка при отправке Id : <' + IntToStr(i) + '> <' + FieldByName('Id').AsString + '> № :');
               //
               Application.ProcessMessages;
               // Сохранили что ошибка
               actUpdate_EDI_Send.Execute;
           end;
           //
-          AddToLog('завершен № : <' + IntToStr(i) + '> из <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
+          if  (FieldByName('isVchasnoEDI').AsBoolean  = false)
+           or (1=1)
+          then AddToLog('завершен № : <' + IntToStr(i) + '> из <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
           //
           Next;
           i:= i+1;
@@ -676,7 +752,7 @@ try
   //
   // !!! Только Загрузка EDI !!!
   gErr:= FALSE;
-  try //fEdi_LoadData_from;
+  try fEdi_LoadData_from;
   except
         on E: Exception do begin
            gErr:= Pos('--- ignore file',E.Message) = 0;
@@ -740,7 +816,7 @@ begin
 if ParamStr(1) <> 'alan_dp_ua' then exit;
 
   ActiveControl:= cbPrevDay;
-exit;
+//exit;
   Present:=Now;
   DecodeTime(Present, Hour, Min, Sec, MSec);
 

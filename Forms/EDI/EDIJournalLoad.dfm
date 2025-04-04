@@ -1100,9 +1100,9 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         item
           Action = actUpdateEdiOrdsprTrue
         end>
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
       Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076'.'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080'> '#1074' EXITE'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072'> '#1074' EXITE'
     end
     object actDesadv: TEDIAction [11]
       Category = 'EDI'
@@ -1837,6 +1837,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       KeyUserName.Value = ''
       KeyUserName.DataType = ftString
       KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
       spHeader = spHeaderOrder
       spList = spListOrder
     end
@@ -1888,6 +1894,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       KeyUserName.Value = ''
       KeyUserName.DataType = ftString
       KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
@@ -1939,6 +1951,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       KeyUserName.Value = ''
       KeyUserName.DataType = ftString
       KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
@@ -1990,6 +2008,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       KeyUserName.Value = ''
       KeyUserName.DataType = ftString
       KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
@@ -2127,6 +2151,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       KeyUserName.ComponentItem = 'UserNameKey'
       KeyUserName.DataType = ftString
       KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
