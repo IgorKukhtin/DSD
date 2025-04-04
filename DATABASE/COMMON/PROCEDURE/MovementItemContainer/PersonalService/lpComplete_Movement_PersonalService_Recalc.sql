@@ -534,11 +534,21 @@ BEGIN
            SELECT tmp.MovementId_to
                 , lpGetAccessKey (ObjectLink_User_Member.ObjectId, zc_Enum_Process_InsertUpdate_Movement_PersonalService(), tmp.PersonalServiceListId_to) AS AccessKeyId
            FROM tmp
+                -- Физ лица(пользователь)
                 LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
                                      ON ObjectLink_PersonalServiceList_Member.ObjectId = tmp.PersonalServiceListId_to
                                     AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
+                -- Руководитель подразделения
+                LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PersonalHead
+                                     ON ObjectLink_PersonalServiceList_PersonalHead.ObjectId = tmp.PersonalServiceListId_to
+                                    AND ObjectLink_PersonalServiceList_PersonalHead.DescId   = zc_ObjectLink_PersonalServiceList_PersonalHead()
+                -- Руководитель подразделения
+                LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                     ON ObjectLink_Personal_Member.ObjectId = ObjectLink_PersonalServiceList_PersonalHead.ChildObjectId
+                                    AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+                -- 
                 LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                                     ON ObjectLink_User_Member.ChildObjectId = ObjectLink_PersonalServiceList_Member.ChildObjectId
+                                     ON ObjectLink_User_Member.ChildObjectId = COALESCE (ObjectLink_PersonalServiceList_Member.ChildObjectId, ObjectLink_Personal_Member.ChildObjectId, ObjectLink_PersonalServiceList_PersonalHead.ChildObjectId)
                                     AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
           ) AS tmp
      WHERE Movement.Id = tmp.MovementId_to
