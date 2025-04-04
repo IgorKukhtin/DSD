@@ -16,6 +16,7 @@ $BODY$
 
     DECLARE vbServiceDateId         Integer;
     DECLARE vbPersonalServiceListId Integer;
+    DECLARE vbServiceDate           TDateTime;
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
@@ -48,7 +49,8 @@ BEGIN
      END IF;
 
 
-     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MIDate_ServiceDate()));
+     vbServiceDate:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MIDate_ServiceDate());
+     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
      vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
 
      -- !!!Проверка прав роль - Ограничение - нет доступа к просмотру ведомость Админ ЗП!!!
@@ -305,7 +307,8 @@ BEGIN
                                      AND (MIContainer.Amount <> 0) --  OR vbUserId = 5
 	                          )
       -- <Карта БН (округление) - 2ф>
-    , tmpMIContainer_diff AS (SELECT SUM (MIContainer.Amount) AS AmountService_diff
+    , tmpMIContainer_diff AS (SELECT -1 * SUM (CASE WHEN MIContainer.OperDate < vbServiceDate + INTERVAL '1 MONTH' THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_start
+                                   , 1 * SUM (CASE WHEN MIContainer.OperDate >= vbServiceDate + INTERVAL '1 MONTH' THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_end
                                    , tmpMIContainer_find_diff.MovementItemId
                               FROM tmpMIContainer_find_diff
                                    INNER JOIN MovementItemContainer AS MIContainer
@@ -351,9 +354,12 @@ BEGIN
 
                            , COALESCE (MIBoolean_Main.ValueData, FALSE) AS isMain
 
+                           , COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0) AS AmountService_diff_start
+                           , COALESCE (tmpMIContainer_diff.AmountService_diff_end, 0)   AS AmountService_diff_end
+
                            , COALESCE (MIFloat_SummToPay.ValueData, 0)
                              -- <Карта БН (округление) - 2ф>
-                           - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+                           + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
                              AS SummToPay
 
                            , COALESCE (MIFloat_SummNalog.ValueData, 0)        AS SummNalog
@@ -365,7 +371,7 @@ BEGIN
 
                            , COALESCE (MIFloat_SummService.ValueData, 0)
                              -- <Карта БН (округление) - 2ф>
-                           - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+                         --+ COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
                              AS SummService
 
                            , COALESCE (MIFloat_SummAdd.ValueData, 0)          AS SummAdd
@@ -595,6 +601,9 @@ BEGIN
 
                            , SUM (tmpMI_all.Amount)           AS Amount
 
+                           , SUM (tmpMI_all.AmountService_diff_start) AS AmountService_diff_start
+                           , SUM (tmpMI_all.AmountService_diff_end)   AS AmountService_diff_end
+
                            , SUM (tmpMI_all.SummToPay)        AS SummToPay
                            , SUM (tmpMI_all.SummNalog)        AS SummNalog
                            , SUM (tmpMI_all.SummNalogRet)     AS SummNalogRet
@@ -648,6 +657,9 @@ BEGIN
                            , tmpMI_all.Comment
 
                            , SUM (tmpMI_all.Amount)           AS Amount
+
+                           , SUM (tmpMI_all.AmountService_diff_start) AS AmountService_diff_start
+                           , SUM (tmpMI_all.AmountService_diff_end)   AS AmountService_diff_end
 
                            , SUM (tmpMI_all.SummToPay)        AS SummToPay
                            , SUM (tmpMI_all.SummNalog)        AS SummNalog
@@ -835,6 +847,9 @@ BEGIN
                             , tmpMI.isMain
                             , tmpMI.Comment
                             , tmpMI.Amount
+
+                            , tmpMI.AmountService_diff_start
+                            , tmpMI.AmountService_diff_end
                             , tmpMI.SummToPay
                             , tmpMI.SummNalog
                             , tmpMI.SummNalogRet
@@ -874,6 +889,9 @@ BEGIN
                             , tmpPersonal.isMain
                             , '' AS Comment
                             , 0 AS Amount
+
+                            , 0 AS AmountService_diff_start
+                            , 0 AS AmountService_diff_end
                             , 0 AS SummToPay
                             , 0 AS SummNalog
                             , 0 AS SummNalogRet
@@ -916,6 +934,9 @@ BEGIN
                             , tmpMember_findPersonal.isMain
                             , '' AS Comment
                             , 0 AS Amount
+
+                            , 0 AS AmountService_diff_start
+                            , 0 AS AmountService_diff_end
                             , 0 AS SummToPay
                             , 0 AS SummNalog
                             , 0 AS SummNalogRet
@@ -1003,6 +1024,13 @@ BEGIN
 
 --            , tmpAll.Amount           :: TFloat AS Amount
 --            , tmpAll.SummToPay        :: TFloat AS AmountToPay
+
+              -- Сальдо на початок
+            , tmpAll.AmountService_diff_start :: TFloat AS AmountService_diff_start
+              -- Сальдо на кінець
+            , tmpAll.AmountService_diff_end   :: TFloat AS AmountService_diff_end
+
+              -- Ост. к выдаче (из кассы), грн
             , (tmpAll.SummToPay
              - COALESCE (tmpMIContainer.SummNalog, 0)    + tmpAll.SummNalog
              + COALESCE (tmpMIContainer.SummNalogRet, 0) - tmpAll.SummNalogRet
@@ -1012,8 +1040,11 @@ BEGIN
              - COALESCE (tmpMIContainer_pay.Amount_avance, 0) - COALESCE (tmpAll.SummAvance, 0)
              - COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)
              - COALESCE (tmpMIContainer_pay.Amount_service, 0)
+               -- Сальдо на кінець
+             - COALESCE (tmpAll.AmountService_diff_end, 0)
               ) :: TFloat AS AmountCash
 
+              -- Начислено,грн
             , (tmpAll.SummService /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/
              -- + tmpAll.SummAdd
              + tmpAll.SummHoliday
@@ -1021,6 +1052,7 @@ BEGIN
              + tmpAll.SummHospOth
              + tmpAll.SummCompensation
               ) :: TFloat AS SummService
+
             , tmpAll.SummCard               :: TFloat AS SummCard
             , COALESCE (tmpAll.SummCardSecond,0)         :: TFloat AS SummCardSecond
             , COALESCE (tmpAll.SummCardSecondCash,0)     :: TFloat AS SummCardSecondCash
@@ -1114,6 +1146,9 @@ BEGIN
           OR 0 <> tmpAll.SummSkip
           OR 0 <> tmpAll.SummHouseAdd
           OR 0 <> tmpAll.SummAvance
+          OR 0 <> tmpAll.AmountService_diff_start
+          OR 0 <> tmpAll.AmountService_diff_end
+
           -- OR 0 <> tmpAll.SummNalog
           -- OR 0 <> tmpAll.SummNalogRet
           OR tmpMIContainer_pay.Amount_avance      <> 0
