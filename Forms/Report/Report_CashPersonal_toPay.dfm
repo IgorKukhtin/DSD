@@ -2,6 +2,7 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
   Caption = #1054#1090#1095#1077#1090' <'#1042#1099#1087#1083#1072#1090#1099' '#1092#1080#1079'.'#1083#1080#1094#1091'>'
   ClientHeight = 483
   ClientWidth = 1094
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1110
   ExplicitHeight = 522
@@ -400,74 +401,18 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
       ImageIndex = 35
-      FormName = 'TReport_Check_ReturnInToSaleDialogForm'
-      FormNameParam.Value = 'TReport_Check_ReturnInToSaleDialogForm'
+      FormName = 'TServiceDateDialogForm'
+      FormNameParam.Value = 'TServiceDateDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'StartDate'
+          Name = 'ServiceDate'
           Value = 42005d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42005d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerId'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inJuridicalId'
-          Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inShowAll'
-          Value = False
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInvNumber'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
+          Component = edServiceDate
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -597,6 +542,14 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
