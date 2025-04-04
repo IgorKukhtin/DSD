@@ -149,6 +149,9 @@ BEGIN
                                THEN zc_Enum_Process_AccessKey_CashZaporozhye()
                           WHEN inCashId = 8073040 -- Касса Ирна
                                THEN zc_Enum_Process_AccessKey_CashIrna()
+                          WHEN inCashId = 11921030-- Касса Винница
+                               THEN zc_Enum_Process_AccessKey_CashVinnica()
+
                           ELSE zc_Enum_Process_AccessKey_CashDnepr() -- lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Cash())
                      END;
 
