@@ -69,7 +69,6 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceZaporozhye()
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceLviv() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceLviv' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceIrna() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceIrna' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
-
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Cash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -141,13 +140,6 @@ BEGIN
                                    , inCode:= 105
                                    , inName:= 'Справочники Винница (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_GuideVinnica');
-
- -- ЗП Vinnica, ограничения в справочниках + документах
- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PersonalServiceVinnica()
-                                   , inDescId:= zc_Object_Process()
-                                   , inCode:= 223
-                                   , inName:= 'ЗП Винница (доступ просмотра)'
-                                   , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalServiceVinnica');
 
  -- по Филиалу ограничиваются Документы для Кассы
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashVinnica()
@@ -797,6 +789,13 @@ BEGIN
                                    , inName:= 'ЗП Ирна (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalServiceIrna');
                        
+ -- ЗП Vinnica, ограничения в справочниках + документах
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PersonalServiceVinnica()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 223
+                                   , inName:= 'ЗП Винница (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalServiceVinnica');
+
  -- ограничения
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_NotCost()
                                    , inDescId:= zc_Object_Process()
