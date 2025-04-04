@@ -17,18 +17,19 @@ BEGIN
      vbUnitId:= lpGetUnit_byUser (inUserId);
 
 
-     IF inUserId = 1234551 
+     IF inUserId = 1234551 AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.';
      END IF;
 
 
      -- Вернули - Подразделение которое проверили
-     IF inUserId = 1234551 AND inUnitId_by IN (1550 -- магазин Chado-Outlet
-                                             , 1539 -- магазин CHADO
-                                             , 1535 -- магазин Vintage
-                                             , 1530 -- магазин Terry-Luxury
-                                             , 1534 -- магазин Terry-Vintage
+     IF inUserId = 1234551 AND inUnitId_by IN (1550    -- магазин Chado-Outlet
+                                             , 1539    -- магазин CHADO
+                                             , 1326945 -- магазин Женя
+                                          --   , 1535 -- магазин Vintage
+                                          --   , 1530 -- магазин Terry-Luxury
+                                          --   , 1534 -- магазин Terry-Vintage
                                               )
      THEN
          RETURN COALESCE (inUnitId_by, 0);

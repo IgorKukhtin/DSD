@@ -15,7 +15,7 @@ BEGIN
   --
   vbUserId := lpGetUserBySession (inSession);
 
-     IF inSession = '1234551'
+     IF inSession = '1234551' AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.';
      END IF;
