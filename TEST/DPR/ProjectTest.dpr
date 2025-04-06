@@ -1576,7 +1576,8 @@ uses
   Report_Inventory_WeighingFact in '..\..\Forms\Report\Report_Inventory_WeighingFact.pas' {Report_Inventory_WeighingFactForm: TParentForm},
   Report_Inventory_WeighingFactDialog in '..\..\Forms\Report\Report_Inventory_WeighingFactDialog.pas' {Report_Inventory_WeighingFactDialogForm: TParentForm},
   GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
-  AmountForm_twoDialog in '..\..\Forms\Document\AmountForm_twoDialog.pas' {AmountForm_twoDialogForm: TParentForm};
+  AmountForm_twoDialog in '..\..\Forms\Document\AmountForm_twoDialog.pas' {AmountForm_twoDialogForm: TParentForm},
+  ServiceDateDialog in '..\..\Forms\Document\ServiceDateDialog.pas' {ServiceDateDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

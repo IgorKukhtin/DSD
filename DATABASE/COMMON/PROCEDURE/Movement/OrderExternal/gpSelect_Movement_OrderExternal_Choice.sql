@@ -64,9 +64,9 @@ BEGIN
                           FROM tmpStatus
                                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
                                JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                          WHERE MovementLinkObject_From.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0
                          )
 
@@ -135,6 +135,42 @@ BEGIN
                                 FROM Object_InfoMoney_View AS View_InfoMoney
                                 WHERE View_InfoMoney.InfoMoneyId IN (SELECT DISTINCT tmpContract_InvNumber_View.InfoMoneyId FROM tmpContract_InvNumber_View)
                                 )
+         --
+        , tmpOL_From_Juridical AS (SELECT ObjectLink_From_Juridical.*
+                                        , Object_Juridical.Id             AS JuridicalId
+                                        , Object_Juridical.ValueData      AS JuridicalName 
+                                   FROM ObjectLink AS ObjectLink_From_Juridical
+                                        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_From_Juridical.ChildObjectId
+                                   WHERE ObjectLink_From_Juridical.ObjectId IN (SELECT DISTINCT tmpMovement.FromId FROM tmpMovement) 
+                                     AND ObjectLink_From_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                   )
+        , tmpObject_From AS (SELECT Object.*
+                             FROM (SELECT DISTINCT tmpMovement.FromId FROM tmpMovement) AS tmp 
+                                 INNER JOIN Object ON Object.Id = tmp.FromId
+                             ) 
+
+        , tmpObject_Personal AS (SELECT Object.*
+                                 FROM (SELECT DISTINCT tmpMovementLinkObject.ObjectId FROM tmpMovementLinkObject WHERE tmpMovementLinkObject.DescId = zc_MovementLinkObject_Personal()) AS tmp 
+                                     INNER JOIN Object ON Object.Id = tmp.ObjectId
+                                 )
+        , tmpObject_To AS (SELECT Object.*
+                           FROM (SELECT DISTINCT tmpMovementLinkObject.ObjectId FROM tmpMovementLinkObject WHERE tmpMovementLinkObject.DescId = zc_MovementLinkObject_To()) AS tmp 
+                                INNER JOIN Object ON Object.Id = tmp.ObjectId
+                          )
+                 
+        , tmpObject_PriceList AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PriceList())
+        , tmpObject_PaidKind AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PaidKind())
+        , tmpObject_Route AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_Route())
+        , tmpObject_RouteSorting AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_RouteSorting())
+        , tmpObject_Status AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_Status())
+ 
+ 
+        , tmpOF_Partner_DocumentDayCount AS (SELECT *
+                                             FROM ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
+                                             WHERE ObjectFloat_Partner_DocumentDayCount.ObjectId IN (SELECT DISTINCT tmpMovement.FromId FROM tmpMovement) 
+                                               AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
+                                             ) 
+
 
        SELECT
              Movement.Id                                    AS Id
@@ -182,16 +218,16 @@ BEGIN
            , MovementFloat_TotalCount.ValueData             AS TotalCount
            , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
 
-           , Object_Juridical.Id             AS JuridicalId
-           , Object_Juridical.ValueData      AS JuridicalName
+           , ObjectLink_From_Juridical.JuridicalId          AS JuridicalId
+           , ObjectLink_From_Juridical.JuridicalName        AS JuridicalName
 
            , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
            , MovementString_Comment.ValueData       AS Comment
        FROM tmpMovement AS Movement
 
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN tmpObject_Status AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN Object AS Object_From ON Object_From.Id = Movement.FromId
+            LEFT JOIN tmpObject_From AS Object_From ON Object_From.Id = Movement.FromId
 
             LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
                                       ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -214,39 +250,39 @@ BEGIN
                                        AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
-                                  ON ObjectFloat_Partner_DocumentDayCount.ObjectId = Movement.FromId
-                                 AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
+            LEFT JOIN tmpOF_Partner_DocumentDayCount AS ObjectFloat_Partner_DocumentDayCount
+                                                     ON ObjectFloat_Partner_DocumentDayCount.ObjectId = Movement.FromId
+                                                    AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_To
                                             ON MovementLinkObject_To.MovementId = Movement.Id
                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN tmpObject_To AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Personal
                                             ON MovementLinkObject_Personal.MovementId = Movement.Id
                                            AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
 
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
+            LEFT JOIN tmpObject_Personal AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Route
                                             ON MovementLinkObject_Route.MovementId = Movement.Id
                                            AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
 
-            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+            LEFT JOIN tmpObject_Route AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_RouteSorting
                                             ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                            AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
 
-            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
+            LEFT JOIN tmpObject_RouteSorting AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_PaidKind
                                             ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                            AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
 
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+            LEFT JOIN tmpObject_PaidKind AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Contract
                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -261,7 +297,7 @@ BEGIN
                                             ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                            AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
 
-            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+            LEFT JOIN tmpObject_PriceList AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
                                          ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -297,11 +333,11 @@ BEGIN
                                               ON MovementLinkMovement_Order.MovementId = Movement.Id 
                                              AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
 
-         LEFT JOIN ObjectLink AS ObjectLink_From_Juridical
-                              ON ObjectLink_From_Juridical.ObjectId = Object_From.Id 
-                             AND ObjectLink_From_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN tmpOL_From_Juridical AS ObjectLink_From_Juridical
+                                           ON ObjectLink_From_Juridical.ObjectId = Movement.FromId 
+                                          AND ObjectLink_From_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
-         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_From_Juridical.ChildObjectId
+         --LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_From_Juridical.ChildObjectId
       ;
 
 END;
@@ -311,6 +347,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 04.04.25         *
  30.03.22         *
  14.01.15         * add From_Juridical
  21.10.14                                        *
@@ -318,3 +355,4 @@ $BODY$
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Movement_OrderExternal_Choice (inStartDate:= '01.06.2022', inEndDate:= '01.06.2022', inIsErased := FALSE, inPartnerId:= 0, inSession:= '2')
+--select * from gpSelect_Movement_OrderExternal_Choice(instartdate := ('03.03.2025')::TDateTime , inenddate := ('10.03.2025')::TDateTime , inIsErased := 'False' , inPartnerId := 0 ,  inSession := '11750040');
