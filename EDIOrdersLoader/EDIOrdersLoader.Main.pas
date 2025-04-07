@@ -453,7 +453,7 @@ begin
   end;
 end;
 
-
+// Загрузка из EDI-VCHASNO
 function TMainForm.fEdi_LoadDataVchasno_from : Boolean;
 var Old_stat : Integer;
     Present: TDateTime;
@@ -763,7 +763,7 @@ try
   try fEdi_LoadDataVchasno_from;
   except
         on E: Exception do begin
-           AddToLog('**** Ошибка *** VCHASNO - LoadData - from *** : ' + E.Message);
+           AddToLog_Vchasno(false, '**** Ошибка *** VCHASNO - LoadData - from *** : ' + E.Message, true);
         end;
   end;
 
