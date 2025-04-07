@@ -600,7 +600,7 @@ END IF;*/
      -- проверка
      IF COALESCE (vbJuridicalId_To, 0) <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbContractId AND OL.DescId = zc_ObjectLink_Contract_Juridical()), 0)
     AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
-    AND inUserId <> 5
+    --AND inUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.В документе выбран договор%для Юридического лица = <%>.%Необходимо выбрать договор%для Юридического лица = <%>.'
                        , CHR (13)
@@ -3509,6 +3509,80 @@ end if;
      THEN
      -- 1.3.1.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_Goods, ContainerId_ProfitLoss_40208, ContainerId_ProfitLoss_10500, ContainerId_ProfitLoss_10400, ContainerId_ProfitLoss_20200, ContainerId, AccountId, ContainerId_Transit_01, ContainerId_Transit_02, ContainerId_Transit_51, ContainerId_Transit_52, ContainerId_Transit_53, OperSumm, OperSumm_ChangePercent, OperSumm_Partner, isLossMaterials)
+       --
+       WITH -- где надо проверить с/с и потом найти альтернативную цену
+            tmpHistoryCost_find_all AS (SELECT _tmpItem.ContainerId_Goods
+                                             , _tmpItem.GoodsId
+                                             , _tmpItem.GoodsKindId
+                                             , Container_Summ.Id               AS ContainerId_Summ
+                                             , Container_Summ.ObjectId         AS AccountId
+                                             , COALESCE (HistoryCost.Price, 0) AS Price
+                                        FROM _tmpItem
+                                             INNER JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
+                                                                                   AND Container_Summ.DescId   = zc_Container_Summ()
+                                             LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
+                                                                  AND CASE WHEN DATE_TRUNC ('MONTH', vbOperDatePartner) < DATE_TRUNC ('MONTH', vbOperDate)
+                                                                                THEN vbOperDatePartner
+                                                                           ELSE vbOperDate
+                                                                      END BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                                        WHERE vbIsPartionCell_from = TRUE
+                                       )
+                -- нашли с/с если нет для ContainerId_Goods
+              , tmpHistoryCost_find AS (SELECT Container_Summ.ContainerId_Goods
+                                             , Container_Summ.ContainerId_Summ
+                                             , MAX (HistoryCost.Price) AS Price
+                                        FROM -- нашли у каких ContainerId_Goods ВСЕ цены = 0
+                                             (SELECT tmpHistoryCost_find_all.ContainerId_Goods FROM tmpHistoryCost_find_all
+                                              GROUP BY tmpHistoryCost_find_all.ContainerId_Goods
+                                              HAVING MAX (tmpHistoryCost_find_all.Price) = 0
+                                             ) AS tmpHistoryCost_list
+                                             -- для всех ContainerId_Summ надо найти альтернативную цену
+                                             JOIN tmpHistoryCost_find_all AS Container_Summ ON Container_Summ.ContainerId_Goods = tmpHistoryCost_list.ContainerId_Goods
+
+                                             -- св-ва ContainerId_Summ, где нет цены
+                                             LEFT JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = Container_Summ.ContainerId_Summ
+                                                                                           AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                             LEFT JOIN ContainerLinkObject AS CLO_InfoMoneyDetail ON CLO_InfoMoneyDetail.ContainerId = Container_Summ.ContainerId_Summ
+                                                                                                 AND CLO_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
+                                             LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis ON CLO_JuridicalBasis.ContainerId = Container_Summ.ContainerId_Summ
+                                                                                                AND CLO_JuridicalBasis.DescId      = zc_ContainerLinkObject_JuridicalBasis()
+                                               
+                                             -- альтернатива
+                                             JOIN Container AS Container_Count_new ON Container_Count_new.ObjectId = Container_Summ.GoodsId
+                                                                                  AND Container_Count_new.DescId   = zc_Container_Count()
+                                             JOIN Container AS Container_Summ_new ON Container_Summ_new.ParentId = Container_Count_new.Id
+                                                                                 AND Container_Summ_new.ObjectId = Container_Summ.AccountId
+                                                                                 AND Container_Summ_new.DescId   = zc_Container_Summ()
+                                             INNER JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ_new.Id
+                                                                  AND CASE WHEN DATE_TRUNC ('MONTH', vbOperDatePartner) < DATE_TRUNC ('MONTH', vbOperDate)
+                                                                                THEN vbOperDatePartner
+                                                                           ELSE vbOperDate
+                                                                      END BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                                                                  -- !!! есть цена !!!
+                                                                  AND HistoryCost.Price > 0
+                                             -- св-ва
+                                             INNER JOIN ContainerLinkObject AS CLO_Unit_new
+                                                                            ON CLO_Unit_new.ContainerId = Container_Summ_new.Id
+                                                                           AND CLO_Unit_new.DescId      = zc_ContainerLinkObject_Unit()
+                                                                           AND CLO_Unit_new.ObjectId    = vbUnitId_From
+
+                                             INNER JOIN ContainerLinkObject AS CLO_InfoMoney_new ON CLO_InfoMoney_new.ContainerId = Container_Summ_new.Id
+                                                                                                AND CLO_InfoMoney_new.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                                                                                AND CLO_InfoMoney_new.ObjectId    = CLO_InfoMoney.ObjectId
+                                             INNER JOIN ContainerLinkObject AS CLO_InfoMoneyDetail_new ON CLO_InfoMoneyDetail_new.ContainerId = Container_Summ_new.Id
+                                                                                                      AND CLO_InfoMoneyDetail_new.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
+                                                                                                      AND CLO_InfoMoneyDetail_new.ObjectId    = CLO_InfoMoneyDetail.ObjectId
+                                             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_new ON CLO_GoodsKind_new.ContainerId = Container_Summ_new.Id
+                                                                                               AND CLO_GoodsKind_new.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                             INNER JOIN ContainerLinkObject AS CLO_JuridicalBasis_new ON CLO_JuridicalBasis_new.ContainerId = Container_Summ_new.Id
+                                                                                                     AND CLO_JuridicalBasis_new.DescId      = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                                     AND CLO_JuridicalBasis_new.ObjectId    = CLO_JuridicalBasis.ObjectId
+
+                                        WHERE COALESCE (CLO_GoodsKind_new.ObjectId, 0) = COALESCE (Container_Summ.GoodsKindId, 0)
+                                        GROUP BY Container_Summ.ContainerId_Goods
+                                               , Container_Summ.ContainerId_Summ
+                                  )
+        -- Результат
         SELECT
               _tmpItem.MovementItemId
             , _tmpItem.ContainerId_Goods
@@ -3526,20 +3600,20 @@ end if;
             , 0 AS ContainerId_Transit_53 -- Счет Транзит, определим позже +++
 
               -- с/с1 - для количества: расход с остатка
-            , SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
-                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+            , SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) AS NUMERIC (16,4))
+                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
                              THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
                         ELSE 0
                    END) AS OperSumm
               -- с/с2 - для количества: с учетом % скидки
-            , SUM (CAST (_tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
-                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+            , SUM (CAST (_tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) AS NUMERIC (16,4))
+                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
                              THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
                         ELSE 0
                    END) AS OperSumm_ChangePercent
               -- с/с3 - для количества: контрагента
-            , SUM (CAST (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
-                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+            , SUM (CAST (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) AS NUMERIC (16,4))
+                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
                              THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
                         ELSE 0
                    END) AS OperSumm_Partner
@@ -3565,9 +3639,14 @@ end if;
                                            --     THEN vbOperDatePartner
                                            ELSE vbOperDate
                                       END BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
-        WHERE (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                 -- !!!
-             OR _tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0) <> 0  -- здесь нули !!!НЕ НУЖНЫ!!!
-             OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- !!!
+
+             -- нашли с/с если нет для ContainerId_GoodsFrom
+             LEFT JOIN tmpHistoryCost_find ON tmpHistoryCost_find.ContainerId_Summ = Container_Summ.Id
+                                          AND HistoryCost.ContainerId IS NULL
+
+        WHERE (_tmpItem.OperCount * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) <> 0                 -- !!!
+             OR _tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) <> 0  -- здесь нули !!!НЕ НУЖНЫ!!!
+             OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) <> 0)       -- !!!
           AND vbPartnerId_From = 0 -- !!!если НЕ продажа от Контрагента -> Контрагенту!!!
         GROUP BY _tmpItem.MovementItemId
                , _tmpItem.ContainerId_Goods
@@ -3676,7 +3755,9 @@ end if;
                                   )
                 , tmpPrice_all AS (SELECT tmpList.GoodsId
                                         , tmpList.GoodsKindId
+                                          -- для каждой партии отдельно
                                         , COALESCE (CLO_PartionGoods.ObjectId, 0)   AS PartionGoodsId
+                                          --
                                         , SUM (COALESCE (HistoryCost.Price, 0))     AS Price
                                         , SUM (COALESCE (HistoryCost_old.Price, 0)) AS Price_old
                                    FROM tmpList
@@ -3692,7 +3773,8 @@ end if;
                                         INNER JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = CLO_Goods.ContainerId
                                                                                   AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                                                                   -- !!!Только Розподільчий комплекс!!!
-                                                                                  AND CLO_Unit.ObjectId    = 8459
+                                                                                  AND CLO_Unit.ObjectId    = zc_Unit_RK()
+
                                         LEFT JOIN ObjectLink AS ObjectLink_AccountGroup ON ObjectLink_AccountGroup.ObjectId      = Container.ObjectId
                                                                                        AND ObjectLink_AccountGroup.DescId        = zc_ObjectLink_Account_AccountGroup()
                                                                                        -- Прибыль будущих периодов + Транзит
