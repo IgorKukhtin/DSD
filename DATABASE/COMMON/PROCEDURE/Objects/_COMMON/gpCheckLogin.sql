@@ -34,7 +34,7 @@ BEGIN
            END AS isCreate
          , Object_User.Id
          , CASE WHEN Object_User.Id IN (5) AND inIP = '192.168.0.102' AND 1=0 THEN TRUE
-                WHEN inIP = '192.168.0.103' AND 1=0 THEN FALSE
+                WHEN inIP = '192.168.0.104' AND 1=1 THEN FALSE
                 WHEN 1=1 THEN COALESCE(ObjectBoolean_ProjectAuthent.ValueData, FALSE)
                 WHEN 1=1 THEN FALSE
                 WHEN Object_User.Id IN (5, 14610) THEN COALESCE(ObjectBoolean_ProjectAuthent.ValueData, FALSE)

@@ -877,7 +877,12 @@ BEGIN
               IF  (COALESCE (vbMovementId_find, 0) = 0  AND vbIsSendOnPriceIn = TRUE)  -- т.е. вводят приход, а vbMovementId_find нет
                OR (COALESCE (vbMovementId_find, 0) <> 0 AND vbIsSendOnPriceIn = FALSE) -- т.е. вводят расход, а vbMovementId_find есть
               THEN
-                   RAISE EXCEPTION 'vbMovementId_find <%> <%> <%>', vbMovementId_find, vbIsSendOnPriceIn, inBranchCode;
+                   IF COALESCE (vbMovementId_find, 0) = 0
+                   THEN
+                       RAISE EXCEPTION 'Ошибка.Для перемещения по цене необходимо указать <№ документа Основание>.';
+                   ELSE
+                       RAISE EXCEPTION 'vbMovementId_find <%> <%> <%>', vbMovementId_find, vbIsSendOnPriceIn, inBranchCode;
+                   END IF;
               END IF;
           END IF;
 
