@@ -81,8 +81,30 @@ BEGIN
      -- нашли - надо ли раскладывать по разным ГП
      IF inIsParentMulti = TRUE
      THEN
+         IF 1 < (SELECT COUNT(*) -- DISTINCT ObjectBoolean_ParentMulti.ValueData
+                 FROM ObjectLink AS ObjectLink_Receipt_Goods
+                      INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                            ON ObjectLink_Receipt_GoodsKind.ObjectId      = ObjectLink_Receipt_Goods.ObjectId
+                                           AND ObjectLink_Receipt_GoodsKind.DescId        = zc_ObjectLink_Receipt_GoodsKind()
+                                           AND ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId
+                      INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                         AND Object_Receipt.isErased = FALSE
+                      INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                               ON ObjectBoolean_Main.ObjectId  = Object_Receipt.Id
+                                              AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Receipt_Main()
+                                              AND ObjectBoolean_Main.ValueData = TRUE
+                      INNER JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
+                                               ON ObjectBoolean_ParentMulti.ObjectId  = Object_Receipt.Id
+                                              AND ObjectBoolean_ParentMulti.DescId    = zc_ObjectBoolean_Receipt_ParentMulti()
+                                              AND ObjectBoolean_ParentMulti.ValueData = TRUE
+                 WHERE ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
+                   AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
+                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Рецептура ParentMulti = TRUE для <%(%)> + <%(%)>.', lfGet_Object_ValueData (inGoodsId), inGoodsId, lfGet_Object_ValueData_sh (inGoodsKindId), inGoodsKindId;
+         END IF;
          --
-         vbIsParentMulti_goods:= COALESCE ((SELECT ObjectBoolean_ParentMulti.ValueData
+         vbIsParentMulti_goods:= COALESCE ((SELECT DISTINCT ObjectBoolean_ParentMulti.ValueData
                                             FROM ObjectLink AS ObjectLink_Receipt_Goods
                                                  INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
                                                                        ON ObjectLink_Receipt_GoodsKind.ObjectId      = ObjectLink_Receipt_Goods.ObjectId
