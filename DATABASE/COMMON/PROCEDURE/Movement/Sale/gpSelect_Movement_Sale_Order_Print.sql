@@ -288,14 +288,18 @@ BEGIN
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                --, SUM (MovementItem.Amount)                                 AS Amount
-                               , SUM (CASE WHEN _tmpListMovement.ToId   = vbToId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount
-                               , SUM (CASE WHEN _tmpListMovement.FromId = vbToId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_ret  --  возврат
+                               , SUM (CASE WHEN _tmpListMovement.ToId   = vbToId THEN COALESCE (MIFloat_AmountPartner.ValueData, MovementItem.Amount,0) ELSE 0 END) AS Amount
+                               , SUM (CASE WHEN _tmpListMovement.FromId = vbToId THEN COALESCE (MIFloat_AmountPartner.ValueData, MovementItem.Amount,0) ELSE 0 END) AS Amount_ret  --  возврат
+
                            FROM _tmpListMovement
                            
                                 INNER JOIN MovementItem ON MovementItem.MovementId = _tmpListMovement.MovementId
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
                                                        AND MovementItem.Amount     <> 0
+                                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
                                 LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                            ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                           AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
