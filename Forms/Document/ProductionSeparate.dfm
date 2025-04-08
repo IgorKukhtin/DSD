@@ -2,7 +2,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
   ClientHeight = 678
   ClientWidth = 913
-  ExplicitTop = -68
   ExplicitWidth = 929
   ExplicitHeight = 717
   PixelsPerInch = 96
@@ -462,7 +461,44 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     inherited actGridToExcel: TdsdGridToExcel
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' - 1 '#1074' Excel'
     end
-    object actPrint_4001: TdsdPrintAction [8]
+    object actPrint_Gov: TdsdPrintAction [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1043#1086#1074#1103#1076#1080#1085#1072' '#1053'/'#1050')'
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_4001: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -528,7 +564,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
       ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
     end
-    object actPrint_Ceh: TdsdPrintAction [10]
+    object actPrint_Ceh: TdsdPrintAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintCeh
@@ -571,7 +607,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [11]
+    object actUpdateChildDS: TdsdUpdateDataSet [12]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -901,6 +937,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Gov'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -970,6 +1010,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     end
     object bbPrint_4001: TdxBarButton
       Action = actPrint_4001
+      Category = 0
+    end
+    object bbPrint_Gov: TdxBarButton
+      Action = actPrint_Gov
       Category = 0
     end
   end

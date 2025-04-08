@@ -1,9 +1,11 @@
 -- Function: gpInsertUpdate_MI_PersonalTransport_Load()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalTransport_Load (Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalTransport_Load (Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalTransport_Load (Integer,Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalTransport_Load(
-    IN inMovementId             Integer   , -- Ключ объекта <Документ>
+    IN inMovementId             Integer   , -- Ключ объекта <Документ> 
+    IN inMemberCode             Integer   , -- ФИО  сотрудника
     IN inPersonalName           TVarChar  , -- ФИО  сотрудника
     IN inPositionName           TVarChar  , -- должность 
     IN inComment                TVarChar  , -- примечание
@@ -23,18 +25,41 @@ BEGIN
 
      IF COALESCE (inAmount,0) = 0 THEN RETURN; END IF;
      
-     -- поиск
-     vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE  TRIM (inPersonalName));
+     --сначала поиск по коду потом по фио
+     --поиск - по коду
+     vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND Object.ObjectCode = inMemberCode);
+     
+     IF COALESCE (vbMemberId,0) = 0 
+     THEN     
+         -- поиск 1
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE TRIM (inPersonalName) AND Object.isErased = FALSE)
+         THEN
+              RAISE EXCEPTION 'Ошибка.Найдено несколько ФИО в справочнике Физ.лиц, ФИО = <%>.', TRIM (inPersonalName);
+         ELSE
+             vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE  TRIM (inPersonalName));
+         END IF;
+     END IF;
      
      -- поиск-2
      IF COALESCE (vbMemberId,0) = 0
      THEN 
-         vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE  TRIM (REPLACE (inPersonalName, '`', CHR (39))));
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE TRIM (REPLACE (inPersonalName, '`', CHR (39))) AND Object.isErased = FALSE)
+         THEN
+              RAISE EXCEPTION 'Ошибка.Найдено несколько ФИО в справочнике Физ.лиц, ФИО = <%>.', TRIM (REPLACE (inPersonalName, '`', CHR (39)));
+         END IF;
+         --
+         vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE TRIM (REPLACE (inPersonalName, '`', CHR (39))) AND Object.isErased = FALSE);
      END IF;
+
      -- поиск-3
      IF COALESCE (vbMemberId,0) = 0
      THEN 
-         vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE  TRIM (REPLACE (inPersonalName, CHR (39), '`')));
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE TRIM (REPLACE (inPersonalName, CHR (39), '`')) AND Object.isErased = FALSE)
+         THEN
+              RAISE EXCEPTION 'Ошибка.Найдено несколько ФИО в справочнике Физ.лиц, ФИО = <%>.', TRIM (REPLACE (inPersonalName, CHR (39), '`'));
+         END IF;
+         --
+         vbMemberId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Member() AND TRIM(Object.ValueData) ILIKE TRIM (REPLACE (inPersonalName, CHR (39), '`')) AND Object.isErased = FALSE);
      END IF;
 
      IF COALESCE (vbMemberId,0) = 0
@@ -42,14 +67,21 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.Не найдено Физ.лицо <%> Сумма компенсации = <%>.<%>', inPersonalName, zfConvert_FloatToString (inAmount), REPLACE (inPersonalName, '`', CHR (39));
      END IF; 
      
+
      --находим должность
-     vbPositionId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Position() AND  (Object.ValueData) ILIKE TRIM (inPositionName));
+     IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_object_Position() AND Object.ValueData ILIKE TRIM (inPositionName) AND Object.isErased = FALSE)
+     THEN
+          RAISE EXCEPTION 'Ошибка.Найдено несколько ФИО в справочнике Физ.лиц, ФИО = <%>.', TRIM (REPLACE (inPersonalName, '`', CHR (39)));
+     END IF;
+     --находим должность
+     vbPositionId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Position() AND Object.ValueData ILIKE TRIM (inPositionName));
      
      IF COALESCE (vbPositionId,0) = 0
      THEN 
           RAISE EXCEPTION 'Ошибка.Не найдена должность <%> для <%> Сумма компенсации = <%>.', inPositionName, inPersonalName, zfConvert_FloatToString (inAmount);
      END IF; 
      
+
       --находим сотрудника
      SELECT lfSelect.PersonalId
           , lfSelect.UnitId    
@@ -96,6 +128,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.04.25         * add inMemberCode
  01.09.22         *
 */
 
