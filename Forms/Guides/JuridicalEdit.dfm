@@ -24,27 +24,27 @@
   end
   object edName: TcxTextEdit [2]
     Left = 5
-    Top = 58
+    Top = 46
     TabOrder = 0
     Width = 272
   end
   object cxLabel1: TcxLabel [3]
     Left = 5
-    Top = 41
+    Top = 29
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
   end
   object Код: TcxLabel [4]
-    Left = 5
-    Top = 0
+    Left = 25
+    Top = 7
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit [5]
-    Left = 5
-    Top = 19
+    Left = 55
+    Top = 6
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 6
-    Width = 134
+    Width = 86
   end
   object cxLabel2: TcxLabel [6]
     Left = 8
@@ -171,8 +171,6 @@
           Height = 575
           Align = alRight
           TabOrder = 8
-          ExplicitLeft = 200
-          ExplicitTop = 66
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -728,7 +726,7 @@
   end
   object cxLabel20: TcxLabel [26]
     Left = 8
-    Top = 357
+    Top = 358
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
   end
   object ceRetail: TcxButtonEdit [27]
@@ -745,14 +743,14 @@
   end
   object cbisTaxSummary: TcxCheckBox [28]
     Left = 8
-    Top = 91
+    Top = 80
     Caption = #1057#1074#1086#1076#1085#1072#1103' '#1053#1053
     TabOrder = 28
     Width = 90
   end
   object edDayTaxSummary: TcxCurrencyEdit [29]
     Left = 110
-    Top = 97
+    Top = 83
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -762,26 +760,26 @@
   end
   object cxLabel21: TcxLabel [30]
     Left = 110
-    Top = 79
+    Top = 67
     Caption = #1055#1077#1088#1080#1086#1076' '#1074' '#1076#1085'. '#1076#1083#1103' '#1089#1074#1086#1076#1085#1086#1081' '#1053#1053
   end
   object cbisDiscountPrice: TcxCheckBox [31]
     Left = 8
-    Top = 116
+    Top = 102
     Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1074' '#1085#1072#1082#1083'.'
     TabOrder = 31
     Width = 225
   end
   object cbisPriceWithVAT: TcxCheckBox [32]
     Left = 8
-    Top = 135
+    Top = 121
     Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1094#1077#1085#1091' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 32
     Width = 241
   end
   object cbisNotRealGoods: TcxCheckBox [33]
     Left = 8
-    Top = 154
+    Top = 140
     Caption = #1053#1077#1090' c'#1093#1077#1084#1099' '#1089' '#1079#1072#1084#1077#1085#1086#1081' '#1092#1072#1082#1090'/'#1073#1091#1093#1075' '#1086#1090#1075#1088'.) ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 34
     Width = 272
@@ -800,15 +798,22 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 39
+    TabOrder = 38
     Width = 272
   end
   object cbVchasnoEdi: TcxCheckBox [36]
     Left = 8
-    Top = 173
+    Top = 159
     Caption = #1054#1073#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1087#1083#1072#1090#1092#1086#1088#1084#1077' '#1042#1095#1072#1089#1085#1086' EDI'
     TabOrder = 40
     Width = 217
+  end
+  object cbisEdiInvoice: TcxCheckBox [37]
+    Left = 8
+    Top = 177
+    Caption = #1040#1074#1090#1086'. '#1086#1090#1087#1088#1072#1074#1082#1072' '#1042#1053' '#1085#1072' '#1087#1083#1072#1090#1092#1086#1088#1084#1077' '#1042#1095#1072#1089#1085#1086' EDI '
+    TabOrder = 41
+    Width = 258
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -1402,6 +1407,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisEdiInvoice'
+        Value = Null
+        Component = cbisEdiInvoice
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDayTaxSummary'
         Value = Null
         Component = edDayTaxSummary
@@ -1694,6 +1707,13 @@
         Name = 'isVchasnoEdi'
         Value = Null
         Component = cbVchasnoEdi
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEdiInvoice'
+        Value = Null
+        Component = cbisEdiInvoice
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -2018,8 +2038,8 @@
   end
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
-    Left = 88
-    Top = 56
+    Left = 240
+    Top = 8
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>

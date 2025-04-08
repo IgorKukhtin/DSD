@@ -41,6 +41,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                VatPriceDate TDateTime,
                isIrna Boolean,
                isVchasnoEdi Boolean,
+               isEdiInvoice Boolean,
                isErased Boolean
               )
 AS
@@ -239,6 +240,7 @@ BEGIN
 
        , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) :: Boolean   AS isIrna
        , COALESCE (ObjectBoolean_VchasnoEdi.ValueData, FALSE) :: Boolean   AS isVchasnoEdi
+       , COALESCE (ObjectBoolean_isEdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
 
        , Object_Juridical.isErased   AS isErased
 
@@ -294,6 +296,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_VchasnoEdi
                                 ON ObjectBoolean_VchasnoEdi.ObjectId = Object_Juridical.Id 
                                AND ObjectBoolean_VchasnoEdi.DescId = zc_ObjectBoolean_Juridical_VchasnoEdi()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiInvoice
+                                ON ObjectBoolean_isEdiInvoice.ObjectId = Object_Juridical.Id 
+                               AND ObjectBoolean_isEdiInvoice.DescId = zc_ObjectBoolean_Juridical_isEdiInvoice()
                                     
         LEFT JOIN tmpObjectDate AS ObjectDate_VatPrice
                              ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
@@ -414,12 +420,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.04.25         * isEdiInvoice
  14.03.25         * isVchasnoEdi
  26.04.23         * inShowDate
  02.11.22         * add Section

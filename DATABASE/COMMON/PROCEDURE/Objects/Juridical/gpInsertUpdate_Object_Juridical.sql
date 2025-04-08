@@ -7,7 +7,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarC
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inIsPriceWithVAT      Boolean   ,    -- Печать в накладной цену с НДС (да/нет)
     IN inIsNotRealGoods      Boolean   ,    -- нет cхемы с заменой факт/бухг отгрузка)
     IN inisVchasnoEdi        Boolean   ,    -- Обработка на платформе Вчасно EDI
+    IN inisEdiInvoice        Boolean   ,    -- на платформу Вчасно EDI, автоматическая отправка ВН
     IN inDayTaxSummary       TFloat    ,    -- Кол-во дней для сводной налоговой
     IN inJuridicalGroupId    Integer   ,    -- Группы юридических лиц
     IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
@@ -116,6 +118,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isNotRealGoods(), ioId, inIsNotRealGoods);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_VchasnoEdi(), ioId, inisVchasnoEdi);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isEdiInvoice(), ioId, inisEdiInvoice);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_JuridicalGroup(), ioId, inJuridicalGroupId);
@@ -224,6 +228,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.04.25         * isEdiInvoice
  14.03.25         * inisVchasnoEdi
  02.11.22         * add inSectionId
  30.09.22         * add inIsNotRealGoods
