@@ -148,6 +148,7 @@ BEGIN
                                                                        , inIsDate            := FALSE 
                                                                        , inisReason          := FALSE
                                                                        , inIsErased          := FALSE
+                                                                       , inIsContract        := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
                        , tmpReturnIn AS (SELECT * FROM gpReport_GoodsMI (inStartDate         := inStartDate
@@ -166,7 +167,8 @@ BEGIN
                                                                        , inIsPartionGoods    := FALSE
                                                                        , inIsDate            := FALSE
                                                                        , inisReason          := FALSE  
-                                                                       , inIsErased          := FALSE
+                                                                       , inIsErased          := FALSE 
+                                                                       , inIsContract        := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
          , tmpIncome AS (SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate         := inStartDate

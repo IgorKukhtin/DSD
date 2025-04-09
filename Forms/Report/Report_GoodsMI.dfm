@@ -15,17 +15,17 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     Height = 454
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1020
+    ExplicitWidth = 1085
     ExplicitHeight = 454
     ClientRectBottom = 454
     ClientRectRight = 1085
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1085
       ExplicitHeight = 454
       inherited cxGrid: TcxGrid
         Width = 1085
         Height = 454
-        ExplicitWidth = 1020
+        ExplicitWidth = 1085
         ExplicitHeight = 454
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -808,6 +808,20 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object ContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -831,7 +845,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 152
+            Width = 143
           end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -898,7 +912,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 151
+            Width = 136
           end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -1888,7 +1902,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   inherited Panel: TPanel
     Width = 1085
     Height = 54
-    ExplicitWidth = 1020
+    ExplicitWidth = 1085
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -2100,6 +2114,15 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     Properties.ReadOnly = False
     TabOrder = 13
     Width = 90
+  end
+  object cbContract: TcxCheckBox [10]
+    Left = 967
+    Top = 87
+    Hint = #1087#1086' '#1044#1086#1075#1086#1074#1086#1088#1072#1084
+    Caption = #1087#1086' '#1044#1086#1075#1086#1074#1086#1088#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 14
+    Width = 100
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2661,6 +2684,14 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isContract'
+          Value = Null
+          Component = cbContract
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2917,6 +2948,14 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisContract'
+        Value = Null
+        Component = cbContract
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 192
@@ -2931,10 +2970,6 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
         item
           Visible = True
           ItemName = 'bbExecuteDialog'
@@ -2982,6 +3017,10 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         item
           Visible = True
           ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContract'
         end
         item
           Visible = True
@@ -3091,6 +3130,13 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = cbErased
+    end
+    object bbContract: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbContract
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

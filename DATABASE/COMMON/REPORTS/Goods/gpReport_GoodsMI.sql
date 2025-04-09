@@ -6,7 +6,9 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
     IN inStartDate         TDateTime ,
@@ -25,7 +27,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
     IN inIsPartionGoods    Boolean   , --
     IN inIsDate            Boolean   , -- 
     IN inisReason          Boolean   , -- развернуть по причинам
-    IN inIsErased          Boolean   , -- показать удаленные Да / Нет
+    IN inIsErased          Boolean   , -- показать удаленные Да / Нет  
+    IN inIsContract        Boolean   , -- по договорам
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -40,6 +43,7 @@ RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull
              , PaidKindId TVarChar, PaidKindName TVarChar
              , BusinessName TVarChar
              , BranchName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
 
              , OperCount_total          TFloat  -- вес склад (итог: с потерями и скидкой)
              , OperCount_real           TFloat  -- вес склад
@@ -394,6 +398,10 @@ BEGIN
          , Object_Business.ValueData      AS BusinessName
          , Object_Branch.ValueData        AS BranchName
 
+         , Object_Contract.Id             AS ContractId
+         , Object_Contract.ObjectCode     AS ContractCode
+         , Object_Contract.ValueData      AS ContractName
+
            -- 1.1. вес, без AnalyzerId, т.е. это со склада, на транзит, с транзита
          , (tmpOperationGroup.OperCount_real) :: TFloat AS OperCount_total
          , ((tmpOperationGroup.OperCount_real     - tmpOperationGroup.OperCount_Change          + tmpOperationGroup.OperCount_40200          * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END)) :: TFloat AS OperCount_real
@@ -562,7 +570,8 @@ BEGIN
                 , tmpContainer.GoodsKindId
                 , tmpContainer.PartnerId
                 , tmpContainer.BusinessId
-                , tmpContainer.BranchId
+                , tmpContainer.BranchId  
+                , CASE WHEN inIsContract = TRUE THEN ContainerLinkObject_Contract.ObjectId ELSE 0 END AS ContractId
                 -- , tmpContainer.InfoMoneyId_goods
                 -- , tmpContainer.TradeMarkId
                 , _tmpGoods.InfoMoneyId AS InfoMoneyId_goods
@@ -832,6 +841,11 @@ BEGIN
                                                     AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                                     AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
 
+                      LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
+                                                    ON ContainerLinkObject_Contract.ContainerId = tmpContainer.ContainerId_Analyzer
+                                                   AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
+                                                   AND inIsContract = TRUE
+
                       WHERE (ContainerLO_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
                         AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0 OR (ContainerLO_Member.ObjectId > 0 AND inPaidKindId = zc_Enum_PaidKind_SecondForm()))
 
@@ -842,6 +856,7 @@ BEGIN
                              , tmpContainer.PartnerId
                              , tmpContainer.BusinessId
                              , tmpContainer.BranchId
+                             , CASE WHEN inIsContract = TRUE THEN ContainerLinkObject_Contract.ObjectId ELSE 0 END
                              -- , tmpContainer.InfoMoneyId_goods
                              -- , tmpContainer.TradeMarkId
                              , _tmpGoods.InfoMoneyId
@@ -861,6 +876,7 @@ BEGIN
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpOperationGroup.PaidKindId
           LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpOperationGroup.BusinessId
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
+          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpOperationGroup.ContractId
 
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
@@ -928,6 +944,10 @@ BEGIN
          , Object_PaidKind.ValueData      AS PaidKindName
          , Object_Business.ValueData ::TVarChar     AS BusinessName   -- Object_Business.ValueData
          , Object_Branch.ValueData   ::TVarChar     AS BranchName     --Object_Branch.ValueData
+
+         , Object_Contract.Id             AS ContractId
+         , Object_Contract.ObjectCode     AS ContractCode
+         , Object_Contract.ValueData      AS ContractName
 
            -- 1.1. вес, без AnalyzerId, т.е. это со склада, на транзит, с транзита
          , 0 :: TFloat AS OperCount_total
@@ -1125,7 +1145,11 @@ BEGIN
                                ON ObjectLink_Unit_Branch.ObjectId = Object_Location.Id
                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
-           
+
+          INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                ON ObjectLink_Contract_Juridical.ChildObjectId = Object_Juridical.Id
+                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_Contract_Juridical.ObjectId            
   ;
 
 END;
@@ -1135,7 +1159,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 
+ 09.04.25         - inIsContract
  02.08.15         * add inIsPartner, inIsTradeMark, inIsGoods, inIsGoodsKind, inIsPartionGoods
  27.07.14                                        * all
  22.07.15         *
@@ -1157,4 +1181,8 @@ $BODY$
 SELECT * FROM gpReport_GoodsMI (inStartDate:= '18.06.2024', inEndDate:= '18.06.2024', inDescId:= zc_Movement_ReturnIn(), inJuridicalId:=0, inPaidKindId:=0, inInfoMoneyId:=0
 , inUnitGroupId:=0, inUnitId:= 346094 , inGoodsGroupId:= 0, inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsPartionGoods:= TRUE, inIsDate:= FALSE, inisReason:= false
 , inIsErased := TRUE, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
+
+select * from gpReport_GoodsMI(inStartDate := ('09.04.2025')::TDateTime , inEndDate := ('09.04.2025')::TDateTime , inDescId := 5 , inJuridicalId := 0 , inPaidKindId := 0 
+, inInfoMoneyId := 0 , inUnitGroupId := 0 , inUnitId := 8459 , inGoodsGroupId := 0 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'True' , inIsGoodsKind := 'False'
+ , inIsPartionGoods := 'False' , inIsDate := 'False' , inisReason := 'False' , inIsErased := 'False' , inIsContract:= 'True',  inSession := '9457');
 */

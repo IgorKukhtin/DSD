@@ -54,7 +54,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 9
-    Top = 175
+    Top = 181
     Properties.Buttons = <
       item
         Default = True
@@ -78,12 +78,12 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cxLabel3: TcxLabel
     Left = 232
-    Top = 204
+    Top = 207
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
   end
   object cxLabel1: TcxLabel
     Left = 9
-    Top = 153
+    Top = 159
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
   end
   object cxLabel6: TcxLabel
@@ -97,13 +97,13 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cxLabel4: TcxLabel
-    Left = 232
-    Top = 103
+    Left = 9
+    Top = 112
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edUnit: TcxButtonEdit
-    Left = 232
-    Top = 123
+    Left = 9
+    Top = 133
     Properties.Buttons = <
       item
         Default = True
@@ -115,7 +115,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object edPaidKind: TcxButtonEdit
     Left = 232
-    Top = 173
+    Top = 179
     Properties.Buttons = <
       item
         Default = True
@@ -127,12 +127,12 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cxLabel2: TcxLabel
     Left = 233
-    Top = 153
+    Top = 159
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
   end
   object cxLabel5: TcxLabel
     Left = 9
-    Top = 204
+    Top = 207
     Caption = #1070#1088'.'#1051#1080#1094#1086
   end
   object edJuridical: TcxButtonEdit
@@ -148,13 +148,13 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     Width = 200
   end
   object cxLabel8: TcxLabel
-    Left = 9
-    Top = 103
+    Left = 8
+    Top = 63
     Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
   end
   object edUnitGroup: TcxButtonEdit
-    Left = 9
-    Top = 123
+    Left = 8
+    Top = 83
     Properties.Buttons = <
       item
         Default = True
@@ -166,7 +166,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cbPartner: TcxCheckBox
     Left = 232
-    Top = 7
+    Top = 21
     Caption = #1087#1086' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
     Properties.ReadOnly = False
     TabOrder = 18
@@ -174,7 +174,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cbTradeMark: TcxCheckBox
     Left = 232
-    Top = 27
+    Top = 41
     Caption = #1087#1086' '#1058#1086#1088#1075#1086#1074#1099#1084' '#1084#1072#1088#1082#1072#1084
     Properties.ReadOnly = False
     TabOrder = 19
@@ -182,7 +182,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cbGoods: TcxCheckBox
     Left = 353
-    Top = 7
+    Top = 21
     Caption = #1087#1086' '#1058#1086#1074#1072#1088#1072#1084
     Properties.ReadOnly = False
     TabOrder = 20
@@ -190,7 +190,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cbGoodsKind: TcxCheckBox
     Left = 353
-    Top = 27
+    Top = 41
     Caption = #1087#1086' '#1042#1080#1076#1072#1084
     Properties.ReadOnly = False
     TabOrder = 21
@@ -198,7 +198,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cbPartionGoods: TcxCheckBox
     Left = 232
-    Top = 48
+    Top = 62
     Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
     Properties.ReadOnly = False
     TabOrder = 22
@@ -206,7 +206,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cbDate: TcxCheckBox
     Left = 353
-    Top = 48
+    Top = 62
     Caption = #1087#1086' '#1044#1072#1090#1072#1084
     Properties.ReadOnly = False
     TabOrder = 23
@@ -214,7 +214,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cbReason: TcxCheckBox
     Left = 232
-    Top = 68
+    Top = 82
     Hint = #1088#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1087#1088#1080#1095#1080#1085#1072#1084
     Caption = #1087#1086' '#1055#1088#1080#1095#1080#1085#1072#1084
     Properties.ReadOnly = False
@@ -223,12 +223,21 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cbErased: TcxCheckBox
     Left = 353
-    Top = 68
+    Top = 82
     Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
     Caption = #1059#1076#1072#1083#1077#1085#1085#1099#1077
     Properties.ReadOnly = False
     TabOrder = 25
     Width = 90
+  end
+  object cbContract: TcxCheckBox
+    Left = 232
+    Top = 103
+    Hint = #1087#1086' '#1044#1086#1075#1086#1074#1086#1088#1072#1084
+    Caption = #1087#1086' '#1044#1086#1075#1086#1074#1086#1088#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 26
+    Width = 100
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -432,6 +441,14 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         Name = 'isReason'
         Value = Null
         Component = cbReason
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isContract'
+        Value = Null
+        Component = cbContract
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
