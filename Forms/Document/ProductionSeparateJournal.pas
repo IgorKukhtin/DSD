@@ -61,6 +61,8 @@ type
     actShowMessage: TShowMessageAction;
     actPrint_4001: TdsdPrintAction;
     bbPrint_4001: TdxBarButton;
+    actPrint_4002: TdsdPrintAction;
+    bbPrint_4002: TdxBarButton;
   private
     { Private declarations }
   public

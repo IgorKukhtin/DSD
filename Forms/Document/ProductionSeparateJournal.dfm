@@ -627,6 +627,43 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       Category = 'Union'
       MoveParams = <>
     end
+    object actPrint_4002: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1043#1086#1074#1103#1076#1080#1085#1072' '#1053'/'#1050')'
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -751,6 +788,10 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_4002'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -792,6 +833,10 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     end
     object bbPrint_4001: TdxBarButton
       Action = actPrint_4001
+      Category = 0
+    end
+    object bbPrint_4002: TdxBarButton
+      Action = actPrint_4002
       Category = 0
     end
   end

@@ -461,7 +461,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     inherited actGridToExcel: TdsdGridToExcel
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' - 1 '#1074' Excel'
     end
-    object actPrint_Gov: TdsdPrintAction [8]
+    object actPrint_4002: TdsdPrintAction [8]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1013,7 +1013,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Category = 0
     end
     object bbPrint_Gov: TdxBarButton
-      Action = actPrint_Gov
+      Action = actPrint_4002
       Category = 0
     end
   end
