@@ -78,6 +78,10 @@ type
     bbPrint_Gov: TdxBarButton;
     bbsPrint: TdxBarSubItem;
     bbBarSeparator: TdxBarSeparator;
+    actReport_Goods_master: TdsdOpenForm;
+    actReport_Goods_child: TdsdOpenForm;
+    bbReport_Goods_master: TdxBarButton;
+    bbReport_Goods_child: TdxBarButton;
   private
     { Private declarations }
   public
