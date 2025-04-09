@@ -76,6 +76,8 @@ type
     GoodsGroupCode: TcxGridDBColumn;
     actPrint_4002: TdsdPrintAction;
     bbPrint_Gov: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    bbBarSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public

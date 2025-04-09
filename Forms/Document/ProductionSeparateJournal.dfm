@@ -635,8 +635,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1043#1086#1074#1103#1076#1080#1085#1072' '#1053'/'#1050')'
-      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) ('#1056#1072#1089#1095#1077#1090')'
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) ('#1056#1072#1089#1095#1077#1090')'
       ImageIndex = 17
       DataSets = <
         item
@@ -780,23 +780,11 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_4001'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_4002'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Ceh'
         end
         item
           Visible = True
@@ -838,6 +826,40 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     object bbPrint_4002: TdxBarButton
       Action = actPrint_4002
       Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_4001'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_4002'
+        end
+        item
+          Visible = True
+          ItemName = 'bbrSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Ceh'
+        end>
+    end
+    object bbrSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
