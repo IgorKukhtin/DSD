@@ -59,6 +59,7 @@ type
     cbDate: TcxCheckBox;
     cbReason: TcxCheckBox;
     cbErased: TcxCheckBox;
+    cbContract: TcxCheckBox;
   private
     { Private declarations }
   public

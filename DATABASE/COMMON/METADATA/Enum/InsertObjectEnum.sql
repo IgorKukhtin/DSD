@@ -5190,12 +5190,33 @@ BEGIN
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
+                                                      inConvertFormatInExcel := FALSE,
+                                                      inSession           := lfGet_User_Session (vbUserId));
+
+ 
+     vbImportTypeItemId := 0;
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inMemberCode';
+    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
+                                                                inParamNumber   := 2,
+                                                                inName          := 'inMemberCode', 
+                                                                inParamType     := 'ftInteger', 
+                                                                inUserParamName := 'Код сотрудника',
+                                                                inImportTypeId  := vbImportTypeId, 
+                                                                inSession       := lfGet_User_Session (vbUserId));
+    vbImportSettingsItem := 0;
+    Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
+    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
+                                                      inName              := 'B',
+                                                      inImportSettingsId  := vbImportSettingId,
+                                                      inImportTypeItemsId := vbImportTypeItemId,
+                                                      inDefaultValue      := NULL::TVarCHar,
+                                                      inConvertFormatInExcel := FALSE,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPersonalName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 2,
+                                                                inParamNumber   := 3,
                                                                 inName          := 'inPersonalName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'ФИО сотрудника',
@@ -5208,12 +5229,13 @@ BEGIN
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
+                                                      inConvertFormatInExcel := FALSE,
                                                       inSession           := lfGet_User_Session (vbUserId));
     
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPositionName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 3, 
+                                                                inParamNumber   := 4, 
                                                                 inName          := 'inPositionName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Должность',
@@ -5226,11 +5248,12 @@ BEGIN
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
+                                                      inConvertFormatInExcel := FALSE,
                                                       inSession           := lfGet_User_Session (vbUserId));
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inComment';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 4, 
+                                                                inParamNumber   := 5, 
                                                                 inName          := 'inComment', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Примечание',
@@ -5243,12 +5266,13 @@ BEGIN
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
+                                                      inConvertFormatInExcel := FALSE,
                                                       inSession           := lfGet_User_Session (vbUserId));
                                                       
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAmount';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 5, 
+                                                                inParamNumber   := 6, 
                                                                 inName          := 'inAmount', 
                                                                 inParamType     := 'ftFloat', 
                                                                 inUserParamName := 'Сумма компенсации',
@@ -5260,8 +5284,10 @@ BEGIN
                                                       inName              := 'E',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
-                                                      inDefaulodetValue      := NULL::TVarCHar,
+                                                      inDefaultValue      := NULL::TVarCHar,
+                                                      inConvertFormatInExcel := FALSE,
                                                       inSession           := lfGet_User_Session (vbUserId));
+
 
 END $$;
 
@@ -5286,6 +5312,7 @@ BEGIN
         
     PERFORM gpInsertUpdate_DefaultValue(ioId := COALESCE(vbId,0), inDefaultKeyId := vbDefaultKeyId, inUserKey := 0, inDefaultValue := zc_Enum_ImportSetting_PersonalTransport()::TBlob, inSession := ''::TVarChar);
 END $$;
+
 
 
 

@@ -68,8 +68,60 @@ BEGIN
                                AND ObjectLink_PartionCell.ObjectId       IS NULL -- т.е. вообще нет этого св-ва
                             ); -- 80132
 
-     --
-    OPEN Cursor1 FOR
+ CREATE TEMP TABLE tmpCursor1 (InvNumber TVarChar
+                             , OperDate TDateTime
+                             , PartionGoods TVarChar
+                             , OperDate_partion TDateTime
+                             , GoodsNameMaster TVarChar
+                             , CountMaster TFloat
+                             , SummMaster TFloat
+                             , HeadCountMaster TFloat
+                             , PriceMaster TFloat
+                             , FromName TVarChar
+                             , PersonalPackerName TVarChar
+                             , GoodsNameIncome TVarChar
+                             , CountIncome  TFloat
+                             , SummIncome  TFloat
+                             , SummDop  TFloat
+                             , HeadCountIncome  TFloat
+                             , CountPackerIncome  TFloat
+                             , HeadCount1  TFloat
+                             , PriceIncome  Tfloat
+                             , PriceIncome1  Tfloat
+                             , PriceTransport  Tfloat
+                             , Count_CountPacker   Tfloat
+                             , PercentCount   Tfloat
+                             , CountSeparate Tfloat
+                             , GoodsNameSeparate TVarChar
+                             , SummHeadCount1   Tfloat
+                             , Separate_info TVarChar ) ON COMMIT DROP;
+    INSERT INTO tmpCursor1 (InvNumber 
+                             , OperDate 
+                             , PartionGoods 
+                             , OperDate_partion 
+                             , GoodsNameMaster 
+                             , CountMaster 
+                             , SummMaster 
+                             , HeadCountMaster 
+                             , PriceMaster 
+                             , FromName 
+                             , PersonalPackerName 
+                             , GoodsNameIncome 
+                             , CountIncome  
+                             , SummIncome  
+                             , SummDop  
+                             , HeadCountIncome
+                             , CountPackerIncome
+                             , HeadCount1
+                             , PriceIncome
+                             , PriceIncome1
+                             , PriceTransport
+                             , Count_CountPacker
+                             , PercentCount
+                             , CountSeparate
+                             , GoodsNameSeparate
+                             , SummHeadCount1
+                             , Separate_info)
 
   WITH -- список товаров для отличия в Separate основного сырья от голов
        tmpGoods AS (SELECT GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (2006)) -- СО- ГОВ. И СВ. Н\К + СЫР
@@ -338,7 +390,47 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-          ;
+          ;  
+
+
+    OPEN Cursor1 FOR
+     -- Результат
+      SELECT tmpCursor1.InvNumber
+           , tmpCursor1.OperDate
+           , tmpCursor1.PartionGoods
+           , tmpCursor1.OperDate_partion
+           , tmpCursor1.GoodsNameMaster
+           , tmpCursor1.CountMaster
+           , tmpCursor1.SummMaster
+           , tmpCursor1.HeadCountMaster
+           , tmpCursor1.PriceMaster
+
+           , tmpCursor1.FromName
+           , tmpCursor1.PersonalPackerName
+           , tmpCursor1.GoodsNameIncome
+           , tmpCursor1.CountIncome
+           , tmpCursor1.SummIncome
+           , tmpCursor1.SummDop
+
+           , tmpCursor1.HeadCountIncome
+           , tmpCursor1.CountPackerIncome
+           , tmpCursor1.HeadCount1 -- цена головы из Income
+
+           , tmpCursor1.PriceIncome
+           , tmpCursor1.PriceIncome1
+           , tmpCursor1.PriceTransport
+
+           , tmpCursor1.Count_CountPacker
+           , tmpCursor1.PercentCount
+
+           , tmpCursor1.CountSeparate
+           , tmpCursor1.GoodsNameSeparate
+           , tmpCursor1.SummHeadCount1  -- ср вес головы из Separate
+
+           , tmpCursor1.Separate_info
+
+      FROM tmpCursor1;
+
     RETURN NEXT Cursor1;
 
 
@@ -357,71 +449,161 @@ BEGIN
                           , lfSelect.ValuePrice
                      FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18886 /*zc_PriceList_ProductionSeparate()*/, inOperDate:= vbOperDate) AS lfSelect
                     )
-                 
-      SELECT Object_Goods.ObjectCode  			 AS GoodsCode
-           , Object_Goods.ValueData   			 AS GoodsName
-           , Object_GoodsGroup.ValueData   		 AS GoodsGroupName
-           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_Measure.ValueData                    AS MeasureName
+        --ПРАЙС - ПЛАН обвалка (сырье)
+      , tmpPricePlan AS (SELECT lfSelect.GoodsId     AS GoodsId
+                              , lfSelect.GoodsKindId AS GoodsKindId
+                              , lfSelect.ValuePrice
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18889, inOperDate:= vbOperDate) AS lfSelect
+                        )
+ 
 
-           , SUM (MovementItem.Amount)::TFloat		 AS Amount
-           , SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) :: TFloat  AS LiveWeight
-           , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) :: TFloat	 AS HeadCount
-           , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN SUM (COALESCE (tmpMIContainer.Amount,0)) / SUM (MovementItem.Amount) ELSE 0 END AS SummPrice
-           , SUM (COALESCE (tmpMIContainer.Amount,0))      AS Summ
-           , COALESCE (tmpPrice.ValuePrice, 0) :: TFloat AS PricePlan
+      , tmpData AS (SELECT Object_Goods.ObjectCode  			 AS GoodsCode
+                        , Object_Goods.ValueData   			 AS GoodsName
+                        , Object_GoodsGroup.ValueData   		 AS GoodsGroupName
+                        , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                        , Object_Measure.ValueData                    AS MeasureName
+             
+                        , SUM (MovementItem.Amount)::TFloat		 AS Amount 
+                        , SUM (SUM (COALESCE (MovementItem.Amount,0))) OVER (PARTITION BY ObjectString_Goods_GoodsGroupFull.ValueData) ::TFloat AS  TotalAmount_gr
+                        , SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) :: TFloat  AS LiveWeight
+                        , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) :: TFloat	 AS HeadCount
+                        , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN SUM (COALESCE (tmpMIContainer.Amount,0)) / SUM (MovementItem.Amount) ELSE 0 END AS SummPrice
+                        , SUM (COALESCE (tmpMIContainer.Amount,0))      AS Summ
+                        , COALESCE (tmpPrice.ValuePrice, 0) :: TFloat AS PricePlan
+             
+                        , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId IN (1966 -- СО-НЕ ВХОД. В ВЫХОД маг
+                                                                                , 1967 -- ****СО-ПОТЕРИ - _toolsView_GoodsProperty_Obvalka_isLoss_TWO
+                                                                                , 1973 -- СО-КОСТИ маг
+                                                                                 )
+                                    THEN TRUE
+                               ELSE FALSE
+                          END :: Boolean AS isLoss
+             
+                        --доп расчет для печати 4002
+                        --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
+                        --  , COALESCE (tmpPricePlan.ValuePrice, 0)  AS Price_kol_E
+                        --кол F  - сумма плановая =E16*C16
+                        , (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0)))::TFloat     AS kol_F 
+                        , SUM (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0))) OVER () AS Total_kol_F
+                    FROM MovementItem
+                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+             
+                         LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
+                                                     ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
+                         LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                     ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+             
+                         LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                                ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
+                                               AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+             
+                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                              ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+             
+                         LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
+             
+                         -- ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)
+                         -- привязка без вида товара
+                         LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
+                                           ANd tmpPrice.GoodsKindId IS NULL
 
-           , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId IN (1966 -- СО-НЕ ВХОД. В ВЫХОД маг
-                                                                   , 1967 -- ****СО-ПОТЕРИ - _toolsView_GoodsProperty_Obvalka_isLoss_TWO
-                                                                   , 1973 -- СО-КОСТИ маг
-                                                                    )
-                       THEN TRUE
-                  ELSE FALSE
-             END :: Boolean AS isLoss
+                         LEFT JOIN tmpPricePlan ON tmpPricePlan.GoodsId = MovementItem.ObjectId
+                                               ANd tmpPricePlan.GoodsKindId IS NULL
+             
+                         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                             AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                         LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+             
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.DescId     = zc_MI_Child()
+                       AND MovementItem.Amount     <> 0
+                       AND MovementItem.isErased   = FALSE
+             
+                     GROUP BY Object_Goods.ObjectCode
+                        , Object_Goods.ValueData
+                        , Object_GoodsGroup.ValueData
+                        , ObjectString_Goods_GoodsGroupFull.ValueData
+                        , Object_Measure.ValueData
+                        , COALESCE (tmpPrice.ValuePrice, 0)
+                        , ObjectLink_Goods_GoodsGroup.ChildObjectId
+           )                
+   , tmpDataCalc AS (SELECT tmpData.GoodsCode
+                          , tmpData.GoodsName
+                          , tmpData.GoodsGroupName
+                          , tmpData.GoodsGroupNameFull
+                          , tmpData.MeasureName
+               
+                          , tmpData.Amount
+                          , tmpData.LiveWeight
+                          , tmpData.HeadCount
+                          , tmpData.SummPrice
+                          , tmpData.Summ
+                          , tmpData.PricePlan
+               
+                          , tmpData.isLoss
+               
+                          --доп расчет для печати 4002
+                          --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
+                         -- , tmpData.Price_kol_E
+                          --кол F  - сумма плановая =E16*C16
+                          , tmpData.kol_F 
+                          , tmpData.Total_kol_F
+                          -- кол G  итого сумма по kol_F дел на  kol_F т.е. доля
+                          , CASE WHEN COALESCE (tmpData.Total_kol_F,0) <> 0 THEN tmpData.kol_F / tmpData.Total_kol_F ELSE 0 END :: TFloat AS kol_G
+                          --
+                          , CASE WHEN COALESCE (tmpData.Amount,0) <> 0 
+                                 THEN (tmpData.kol_F - 
+                                      ( (tmpData.Total_kol_F - tmpCursor1.summheadcount1) * CASE WHEN COALESCE (tmpData.Total_kol_F,0) <> 0 THEN tmpData.kol_F / tmpData.Total_kol_F ELSE 0 END)/* kol_H*/      
+                                      )  /*kol_i */ 
+                                      / COALESCE (tmpData.Amount,0) 
+                                      ELSE 0 
+                            END AS PriceFact
+                          , CASE WHEN COALESCE (tmpCursor1.countmaster,0) <> 0 THEN 100 * (COALESCE (tmpData.Amount,0)/ tmpCursor1.countmaster) ELSE 0 END         :: TFloat AS Persent_v 
+                          , CASE WHEN COALESCE (tmpCursor1.countmaster,0) <> 0 THEN 100 * (COALESCE (tmpData.TotalAmount_gr,0)/ tmpCursor1.countmaster) ELSE 0 END :: TFloat AS Persent_gr
 
-       FROM MovementItem
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                          -- сколько строк в группе
+                          , COUNT (*) OVER (PARTITION BY tmpData.GoodsGroupNameFull) AS Count_gr
+                             
+                      FROM tmpData
+                        LEFT JOIN tmpCursor1 ON 1 = 1 
+                      )
 
-            LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
-                                        ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
-                                       AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
-            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
-                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+     SELECT tmpData.GoodsCode
+          , tmpData.GoodsName
+          , tmpData.GoodsGroupName
+          , tmpData.GoodsGroupNameFull
+          , tmpData.MeasureName
 
-            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+          , tmpData.Amount
+          , tmpData.LiveWeight
+          , tmpData.HeadCount
+          , tmpData.SummPrice
+          , tmpData.Summ
+          , tmpData.PricePlan
 
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+          , tmpData.isLoss
 
-            LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
-
-            -- ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)
-            -- привязка без вида товара
-            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
-                              ANd tmpPrice.GoodsKindId IS NULL
-
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
-        WHERE MovementItem.MovementId = inMovementId
-          AND MovementItem.DescId     = zc_MI_Child()
-          AND MovementItem.Amount     <> 0
-          AND MovementItem.isErased   = FALSE
-
-        GROUP BY Object_Goods.ObjectCode
-           , Object_Goods.ValueData
-           , Object_GoodsGroup.ValueData
-           , ObjectString_Goods_GoodsGroupFull.ValueData
-           , Object_Measure.ValueData
-           , COALESCE (tmpPrice.ValuePrice, 0)
-           , ObjectLink_Goods_GoodsGroup.ChildObjectId
+          --доп расчет для печати 4002
+          --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
+          --кол F  - сумма плановая =E16*C16
+          --, tmpData.kol_F 
+          --, tmpData.Total_kol_F  --итого сумма плановая
+          -- кол G  итого сумма по kol_F дел на  kol_F т.е. доля
+          --, tmpData.kol_G
+          --
+          , tmpData.PriceFact ::TFloat
+          , (tmpData.PriceFact * COALESCE (tmpData.Amount,0)) ::TFloat AS SummFact
+          , tmpData.Count_gr
+          , ROUND (tmpData.Count_gr / 2.0 , 0) ::TFloat AS Str_print
+          , tmpData.Persent_v
+          , tmpData.Persent_gr   
+  
+      FROM tmpDataCalc AS tmpData
        ;
     RETURN NEXT Cursor2;
 
@@ -440,5 +622,7 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionSeparate_Print (inMovementId:= 8332288, inSession:= zfCalc_UserAdmin());
--- FETCH ALL "<unnamed portal 4>";
+-- 
+--SELECT * FROM gpSelect_Movement_ProductionSeparate_Print (inMovementId:= 30723210 , inSession:= zfCalc_UserAdmin());
+--FETCH ALL "<unnamed portal 98>";
+

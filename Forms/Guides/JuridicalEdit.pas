@@ -173,6 +173,7 @@ type
     bbProtocolOpenFormContract: TdxBarButton;
     bbProtocolOpenFormPartner: TdxBarButton;
     cbVchasnoEdi: TcxCheckBox;
+    cbisEdiInvoice: TcxCheckBox;
   private
     { Private declarations }
   public

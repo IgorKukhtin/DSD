@@ -627,6 +627,43 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       Category = 'Union'
       MoveParams = <>
     end
+    object actPrint_4002: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) ('#1056#1072#1089#1095#1077#1090')'
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) ('#1056#1072#1089#1095#1077#1090')'
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -743,19 +780,11 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_4001'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Ceh'
         end
         item
           Visible = True
@@ -793,6 +822,44 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     object bbPrint_4001: TdxBarButton
       Action = actPrint_4001
       Category = 0
+    end
+    object bbPrint_4002: TdxBarButton
+      Action = actPrint_4002
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_4001'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_4002'
+        end
+        item
+          Visible = True
+          ItemName = 'bbrSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Ceh'
+        end>
+    end
+    object bbrSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

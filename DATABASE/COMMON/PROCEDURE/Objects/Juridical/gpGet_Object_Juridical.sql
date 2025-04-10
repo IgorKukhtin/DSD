@@ -21,7 +21,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PriceListPromoId Integer, PriceListPromoName TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
                isVatPrice Boolean,
-               isVchasnoEdi Boolean,
+               isVchasnoEdi Boolean, 
+               isEdiInvoice Boolean,
                VatPriceDate TDateTime,
                SectionId Integer, SectionName TVarChar
                ) AS
@@ -74,7 +75,9 @@ BEGIN
            , CURRENT_DATE :: TDateTime AS EndPromo
            
            , CAST (false as Boolean)   AS isVatPrice  
-           , CAST (FALSE AS Boolean)   AS isVchasnoEdi
+           , CAST (FALSE AS Boolean)   AS isVchasnoEdi 
+           , CAST (FALSE AS Boolean)   AS isEdiInvoice
+
            , NULL         :: TDateTime AS VatPriceDate
 
            , CAST (0 as Integer)    AS SectionId
@@ -122,6 +125,7 @@ BEGIN
 
            , COALESCE (ObjectBoolean_isVatPrice.ValueData, FALSE) :: Boolean   AS isVatPrice
            , COALESCE (ObjectBoolean_VchasnoEdi.ValueData, FALSE) :: Boolean   AS isVchasnoEdi
+           , COALESCE (ObjectBoolean_isEdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
            , COALESCE (ObjectDate_VatPrice.ValueData, NULL)       :: TDateTime AS VatPriceDate
 
            , Object_Section.Id                AS SectionId
@@ -165,6 +169,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_VchasnoEdi
                                    ON ObjectBoolean_VchasnoEdi.ObjectId = Object_Juridical.Id 
                                   AND ObjectBoolean_VchasnoEdi.DescId = zc_ObjectBoolean_Juridical_VchasnoEdi()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiInvoice
+                                   ON ObjectBoolean_isEdiInvoice.ObjectId = Object_Juridical.Id 
+                                  AND ObjectBoolean_isEdiInvoice.DescId = zc_ObjectBoolean_Juridical_isEdiInvoice()
 
            LEFT JOIN ObjectDate AS ObjectDate_VatPrice
                                 ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
@@ -228,6 +236,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.04.25         * isEdiInvoice
  14.03.25         * isVchasnoEdi
  02.11.22         * add Section
  30.09.22         * 

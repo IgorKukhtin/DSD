@@ -162,6 +162,8 @@ type
     bbisReason: TdxBarControlContainerItem;
     cbErased: TcxCheckBox;
     bbErased: TdxBarControlContainerItem;
+    cbContract: TcxCheckBox;
+    bbContract: TdxBarControlContainerItem;
   private
     { Private declarations }
   public
