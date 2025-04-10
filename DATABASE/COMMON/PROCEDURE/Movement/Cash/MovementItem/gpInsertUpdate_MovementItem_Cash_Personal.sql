@@ -1,26 +1,31 @@
 -- Function: gpInsertUpdate_MovementItem_Cash_Personal()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Cash_Personal(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inMovementId_Parent   Integer   , -- Ключ объекта <Документ>
-    IN inPersonalId          Integer   , -- Сотрудники
-    IN inAmount              TFloat    , -- Сумма
-   OUT outSummRemains        TFloat    , -- Остаток к выплате 
-    IN inComment             TVarChar  , -- 
-    IN inInfoMoneyId         Integer   , -- Статьи назначения
-    IN inUnitId              Integer   , -- Подразделение
-    IN inPositionId          Integer   , -- Должность
-    IN inIsCalculated        Boolean   , -- 
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                         Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId                 Integer   , -- Ключ объекта <Документ>
+    IN inMovementId_Parent          Integer   , -- Ключ объекта <Документ>
+    IN inPersonalId                 Integer   , -- Сотрудники
+    IN inAmount                     TFloat    , -- Сумма
+ INOUT ioSummRemains_diff_F2_tmp    TFloat    , -- ***временное поле для сохранение факт - сумма округлений - КАССА***
+   OUT outSumm_diff_F2              TFloat    , -- ***факт - сумма округлений - КАССА***
+   OUT outSummRemains               TFloat    , -- Остаток к выплате 
+   OUT outSummRemains_orig          TFloat    , -- Остаток к выплате  - без округлений
+    IN inComment                    TVarChar  , -- 
+    IN inInfoMoneyId                Integer   , -- Статьи назначения
+    IN inUnitId                     Integer   , -- Подразделение
+    IN inPositionId                 Integer   , -- Должность
+    IN inIsCalculated               Boolean   , -- 
+    IN inSession                    TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbSummRemains_diff_F2 TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
@@ -44,16 +49,33 @@ BEGIN
                                                      , inIsCalculated       := CASE WHEN inAmount < 0 THEN TRUE ELSE inIsCalculated END
                                                      , inUserId             := vbUserId
                                                       );
-     -- вернули <Остаток к выплате>
-     outSummRemains:= (SELECT tmp.SummRemains
-                       FROM gpSelect_MovementItem_Cash_Personal (inMovementId     := inMovementId
-                                                               , inParentId       := inMovementId_Parent
-                                                               , inMovementItemId := ioId
-                                                               , inShowAll        := FALSE
-                                                               , inIsErased       := FALSE
-                                                               , inSession        := inSession
-                                                                )  AS tmp
-                      );
+
+     -- вернули <Остаток к выплате> + <Ост. к выпл. из кассы - без округлений>
+     SELECT tmp.SummRemains, tmp.SummRemains_orig, tmp.SummRemains_diff_F2
+            INTO outSummRemains, outSummRemains_orig, vbSummRemains_diff_F2
+     FROM gpSelect_MovementItem_Cash_Personal (inMovementId     := inMovementId
+                                             , inParentId       := inMovementId_Parent
+                                             , inMovementItemId := ioId
+                                             , inShowAll        := FALSE
+                                             , inIsErased       := FALSE
+                                             , inSession        := inSession
+                                              )  AS tmp
+     ;
+     
+     -- если вся сумма выплаты вводилась вручную
+     IF COALESCE (ioSummRemains_diff_F2_tmp, 0) = 0 AND COALESCE (outSummRemains, 0) = 0 AND outSummRemains_orig <> 0
+     THEN
+         -- замена - ***факт - сумма округлений - КАССА***
+         ioSummRemains_diff_F2_tmp:= vbSummRemains_diff_F2;
+     END IF;
+
+
+     -- сохранили связь с факт - <Выплата по ведомости (округление) - 2ф.>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ_diff_F2(), ioId, ioSummRemains_diff_F2_tmp);
+     -- вернули в грид
+     outSumm_diff_F2:= ioSummRemains_diff_F2_tmp;
+     -- обнулили параметр
+     ioSummRemains_diff_F2_tmp:= 0;
 
 END;
 $BODY$

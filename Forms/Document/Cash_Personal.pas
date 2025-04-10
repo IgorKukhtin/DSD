@@ -119,6 +119,10 @@ type
     SummCardSecond_all_005: TcxGridDBColumn;
     SummCardSecond_diff_005: TcxGridDBColumn;
     AmountService_diff: TcxGridDBColumn;
+    SummRemains_orig: TcxGridDBColumn;
+    SummRemains_diff_F2: TcxGridDBColumn;
+    Summ_diff_F2: TcxGridDBColumn;
+    SummRemains_diff_F2_tmp: TcxGridDBColumn;
   private
     { Private declarations }
   public

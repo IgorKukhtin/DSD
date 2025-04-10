@@ -1,13 +1,16 @@
 -- Function: gpGet_MovementItem_Cash_Personal_Amount()
 
-DROP FUNCTION IF EXISTS gpGet_MovementItem_Cash_Personal_Amount (Integer, TFloat, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_MovementItem_Cash_Personal_Amount (Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MovementItem_Cash_Personal_Amount (Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MovementItem_Cash_Personal_Amount (
- INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
- INOUT ioAmount              TFloat    , -- —умма
- INOUT ioSummRemains         TFloat    , -- ќстаток к выплате
-   OUT outIsCalculated       Boolean   , -- 
-    IN inSession             TVarChar    -- сесси€ пользовател€
+ INOUT ioId                   Integer   , --  люч объекта <Ёлемент документа>
+ INOUT ioAmount               TFloat    , -- —умма
+ INOUT ioSummRemains          TFloat    , -- ќстаток к выплате
+    IN inSummRemains_diff_F2  TFloat    , -- сначала вз€ли из грида
+   OUT outSummRemains_diff_F2 TFloat    , -- вернули в грид дл€ сохранени€
+   OUT outIsCalculated        Boolean   , --
+    IN inSession              TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD
 AS
@@ -20,7 +23,8 @@ BEGIN
      -- установили новые значени€
      ioAmount:= COALESCE (ioAmount, 0) + COALESCE (ioSummRemains, 0);
      ioSummRemains:= 0;
-     
+     outSummRemains_diff_F2:= inSummRemains_diff_F2;
+
      -- расчет
      outIsCalculated:= FALSE;
 
@@ -36,6 +40,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MovementItem_Cash_Personal_Amount(ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
-
---select * from gpGet_MovementItem_Cash_Personal_Amount(ioId := 11967866 , inMovementId := 1015917 , inPersonalId := 280263 , ioAmount := 8 , ioSummRemains := 450 ,  inSession := '5');
+-- SELECT * FROM gpGet_MovementItem_Cash_Personal_Amount (ioId := 11967866, ioAmount:= 8, ioSummRemains:= 450, inSummRemains_diff_F2:= 10, inSession:= '5');

@@ -56,7 +56,7 @@ $BODY$
 */
 
 -- тест
--- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_GoodsBalance';
+-- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_GoodsMI';
 -- SELECT * FROM Object WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelectMobile_Object_GoodsListSale' ORDER BY Id DESC;
 -- SELECT *, gpInsertUpdate_Object_ReportExternal (ioId:= Id, inName:= '', inSession:= zfCalc_UserAdmin()) FROM Object WHERE DescId = zc_Object_ReportExternal() AND Id = 0 ORDER BY Id;
 --
