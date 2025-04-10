@@ -698,8 +698,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1046#1042')'
-      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1046#1042')'
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1043#1086#1074#1103#1076#1080#1085#1072')'
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1043#1086#1074#1103#1076#1080#1085#1072')'
       ImageIndex = 15
       DataSets = <
         item
@@ -929,7 +929,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       Category = 0
     end
     object bbsPrintAr: TdxBarSubItem
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1072#1088#1093#1080#1074')'
+      Caption = #1040#1088#1093#1080#1074
       Category = 0
       Visible = ivAlways
       ItemLinks = <
