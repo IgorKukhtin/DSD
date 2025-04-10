@@ -124,38 +124,57 @@ BEGIN
                   AND (inIsTradeMark = TRUE AND inIsGoods = FALSE)
                   AND inIsGoods_where = FALSE -- !!!
           )
+        , _tmpMemberBranch AS (SELECT DISTINCT ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                               FROM ObjectLink AS ObjectLink_Personal_Unit
+                                    INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = ObjectLink_Personal_Unit.ObjectId
+                                                                        AND Object_Personal.isErased = FALSE
+                                    INNER JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                          ON ObjectLink_Unit_Branch.ObjectId      = ObjectLink_Personal_Unit.ChildObjectId
+                                                         AND ObjectLink_Unit_Branch.DescId        = zc_ObjectLink_Unit_Branch()
+                                                         AND ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
+                                                         AND vbObjectId_Constraint_Branch         > 0
+                                                         AND inIsJuridical_Branch                 = TRUE
+                                    INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                          ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                         AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+                               WHERE ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                              )
         , _tmpJuridicalBranch AS (
-                                     SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                                     FROM ObjectLink AS ObjectLink_Unit_Branch
-                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
-                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                     SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                     FROM _tmpMemberBranch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
+                                                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
                                           INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
-                                                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId        = zc_ObjectLink_Partner_Personal()
                                           INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                                 ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
-                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                       AND inIsJuridical_Branch = TRUE AND vbObjectId_Constraint_Branch <> 0 -- !!!
-                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                                     UNION
-                                     SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
-                                     FROM ObjectLink AS ObjectLink_Unit_Branch
-                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
-                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                     SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                     FROM _tmpMemberBranch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
+                                                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId        = zc_ObjectLink_Partner_PersonalTrade()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                    UNION
+                                     SELECT DISTINCT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                     FROM _tmpMemberBranch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
+                                                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
                                           INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
-                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
-                                                               AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Contract_Personal.DescId        = zc_ObjectLink_Contract_Personal()
                                           INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                                 ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_Personal.ObjectId
-                                                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
-                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                       AND inIsJuridical_Branch = TRUE AND vbObjectId_Constraint_Branch <> 0 -- !!!
-                                     GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
+                                                               AND ObjectLink_Contract_Juridical.DescId   = zc_ObjectLink_Contract_Juridical()
                                  )
 
         , _tmpPartner AS (

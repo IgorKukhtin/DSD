@@ -212,7 +212,7 @@ BEGIN
                PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_Retail(), vbJuridicalId, inRetailId);
 
                -- сохранили протокол
-               PERFORM lpInsert_ObjectProtocol (vbJuridicalId, inUserId);
+               PERFORM lpInsert_ObjectProtocol (vbJuridicalId, vbUserId);
            END IF;
 
            IF COALESCE (vbRouteId, 0) <> inRouteId
@@ -248,7 +248,7 @@ BEGIN
                PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_Retail(), vbJuridicalId, inRetailId);
 
                -- сохранили протокол
-               PERFORM lpInsert_ObjectProtocol (vbJuridicalId, inUserId);
+               PERFORM lpInsert_ObjectProtocol (vbJuridicalId, vbUserId);
            END IF;
 
            IF COALESCE (vbRouteId, 0) <> inRouteId

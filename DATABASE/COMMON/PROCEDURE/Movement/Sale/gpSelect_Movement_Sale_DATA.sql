@@ -834,7 +834,10 @@ end if;
            , COALESCE (MovementBoolean_CurrencyUser.ValueData, FALSE) ::Boolean AS isCurrencyUser
 
            , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
-           , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
+           , CASE WHEN MovementString_InvNumberOrder.ValueData ILIKE '***%' THEN MovementString_InvNumberOrder.ValueData
+                  ELSE COALESCE (MovementString_InvNumberOrder.ValueData, '') || COALESCE (' ***' || Movement_order.InvNumber, '')
+             END :: TVarChar AS InvNumberOrder
+
            , Object_From.Id                                 AS FromId
            , Object_From.ValueData                          AS FromName
            , Object_To.Id                                   AS ToId
@@ -1177,6 +1180,7 @@ end if;
                              ON MovementLinkMovement_Order.MovementId = Movement.Id
                             AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
 
+            LEFT JOIN Movement AS Movement_order ON Movement_order.Id = MovementLinkMovement_Order.MovementChildId
             LEFT JOIN tmpRoute AS Object_Route ON Object_Route.MovementId = MovementLinkMovement_Order.MovementChildId
 
             LEFT JOIN tmpPersonal AS Object_Personal ON Object_Personal.MovementId = MovementLinkMovement_Order.MovementChildId

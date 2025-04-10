@@ -299,7 +299,7 @@ BEGIN
          vbIsGoodsGroup:= TRUE;
 
          --
-         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId, GoodsKindId_real)
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId, GoodsKindId_real, InfoMoneyDestinationId, InfoMoneyId)
             SELECT DISTINCT MovementItem.ObjectId AS GoodsId
                           , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                   AND MILinkObject_GoodsKind.ObjectId = zc_GoodsKind_Basis()
@@ -314,6 +314,9 @@ BEGIN
                                  WHEN CLO_GoodsKind.ObjectId > 0 THEN CLO_GoodsKind.ObjectId
                                  ELSE 0
                             END AS GoodsKindId_real
+                            --
+                          , View_InfoMoney.InfoMoneyDestinationId
+                          , View_InfoMoney.InfoMoneyId
                                    
             FROM MovementItem
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -337,31 +340,50 @@ BEGIN
      THEN
          vbIsGoodsGroup:= TRUE;
          --
-         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId, GoodsKindId_real)
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId, GoodsKindId_real, InfoMoneyDestinationId, InfoMoneyId)
             WITH tmpGoods AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (vbGoodsGroupId) AS lfSelect)
-            SELECT Object.Id AS GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real FROM Object LEFT JOIN tmpGoods ON tmpGoods.GoodsId = Object.Id WHERE Object.DescId = zc_Object_Goods() AND tmpGoods.GoodsId IS NULL
+            SELECT Object.Id AS GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real
+                   --
+                 , View_InfoMoney.InfoMoneyDestinationId
+                 , View_InfoMoney.InfoMoneyId
+            FROM Object
+                 LEFT JOIN tmpGoods ON tmpGoods.GoodsId = Object.Id
+                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                      ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
+                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+            WHERE Object.DescId = zc_Object_Goods() AND tmpGoods.GoodsId IS NULL
            ;
      -- !!!Ограничения по товарам!!!
      ELSEIF vbGoodsGroupId > 0 AND vbIsGoodsGroupIn = TRUE
      THEN
          vbIsGoodsGroup:= TRUE;
          --
-         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId, GoodsKindId_real)
-            SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real FROM lfSelect_Object_Goods_byGoodsGroup (vbGoodsGroupId) AS lfSelect
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId, GoodsKindId_real, InfoMoneyDestinationId, InfoMoneyId)
+            WITH tmpGoods AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (vbGoodsGroupId) AS lfSelect)
+            SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real
+                   -- Пока не надо
+                 , 0 AS InfoMoneyDestinationId
+                 , 0 AS InfoMoneyId
+            FROM tmpGoods AS lfSelect
+                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                      ON ObjectLink_Goods_InfoMoney.ObjectId = lfSelect.GoodsId
+                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
            ;
      ELSEIF EXISTS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup WHERE UnitId = vbUnitId) -- ЦЕХ колбаса+дел-сы
        AND 1 <> EXTRACT (DAY FROM (vbOperDate :: Date + 1))
      THEN
          vbIsGoodsGroup:= TRUE;
          --
-         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId, GoodsKindId_real)
-            SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real FROM lfSelect_Object_Goods_byGoodsGroup (1945)    AS lfSelect -- СО-ОБЩАЯ
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId, GoodsKindId_real, InfoMoneyDestinationId, InfoMoneyId)
+            SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real, 0 AS InfoMoneyDestinationId, 0 AS InfoMoneyId FROM lfSelect_Object_Goods_byGoodsGroup (1945)    AS lfSelect -- СО-ОБЩАЯ
            UNION
-            SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real FROM lfSelect_Object_Goods_byGoodsGroup (1942)    AS lfSelect -- СО-ЭМУЛЬСИИ
+            SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real, 0 AS InfoMoneyDestinationId, 0 AS InfoMoneyId FROM lfSelect_Object_Goods_byGoodsGroup (1942)    AS lfSelect -- СО-ЭМУЛЬСИИ
            UNION
-            SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real FROM lfSelect_Object_Goods_byGoodsGroup (5064881) AS lfSelect -- СО-ПОСОЛ
+            SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real, 0 AS InfoMoneyDestinationId, 0 AS InfoMoneyId FROM lfSelect_Object_Goods_byGoodsGroup (5064881) AS lfSelect -- СО-ПОСОЛ
            UNION
-            SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real FROM lfSelect_Object_Goods_byGoodsGroup (1938)    AS lfSelect -- С-ПЕРЕРАБОТКА
+            SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real, 0 AS InfoMoneyDestinationId, 0 AS InfoMoneyId FROM lfSelect_Object_Goods_byGoodsGroup (1938)    AS lfSelect -- С-ПЕРЕРАБОТКА
             WHERE vbUnitId <> 8447 -- ЦЕХ колбасный
            ;
 
@@ -1090,6 +1112,10 @@ BEGIN
                                                                             AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
                                                -- если ограничено этим списком
                                                JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = Container.ObjectId
+                                               
+                                               -- неправильно для Container.Id = 4120243
+                                               -- поэтому отключим Тушенку
+                                               AND _tmpGoods_Complete_Inventory.InfoMoneyId <> zc_Enum_InfoMoney_30102()
 
                                           WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                                             -- есть GoodsKind

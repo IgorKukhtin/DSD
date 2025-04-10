@@ -1648,6 +1648,13 @@ begin
 
      if Length(lBarCodeText)>=13
      then begin
+               //
+               if SettingMain.BranchCode >= 1000 then
+               begin
+                    ShowMessage('Ошибка.Нет прав сканировать.');
+                    exit;
+               end;
+
                //Проверка <Контрольная сумма>
                if CheckBarCode(lBarCodeText) = FALSE
                then begin

@@ -5237,6 +5237,8 @@ begin
   DESADV_fozz_Amount.InvoiceHeader.ContractNumber := HeaderDataSet.FieldByName('ContractName').asString;
   // Дата договору
   DESADV_fozz_Amount.InvoiceHeader.ContractDate := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
+  // Місце складання
+  DESADV_fozz_Amount.InvoiceHeader.Place := HeaderDataSet.FieldByName('PlaceOf').asString;
   // Номер замовлення
   DESADV_fozz_Amount.InvoiceReference.Order.BuyerOrderNumber := HeaderDataSet.FieldByName('InvNumberOrder').asString;
   // Дата замовлення

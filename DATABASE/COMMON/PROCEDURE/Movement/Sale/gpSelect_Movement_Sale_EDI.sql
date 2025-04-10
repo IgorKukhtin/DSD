@@ -32,7 +32,7 @@ $BODY$
     DECLARE vbOperSumm_PVAT TFloat;
     DECLARE vbTotalCountKg  TFloat;
     DECLARE vbTotalCountSh  TFloat;
-    
+
     DECLARE vbIsGoodsCode Boolean;
 
     DECLARE vbWeighingCount TFloat;
@@ -43,7 +43,7 @@ $BODY$
     DECLARE vbIsProcess_BranchIn Boolean;
 
     DECLARE vbStoreKeeperName TVarChar;
-    
+
     DECLARE vbPartneFromId Integer;
 
     DECLARE vbUserSign TVarChar;
@@ -63,7 +63,7 @@ END IF;
 
      -- определяется - Крыхта Владимир Николаевич * м. Дніпро вул. Стартова 26
      vbPartneFromId := 258612;
-     
+
 
      -- определяется Новая схема Сильпо - Desadv = BOXESQUANTITY (Кількість ящиків)
      vbIsSchema_fozz_desadv:= EXISTS (SELECT
@@ -107,13 +107,13 @@ END IF;
 
      FROM Object AS Object_User
           LEFT JOIN ObjectString AS ObjectString_UserSign
-                                 ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
+                                 ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign()
                                 AND ObjectString_UserSign.ObjectId = Object_User.Id
           LEFT JOIN ObjectString AS ObjectString_UserSeal
-                                 ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal() 
+                                 ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal()
                                 AND ObjectString_UserSeal.ObjectId = Object_User.Id
-          LEFT JOIN ObjectString AS ObjectString_UserKey 
-                                 ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
+          LEFT JOIN ObjectString AS ObjectString_UserKey
+                                 ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key()
                                 AND ObjectString_UserKey.ObjectId = Object_User.Id
      WHERE Object_User.Id = vbUserId;
 
@@ -311,7 +311,7 @@ END IF;
                                WHEN Movement.DescId IN (zc_Movement_SendOnPrice()) AND vbIsProcess_BranchIn = TRUE
                                     THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                ELSE MovementItem.Amount
- 
+
                           END) AS Amount
               FROM MovementItem
                    INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -398,7 +398,7 @@ END IF;
     OPEN Cursor1 FOR
 --     WITH tmpObject_GoodsPropertyValue AS
        WITH tmpTransport AS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_TransportGoods())
-          , tmpTransportGoods AS (SELECT * 
+          , tmpTransportGoods AS (SELECT *
                                   FROM gpGet_Movement_TransportGoods (inMovementId       := (SELECT MovementChildId FROM tmpTransport)
                                                                     , inMovementId_Sale  := inMovementId
                                                                     , inOperDate         := NULL
@@ -420,8 +420,8 @@ END IF;
                               WHERE tmpObject_BankAccount_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                               LIMIT 1
                               )
-          
-          , tmpOH_JuridicalDetails_ViewByDate AS (SELECT * 
+
+          , tmpOH_JuridicalDetails_ViewByDate AS (SELECT *
                                                   FROM ObjectHistory_JuridicalDetails_ViewByDate
                                                   )
           , tmpMovementFloat AS (SELECT *
@@ -443,7 +443,7 @@ END IF;
                                                                 , zc_MovementString_InvNumberPartner()
                                                                  )
                                  )
-                    
+
           , tmpMovementDate AS (SELECT *
                                 FROM MovementDate
                                 WHERE MovementDate.MovementId = inMovementId
@@ -481,6 +481,10 @@ END IF;
            , MovementString_DealId.ValueData            AS DealId
            , MovementString_DocumentId_vch.ValueData    AS DocumentId_vch
            , MovementString_VchasnoId.ValueData         AS VchasnoId
+
+           , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
+                  ELSE '' -- 'м.Днiпро'
+                  END  :: TVarChar   AS PlaceOf
 
            , CASE WHEN MovementString_InvNumberPartner_order.ValueData <> ''
                        THEN MovementString_InvNumberPartner_order.ValueData
@@ -532,7 +536,7 @@ END IF;
            , Object_Street_View.PostalCode              AS PostalCode_To
            , COALESCE(ObjectString_CityKind_ShortName_To.ValueData||' ', '')||
              COALESCE (Object_Street_View.CityName, '')    AS CityName_To
-                      
+
            , (CASE WHEN ObjectString_HouseNumber.ValueData <> '' THEN Object_Street_View.StreetKindName || ' ' ELSE '' END
              || Object_Street_View.Name
              || CASE WHEN ObjectString_HouseNumber.ValueData <> '' THEN ' д.' || ObjectString_HouseNumber.ValueData ELSE '' END
@@ -676,14 +680,14 @@ END IF;
 
            , vbOperDate_insert AS OperDate_insert
            , CASE WHEN vbWeighingCount > 0 THEN vbWeighingCount ELSE 1 END :: Integer AS WeighingCount
-           
+
            , Object_Street_View_From.PostalCode     AS PostalCode_From
 
            , COALESCE(ObjectString_CityKind_ShortName_From.ValueData||' ', '')||
              COALESCE (Object_Street_View_From.CityName, '')    AS CityName_From
 
            , COALESCE(ObjectString_StreetKind_ShortName_From.ValueData||' ', '')||
-             Object_Street_View_From.Name|| 
+             Object_Street_View_From.Name||
                               CASE WHEN COALESCE (ObjectString_HouseNumber_From.ValueData, '') <> ''
                                         THEN ' буд.' || COALESCE (ObjectString_HouseNumber_From.ValueData, '')
                                    ELSE ''
@@ -767,6 +771,13 @@ END IF;
                                  ON ObjectLink_Unit_Juridical.ObjectId = Object_From.Id
                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                                 AND vbContractId = 0
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_From.Id
+                                AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN ObjectString AS ObjectString_PlaceOf
+                                   ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                                  AND ObjectString_PlaceOf.DescId   = zc_objectString_Branch_PlaceOf()
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_ArticleLoss
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
@@ -896,7 +907,7 @@ END IF;
 
             LEFT JOIN tmpOH_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_Bank_From
                                                         ON OH_JuridicalDetails_Bank_From.JuridicalId = Object_BankAccount.BankJuridicalId
-                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_Bank_From.StartDate 
+                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_Bank_From.StartDate
                                                        AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_Bank_From.EndDate
 
             LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_Bank_From
@@ -946,7 +957,7 @@ END IF;
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
             LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                                                   AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
-                                                                  
+
             LEFT JOIN ObjectString AS ObjectString_HouseNumber_From
                                    ON ObjectString_HouseNumber_From.ObjectId = vbPartneFromId
                                   AND ObjectString_HouseNumber_From.DescId = zc_ObjectString_Partner_HouseNumber()
@@ -1145,7 +1156,7 @@ END IF;
       -- на дату
     , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDatePartner) AS CodeUKTZED
                     FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
-       -- 
+       --
       SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
            , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
