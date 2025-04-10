@@ -82,8 +82,8 @@ type
     actReport_Goods_child: TdsdOpenForm;
     bbReport_Goods_master: TdxBarButton;
     bbReport_Goods_child: TdxBarButton;
-    actPrint_4218: TdsdPrintAction;
-    bbPrint_4218: TdxBarButton;
+    actPrint_4001_gov: TdsdPrintAction;
+    bbPrint_4001_gov: TdxBarButton;
     bbsPrintAr: TdxBarSubItem;
   private
     { Private declarations }

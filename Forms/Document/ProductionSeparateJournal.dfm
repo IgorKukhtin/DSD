@@ -22,6 +22,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 478
+        ExplicitLeft = 3
         ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -669,15 +670,15 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
-      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001)'#1088#1072#1089#1095#1077#1090
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001)'#1088#1072#1089#1095#1077#1090
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4218: TdsdPrintAction
+    object actPrint_4001_gov: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -719,8 +720,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4218)'
-      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4218)'
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) '#1075#1086#1074#1103#1076#1080#1085#1072
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) '#1075#1086#1074#1103#1076#1080#1085#1072
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -906,7 +907,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_4218'
+          ItemName = 'bbPrint_4001_gov'
         end
         item
           Visible = True
@@ -924,8 +925,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       Visible = ivAlways
       ShowCaption = False
     end
-    object bbPrint_4218: TdxBarButton
-      Action = actPrint_4218
+    object bbPrint_4001_gov: TdxBarButton
+      Action = actPrint_4001_gov
       Category = 0
     end
     object bbsPrintAr: TdxBarSubItem

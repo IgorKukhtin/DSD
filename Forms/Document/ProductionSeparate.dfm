@@ -490,15 +490,15 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
-      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001)'#1088#1072#1089#1095#1077#1090
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001)'#1088#1072#1089#1095#1077#1090
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4218: TdsdPrintAction [9]
+    object actPrint_4001_gov: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -527,8 +527,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4218)'
-      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4218)'
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) '#1075#1086#1074#1103#1076#1080#1085#1072
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) '#1075#1086#1074#1103#1076#1080#1085#1072
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1270,7 +1270,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_4218'
+          ItemName = 'bbPrint_4001_gov'
         end
         item
           Visible = True
@@ -1296,8 +1296,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Action = actReport_Goods_child
       Category = 0
     end
-    object bbPrint_4218: TdxBarButton
-      Action = actPrint_4218
+    object bbPrint_4001_gov: TdxBarButton
+      Action = actPrint_4001_gov
       Category = 0
     end
     object bbsPrintAr: TdxBarSubItem
