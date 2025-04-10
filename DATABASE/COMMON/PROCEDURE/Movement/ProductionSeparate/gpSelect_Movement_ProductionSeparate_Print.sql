@@ -455,36 +455,45 @@ BEGIN
                               , lfSelect.ValuePrice
                          FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18889, inOperDate:= vbOperDate) AS lfSelect
                         )
- 
+        --ПРАЙС - НОРМА ВЫХОДОВ обвалка  - для расчета  % выхода норма 
+      , tmpPriceNorm AS (SELECT lfSelect.GoodsId     AS GoodsId
+                              , lfSelect.GoodsKindId AS GoodsKindId
+                              , lfSelect.ValuePrice
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 12048635, inOperDate:= vbOperDate) AS lfSelect
+                        )                              
+  
 
-      , tmpData AS (SELECT Object_Goods.ObjectCode  			 AS GoodsCode
-                        , Object_Goods.ValueData   			 AS GoodsName
-                        , Object_GoodsGroup.ValueData   		 AS GoodsGroupName
-                        , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-                        , Object_Measure.ValueData                    AS MeasureName
-             
-                        , SUM (MovementItem.Amount)::TFloat		 AS Amount 
-                        , SUM (SUM (COALESCE (MovementItem.Amount,0))) OVER (PARTITION BY ObjectString_Goods_GoodsGroupFull.ValueData) ::TFloat AS  TotalAmount_gr
-                        , SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) :: TFloat  AS LiveWeight
-                        , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) :: TFloat	 AS HeadCount
-                        , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN SUM (COALESCE (tmpMIContainer.Amount,0)) / SUM (MovementItem.Amount) ELSE 0 END AS SummPrice
-                        , SUM (COALESCE (tmpMIContainer.Amount,0))      AS Summ
-                        , COALESCE (tmpPrice.ValuePrice, 0) :: TFloat AS PricePlan
-             
-                        , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId IN (1966 -- СО-НЕ ВХОД. В ВЫХОД маг
-                                                                                , 1967 -- ****СО-ПОТЕРИ - _toolsView_GoodsProperty_Obvalka_isLoss_TWO
-                                                                                , 1973 -- СО-КОСТИ маг
-                                                                                 )
-                                    THEN TRUE
-                               ELSE FALSE
-                          END :: Boolean AS isLoss
-             
-                        --доп расчет для печати 4002
-                        --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
-                        --  , COALESCE (tmpPricePlan.ValuePrice, 0)  AS Price_kol_E
-                        --кол F  - сумма плановая =E16*C16
-                        , (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0)))::TFloat     AS kol_F 
-                        , SUM (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0))) OVER () AS Total_kol_F
+      , tmpData AS (SELECT Object_Goods.Id  			         AS GoodsId
+                         , Object_Goods.ObjectCode  			 AS GoodsCode
+                         , Object_Goods.ValueData   			 AS GoodsName
+                         , Object_GoodsGroup.ValueData   		 AS GoodsGroupName
+                         , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                         , Object_Measure.ValueData                    AS MeasureName
+              
+                         , SUM (MovementItem.Amount)::TFloat		 AS Amount 
+                         , SUM (SUM (COALESCE (MovementItem.Amount,0))) OVER (PARTITION BY ObjectString_Goods_GoodsGroupFull.ValueData) ::TFloat AS  TotalAmount_gr
+                         , SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) :: TFloat  AS LiveWeight
+                         , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) :: TFloat	 AS HeadCount
+                         , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN SUM (COALESCE (tmpMIContainer.Amount,0)) / SUM (MovementItem.Amount) ELSE 0 END AS SummPrice
+                         , SUM (COALESCE (tmpMIContainer.Amount,0))      AS Summ
+                         , COALESCE (tmpPrice.ValuePrice, 0) :: TFloat AS PricePlan
+              
+                         , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId IN (1966 -- СО-НЕ ВХОД. В ВЫХОД маг
+                                                                                 , 1967 -- ****СО-ПОТЕРИ - _toolsView_GoodsProperty_Obvalka_isLoss_TWO
+                                                                                 , 1973 -- СО-КОСТИ маг
+                                                                                  )
+                                     THEN TRUE
+                                ELSE FALSE
+                           END :: Boolean AS isLoss
+              
+                         --доп расчет для печати 4002
+                         --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
+                         --  , COALESCE (tmpPricePlan.ValuePrice, 0)  AS Price_kol_E
+                         --кол F  - сумма плановая =E16*C16
+                         , (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0)))::TFloat     AS kol_F 
+                         , SUM (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0))) OVER () AS Total_kol_F 
+                         -- - НОРМА ВЫХОДОВ обвалка
+                         , COALESCE (tmpPriceNorm.ValuePrice, 0)  AS PriceNorm
                     FROM MovementItem
                          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
              
@@ -513,7 +522,10 @@ BEGIN
 
                          LEFT JOIN tmpPricePlan ON tmpPricePlan.GoodsId = MovementItem.ObjectId
                                                ANd tmpPricePlan.GoodsKindId IS NULL
-             
+
+                         LEFT JOIN tmpPriceNorm ON tmpPriceNorm.GoodsId = MovementItem.ObjectId
+                                               ANd tmpPriceNorm.GoodsKindId IS NULL                                                    
+
                          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -525,14 +537,17 @@ BEGIN
                        AND MovementItem.isErased   = FALSE
              
                      GROUP BY Object_Goods.ObjectCode
-                        , Object_Goods.ValueData
-                        , Object_GoodsGroup.ValueData
-                        , ObjectString_Goods_GoodsGroupFull.ValueData
-                        , Object_Measure.ValueData
-                        , COALESCE (tmpPrice.ValuePrice, 0)
-                        , ObjectLink_Goods_GoodsGroup.ChildObjectId
-           )                
-   , tmpDataCalc AS (SELECT tmpData.GoodsCode
+                         , Object_Goods.Id
+                         , Object_Goods.ValueData
+                         , Object_GoodsGroup.ValueData
+                         , ObjectString_Goods_GoodsGroupFull.ValueData
+                         , Object_Measure.ValueData
+                         , COALESCE (tmpPrice.ValuePrice, 0)
+                         , ObjectLink_Goods_GoodsGroup.ChildObjectId
+                         , COALESCE (tmpPriceNorm.ValuePrice, 0)
+                     )                
+   , tmpDataCalc AS (SELECT tmpData.GoodsId
+                          , tmpData.GoodsCode
                           , tmpData.GoodsName
                           , tmpData.GoodsGroupName
                           , tmpData.GoodsGroupNameFull
@@ -544,6 +559,7 @@ BEGIN
                           , tmpData.SummPrice
                           , tmpData.Summ
                           , tmpData.PricePlan
+                          , tmpData.PriceNorm
                
                           , tmpData.isLoss
                
@@ -576,7 +592,9 @@ BEGIN
      SELECT tmpData.GoodsCode
           , tmpData.GoodsName
           , tmpData.GoodsGroupName
-          , tmpData.GoodsGroupNameFull
+          , tmpData.GoodsGroupNameFull 
+          , Object_GoodsGroupStat.Id        AS GroupStatId
+          , Object_GoodsGroupStat.ValueData AS GroupStatName
           , tmpData.MeasureName
 
           , tmpData.Amount
@@ -585,6 +603,7 @@ BEGIN
           , tmpData.SummPrice
           , tmpData.Summ
           , tmpData.PricePlan
+          , tmpData.PriceNorm
 
           , tmpData.isLoss
 
@@ -604,6 +623,10 @@ BEGIN
           , tmpData.Persent_gr   
   
       FROM tmpDataCalc AS tmpData
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+                                  ON ObjectLink_Goods_GoodsGroupStat.ObjectId = tmpData.GoodsId
+                                 AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
+             LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
        ;
     RETURN NEXT Cursor2;
 
