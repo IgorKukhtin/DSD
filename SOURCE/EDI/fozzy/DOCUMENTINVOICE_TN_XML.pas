@@ -61,17 +61,21 @@ type
     function Get_DocumentFunctionCode: UnicodeString;
     function Get_ContractNumber: UnicodeString;
     function Get_ContractDate: UnicodeString;
+    function Get_Place: UnicodeString;
     procedure Set_InvoiceNumber(Value: UnicodeString);
     procedure Set_InvoiceDate(Value: UnicodeString);
     procedure Set_DocumentFunctionCode(Value: UnicodeString);
     procedure Set_ContractNumber(Value: UnicodeString);
     procedure Set_ContractDate(Value: UnicodeString);
+    procedure Set_Place(Value: UnicodeString);
     { Methods & Properties }
     property InvoiceNumber: UnicodeString read Get_InvoiceNumber write Set_InvoiceNumber;
     property InvoiceDate: UnicodeString read Get_InvoiceDate write Set_InvoiceDate;
     property DocumentFunctionCode: UnicodeString read Get_DocumentFunctionCode write Set_DocumentFunctionCode;
     property ContractNumber: UnicodeString read Get_ContractNumber write Set_ContractNumber;
     property ContractDate: UnicodeString read Get_ContractDate write Set_ContractDate;
+    property Place: UnicodeString read Get_Place write Set_Place;
+
   end;
 
 { IXMLInvoiceReferenceType }
@@ -332,11 +336,13 @@ type
     function Get_DocumentFunctionCode: UnicodeString;
     function Get_ContractNumber: UnicodeString;
     function Get_ContractDate: UnicodeString;
+    function Get_Place: UnicodeString;
     procedure Set_InvoiceNumber(Value: UnicodeString);
     procedure Set_InvoiceDate(Value: UnicodeString);
     procedure Set_DocumentFunctionCode(Value: UnicodeString);
     procedure Set_ContractNumber(Value: UnicodeString);
     procedure Set_ContractDate(Value: UnicodeString);
+    procedure Set_Place(Value: UnicodeString);
   end;
 
 { TXMLInvoiceReferenceType }
@@ -621,10 +627,20 @@ begin
   Result := ChildNodes['ContractDate'].Text;
 end;
 
+function TXMLInvoiceHeaderType.Get_Place: UnicodeString;
+begin
+  Result := ChildNodes['Place'].Text;
+end;
+
 procedure TXMLInvoiceHeaderType.Set_ContractDate(Value: UnicodeString);
 begin
   ChildNodes['ContractDate'].NodeValue := Value;
 end;
+procedure TXMLInvoiceHeaderType.Set_Place(Value: UnicodeString);
+begin
+  ChildNodes['Place'].NodeValue := Value;
+end;
+
 
 { TXMLInvoiceReferenceType }
 
