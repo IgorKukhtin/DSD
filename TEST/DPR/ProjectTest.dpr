@@ -135,7 +135,6 @@ uses
   AssetGroupEdit in '..\..\Forms\Guides\AssetGroupEdit.pas' {AssetGroupEditForm: TParentForm},
   Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm},
   PersonalEdit in '..\..\Forms\Guides\PersonalEdit.pas' {PersonalEditForm},
-  ProductionSeparateJournal in '..\..\Forms\Document\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm},
   JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas',
   SendOnPrice_BranchJournal in '..\..\Forms\Document\SendOnPrice_BranchJournal.pas' {SendOnPrice_BranchJournalForm},
   SendOnPrice_Branch in '..\..\Forms\Document\SendOnPrice_Branch.pas' {SendOnPrice_BranchForm},
@@ -1577,7 +1576,8 @@ uses
   Report_Inventory_WeighingFactDialog in '..\..\Forms\Report\Report_Inventory_WeighingFactDialog.pas' {Report_Inventory_WeighingFactDialogForm: TParentForm},
   GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
   AmountForm_twoDialog in '..\..\Forms\Document\AmountForm_twoDialog.pas' {AmountForm_twoDialogForm: TParentForm},
-  ServiceDateDialog in '..\..\Forms\Document\ServiceDateDialog.pas' {ServiceDateDialogForm: TParentForm};
+  ServiceDateDialog in '..\..\Forms\Document\ServiceDateDialog.pas' {ServiceDateDialogForm: TParentForm},
+  ProductionSeparateJournal in '..\..\Forms\Document\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -326,9 +326,6 @@
 			<DCCReference Include="..\..\Forms\Guides\PersonalEdit.pas">
 				<Form>PersonalEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ProductionSeparateJournal.pas">
-				<Form>ProductionSeparateJournalForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\SendOnPrice_BranchJournal.pas">
 				<Form>SendOnPrice_BranchJournalForm</Form>
@@ -5541,6 +5538,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ServiceDateDialog.pas">
 				<Form>ServiceDateDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProductionSeparateJournal.pas">
+				<Form>ProductionSeparateJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -22,6 +22,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 478
+        ExplicitLeft = 3
         ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -629,7 +630,20 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     end
     object actPrint_4002: TdsdPrintAction
       Category = 'DSDLib'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -656,8 +670,58 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
-      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4002)'
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001)'#1088#1072#1089#1095#1077#1090
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001)'#1088#1072#1089#1095#1077#1090
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_4001_gov: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1043#1086#1074#1103#1076#1080#1085#1072')'
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1043#1086#1074#1103#1076#1080#1085#1072')'
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupStatName;GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) '#1075#1086#1074#1103#1076#1080#1085#1072
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) '#1075#1086#1074#1103#1076#1080#1085#1072
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -788,6 +852,10 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbsPrintAr'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -839,11 +907,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_4001'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_4002'
+          ItemName = 'bbPrint_4001_gov'
         end
         item
           Visible = True
@@ -860,6 +924,24 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       Hint = 'Separator'
       Visible = ivAlways
       ShowCaption = False
+    end
+    object bbPrint_4001_gov: TdxBarButton
+      Action = actPrint_4001_gov
+      Category = 0
+    end
+    object bbsPrintAr: TdxBarSubItem
+      Caption = #1040#1088#1093#1080#1074
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint_4001'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_4002'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
