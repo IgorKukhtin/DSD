@@ -2092,7 +2092,7 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalLiveWeight(), inMovementId, vbTotalLiveWeight);
 
          -- Сохранили свойство <Итого сумма по Оборотной таре>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), inMovementId, vbOperSumm_Tare);
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTare(), inMovementId, vbOperSumm_Tare);
 
          IF vbMovementDescId = zc_Movement_PromoTrade()
          THEN
