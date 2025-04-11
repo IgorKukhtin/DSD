@@ -27,6 +27,7 @@ $BODY$
     DECLARE vbPaidKindId Integer;
     DECLARE vbContractId Integer;
     DECLARE vbIsLongUKTZED Boolean;
+    DECLARE vbIsVchasnoEdi Boolean;
 
     DECLARE vbOperSumm_MVAT TFloat;
     DECLARE vbOperSumm_PVAT TFloat;
@@ -185,9 +186,10 @@ END IF;
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)   AS isLongUKTZED
+          , COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE)   AS isVchasnoEdi
             INTO vbOperDate, vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId
                , vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
-               , vbIsLongUKTZED
+               , vbIsLongUKTZED, vbIsVchasnoEdi
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -211,6 +213,12 @@ END IF;
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+          -- схема Vchasno - EDI
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_VchasnoEdi
+                                  ON ObjectBoolean_Juridical_VchasnoEdi.ObjectId  = ObjectLink_Partner_Juridical.ChildObjectId
+                                 AND ObjectBoolean_Juridical_VchasnoEdi.DescId    = zc_ObjectBoolean_Juridical_VchasnoEdi()
+
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
                                   ON ObjectBoolean_isLongUKTZED.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                  AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
@@ -1261,11 +1269,18 @@ END IF;
                    AS NUMERIC (16, 2)) AS AmountSummNoVAT
 
              -- расчет суммы с НДС, до 3 знаков
-           , CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT <> TRUE
-                                              THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
-                                              ELSE tmpMI.Price
-                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 3)) AS AmountSummWVAT
+           , CASE WHEN vbIsVchasnoEdi = TRUE
+                  THEN CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT <> TRUE
+                                                        THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
+                                                        ELSE tmpMI.Price
+                                                   END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                             AS NUMERIC (16, 2))
+                  ELSE CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT <> TRUE
+                                                        THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
+                                                        ELSE tmpMI.Price
+                                                   END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                             AS NUMERIC (16, 3))
+             END AS AmountSummWVAT
 
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
 --           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
