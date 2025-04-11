@@ -217,20 +217,23 @@ type
     bbVchasnoEDIDesadv: TdxBarButton;
     mactVchasnoEDIOrdrsp: TMultiAction;
     actVchasnoEDIOrdrsp: TdsdVchasnoEDIAction;
-    mactVchasnoEDIDeclar: TMultiAction;
-    actVchasnoEDIDeclar: TdsdVchasnoEDIAction;
-    dxBarButton1: TdxBarButton;
-    dxBarButton2: TdxBarButton;
+    mactVchasnoEDIDelnot: TMultiAction;
+    actVchasnoEDIDelnot: TdsdVchasnoEDIAction;
+    bbVchasnoEDIOrdrsp: TdxBarButton;
+    bbVchasnoEDIDelnot: TdxBarButton;
     spInsertUpdate_EDIINVOICE_NP: TdsdStoredProc;
     spGet_DefaultEDIN: TdsdStoredProc;
     actGet_DefaultEDIN: TdsdExecStoredProc;
     actLoadInvoiceNR: TdsdEDINAction;
     mactLoadInvoiceNR: TMultiAction;
     dxBarButton3: TdxBarButton;
-    mactVchasnoEDISignDeclar: TMultiAction;
-    actVchasnoEDISignDeclar: TdsdVchasnoEDIAction;
-    dxBarButton4: TdxBarButton;
+    mactVchasnoEDISignDelnot: TMultiAction;
+    actVchasnoEDISignDelnot: TdsdVchasnoEDIAction;
+    bbVchasnoEDISignDelnot: TdxBarButton;
     isVchasno: TcxGridDBColumn;
+    actVchasnoEDIComdoc: TdsdVchasnoEDIAction;
+    mactVchasnoEDIComdoc: TMultiAction;
+    bbVchasnoEDIComdoc: TdxBarButton;
   private
     { Private declarations }
   public

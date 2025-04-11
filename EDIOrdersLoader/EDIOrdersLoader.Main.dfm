@@ -11300,11 +11300,11 @@ object MainForm: TMainForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object actVchasnoEDIComDoc: TdsdVchasnoEDIAction
+    object actVchasnoEDIComDoc2: TdsdVchasnoEDIAction
       Category = 'VchasnoEDI'
       MoveParams = <>
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
       Host.Value = 'https://edi.vchasno.ua/api/documents'
       Host.DataType = ftString
       Host.MultiSelectSeparator = ','
@@ -11319,6 +11319,40 @@ object MainForm: TMainForm
       DateTo.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediComDocSave
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object actVchasnoEDIDelnot: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Delnot '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Delnot '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediDelnotSave
       KeyFileName.Value = ''
       KeyFileName.DataType = ftString
       KeyFileName.MultiSelectSeparator = ','
@@ -11368,7 +11402,7 @@ object MainForm: TMainForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1077'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
       ImageIndex = 84
     end
-    object mactVchasnoEDIComDoc: TMultiAction
+    object mactVchasnoEDIDelnot: TMultiAction
       Category = 'VchasnoEDI'
       MoveParams = <>
       ActionList = <
@@ -11376,13 +11410,13 @@ object MainForm: TMainForm
           Action = actExecPrintStoredProc
         end
         item
-          Action = actVchasnoEDIComDoc
+          Action = actVchasnoEDIDelnot
         end
         item
           Action = actUpdateEdiDesadvTrue
         end>
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Delnot '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Delnot '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
       ImageIndex = 84
     end
   end

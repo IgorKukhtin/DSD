@@ -127,15 +127,35 @@ type
     function Get_TaxID: UnicodeString;
     function Get_UtilizationRegisterNumber: UnicodeString;
     function Get_Name: UnicodeString;
+
     procedure Set_ILN(Value: UnicodeString);
     procedure Set_TaxID(Value: UnicodeString);
     procedure Set_UtilizationRegisterNumber(Value: UnicodeString);
     procedure Set_Name(Value: UnicodeString);
+
+    function Get_CityName: UnicodeString;
+    function Get_StreetAndNumber: UnicodeString;
+    function Get_PostalCode: UnicodeString;
+    function Get_PhoneNumber: UnicodeString;
+    function Get_Country: UnicodeString;
+
+    procedure Set_CityName(Value: UnicodeString);
+    procedure Set_StreetAndNumber(Value: UnicodeString);
+    procedure Set_PostalCode(Value: UnicodeString);
+    procedure Set_PhoneNumber(Value: UnicodeString);
+    procedure Set_Country(Value: UnicodeString);
+
     { Methods & Properties }
     property ILN: UnicodeString read Get_ILN write Set_ILN;
     property TaxID: UnicodeString read Get_TaxID write Set_TaxID;
     property UtilizationRegisterNumber: UnicodeString read Get_UtilizationRegisterNumber write Set_UtilizationRegisterNumber;
     property Name: UnicodeString read Get_Name write Set_Name;
+
+    property CityName: UnicodeString read Get_CityName write Set_CityName;
+    property StreetAndNumber: UnicodeString read Get_StreetAndNumber write Set_StreetAndNumber;
+    property PostalCode: UnicodeString read Get_PostalCode write Set_PostalCode;
+    property PhoneNumber: UnicodeString read Get_PhoneNumber write Set_PhoneNumber;
+    property Country: UnicodeString read Get_Country write Set_Country;
   end;
 
 { IXMLSellerType }
@@ -388,10 +408,23 @@ type
     function Get_TaxID: UnicodeString;
     function Get_UtilizationRegisterNumber: UnicodeString;
     function Get_Name: UnicodeString;
+
     procedure Set_ILN(Value: UnicodeString);
     procedure Set_TaxID(Value: UnicodeString);
     procedure Set_UtilizationRegisterNumber(Value: UnicodeString);
     procedure Set_Name(Value: UnicodeString);
+
+    function Get_CityName: UnicodeString;
+    function Get_StreetAndNumber: UnicodeString;
+    function Get_PostalCode: UnicodeString;
+    function Get_PhoneNumber: UnicodeString;
+    function Get_Country: UnicodeString;
+
+    procedure Set_CityName(Value: UnicodeString);
+    procedure Set_StreetAndNumber(Value: UnicodeString);
+    procedure Set_PostalCode(Value: UnicodeString);
+    procedure Set_PhoneNumber(Value: UnicodeString);
+    procedure Set_Country(Value: UnicodeString);
   end;
 
 { TXMLSellerType }
@@ -709,6 +742,56 @@ begin
 end;
 
 { TXMLBuyerType }
+
+function TXMLBuyerType.Get_CityName: UnicodeString;
+begin
+  Result := ChildNodes['CityName'].NodeValue;
+end;
+
+procedure TXMLBuyerType.Set_CityName(Value: UnicodeString);
+begin
+  ChildNodes['CityName'].NodeValue := Value;
+end;
+
+function TXMLBuyerType.Get_StreetAndNumber: UnicodeString;
+begin
+  Result := ChildNodes['StreetAndNumber'].NodeValue;
+end;
+
+procedure TXMLBuyerType.Set_StreetAndNumber(Value: UnicodeString);
+begin
+  ChildNodes['StreetAndNumber'].NodeValue := Value;
+end;
+
+function TXMLBuyerType.Get_PostalCode: UnicodeString;
+begin
+  Result := ChildNodes['PostalCode'].NodeValue;
+end;
+
+procedure TXMLBuyerType.Set_PostalCode(Value: UnicodeString);
+begin
+  ChildNodes['PostalCode'].NodeValue := Value;
+end;
+
+function TXMLBuyerType.Get_PhoneNumber: UnicodeString;
+begin
+  Result := ChildNodes['PhoneNumber'].NodeValue;
+end;
+
+procedure TXMLBuyerType.Set_PhoneNumber(Value: UnicodeString);
+begin
+  ChildNodes['PhoneNumber'].NodeValue := Value;
+end;
+
+function TXMLBuyerType.Get_Country: UnicodeString;
+begin
+  Result := ChildNodes['Country'].NodeValue;
+end;
+
+procedure TXMLBuyerType.Set_Country(Value: UnicodeString);
+begin
+  ChildNodes['Country'].NodeValue := Value;
+end;
 
 function TXMLBuyerType.Get_ILN: UnicodeString;
 begin
