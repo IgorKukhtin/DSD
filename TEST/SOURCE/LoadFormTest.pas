@@ -4788,10 +4788,10 @@ end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;
 begin
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalUnit_ObjectForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReasonOutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReasonOutEditForm'));
@@ -4799,7 +4799,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
-  //exit;
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');

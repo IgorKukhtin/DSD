@@ -130,6 +130,16 @@ type
     PersonalServiceListAvanceF2: TOpenChoiceForm;
     ServiceListName_AvanceF2: TcxGridDBColumn;
     DepartmentName: TcxGridDBColumn;
+    ceServiceListCardSecond: TcxButtonEdit;
+    cxLabel1: TcxLabel;
+    GuidesServiceListCardSecond: TdsdGuides;
+    spUpdate_PersonalServiceListCardSecond: TdsdStoredProc;
+    bccServiceListCardSecondText: TdxBarControlContainerItem;
+    bccServiceListCardSecond: TdxBarControlContainerItem;
+    actUpdate_PersonalServiceListCardSecond: TdsdExecStoredProc;
+    macUpdate_PersonalServiceListCardSecond_list: TMultiAction;
+    macUpdate_PersonalServiceListCardSecond: TMultiAction;
+    bbUpdate_PersonalServiceListCardSecond: TdxBarButton;
   private
     { Private declarations }
   public

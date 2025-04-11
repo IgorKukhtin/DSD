@@ -2,8 +2,8 @@ object PersonalForm: TPersonalForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
-  ClientHeight = 448
-  ClientWidth = 1346
+  ClientHeight = 469
+  ClientWidth = 1711
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,15 @@ object PersonalForm: TPersonalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 1346
-    Height = 422
+    Width = 1711
+    Height = 443
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 1346
+    ExplicitHeight = 422
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -515,6 +517,23 @@ object PersonalForm: TPersonalForm
     TabOrder = 10
     Width = 161
   end
+  object ceServiceListCardSecond: TcxButtonEdit
+    Left = 853
+    Top = 26
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 161
+  end
+  object cxLabel1: TcxLabel
+    Left = 853
+    Top = 46
+    Caption = #1053#1086#1074#1072#1103' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083'.('#1082#1072#1088#1090#1072' '#1092'2)'
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 56
@@ -620,15 +639,7 @@ object PersonalForm: TPersonalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbUpdate_isIrna'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -669,6 +680,22 @@ object PersonalForm: TPersonalForm
         item
           Visible = True
           ItemName = 'bbUpdate_PersonalServiceList'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bccServiceListCardSecondText'
+        end
+        item
+          Visible = True
+          ItemName = 'bccServiceListCardSecond'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PersonalServiceListCardSecond'
         end
         item
           Visible = True
@@ -793,6 +820,24 @@ object PersonalForm: TPersonalForm
     object bbUpdate_PersonalServiceList: TdxBarButton
       Action = macUpdate_PersonalServiceList
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074'. '#1079#1085#1072#1095#1077#1085#1080#1077' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083'. '#1075#1083#1072#1074#1085#1072#1103
+      Category = 0
+    end
+    object bccServiceListCardSecondText: TdxBarControlContainerItem
+      Caption = 'ServiceListCardSecondText'
+      Category = 0
+      Hint = 'ServiceListCardSecondText'
+      Visible = ivAlways
+      Control = cxLabel1
+    end
+    object bccServiceListCardSecond: TdxBarControlContainerItem
+      Caption = 'ServiceListCardSecond'
+      Category = 0
+      Hint = 'ServiceListCardSecond'
+      Visible = ivAlways
+      Control = ceServiceListCardSecond
+    end
+    object bbUpdate_PersonalServiceListCardSecond: TdxBarButton
+      Action = macUpdate_PersonalServiceListCardSecond
       Category = 0
     end
   end
@@ -1302,6 +1347,45 @@ object PersonalForm: TPersonalForm
       Caption = 'actUpdate_isIrna'
       ImageIndex = 66
     end
+    object actUpdate_PersonalServiceListCardSecond: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PersonalServiceListCardSecond
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PersonalServiceListCardSecond
+        end>
+      Caption = 'actUpdate_PersonalServiceListCardSecond'
+    end
+    object macUpdate_PersonalServiceListCardSecond_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PersonalServiceListCardSecond
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_PersonalServiceListCardSecond_list'
+    end
+    object macUpdate_PersonalServiceListCardSecond: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_PersonalServiceListCardSecond_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074'. '#1079#1085#1072#1095#1077#1085#1080#1077' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1082#1072#1088#1090#1072' '#1092'2) '#1074#1099#1073#1088#1072#1085#1085#1099 +
+        #1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084'?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1103' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1099
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074'. '#1079#1085#1072#1095#1077#1085#1080#1077' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1082#1072#1088#1090#1072' '#1092'2)'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074'. '#1079#1085#1072#1095#1077#1085#1080#1077' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1082#1072#1088#1090#1072' '#1092'2)'
+      ImageIndex = 82
+    end
     object actUpdate_PersonalServiceList: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1644,6 +1728,61 @@ object PersonalForm: TPersonalForm
       end>
     PackSize = 1
     Left = 768
+    Top = 152
+  end
+  object GuidesServiceListCardSecond: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceServiceListCardSecond
+    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalServiceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesServiceListCardSecond
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesServiceListCardSecond
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 956
+    Top = 89
+  end
+  object spUpdate_PersonalServiceListCardSecond: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Personal_PersonalServiceListCardSecond'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListId'
+        Value = ''
+        Component = GuidesServiceListCardSecond
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 952
     Top = 152
   end
 end
