@@ -215,6 +215,20 @@ type
     DealId: TcxGridDBColumn;
     DocumentId_vch: TcxGridDBColumn;
     VchasnoId: TcxGridDBColumn;
+    bbVchasnoEDI: TdxBarSubItem;
+    actVchasnoEDIOrdeLoad: TdsdVchasnoEDIAction;
+    mactVchasnoEDIOrdersLoad: TMultiAction;
+    actVchasnoEDIDesadv: TdsdVchasnoEDIAction;
+    mactVchasnoEDIDesadv: TMultiAction;
+    actVchasnoEDIOrdrsp: TdsdVchasnoEDIAction;
+    mactVchasnoEDIOrdrsp: TMultiAction;
+    actVchasnoEDIDeclar: TdsdVchasnoEDIAction;
+    mactVchasnoEDIDeclar: TMultiAction;
+    bbVchasnoEDIOrdersLoad: TdxBarButton;
+    bbVchasnoEDIDesadv: TdxBarButton;
+    bbVchasnoEDIOrdrsp: TdxBarButton;
+    bbVchasnoEDIDeclar: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
   private
     { Private declarations }
   public

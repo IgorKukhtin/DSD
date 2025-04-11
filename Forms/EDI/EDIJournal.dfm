@@ -880,7 +880,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
-      EditValue = 43313d
+      EditValue = 45658d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -889,7 +889,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 43313d
+      EditValue = 45658d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -1844,6 +1844,228 @@ inherited EDIJournalForm: TEDIJournalForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' EXITE'
       ImageIndex = 27
     end
+    object actVchasnoEDIOrdeLoad: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.Component = deStart
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.Component = deEnd
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      spHeader = spHeaderOrder
+      spList = spListOrder
+    end
+    object mactVchasnoEDIOrdersLoad: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actVchasnoEDIOrdeLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' p'#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDIDesadv: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = 'actVchasnoEDIDesadv'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediDesadv
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object mactVchasnoEDIDesadv: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actVchasnoEDIDesadv
+        end
+        item
+          Action = actUpdateEdiDesadvTrue
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1077'> '#1074'  '#1042#1095 +
+        #1072#1089#1085#1086' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1077'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1077'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1077'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDIOrdrsp: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = 'actVchasnoEDIOrdrsp'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediOrdrsp
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object mactVchasnoEDIOrdrsp: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actVchasnoEDIOrdrsp
+        end
+        item
+          Action = actUpdateEdiDesadvTrue
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072'> '#1074'  '#1042#1095#1072#1089#1085 +
+        #1086' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1072'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1072'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1072'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDIDeclar: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = 'actVchasnoEDIDeclar'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediComDocSave
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object mactVchasnoEDIDeclar: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actVchasnoEDIDeclar
+        end
+        item
+          Action = actUpdateEdiDesadvTrue
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' ' +
+        'EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -1928,6 +2150,14 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbVchasnoEDI'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -2133,6 +2363,52 @@ inherited EDIJournalForm: TEDIJournalForm
     object bbmacUpdateMI_EDIComdoc: TdxBarButton
       Action = macUpdateMI_EDIComdoc
       Category = 0
+    end
+    object bbVchasnoEDI: TdxBarSubItem
+      Caption = #1042#1095#1072#1089#1085#1086' EDI'
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 84
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbVchasnoEDIOrdrsp'
+        end
+        item
+          Visible = True
+          ItemName = 'bbVchasnoEDIDesadv'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbVchasnoEDIDeclar'
+        end>
+    end
+    object bbVchasnoEDIOrdersLoad: TdxBarButton
+      Action = mactVchasnoEDIOrdersLoad
+      Category = 0
+    end
+    object bbVchasnoEDIDesadv: TdxBarButton
+      Action = mactVchasnoEDIDesadv
+      Category = 0
+    end
+    object bbVchasnoEDIOrdrsp: TdxBarButton
+      Action = mactVchasnoEDIOrdrsp
+      Category = 0
+    end
+    object bbVchasnoEDIDeclar: TdxBarButton
+      Action = mactVchasnoEDIDeclar
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = '-'
+      Category = 0
+      Hint = '-'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

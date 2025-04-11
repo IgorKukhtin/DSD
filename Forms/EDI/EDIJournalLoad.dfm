@@ -2245,7 +2245,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'dsVchasnoEDI'
+          ItemName = 'bbVchasnoEDI'
         end
         item
           Visible = True
@@ -2451,7 +2451,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       Action = mactVchasnoEDIOrdersLoad
       Category = 0
     end
-    object dsVchasnoEDI: TdxBarSubItem
+    object bbVchasnoEDI: TdxBarSubItem
       Caption = #1042#1095#1072#1089#1085#1086' EDI'
       Category = 0
       Hint = #1042#1095#1072#1089#1085#1086' EDI'

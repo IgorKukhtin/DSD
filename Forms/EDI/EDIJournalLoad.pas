@@ -212,7 +212,7 @@ type
     actVchasnoEDIOrdeLoad: TdsdVchasnoEDIAction;
     actVchasnoEDIDesadv: TdsdVchasnoEDIAction;
     mactVchasnoEDIDesadv: TMultiAction;
-    dsVchasnoEDI: TdxBarSubItem;
+    bbVchasnoEDI: TdxBarSubItem;
     dxBarSeparator1: TdxBarSeparator;
     bbVchasnoEDIDesadv: TdxBarButton;
     mactVchasnoEDIOrdrsp: TMultiAction;
