@@ -6002,17 +6002,17 @@ begin
 
     try
       try
-        EncodeStream(fileStreamSing, base64StreamSing);
+       EncodeStream(fileStreamSing, base64StreamSing);
 
-        Body := '{'#13 +
-                '  "signature": ' +  base64StreamSing.DataString + ''#13;
+        Body := '{'#10 +
+                '  "signature": "' +  base64StreamSing.DataString + '"';
         if Assigned(fileStreamStamp) then
         begin
           EncodeStream(fileStreamStamp, base64StreamStamp);
 
-          Body := Body + ', "stamp": ' + base64StreamStamp.DataString + ''#13;
+          Body := Body + ','#10'  "stamp": "' + base64StreamStamp.DataString + '"'#10;
         end;
-        Body := Body + #13 + '}';
+        Body := Body + #10 + '}';
       except on E:EIdHTTPProtocolException  do
                   ShowMessages('Ошибка: ' + e.ErrorMessage);
       end;
@@ -6024,7 +6024,7 @@ begin
     end;
 
     IdHTTP.Request.Clear;
-    IdHTTP.Request.ContentType := 'application/json; charset=utf-8';
+    IdHTTP.Request.ContentType := 'text/plain';
     IdHTTP.Request.ContentEncoding := 'UTF-8';
     IdHTTP.Request.Accept := '*/*';
     IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
