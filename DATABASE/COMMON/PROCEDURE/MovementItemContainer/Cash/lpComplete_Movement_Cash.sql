@@ -842,6 +842,148 @@ BEGIN
 
 
        UNION ALL
+        -- 1.1.0. перевыставления - факт - сумма округлений - КАССА
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+
+             , COALESCE (MI_Child.ObjectId, 0) AS ObjectId
+
+             , COALESCE (Object.DescId, 0) AS ObjectDescId
+
+               -- Cумма грн, округление по ведомости- 2ф.
+             , tmpSignData.mySign * MIFloat_Summ_diff_F2.ValueData AS OperSumm
+
+               -- Cумма в валюте, по ...
+             , 0 AS OperSumm_Currency
+               --
+             , 0 AS OperSumm_Asset
+
+             , COALESCE (MI_Child.Id, 0)    AS MovementItemId
+
+             , 0 AS ContainerId                                               -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId                   -- сформируем позже
+             , 0 AS AccountId                                                 -- сформируем позже
+
+               -- Группы ОПиУ - для выплаты ЗП - не используется
+             , 0 AS ProfitLossGroupId
+               -- Аналитики ОПиУ - направления - для выплаты ЗП - не используется
+             , 0 AS ProfitLossDirectionId
+
+               -- Управленческие группы назначения
+             , _tmpItem.InfoMoneyGroupId
+               -- Управленческие назначения
+             , _tmpItem.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , _tmpItem.InfoMoneyId
+
+               -- Бизнес Баланс: всегда из кассы
+             , _tmpItem.BusinessId_Balance
+
+               -- Бизнес ОПиУ: ObjectLink_Unit_Business
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо всегда из кассы
+             , _tmpItem.JuridicalId_Basis
+
+             , COALESCE (MILinkObject_Unit.ObjectId, 0)     AS UnitId
+             , COALESCE (MILinkObject_Position.ObjectId, 0) AS PositionId
+
+             , COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, ObjectLink_PersonalServiceList_two.ChildObjectId, MILinkObject_MoneyPlace.ObjectId, 0) AS PersonalServiceListId
+
+                -- Филиал Баланс: для ЗП - как в начислениях
+             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_Balance
+
+               -- Филиал ОПиУ: для выплаты ЗП - не используется!!!
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: есть
+             , lpInsertFind_Object_ServiceDate (inOperDate:= CASE WHEN tmpSignData.mySign = -1 THEN MIDate_ServiceDate.ValueData ELSE MIDate_ServiceDate.ValueData + INTERVAL '1 MONTH' END) AS ServiceDateId
+ 
+             , 0 AS ContractId
+
+             , 0 AS PaidKindId
+
+             , 0 AS PartionMovementId
+
+             , zc_Enum_AnalyzerId_PersonalService_SummDiff() AS AnalyzerId -- это выплата ЗП (округление) - 2ф
+
+               -- Валюта
+             , 0 AS CurrencyId
+
+             , 0 AS CarId
+
+             , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+        FROM _tmpItem
+             INNER JOIN tmpMI_Child AS MI_Child ON MI_Child.MovementId = inMovementId
+                                               -- AND MI_Child.DescId = zc_MI_Child()
+                                               -- AND MI_Child.isErased = FALSE
+
+             -- Выплата по ведомости (округление) - 2ф.
+             INNER JOIN MovementItemFloat AS MIFloat_Summ_diff_F2
+                                          ON MIFloat_Summ_diff_F2.MovementItemId = MI_Child.Id
+                                         AND MIFloat_Summ_diff_F2.DescId         = zc_MIFloat_Summ_diff_F2()
+                                         AND MIFloat_Summ_diff_F2.ValueData      <> 0
+
+             -- задваиваем записи
+             LEFT JOIN (SELECT -1 AS mySign UNION SELECT 1 AS mySign
+                       ) AS tmpSignData ON 1 = 1
+                       
+             LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                          ON MLO_PersonalServiceList.MovementId = inMovementId
+                                         AND MLO_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+
+             LEFT JOIN MovementItemDate AS MIDate_ServiceDate
+                                        ON MIDate_ServiceDate.MovementItemId = COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
+                                       AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                              ON MILinkObject_MoneyPlace.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
+                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
+                                              ON MILinkObject_Position.MovementItemId = COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
+                                             AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+
+             LEFT JOIN Object ON Object.Id = MI_Child.ObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
+                                                             AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
+                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+
+             -- Замена
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                                  ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId      = MI_Child.ObjectId
+                                 AND ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId = MILinkObject_MoneyPlace.ObjectId
+                                 AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId        = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                  ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                 AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
+
+             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                  ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = MILinkObject_MoneyPlace.ObjectId
+                                 AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_two
+                                  ON ObjectLink_PersonalServiceList_two.ObjectId = MI_Child.ObjectId
+                                 AND ObjectLink_PersonalServiceList_two.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
+                                  -- !!!исключить Ведомость Больничные соц страх БН!!!
+                                 AND MILinkObject_MoneyPlace.ObjectId <> 1064330 
+                                  -- !!!вот он БН!!!
+                                 AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+
+             -- перевыставление
+             -- LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract
+             --                      ON ObjectLink_Unit_Contract.ObjectId = MILinkObject_Unit.ObjectId
+             --                     AND ObjectLink_Unit_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+
+        -- !!!если НЕ перевыставление!!!
+        --WHERE ObjectLink_Unit_Contract.ChildObjectId IS NULL
+
+
+       UNION ALL
         -- 1.2. в балансе - Перевыставление затрат на Юр Лицо
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate

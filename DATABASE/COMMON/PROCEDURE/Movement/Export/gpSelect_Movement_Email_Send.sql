@@ -610,7 +610,7 @@ BEGIN
 	-- Адрес доставки (в ObjectString_RoomNumber.ValueData хранится номер магазина)
 	--|| ';' || 'DP:V'||ObjectString_RoomNumber.ValueData||' - НЕКТАР №'||ObjectString_RoomNumber.ValueData||' '||COALESCE(Object_PartnerAdress.ValueData, '')
 	|| ';' || CASE WHEN View_Contract.JuridicalId = 11978558 -- Деметра Рітейл ТОВ
-                            THEN 'V'
+                            THEN '' -- 'V'
                        ELSE 'DP:V'
                   END
                 || COALESCE (ObjectString_ShortName.ValueData, '')

@@ -205,6 +205,26 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = AmountService_diff
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummRemains_orig
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummRemains_diff_F2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summ_diff_F2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummRemains_diff_F2_tmp
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -391,6 +411,26 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = AmountService_diff
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummRemains_orig
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummRemains_diff_F2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summ_diff_F2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummRemains_diff_F2_tmp
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -718,10 +758,53 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077' '#1080#1079' '#1082#1072#1089#1089#1099' ('#1057' '#1054#1050#1056#1059#1043#1051#1045#1053#1048#1071#1052#1048')'
             Options.Editing = False
             Width = 70
           end
-          object SummCardSecondRemains: TcxGridDBColumn [31]
+          object SummRemains_orig: TcxGridDBColumn [31]
+            Caption = '***'#1054#1089#1090'. '#1082' '#1074#1099#1087#1083'. '#1080#1079' '#1082#1072#1089#1089#1099
+            DataBinding.FieldName = 'SummRemains_orig'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077' '#1080#1079' '#1082#1072#1089#1089#1099' ('#1041#1045#1047' '#1054#1050#1056#1059#1043#1051#1045#1053#1048#1049')'
+            Options.Editing = False
+            Width = 70
+          end
+          object SummRemains_diff_F2: TcxGridDBColumn [32]
+            Caption = '***'#1054#1082#1088#1091#1075#1083'. '#1088#1072#1089#1095'. '#1080#1079' '#1082#1072#1089#1089#1099
+            DataBinding.FieldName = 'SummRemains_diff_F2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1082#1088#1091#1075#1083#1077#1085#1080#1103' '#1088#1072#1089#1095#1077#1090' '#1087#1088#1080' '#1074#1099#1087#1083#1072#1090#1077' '#1080#1079' '#1082#1072#1089#1089#1099
+            Options.Editing = False
+            Width = 70
+          end
+          object SummRemains_diff_F2_tmp: TcxGridDBColumn [33]
+            Caption = '***'#1054#1082#1088#1091#1075#1083#1077#1085#1080#1077' (tmp)'
+            DataBinding.FieldName = 'SummRemains_diff_F2_tmp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Summ_diff_F2: TcxGridDBColumn [34]
+            Caption = '***'#1054#1082#1088#1091#1075#1083'. '#1092#1072#1082#1090' '#1080#1079' '#1082#1072#1089#1089#1099
+            DataBinding.FieldName = 'Summ_diff_F2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1082#1088#1091#1075#1083#1077#1085#1080#1103' '#1092#1072#1082#1090' '#1087#1088#1080' '#1074#1099#1087#1083#1072#1090#1077' '#1080#1079' '#1082#1072#1089#1089#1099
+            Options.Editing = False
+            Width = 70
+          end
+          object SummCardSecondRemains: TcxGridDBColumn [35]
             Caption = #1054#1089#1090'. '#1082' '#1074#1099#1087#1083'. '#1050#1072#1088#1090#1072' '#1041#1053' 2'#1092'. '
             DataBinding.FieldName = 'SummCardSecondRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -731,7 +814,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 100
           end
-          object SummMinus: TcxGridDBColumn [32]
+          object SummMinus: TcxGridDBColumn [36]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103
             DataBinding.FieldName = 'SummMinus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -741,7 +824,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummFine: TcxGridDBColumn [33]
+          object SummFine: TcxGridDBColumn [37]
             Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
             DataBinding.FieldName = 'SummFine'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -752,7 +835,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 75
           end
-          object SummAdd: TcxGridDBColumn [34]
+          object SummAdd: TcxGridDBColumn [38]
             Caption = #1055#1088#1077#1084#1080#1103
             DataBinding.FieldName = 'SummAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -762,7 +845,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummHoliday: TcxGridDBColumn [35]
+          object SummHoliday: TcxGridDBColumn [39]
             Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
             DataBinding.FieldName = 'SummHoliday'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -772,7 +855,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummCompensation: TcxGridDBColumn [36]
+          object SummCompensation: TcxGridDBColumn [40]
             Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087'.'
             DataBinding.FieldName = 'SummCompensation'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -784,7 +867,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 75
           end
-          object SummHosp: TcxGridDBColumn [37]
+          object SummHosp: TcxGridDBColumn [41]
             Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1086#1075#1086
             DataBinding.FieldName = 'SummHosp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -795,7 +878,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 82
           end
-          object SummTransport: TcxGridDBColumn [38]
+          object SummTransport: TcxGridDBColumn [42]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
             DataBinding.FieldName = 'SummTransport'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -805,7 +888,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 75
           end
-          object SummAvance: TcxGridDBColumn [39]
+          object SummAvance: TcxGridDBColumn [43]
             Caption = #1040#1074#1072#1085#1089' ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
             DataBinding.FieldName = 'SummAvance'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -815,7 +898,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object SummPhone: TcxGridDBColumn [40]
+          object SummPhone: TcxGridDBColumn [44]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1052#1086#1073'.'#1089#1074#1103#1079#1100
             DataBinding.FieldName = 'SummPhone'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -825,7 +908,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 75
           end
-          object SummTransportAdd: TcxGridDBColumn [41]
+          object SummTransportAdd: TcxGridDBColumn [45]
             Caption = #1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
             DataBinding.FieldName = 'SummTransportAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -836,7 +919,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 100
           end
-          object SummTransportAddLong: TcxGridDBColumn [42]
+          object SummTransportAddLong: TcxGridDBColumn [46]
             Caption = #1044#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
             DataBinding.FieldName = 'SummTransportAddLong'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -846,7 +929,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 100
           end
-          object SummTransportTaxi: TcxGridDBColumn [43]
+          object SummTransportTaxi: TcxGridDBColumn [47]
             Caption = #1058#1072#1082#1089#1080' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
             DataBinding.FieldName = 'SummTransportTaxi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -855,7 +938,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object SummSocialIn: TcxGridDBColumn [44]
+          object SummSocialIn: TcxGridDBColumn [48]
             Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1080#1079' '#1079#1087')'
             DataBinding.FieldName = 'SummSocialIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -865,7 +948,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummSocialAdd: TcxGridDBColumn [45]
+          object SummSocialAdd: TcxGridDBColumn [49]
             Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1076#1086#1087'. '#1082' '#1079#1087')'
             DataBinding.FieldName = 'SummSocialAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -875,14 +958,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object Comment: TcxGridDBColumn [46]
+          object Comment: TcxGridDBColumn [50]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object InfoMoneyCode: TcxGridDBColumn [47]
+          object InfoMoneyCode: TcxGridDBColumn [51]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -891,7 +974,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 55
           end
-          object InfoMoneyName: TcxGridDBColumn [48]
+          object InfoMoneyName: TcxGridDBColumn [52]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -900,7 +983,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object InfoMoneyName_all: TcxGridDBColumn [49]
+          object InfoMoneyName_all: TcxGridDBColumn [53]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -1942,10 +2025,35 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioSummRemains_diff_F2_tmp'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummRemains_diff_F2_tmp'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm_diff_F2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summ_diff_F2'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outSummRemains'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SummRemains'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummRemains_orig'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummRemains_orig'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2048,7 +2156,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisShowAll'
+        Name = 'inIsShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsList'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
@@ -2309,6 +2424,23 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'SummRemains'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummRemains_diff_F2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummRemains_diff_F2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummRemains_diff_F2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummRemains_diff_F2_tmp'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item

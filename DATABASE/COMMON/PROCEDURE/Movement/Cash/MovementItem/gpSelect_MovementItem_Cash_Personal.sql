@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , SummCompensation TFloat
              , SummAvance TFloat
+               -- Карта БН (округление) - 2ф
              , AmountService_diff TFloat
 
              , Amount_current TFloat
@@ -38,8 +39,19 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , Amount_avance_ret TFloat
                -- Другие (выплачено)
              , Amount_service TFloat
-               -- 
-             , SummRemains TFloat, SummCardSecondRemains TFloat
+
+               -- ***Ост. к выпл. из кассы - Округлили***
+             , SummRemains TFloat
+               -- ***Ост. к выпл. из кассы - без округлений***
+             , SummRemains_orig TFloat
+               -- ***Расчет - сумма округлений - КАССА***
+             , SummRemains_diff_F2 TFloat
+              --  временное поле, если надо при заливке сохранить "округление"
+             , SummRemains_diff_F2_tmp TFloat
+               -- Факт Выплата по ведомости (округление) - 2ф.
+             , Summ_diff_F2 TFloat
+
+             , SummCardSecondRemains TFloat
              , AmountCardSecond_avance TFloat
              , isCalculated Boolean
              , Comment TVarChar
@@ -54,18 +66,24 @@ $BODY$
 
    DECLARE vbServiceDateId         Integer;
    DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbPersonalServiceList_NotRound Boolean;
    DECLARE vbServiceDate           TDateTime;
    DECLARE vbIsOnly                Boolean;
    DECLARE vbIsCardSecond          Boolean;
-   DECLARE vbKoeffSummCardSecond   NUMERIC (16,10); 
+   DECLARE vbKoeffSummCardSecond   NUMERIC (16,10);
+   DECLARE vbKoeff_ro              TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!
+     vbKoeff_ro:= 100;
 
      -- определяем
      vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inParentId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
+     -- определяем
+     vbPersonalServiceList_NotRound:= COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbPersonalServiceListId AND OB.DescId = zc_ObjectBoolean_PersonalServiceList_NotRound()), FALSE);
 
      -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
      IF NOT EXISTS (SELECT 1 FROM Object_PersonalServiceList_User_View WHERE Object_PersonalServiceList_User_View.UserId = vbUserId AND (Object_PersonalServiceList_User_View.PersonalServiceListId = vbPersonalServiceListId OR COALESCE (vbPersonalServiceListId, 0) = 0))
@@ -181,6 +199,9 @@ BEGIN
                            , MILinkObject_InfoMoney.ObjectId          AS InfoMoneyId
                            , MILinkObject_MoneyPlace.ObjectId         AS MoneyPlaceId
                            , MIDate_ServiceDate.ValueData             AS ServiceDate_mp
+                             -- Факт Выплата по ведомости (округление) - 2ф.
+                           , COALESCE (MIF_Summ_diff_F2.ValueData, 0) AS Summ_diff_F2
+                             --
                            , MovementItem.isErased
                       FROM tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -188,6 +209,9 @@ BEGIN
                                                   AND MovementItem.isErased = tmpIsErased.isErased
                                                   AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)
                                                   AND MovementItem.Amount <> 0
+                           LEFT JOIN MovementItemFloat AS MIF_Summ_diff_F2
+                                                       ON MIF_Summ_diff_F2.MovementItemId = MovementItem.Id
+                                                      AND MIF_Summ_diff_F2.DescId         = zc_MIFloat_Summ_diff_F2()
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -216,6 +240,9 @@ BEGIN
                            , tmpMI_Child.InfoMoneyId
                            , tmpMI_Child.MoneyPlaceId
                            , tmpMI_Child.ServiceDate_mp
+                             -- Факт Выплата по ведомости (округление) - 2ф.
+                           , tmpMI_Child.Summ_diff_F2
+                             --
                            , tmpMI_Child.isErased
                       FROM tmpMI_Child
 
@@ -228,6 +255,9 @@ BEGIN
                            , MILinkObject_InfoMoney.ObjectId          AS InfoMoneyId
                            , MILinkObject_MoneyPlace.ObjectId         AS MoneyPlaceId
                            , MIDate_ServiceDate.ValueData             AS ServiceDate_mp
+                             -- Факт Выплата по ведомости (округление) - 2ф.
+                           , 0 AS Summ_diff_F2
+                             --
                            , MovementItem.isErased
                       FROM tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -325,11 +355,11 @@ BEGIN
                                    , MILinkObject_InfoMoney.ObjectId                        AS InfoMoneyId
 
                                      -- замена - Премии производство (добавочная)
-                                   , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325 
+                                   , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325
                                                THEN MLO_PersonalServiceList.ObjectId
                                           ELSE COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId)
                                      END AS PersonalServiceListId
-                                   , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325 
+                                   , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325
                                                THEN 0
                                           ELSE COALESCE (MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId)
                                      END AS PersonalServiceListId_calc
@@ -337,7 +367,8 @@ BEGIN
                               FROM Movement
                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                           AND MovementItem.DescId = zc_MI_Master()
-                                                          AND (MovementItem.isErased = FALSE OR inShowAll = TRUE)
+                                                          AND MovementItem.isErased = FALSE
+                                                        --AND (MovementItem.isErased = FALSE OR inShowAll = TRUE)
                                                           -- AND MovementItem.Amount <> 0
                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                         ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
@@ -507,11 +538,11 @@ BEGIN
                                      , MILinkObject_Position.ObjectId
                                      , MILinkObject_InfoMoney.ObjectId
                                        -- замена - Премии производство (добавочная)
-                                     , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325 
+                                     , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325
                                                  THEN MLO_PersonalServiceList.ObjectId
                                             ELSE COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId)
                                        END
-                                     , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325 
+                                     , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325
                                                  THEN 0
                                             ELSE COALESCE (MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId)
                                        END
@@ -868,7 +899,7 @@ BEGIN
                                                                 AND tmpMIContainer_diff.PositionId            = tmpParent.PositionId
                                                                 AND tmpMIContainer_diff.InfoMoneyId           = tmpParent.InfoMoneyId
                                                                 AND tmpMIContainer_diff.PersonalServiceListId = tmpParent.PersonalServiceListId
-                                                           
+
                               GROUP BY tmpParent.PersonalId
                                      , tmpParent.MemberId_Personal
                                      , tmpParent.UnitId
@@ -877,6 +908,9 @@ BEGIN
                              )
                 , tmpData AS (SELECT tmpMI.MovementItemId
                                    , tmpMI.Amount
+                                     -- Факт Выплата по ведомости (округление) - 2ф.
+                                   , tmpMI.Summ_diff_F2
+                                     --
                                    , tmpMI.MoneyPlaceId
                                    , tmpMI.ServiceDate_mp
                                    , tmpService.SummService
@@ -955,185 +989,342 @@ BEGIN
                              GROUP BY MovementItem.ObjectId
                             )
 
+          -- Сначала Элементы - Результат
+        , tmpData_res AS (SELECT tmpData.MovementItemId                  AS Id
+                                 -- на всякий случай
+                               , COALESCE (ObjectLink_Personal_Member.ChildObjectId, Object_Personal.Id) AS MemberId
+                                 --
+                               , Object_Personal.Id                      AS PersonalId
+                               , Object_Personal.ObjectCode              AS PersonalCode
+                               , Object_Personal.ValueData               AS PersonalName
+                               , ObjectString_Member_INN.ValueData       AS INN
+                               , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) :: Boolean   AS isMain
+                               , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
+
+                               , Object_Unit.Id                          AS UnitId
+                               -- , (select sum(tmpMIContainer.Amount_avance)  from  tmpMIContainer) :: Integer
+                               , Object_Unit.ObjectCode                  AS UnitCode
+                               , Object_Unit.ValueData                   AS UnitName
+                               , Object_Position.Id                      AS PositionId
+                               , Object_Position.ValueData               AS PositionName
+                               , Object_PositionLevel.Id                 AS PositionLevelId
+                               , Object_PositionLevel.ValueData          AS PositionLevelName
+                               , View_InfoMoney.InfoMoneyId
+                               , View_InfoMoney.InfoMoneyCode
+                               , View_InfoMoney.InfoMoneyName
+                               , View_InfoMoney.InfoMoneyName_all
+
+                               , Object_MoneyPlace.Id                      AS MoneyPlaceId
+                               , Object_MoneyPlace.ValueData               AS MoneyPlaceName
+                               , tmpData.ServiceDate_mp                    AS ServiceDate_mp
+
+
+                               , tmpData.Amount           :: TFloat AS Amount
+                               , tmpData.SummService      :: TFloat AS SummService
+                                 -- К выплате (из кассы) минус Карта БН (округление) - 2ф
+                               , (COALESCE (tmpData.SummToPay_cash, 0)  - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay_cash
+                                 -- К выплате (итог)
+                               , (COALESCE (tmpData.SummToPay, 0)       - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay
+                                 --
+                               , tmpData.SummCard         :: TFloat AS SummCard
+                               , tmpData.SummCardSecond   :: TFloat AS SummCardSecond
+                               , tmpData.SummAvCardSecond :: TFloat AS SummAvCardSecond
+                                 -- Карта БН (касса)- 2ф.
+                               , tmpData.SummCardSecondCash  :: TFloat AS SummCardSecondCash
+
+                               , (FLOOR (100 * CAST (tmpData.SummCardSecondCash * vbKoeffSummCardSecond
+                                                    AS NUMERIC (16, 0))
+                                        ) / 100) :: TFloat AS SummCardSecond_all_00807
+                               , (FLOOR (100 * CAST (tmpData.SummCardSecondCash * vbKoeffSummCardSecond
+                                                    AS NUMERIC (16, 0))
+                                        ) / 100 - tmpData.SummCardSecondCash) :: TFloat AS SummCardSecond_diff_00807
+
+                               , CAST (CASE WHEN tmpMI_card_b2.Summ_calc < 4000
+                                                  THEN 0
+                                             WHEN tmpMI_card_b2.Summ_calc <= 29999
+                                             THEN tmpMI_card_b2.Summ_calc
+                                             ELSE tmpMI_card_b2.Summ_calc + (tmpMI_card_b2.Summ_calc - 29999) * 0.005
+                                       END AS NUMERIC (16, 0)) :: TFloat AS SummCardSecond_all_005
+
+                               , (CAST (CASE WHEN tmpMI_card_b2.Summ_calc < 4000
+                                                  THEN 0
+                                             WHEN tmpMI_card_b2.Summ_calc <= 29999
+                                             THEN tmpMI_card_b2.Summ_calc
+                                             ELSE tmpMI_card_b2.Summ_calc + (tmpMI_card_b2.Summ_calc - 29999) * 0.005
+                                       END AS NUMERIC (16, 0))
+                                     - CASE WHEN tmpMI_card_b2.Summ_calc < 4000
+                                                  THEN 0
+                                             WHEN tmpMI_card_b2.Summ_calc <= 29999
+                                             THEN tmpMI_card_b2.Summ_calc
+                                             ELSE tmpMI_card_b2.Summ_calc
+                                       END) :: TFloat AS SummCardSecond_diff_005
+
+                                 --
+                               , tmpData.SummNalog        :: TFloat AS SummNalog
+                               , tmpData.SummMinus        :: TFloat AS SummMinus
+                               , tmpData.SummFine         :: TFloat AS SummFine
+                               , (tmpData.SummAdd + tmpData.SummAddOth) :: TFloat AS SummAdd
+                               , tmpData.SummHoliday      :: TFloat AS SummHoliday
+                               , tmpData.SummHosp         :: TFloat AS SummHosp
+                               , tmpData.SummSocialIn     :: TFloat AS SummSocialIn
+                               , tmpData.SummSocialAdd    :: TFloat AS SummSocialAdd
+                               , tmpData.SummChild        :: TFloat AS SummChild
+                               , tmpData.SummMinusExt     :: TFloat AS SummMinusExt
+                               , tmpData.SummTransport        :: TFloat AS SummTransport
+                               , tmpData.SummTransportAdd     :: TFloat AS SummTransportAdd
+                               , tmpData.SummTransportAddLong :: TFloat AS SummTransportAddLong
+                               , tmpData.SummTransportTaxi    :: TFloat AS SummTransportTaxi
+                               , tmpData.SummPhone            :: TFloat AS SummPhone
+                               , tmpData.SummCompensation     :: TFloat AS SummCompensation
+                               , tmpData.SummAvance           :: TFloat AS SummAvance
+
+                                 -- Карта БН (округление) - 2ф
+                               , tmpData.AmountService_diff   :: TFloat AS AmountService_diff
+
+                               , tmpData.Amount_current     :: TFloat AS Amount_current
+
+                                 -- Аванс (выплачено)
+                               , (CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END
+                                + COALESCE (tmpAvance_find.Amount, 0)
+                                 ) :: TFloat AS Amount_avance
+
+                                 -- Аванс (возврат)
+                               , tmpData.Amount_avance_ret  :: TFloat AS Amount_avance_ret
+
+                                 -- Другие (выплачено)
+                               , (COALESCE (tmpData.Amount_service, 0) + COALESCE (tmpAvance_Only.Amount, 0)) :: TFloat AS Amount_service
+
+                                 -- ***Ост. к выпл. из кассы***
+                               , (COALESCE (tmpData.SummToPay_cash, 0)
+                                - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN 0 ELSE COALESCE (tmpData.Amount, 0) END
+                                - COALESCE (tmpData.Amount_avance_ret, 0)
+                                - CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END
+                                - COALESCE (tmpData.Amount_service, 0)
+                                -- !!!схема премии!!!
+                                - COALESCE (tmpAvance_Only.Amount, 0)
+                                  -- Карта БН (округление) - 2ф
+                                - COALESCE (tmpData.AmountService_diff, 0)
+                                 ) :: TFloat AS SummRemains_orig
+
+                                 -- Факт Выплата по ведомости (округление) - 2ф.
+                               , tmpData.Summ_diff_F2
+
+                                 -- Ост. к выпл. Карта БН 2ф.
+                               , (CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0
+                                       ELSE COALESCE (tmpData.SummCardSecond, 0)
+                                          + COALESCE (tmpData.SummAvCardSecond, 0)
+                                          + COALESCE (tmpData.SummCardSecondCash, 0)
+                                          - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN COALESCE (tmpData.Amount, 0) ELSE 0 END
+                                            --
+                                          - CASE WHEN tmpData.SummCardSecondCash > 0 THEN 0 ELSE COALESCE (tmpData.AmountCardSecond_avance, 0) END
+
+                                  END) :: TFloat AS SummCardSecondRemains
+
+                                 -- Карта БН - 2ф.  (выплачено)
+                               , CASE WHEN tmpData.SummCardSecondCash > 0 THEN 0 ELSE COALESCE (tmpData.AmountCardSecond_avance, 0) END :: TFloat AS AmountCardSecond_avance
+
+                               , COALESCE (MIBoolean_Calculated.ValueData, FALSE) AS isCalculated
+                               , MIString_Comment.ValueData       AS Comment
+
+                               , tmpData.PersonalServiceListId      :: Integer AS PersonalServiceListId
+                             --, tmpData.PersonalServiceListId_calc :: Integer AS PersonalServiceListId_calc
+                               , tmpData.MovementId_find  :: Integer AS MovementId_find
+                               , tmpData.ContainerId_find :: Integer AS ContainerId_find
+                               , tmpData.isErased
+
+                                 -- № п/п, очередность, округление показать только в одной записи
+                               , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectLink_Personal_Member.ChildObjectId, Object_Personal.Id)
+                                                    -- !!!***Ост. к выпл. из кассы***
+                                                    ORDER BY COALESCE (tmpData.SummToPay_cash, 0)
+                                                           - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN 0 ELSE COALESCE (tmpData.Amount, 0) END
+                                                           - COALESCE (tmpData.Amount_avance_ret, 0)
+                                                           - CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END
+                                                           - COALESCE (tmpData.Amount_service, 0)
+                                                           -- !!!схема премии!!!
+                                                           - COALESCE (tmpAvance_Only.Amount, 0)
+                                                             -- Карта БН (округление) - 2ф
+                                                           - COALESCE (tmpData.AmountService_diff, 0)
+                                                           DESC
+                                                   ) AS Ord
+
+                          FROM tmpData
+                               LEFT JOIN tmpMI_card_b2 ON tmpMI_card_b2.MemberId_Personal = tmpData.MemberId_Personal
+                                                      AND tmpData.Ord_2                   = 1
+
+                               LEFT JOIN tmpAvance_Only ON tmpAvance_Only.PersonalId = tmpData.PersonalId
+                                                       AND tmpData.Ord               = 1
+
+                               -- !!!аванс - факт (другой алгоритм)!!!
+                               LEFT JOIN tmpAvance_find ON tmpAvance_find.PersonalId = tmpData.PersonalId
+
+                               LEFT JOIN MovementItemString AS MIString_Comment
+                                                            ON MIString_Comment.MovementItemId = tmpData.MovementItemId
+                                                           AND MIString_Comment.DescId         = zc_MIString_Comment()
+                               LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                             ON MIBoolean_Calculated.MovementItemId = tmpData.MovementItemId
+                                                            AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+
+                               LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpData.PersonalId
+                               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
+                               LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpData.PositionId
+                               LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpData.InfoMoneyId
+
+                               LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = tmpData.MoneyPlaceId
+
+
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
+                                                       ON ObjectBoolean_Personal_Main.ObjectId = tmpData.PersonalId
+                                                      AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                    ON ObjectLink_Personal_Member.ObjectId = tmpData.PersonalId
+                                                   AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                               LEFT JOIN ObjectString AS ObjectString_Member_INN
+                                                      ON ObjectString_Member_INN.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                     AND ObjectString_Member_INN.DescId = zc_ObjectString_Member_INN()
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
+                                                       ON ObjectBoolean_Member_Official.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                      AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                                    ON ObjectLink_Personal_PositionLevel.ObjectId = tmpData.PersonalId
+                                                   AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+                               LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+                         )
+
        -- Результат
-       SELECT tmpData.MovementItemId                  AS Id
-            , Object_Personal.Id                      AS PersonalId
-            , Object_Personal.ObjectCode              AS PersonalCode
-            , Object_Personal.ValueData               AS PersonalName
-            , ObjectString_Member_INN.ValueData       AS INN
-            , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) :: Boolean   AS isMain
-            , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
+       SELECT tmpData_res.Id
+            , tmpData_res.PersonalId
+            , tmpData_res.PersonalCode
+            , tmpData_res.PersonalName
+            , tmpData_res.INN
+            , tmpData_res.isMain
+            , tmpData_res.isOfficial
 
-            , Object_Unit.Id                          AS UnitId
+            , tmpData_res.UnitId
             -- , (select sum(tmpMIContainer.Amount_avance)  from  tmpMIContainer) :: Integer
-            , Object_Unit.ObjectCode                  AS UnitCode
-            , Object_Unit.ValueData                   AS UnitName
-            , Object_Position.Id                      AS PositionId
-            , Object_Position.ValueData               AS PositionName
-            , Object_PositionLevel.Id                 AS PositionLevelId
-            , Object_PositionLevel.ValueData          AS PositionLevelName
-            , View_InfoMoney.InfoMoneyId
-            , View_InfoMoney.InfoMoneyCode
-            , View_InfoMoney.InfoMoneyName
-            , View_InfoMoney.InfoMoneyName_all
-            
-            , Object_MoneyPlace.Id                      AS MoneyPlaceId
-            , Object_MoneyPlace.ValueData               AS MoneyPlaceName
-            , tmpData.ServiceDate_mp                    AS ServiceDate_mp
-            
+            , tmpData_res.UnitCode
+            , tmpData_res.UnitName
+            , tmpData_res.PositionId
+            , tmpData_res.PositionName
+            , tmpData_res.PositionLevelId
+            , tmpData_res.PositionLevelName
+            , tmpData_res.InfoMoneyId
+            , tmpData_res.InfoMoneyCode
+            , tmpData_res.InfoMoneyName
+            , tmpData_res.InfoMoneyName_all
 
-            , tmpData.Amount           :: TFloat AS Amount
-            , tmpData.SummService      :: TFloat AS SummService
+            , tmpData_res.MoneyPlaceId
+            , tmpData_res.MoneyPlaceName
+            , tmpData_res.ServiceDate_mp
+
+
+            , tmpData_res.Amount
+            , tmpData_res.SummService
+
               -- К выплате (из кассы) минус Карта БН (округление) - 2ф
-            , (COALESCE (tmpData.SummToPay_cash, 0)  - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay_cash
+            , tmpData_res.SummToPay_cash
               -- К выплате (итог)
-            , (COALESCE (tmpData.SummToPay, 0)       - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay
+            , tmpData_res.SummToPay
               --
-            , tmpData.SummCard         :: TFloat AS SummCard
-            , tmpData.SummCardSecond   :: TFloat AS SummCardSecond
-            , tmpData.SummAvCardSecond :: TFloat AS SummAvCardSecond
+            , tmpData_res.SummCard
+            , tmpData_res.SummCardSecond
+            , tmpData_res.SummAvCardSecond
               -- Карта БН (касса)- 2ф.
-            , tmpData.SummCardSecondCash  :: TFloat AS SummCardSecondCash
+            , tmpData_res.SummCardSecondCash
 
-            , (FLOOR (100 * CAST (tmpData.SummCardSecondCash * vbKoeffSummCardSecond
-                                 AS NUMERIC (16, 0))
-                     ) / 100) :: TFloat AS SummCardSecond_all_00807
-            , (FLOOR (100 * CAST (tmpData.SummCardSecondCash * vbKoeffSummCardSecond
-                                 AS NUMERIC (16, 0))
-                     ) / 100 - tmpData.SummCardSecondCash) :: TFloat AS SummCardSecond_diff_00807
+            , tmpData_res.SummCardSecond_all_00807
+            , tmpData_res.SummCardSecond_diff_00807
 
-            , CAST (CASE WHEN tmpMI_card_b2.Summ_calc < 4000
-                               THEN 0
-                          WHEN tmpMI_card_b2.Summ_calc <= 29999
-                          THEN tmpMI_card_b2.Summ_calc
-                          ELSE tmpMI_card_b2.Summ_calc + (tmpMI_card_b2.Summ_calc - 29999) * 0.005
-                    END AS NUMERIC (16, 0)) :: TFloat AS SummCardSecond_all_005
+            , tmpData_res.SummCardSecond_all_005
 
-            , (CAST (CASE WHEN tmpMI_card_b2.Summ_calc < 4000
-                               THEN 0
-                          WHEN tmpMI_card_b2.Summ_calc <= 29999
-                          THEN tmpMI_card_b2.Summ_calc
-                          ELSE tmpMI_card_b2.Summ_calc + (tmpMI_card_b2.Summ_calc - 29999) * 0.005
-                    END AS NUMERIC (16, 0))
-                  - CASE WHEN tmpMI_card_b2.Summ_calc < 4000
-                               THEN 0
-                          WHEN tmpMI_card_b2.Summ_calc <= 29999
-                          THEN tmpMI_card_b2.Summ_calc
-                          ELSE tmpMI_card_b2.Summ_calc
-                    END) :: TFloat AS SummCardSecond_diff_005
+            , tmpData_res.SummCardSecond_diff_005
 
               --
-            , tmpData.SummNalog        :: TFloat AS SummNalog
-            , tmpData.SummMinus        :: TFloat AS SummMinus
-            , tmpData.SummFine         :: TFloat AS SummFine
-            , (tmpData.SummAdd + tmpData.SummAddOth) :: TFloat AS SummAdd
-            , tmpData.SummHoliday      :: TFloat AS SummHoliday
-            , tmpData.SummHosp         :: TFloat AS SummHosp
-            , tmpData.SummSocialIn     :: TFloat AS SummSocialIn
-            , tmpData.SummSocialAdd    :: TFloat AS SummSocialAdd
-            , tmpData.SummChild        :: TFloat AS SummChild
-            , tmpData.SummMinusExt     :: TFloat AS SummMinusExt
-            , tmpData.SummTransport        :: TFloat AS SummTransport
-            , tmpData.SummTransportAdd     :: TFloat AS SummTransportAdd
-            , tmpData.SummTransportAddLong :: TFloat AS SummTransportAddLong
-            , tmpData.SummTransportTaxi    :: TFloat AS SummTransportTaxi
-            , tmpData.SummPhone            :: TFloat AS SummPhone
-            , tmpData.SummCompensation     :: TFloat AS SummCompensation
-            , tmpData.SummAvance           :: TFloat AS SummAvance
+            , tmpData_res.SummNalog
+            , tmpData_res.SummMinus
+            , tmpData_res.SummFine
+            , tmpData_res.SummAdd
+            , tmpData_res.SummHoliday
+            , tmpData_res.SummHosp
+            , tmpData_res.SummSocialIn
+            , tmpData_res.SummSocialAdd
+            , tmpData_res.SummChild
+            , tmpData_res.SummMinusExt
+            , tmpData_res.SummTransport
+            , tmpData_res.SummTransportAdd
+            , tmpData_res.SummTransportAddLong
+            , tmpData_res.SummTransportTaxi
+            , tmpData_res.SummPhone
+            , tmpData_res.SummCompensation
+            , tmpData_res.SummAvance
 
               -- Карта БН (округление) - 2ф
-            , tmpData.AmountService_diff   :: TFloat AS AmountService_diff
+            , tmpData_res.AmountService_diff
 
-            , tmpData.Amount_current     :: TFloat AS Amount_current
- 
+            , tmpData_res.Amount_current
+
               -- Аванс (выплачено)
-            , (CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END
-             + COALESCE (tmpAvance_find.Amount, 0)
-              ) :: TFloat AS Amount_avance
+            , tmpData_res.Amount_avance
 
               -- Аванс (возврат)
-            , tmpData.Amount_avance_ret  :: TFloat AS Amount_avance_ret
+            , tmpData_res.Amount_avance_ret
 
               -- Другие (выплачено)
-            , (COALESCE (tmpData.Amount_service, 0) + COALESCE (tmpAvance_Only.Amount, 0)) :: TFloat AS Amount_service
+            , tmpData_res.Amount_service
 
-              -- Ост. к выпл. из кассы
-            , (COALESCE (tmpData.SummToPay_cash, 0)
-               - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN 0 ELSE COALESCE (tmpData.Amount, 0) END
-               - COALESCE (tmpData.Amount_avance_ret, 0)
-               - CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END
-               - COALESCE (tmpData.Amount_service, 0)
-               -- !!!схема премии!!!
-               - COALESCE (tmpAvance_Only.Amount, 0)
-                 -- Карта БН (округление) - 2ф
-               - COALESCE (tmpData.AmountService_diff, 0)
-              ) :: TFloat AS SummRemains
+              -- ***Ост. к выпл. из кассы - Округлили***
+            , CASE WHEN vbUserId = 5 OR 1=1
+                        -- добавили Округление
+                        THEN tmpData_res.SummRemains_orig
+                           + (COALESCE (tmpData_res_diff_F2.SummRemains, 0) - COALESCE (tmpData_res_diff_F2.SummRemains_orig, 0))
+                   ELSE tmpData_res.SummRemains_orig
+              END :: TFloat AS SummRemains
 
-              -- Ост. к выпл. Карта БН 2ф. 
-            , (CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0
-                    ELSE COALESCE (tmpData.SummCardSecond, 0)
-                       + COALESCE (tmpData.SummAvCardSecond, 0)
-                       + COALESCE (tmpData.SummCardSecondCash, 0)
-                       - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN COALESCE (tmpData.Amount, 0) ELSE 0 END
-                         --
-                       - CASE WHEN tmpData.SummCardSecondCash > 0 THEN 0 ELSE COALESCE (tmpData.AmountCardSecond_avance, 0) END
+              -- ***Ост. к выпл. из кассы - без округлений***
+            , tmpData_res.SummRemains_orig
 
-               END) :: TFloat AS SummCardSecondRemains
+              -- ***Расчет - сумма округлений - КАССА***
+            , (CASE WHEN vbUserId = 5 OR 1=1
+                        THEN COALESCE (tmpData_res_diff_F2.SummRemains, 0) - COALESCE (tmpData_res_diff_F2.SummRemains_orig, 0)
+                   ELSE tmpData_res.SummRemains_orig
+              END
+             ) :: TFloat AS SummRemains_diff_F2
+  
+              --  временное поле, если надо при заливке сохранить "округление"
+            , 0 :: TFloat AS SummRemains_diff_F2_tmp
+
+              -- Факт Выплата по ведомости (округление) - 2ф.
+            , tmpData_res.Summ_diff_F2 :: TFloat AS Summ_diff_F2
+
+              -- Ост. к выпл. Карта БН 2ф.
+            , tmpData_res.SummCardSecondRemains
 
               -- Карта БН - 2ф.  (выплачено)
-            , CASE WHEN tmpData.SummCardSecondCash > 0 THEN 0 ELSE COALESCE (tmpData.AmountCardSecond_avance, 0) END :: TFloat AS AmountCardSecond_avance
+            , tmpData_res.AmountCardSecond_avance
 
-            , COALESCE (MIBoolean_Calculated.ValueData, FALSE) AS isCalculated
-            , MIString_Comment.ValueData       AS Comment
+            , tmpData_res.isCalculated
+            , tmpData_res.Comment
 
-            , tmpData.PersonalServiceListId      :: Integer AS PersonalServiceListId
-          --, tmpData.PersonalServiceListId_calc :: Integer AS PersonalServiceListId_calc
-            , tmpData.MovementId_find  :: Integer AS MovementId_find
-            , tmpData.ContainerId_find :: Integer AS ContainerId_find
-            , tmpData.isErased
+            , tmpData_res.PersonalServiceListId
+          --, tmpData_res.PersonalServiceListId_calc
+            , tmpData_res.MovementId_find
+            , tmpData_res.ContainerId_find
+            , tmpData_res.isErased
 
-       FROM tmpData
-            LEFT JOIN tmpMI_card_b2 ON tmpMI_card_b2.MemberId_Personal = tmpData.MemberId_Personal
-                                   AND tmpData.Ord_2                   = 1
-
-            LEFT JOIN tmpAvance_Only ON tmpAvance_Only.PersonalId = tmpData.PersonalId
-                                    AND tmpData.Ord               = 1
-
-            -- !!!аванс - факт (другой алгоритм)!!!
-            LEFT JOIN tmpAvance_find ON tmpAvance_find.PersonalId = tmpData.PersonalId
-
-            LEFT JOIN MovementItemString AS MIString_Comment
-                                         ON MIString_Comment.MovementItemId = tmpData.MovementItemId
-                                        AND MIString_Comment.DescId         = zc_MIString_Comment()
-            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
-                                          ON MIBoolean_Calculated.MovementItemId = tmpData.MovementItemId
-                                         AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
-
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpData.PersonalId
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
-            LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpData.PositionId
-            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpData.InfoMoneyId
-            
-            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = tmpData.MoneyPlaceId
-            
-
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
-                                    ON ObjectBoolean_Personal_Main.ObjectId = tmpData.PersonalId
-                                   AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
-            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                                 ON ObjectLink_Personal_Member.ObjectId = tmpData.PersonalId
-                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-            LEFT JOIN ObjectString AS ObjectString_Member_INN
-                                   ON ObjectString_Member_INN.ObjectId = ObjectLink_Personal_Member.ChildObjectId
-                                  AND ObjectString_Member_INN.DescId = zc_ObjectString_Member_INN()
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
-                                    ON ObjectBoolean_Member_Official.ObjectId = ObjectLink_Personal_Member.ChildObjectId
-                                   AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
-            LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
-                                 ON ObjectLink_Personal_PositionLevel.ObjectId = tmpData.PersonalId
-                                AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
-            LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
-
+       FROM tmpData_res
+            -- ***Расчет - сумма округлений - КАССА***
+            LEFT JOIN (SELECT tmpData_res.MemberId
+                              -- ***Ост. к выпл. из кассы - без округлений***
+                            , SUM (tmpData_res.SummRemains_orig) AS SummRemains_orig
+                              -- ***Ост. к выпл. из кассы - Округлили***
+                            , ROUND (SUM (tmpData_res.SummRemains_orig) / vbKoeff_ro, 0) * 100 AS SummRemains
+                       FROM tmpData_res
+                       -- только для Этой Ведомости
+                       WHERE vbPersonalServiceList_NotRound = FALSE
+                       GROUP BY tmpData_res.MemberId
+                      ) AS tmpData_res_diff_F2
+                        ON tmpData_res_diff_F2.MemberId = tmpData_res.MemberId
+                       -- только для одного MemberId
+                       AND tmpData_res.Ord = 1
       ;
 
 END;
