@@ -3,6 +3,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Object_Personal() RETURNS Integer
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Object_Personal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Object_Personal' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Personal_PersonalServiceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Personal_PersonalServiceList' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Personal_PersonalSLCardSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Personal_PersonalSLCardSecond' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+
 DO $$
 BEGIN
 
@@ -29,6 +31,11 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Persona
                                   , inCode:= 4
                                   , inName:= 'изменение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Personal())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_Personal_PersonalServiceList');
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Personal_PersonalSLCardSecond()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 5
+                                  , inName:= 'изменение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Personal())||'>.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Personal_PersonalSLCardSecond');
                
  -- заливка прав - InsertUpdate
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
@@ -100,6 +107,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.04.25         *
  21.06.22         *
  03.12.13         *
 */

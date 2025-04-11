@@ -157,6 +157,9 @@ object PersonalTransportForm: TPersonalTransportForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0

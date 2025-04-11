@@ -74,6 +74,7 @@ BEGIN
                              , OperDate_partion TDateTime
                              , GoodsNameMaster TVarChar
                              , CountMaster TFloat
+                             , CountMaster_4134 TFloat
                              , SummMaster TFloat
                              , HeadCountMaster TFloat
                              , PriceMaster TFloat
@@ -100,7 +101,8 @@ BEGIN
                              , PartionGoods 
                              , OperDate_partion 
                              , GoodsNameMaster 
-                             , CountMaster 
+                             , CountMaster
+                             , CountMaster_4134 
                              , SummMaster 
                              , HeadCountMaster 
                              , PriceMaster 
@@ -330,6 +332,7 @@ BEGIN
            , tmpMovement.OperDate_partion
            , Object_Goods.ValueData   AS GoodsNameMaster
            , tmpMI_group.Amount_count AS CountMaster
+           , (select SUM (COALESCE (MI.Amount,0)) from MovementItem MI where MI.MovementId = inMovementId and MI.Objectid = 4261) AS CountMaster_4134
            , tmpMI_group.Amount_summ  AS SummMaster
            , tmpMI_group.HeadCount    AS HeadCountMaster
            , CASE WHEN tmpMI_group.Amount_count <> 0 THEN tmpMI_group.Amount_summ / tmpMI_group.Amount_count ELSE 0 END AS PriceMaster
@@ -401,6 +404,7 @@ BEGIN
            , tmpCursor1.OperDate_partion
            , tmpCursor1.GoodsNameMaster
            , tmpCursor1.CountMaster
+           , tmpCursor1.CountMaster_4134
            , tmpCursor1.SummMaster
            , tmpCursor1.HeadCountMaster
            , tmpCursor1.PriceMaster
