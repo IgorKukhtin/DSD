@@ -14,17 +14,21 @@ RETURNS TABLE (Id Integer, MovementId Integer
              , JuridicalName_To TVarChar
              , StatusCode Integer, StatusName TVarChar
              , Comment TVarChar
+               -- схема Vchasno - EDI
              , isVchasnoEDI Boolean
-              )
+               -- ВН - Comdoc, автоматическая отправка
+             , isEdiComdoc Boolean
+               -- ВН - Delnot, автоматическая отправка
+             , isEdiDelnot Boolean
+         )
 AS
 $BODY$
 BEGIN
-
          -- Результат
          RETURN QUERY
            WITH tmpMovement_WeighingPartner AS (SELECT Movement_Order.Id             AS MovementId_order
                                                      , MAX (MIDate_Insert.ValueData) AS InsertDate
-                                                FROM Movement 
+                                                FROM Movement
                                                      INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                                                      ON MovementLinkMovement_Order.MovementId = Movement.Id
                                                                                     AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
@@ -36,7 +40,7 @@ BEGIN
                                                      INNER JOIN MovementItemDate AS MIDate_Insert
                                                                                  ON MIDate_Insert.MovementItemId = MovementItem.Id
                                                                                 AND MIDate_Insert.DescId         = zc_MIDate_Insert()
-                                                                            
+
                                                 WHERE Movement.DescId   = zc_Movement_WeighingPartner()
                                                   AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                                   AND Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
@@ -69,9 +73,43 @@ BEGIN
                , Object_Status.ObjectCode    		        AS StatusCode
                , Object_Status.ValueData     		        AS StatusName
                , MovementString_Comment.ValueData               AS Comment
+
                  -- схема Vchasno - EDI
                , COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE) :: Boolean AS isVchasnoEDI
 
+                 -- ВН - Comdoc, автоматическая отправка
+               , CASE WHEN 1=1
+                       -- временно без этой проверки
+                       -- AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiComdoc.ValueData = TRUE
+                           THEN COALESCE (MovementBoolean_EdiComdoc.ValueData, FALSE)
+
+                      -- если надо
+                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiComdoc.ValueData = TRUE
+                           THEN TRUE
+                      -- временно Рост Харьков
+                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND Object_Retail.Id = 310862 -- Рост Харьков
+                           THEN TRUE
+
+                      ELSE FALSE
+                 END:: Boolean AS isEdiComdoc
+
+                 -- ВН - Delnot, автоматическая отправка
+               , CASE WHEN 1=1
+                       -- временно без этой проверки
+                       -- AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiDelnot.ValueData = TRUE
+                           THEN COALESCE (MovementBoolean_EdiDelnot.ValueData, FALSE)
+
+                      -- если надо
+                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiDelnot.ValueData = TRUE
+                           THEN TRUE
+                      -- временно Рост Харьков
+                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND Object_Retail.Id = 310862 -- Рост Харьков
+                           THEN FALSE
+                      -- временно Всем
+                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
+                           THEN TRUE
+                      ELSE FALSE
+                 END:: Boolean AS isEdiDelnot
 
            FROM Movement
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -86,16 +124,26 @@ BEGIN
                                          ON MovementString_Comment.MovementId = Movement.Id
                                         AND MovementString_Comment.DescId     = zc_MovementString_Comment()
 
+                --  EDI - Подтверждение заказа 
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiOrdspr
                                           ON MovementBoolean_EdiOrdspr.MovementId = Movement.Id
                                          AND MovementBoolean_EdiOrdspr.DescId     = zc_MovementBoolean_EdiOrdspr()
+                --  EDI - Счет
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiInvoice
                                           ON MovementBoolean_EdiInvoice.MovementId = Movement.Id
                                          AND MovementBoolean_EdiInvoice.DescId     = zc_MovementBoolean_EdiInvoice()
+                --  EDI - Уведомление об отгрузке
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiDesadv
                                           ON MovementBoolean_EdiDesadv.MovementId = Movement.Id
                                          AND MovementBoolean_EdiDesadv.DescId     = zc_MovementBoolean_EdiDesadv()
-
+                -- COMDOC-Видаткова Накладна
+                LEFT JOIN MovementBoolean AS MovementBoolean_EdiComdoc
+                                          ON MovementBoolean_EdiComdoc.MovementId = Movement.Id
+                                         AND MovementBoolean_EdiComdoc.DescId     = zc_MovementBoolean_EdiComdoc()
+                --  DELNOT-Видаткова Накладна 
+                LEFT JOIN MovementBoolean AS MovementBoolean_EdiDelnot
+                                          ON MovementBoolean_EdiDelnot.MovementId = Movement.Id
+                                         AND MovementBoolean_EdiDelnot.DescId     = zc_MovementBoolean_EdiDelnot()
 
                 LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
@@ -127,12 +175,20 @@ BEGIN
                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                 LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
-                -- Без схемы Vchasno - EDI
+                -- схема Vchasno - EDI
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_VchasnoEdi
                                         ON ObjectBoolean_Juridical_VchasnoEdi.ObjectId  = Object_JuridicalTo.Id
                                        AND ObjectBoolean_Juridical_VchasnoEdi.DescId    = zc_ObjectBoolean_Juridical_VchasnoEdi()
                                      --AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
 
+                -- ВН - Comdoc, автоматическая отправка
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_EdiComdoc
+                                        ON ObjectBoolean_Juridical_EdiComdoc.ObjectId  = Object_JuridicalTo.Id
+                                       AND ObjectBoolean_Juridical_EdiComdoc.DescId    = zc_ObjectBoolean_Juridical_isEdiComdoc()
+                -- ВН - Delnot, автоматическая отправка
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_EdiDelnot
+                                        ON ObjectBoolean_Juridical_EdiDelnot.ObjectId  = Object_JuridicalTo.Id
+                                       AND ObjectBoolean_Juridical_EdiDelnot.DescId    = zc_ObjectBoolean_Juridical_isEdiDelnot()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                      ON ObjectLink_Juridical_Retail.ObjectId = Object_JuridicalTo.Id
@@ -147,10 +203,20 @@ BEGIN
              --
              AND COALESCE (Movement_Parent.StatusId, 0) <> zc_Enum_Status_UnComplete()
              --
-             AND ((Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
-              AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
-                < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
+             AND (-- Этих Отправляем 55-min
+                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
+               AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
+                 < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
                   )
+               
+               OR -- Этих Отправляем 10-min
+                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '10 MIN'
+               AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
+                   < CURRENT_TIMESTAMP - INTERVAL '10 MIN'
+               -- схема Vchasno - EDI
+               AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
+                  )
+
                -- Этих Отправляем Сразу
                OR (Object_Retail.Id IN (310855 -- !!!Варус!!!
                                       -- , 310846 -- !!!ВК!!!
@@ -162,7 +228,7 @@ BEGIN
                AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '5 MIN'
                AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '5 MIN'
                   )*/
-                  
+
                 )
            ORDER BY COALESCE (MovementDate_Update.ValueData, Movement.OperDate)
           ;

@@ -143,11 +143,14 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_VchasnoEdi() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_VchasnoEdi'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_VchasnoEdi', 'Обработка на платформе Вчасно EDI' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_VchasnoEdi');
-
-CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_isEdiInvoice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isEdiInvoice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_isEdiComdoc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isEdiComdoc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
-  SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_isEdiInvoice', 'на платформу Вчасно EDI, автоматическая отправка ВН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isEdiInvoice');
+  SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_isEdiComdoc', 'ВН - Comdoc, автоматическая отправка' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isEdiComdoc');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_isEdiDelnot() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isEdiDelnot'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_isEdiDelnot', 'ВН - Delnot, автоматическая отправка' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isEdiDelnot');
 
 
 

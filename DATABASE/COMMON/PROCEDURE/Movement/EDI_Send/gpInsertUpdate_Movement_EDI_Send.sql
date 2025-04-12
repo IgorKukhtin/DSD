@@ -11,9 +11,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDI_Send(
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbUserId   Integer;
-   DECLARE vbIsInsert Boolean;
-   DECLARE vbDescId   Integer;
+   DECLARE vbUserId       Integer;
+   DECLARE vbIsInsert     Boolean;
+   DECLARE vbDescId       Integer;
+   DECLARE vbJuridicalId  Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI_Send());
@@ -21,7 +22,7 @@ BEGIN
 
 
      -- Поиск
-     vbDescId := (SELECT Id FROM MovementBooleanDesc WHERE LOWER (Code) = LOWER (inDescCode));
+     vbDescId := (SELECT Id FROM MovementBooleanDesc WHERE Code ILIKE inDescCode);
      -- проверка
      IF COALESCE (vbDescId, 0) = 0 THEN
          RAISE EXCEPTION 'Ошибка.Неверно значение св-ва <Вид отправки> = <%>.', inDescCode;
@@ -62,6 +63,55 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
+     
+     
+     -- Еще может быть схема ВЧАСНО, если Desadv
+     IF EXISTS (SELECT 1 FROM MovementBooleanDesc WHERE Code ILIKE inDescCode AND Id = zc_MovementBoolean_EdiDesadv())
+     THEN
+         -- из Продажи
+         vbJuridicalId:= (SELECT ObjectLink_Partner_Juridical.ChildObjectId
+                          FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                   AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                          WHERE Movement.Id = inParentId
+                         );
+
+         -- если схема Vchasno - EDI
+         IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbJuridicalId AND OB.DescId = zc_ObjectBoolean_Juridical_VchasnoEdi() AND OB.ValueData = TRUE)
+         THEN
+             -- Если Comdoc
+             IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbJuridicalId AND OB.DescId = zc_ObjectBoolean_Juridical_isEdiComdoc() AND OB.ValueData = TRUE)
+                -- временно Рост Харьков
+            AND EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId  = vbJuridicalId AND OL.DescId = zc_ObjectLink_Juridical_Retail() AND OL.ChildObjectId = 310862) -- Рост Харьков
+             THEN
+                 -- Добавили Отправку Comdoc
+                 PERFORM gpInsertUpdate_Movement_EDI_Send (ioId       := 0
+                                                         , inParentId := inParentId
+                                                         , inDescCode := 'zc_MovementBoolean_EdiComdoc'
+                                                         , inSession  := inSession
+                                                          );
+                     
+             -- временно Отключил - Если Delnot
+             --ELSEIF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbJuridicalId AND OB.DescId = zc_ObjectBoolean_Juridical_isEdiDelnot() AND OB.ValueData = TRUE)
+             --THEN
+
+             -- временно ВСЕМ
+             ELSE
+                 -- Добавили Отправку Delnot
+                 PERFORM gpInsertUpdate_Movement_EDI_Send (ioId       := 0
+                                                         , inParentId := inParentId
+                                                         , inDescCode := 'zc_MovementBoolean_EdiDelnot'
+                                                         , inSession  := inSession
+                                                          );
+             END IF;
+             
+         END IF; -- если схема Vchasno - EDI
+
+     END IF; -- если Desadv
 
 END;
 $BODY$

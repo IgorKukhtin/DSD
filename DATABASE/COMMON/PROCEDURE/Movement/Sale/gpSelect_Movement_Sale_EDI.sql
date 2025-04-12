@@ -27,6 +27,7 @@ $BODY$
     DECLARE vbPaidKindId Integer;
     DECLARE vbContractId Integer;
     DECLARE vbIsLongUKTZED Boolean;
+
     DECLARE vbIsVchasnoEdi Boolean;
 
     DECLARE vbOperSumm_MVAT TFloat;
@@ -186,10 +187,14 @@ END IF;
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)   AS isLongUKTZED
-          , COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE)   AS isVchasnoEdi
+
+            -- схема Vchasno - EDI
+          , COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE) AS isVchasnoEdi
+
             INTO vbOperDate, vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId
                , vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
-               , vbIsLongUKTZED, vbIsVchasnoEdi
+               , vbIsLongUKTZED
+               , vbIsVchasnoEdi
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -221,7 +226,8 @@ END IF;
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
                                   ON ObjectBoolean_isLongUKTZED.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                 AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
+                                 AND ObjectBoolean_isLongUKTZED.DescId   = zc_ObjectBoolean_Juridical_isLongUKTZED()
+
           /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
                               AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
@@ -540,15 +546,28 @@ END IF;
 
            , ObjectString_Partner_ShortName.ValueData   AS ShortNamePartner_To
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
-           --, Object_Street_View.CityName                AS CityName_To
-           , Object_Street_View.PostalCode              AS PostalCode_To
-           , COALESCE(ObjectString_CityKind_ShortName_To.ValueData||' ', '')||
-             COALESCE (Object_Street_View.CityName, '')    AS CityName_To
 
+             -- PostalCode
+           , Object_Street_View.PostalCode              AS PostalCode_To
+
+             -- CityName
+         --, Object_Street_View.CityName                AS CityName_To
+           , (COALESCE(ObjectString_CityKind_ShortName_To.ValueData||' ', '')
+           || COALESCE (Object_Street_View.CityName, '')
+             ) :: TvarChar AS CityName_To
+
+             -- Country
+           , 'UA' :: TVarChar AS CountryName_to
+
+             -- PhoneNumber
+           , '' :: TVarChar AS PhoneNumber_to
+
+             -- StreetAndNumber
            , (CASE WHEN ObjectString_HouseNumber.ValueData <> '' THEN Object_Street_View.StreetKindName || ' ' ELSE '' END
              || Object_Street_View.Name
              || CASE WHEN ObjectString_HouseNumber.ValueData <> '' THEN ' д.' || ObjectString_HouseNumber.ValueData ELSE '' END
              ) :: TVarChar AS StreetName_To
+
            , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
            , COALESCE (Object_ArticleLoss.ValueData, OH_JuridicalDetails_To.FullName) AS JuridicalName_To
            , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
