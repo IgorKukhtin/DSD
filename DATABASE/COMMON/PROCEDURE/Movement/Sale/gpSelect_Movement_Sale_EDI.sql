@@ -93,16 +93,16 @@ END IF;
 
             -- UserSeal
           , CASE WHEN vbUserId = 5 AND 1=0
-                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U241212112504.ZS2'
                  WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData
-                 ELSE '24447183_U221220114928.ZS2'
+                 ELSE '24447183_U241212112504.ZS2'
             END AS UserSeal
 
             -- UserKey
           , CASE WHEN vbUserId = 5 AND 1=0
-                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U241212112504.ZS2'
                  WHEN ObjectString_UserKey.ValueData <> '' THEN ObjectString_UserKey.ValueData
-                 ELSE '24447183_U221220114928.ZS2'
+                 ELSE '24447183_U241212112504.ZS2'
             END AS UserKey
 
             INTO vbUserSign, vbUserSeal, vbUserKey
@@ -526,9 +526,13 @@ END IF;
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountKg ELSE MovementFloat_TotalCountKg.ValueData END AS TotalCountKg
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountSh ELSE MovementFloat_TotalCountSh.ValueData END AS TotalCountSh
+             -- Сума Без ПДВ
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT
+             -- Сума з ПДВ
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
+             -- Сума ПДВ
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
+             --
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
            , Object_From.ValueData             		AS FromName
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
@@ -727,12 +731,16 @@ END IF;
                                    ELSE ''
                               END  AS StreetName_From
 
+           , MovementFloat_TotalSummMVAT.ValueData AS TotalSummMVAT
+             -- 
+           , MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT
+           , (MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData) :: TFloat AS TotalSummVAT
+
            , vbUserSign AS UserSign
            , vbUserSeal AS UserSeal
            , vbUserKey  AS UserKey
 
        FROM tmpMovement AS Movement
-
             -- Налоговая
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                            ON MovementLinkMovement_Tax.MovementId = Movement.Id
