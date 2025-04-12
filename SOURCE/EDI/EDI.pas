@@ -6020,15 +6020,15 @@ begin
       try
         EncodeStream(fileStreamSing, base64StreamSing);
 
-        Body := '{'#13 +
-                '  "signature": ' +  base64StreamSing.DataString + ''#13;
+        Body := '{'#10 +
+                '  "signature": "' +  base64StreamSing.DataString + '"';
         if Assigned(fileStreamStamp) then
         begin
           EncodeStream(fileStreamStamp, base64StreamStamp);
 
-          Body := Body + ', "stamp": ' + base64StreamStamp.DataString + ''#13;
+          Body := Body + ','#10'  "stamp": "' + base64StreamStamp.DataString + '"'#10;
         end;
-        Body := Body + #13 + '}';
+        Body := Body + #10 + '}';
       except on E:EIdHTTPProtocolException  do
                   ShowMessages('Ошибка: ' + e.ErrorMessage);
       end;
@@ -6039,8 +6039,13 @@ begin
       FreeAndNil(base64StreamSing);
     end;
 
+//    Body := '{' +
+//            '"signature": "0KHRgNC40LLQtdGCLCDQvNC+0LbQtdC90LjRjw==",' +
+//            '"stamp": "0JrQsNGA0YHQvtCy0L7QtNGB"' +
+//            '}';
+
     IdHTTP.Request.Clear;
-    IdHTTP.Request.ContentType := 'application/json; charset=utf-8';
+    IdHTTP.Request.ContentType := 'text/plain';
     IdHTTP.Request.ContentEncoding := 'UTF-8';
     IdHTTP.Request.Accept := '*/*';
     IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
@@ -6108,6 +6113,7 @@ begin
   if not FileExists(SignFile) then
   begin
     ShowMessages('Ошибка Не найдена программа шифрования: ' + SignFile);
+    Exit;
   end;
 
   // 1.Установка ключей
@@ -6116,13 +6122,21 @@ begin
   else FileKeyName := AnsiString(ExtractFilePath(ParamStr(0)) + UserSign);
 
   // проверка
-  if not FileExists(String(FileKeyName)) then ShowError('Файл не найден : <'+String(FileKeyName)+'>');
+  if not FileExists(String(FileKeyName)) then
+  begin
+    ShowMessages('Файл не найден : <'+String(FileKeyName)+'>');
+    Exit;
+  end;
 
   FKeyFileNameParam.Value := ExtractFileName(String(FileKeyName));
 
   FileName := FFileNameParam.Value;
   // проверка
-  if not FileExists(String(FileName)) then ShowError('Файл документа не найден : <'+String(FileName)+'>');
+  if not FileExists(String(FileName)) then
+  begin
+    ShowMessages('Файл документа не найден : <'+String(FileName)+'>');
+    Exit;
+  end;
 
   CmdLine := '"' + SignFile + '" "' + apath + '" "' + FileKeyName + '" "24447183" "' + FileName + '"';
 
