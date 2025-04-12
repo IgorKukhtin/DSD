@@ -250,10 +250,10 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
     Width = 941
     ExplicitWidth = 941
     inherited deStart: TcxDateEdit
-      EditValue = 43101d
+      EditValue = 45658d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 43101d
+      EditValue = 45658d
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
