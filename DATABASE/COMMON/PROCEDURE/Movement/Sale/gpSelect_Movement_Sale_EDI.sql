@@ -496,6 +496,11 @@ END IF;
            , MovementString_DocumentId_vch.ValueData    AS DocumentId_vch
            , MovementString_VchasnoId.ValueData         AS VchasnoId
 
+             -- Налоговая
+           , MovementLinkMovement_Tax.MovementChildId AS MovementId_tax
+           , Movement_Tax.OperDate                    AS OperDate_tax
+           , MS_InvNumberPartner_Tax.ValueData        AS InvNumberPartner_Master
+
            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
                   ELSE '' -- 'м.Днiпро'
                   END  :: TVarChar   AS PlaceOf
@@ -675,8 +680,6 @@ END IF;
            , BankAccount_To.BeneficiarysAccount                 AS BenefAccount_Int
            , BankAccount_To.Name                                AS BankAccount_Int
 
-           , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
-
            , CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0) AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
                         THEN ' та знижкой'
                   ELSE ''
@@ -729,6 +732,16 @@ END IF;
            , vbUserKey  AS UserKey
 
        FROM tmpMovement AS Movement
+
+            -- Налоговая
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                           ON MovementLinkMovement_Tax.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Tax.DescId     = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
+            LEFT JOIN MovementString AS MS_InvNumberPartner_Tax
+                                     ON MS_InvNumberPartner_Tax.MovementId = MovementLinkMovement_Tax.MovementChildId
+                                    AND MS_InvNumberPartner_Tax.DescId     = zc_MovementString_InvNumberPartner()
+
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
@@ -977,13 +990,6 @@ END IF;
             LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_To
                                           ON OHS_JD_JuridicalAddress_To.ObjectHistoryId = OH_JuridicalDetailsBank_To.ObjectHistoryId
                                          AND OHS_JD_JuridicalAddress_To.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
-
---
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                           ON MovementLinkMovement_Master.MovementId = Movement.Id
-                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-            LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
-                                                                  AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN ObjectString AS ObjectString_HouseNumber_From
                                    ON ObjectString_HouseNumber_From.ObjectId = vbPartneFromId

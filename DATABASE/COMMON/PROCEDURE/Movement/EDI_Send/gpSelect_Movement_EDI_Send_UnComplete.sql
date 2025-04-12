@@ -230,7 +230,13 @@ BEGIN
                   )*/
 
                 )
-           ORDER BY COALESCE (MovementDate_Update.ValueData, Movement.OperDate)
+           ORDER BY 
+                    CASE WHEN MovementBoolean_EdiOrdspr.ValueData  = TRUE THEN 1 ELSE 888 END
+                  , CASE WHEN MovementBoolean_EdiInvoice.ValueData = TRUE THEN 2 ELSE 888 END
+                  , CASE WHEN MovementBoolean_EdiDesadv.ValueData  = TRUE THEN 3 ELSE 888 END
+                  , CASE WHEN MovementBoolean_EdiDelnot.ValueData  = TRUE THEN 4 ELSE 888 END
+                  , CASE WHEN MovementBoolean_EdiComdoc.ValueData  = TRUE THEN 5 ELSE 888 END
+                  , COALESCE (MovementDate_Update.ValueData, Movement.OperDate)
           ;
 
 END;
