@@ -10619,6 +10619,28 @@ object MainForm: TMainForm
         end>
       Caption = 'actGet_Movement_Edi_stat'
     end
+    object actUpdateVchasnoEdiDelnotTrue: TdsdExecStoredProc
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateVchasnoEdiDelnot
+      StoredProcList = <
+        item
+          StoredProc = spUpdateVchasnoEdiDelnot
+        end>
+      Caption = 'actUpdateVchasnoEdiDelnotTrue'
+    end
+    object actUpdateVchasnoEdiComdocTrue: TdsdExecStoredProc
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateVchasnoEdiComdoc
+      StoredProcList = <
+        item
+          StoredProc = spUpdateVchasnoEdiComdoc
+        end>
+      Caption = 'actUpdateVchasnoEdiComdocTrue'
+    end
     object actUpdate_EDI_Send: TdsdExecStoredProc
       Category = 'EDI'
       MoveParams = <>
@@ -11300,7 +11322,7 @@ object MainForm: TMainForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object actVchasnoEDIComDoc2: TdsdVchasnoEDIAction
+    object actVchasnoEDIComDoc: TdsdVchasnoEDIAction
       Category = 'VchasnoEDI'
       MoveParams = <>
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
@@ -11367,57 +11389,6 @@ object MainForm: TMainForm
       ErrorText.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
-    end
-    object mactVchasnoEDIOrdrsp: TMultiAction
-      Category = 'VchasnoEDI'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecPrintStoredProc
-        end
-        item
-          Action = actVchasnoEDIOrdrsp
-        end
-        item
-          Action = actUpdateEdiDesadvTrue
-        end>
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1072'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1072'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
-      ImageIndex = 84
-    end
-    object mactVchasnoEDIDesadv: TMultiAction
-      Category = 'VchasnoEDI'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecPrintStoredProc
-        end
-        item
-          Action = actVchasnoEDIDesadv
-        end
-        item
-          Action = actUpdateEdiDesadvTrue
-        end>
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1077'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1077'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
-      ImageIndex = 84
-    end
-    object mactVchasnoEDIDelnot: TMultiAction
-      Category = 'VchasnoEDI'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecPrintStoredProc
-        end
-        item
-          Action = actVchasnoEDIDelnot
-        end
-        item
-          Action = actUpdateEdiDesadvTrue
-        end>
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Delnot '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Delnot '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
-      ImageIndex = 84
     end
   end
   object spHeaderOrder: TdsdStoredProc
@@ -12062,5 +12033,53 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 271
     Top = 88
+  end
+  object spUpdateVchasnoEdiComdoc: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_toEDI'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiComdoc'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 384
+  end
+  object spUpdateVchasnoEdiDelnot: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_toEDI'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiDelnot'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 416
   end
 end

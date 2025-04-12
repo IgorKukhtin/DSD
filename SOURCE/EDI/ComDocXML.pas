@@ -178,7 +178,7 @@ end;
     { Property Accessors }
     function Get_ІД: Integer;
     function Get_НомПоз: Integer;
-    function Get_Штрихкод: IXMLШтрихкодType;
+    function Get_Штрихкод: UnicodeString;
     function Get_АртикулПокупця: UnicodeString;
     function Get_Найменування: UnicodeString;
     function Get_ПрийнятаКількість: UnicodeString;
@@ -191,6 +191,7 @@ end;
     procedure Set_ІД(Value: Integer);
     procedure Set_НомПоз(Value: Integer);
     procedure Set_АртикулПокупця(Value: UnicodeString);
+    procedure Set_Штрихкод(Value: UnicodeString);
     procedure Set_Найменування(Value: UnicodeString);
     procedure Set_ПрийнятаКількість(Value: UnicodeString);
     procedure Set_ОдиницяВиміру(Value: UnicodeString);
@@ -200,8 +201,9 @@ end;
     { Methods & Properties }
     property ІД: Integer read Get_ІД write Set_ІД;
     property НомПоз: Integer read Get_НомПоз write Set_НомПоз;
-    property Штрихкод: IXMLШтрихкодType read Get_Штрихкод;
     property АртикулПокупця: UnicodeString read Get_АртикулПокупця write Set_АртикулПокупця;
+    //property Штрихкод: IXMLШтрихкодType read Get_Штрихкод write Set_Штрихкод;
+    property Штрихкод: UnicodeString read Get_Штрихкод write Set_Штрихкод;
     property Найменування: UnicodeString read Get_Найменування write Set_Найменування;
     property ПрийнятаКількість: UnicodeString read Get_ПрийнятаКількість write Set_ПрийнятаКількість;
     property ОдиницяВиміру: UnicodeString read Get_ОдиницяВиміру write Set_ОдиницяВиміру;
@@ -413,7 +415,7 @@ end;
     { IXMLРядокType }
     function Get_ІД: Integer;
     function Get_НомПоз: Integer;
-    function Get_Штрихкод: IXMLШтрихкодType;
+    function Get_Штрихкод: UnicodeString;
     function Get_АртикулПокупця: UnicodeString;
     function Get_Найменування: UnicodeString;
     function Get_ПрийнятаКількість: UnicodeString;
@@ -426,6 +428,7 @@ end;
     procedure Set_ІД(Value: Integer);
     procedure Set_НомПоз(Value: Integer);
     procedure Set_АртикулПокупця(Value: UnicodeString);
+    procedure Set_Штрихкод(Value: UnicodeString);
     procedure Set_Найменування(Value: UnicodeString);
     procedure Set_ПрийнятаКількість(Value: UnicodeString);
     procedure Set_ОдиницяВиміру(Value: UnicodeString);
@@ -884,9 +887,16 @@ begin
   ChildNodes['НомПоз'].NodeValue := Value;
 end;
 
-function TXMLРядокType.Get_Штрихкод: IXMLШтрихкодType;
+function TXMLРядокType.Get_Штрихкод: UnicodeString;
 begin
-  Result := ChildNodes['Штрихкод'] as IXMLШтрихкодType;
+  //Result := ChildNodes['Штрихкод'] as IXMLШтрихкодType;
+  Result := ChildNodes['Штрихкод'].NodeValue;
+
+end;
+
+procedure TXMLРядокType.Set_Штрихкод(Value: UnicodeString);
+begin
+  ChildNodes['Штрихкод'].NodeValue := Value;
 end;
 
 function TXMLРядокType.Get_АртикулПокупця: UnicodeString;
@@ -898,6 +908,7 @@ procedure TXMLРядокType.Set_АртикулПокупця(Value: UnicodeString);
 begin
   ChildNodes['АртикулПокупця'].NodeValue := Value;
 end;
+
 
 function TXMLРядокType.Get_Найменування: UnicodeString;
 begin

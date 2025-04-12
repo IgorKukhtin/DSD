@@ -5251,7 +5251,7 @@ procedure TEDI.ComDocSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Strea
 var
   ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
   i: integer;
-  XMLFileName, P7SFileName: string;
+  XMLFileName: string;
 begin
   // создать xml файл
   ЕлектроннийДокумент := NewЕлектроннийДокумент;
@@ -5285,6 +5285,13 @@ begin
     GLN := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
   end;
 
+  // Глобальний номер розташування (GLN) контрагента - GLN Точка доставки
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Точка доставки';
+       NodeValue:= HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
+  end;
+
   i := 1;
   ItemsDataSet.First;
   while not ItemsDataSet.Eof do
@@ -5293,8 +5300,8 @@ begin
     begin
       ІД := i;
       НомПоз := i;
-      АртикулПокупця := ItemsDataSet.FieldByName
-        ('ArticleGLN_Juridical').asString;
+      Штрихкод := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+      АртикулПокупця := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
       Найменування := ItemsDataSet.FieldByName('GoodsName').asString;
       ПрийнятаКількість :=
         gfFloatToStr(ItemsDataSet.FieldByName('AmountPartner').AsFloat);
@@ -5345,7 +5352,14 @@ begin
   then DESADV_fozz_Amount.InvoiceParties.Buyer.UtilizationRegisterNumber := HeaderDataSet.FieldByName('OKPO_To').asString;
   // Назва контрагента
   DESADV_fozz_Amount.InvoiceParties.Buyer.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
-
+  // Місто - Точка доставки
+  DESADV_fozz_Amount.InvoiceParties.Buyer.CityName := HeaderDataSet.FieldByName('CityName_To').asString;
+  // Вулиця і номер будинку - Точка доставки
+  DESADV_fozz_Amount.InvoiceParties.Buyer.StreetAndNumber := HeaderDataSet.FieldByName('StreetName_To').asString;
+  // Поштовий код - Точка доставки
+  DESADV_fozz_Amount.InvoiceParties.Buyer.PostalCode := HeaderDataSet.FieldByName('PostalCode_To').asString;
+  // Country
+  DESADV_fozz_Amount.InvoiceParties.Buyer.Country := HeaderDataSet.FieldByName('CountryName_to').asString;
 
   // Глобальний номер розташування (GLN) контрагента - GLN продавця
   if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
@@ -5369,7 +5383,9 @@ begin
   // Вулиця і номер будинку - Точка доставки
   DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.StreetAndNumber := HeaderDataSet.FieldByName('StreetName_To').asString;
   // Поштовий код - Точка доставки
-  //try DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.PostalCode := StrToInt(HeaderDataSet.FieldByName('PostalCode_To').asString);except end;
+  DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.PostalCode := HeaderDataSet.FieldByName('PostalCode_To').asString;
+  // Country
+  //DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.Country := HeaderDataSet.FieldByName('CountryName_to').asString;
 
 
   TotalGrossAmount := 0;
