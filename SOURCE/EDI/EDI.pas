@@ -5276,7 +5276,6 @@ begin
   then begin
          Delnot_Vchasno.InvoiceReference.TaxInvoice.TaxInvoiceNumber := HeaderDataSet.FieldByName('InvNumberPartner_Master').asString;
          Delnot_Vchasno.InvoiceReference.TaxInvoice.TaxInvoiceDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDate_tax').asDateTime);
-
   end;
 
 
@@ -5390,14 +5389,21 @@ var
 begin
   // создать xml файл
   ЕлектроннийДокумент := invoice_comdoc_vchasno.NewЕлектроннийДокумент;
-  ЕлектроннийДокумент.Заголовок.НомерДокументу :=
-    HeaderDataSet.FieldByName('InvNumber').asString;
+  ЕлектроннийДокумент.Заголовок.НомерДокументу := HeaderDataSet.FieldByName('InvNumber').asString;
   ЕлектроннийДокумент.Заголовок.ТипДокументу := 'Видаткова накладна';
   ЕлектроннийДокумент.Заголовок.КодТипуДокументу := '006';
-  ЕлектроннийДокумент.Заголовок.ДатаДокументу := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
-  ЕлектроннийДокумент.Заголовок.НомерЗамовлення :=
-    HeaderDataSet.FieldByName('InvNumberOrder').asString;
+  ЕлектроннийДокумент.Заголовок.ДатаДокументу := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+
+  ЕлектроннийДокумент.Заголовок.НомерЗамовлення :=HeaderDataSet.FieldByName('InvNumberOrder').asString;
+  //ЕлектроннийДокумент.Заголовок.ДатаЗамовлення :=FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+
+  with ЕлектроннийДокумент.Заголовок.ДокПідстава do
+  begin
+    НомерДокументу := HeaderDataSet.FieldByName('InvNumber').asString;
+    ТипДокументу := 'Повідомлення про відвантаження';
+    КодТипуДокументу := '001';
+    ДатаДокументу := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+  end;
 
   with ЕлектроннийДокумент.Сторони.Add do
   begin
@@ -5426,6 +5432,46 @@ begin
        назва:= 'Точка доставки';
        NodeValue:= HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
   end;
+  //Адреса доставки - Точка доставки
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Адреса доставки';
+       NodeValue:= HeaderDataSet.FieldByName('PartnerAddress_To').asString;
+  end;
+
+  //Номер договору на поставку
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Номер договору';
+       NodeValue:= HeaderDataSet.FieldByName('ContractName').asString;
+  end;
+  //Дата договору
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Дата договору';
+       NodeValue:= FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
+  end;
+
+  //Номер податкової накладної
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Номер податкової накладної';
+       NodeValue:= HeaderDataSet.FieldByName('InvNumberPartner_Master').asString;
+  end;
+  //Дата податкової накладної
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Дата податкової накладної';
+       NodeValue:= FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDate_tax').asDateTime);
+  end;
+
+  with ЕлектроннийДокумент.ВсьогоПоДокументу do
+  begin
+       СумаБезПДВ:= gfFloatToStr(HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat);
+       ПДВ:= gfFloatToStr(HeaderDataSet.FieldByName('SummVAT').AsFloat);
+       Сума:= gfFloatToStr(HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat);
+  end;
+
 
   i := 1;
   ItemsDataSet.First;
@@ -5438,9 +5484,22 @@ begin
       Штрихкод := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
       АртикулПокупця := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
       Найменування := ItemsDataSet.FieldByName('GoodsName').asString;
-      ПрийнятаКількість :=
-        gfFloatToStr(ItemsDataSet.FieldByName('AmountPartner').AsFloat);
+      //ОдиницяВиміру
+      ОдиницяВиміру:= ItemsDataSet.FieldByName('MeasureName').asString;
+
+      ПрийнятаКількість := gfFloatToStr(ItemsDataSet.FieldByName('AmountPartner').AsFloat);
+      //Ціна за одиницю без ПДВ
+      БазоваЦіна:= gfFloatToStr(ItemsDataSet.FieldByName('PriceNoVAT').AsFloat);
+      //Ціна за одиницю з ПДВ
       Ціна := gfFloatToStr(ItemsDataSet.FieldByName('PriceWVAT').AsFloat);
+
+      //ВсьогоПоРядку - Сума Без ПДВ
+      ВсьогоПоРядку.СумаБезПДВ:= gfFloatToStr(ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat);
+      //ВсьогоПоРядку - Сума ПДВ
+      ВсьогоПоРядку.ПДВ:= gfFloatToStr(ROUND(ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat * 100) / 100 - ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat);
+      //ВсьогоПоРядку - Сума з ПДВ
+      ВсьогоПоРядку.Сума:= gfFloatToStr(ROUND(ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat * 100) / 100);
+
       inc(i);
     end;
     ItemsDataSet.Next;

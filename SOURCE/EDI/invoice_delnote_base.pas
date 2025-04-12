@@ -643,7 +643,7 @@ const
   TargetNamespace = '';
 
 implementation
-
+uses UtilConvert;
 { Global Functions }
 
 function GetDocumentInvoice(Doc: IXMLDocument): IXMLDocumentInvoiceType;
@@ -1179,7 +1179,7 @@ end;
 
 procedure TXMLLineItemType.Set_InvoiceQuantity(Value: Double);
 begin
-  ChildNodes['InvoiceQuantity'].NodeValue := Value;
+  ChildNodes['InvoiceQuantity'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLLineItemType.Get_UnitOfMeasure: UnicodeString;
@@ -1199,7 +1199,7 @@ end;
 
 procedure TXMLLineItemType.Set_InvoiceUnitNetPrice(Value: Double);
 begin
-  ChildNodes['InvoiceUnitNetPrice'].NodeValue := Value;
+  ChildNodes['InvoiceUnitNetPrice'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLLineItemType.Get_TaxRate: Double;
@@ -1209,7 +1209,7 @@ end;
 
 procedure TXMLLineItemType.Set_TaxRate(Value: Double);
 begin
-  ChildNodes['TaxRate'].NodeValue := Value;
+  ChildNodes['TaxRate'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLLineItemType.Get_TaxAmount: Double;
@@ -1219,7 +1219,7 @@ end;
 
 procedure TXMLLineItemType.Set_TaxAmount(Value: Double);
 begin
-  ChildNodes['TaxAmount'].NodeValue := Value;
+  ChildNodes['TaxAmount'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLLineItemType.Get_NetAmount: Double;
@@ -1229,7 +1229,7 @@ end;
 
 procedure TXMLLineItemType.Set_NetAmount(Value: Double);
 begin
-  ChildNodes['NetAmount'].NodeValue := Value;
+  ChildNodes['NetAmount'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLLineItemType.Get_TaxCategoryCode: UnicodeString;
@@ -1277,7 +1277,7 @@ end;
 
 procedure TXMLInvoiceSummaryType.Set_TotalNetAmount(Value: Double);
 begin
-  ChildNodes['TotalNetAmount'].NodeValue := Value;
+  ChildNodes['TotalNetAmount'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLInvoiceSummaryType.Get_TotalTaxAmount: Double;
@@ -1287,7 +1287,7 @@ end;
 
 procedure TXMLInvoiceSummaryType.Set_TotalTaxAmount(Value: Double);
 begin
-  ChildNodes['TotalTaxAmount'].NodeValue := Value;
+  ChildNodes['TotalTaxAmount'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLInvoiceSummaryType.Get_TotalGrossAmount: Double;
@@ -1297,7 +1297,7 @@ end;
 
 procedure TXMLInvoiceSummaryType.Set_TotalGrossAmount(Value: Double);
 begin
-  ChildNodes['TotalGrossAmount'].NodeValue := Value;
+  ChildNodes['TotalGrossAmount'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLInvoiceSummaryType.Get_TotalGrossAmountText: Double;
@@ -1307,7 +1307,7 @@ end;
 
 procedure TXMLInvoiceSummaryType.Set_TotalGrossAmountText(Value: Double);
 begin
-  ChildNodes['TotalGrossAmountText'].NodeValue := Value;
+  ChildNodes['TotalGrossAmountText'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLInvoiceSummaryType.Get_TaxSummary: IXMLTaxSummaryType;
@@ -1337,7 +1337,7 @@ end;
 
 procedure TXMLTaxSummaryLineType.Set_TaxRate(Value: Double);
 begin
-  ChildNodes['TaxRate'].NodeValue := Value;
+  ChildNodes['TaxRate'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLTaxSummaryLineType.Get_TaxCategoryCode: UnicodeString;
@@ -1357,7 +1357,7 @@ end;
 
 procedure TXMLTaxSummaryLineType.Set_TaxAmount(Value: Double);
 begin
-  ChildNodes['TaxAmount'].NodeValue := Value;
+  ChildNodes['TaxAmount'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLTaxSummaryLineType.Get_TaxableAmount: Double;
@@ -1367,7 +1367,7 @@ end;
 
 procedure TXMLTaxSummaryLineType.Set_TaxableAmount(Value: Double);
 begin
-  ChildNodes['TaxableAmount'].NodeValue := Value;
+  ChildNodes['TaxableAmount'].NodeValue := gfFloatToStr(Value);
 end;
 
 function TXMLTaxSummaryLineType.Get_GrossAmount: Double;
@@ -1377,7 +1377,7 @@ end;
 
 procedure TXMLTaxSummaryLineType.Set_GrossAmount(Value: Double);
 begin
-  ChildNodes['GrossAmount'].NodeValue := Value;
+  ChildNodes['GrossAmount'].NodeValue := gfFloatToStr(Value);
 end;
 
 end.

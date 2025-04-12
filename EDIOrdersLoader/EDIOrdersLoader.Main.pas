@@ -603,6 +603,7 @@ begin
 
               // Vchasno - Delnot
               if (FieldByName('isEdiDelnot').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
+               //and (1=0)
               then begin
                        actExecPrintStoredProc.Execute;
                        if actVchasnoEDIDelnot.Execute
@@ -617,6 +618,7 @@ begin
 
               // Vchasno - Comdoc
               if (FieldByName('isEdiComdoc').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
+               //and (1=0)
               then begin
                        actExecPrintStoredProc.Execute;
                        if actVchasnoEDIComdoc.Execute

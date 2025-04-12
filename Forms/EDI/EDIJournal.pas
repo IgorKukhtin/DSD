@@ -222,13 +222,20 @@ type
     mactVchasnoEDIDesadv: TMultiAction;
     actVchasnoEDIOrdrsp: TdsdVchasnoEDIAction;
     mactVchasnoEDIOrdrsp: TMultiAction;
-    actVchasnoEDIDeclar: TdsdVchasnoEDIAction;
-    mactVchasnoEDIDeclar: TMultiAction;
+    actVchasnoEDIDelnot: TdsdVchasnoEDIAction;
+    mactVchasnoEDIDelnot: TMultiAction;
     bbVchasnoEDIOrdersLoad: TdxBarButton;
     bbVchasnoEDIDesadv: TdxBarButton;
     bbVchasnoEDIOrdrsp: TdxBarButton;
-    bbVchasnoEDIDeclar: TdxBarButton;
+    bbVchasnoEDIDelnot: TdxBarButton;
     dxBarSeparator1: TdxBarSeparator;
+    spUpdateVchasnoEdiDelnot: TdsdStoredProc;
+    spUpdateVchasnoEdiComdoc: TdsdStoredProc;
+    actUpdateVchasnoEdiDelnotTrue: TdsdExecStoredProc;
+    actUpdateVchasnoEdiComdocTrue: TdsdExecStoredProc;
+    actVchasnoEDIComdoc: TdsdVchasnoEDIAction;
+    mactVchasnoEDIComdoc: TMultiAction;
+    bbVchasnoEDIComdoc: TdxBarButton;
   private
     { Private declarations }
   public

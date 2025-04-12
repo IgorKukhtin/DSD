@@ -1104,7 +1104,29 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076'.'
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072'> '#1074' EXITE'
     end
-    object actDesadv: TEDIAction [11]
+    object actUpdateVchasnoEdiDelnotTrue: TdsdExecStoredProc [11]
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateVchasnoEdiDelnot
+      StoredProcList = <
+        item
+          StoredProc = spUpdateVchasnoEdiDelnot
+        end>
+      Caption = 'actUpdateVchasnoEdiDelnotTrue'
+    end
+    object actUpdateVchasnoEdiComdocTrue: TdsdExecStoredProc [12]
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateVchasnoEdiComdoc
+      StoredProcList = <
+        item
+          StoredProc = spUpdateVchasnoEdiComdoc
+        end>
+      Caption = 'actUpdateVchasnoEdiComdocTrue'
+    end
+    object actDesadv: TEDIAction [13]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -1116,7 +1138,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object mactDesadv: TMultiAction [12]
+    object mactDesadv: TMultiAction [14]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -1971,7 +1993,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Action = actVchasnoEDIDelnot
         end
         item
-          Action = actUpdateEdiDesadvTrue
+          Action = actUpdateVchasnoEdiDelnotTrue
         end
         item
           Action = actRefresh
@@ -2172,7 +2194,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Action = actVchasnoEDIComdoc
         end
         item
-          Action = actUpdateEdiDesadvTrue
+          Action = actUpdateVchasnoEdiComdocTrue
         end
         item
           Action = actRefresh
@@ -3998,5 +4020,53 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     PackSize = 1
     Left = 1056
     Top = 72
+  end
+  object spUpdateVchasnoEdiComdoc: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiComdoc'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 960
+    Top = 192
+  end
+  object spUpdateVchasnoEdiDelnot: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiDelnot'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 992
+    Top = 208
   end
 end

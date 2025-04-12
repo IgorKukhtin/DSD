@@ -234,6 +234,10 @@ type
     actVchasnoEDIComdoc: TdsdVchasnoEDIAction;
     mactVchasnoEDIComdoc: TMultiAction;
     bbVchasnoEDIComdoc: TdxBarButton;
+    spUpdateVchasnoEdiComdoc: TdsdStoredProc;
+    spUpdateVchasnoEdiDelnot: TdsdStoredProc;
+    actUpdateVchasnoEdiDelnotTrue: TdsdExecStoredProc;
+    actUpdateVchasnoEdiComdocTrue: TdsdExecStoredProc;
   private
     { Private declarations }
   public
