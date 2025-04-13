@@ -1577,7 +1577,9 @@ uses
   GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
   AmountForm_twoDialog in '..\..\Forms\Document\AmountForm_twoDialog.pas' {AmountForm_twoDialogForm: TParentForm},
   ServiceDateDialog in '..\..\Forms\Document\ServiceDateDialog.pas' {ServiceDateDialogForm: TParentForm},
-  ProductionSeparateJournal in '..\..\Forms\Document\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm: TParentForm};
+  ProductionSeparateJournal in '..\..\Forms\Document\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm: TParentForm},
+  invoice_comdoc_vchasno in '..\..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
+  invoice_delnote_base in '..\..\SOURCE\EDI\invoice_delnote_base.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
