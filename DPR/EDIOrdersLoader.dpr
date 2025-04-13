@@ -17,7 +17,9 @@ uses
   PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
   DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
   EUSignCP in '..\SOURCE\EUSignCP\EUSignCP.pas',
-  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
+  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
+  invoice_comdoc_vchasno in '..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
+  invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas';
 
 {$R *.res}
 

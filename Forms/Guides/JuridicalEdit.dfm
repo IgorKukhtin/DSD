@@ -798,20 +798,20 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 38
+    TabOrder = 36
     Width = 272
   end
   object cbVchasnoEdi: TcxCheckBox [36]
     Left = 8
     Top = 159
     Caption = #1054#1073#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1087#1083#1072#1090#1092#1086#1088#1084#1077' '#1042#1095#1072#1089#1085#1086' EDI'
-    TabOrder = 40
+    TabOrder = 39
     Width = 217
   end
-  object cbisEdiInvoice: TcxCheckBox [37]
+  object cbIsEdiComdoc: TcxCheckBox [37]
     Left = 8
     Top = 177
-    Caption = #1040#1074#1090#1086'. '#1086#1090#1087#1088#1072#1074#1082#1072' '#1042#1053' '#1085#1072' '#1087#1083#1072#1090#1092#1086#1088#1084#1077' '#1042#1095#1072#1089#1085#1086' EDI '
+    Caption = #1042#1053' - Comdoc, '#1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1086#1090#1087#1088#1072#1074#1082#1072
     TabOrder = 41
     Width = 258
   end
@@ -1359,7 +1359,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisCorporate'
+        Name = 'inIsCorporate'
         Value = False
         Component = cbisCorporate
         DataType = ftBoolean
@@ -1367,7 +1367,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisTaxSummary'
+        Name = 'inIsTaxSummary'
         Value = Null
         Component = cbisTaxSummary
         DataType = ftBoolean
@@ -1375,7 +1375,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisDiscountPrice'
+        Name = 'inIsDiscountPrice'
         Value = Null
         Component = cbisDiscountPrice
         DataType = ftBoolean
@@ -1383,7 +1383,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPriceWithVAT'
+        Name = 'inIsPriceWithVAT'
         Value = Null
         Component = cbisPriceWithVAT
         DataType = ftBoolean
@@ -1391,7 +1391,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisNotRealGoods'
+        Name = 'inIsNotRealGoods'
         Value = Null
         Component = cbisNotRealGoods
         DataType = ftBoolean
@@ -1399,7 +1399,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisVchasnoEdi'
+        Name = 'inIsVchasnoEdi'
         Value = Null
         Component = cbVchasnoEdi
         DataType = ftBoolean
@@ -1407,9 +1407,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisEdiInvoice'
+        Name = 'inIsEdiComdoc'
         Value = Null
-        Component = cbisEdiInvoice
+        Component = cbIsEdiComdoc
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1508,7 +1508,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
@@ -1711,9 +1711,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isEdiInvoice'
+        Name = 'isEdiComdoc'
         Value = Null
-        Component = cbisEdiInvoice
+        Component = cbIsEdiComdoc
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

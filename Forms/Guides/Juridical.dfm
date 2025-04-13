@@ -339,12 +339,12 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 110
       end
-      object isEdiInvoice: TcxGridDBColumn
-        Caption = #1040#1074#1090#1086'. '#1086#1090#1087#1088#1072#1074#1082#1072' '#1042#1053', ('#1042#1095#1072#1089#1085#1086' EDI) '
-        DataBinding.FieldName = 'isEdiInvoice'
+      object isEdiComdoc: TcxGridDBColumn
+        Caption = #1042#1053' - Comdoc, '#1072#1074#1090#1086' '#1086#1090#1087#1088'.'
+        DataBinding.FieldName = 'isEdiComdoc'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1085#1072' '#1087#1083#1072#1090#1092#1086#1088#1084#1091' '#1042#1095#1072#1089#1085#1086' EDI, '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1086#1090#1087#1088#1072#1074#1082#1072' '#1042#1053
+        HeaderHint = #1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1086#1090#1087#1088#1072#1074#1082#1072' '#1042#1095#1072#1089#1085#1086' EDI COMDOC-'#1042#1080#1076#1072#1090#1082#1086#1074#1072' '#1053#1072#1082#1083#1072#1076#1085#1072' '
         Options.Editing = False
         Width = 133
       end

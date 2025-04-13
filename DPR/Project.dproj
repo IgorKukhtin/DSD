@@ -85,7 +85,7 @@
 			<UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
 			<VerInfo_MinorVer>5</VerInfo_MinorVer>
 			<VerInfo_Release>10</VerInfo_Release>
-			<VerInfo_Build>178</VerInfo_Build>
+			<VerInfo_Build>179</VerInfo_Build>
 			<Icon_MainIcon>alan-64.ico</Icon_MainIcon>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
@@ -107,9 +107,9 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
-			<VerInfo_Build>178</VerInfo_Build>
+			<VerInfo_Build>179</VerInfo_Build>
 			<VerInfo_Release>10</VerInfo_Release>
-			<VerInfo_Keys>CompanyName=;FileVersion=1.5.10.178;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileVersion=1.5.10.179;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -139,9 +139,9 @@
 		<PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
 			<VerInfo_MinorVer>5</VerInfo_MinorVer>
 			<VerInfo_Release>10</VerInfo_Release>
-			<VerInfo_Build>178</VerInfo_Build>
+			<VerInfo_Build>179</VerInfo_Build>
 			<VerInfo_Locale>1033</VerInfo_Locale>
-			<VerInfo_Keys>CompanyName=;FileVersion=1.5.10.178;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileVersion=1.5.10.179;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
 			<Icon_MainIcon>alan-64.ico</Icon_MainIcon>
@@ -321,6 +321,8 @@
 			<DCCReference Include="..\SOURCE\Pdfium\PdfiumCtrl.pas"/>
 			<DCCReference Include="..\SOURCE\Pdfium\PdfiumLib.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdCommon.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\invoice_comdoc_vchasno.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\invoice_delnote_base.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

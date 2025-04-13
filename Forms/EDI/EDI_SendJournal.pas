@@ -40,6 +40,8 @@ type
     OperDatePartner_Parent: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
+    isEdiComdoc: TcxGridDBColumn;
+    isEdiDelnot: TcxGridDBColumn;
   private
     { Private declarations }
   public

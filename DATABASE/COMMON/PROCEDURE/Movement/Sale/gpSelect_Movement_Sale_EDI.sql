@@ -28,6 +28,8 @@ $BODY$
     DECLARE vbContractId Integer;
     DECLARE vbIsLongUKTZED Boolean;
 
+    DECLARE vbIsVchasnoEdi Boolean;
+
     DECLARE vbOperSumm_MVAT TFloat;
     DECLARE vbOperSumm_PVAT TFloat;
     DECLARE vbTotalCountKg  TFloat;
@@ -91,16 +93,16 @@ END IF;
 
             -- UserSeal
           , CASE WHEN vbUserId = 5 AND 1=0
-                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U241212112504.ZS2'
                  WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData
-                 ELSE '24447183_U221220114928.ZS2'
+                 ELSE '24447183_U241212112504.ZS2'
             END AS UserSeal
 
             -- UserKey
           , CASE WHEN vbUserId = 5 AND 1=0
-                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U241212112504.ZS2'
                  WHEN ObjectString_UserKey.ValueData <> '' THEN ObjectString_UserKey.ValueData
-                 ELSE '24447183_U221220114928.ZS2'
+                 ELSE '24447183_U241212112504.ZS2'
             END AS UserKey
 
             INTO vbUserSign, vbUserSeal, vbUserKey
@@ -185,9 +187,14 @@ END IF;
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)   AS isLongUKTZED
+
+            -- схема Vchasno - EDI
+          , COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE) AS isVchasnoEdi
+
             INTO vbOperDate, vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId
                , vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
                , vbIsLongUKTZED
+               , vbIsVchasnoEdi
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -211,9 +218,16 @@ END IF;
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+          -- схема Vchasno - EDI
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_VchasnoEdi
+                                  ON ObjectBoolean_Juridical_VchasnoEdi.ObjectId  = ObjectLink_Partner_Juridical.ChildObjectId
+                                 AND ObjectBoolean_Juridical_VchasnoEdi.DescId    = zc_ObjectBoolean_Juridical_VchasnoEdi()
+
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
                                   ON ObjectBoolean_isLongUKTZED.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                 AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
+                                 AND ObjectBoolean_isLongUKTZED.DescId   = zc_ObjectBoolean_Juridical_isLongUKTZED()
+
           /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
                               AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
@@ -482,6 +496,11 @@ END IF;
            , MovementString_DocumentId_vch.ValueData    AS DocumentId_vch
            , MovementString_VchasnoId.ValueData         AS VchasnoId
 
+             -- Налоговая
+           , MovementLinkMovement_Tax.MovementChildId AS MovementId_tax
+           , Movement_Tax.OperDate                    AS OperDate_tax
+           , MS_InvNumberPartner_Tax.ValueData        AS InvNumberPartner_Master
+
            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
                   ELSE '' -- 'м.Днiпро'
                   END  :: TVarChar   AS PlaceOf
@@ -507,9 +526,13 @@ END IF;
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountKg ELSE MovementFloat_TotalCountKg.ValueData END AS TotalCountKg
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountSh ELSE MovementFloat_TotalCountSh.ValueData END AS TotalCountSh
+             -- Сума Без ПДВ
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT
+             -- Сума з ПДВ
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
+             -- Сума ПДВ
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
+             --
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
            , Object_From.ValueData             		AS FromName
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
@@ -532,15 +555,28 @@ END IF;
 
            , ObjectString_Partner_ShortName.ValueData   AS ShortNamePartner_To
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
-           --, Object_Street_View.CityName                AS CityName_To
-           , Object_Street_View.PostalCode              AS PostalCode_To
-           , COALESCE(ObjectString_CityKind_ShortName_To.ValueData||' ', '')||
-             COALESCE (Object_Street_View.CityName, '')    AS CityName_To
 
+             -- PostalCode
+           , Object_Street_View.PostalCode              AS PostalCode_To
+
+             -- CityName
+         --, Object_Street_View.CityName                AS CityName_To
+           , (COALESCE(ObjectString_CityKind_ShortName_To.ValueData||' ', '')
+           || COALESCE (Object_Street_View.CityName, '')
+             ) :: TvarChar AS CityName_To
+
+             -- Country
+           , 'UA' :: TVarChar AS CountryName_to
+
+             -- PhoneNumber
+           , '' :: TVarChar AS PhoneNumber_to
+
+             -- StreetAndNumber
            , (CASE WHEN ObjectString_HouseNumber.ValueData <> '' THEN Object_Street_View.StreetKindName || ' ' ELSE '' END
              || Object_Street_View.Name
              || CASE WHEN ObjectString_HouseNumber.ValueData <> '' THEN ' д.' || ObjectString_HouseNumber.ValueData ELSE '' END
              ) :: TVarChar AS StreetName_To
+
            , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
            , COALESCE (Object_ArticleLoss.ValueData, OH_JuridicalDetails_To.FullName) AS JuridicalName_To
            , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
@@ -648,8 +684,6 @@ END IF;
            , BankAccount_To.BeneficiarysAccount                 AS BenefAccount_Int
            , BankAccount_To.Name                                AS BankAccount_Int
 
-           , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
-
            , CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0) AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
                         THEN ' та знижкой'
                   ELSE ''
@@ -697,11 +731,25 @@ END IF;
                                    ELSE ''
                               END  AS StreetName_From
 
+           , MovementFloat_TotalSummMVAT.ValueData AS TotalSummMVAT
+             -- 
+           , MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT
+           , (MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData) :: TFloat AS TotalSummVAT
+
            , vbUserSign AS UserSign
            , vbUserSeal AS UserSeal
            , vbUserKey  AS UserKey
 
        FROM tmpMovement AS Movement
+            -- Налоговая
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                           ON MovementLinkMovement_Tax.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Tax.DescId     = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
+            LEFT JOIN MovementString AS MS_InvNumberPartner_Tax
+                                     ON MS_InvNumberPartner_Tax.MovementId = MovementLinkMovement_Tax.MovementChildId
+                                    AND MS_InvNumberPartner_Tax.DescId     = zc_MovementString_InvNumberPartner()
+
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
@@ -950,13 +998,6 @@ END IF;
             LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_To
                                           ON OHS_JD_JuridicalAddress_To.ObjectHistoryId = OH_JuridicalDetailsBank_To.ObjectHistoryId
                                          AND OHS_JD_JuridicalAddress_To.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
-
---
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                           ON MovementLinkMovement_Master.MovementId = Movement.Id
-                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-            LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
-                                                                  AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN ObjectString AS ObjectString_HouseNumber_From
                                    ON ObjectString_HouseNumber_From.ObjectId = vbPartneFromId
@@ -1261,11 +1302,18 @@ END IF;
                    AS NUMERIC (16, 2)) AS AmountSummNoVAT
 
              -- расчет суммы с НДС, до 3 знаков
-           , CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT <> TRUE
-                                              THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
-                                              ELSE tmpMI.Price
-                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 3)) AS AmountSummWVAT
+           , CASE WHEN vbIsVchasnoEdi = TRUE
+                  THEN CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT <> TRUE
+                                                        THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
+                                                        ELSE tmpMI.Price
+                                                   END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                             AS NUMERIC (16, 2))
+                  ELSE CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT <> TRUE
+                                                        THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
+                                                        ELSE tmpMI.Price
+                                                   END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                             AS NUMERIC (16, 3))
+             END AS AmountSummWVAT
 
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
 --           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh

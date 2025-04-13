@@ -115,12 +115,14 @@ type
     actVchasnoEDIOrdrsp: TdsdVchasnoEDIAction;
     actVchasnoEDIDesadv: TdsdVchasnoEDIAction;
     actVchasnoEDIComDoc: TdsdVchasnoEDIAction;
-    mactVchasnoEDIDesadv: TMultiAction;
-    mactVchasnoEDIOrdrsp: TMultiAction;
-    mactVchasnoEDIComDoc: TMultiAction;
     Panel1: TPanel;
     LogVchasno_InMsgMemo: TMemo;
     LogVchasno_OutMsgMemo: TMemo;
+    actVchasnoEDIDelnot: TdsdVchasnoEDIAction;
+    actUpdateVchasnoEdiComdocTrue: TdsdExecStoredProc;
+    actUpdateVchasnoEdiDelnotTrue: TdsdExecStoredProc;
+    spUpdateVchasnoEdiComdoc: TdsdStoredProc;
+    spUpdateVchasnoEdiDelnot: TdsdStoredProc;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -318,6 +320,7 @@ begin
   actVchasnoEDIOrdeLoad.ShowErrorMessages.Value:= FALSE;
   actVchasnoEDIOrdrsp.ShowErrorMessages.Value:= FALSE;
   actVchasnoEDIDesadv.ShowErrorMessages.Value:= FALSE;
+  actVchasnoEDIDelnot.ShowErrorMessages.Value:= FALSE;
   actVchasnoEDIComDoc.ShowErrorMessages.Value:= FALSE;
   //
   cbEmailExcel.Checked:= TRUE; // ParamStr(3) = 'Excel';
@@ -557,9 +560,14 @@ begin
           Application.ProcessMessages;
           // Попробовали отправить
           try
+              // EDIN
               if (FieldByName('isEdiOrdspr').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactOrdspr.Execute;
+              // EDIN
               if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactDesadv.Execute;
+              // EDIN
               if (FieldByName('isEdiInvoice').AsBoolean = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactInvoice.Execute;
+
+
               // Vchasno-Ordspr
               if (FieldByName('isEdiOrdspr').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
                //and (1=0)
@@ -570,12 +578,13 @@ begin
                        else begin
                             // Ошибку показать в логе
                             AddToLog_Vchasno(true, 'Ошибка при отправке Ordspr Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
-                            AddToLog_Vchasno(true, actVchasnoEDIDesadv.ErrorText.Value, true);
+                            AddToLog_Vchasno(true, actVchasnoEDIOrdrsp.ErrorText.Value, true);
                             AddToLog_Vchasno(true, '', true);
                             ;
                        end;
                        MyDelay_two(3000);
               end;
+
               // Vchasno-Desadv
               if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
                //and (1=0)
@@ -591,17 +600,33 @@ begin
                        end;
                        MyDelay_two(3000);
               end;
-              // еще раз, но Vchasno-ComDoc
-              if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
+
+              // Vchasno - Delnot
+              if (FieldByName('isEdiDelnot').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
                //and (1=0)
               then begin
                        actExecPrintStoredProc.Execute;
-                       if actVchasnoEDIComDoc.Execute
-                       then actUpdateEdiInvoiceTrue.Execute
+                       if actVchasnoEDIDelnot.Execute
+                       then actUpdateVchasnoEdiDelnotTrue.Execute
                        else begin
                             // Ошибку показать в логе
-                            AddToLog_Vchasno(true, 'Ошибка при отправке ComDoc Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
-                            AddToLog_Vchasno(true, actVchasnoEDIDesadv.ErrorText.Value, true);
+                            AddToLog_Vchasno(true, 'Ошибка при отправке Delnot Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
+                            AddToLog_Vchasno(true, actVchasnoEDIDelnot.ErrorText.Value, true);
+                            AddToLog_Vchasno(true, '', true);
+                       end;
+              end;
+
+              // Vchasno - Comdoc
+              if (FieldByName('isEdiComdoc').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
+               //and (1=0)
+              then begin
+                       actExecPrintStoredProc.Execute;
+                       if actVchasnoEDIComdoc.Execute
+                       then actUpdateVchasnoEdiComdocTrue.Execute
+                       else begin
+                            // Ошибку показать в логе
+                            AddToLog_Vchasno(true, 'Ошибка при отправке Comdoc Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
+                            AddToLog_Vchasno(true, actVchasnoEDIComdoc.ErrorText.Value, true);
                             AddToLog_Vchasno(true, '', true);
                        end;
               end;

@@ -43,6 +43,14 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
           end
+          object isVchasnoEDI: TcxGridDBColumn [1]
+            Caption = #1042#1095#1072#1089#1085#1086'-EDI ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isVchasnoEDI'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           inherited colInvNumber: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
@@ -210,13 +218,21 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
             Options.Editing = False
             Width = 71
           end
-          object isVchasno: TcxGridDBColumn
-            Caption = #1042#1095#1072#1089#1085#1086'-EDI ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isVchasno'
+          object isEdiComdoc: TcxGridDBColumn
+            Caption = #1042#1095#1072#1089#1085#1086' Comdoc'
+            DataBinding.FieldName = 'isEdiComdoc'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 55
+          end
+          object isEdiDelnot: TcxGridDBColumn
+            Caption = #1042#1095#1072#1089#1085#1086' Delnot'
+            DataBinding.FieldName = 'isEdiDelnot'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -234,10 +250,10 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
     Width = 941
     ExplicitWidth = 941
     inherited deStart: TcxDateEdit
-      EditValue = 43101d
+      EditValue = 45658d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 43101d
+      EditValue = 45658d
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

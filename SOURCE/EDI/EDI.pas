@@ -9,7 +9,7 @@ uses DBClient, Classes, DB, dsdAction, IdFTP, ComDocXML, dsdCommon, dsdDb, Order
 
 type
 
-  TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave,
+  TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave, ediDelnotSave,
     ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice, ediError,
     ediRecadv, ediTTN, ediComDocSign, ediComDocSendSign);
   TSignType = (stDeclar, stComDoc);
@@ -67,7 +67,10 @@ type
       spHeader, spList: TdsdStoredProc; lFileName, ADealId : String);
     procedure UpdateOrderDESADVSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
     procedure UpdateOrderORDERSPSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
+
     procedure UpdateOrderDELNOTSaveVchasnoEDI(AEDIId: Integer; DocumentId, VchasnoId: String; isError : Boolean);
+    procedure UpdateOrderCOMDOCSaveVchasnoEDI(AEDIId: Integer; DocumentId, VchasnoId: String; isError : Boolean);
+
     procedure UpdateOrderDELNOTSignVchasnoEDI(AEDIId: Integer; isError : Boolean);
 
   public
@@ -112,11 +115,13 @@ type
     procedure ErrorLoad(Directory: string);
     // заказ VchasnoEDI
     procedure OrderLoadVchasnoEDI(AOrder, AFileName, ADealId : string; spHeader, spList: TdsdStoredProc);
-    // отправка повідомлення про відвантаження
-    procedure DESADVSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
     // отправка подтверждения заказа
     procedure ORDERSPSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
-    // отправка видатковой накладной
+    // отправка повідомлення про відвантаження
+    procedure DESADVSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
+    // отправка видатковой-Delnot накладной
+    procedure DelnotSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
+    // отправка видатковой-ComDoc накладной
     procedure ComDocSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
   published
     property ConnectionParams: TConnectionParams read FConnectionParams
@@ -197,6 +202,7 @@ type
     function OrderLoad : Boolean;
     function OrdrspSave : Boolean;
     function DESADVSave : Boolean;
+    function DelnotSave : Boolean;
     function ComDocSave : Boolean;
     function DoSignComDoc: Boolean;
     function DoSendSignComDoc: Boolean;
@@ -341,6 +347,7 @@ uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML,
   DesadvFozzXML, OrderSpFozzXML, IftminFozzXML, Registry, System.IniFiles,
   DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML, UAECMRXML,
+  invoice_delnote_base, invoice_comdoc_vchasno,
   Vcl.Forms, System.IOUtils, System.RegularExpressions, ZLib, Math,
   IdHTTP, IdSSLOpenSSL, IdURI, IdCTypes, IdSSLOpenSSLHeaders,
   IdMultipartFormData, Xml.XMLDoc, Soap.EncdDecd, EUSignCP, EUSignCPOwnUI,
@@ -365,12 +372,12 @@ end;
 procedure TEDI.COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet;
   Directory: String; DebugMode: boolean);
 var
-  ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
+  ЕлектроннийДокумент: ComDocXML.IXMLЕлектроннийДокументType;
   i: integer;
   XMLFileName, P7SFileName: string;
 begin
   // создать xml файл
-  ЕлектроннийДокумент := NewЕлектроннийДокумент;
+  ЕлектроннийДокумент := ComDocXML.NewЕлектроннийДокумент;
   ЕлектроннийДокумент.Заголовок.НомерДокументу :=
     HeaderDataSet.FieldByName('InvNumber').asString;
   ЕлектроннийДокумент.Заголовок.ТипДокументу := 'Видаткова накладна';
@@ -579,7 +586,7 @@ var
   Stream: TStringStream;
   FileData: string;
   DocData: TDateTime;
-  ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
+  ЕлектроннийДокумент: ComDocXML.IXMLЕлектроннийДокументType;
   Present: TDateTime;
   Year, Month, Day: Word;
 begin
@@ -631,7 +638,7 @@ begin
                   FileData) + 21);
                 try
                 MovementId:= 0;
-                ЕлектроннийДокумент := LoadЕлектроннийДокумент(FileData);
+                ЕлектроннийДокумент := ComDocXML.LoadЕлектроннийДокумент(FileData);
                 except ON E: Exception DO
                       Begin
                          ShowMessage(E.Message +#10  +#13 + List[i]);
@@ -4007,7 +4014,7 @@ begin
 end;
 
 function TEDI.InsertUpdateComDoc(ЕлектроннийДокумент
-  : IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
+  : ComDocXML.IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
 var
   MovementId, GoodsPropertyId: integer;
   i: integer;
@@ -4994,6 +5001,25 @@ begin
   end;
 end;
 
+procedure TEDI.UpdateOrderCOMDOCSaveVchasnoEDI(AEDIId: Integer; DocumentId, VchasnoId: String; isError : Boolean);
+begin
+  if AEDIId <> 0 then
+  begin
+
+    FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
+    FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
+    FUpdateEDIErrorState.Execute;
+
+    FInsertEDIEventsDoc.ParamByName('inMovementId').Value :=AEDIId;
+    FInsertEDIEventsDoc.ParamByName('inDocumentId').Value :=DocumentId;
+    FInsertEDIEventsDoc.ParamByName('inVchasnoId').Value :=VchasnoId;
+    if isError = TRUE
+    then FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно COMDOC-Расходная накладная'
+    else FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно COMDOC-Расходная накладная';
+    FInsertEDIEventsDoc.Execute;
+  end;
+end;
+
 procedure TEDI.UpdateOrderDELNOTSaveVchasnoEDI(AEDIId: Integer; DocumentId, VchasnoId: String; isError : Boolean);
 begin
   if AEDIId <> 0 then
@@ -5007,11 +5033,12 @@ begin
     FInsertEDIEventsDoc.ParamByName('inDocumentId').Value :=DocumentId;
     FInsertEDIEventsDoc.ParamByName('inVchasnoId').Value :=VchasnoId;
     if isError = TRUE
-    then FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно Расходная накладная'
-    else FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Расходная накладная';
+    then FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно DELNOT-Расходная накладная'
+    else FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно DELNOT-Расходная накладная';
     FInsertEDIEventsDoc.Execute;
   end;
 end;
+
 
 procedure TEDI.UpdateOrderDELNOTSignVchasnoEDI(AEDIId: Integer; isError : Boolean);
 begin
@@ -5042,6 +5069,92 @@ begin
     on E: Exception do begin raise Exception.Create(E.Message);
     end;
   end;
+end;
+
+procedure TEDI.ORDERSPSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
+var ORDRSP: ORDRSPXML.IXMLORDRSPType;
+    i: integer;
+begin
+
+  // Создать XML
+  ORDRSP := ORDRSPXML.NewORDRSP;
+  //
+  ORDRSP.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+  ORDRSP.Date := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  ORDRSP.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+  ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+
+  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+  then
+      ORDRSP.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+  ORDRSP.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+  ORDRSP.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
+    ('DELIVERYPLACEGLNCode').asString;
+  ORDRSP.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
+  ORDRSP.HEAD.RECIPIENT := HeaderDataSet.FieldByName('RecipientGLNCode').asString;
+
+  with ItemsDataSet do
+  begin
+    First;
+    i := 1;
+    while not Eof do
+    begin
+      with ORDRSP.HEAD.POSITION.Add do
+      begin
+        POSITIONNUMBER := IntToStr(i);
+        PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+        PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
+        PRODUCTIDBUYER := ItemsDataSet.FieldByName
+          ('ArticleGLN_Juridical').asString;
+        DESCRIPTION := ItemsDataSet.FieldByName('GoodsName').asString;
+        ORDRSPUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
+        if ItemsDataSet.FieldByName('AmountOrder')
+          .AsFloat = ItemsDataSet.FieldByName('AmountPartner').AsFloat then
+          PRODUCTTYPE := '1';
+
+        if ItemsDataSet.FieldByName('AmountOrder').AsFloat <>
+          ItemsDataSet.FieldByName('AmountPartner').AsFloat then
+          PRODUCTTYPE := '2';
+
+        if ItemsDataSet.FieldByName('AmountOrder').AsFloat = 0 then
+          PRODUCTTYPE := '3';
+
+        ORDEREDQUANTITY :=
+          StringReplace(FormatFloat('0.000',
+          ItemsDataSet.FieldByName('AmountOrder').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+        ACCEPTEDQUANTITY :=
+          StringReplace(FormatFloat('0.000',
+          ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+        PRICE :=
+          StringReplace(FormatFloat('0.00',
+          ItemsDataSet.FieldByName('PriceNoVAT').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+        PRICEWITHVAT :=
+          StringReplace(FormatFloat('0.00',
+          ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+        VAT :=
+          StringReplace(FormatFloat('0.00',
+          HeaderDataSet.FieldByName('VATPercent').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+      end;
+      inc(i);
+      Next;
+    end;
+  end;
+
+  ORDRSP.OwnerDocument.SaveToFile('test_ORDRSP_VchasnoEDI.xml');
+  ORDRSP.OwnerDocument.SaveToStream(Stream);
 end;
 
 procedure TEDI.DESADVSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
@@ -5133,154 +5246,74 @@ begin
   DESADV.OwnerDocument.SaveToStream(Stream);
 end;
 
-procedure TEDI.ORDERSPSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
-var ORDRSP: ORDRSPXML.IXMLORDRSPType;
-    i: integer;
-begin
-
-  // Создать XML
-  ORDRSP := ORDRSPXML.NewORDRSP;
-  //
-  ORDRSP.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-  ORDRSP.Date := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
-  ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
-  ORDRSP.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
-  ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
-
-  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
-  then
-      ORDRSP.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
-  ORDRSP.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
-  ORDRSP.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
-    ('DELIVERYPLACEGLNCode').asString;
-  ORDRSP.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
-  ORDRSP.HEAD.RECIPIENT := HeaderDataSet.FieldByName('RecipientGLNCode').asString;
-
-  with ItemsDataSet do
-  begin
-    First;
-    i := 1;
-    while not Eof do
-    begin
-      with ORDRSP.HEAD.POSITION.Add do
-      begin
-        POSITIONNUMBER := IntToStr(i);
-        PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
-        PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
-        PRODUCTIDBUYER := ItemsDataSet.FieldByName
-          ('ArticleGLN_Juridical').asString;
-        DESCRIPTION := ItemsDataSet.FieldByName('GoodsName').asString;
-        ORDRSPUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
-        if ItemsDataSet.FieldByName('AmountOrder')
-          .AsFloat = ItemsDataSet.FieldByName('AmountPartner').AsFloat then
-          PRODUCTTYPE := '1';
-
-        if ItemsDataSet.FieldByName('AmountOrder').AsFloat <>
-          ItemsDataSet.FieldByName('AmountPartner').AsFloat then
-          PRODUCTTYPE := '2';
-
-        if ItemsDataSet.FieldByName('AmountOrder').AsFloat = 0 then
-          PRODUCTTYPE := '3';
-
-        ORDEREDQUANTITY :=
-          StringReplace(FormatFloat('0.000',
-          ItemsDataSet.FieldByName('AmountOrder').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-        ACCEPTEDQUANTITY :=
-          StringReplace(FormatFloat('0.000',
-          ItemsDataSet.FieldByName('AmountPartner').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-
-        PRICE :=
-          StringReplace(FormatFloat('0.00',
-          ItemsDataSet.FieldByName('PriceNoVAT').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-
-        PRICEWITHVAT :=
-          StringReplace(FormatFloat('0.00',
-          ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-
-        VAT :=
-          StringReplace(FormatFloat('0.00',
-          HeaderDataSet.FieldByName('VATPercent').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-
-      end;
-      inc(i);
-      Next;
-    end;
-  end;
-
-  ORDRSP.OwnerDocument.SaveToFile('test_ORDRSP_VchasnoEDI.xml');
-  ORDRSP.OwnerDocument.SaveToStream(Stream);
-end;
-
-procedure TEDI.ComDocSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
+procedure TEDI.DelnotSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
 var
-  DESADV_fozz_Amount: DOCUMENTINVOICE_TN_XML.IXMLDocumentInvoiceType;
+  Delnot_Vchasno: invoice_delnote_base.IXMLDocumentInvoiceType;
   i: integer;
   TotalGrossAmount, TotalNetAmount : Double;
 begin
   // 1.1. Создать XML - fozzy - Amount
-  DESADV_fozz_Amount := DOCUMENTINVOICE_TN_XML.NewDocumentInvoice;
+  Delnot_Vchasno := invoice_delnote_base.NewDocumentInvoice;
   // Номер повідомлення про відвантаження
-  DESADV_fozz_Amount.InvoiceHeader.InvoiceNumber := HeaderDataSet.FieldByName('InvNumber').asString;
+  Delnot_Vchasno.InvoiceHeader.InvoiceNumber := HeaderDataSet.FieldByName('InvNumber').asString;
   // Дата документа
-  DESADV_fozz_Amount.InvoiceHeader.InvoiceDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+  Delnot_Vchasno.InvoiceHeader.InvoiceDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
   //Код типу документа: TN - накладна за кількістю
-  DESADV_fozz_Amount.InvoiceHeader.DocumentFunctionCode := 'TN';
+  Delnot_Vchasno.InvoiceHeader.DocumentFunctionCode := 'TN';
   // Номер договору на поставку
-  DESADV_fozz_Amount.InvoiceHeader.ContractNumber := HeaderDataSet.FieldByName('ContractName').asString;
+  Delnot_Vchasno.InvoiceHeader.ContractNumber := HeaderDataSet.FieldByName('ContractName').asString;
   // Дата договору
-  DESADV_fozz_Amount.InvoiceHeader.ContractDate := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
+  Delnot_Vchasno.InvoiceHeader.ContractDate := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
   // Місце складання
-  DESADV_fozz_Amount.InvoiceHeader.Place := HeaderDataSet.FieldByName('PlaceOf').asString;
+  Delnot_Vchasno.InvoiceHeader.Place := HeaderDataSet.FieldByName('PlaceOf').asString;
   // Номер замовлення
-  DESADV_fozz_Amount.InvoiceReference.Order.BuyerOrderNumber := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+  Delnot_Vchasno.InvoiceReference.Order.BuyerOrderNumber := HeaderDataSet.FieldByName('InvNumberOrder').asString;
   // Дата замовлення
-  DESADV_fozz_Amount.InvoiceReference.Order.BuyerOrderDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+  Delnot_Vchasno.InvoiceReference.Order.BuyerOrderDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+
+  //Номер податкової накладної
+  if HeaderDataSet.FieldByName('InvNumberPartner_Master').asString <> ''
+  then begin
+         Delnot_Vchasno.InvoiceReference.TaxInvoice.TaxInvoiceNumber := HeaderDataSet.FieldByName('InvNumberPartner_Master').asString;
+         Delnot_Vchasno.InvoiceReference.TaxInvoice.TaxInvoiceDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDate_tax').asDateTime);
+  end;
+
 
   // Глобальний номер розташування (GLN) контрагента - GLN покупця
   if HeaderDataSet.FieldByName('BuyerGLNCode').asString <> ''
-  then DESADV_fozz_Amount.InvoiceParties.Buyer.ILN := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+  then Delnot_Vchasno.InvoiceParties.Buyer.ILN := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
   // Податковий ідентифікаційний номер - покупця
   if HeaderDataSet.FieldByName('INN_To').asString <> ''
-  then DESADV_fozz_Amount.InvoiceParties.Buyer.TaxID := HeaderDataSet.FieldByName('INN_To').asString;
+  then Delnot_Vchasno.InvoiceParties.Buyer.TaxID := HeaderDataSet.FieldByName('INN_To').asString;
   // Код ЄДРПОУ - покупця
   if HeaderDataSet.FieldByName('OKPO_To').asString <> ''
-  then DESADV_fozz_Amount.InvoiceParties.Buyer.UtilizationRegisterNumber := HeaderDataSet.FieldByName('OKPO_To').asString;
+  then Delnot_Vchasno.InvoiceParties.Buyer.UtilizationRegisterNumber := HeaderDataSet.FieldByName('OKPO_To').asString;
   // Назва контрагента
-  DESADV_fozz_Amount.InvoiceParties.Buyer.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
-
+  Delnot_Vchasno.InvoiceParties.Buyer.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
+  // Місто - Точка доставки
+  Delnot_Vchasno.InvoiceParties.Buyer.CityName := HeaderDataSet.FieldByName('CityName_To').asString;
+  // Вулиця і номер будинку - Точка доставки
+  Delnot_Vchasno.InvoiceParties.Buyer.StreetAndNumber := HeaderDataSet.FieldByName('StreetName_To').asString;
+  // Поштовий код - Точка доставки
+  Delnot_Vchasno.InvoiceParties.Buyer.PostalCode := HeaderDataSet.FieldByName('PostalCode_To').asString;
+  // Country
+  Delnot_Vchasno.InvoiceParties.Buyer.Country := HeaderDataSet.FieldByName('CountryName_to').asString;
 
   // Глобальний номер розташування (GLN) контрагента - GLN продавця
   if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
-  then DESADV_fozz_Amount.InvoiceParties.Seller.ILN := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+  then Delnot_Vchasno.InvoiceParties.Seller.ILN := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
   // Податковий ідентифікаційний номер - продавця
   if HeaderDataSet.FieldByName('INN_From').asString <> ''
-  then DESADV_fozz_Amount.InvoiceParties.Seller.TaxID := HeaderDataSet.FieldByName('INN_From').asString;
+  then Delnot_Vchasno.InvoiceParties.Seller.TaxID := HeaderDataSet.FieldByName('INN_From').asString;
   // Код ЄДРПОУ - продавця
   if HeaderDataSet.FieldByName('OKPO_From').asString <> ''
-  then DESADV_fozz_Amount.InvoiceParties.Seller.UtilizationRegisterNumber := HeaderDataSet.FieldByName('OKPO_From').asString;
+  then Delnot_Vchasno.InvoiceParties.Seller.UtilizationRegisterNumber := HeaderDataSet.FieldByName('OKPO_From').asString;
   // Назва продавця
-  DESADV_fozz_Amount.InvoiceParties.Seller.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString;
+  Delnot_Vchasno.InvoiceParties.Seller.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString;
 
   // Глобальний номер розташування (GLN) контрагента - GLN Точка доставки
   if HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString <> ''
-  then DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.ILN := HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
-  // Юридична особа об’єкту доставки
-  DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
-  // Місто - Точка доставки
-  DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.CityName := HeaderDataSet.FieldByName('CityName_To').asString;
-  // Вулиця і номер будинку - Точка доставки
-  DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.StreetAndNumber := HeaderDataSet.FieldByName('StreetName_To').asString;
-  // Поштовий код - Точка доставки
-  //try DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.PostalCode := StrToInt(HeaderDataSet.FieldByName('PostalCode_To').asString);except end;
-
+  then Delnot_Vchasno.InvoiceParties.DeliveryPoint.ILN := HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
 
   TotalGrossAmount := 0;
   TotalNetAmount := 0;
@@ -5290,7 +5323,7 @@ begin
     i := 1;
     while not Eof do
     begin
-      with DESADV_fozz_Amount.InvoiceLines.Add do
+      with Delnot_Vchasno.InvoiceLines.Add do
       begin
         // Номер товарної позиції
         LineItem.LineNumber := i;
@@ -5329,19 +5362,152 @@ begin
   end;
 
     // Кількість рядків в документі
-  DESADV_fozz_Amount.InvoiceSummary.TotalLines := i;
+  Delnot_Vchasno.InvoiceSummary.TotalLines := i;
   // Загальна сума без ПДВ
   // Кількість рядків в документі
-  DESADV_fozz_Amount.InvoiceSummary.TotalLines := i;
+  Delnot_Vchasno.InvoiceSummary.TotalLines := i;
   // Загальна сума без ПДВ
-  DESADV_fozz_Amount.InvoiceSummary.TotalNetAmount := TotalNetAmount;
+  Delnot_Vchasno.InvoiceSummary.TotalNetAmount := Round(100 * TotalNetAmount) / 100;
   // Сума ПДВ
-  DESADV_fozz_Amount.InvoiceSummary.TotalTaxAmount := TotalGrossAmount - TotalNetAmount;
+  Delnot_Vchasno.InvoiceSummary.TotalTaxAmount := Round(1.2 * Round(100 * TotalNetAmount)) / 100
+                                                    - Round(100 * TotalNetAmount) / 100
+                                                     ;
   // Загальна сума з ПДВ
-  DESADV_fozz_Amount.InvoiceSummary.TotalGrossAmount := TotalGrossAmount;
+  Delnot_Vchasno.InvoiceSummary.TotalGrossAmount := Round(1.2 * Round(100 * TotalNetAmount)) / 100;
 
-  DESADV_fozz_Amount.OwnerDocument.SaveToFile('test_ComDoc_VchasnoEDI.xml');
-  DESADV_fozz_Amount.OwnerDocument.SaveToStream(Stream);
+  Delnot_Vchasno.OwnerDocument.SaveToFile('test_Delnot_VchasnoEDI.xml');
+  Delnot_Vchasno.OwnerDocument.SaveToStream(Stream);
+end;
+
+procedure TEDI.ComDocSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
+//procedure TEDI.COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet;
+//  Directory: String; DebugMode: boolean);
+var
+  ЕлектроннийДокумент: invoice_comdoc_vchasno.IXMLЕлектроннийДокументType;
+  i: integer;
+  XMLFileName: string;
+begin
+  // создать xml файл
+  ЕлектроннийДокумент := invoice_comdoc_vchasno.NewЕлектроннийДокумент;
+  ЕлектроннийДокумент.Заголовок.НомерДокументу := HeaderDataSet.FieldByName('InvNumber').asString;
+  ЕлектроннийДокумент.Заголовок.ТипДокументу := 'Видаткова накладна';
+  ЕлектроннийДокумент.Заголовок.КодТипуДокументу := '006';
+  ЕлектроннийДокумент.Заголовок.ДатаДокументу := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+
+  ЕлектроннийДокумент.Заголовок.НомерЗамовлення :=HeaderDataSet.FieldByName('InvNumberOrder').asString;
+  //ЕлектроннийДокумент.Заголовок.ДатаЗамовлення :=FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+
+  with ЕлектроннийДокумент.Заголовок.ДокПідстава do
+  begin
+    НомерДокументу := HeaderDataSet.FieldByName('InvNumber').asString;
+    ТипДокументу := 'Повідомлення про відвантаження';
+    КодТипуДокументу := '001';
+    ДатаДокументу := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+  end;
+
+  with ЕлектроннийДокумент.Сторони.Add do
+  begin
+    СтатусКонтрагента := 'Продавець';
+    //ВидОсоби := 'Юридична';
+    НазваКонтрагента := HeaderDataSet.FieldByName('JuridicalName_From')
+      .asString;
+    КодКонтрагента := HeaderDataSet.FieldByName('OKPO_From').asString;
+    ІПН := HeaderDataSet.FieldByName('INN_From').asString;
+    if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+    then GLN := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+  end;
+  with ЕлектроннийДокумент.Сторони.Add do
+  begin
+    СтатусКонтрагента := 'Покупець';
+    //ВидОсоби := 'Юридична';
+    НазваКонтрагента := HeaderDataSet.FieldByName('JuridicalName_To').asString;
+    КодКонтрагента := HeaderDataSet.FieldByName('OKPO_To').asString;
+    ІПН := HeaderDataSet.FieldByName('INN_To').asString;
+    GLN := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+  end;
+
+  // Глобальний номер розташування (GLN) контрагента - GLN Точка доставки
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Точка доставки';
+       NodeValue:= HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
+  end;
+  //Адреса доставки - Точка доставки
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Адреса доставки';
+       NodeValue:= HeaderDataSet.FieldByName('PartnerAddress_To').asString;
+  end;
+
+  //Номер договору на поставку
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Номер договору';
+       NodeValue:= HeaderDataSet.FieldByName('ContractName').asString;
+  end;
+  //Дата договору
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Дата договору';
+       NodeValue:= FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
+  end;
+
+  //Номер податкової накладної
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Номер податкової накладної';
+       NodeValue:= HeaderDataSet.FieldByName('InvNumberPartner_Master').asString;
+  end;
+  //Дата податкової накладної
+  with ЕлектроннийДокумент.Параметри.Add do
+  begin
+       назва:= 'Дата податкової накладної';
+       NodeValue:= FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDate_tax').asDateTime);
+  end;
+
+  with ЕлектроннийДокумент.ВсьогоПоДокументу do
+  begin
+       СумаБезПДВ:= gfFloatToStr(HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat);
+       ПДВ:= gfFloatToStr(HeaderDataSet.FieldByName('SummVAT').AsFloat);
+       Сума:= gfFloatToStr(HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat);
+  end;
+
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with ЕлектроннийДокумент.Таблиця.Add do
+    begin
+      //ІД := i;
+      НомПоз := i;
+      Штрихкод := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+      АртикулПокупця := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+      Найменування := ItemsDataSet.FieldByName('GoodsName').asString;
+      //ОдиницяВиміру
+      ОдиницяВиміру:= ItemsDataSet.FieldByName('MeasureName').asString;
+
+      ПрийнятаКількість := gfFloatToStr(ItemsDataSet.FieldByName('AmountPartner').AsFloat);
+      //Ціна за одиницю без ПДВ
+      БазоваЦіна:= gfFloatToStr(ItemsDataSet.FieldByName('PriceNoVAT').AsFloat);
+      //Ціна за одиницю з ПДВ
+      Ціна := gfFloatToStr(ItemsDataSet.FieldByName('PriceWVAT').AsFloat);
+
+      //ВсьогоПоРядку - Сума Без ПДВ
+      ВсьогоПоРядку.СумаБезПДВ:= gfFloatToStr(ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat);
+      //ВсьогоПоРядку - Сума ПДВ
+      ВсьогоПоРядку.ПДВ:= gfFloatToStr(ROUND(ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat * 100) / 100 - ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat);
+      //ВсьогоПоРядку - Сума з ПДВ
+      ВсьогоПоРядку.Сума:= gfFloatToStr(ROUND(ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat * 100) / 100);
+
+      inc(i);
+    end;
+    ItemsDataSet.Next;
+  end;
+
+  ЕлектроннийДокумент.OwnerDocument.SaveToFile('test_ComDoc_VchasnoEDI.xml');
+  ЕлектроннийДокумент.OwnerDocument.SaveToStream(Stream);
+
 end;
 
 { TEDIActionEDI }
@@ -5912,15 +6078,15 @@ begin
       try
         EncodeStream(fileStreamSing, base64StreamSing);
 
-        Body := '{'#13 +
-                '  "signature": ' +  base64StreamSing.DataString + ''#13;
+        Body := '{'#10 +
+                '  "signature": "' +  base64StreamSing.DataString + '"';
         if Assigned(fileStreamStamp) then
         begin
           EncodeStream(fileStreamStamp, base64StreamStamp);
 
-          Body := Body + ', "stamp": ' + base64StreamStamp.DataString + ''#13;
+          Body := Body + ','#10'  "stamp": "' + base64StreamStamp.DataString + '"'#10;
         end;
-        Body := Body + #13 + '}';
+        Body := Body + #10 + '}';
       except on E:EIdHTTPProtocolException  do
                   ShowMessages('Ошибка: ' + e.ErrorMessage);
       end;
@@ -5931,8 +6097,13 @@ begin
       FreeAndNil(base64StreamSing);
     end;
 
+//    Body := '{' +
+//            '"signature": "0KHRgNC40LLQtdGCLCDQvNC+0LbQtdC90LjRjw==",' +
+//            '"stamp": "0JrQsNGA0YHQvtCy0L7QtNGB"' +
+//            '}';
+
     IdHTTP.Request.Clear;
-    IdHTTP.Request.ContentType := 'application/json; charset=utf-8';
+    IdHTTP.Request.ContentType := 'text/plain';
     IdHTTP.Request.ContentEncoding := 'UTF-8';
     IdHTTP.Request.Accept := '*/*';
     IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
@@ -6000,6 +6171,7 @@ begin
   if not FileExists(SignFile) then
   begin
     ShowMessages('Ошибка Не найдена программа шифрования: ' + SignFile);
+    Exit;
   end;
 
   // 1.Установка ключей
@@ -6008,13 +6180,21 @@ begin
   else FileKeyName := AnsiString(ExtractFilePath(ParamStr(0)) + UserSign);
 
   // проверка
-  if not FileExists(String(FileKeyName)) then ShowError('Файл не найден : <'+String(FileKeyName)+'>');
+  if not FileExists(String(FileKeyName)) then
+  begin
+    ShowMessages('Файл не найден : <'+String(FileKeyName)+'>');
+    Exit;
+  end;
 
   FKeyFileNameParam.Value := ExtractFileName(String(FileKeyName));
 
   FileName := FFileNameParam.Value;
   // проверка
-  if not FileExists(String(FileName)) then ShowError('Файл документа не найден : <'+String(FileName)+'>');
+  if not FileExists(String(FileName)) then
+  begin
+    ShowMessages('Файл документа не найден : <'+String(FileName)+'>');
+    Exit;
+  end;
 
   CmdLine := '"' + SignFile + '" "' + apath + '" "' + FileKeyName + '" "24447183" "' + FileName + '"';
 
@@ -6272,6 +6452,33 @@ begin
 
 end;
 
+function TdsdVchasnoEDIAction.DelnotSave : Boolean;
+  var Stream: TMemoryStream;
+begin
+  Result := False;
+  if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+  begin
+
+     Stream := TMemoryStream.Create;
+     try
+       EDI.DelnotSaveVchasnoEDI(HeaderDataSet, ListDataSet, Stream);
+       FOrderParam.Value := HeaderDataSet.FieldByName('DealId').AsString;
+       //FOrderParam.Value := '0f4a31d1-2bed-6837-562d-65f03ea5055a';
+       //Stream.SaveToFile('C:\Work\1_Log\ORDERSPS\DELNOT00_original.xml');
+       //Stream.LoadFromFile('c:\Work\1_Log\ORDERSPS\DELNOT_original.xml');
+       Result := POSTVchasnoEDI(0, Stream);
+     finally
+       Stream.Free;
+     end;
+     //
+     EDI.UpdateOrderDELNOTSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger
+                                       , FDocumentIdParam.Value, FVchasnoIdParam.Value
+                                       , not Result
+                                        );
+  end;
+
+end;
+
 function TdsdVchasnoEDIAction.ComDocSave : Boolean;
   var Stream: TMemoryStream;
 begin
@@ -6291,7 +6498,7 @@ begin
        Stream.Free;
      end;
      //
-     EDI.UpdateOrderDELNOTSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger
+     EDI.UpdateOrderCOMDOCSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger
                                        , FDocumentIdParam.Value, FVchasnoIdParam.Value
                                        , not Result
                                         );
@@ -6354,7 +6561,7 @@ end;
 function TdsdVchasnoEDIAction.DoSendSignComDoc: Boolean;
   var cXML : String;
 begin
-  Result := ComDocSave;
+  Result := DelnotSave;
   if Result then
   begin
     if (FResultParam.Value <> HeaderDataSet.FieldByName('EDIId').AsString) then
@@ -6382,6 +6589,8 @@ begin
     ediOrdrsp : Result := OrdrspSave;
     ediDesadv : Result := DESADVSave;
     ediComDocSave : Result := ComDocSave;
+    ediDelnotSave : Result := DelnotSave;
+
 
     ediComDocSign : Result := DoSignComDoc;
     ediComDocSendSign : Result := DoSendSignComDoc;

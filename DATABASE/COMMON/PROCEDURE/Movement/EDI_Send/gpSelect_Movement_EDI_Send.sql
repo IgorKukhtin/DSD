@@ -19,7 +19,12 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , StatusCode_sale Integer, StatusName_sale TVarChar
              , MovementDescName TVarChar
              , Comment TVarChar
-             , isVchasno Boolean
+               -- схема Vchasno - EDI
+             , isVchasnoEDI Boolean
+               -- ВН - Comdoc, автоматическая отправка
+             , isEdiComdoc Boolean
+               -- ВН - Delnot, автоматическая отправка
+             , isEdiDelnot Boolean
               )
 AS
 $BODY$
@@ -32,7 +37,7 @@ BEGIN
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
-  -- Результат
+    -- Результат
     RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -68,12 +73,17 @@ BEGIN
                , Object_Status_sale.ValueData           AS StatusName_sale
                , MovementDesc.ItemName     	            AS MovementDescName
                , MovementString_Comment.ValueData       AS Comment
-               , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '') <> '' THEN TRUE ELSE FALSE END ::Boolean AS isVchasno
+                 -- схема Vchasno - EDI
+               , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '') <> '' THEN TRUE ELSE FALSE END ::Boolean AS isVchasnoEDI
+                 -- ВН - Comdoc, автоматическая отправка
+               , COALESCE (MovementBoolean_EdiComdoc.ValueData, FALSE)  :: Boolean AS isEdiComdoc
+                 -- ВН - Delnot, автоматическая отправка
+               , COALESCE (MovementBoolean_EdiDelnot.ValueData, FALSE)  :: Boolean AS isEdiDelnot
 
            FROM (SELECT Movement.*
                  FROM tmpStatus
                       JOIN Movement ON Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 day'
-                                   AND Movement.DescId = zc_Movement_EDI_Send() 
+                                   AND Movement.DescId = zc_Movement_EDI_Send()
                                    AND Movement.StatusId = tmpStatus.StatusId
                 ) AS Movement
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -88,15 +98,27 @@ BEGIN
                                          ON MovementString_Comment.MovementId = Movement.Id
                                         AND MovementString_Comment.DescId     = zc_MovementString_Comment()
 
+                --  EDI - Подтверждение заказа 
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiOrdspr
                                           ON MovementBoolean_EdiOrdspr.MovementId = Movement.Id
                                          AND MovementBoolean_EdiOrdspr.DescId     = zc_MovementBoolean_EdiOrdspr()
+                --  EDI - Счет
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiInvoice
                                           ON MovementBoolean_EdiInvoice.MovementId = Movement.Id
                                          AND MovementBoolean_EdiInvoice.DescId     = zc_MovementBoolean_EdiInvoice()
+                --  EDI - Уведомление об отгрузке
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiDesadv
                                           ON MovementBoolean_EdiDesadv.MovementId = Movement.Id
                                          AND MovementBoolean_EdiDesadv.DescId     = zc_MovementBoolean_EdiDesadv()
+
+                -- COMDOC-Видаткова Накладна
+                LEFT JOIN MovementBoolean AS MovementBoolean_EdiComdoc
+                                          ON MovementBoolean_EdiComdoc.MovementId = Movement.Id
+                                         AND MovementBoolean_EdiComdoc.DescId     = zc_MovementBoolean_EdiComdoc()
+                --  DELNOT-Видаткова Накладна 
+                LEFT JOIN MovementBoolean AS MovementBoolean_EdiDelnot
+                                          ON MovementBoolean_EdiDelnot.MovementId = Movement.Id
+                                         AND MovementBoolean_EdiDelnot.DescId     = zc_MovementBoolean_EdiDelnot()
 
                 LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
                 LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Parent.DescId
@@ -130,16 +152,16 @@ BEGIN
                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
                 LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
-                --получить zc_Movement_EDI через заказ покупателя 
+                --получить zc_Movement_EDI через заказ покупателя
                 --заявка покупателя
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                ON MovementLinkMovement_Order.MovementId = Movement_Parent.Id
                                               AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                 --EDI
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_EDI
-                                               ON MovementLinkMovement_Order_EDI.MovementId = MovementLinkMovement_Order.MovementChildId     
+                                               ON MovementLinkMovement_Order_EDI.MovementId = MovementLinkMovement_Order.MovementChildId
                                               AND MovementLinkMovement_Order_EDI.DescId = zc_MovementLinkMovement_Order()
-                                          
+
                 LEFT JOIN MovementString AS MovementString_DealId
                                          ON MovementString_DealId.MovementId = MovementLinkMovement_Order_EDI.MovementChildId
                                         AND MovementString_DealId.DescId     = zc_MovementString_DealId()

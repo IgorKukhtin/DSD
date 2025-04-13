@@ -41,7 +41,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                VatPriceDate TDateTime,
                isIrna Boolean,
                isVchasnoEdi Boolean,
-               isEdiInvoice Boolean,
+               isEdiComdoc Boolean,
                isErased Boolean
               )
 AS
@@ -154,7 +154,7 @@ BEGIN
    SELECT
          Object_Juridical.Id             AS Id
        , Object_Juridical.ObjectCode     AS Code
-       , Object_Juridical.ValueData      AS Name   
+       , Object_Juridical.ValueData      AS Name
        , ObjectFloat_ObjectCode_Basis.ValueData ::Integer AS BasisCode
 
        , COALESCE (ObjectFloat_DayTaxSummary.ValueData, CAST(0 as TFloat))    AS DayTaxSummary
@@ -199,7 +199,7 @@ BEGIN
        , OH_JuridicalDetails.JuridicalAddress  AS JuridicalAddress_inf
        , OH_JuridicalDetails.OKPO              AS OKPO_inf
        , OH_JuridicalDetails.INN               AS INN_inf
-       , CASE WHEN (COALESCE(OH_JuridicalDetails.OKPO,'') <> COALESCE(ObjectHistory_JuridicalDetails_View.OKPO,'')) 
+       , CASE WHEN (COALESCE(OH_JuridicalDetails.OKPO,'') <> COALESCE(ObjectHistory_JuridicalDetails_View.OKPO,''))
                 OR (TRIM (COALESCE(OH_JuridicalDetails.INN,'')) <> TRIM (COALESCE(ObjectHistory_JuridicalDetails_View.INN,'')))
               THEN TRUE
               ELSE FALSE
@@ -240,7 +240,7 @@ BEGIN
 
        , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) :: Boolean   AS isIrna
        , COALESCE (ObjectBoolean_VchasnoEdi.ValueData, FALSE) :: Boolean   AS isVchasnoEdi
-       , COALESCE (ObjectBoolean_isEdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
+       , COALESCE (ObjectBoolean_isEdiComdoc.ValueData, FALSE) :: Boolean  AS isEdiComdoc
 
        , Object_Juridical.isErased   AS isErased
 
@@ -282,11 +282,11 @@ BEGIN
                                AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
 
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isVatPrice
-                                   ON ObjectBoolean_isVatPrice.ObjectId = Object_Juridical.Id 
-                                  AND ObjectBoolean_isVatPrice.DescId = zc_ObjectBoolean_Juridical_isVatPrice()  
+                                   ON ObjectBoolean_isVatPrice.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_isVatPrice.DescId = zc_ObjectBoolean_Juridical_isVatPrice()
 
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isNotRealGoods
-                                   ON ObjectBoolean_isNotRealGoods.ObjectId = Object_Juridical.Id 
+                                   ON ObjectBoolean_isNotRealGoods.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_isNotRealGoods.DescId = zc_ObjectBoolean_Juridical_isNotRealGoods()
 
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_Guide_Irna
@@ -294,13 +294,13 @@ BEGIN
                                   AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_VchasnoEdi
-                                ON ObjectBoolean_VchasnoEdi.ObjectId = Object_Juridical.Id 
+                                ON ObjectBoolean_VchasnoEdi.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_VchasnoEdi.DescId = zc_ObjectBoolean_Juridical_VchasnoEdi()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiInvoice
-                                ON ObjectBoolean_isEdiInvoice.ObjectId = Object_Juridical.Id 
-                               AND ObjectBoolean_isEdiInvoice.DescId = zc_ObjectBoolean_Juridical_isEdiInvoice()
-                                    
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiComdoc
+                                ON ObjectBoolean_isEdiComdoc.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_isEdiComdoc.DescId = zc_ObjectBoolean_Juridical_isEdiComdoc()
+
         LEFT JOIN tmpObjectDate AS ObjectDate_VatPrice
                              ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
                             --AND ObjectDate_VatPrice.DescId = zc_ObjectDate_Juridical_VatPrice()
@@ -388,7 +388,7 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Section
                              ON ObjectLink_Juridical_Section.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
-        LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId    
+        LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
 
         LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails
                                                             ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
