@@ -89,7 +89,8 @@ BEGIN
                              , HeadCount1  TFloat
                              , PriceIncome  Tfloat
                              , PriceIncome1  Tfloat
-                             , PriceTransport  Tfloat
+                             , PriceTransport  Tfloat 
+                             , SummCostIncome TFloat
                              , Count_CountPacker   Tfloat
                              , PercentCount   Tfloat
                              , CountSeparate Tfloat
@@ -118,6 +119,7 @@ BEGIN
                              , PriceIncome
                              , PriceIncome1
                              , PriceTransport
+                             , SummCostIncome
                              , Count_CountPacker
                              , PercentCount
                              , CountSeparate
@@ -325,6 +327,17 @@ BEGIN
                           AND MIContainer.MovementId IN (SELECT DISTINCT tmpSeparate.MovementId FROM tmpSeparate)
                           AND tmpGoods.GoodsId IS NOT NULL
                        )
+      --затраты из приходе поставщика
+     , tmpIncomeCost AS (SELECT SUM (COALESCE (MovementFloat_AmountCost.ValueData,0)) AS AmountCost
+                         FROM Movement
+                              LEFT JOIN MovementFloat AS MovementFloat_AmountCost
+                                                      ON MovementFloat_AmountCost.MovementId = Movement.Id
+                                                     AND MovementFloat_AmountCost.DescId     = zc_MovementFloat_AmountCost()
+                         WHERE Movement.ParentId IN (SELECT DISTINCT tmpIncome.MovementId FROM tmpIncome)
+                           AND Movement.DescId   = zc_Movement_IncomeCost()
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                         )  
+      
       -- Результат
       SELECT tmpMovement.InvNumber
            , tmpMovement.OperDate
@@ -351,6 +364,7 @@ BEGIN
            , tmpIncomeAll.Amount_summ / tmpIncomeAll.Amount_count                              AS PriceIncome
            , tmpIncomeAll.Amount_summ / (tmpIncomeAll.Amount_count - tmpIncomeAll.CountPacker) AS PriceIncome1
            , 0 :: Tfloat                                                                       AS PriceTransport
+           , tmpIncomeCost.AmountCost   ::TFloat                                               AS SummCostIncome
 
            , (tmpIncomeAll.Amount_count - tmpIncomeAll.CountPacker)      AS Count_CountPacker
            , 100 * tmpSeparateS.Amount_count / tmpIncomeAll.Amount_count AS PercentCount
@@ -393,6 +407,8 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+
+           LEFT JOIN tmpIncomeCost ON 1 = 1
           ;  
 
 
@@ -423,6 +439,7 @@ BEGIN
            , tmpCursor1.PriceIncome
            , tmpCursor1.PriceIncome1
            , tmpCursor1.PriceTransport
+           , tmpCursor1.SummCostIncome
 
            , tmpCursor1.Count_CountPacker
            , tmpCursor1.PercentCount
@@ -619,18 +636,18 @@ BEGIN
           -- кол G  итого сумма по kol_F дел на  kol_F т.е. доля
           --, tmpData.kol_G
           --
-          , tmpData.PriceFact ::TFloat
+          , tmpData.PriceFact ::TFloat       --расчет по файлу 
           , (tmpData.PriceFact * COALESCE (tmpData.Amount,0)) ::TFloat AS SummFact
-          , tmpData.Count_gr
-          , ROUND (tmpData.Count_gr / 2.0 , 0) ::TFloat AS Str_print
-          , tmpData.Persent_v
-          , tmpData.Persent_gr   
+          , tmpData.Count_gr                 -- кол.товаров в группе
+          , ROUND (tmpData.Count_gr / 2.0 , 0) ::TFloat AS Str_print     --для вывода значения % выхода по группе 
+          , tmpData.Persent_v                --% выхода 
+          , tmpData.Persent_gr               --% выхода по группе 
   
       FROM tmpDataCalc AS tmpData
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                   ON ObjectLink_Goods_GoodsGroupStat.ObjectId = tmpData.GoodsId
                                  AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
-             LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+             LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = COALESCE (ObjectLink_Goods_GoodsGroupStat.ChildObjectId, 12045234)  --если не задано то группа "СО-не входит в выход"
        ;
     RETURN NEXT Cursor2;
 
