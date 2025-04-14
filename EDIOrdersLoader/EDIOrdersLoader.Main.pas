@@ -566,7 +566,8 @@ begin
               if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactDesadv.Execute;
               // EDIN
               if (FieldByName('isEdiInvoice').AsBoolean = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactInvoice.Execute;
-
+              // Ошибку по EDIN нет
+              FormParams.ParamByName('Err_str_toEDI').Value := '';
 
               // Vchasno-Ordspr
               if (FieldByName('isEdiOrdspr').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
@@ -576,6 +577,8 @@ begin
                        if actVchasnoEDIOrdrsp.Execute
                        then actUpdateEdiOrdsprTrue.Execute
                        else begin
+                            // Ошибку записать в базе
+                            FormParams.ParamByName('Err_str_toEDI').Value := 'Ошибка при отправке';
                             // Ошибку показать в логе
                             AddToLog_Vchasno(true, 'Ошибка при отправке Ordspr Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
                             AddToLog_Vchasno(true, actVchasnoEDIOrdrsp.ErrorText.Value, true);
@@ -593,6 +596,8 @@ begin
                        if actVchasnoEDIDesadv.Execute
                        then actUpdateEdiDesadvTrue.Execute
                        else begin
+                            // Ошибку записать в базе
+                            FormParams.ParamByName('Err_str_toEDI').Value := 'Ошибка при отправке';
                             // Ошибку показать в логе
                             AddToLog_Vchasno(true, 'Ошибка при отправке Desadv Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
                             AddToLog_Vchasno(true, actVchasnoEDIDesadv.ErrorText.Value, true);
@@ -609,6 +614,8 @@ begin
                        if actVchasnoEDIDelnot.Execute
                        then actUpdateVchasnoEdiDelnotTrue.Execute
                        else begin
+                            // Ошибку записать в базе
+                            FormParams.ParamByName('Err_str_toEDI').Value := 'Ошибка при отправке';
                             // Ошибку показать в логе
                             AddToLog_Vchasno(true, 'Ошибка при отправке Delnot Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
                             AddToLog_Vchasno(true, actVchasnoEDIDelnot.ErrorText.Value, true);
@@ -624,6 +631,8 @@ begin
                        if actVchasnoEDIComdoc.Execute
                        then actUpdateVchasnoEdiComdocTrue.Execute
                        else begin
+                            // Ошибку записать в базе
+                            FormParams.ParamByName('Err_str_toEDI').Value := 'Ошибка при отправке';
                             // Ошибку показать в логе
                             AddToLog_Vchasno(true, 'Ошибка при отправке Comdoc Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
                             AddToLog_Vchasno(true, actVchasnoEDIComdoc.ErrorText.Value, true);
@@ -631,16 +640,14 @@ begin
                        end;
               end;
               //
-              FormParams.ParamByName('Err_str_toEDI').Value := '';
-              //
               Application.ProcessMessages;
+
+              // Сохранили Log
+              if FormParams.ParamByName('Err_str_toEDI').Value = ''
+              then AddToLog('отправилось без ошибки № : <' + IntToStr(i) + '>');
               // Сохранили что отправка прошла
-              if  (FieldByName('isVchasnoEDI').AsBoolean  = false)
-               or (1=1)
-              then begin
-                AddToLog('отправилось без ошибки № : <' + IntToStr(i) + '>');
-                actUpdate_EDI_Send.Execute;
-              end;
+              actUpdate_EDI_Send.Execute;
+
           except
               FormParams.ParamByName('Err_str_toEDI').Value := 'Ошибка при отправке';
               //
