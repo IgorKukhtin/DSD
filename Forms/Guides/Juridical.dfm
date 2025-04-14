@@ -348,6 +348,15 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 133
       end
+      object IsEdiDelnot: TcxGridDBColumn
+        Caption = #1042#1053' - Delnot, '#1072#1074#1090#1086'. '#1086#1090#1087#1088'.'
+        DataBinding.FieldName = 'IsEdiDelnot'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1053' - Delnot, '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1086#1090#1087#1088#1072#1074#1082#1072
+        Options.Editing = False
+        Width = 70
+      end
       object VatPriceDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1089#1093'. '#1088#1072#1089#1095'. '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1089#1090#1088'.)'
         DataBinding.FieldName = 'VatPriceDate'

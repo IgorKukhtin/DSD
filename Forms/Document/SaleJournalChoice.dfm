@@ -655,6 +655,26 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
             Options.Editing = False
             Width = 60
           end
+          object EdiComdoc: TcxGridDBColumn
+            Caption = #1042#1095#1072#1089#1085#1086'-EDI - Comdoc'
+            DataBinding.FieldName = 'EdiComdoc'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1095#1072#1089#1085#1086'-EDI - Comdoc'
+            Options.Editing = False
+            Width = 75
+          end
+          object EdiDelnot: TcxGridDBColumn
+            Caption = #1042#1095#1072#1089#1085#1086'-EDI - Delnot'
+            DataBinding.FieldName = 'EdiDelnot'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1095#1072#1089#1085#1086'-EDI - Delnot'
+            Options.Editing = False
+            Width = 79
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'

@@ -45,7 +45,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isEDI Boolean
              , isElectron Boolean
              , isMedoc Boolean
-             , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
+             , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean, EdiComdoc Boolean, EdiDelnot Boolean
              , isEdiOrdspr_partner Boolean, isEdiInvoice_partner Boolean, isEdiDesadv_partner Boolean
              , isError Boolean
              , isPrinted Boolean

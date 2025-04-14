@@ -140,6 +140,7 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     JuridicalAddress: TcxGridDBColumn;
     JuridicalAddress_inf: TcxGridDBColumn;
+    IsEdiDelnot: TcxGridDBColumn;
   private
     { Private declarations }
   public

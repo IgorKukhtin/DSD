@@ -1657,7 +1657,7 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderJournalForm');
-   //exit;
+  // exit;
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementCheckForm');
@@ -4802,11 +4802,10 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
-  exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ChoiceForm');
   //exit;
@@ -4815,7 +4814,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
   //exit;
   //  Установить пароль для подтверждения в Scale
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPswDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPswDialogForm');
 

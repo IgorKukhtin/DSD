@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isVatPrice Boolean,
                isVchasnoEdi Boolean,
                isEdiComdoc Boolean,
+               isEdiDelnot Boolean,
                VatPriceDate TDateTime,
                SectionId Integer, SectionName TVarChar
                ) AS
@@ -77,6 +78,7 @@ BEGIN
            , CAST (false as Boolean)   AS isVatPrice
            , CAST (FALSE AS Boolean)   AS isVchasnoEdi
            , CAST (FALSE AS Boolean)   AS isEdiComdoc
+           , CAST (FALSE AS Boolean)   AS isEdiDelnot
 
            , NULL         :: TDateTime AS VatPriceDate
 
@@ -126,6 +128,7 @@ BEGIN
            , COALESCE (ObjectBoolean_isVatPrice.ValueData, FALSE) :: Boolean   AS isVatPrice
            , COALESCE (ObjectBoolean_VchasnoEdi.ValueData, FALSE) :: Boolean   AS isVchasnoEdi
            , COALESCE (ObjectBoolean_isEdiComdoc.ValueData, FALSE) :: Boolean  AS isEdiComdoc
+           , COALESCE (ObjectBoolean_isEdiDelnot.ValueData, FALSE) :: Boolean  AS isEdiDelnot
            , COALESCE (ObjectDate_VatPrice.ValueData, NULL)       :: TDateTime AS VatPriceDate
 
            , Object_Section.Id                AS SectionId
@@ -173,6 +176,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiComdoc
                                    ON ObjectBoolean_isEdiComdoc.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_isEdiComdoc.DescId = zc_ObjectBoolean_Juridical_isEdiComdoc()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiDelnot
+                                   ON ObjectBoolean_isEdiDelnot.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_isEdiDelnot.DescId = zc_ObjectBoolean_Juridical_isEdiDelnot()
 
            LEFT JOIN ObjectDate AS ObjectDate_VatPrice
                                 ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
@@ -235,6 +242,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.04.25         * isEdiDelnot
  07.04.25         * isEdiInvoice
  14.03.25         * isVchasnoEdi
  02.11.22         * add Section

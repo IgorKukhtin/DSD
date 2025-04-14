@@ -174,6 +174,7 @@ type
     bbProtocolOpenFormPartner: TdxBarButton;
     cbVchasnoEdi: TcxCheckBox;
     cbIsEdiComdoc: TcxCheckBox;
+    cbIsEdiDelnot: TcxCheckBox;
   private
     { Private declarations }
   public

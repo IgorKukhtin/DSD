@@ -2489,10 +2489,6 @@
 				<Form>ExportJuridicalEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\JuridicalEdit.pas">
-				<Form>JuridicalEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\CurrencyValue_ForCash.pas">
 				<Form>CurrencyValue_ForCashForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5546,6 +5542,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\EDI\invoice_comdoc_vchasno.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\invoice_delnote_base.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\JuridicalEdit.pas">
+				<Form>JuridicalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

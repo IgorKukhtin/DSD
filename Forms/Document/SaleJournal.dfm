@@ -5,6 +5,7 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -210
   ExplicitWidth = 1390
   ExplicitHeight = 680
   PixelsPerInch = 96
@@ -780,6 +781,24 @@ inherited SaleJournalForm: TSaleJournalForm
             DataBinding.FieldName = 'EdiDesadv'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object EdiComdoc: TcxGridDBColumn
+            Caption = #1042#1095#1072#1089#1085#1086'-EDI - Comdoc'
+            DataBinding.FieldName = 'EdiComdoc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1095#1072#1089#1085#1086'-EDI - Comdoc'
+            Options.Editing = False
+            Width = 60
+          end
+          object EdiDelnot: TcxGridDBColumn
+            Caption = #1042#1095#1072#1089#1085#1086'-EDI - Delnot'
+            DataBinding.FieldName = 'EdiDelnot'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1095#1072#1089#1085#1086'-EDI - Delnot'
             Options.Editing = False
             Width = 60
           end
