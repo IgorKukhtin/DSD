@@ -6,7 +6,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_EDI_Send_UnComplete(
     IN inSession             TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, MovementId Integer
+               --
              , isEdiOrdspr Boolean, isEdiInvoice Boolean, isEdiDesadv Boolean
+               -- схема Vchasno - EDI
+             , isVchasnoEDI Boolean
+               -- ВН - Delnot, автоматическая отправка
+             , isEdiDelnot Boolean
+               -- ВН - Comdoc, автоматическая отправка
+             , isEdiComdoc Boolean
+               --
              , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime, OperDatePartner TDateTime, InsertDate_WeighingPartner TDateTime
              , InvNumber_Parent TVarChar, OperDate_Parent TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, RetailName TVarChar
@@ -14,12 +22,6 @@ RETURNS TABLE (Id Integer, MovementId Integer
              , JuridicalName_To TVarChar
              , StatusCode Integer, StatusName TVarChar
              , Comment TVarChar
-               -- схема Vchasno - EDI
-             , isVchasnoEDI Boolean
-               -- ВН - Comdoc, автоматическая отправка
-             , isEdiComdoc Boolean
-               -- ВН - Delnot, автоматическая отправка
-             , isEdiDelnot Boolean
          )
 AS
 $BODY$
@@ -50,9 +52,65 @@ BEGIN
            SELECT
                  Movement.ParentId                              AS Id
                , Movement.Id                                    AS MovementId
+
                , MovementBoolean_EdiOrdspr.ValueData            AS isEdiOrdspr
                , MovementBoolean_EdiInvoice.ValueData           AS isEdiInvoice
                , MovementBoolean_EdiDesadv.ValueData            AS isEdiDesadv
+
+                 -- схема Vchasno - EDI
+               , CASE WHEN MovementString_DealId.ValueData <> ''
+                           THEN COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE)
+                      ELSE FALSE
+                 END :: Boolean AS isVchasnoEDI
+
+
+                 -- ВН - Delnot, автоматическая отправка
+               , CASE -- этим никогда
+                      WHEN Object_Retail.Id = 8873723 -- Кошик
+                           THEN FALSE
+
+                      -- НЕ НАДО - временно Рост Харьков + Чудо-Маркет
+                      WHEN Object_Retail.Id IN (310862  -- Рост Харьков
+                                              , 2473612 -- Чудо-Маркет
+                                               )
+                           THEN FALSE
+
+                      -- если надо
+                      -- WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiDelnot.ValueData = TRUE
+                      --     THEN TRUE
+
+                      -- временно Всем
+                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND (MovementBoolean_EdiDelnot.ValueData = TRUE
+                                                                                 OR MovementBoolean_EdiComdoc.ValueData = TRUE
+                                                                                   )
+                           THEN TRUE
+
+                      ELSE FALSE
+                 END:: Boolean AS isEdiDelnot
+
+
+                 -- ВН - Comdoc, автоматическая отправка
+               , CASE -- этим никогда
+                      WHEN Object_Retail.Id = 8873723 -- Кошик
+                           THEN FALSE
+
+                      -- НАДО - временно Рост Харьков + Чудо-Маркет
+                      WHEN Object_Retail.Id IN (310862  -- Рост Харьков
+                                              , 2473612 -- Чудо-Маркет
+                                               )
+                       AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND (MovementBoolean_EdiDelnot.ValueData = TRUE
+                                                                                 OR MovementBoolean_EdiComdoc.ValueData = TRUE
+                                                                                   )
+                           THEN TRUE
+
+                      -- если надо
+                      -- WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiComdoc.ValueData = TRUE
+                      --     THEN TRUE
+
+                      ELSE FALSE
+                 END:: Boolean AS isEdiComdoc
+
+
                , Movement.InvNumber                             AS InvNumber
                , Movement.OperDate                              AS OperDate
                , MovementDate_Update.ValueData                  AS UpdateDate
@@ -73,43 +131,6 @@ BEGIN
                , Object_Status.ObjectCode    		        AS StatusCode
                , Object_Status.ValueData     		        AS StatusName
                , MovementString_Comment.ValueData               AS Comment
-
-                 -- схема Vchasno - EDI
-               , COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE) :: Boolean AS isVchasnoEDI
-
-                 -- ВН - Comdoc, автоматическая отправка
-               , CASE WHEN 1=1
-                       -- временно без этой проверки
-                       -- AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiComdoc.ValueData = TRUE
-                           THEN COALESCE (MovementBoolean_EdiComdoc.ValueData, FALSE)
-
-                      -- если надо
-                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiComdoc.ValueData = TRUE
-                           THEN TRUE
-                      -- временно Рост Харьков
-                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND Object_Retail.Id = 310862 -- Рост Харьков
-                           THEN TRUE
-
-                      ELSE FALSE
-                 END:: Boolean AS isEdiComdoc
-
-                 -- ВН - Delnot, автоматическая отправка
-               , CASE WHEN 1=1
-                       -- временно без этой проверки
-                       -- AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiDelnot.ValueData = TRUE
-                           THEN COALESCE (MovementBoolean_EdiDelnot.ValueData, FALSE)
-
-                      -- если надо
-                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiDelnot.ValueData = TRUE
-                           THEN TRUE
-                      -- временно Рост Харьков
-                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND Object_Retail.Id = 310862 -- Рост Харьков
-                           THEN FALSE
-                      -- временно Всем
-                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
-                           THEN TRUE
-                      ELSE FALSE
-                 END:: Boolean AS isEdiDelnot
 
            FROM Movement
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -136,14 +157,14 @@ BEGIN
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiDesadv
                                           ON MovementBoolean_EdiDesadv.MovementId = Movement.Id
                                          AND MovementBoolean_EdiDesadv.DescId     = zc_MovementBoolean_EdiDesadv()
-                -- COMDOC-Видаткова Накладна
-                LEFT JOIN MovementBoolean AS MovementBoolean_EdiComdoc
-                                          ON MovementBoolean_EdiComdoc.MovementId = Movement.Id
-                                         AND MovementBoolean_EdiComdoc.DescId     = zc_MovementBoolean_EdiComdoc()
                 --  DELNOT-Видаткова Накладна 
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiDelnot
                                           ON MovementBoolean_EdiDelnot.MovementId = Movement.Id
                                          AND MovementBoolean_EdiDelnot.DescId     = zc_MovementBoolean_EdiDelnot()
+                -- COMDOC-Видаткова Накладна
+                LEFT JOIN MovementBoolean AS MovementBoolean_EdiComdoc
+                                          ON MovementBoolean_EdiComdoc.MovementId = Movement.Id
+                                         AND MovementBoolean_EdiComdoc.DescId     = zc_MovementBoolean_EdiComdoc()
 
                 LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
@@ -195,11 +216,20 @@ BEGIN
                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
                 LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
+                --EDI
+                LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_EDI
+                                               ON MovementLinkMovement_Order_EDI.MovementId = MovementLinkMovement_Order.MovementChildId
+                                              AND MovementLinkMovement_Order_EDI.DescId = zc_MovementLinkMovement_Order()
+               -- схема Vchasno - EDI
+                LEFT JOIN MovementString AS MovementString_DealId
+                                         ON MovementString_DealId.MovementId = MovementLinkMovement_Order_EDI.MovementChildId
+                                        AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+
            WHERE Movement.DescId   = zc_Movement_EDI_Send()
              AND Movement.StatusId = zc_Enum_Status_UnComplete()
              AND Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
              -- Без схемы Vchasno - EDI
-             -- AND ObjectBoolean_Juridical_VchasnoEdi.ObjectId IS NULL
+             -- AND COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE) = TRUE
              --
              AND COALESCE (Movement_Parent.StatusId, 0) <> zc_Enum_Status_UnComplete()
              --

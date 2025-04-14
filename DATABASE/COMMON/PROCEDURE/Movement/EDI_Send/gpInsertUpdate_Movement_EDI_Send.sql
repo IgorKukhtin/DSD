@@ -82,11 +82,24 @@ BEGIN
 
          -- если схема Vchasno - EDI
          IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbJuridicalId AND OB.DescId = zc_ObjectBoolean_Juridical_VchasnoEdi() AND OB.ValueData = TRUE)
+         -- этим никогда
+         AND NOT EXISTS (SELECT 1
+                         FROM ObjectLink AS OL
+                         WHERE OL.ObjectId  = vbJuridicalId AND OL.DescId = zc_ObjectLink_Juridical_Retail()
+                           AND OL.ChildObjectId IN (8873723 -- Кошик
+                                                   )
+                        )
          THEN
              -- Если Comdoc
              IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbJuridicalId AND OB.DescId = zc_ObjectBoolean_Juridical_isEdiComdoc() AND OB.ValueData = TRUE)
-                -- временно Рост Харьков
-            AND EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId  = vbJuridicalId AND OL.DescId = zc_ObjectLink_Juridical_Retail() AND OL.ChildObjectId = 310862) -- Рост Харьков
+                -- временно Рост Харьков + Чудо-Маркет
+            AND EXISTS (SELECT 1
+                        FROM ObjectLink AS OL
+                        WHERE OL.ObjectId  = vbJuridicalId AND OL.DescId = zc_ObjectLink_Juridical_Retail()
+                          AND OL.ChildObjectId IN (310862  -- Рост Харьков
+                                                 , 2473612 -- Чудо-Маркет
+                                                  )
+                       )
              THEN
                  -- Добавили Отправку Comdoc
                  PERFORM gpInsertUpdate_Movement_EDI_Send (ioId       := 0

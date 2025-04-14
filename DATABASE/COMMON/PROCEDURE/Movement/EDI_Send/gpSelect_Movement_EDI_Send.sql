@@ -9,7 +9,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_EDI_Send(
     IN inSession             TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ParentId Integer
+               --
              , isEdiOrdspr Boolean, isEdiInvoice Boolean, isEdiDesadv Boolean
+               -- схема Vchasno - EDI
+             , isVchasnoEDI Boolean
+               -- ВН - Comdoc, автоматическая отправка
+             , isEdiComdoc Boolean
+               -- ВН - Delnot, автоматическая отправка
+             , isEdiDelnot Boolean
+               --
              , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime, OperDatePartner TDateTime
              , InvNumber_Parent TVarChar, OperDate_Parent TDateTime, OperDatePartner_Parent TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, RetailId Integer, RetailName TVarChar
@@ -19,12 +27,6 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , StatusCode_sale Integer, StatusName_sale TVarChar
              , MovementDescName TVarChar
              , Comment TVarChar
-               -- схема Vchasno - EDI
-             , isVchasnoEDI Boolean
-               -- ВН - Comdoc, автоматическая отправка
-             , isEdiComdoc Boolean
-               -- ВН - Delnot, автоматическая отправка
-             , isEdiDelnot Boolean
               )
 AS
 $BODY$
@@ -46,9 +48,17 @@ BEGIN
            SELECT
                  Movement.Id                                    AS Id
                , Movement.ParentId                              AS ParentId
+                 --
                , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
                , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
                , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
+                 -- схема Vchasno - EDI
+               , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '') <> '' THEN TRUE ELSE FALSE END ::Boolean AS isVchasnoEDI
+                 -- ВН - Comdoc, автоматическая отправка
+               , COALESCE (MovementBoolean_EdiComdoc.ValueData, FALSE)  :: Boolean AS isEdiComdoc
+                 -- ВН - Delnot, автоматическая отправка
+               , COALESCE (MovementBoolean_EdiDelnot.ValueData, FALSE)  :: Boolean AS isEdiDelnot
+
                , Movement.InvNumber                             AS InvNumber
                , Movement.OperDate                              AS OperDate
                , MovementDate_Update.ValueData                  AS UpdateDate
@@ -73,12 +83,6 @@ BEGIN
                , Object_Status_sale.ValueData           AS StatusName_sale
                , MovementDesc.ItemName     	            AS MovementDescName
                , MovementString_Comment.ValueData       AS Comment
-                 -- схема Vchasno - EDI
-               , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '') <> '' THEN TRUE ELSE FALSE END ::Boolean AS isVchasnoEDI
-                 -- ВН - Comdoc, автоматическая отправка
-               , COALESCE (MovementBoolean_EdiComdoc.ValueData, FALSE)  :: Boolean AS isEdiComdoc
-                 -- ВН - Delnot, автоматическая отправка
-               , COALESCE (MovementBoolean_EdiDelnot.ValueData, FALSE)  :: Boolean AS isEdiDelnot
 
            FROM (SELECT Movement.*
                  FROM tmpStatus
