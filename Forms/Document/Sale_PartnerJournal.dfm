@@ -25,6 +25,8 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       inherited cxGrid: TcxGrid
         Width = 1165
         Height = 455
+        ExplicitLeft = 240
+        ExplicitTop = 16
         ExplicitWidth = 1165
         ExplicitHeight = 455
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -751,6 +753,24 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             DataBinding.FieldName = 'EdiDesadv'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object EdiComdoc: TcxGridDBColumn
+            Caption = #1042#1095#1072#1089#1085#1086'-EDI - Comdoc'
+            DataBinding.FieldName = 'EdiComdoc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1095#1072#1089#1085#1086'-EDI - Comdoc'
+            Options.Editing = False
+            Width = 60
+          end
+          object EdiDelnot: TcxGridDBColumn
+            Caption = #1042#1095#1072#1089#1085#1086'-EDI - Delnot'
+            DataBinding.FieldName = 'EdiDelnot'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1095#1072#1089#1085#1086'-EDI - Delnot'
             Options.Editing = False
             Width = 60
           end

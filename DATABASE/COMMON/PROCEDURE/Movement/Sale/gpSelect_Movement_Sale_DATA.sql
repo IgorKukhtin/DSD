@@ -44,7 +44,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isEDI Boolean
              , isElectron Boolean
              , isMedoc Boolean
-             , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
+             , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean, EdiComdoc Boolean, EdiDelnot Boolean
              , isEdiOrdspr_partner Boolean, isEdiInvoice_partner Boolean, isEdiDesadv_partner Boolean
              , isError Boolean
              , isPrinted Boolean
@@ -335,6 +335,8 @@ end if;
                                                                 , zc_MovementBoolean_PriceWithVAT()
                                                                 , zc_MovementBoolean_EdiInvoice()
                                                                 , zc_MovementBoolean_EdiDesadv()
+                                                                , zc_MovementBoolean_EdiComdoc()
+                                                                , zc_MovementBoolean_EdiDelnot()
                                                                 , zc_MovementBoolean_Print()
                                                                 , zc_MovementBoolean_Promo() 
                                                                 , zc_MovementBoolean_CurrencyUser()
@@ -898,6 +900,8 @@ end if;
            , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    :: Boolean AS EdiOrdspr
            , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   :: Boolean AS EdiInvoice
            , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)    :: Boolean AS EdiDesadv
+           , COALESCE (MovementBoolean_EdiComdoc.ValueData, FALSE)    :: Boolean AS EdiComdoc
+           , COALESCE (MovementBoolean_EdiDelnot.ValueData, FALSE)    :: Boolean AS EdiDelnot
 
            , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     :: Boolean AS isEdiOrdspr_partner
            , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    :: Boolean AS isEdiInvoice_partner
@@ -987,6 +991,13 @@ end if;
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_EdiDesadv
                                          ON MovementBoolean_EdiDesadv.MovementId =  Movement.Id
                                         AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
+
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_EdiComdoc
+                                         ON MovementBoolean_EdiComdoc.MovementId =  Movement.Id
+                                        AND MovementBoolean_EdiComdoc.DescId = zc_MovementBoolean_EdiComdoc()
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_EdiDelnot
+                                         ON MovementBoolean_EdiDelnot.MovementId =  Movement.Id
+                                        AND MovementBoolean_EdiDelnot.DescId = zc_MovementBoolean_EdiDelnot()
 
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_Print
                                          ON MovementBoolean_Print.MovementId =  Movement.Id
@@ -1273,6 +1284,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 14.04.25         *
  07.11.24         *
  16.08.24         *
  21.03.22         *

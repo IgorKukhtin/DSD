@@ -142,7 +142,6 @@ contains
   Log in '..\SOURCE\Log.pas',
   ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
   ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
-  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
   DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
   DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
@@ -206,6 +205,9 @@ contains
   PdfiumCore in '..\SOURCE\Pdfium\PdfiumCore.pas',
   PdfiumCtrl in '..\SOURCE\Pdfium\PdfiumCtrl.pas',
   PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
-  dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas';
+  dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas',
+  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
+  invoice_comdoc_vchasno in '..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
+  invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas';
 
 end.
