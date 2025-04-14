@@ -13,7 +13,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Personal_PersonalSLCardSecond());
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Personal_CardSecond());
 
    --проверка
    IF COALESCE (inPersonalServiceListId,0) = 0 
