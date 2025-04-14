@@ -22,7 +22,7 @@ BEGIN
    END IF;
 
    -- сохранили связь с <Ведомость начисления(главная)>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceList(), ioId, inPersonalServiceListId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceList(), inId, inPersonalServiceListId);
 
 
    -- сохранили протокол
