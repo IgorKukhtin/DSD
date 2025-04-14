@@ -42,6 +42,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                isIrna Boolean,
                isVchasnoEdi Boolean,
                isEdiComdoc Boolean,
+               isEdiDelnot Boolean,
                isErased Boolean
               )
 AS
@@ -241,6 +242,7 @@ BEGIN
        , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) :: Boolean   AS isIrna
        , COALESCE (ObjectBoolean_VchasnoEdi.ValueData, FALSE) :: Boolean   AS isVchasnoEdi
        , COALESCE (ObjectBoolean_isEdiComdoc.ValueData, FALSE) :: Boolean  AS isEdiComdoc
+       , COALESCE (ObjectBoolean_isEdiDelnot.ValueData, FALSE) :: Boolean  AS isEdiDelnot
 
        , Object_Juridical.isErased   AS isErased
 
@@ -300,6 +302,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiComdoc
                                 ON ObjectBoolean_isEdiComdoc.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isEdiComdoc.DescId = zc_ObjectBoolean_Juridical_isEdiComdoc()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiDelnot
+                                ON ObjectBoolean_isEdiDelnot.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_isEdiDelnot.DescId = zc_ObjectBoolean_Juridical_isEdiDelnot()
 
         LEFT JOIN tmpObjectDate AS ObjectDate_VatPrice
                              ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
@@ -426,6 +431,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.04.25         * isEdiDelnot
  07.04.25         * isEdiInvoice
  14.03.25         * isVchasnoEdi
  26.04.23         * inShowDate
