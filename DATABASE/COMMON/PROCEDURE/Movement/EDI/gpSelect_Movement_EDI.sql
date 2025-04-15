@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSumm TFloat
              , OKPO TVarChar, JuridicalName TVarChar
              , GLNCode TVarChar,  GLNPlaceCode TVarChar
-             , JuridicalId_Find Integer, JuridicalNameFind TVarChar, PartnerNameFind TVarChar
+             , JuridicalId_Find Integer, JuridicalNameFind TVarChar, PartnerNameFind TVarChar, RetailName TVarChar
 
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -68,7 +68,7 @@ BEGIN
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
 
-   if vbUserId = 5 and inStartDate   = inEndDate
+   if vbUserId = 5 and inStartDate   = inEndDate AND 1=0
    then inStartDate := DATE_TRUNC ('MONTH', inStartDate);
    end if;
 
@@ -117,6 +117,7 @@ BEGIN
            , Object_Juridical.Id                    AS JuridicalId_Find
            , Object_Juridical.ValueData             AS JuridicalNameFind
            , Object_Partner.ValueData               AS PartnerNameFind
+           , Object_Retail.ValueData                AS RetailName
 
            , View_Contract_InvNumber.ContractId             AS ContractId
            , View_Contract_InvNumber.ContractCode           AS ContractCode
@@ -255,6 +256,11 @@ BEGIN
                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                                AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
