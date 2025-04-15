@@ -1,9 +1,11 @@
 -- Function: gpUpdate_MI_PersonalService_CardSecond_num()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_PersonalService_CardSecond_num (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_PersonalService_CardSecond_num (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_PersonalService_CardSecond_num(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inIsLimit_4000        Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -142,7 +144,8 @@ END IF;
                        THEN 3000 -- ВОСТОК + аванс
 
                   WHEN MovementFloat_BankSecond_num.ValueData = 1
-                       THEN 4000 -- ВОСТОК
+                       -- ВОСТОК
+                       THEN CASE WHEN inIsLimit_4000 = TRUE  THEN 4000 ELSE 0 END
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 1
                        THEN 0
@@ -158,7 +161,8 @@ END IF;
                        THEN 3000 --ВОСТОК + аванс
 
                   WHEN MovementFloat_BankSecond_num.ValueData = 2
-                       THEN 4000 -- ВОСТОК
+                       -- ВОСТОК
+                       THEN CASE WHEN inIsLimit_4000 = TRUE  THEN 4000 ELSE 0 END
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 2
                        THEN 0
@@ -173,7 +177,8 @@ END IF;
                        THEN 3000 -- ВОСТОК + аванс
 
                   WHEN MovementFloat_BankSecond_num.ValueData = 3
-                       THEN 4000 -- ВОСТОК
+                       -- ВОСТОК
+                       THEN CASE WHEN inIsLimit_4000 = TRUE  THEN 4000 ELSE 0 END
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 3
                        THEN 0
@@ -1574,7 +1579,7 @@ from _tmpMI where _tmpMI.MemberId = 239655)
 -- !!!тест
 -- PERFORM gpComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
 
-IF vbUserId = 5 and 1=0
+IF vbUserId = 5 and 1=1
 THEN
     RAISE EXCEPTION 'Ошибка.test=ok   %'
   , (            SELECT sum (coalesce (MIF_SummCardSecondRecalc.ValueData, 0))
