@@ -238,6 +238,7 @@ type
     spUpdateVchasnoEdiDelnot: TdsdStoredProc;
     actUpdateVchasnoEdiDelnotTrue: TdsdExecStoredProc;
     actUpdateVchasnoEdiComdocTrue: TdsdExecStoredProc;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -40,6 +40,9 @@ BEGIN
          -- сохранили свойство <Дата/Время когда отправили>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inId, CURRENT_TIMESTAMP);
 
+         -- сохранили свойство
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inId, '');
+
      END IF;
 
      -- сохранили протокол

@@ -347,7 +347,7 @@ type
     SummCardSecondRecalc_005: TcxGridDBColumn;
     macUpdateCardSecond_num: TMultiAction;
     actUpdateCardSecond_num: TdsdExecStoredProc;
-    spUpdate_CardSecond_num: TdsdStoredProc;
+    spUpdate_CardSecond_num_yes4000: TdsdStoredProc;
     bbUpdateCardSecond_num: TdxBarButton;
     actOpenBankSecondNumForm: TdsdOpenForm;
     cxLabel30: TcxLabel;
@@ -403,6 +403,10 @@ type
     actPrint_Grid_new: TdsdPrintAction;
     MI_ChildProtocolOpenForm: TdsdOpenForm;
     bbMI_ChildProtocolOpenForm: TdxBarButton;
+    actUpdate_CardSecond_num_not4000: TdsdExecStoredProc;
+    mactUpdateCardSecond_num_not4000: TMultiAction;
+    spUpdate_CardSecond_num_not4000: TdsdStoredProc;
+    bbUpdateCardSecond_num_not4000: TdxBarButton;
   private
     { Private declarations }
   public

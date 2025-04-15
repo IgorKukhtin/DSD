@@ -236,6 +236,7 @@ type
     actVchasnoEDIComdoc: TdsdVchasnoEDIAction;
     mactVchasnoEDIComdoc: TMultiAction;
     bbVchasnoEDIComdoc: TdxBarButton;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -784,9 +784,42 @@ BEGIN
                         --AND vbUserId = 5
                        )*/
 
+     , tmpMIContainer_pay_data AS (SELECT MIContainer.*
+                                   FROM tmpContainer_pay
+                                        INNER JOIN MovementItemContainer AS MIContainer
+                                                                         ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
+                                                                        AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                        AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                  )
+     , tmpMI_pay_data AS (SELECT tmpMIContainer_pay_data.MovementId
+                               , MILinkObject_MoneyPlace.ObjectId AS PersonalServiceId
+                               , Object.ValueData                 AS PersonalServiceName
+                          FROM (SELECT DISTINCT tmpMIContainer_pay_data.MovementId FROM tmpMIContainer_pay_data
+                               ) AS tmpMIContainer_pay_data
+                                   INNER JOIN MovementItem ON MovementItem.MovementId = tmpMIContainer_pay_data.MovementId
+                                                          AND MovementItem.DescId     = zc_MI_Master()
+                                                          AND MovementItem.isErased   = FALSE
+                                                        --AND vbUserId = 5
+                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                                    ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                                   AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                                   LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
+                         )
+                                                                   
+
      , tmpMIContainer_pay AS (SELECT -- Amount_avance
                                      -- SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
-                                     SUM (CASE WHEN (/*MIContainer.Amount = 2000 OR*/ MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()/*, zc_Enum_AnalyzerId_Cash_PersonalCardSecond()*/)) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END
+                                     SUM (CASE WHEN (MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()/*, zc_Enum_AnalyzerId_Cash_PersonalCardSecond()*/)
+                                                 AND MIContainer.Amount > 0
+                                                    )
+                                                  -- аванс по ведомости
+                                                 OR (MIContainer.MovementDescId = zc_Movement_Cash()
+                                                 AND tmpMI_pay_data.PersonalServiceName ILIKE '%АВАНС%'
+                                                 AND MIContainer.Amount > 0
+                                                    )
+                                                    THEN MIContainer.Amount
+                                               ELSE 0
+                                          END
                                           -- аванс по ведомости
                                           /*+ CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
                                                  AND MIContainer.MovementDescId = zc_Movement_Cash()
@@ -804,7 +837,18 @@ BEGIN
                                          ) AS Amount_avance_ret
 
                                      -- Amount_service
-                                   , SUM (CASE WHEN /*MIContainer.Amount <> 2000 AND*/ MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END
+                                   , SUM (CASE WHEN (MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()/*, zc_Enum_AnalyzerId_Cash_PersonalCardSecond()*/)
+                                                 AND MIContainer.Amount > 0
+                                                    )
+                                                  -- аванс по ведомости
+                                                 OR (MIContainer.MovementDescId = zc_Movement_Cash()
+                                                 AND tmpMI_pay_data.PersonalServiceName ILIKE '%АВАНС%'
+                                                 AND MIContainer.Amount > 0
+                                                    )
+                                                    -- !!! без аванса
+                                                    THEN 0
+
+                                               WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END
                                           -- аванс по ведомости
                                           /*- CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
                                                  AND MIContainer.MovementDescId = zc_Movement_Cash()
@@ -825,18 +869,7 @@ BEGIN
                                                                     ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
                                                                    AND MIContainer.DescId         = zc_MIContainer_Summ()
                                                                    AND MIContainer.MovementDescId = zc_Movement_Cash()
-                                   /*LEFT JOIN MovementItem ON MovementItem.MovementId = MIContainer.MovementId
-                                                         AND MovementItem.DescId     = zc_MI_Master()
-                                                         AND MovementItem.isErased   = FALSE
-                                                       --AND vbUserId = 5
-
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
-                                   LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
-                                   LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
-                                                        ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MILinkObject_MoneyPlace.ObjectId
-                                                       AND ObjectLink_PersonalServiceList_PaidKind.DescId   = zc_ObjectLink_PersonalServiceList_PaidKind()*/
+                                   LEFT JOIN tmpMI_pay_data ON tmpMI_pay_data.MovementId = MIContainer.MovementId
 
                               GROUP BY tmpContainer_pay.MemberId
                                      , CASE WHEN inIsShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END
@@ -1040,7 +1073,7 @@ BEGIN
              - COALESCE (tmpMIContainer_pay.Amount_avance, 0) - COALESCE (tmpAll.SummAvance, 0)
              - COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)
              - COALESCE (tmpMIContainer_pay.Amount_service, 0)
-               -- Сальдо на кінець
+               -- минус Сальдо на кінець
              - COALESCE (tmpAll.AmountService_diff_end, 0)
               ) :: TFloat AS AmountCash
 
@@ -1080,7 +1113,10 @@ BEGIN
 --            , ( 1 * COALESCE (tmpMIContainer_pay.Amount_avance, 0) + COALESCE (tmpAll.SummAvance, 0)) :: TFloat AS Amount_avance
             , case when vbUserId = 5 and 1=0 then tmpAll.SummAvance else COALESCE (tmpMIContainer_pay.Amount_avance, 0) + COALESCE (tmpAll.SummAvance, 0) end :: TFloat AS Amount_avance
             , (-1 * tmpMIContainer_pay.Amount_avance_ret)  :: TFloat AS Amount_avance_ret
+
+              -- Выплата по ведм. грн
             , tmpMIContainer_pay.Amount_service :: TFloat AS Amount_pay_service
+
             , tmpAll.WorkTimeHoursOne_child ::TFloat
 
             , tmpAll.Comment

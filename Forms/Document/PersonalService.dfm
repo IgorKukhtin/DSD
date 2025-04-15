@@ -2,7 +2,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 759
   ClientWidth = 1474
-  ExplicitLeft = -597
   ExplicitWidth = 1490
   ExplicitHeight = 798
   PixelsPerInch = 96
@@ -4565,6 +4564,55 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
       ImageIndex = 89
     end
+    object actUpdateCardSecond_num: TdsdExecStoredProc
+      Category = 'Update'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CardSecond_num_yes4000
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CardSecond_num_yes4000
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
+    end
+    object mactUpdateCardSecond_num_not4000: TMultiAction
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenBankSecondNumForm
+        end
+        item
+          Action = actUpdate_CardSecond_num_not4000
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1041#1045#1047' '#1083#1080#1084#1080#1090#1072' '#1050#1072 +
+        #1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.?'
+      InfoAfterExecute = 
+        #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1041#1045#1047' '#1083#1080#1084#1080#1090#1072' '#1050#1072#1088#1090#1072' '#1041#1053 +
+        ' ('#1074#1074#1086#1076') - 2'#1092'.'
+      Caption = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1041#1045#1047' '#1083#1080#1084#1080#1090#1072' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') ' +
+        '- 2'#1092'.'
+      Hint = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1041#1045#1047' '#1083#1080#1084#1080#1090#1072' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') ' +
+        '- 2'#1092'.'
+      ImageIndex = 84
+    end
+    object actUpdate_CardSecond_num_not4000: TdsdExecStoredProc
+      Category = 'Update'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CardSecond_num_not4000
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CardSecond_num_not4000
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
+    end
     object actOpenBankSecondNumForm: TdsdOpenForm
       Category = 'Update'
       TabSheet = tsMain
@@ -4607,17 +4655,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-    end
-    object actUpdateCardSecond_num: TdsdExecStoredProc
-      Category = 'Update'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_CardSecond_num
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_CardSecond_num
-        end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
     end
     object macUpdateCardSecond: TMultiAction
       Category = 'Update'
@@ -6101,7 +6138,19 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateCardSecond_num'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateCardSecond_num_not4000'
         end
         item
           Visible = True
@@ -6261,6 +6310,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbMI_ChildProtocolOpenForm: TdxBarButton
       Action = MI_ChildProtocolOpenForm
+      Category = 0
+    end
+    object bbUpdateCardSecond_num_not4000: TdxBarButton
+      Action = mactUpdateCardSecond_num_not4000
       Category = 0
     end
   end
@@ -9175,7 +9228,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 544
     Top = 400
   end
-  object spUpdate_CardSecond_num: TdsdStoredProc
+  object spUpdate_CardSecond_num_yes4000: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PersonalService_CardSecond_num'
     DataSets = <>
     OutputType = otResult
@@ -9187,10 +9240,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLimit_4000'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 592
-    Top = 312
+    Top = 288
   end
   object GuidesBankSecondNum: TdsdGuides
     KeyField = 'Id'
@@ -9485,5 +9545,29 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 847
     Top = 16
+  end
+  object spUpdate_CardSecond_num_not4000: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PersonalService_CardSecond_num'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLimit_4000'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
+    Top = 304
   end
 end

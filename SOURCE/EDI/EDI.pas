@@ -6533,12 +6533,12 @@ begin
     end;
 
     // Подпись файла 2
-//    if Result and (HeaderDataSet.FieldByName('UserSeal').asString <> '') then
-//    begin
-//      if Result then Result := SignData(HeaderDataSet.FieldByName('UserSeal').asString);
-//      if FileExists(FFileNameParam.Value + '.p7s') then
-//        RenameFile(FFileNameParam.Value + '.p7s', FFileNameParam.Value + '_stamp.p7s');
-//    end;
+    if Result and (HeaderDataSet.FieldByName('UserSeal').asString <> '') then
+    begin
+      if Result then Result := SignData(HeaderDataSet.FieldByName('UserSeal').asString);
+      if FileExists(FFileNameParam.Value + '.p7s') then
+        RenameFile(FFileNameParam.Value + '.p7s', FFileNameParam.Value + '_stamp.p7s');
+    end;
 
     // Отправка подписанных файлов eTTN
     if Result then Result := POSTSignVchasnoEDI;
