@@ -416,52 +416,49 @@ BEGIN
           ;  
 
 
-    OPEN Cursor1 FOR
-     -- Результат
-      SELECT tmpCursor1.InvNumber
-           , tmpCursor1.OperDate
-           , tmpCursor1.PartionGoods
-           , tmpCursor1.OperDate_partion
-           , tmpCursor1.GoodsNameMaster
-           , tmpCursor1.CountMaster
-           , tmpCursor1.CountMaster_4134
-           , tmpCursor1.SummMaster
-           , tmpCursor1.HeadCountMaster
-           , tmpCursor1.PriceMaster
+   ---даннык строк для курсора2 
+    CREATE TEMP TABLE tmpCursor2 (GoodsCode Integer
+                                , GoodsName TVarChar
+                                , GoodsGroupName TVarChar
+                                , GoodsGroupNameFull TVarChar
+                                , GroupStatId Integer
+                                , GroupStatName TVarChar
+                                , MeasureName TVarChar
+                                , Amount  TFloat
+                                , LiveWeight  TFloat
+                                , HeadCount  TFloat
+                                , SummPrice  TFloat
+                                , Summ  TFloat
+                                , PricePlan TFloat, PriceNorm TFloat
+                                , isLoss  Boolean
+                                , PriceFact  Tfloat
+                                , SummFact  Tfloat
+                                , Count_gr  Tfloat 
+                                , Str_print TFloat
+                                , Persent_v   Tfloat
+                                , Persent_gr   Tfloat
+                                ) ON COMMIT DROP;
+    INSERT INTO tmpCursor2 (GoodsCode 
+                                , GoodsName 
+                                , GoodsGroupName 
+                                , GoodsGroupNameFull 
+                                , GroupStatId 
+                                , GroupStatName
+                                , MeasureName 
+                                , Amount  
+                                , LiveWeight  
+                                , HeadCount  
+                                , SummPrice  
+                                , Summ  
+                                , PricePlan, PriceNorm
+                                , isLoss
+                                , PriceFact
+                                , SummFact
+                                , Count_gr 
+                                , Str_print
+                                , Persent_v
+                                , Persent_gr)
 
-           , tmpCursor1.FromName
-           , tmpCursor1.PersonalPackerName
-           , tmpCursor1.GoodsNameIncome
-           , tmpCursor1.CountIncome
-           , tmpCursor1.SummIncome
-           , tmpCursor1.SummDop
-
-           , tmpCursor1.HeadCountIncome
-           , tmpCursor1.CountPackerIncome
-           , tmpCursor1.AmountPartnerIncome
-           , tmpCursor1.AmountPartnerSecondIncome
-           , tmpCursor1.HeadCount1 -- цена головы из Income
-
-           , tmpCursor1.PriceIncome
-           , tmpCursor1.PriceIncome1
-           , tmpCursor1.PriceTransport
-           , tmpCursor1.SummCostIncome
-
-           , tmpCursor1.Count_CountPacker
-           , tmpCursor1.PercentCount
-
-           , tmpCursor1.CountSeparate
-           , tmpCursor1.GoodsNameSeparate
-           , tmpCursor1.SummHeadCount1  -- ср вес головы из Separate
-
-           , tmpCursor1.Separate_info
-
-      FROM tmpCursor1;
-
-    RETURN NEXT Cursor1;
-
-
-    OPEN Cursor2 FOR
     WITH tmpMIContainer AS (SELECT MIContainer.MovementItemId
                                  , SUM (MIContainer.Amount) AS Amount
                             FROM MovementItemContainer AS MIContainer
@@ -648,13 +645,98 @@ BEGIN
           , ROUND (tmpData.Count_gr / 2.0 , 0) ::TFloat AS Str_print     --для вывода значения % выхода по группе 
           , tmpData.Persent_v                --% выхода 
           , tmpData.Persent_gr               --% выхода по группе 
-  
       FROM tmpDataCalc AS tmpData
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                   ON ObjectLink_Goods_GoodsGroupStat.ObjectId = tmpData.GoodsId
                                  AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
              LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = COALESCE (ObjectLink_Goods_GoodsGroupStat.ChildObjectId, 12045234)  --если не задано то группа "СО-не входит в выход"
        ;
+       
+
+    OPEN Cursor1 FOR
+     -- Результат
+      SELECT tmpCursor1.InvNumber
+           , tmpCursor1.OperDate
+           , tmpCursor1.PartionGoods
+           , tmpCursor1.OperDate_partion
+           , tmpCursor1.GoodsNameMaster
+           , tmpCursor1.CountMaster
+           , tmpCursor1.CountMaster_4134
+           , tmpCursor1.SummMaster
+           , tmpCursor1.HeadCountMaster
+           , tmpCursor1.PriceMaster
+
+           , tmpCursor1.FromName
+           , tmpCursor1.PersonalPackerName
+           , tmpCursor1.GoodsNameIncome
+           , tmpCursor1.CountIncome
+           , tmpCursor1.SummIncome
+           , tmpCursor1.SummDop
+
+           , tmpCursor1.HeadCountIncome
+           , tmpCursor1.CountPackerIncome
+           , tmpCursor1.AmountPartnerIncome
+           , tmpCursor1.AmountPartnerSecondIncome
+           , tmpCursor1.HeadCount1 -- цена головы из Income
+
+           , tmpCursor1.PriceIncome
+           , tmpCursor1.PriceIncome1
+           , tmpCursor1.PriceTransport
+           , tmpCursor1.SummCostIncome
+
+           , tmpCursor1.Count_CountPacker
+           , tmpCursor1.PercentCount
+
+           , tmpCursor1.CountSeparate
+           , tmpCursor1.GoodsNameSeparate
+           , tmpCursor1.SummHeadCount1  -- ср вес головы из Separate
+
+           , tmpCursor1.Separate_info   
+           
+           , tmpMaster.GoodsName      AS GoodsName_4134
+           , tmpMaster.summprice      AS summprice_4134
+           , tmpMaster.Amount         AS Amount_4134
+           , CASE WHEN COALESCE (tmpCursor1.CountMaster,0) <> 0 THEN 100  * tmpMaster.Amount / tmpCursor1.CountMaster ELSE 0 END :: TFloat AS Persent_4134
+
+      FROM tmpCursor1
+           LEFT JOIN (SELECT tmpCursor2.GoodsName
+                           , tmpCursor2.summprice
+                           , SUM (tmpCursor2.Amount) AS Amount
+                      FROM tmpCursor2
+                      WHERE tmpCursor2.GoodsCode = 4134            /* Id ---4261 */
+                      GROUP BY tmpCursor2.GoodsName
+                             , tmpCursor2.summprice
+                      ) AS tmpMaster ON 1=1
+      ;    
+
+
+    RETURN NEXT Cursor1;
+
+
+    OPEN Cursor2 FOR
+     SELECT tmpCursor2.GoodsCode
+          , tmpCursor2.GoodsName
+          , tmpCursor2.GoodsGroupName
+          , tmpCursor2.GoodsGroupNameFull 
+          , tmpCursor2.GroupStatId
+          , tmpCursor2.GroupStatName
+          , tmpCursor2.MeasureName
+          , tmpCursor2.Amount
+          , tmpCursor2.LiveWeight
+          , tmpCursor2.HeadCount
+          , tmpCursor2.SummPrice
+          , tmpCursor2.Summ
+          , tmpCursor2.PricePlan
+          , tmpCursor2.PriceNorm
+          , tmpCursor2.isLoss
+          , tmpCursor2.PriceFact                --расчет по файлу 
+          , tmpCursor2.SummFact
+          , tmpCursor2.Count_gr                 -- кол.товаров в группе
+          , tmpCursor2.Str_print                --для вывода значения % выхода по группе 
+          , tmpCursor2.Persent_v                --% выхода 
+          , tmpCursor2.Persent_gr               --% выхода по группе 
+     FROM tmpCursor2;
+        
     RETURN NEXT Cursor2;
 
 END;
