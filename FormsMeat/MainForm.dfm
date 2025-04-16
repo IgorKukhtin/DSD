@@ -9627,12 +9627,12 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'CashId_top'
-          Value = '3259636'
+          Value = '11921030'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
-          Value = #1050#1072#1089#1089#1072' '#1051#1100#1074#1086#1074
+          Value = #1050#1072#1089#1089#1072' '#1042#1080#1085#1085#1080#1094#1072
           DataType = ftString
           MultiSelectSeparator = ','
         end>
