@@ -86,6 +86,7 @@ BEGIN
                              , SummDop  TFloat
                              , HeadCountIncome  TFloat
                              , CountPackerIncome  TFloat
+                             , AmountPartnerIncome TFloat, AmountPartnerSecondIncome TFloat
                              , HeadCount1  TFloat
                              , PriceIncome  Tfloat
                              , PriceIncome1  Tfloat
@@ -114,7 +115,8 @@ BEGIN
                              , SummIncome  
                              , SummDop  
                              , HeadCountIncome
-                             , CountPackerIncome
+                             , CountPackerIncome 
+                             , AmountPartnerIncome, AmountPartnerSecondIncome
                              , HeadCount1
                              , PriceIncome
                              , PriceIncome1
@@ -199,38 +201,16 @@ BEGIN
 
      , tmpMI_Float AS (SELECT MovementItemFloat.*
                        FROM MovementItemFloat
-                       WHERE MovementItemFloat.DescId IN ( zc_MIFloat_AmountPacker(), zc_MIFloat_HeadCount())
-                         AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpIncome_Container.MovementItemId FROM tmpIncome_Container)
+                       WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpIncome_Container.MovementItemId FROM tmpIncome_Container)
+                         AND MovementItemFloat.DescId IN ( zc_MIFloat_AmountPacker()
+                                                         , zc_MIFloat_HeadCount()
+                                                         , zc_MIFloat_AmountPartner()
+                                                         , zc_MIFloat_AmountPartnerSecond()
+                                                         )
                        )
 
         -- приход от поставщика : кол. и сумм.
      , tmpIncome AS (-- находим по партиям из проводкок
-                      /*SELECT tmpContainer.DescId
-                           , tmpContainer.ContainerId
-                           , MIContainer.MovementId
-                           , MIContainer.ObjectId_analyzer AS GoodsId
-                           , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN SUM (MIContainer.Amount) ELSE 0 END AS Amount_count
-                           , CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN SUM (MIContainer.Amount) ELSE 0 END AS Amount_summ
-                           , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS CountPacker
-                           , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))    AS HeadCount
-
-                      FROM tmpContainer
-                           INNER JOIN MovementItemContainer AS MIContainer
-                                                            ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                           AND MIContainer.MovementDescId = zc_Movement_Income()
-                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
-                                                       ON MIFloat_AmountPacker.MovementItemId = MIContainer.MovementItemId
-                                                      AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
-                                                      AND MIContainer.DescId = zc_MIContainer_Count()
-                                                      AND COALESCE (MIContainer.AnalyzerId, 0) = 0
-                           LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
-                                                       ON MIFloat_HeadCount.MovementItemId = MIContainer.MovementItemId
-                                                      AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-                                                      AND MIContainer.DescId = zc_MIContainer_Count()
-                                                      AND COALESCE (MIContainer.AnalyzerId, 0) = 0
-
-                      GROUP BY tmpContainer.DescId, tmpContainer.ContainerId, MIContainer.MovementId, MIContainer.ObjectId_analyzer, MIContainer.DescId
-                      */
                       SELECT MIContainer.DescId
                            , MIContainer.ContainerId
                            , MIContainer.MovementId
@@ -239,6 +219,8 @@ BEGIN
                            , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN (MIContainer.Amount) ELSE 0 END) AS Amount_summ
                            , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS CountPacker
                            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))    AS HeadCount
+                           , SUM (COALESCE (MIFloat_AmountPartner.ValueData,0))       AS AmountPartner
+                           , SUM (COALESCE (MIFloat_AmountPartnerSecond.ValueData,0)) AS AmountPartnerSecond
                       FROM tmpIncome_Container AS MIContainer
                            LEFT JOIN tmpMI_Float AS MIFloat_AmountPacker
                                                        ON MIFloat_AmountPacker.MovementItemId = MIContainer.MovementItemId
@@ -251,10 +233,20 @@ BEGIN
                                                       AND MIContainer.DescId = zc_MIContainer_Count()
                                                       AND COALESCE (MIContainer.AnalyzerId, 0) = 0
 
+                           LEFT JOIN tmpMI_Float AS MIFloat_AmountPartner
+                                                 ON MIFloat_AmountPartner.MovementItemId = MIContainer.MovementItemId
+                                                AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                                AND MIContainer.DescId = zc_MIContainer_Count()
+                                                      AND COALESCE (MIContainer.AnalyzerId, 0) = 0
+                           LEFT JOIN tmpMI_Float AS MIFloat_AmountPartnerSecond
+                                                 ON MIFloat_AmountPartnerSecond.MovementItemId = MIContainer.MovementItemId
+                                                AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
+                                                AND MIContainer.DescId = zc_MIContainer_Count()
+                                                      AND COALESCE (MIContainer.AnalyzerId, 0) = 0
                       GROUP BY MIContainer.DescId
                              , MIContainer.ContainerId
                              , MIContainer.MovementId
-                             , MIContainer.ObjectId_analyzer
+                             , MIContainer.ObjectId_analyzer 
                      UNION ALL
                       -- находим по партиям из документа (т.к. не партионный учет то проводок по партиям нет)
                       SELECT 0 AS DescId
@@ -265,7 +257,8 @@ BEGIN
                            , CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN SUM (MIContainer.Amount) ELSE 0 END AS Amount_summ
                            , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS CountPacker
                            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))    AS HeadCount
-
+                           , SUM (COALESCE (MIFloat_AmountPartner.ValueData,0))       AS AmountPartner
+                           , SUM (COALESCE (MIFloat_AmountPartnerSecond.ValueData,0)) AS AmountPartnerSecond
                       FROM tmpMovement
                            LEFT JOIN tmpContainer ON 1 = 1
                            INNER JOIN Movement ON Movement.OperDate = tmpMovement.OperDate_partion
@@ -289,6 +282,14 @@ BEGIN
                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
                                                       AND MIContainer.DescId = zc_MIContainer_Count()
 
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                       ON MIFloat_AmountPartner.MovementItemId = MIContainer.MovementItemId
+                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                                      AND MIContainer.DescId = zc_MIContainer_Count()
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
+                                                       ON MIFloat_AmountPartnerSecond.MovementItemId = MIContainer.MovementItemId
+                                                      AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
+                                                      AND MIContainer.DescId = zc_MIContainer_Count()
                       WHERE tmpContainer.ContainerId IS NULL
                         AND tmpMovement.PartnerCode_partion > 0
                       GROUP BY MIContainer.MovementId, MIContainer.ObjectId_analyzer, MIContainer.DescId
@@ -359,6 +360,8 @@ BEGIN
 
            , tmpIncomeAll.HeadCount           AS HeadCountIncome
            , tmpIncomeAll.CountPacker         AS CountPackerIncome
+           , tmpIncomeAll.AmountPartner       AS AmountPartnerIncome
+           , tmpIncomeAll.AmountPartnerSecond AS AmountPartnerSecondIncome
            , CASE WHEN tmpIncomeAll.HeadCount <> 0 THEN tmpIncomeAll.Amount_count / tmpIncomeAll.HeadCount ELSE 0 END AS HeadCount1 -- цена головы из Income
 
            , tmpIncomeAll.Amount_summ / tmpIncomeAll.Amount_count                              AS PriceIncome
@@ -389,7 +392,8 @@ BEGIN
                            , MAX (COALESCE (MovementLinkObject_PersonalPacker.ObjectId, 0)) AS PersonalPackerId
                            , SUM (tmpIncome.Amount_count) AS Amount_count, SUM ( tmpIncome.Amount_summ) AS Amount_summ
                            , SUM (tmpIncome.CountPacker) AS CountPacker, SUM (tmpIncome.HeadCount) AS HeadCount
-
+                           , SUM (tmpIncome.AmountPartner)       AS AmountPartner
+                           , SUM (tmpIncome.AmountPartnerSecond) AS AmountPartnerSecond
                       FROM tmpIncome
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                         ON MovementLinkObject_From.MovementId = tmpIncome.MovementId
@@ -412,50 +416,49 @@ BEGIN
           ;  
 
 
-    OPEN Cursor1 FOR
-     -- Результат
-      SELECT tmpCursor1.InvNumber
-           , tmpCursor1.OperDate
-           , tmpCursor1.PartionGoods
-           , tmpCursor1.OperDate_partion
-           , tmpCursor1.GoodsNameMaster
-           , tmpCursor1.CountMaster
-           , tmpCursor1.CountMaster_4134
-           , tmpCursor1.SummMaster
-           , tmpCursor1.HeadCountMaster
-           , tmpCursor1.PriceMaster
+   ---даннык строк для курсора2 
+    CREATE TEMP TABLE tmpCursor2 (GoodsCode Integer
+                                , GoodsName TVarChar
+                                , GoodsGroupName TVarChar
+                                , GoodsGroupNameFull TVarChar
+                                , GroupStatId Integer
+                                , GroupStatName TVarChar
+                                , MeasureName TVarChar
+                                , Amount  TFloat
+                                , LiveWeight  TFloat
+                                , HeadCount  TFloat
+                                , SummPrice  TFloat
+                                , Summ  TFloat
+                                , PricePlan TFloat, PriceNorm TFloat
+                                , isLoss  Boolean
+                                , PriceFact  Tfloat
+                                , SummFact  Tfloat
+                                , Count_gr  Tfloat 
+                                , Str_print TFloat
+                                , Persent_v   Tfloat
+                                , Persent_gr   Tfloat
+                                ) ON COMMIT DROP;
+    INSERT INTO tmpCursor2 (GoodsCode 
+                                , GoodsName 
+                                , GoodsGroupName 
+                                , GoodsGroupNameFull 
+                                , GroupStatId 
+                                , GroupStatName
+                                , MeasureName 
+                                , Amount  
+                                , LiveWeight  
+                                , HeadCount  
+                                , SummPrice  
+                                , Summ  
+                                , PricePlan, PriceNorm
+                                , isLoss
+                                , PriceFact
+                                , SummFact
+                                , Count_gr 
+                                , Str_print
+                                , Persent_v
+                                , Persent_gr)
 
-           , tmpCursor1.FromName
-           , tmpCursor1.PersonalPackerName
-           , tmpCursor1.GoodsNameIncome
-           , tmpCursor1.CountIncome
-           , tmpCursor1.SummIncome
-           , tmpCursor1.SummDop
-
-           , tmpCursor1.HeadCountIncome
-           , tmpCursor1.CountPackerIncome
-           , tmpCursor1.HeadCount1 -- цена головы из Income
-
-           , tmpCursor1.PriceIncome
-           , tmpCursor1.PriceIncome1
-           , tmpCursor1.PriceTransport
-           , tmpCursor1.SummCostIncome
-
-           , tmpCursor1.Count_CountPacker
-           , tmpCursor1.PercentCount
-
-           , tmpCursor1.CountSeparate
-           , tmpCursor1.GoodsNameSeparate
-           , tmpCursor1.SummHeadCount1  -- ср вес головы из Separate
-
-           , tmpCursor1.Separate_info
-
-      FROM tmpCursor1;
-
-    RETURN NEXT Cursor1;
-
-
-    OPEN Cursor2 FOR
     WITH tmpMIContainer AS (SELECT MIContainer.MovementItemId
                                  , SUM (MIContainer.Amount) AS Amount
                             FROM MovementItemContainer AS MIContainer
@@ -642,13 +645,98 @@ BEGIN
           , ROUND (tmpData.Count_gr / 2.0 , 0) ::TFloat AS Str_print     --для вывода значения % выхода по группе 
           , tmpData.Persent_v                --% выхода 
           , tmpData.Persent_gr               --% выхода по группе 
-  
       FROM tmpDataCalc AS tmpData
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                   ON ObjectLink_Goods_GoodsGroupStat.ObjectId = tmpData.GoodsId
                                  AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
              LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = COALESCE (ObjectLink_Goods_GoodsGroupStat.ChildObjectId, 12045234)  --если не задано то группа "СО-не входит в выход"
        ;
+       
+
+    OPEN Cursor1 FOR
+     -- Результат
+      SELECT tmpCursor1.InvNumber
+           , tmpCursor1.OperDate
+           , tmpCursor1.PartionGoods
+           , tmpCursor1.OperDate_partion
+           , tmpCursor1.GoodsNameMaster
+           , tmpCursor1.CountMaster
+           , tmpCursor1.CountMaster_4134
+           , tmpCursor1.SummMaster
+           , tmpCursor1.HeadCountMaster
+           , tmpCursor1.PriceMaster
+
+           , tmpCursor1.FromName
+           , tmpCursor1.PersonalPackerName
+           , tmpCursor1.GoodsNameIncome
+           , tmpCursor1.CountIncome
+           , tmpCursor1.SummIncome
+           , tmpCursor1.SummDop
+
+           , tmpCursor1.HeadCountIncome
+           , tmpCursor1.CountPackerIncome
+           , tmpCursor1.AmountPartnerIncome
+           , tmpCursor1.AmountPartnerSecondIncome
+           , tmpCursor1.HeadCount1 -- цена головы из Income
+
+           , tmpCursor1.PriceIncome
+           , tmpCursor1.PriceIncome1
+           , tmpCursor1.PriceTransport
+           , tmpCursor1.SummCostIncome
+
+           , tmpCursor1.Count_CountPacker
+           , tmpCursor1.PercentCount
+
+           , tmpCursor1.CountSeparate
+           , tmpCursor1.GoodsNameSeparate
+           , tmpCursor1.SummHeadCount1  -- ср вес головы из Separate
+
+           , tmpCursor1.Separate_info   
+           
+           , tmpMaster.GoodsName      AS GoodsName_4134
+           , tmpMaster.summprice      AS summprice_4134
+           , tmpMaster.Amount         AS Amount_4134
+           , CASE WHEN COALESCE (tmpCursor1.CountMaster,0) <> 0 THEN 100  * tmpMaster.Amount / tmpCursor1.CountMaster ELSE 0 END :: TFloat AS Persent_4134
+
+      FROM tmpCursor1
+           LEFT JOIN (SELECT tmpCursor2.GoodsName
+                           , tmpCursor2.summprice
+                           , SUM (tmpCursor2.Amount) AS Amount
+                      FROM tmpCursor2
+                      WHERE tmpCursor2.GoodsCode = 4134            /* Id ---4261 */
+                      GROUP BY tmpCursor2.GoodsName
+                             , tmpCursor2.summprice
+                      ) AS tmpMaster ON 1=1
+      ;    
+
+
+    RETURN NEXT Cursor1;
+
+
+    OPEN Cursor2 FOR
+     SELECT tmpCursor2.GoodsCode
+          , tmpCursor2.GoodsName
+          , tmpCursor2.GoodsGroupName
+          , tmpCursor2.GoodsGroupNameFull 
+          , tmpCursor2.GroupStatId
+          , tmpCursor2.GroupStatName
+          , tmpCursor2.MeasureName
+          , tmpCursor2.Amount
+          , tmpCursor2.LiveWeight
+          , tmpCursor2.HeadCount
+          , tmpCursor2.SummPrice
+          , tmpCursor2.Summ
+          , tmpCursor2.PricePlan
+          , tmpCursor2.PriceNorm
+          , tmpCursor2.isLoss
+          , tmpCursor2.PriceFact                --расчет по файлу 
+          , tmpCursor2.SummFact
+          , tmpCursor2.Count_gr                 -- кол.товаров в группе
+          , tmpCursor2.Str_print                --для вывода значения % выхода по группе 
+          , tmpCursor2.Persent_v                --% выхода 
+          , tmpCursor2.Persent_gr               --% выхода по группе 
+     FROM tmpCursor2;
+        
     RETURN NEXT Cursor2;
 
 END;

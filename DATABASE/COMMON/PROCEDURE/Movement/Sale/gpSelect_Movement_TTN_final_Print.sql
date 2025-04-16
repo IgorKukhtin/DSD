@@ -293,9 +293,9 @@ BEGIN
                              )
 
      , tmpCar_param AS (SELECT tmp.CarId
-                             , CASE WHEN COALESCE (ObjectFloat_Length.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Length.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Length
-                             , CASE WHEN COALESCE (ObjectFloat_Width.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Width.ValueData AS NUMERIC (16,0))   ::TVarChar END :: TVarChar  AS Width 
-                             , CASE WHEN COALESCE (ObjectFloat_Height.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Height.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Height
+                             , CASE WHEN COALESCE (ObjectFloat_Length.ValueData,0) = 0 THEN '0' ELSE CAST (ObjectFloat_Length.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Length
+                             , CASE WHEN COALESCE (ObjectFloat_Width.ValueData,0) = 0 THEN '0' ELSE CAST (ObjectFloat_Width.ValueData AS NUMERIC (16,0))   ::TVarChar END :: TVarChar  AS Width 
+                             , CASE WHEN COALESCE (ObjectFloat_Height.ValueData,0) = 0 THEN '0' ELSE CAST (ObjectFloat_Height.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Height
                              , COALESCE (ObjectFloat_Weight.ValueData, 0) AS Weight
                              , COALESCE (ObjectFloat_Year.ValueData, 0)   AS Year
                              , ObjectString_VIN.ValueData                 AS VIN
@@ -510,9 +510,11 @@ BEGIN
            , tmpTransportGoods.CarModelName
            , CASE WHEN COALESCE (tmpTransportGoods.CarTrailerName, '') = '' THEN 'немає' ELSE tmpTransportGoods.CarTrailerName END ::TVarChar AS CarTrailerName
            , tmpTransportGoods.CarTrailerModelName
-           , tmpTransportGoods.PersonalDriverName
+           , tmpTransportGoods.PersonalDriverName 
+           , CASE WHEN COALESCE (ObjectString_PersonalDriver_INN.ValueData,'') <> '' THEN '('||ObjectString_PersonalDriver_INN.ValueData||')' ELSE '' END ::TVarChar AS INN_PersonalDriver
            , COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData) :: TVarChar AS DriverCertificate
            , CASE WHEN TRIM (COALESCE (tmpTransportGoods.MemberName1, '')) = '' THEN tmpTransportGoods.PersonalDriverName ELSE tmpTransportGoods.MemberName1 END :: TVarChar AS MemberName1
+           , CASE WHEN COALESCE (ObjectString_Member1_INN.ValueData,'') <> '' THEN '('||ObjectString_Member1_INN.ValueData||')' ELSE '' END               ::TVarChar AS INN_Member1
            , tmpTransportGoods.MemberName2
            , tmpTransportGoods.MemberName3
            , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn() THEN 'Комірник ' ||tmpTransportGoods.MemberName4 ELSE tmpTransportGoods.MemberName7 END AS MemberName4  -- 4 и 7 меняем местами для возврата
@@ -538,9 +540,9 @@ BEGIN
           , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
                   ELSE '' -- 'м.Днiпро'
                   END  :: TVarChar   AS PlaceOf
-          , (select tmpCar_param.Length  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS Length
-          , (select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS Width 
-          , (select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS Height
+          , (select tmpCar_param.Length  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: Integer  AS Length
+          , (select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId)  :: Integer  AS Width 
+          , (select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId)  :: Integer  AS Height
           --вага авто в кг
           , CASE WHEN COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId), 0)
                     + COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId), 0)
@@ -692,6 +694,24 @@ BEGIN
             LEFT JOIN tmpSale_Total ON 1 = 1
             LEFT JOIN tmpTG_Total ON 1=1
 
+            --ИНН для водителя
+            LEFT JOIN ObjectLink AS OL_PersonalDriver_Member
+                                 ON OL_PersonalDriver_Member.objectid = tmpTransportGoods.PersonalDriverId
+                                AND OL_PersonalDriver_Member.descid = zc_objectlink_personal_member()
+
+            LEFT JOIN ObjectString AS ObjectString_PersonalDriver_INN
+                                   ON ObjectString_PersonalDriver_INN.ObjectId = OL_PersonalDriver_Member.ChildObjectId
+                                  AND ObjectString_PersonalDriver_INN.DescId = zc_ObjectString_Member_INN()
+
+            --ИНН для "отримав водій/експедитор"
+            LEFT JOIN ObjectLink AS OL_Member1_Member
+                                 ON OL_Member1_Member.objectid = CASE WHEN COALESCE (tmpTransportGoods.MemberId1,0) = 0 THEN tmpTransportGoods.PersonalDriverId ELSE tmpTransportGoods.MemberId1 END
+                                AND OL_Member1_Member.descid = zc_objectlink_personal_member()
+
+            LEFT JOIN ObjectString AS ObjectString_Member1_INN
+                                   ON ObjectString_Member1_INN.ObjectId = OL_Member1_Member.ChildObjectId
+                                  AND ObjectString_Member1_INN.DescId = zc_ObjectString_Member_INN()
+                                  
        WHERE Movement.Id = vbMovementId_Sale
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
