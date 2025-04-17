@@ -6035,15 +6035,91 @@ begin
   end;
 end;
 
+const
+
+  Base64EncodeChars: array[0..63] of Char = (
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+    'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+    'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+    'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+    'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+    'w', 'x', 'y', 'z', '0', '1', '2', '3',
+    '4', '5', '6', '7', '8', '9', '+', '/');
+
+function base64encode(const Data: TBytes): string;
+var
+  R, Len, I, J, L : Longint;
+  C : LongWord;
+begin
+  Result := '';
+  Len := Length(Data);
+  if Len = 0 then Exit;
+  R := Len mod 3;
+  Dec(Len, R);
+  L := (Len div 3) * 4;
+  if (R > 0) then Inc(L, 4);
+  SetLength(Result, L);
+  I := 0;
+  J := 1;
+  while (I < Len) do begin
+    C := Data[I];
+    Inc(I);
+    C := (C shl 8) or Data[I];
+    Inc(I);
+    C := (C shl 8) or Data[I];
+    Inc(I);
+    Result[J] := Base64EncodeChars[C shr 18];
+    Inc(J);
+    Result[J] := Base64EncodeChars[(C shr 12) and $3F];
+    Inc(J);
+    Result[J] := Base64EncodeChars[(C shr 6) and $3F];
+    Inc(J);
+    Result[J] := Base64EncodeChars[C and $3F];
+    Inc(J);
+  end;
+  if (R = 1) then begin
+    C := Data[I];
+    Result[J] := Base64EncodeChars[C shr 2];
+    Inc(J);
+    Result[J] := Base64EncodeChars[(C and $03) shl 4];
+    Inc(J);
+    Result[J] := '=';
+    Inc(J);
+    Result[J] := '=';
+  end
+  else if (R = 2) then begin
+    C := Data[I];
+    Inc(I);
+    C := (C shl 8) or Data[I];
+    Result[J] := Base64EncodeChars[C shr 10];
+    Inc(J);
+    Result[J] := Base64EncodeChars[(C shr 4) and $3F];
+    Inc(J);
+    Result[J] := Base64EncodeChars[(C and $0F) shl 2];
+    Inc(J);
+    Result[J] := '=';
+  end;
+end;
+
 function TdsdVchasnoEDIAction.POSTSignVchasnoEDI: Boolean;
   var IdHTTP: TCustomIdHTTP;
       S, Params: String;
-      fileStreamSing: TFileStream;
-      base64StreamSing: TStringStream;
-      fileStreamStamp: TFileStream;
-      base64StreamStamp: TStringStream;
+      fileStreamSing: TMemoryStream;
+      fileStreamStamp: TMemoryStream;
       Stream: TStringStream;
+      JSONObject: TJSONObject;
+
       Body: string;
+      ByteArray: TBytes;
+
+  function MemoryToBytes(const Ptr: Pointer; Size: Integer): TBytes;
+  begin
+    SetLength(Result, Size);
+    if (Size > 0) and Assigned(Ptr) then
+      Move(Ptr^, Result[0], Size);
+  end;
+
 begin
   inherited;
   Result := False;
@@ -6066,47 +6142,57 @@ begin
   IdHTTP := TCustomIdHTTP.Create(Nil);
   try
 
-    fileStreamSing := TFileStream.Create(FFileNameParam.Value + '_sign.p7s', fmOpenRead);
-    base64StreamSing := TStringStream.Create('', TEncoding.UTF8);
+    fileStreamSing := TMemoryStream.Create;
+    fileStreamSing.LoadFromFile(FFileNameParam.Value + '_sign.p7s');
     if FileExists(FFileNameParam.Value + '_stamp.p7s') then
     begin
-      fileStreamStamp := TFileStream.Create(FFileNameParam.Value + '_stamp.p7s', fmOpenRead);
-      base64StreamStamp := TStringStream.Create('', TEncoding.UTF8);
+      fileStreamStamp := TMemoryStream.Create;
+      fileStreamStamp.LoadFromFile(FFileNameParam.Value + '_stamp.p7s');
     end;
 
     try
+      JSONObject := TJSONObject.Create;
       try
-        EncodeStream(fileStreamSing, base64StreamSing);
+        try
 
-        Body := '{'#10 +
-                '  "signature": "' +  base64StreamSing.DataString + '"';
-        if Assigned(fileStreamStamp) then
-        begin
-          EncodeStream(fileStreamStamp, base64StreamStamp);
+          ByteArray := MemoryToBytes(fileStreamSing.Memory, fileStreamSing.Size);
+          JSONObject.AddPair('signature',  base64encode(ByteArray));
+          if Assigned(fileStreamStamp) then
+          begin
+            ByteArray := MemoryToBytes(fileStreamStamp.Memory, fileStreamSing.Size);
+            JSONObject.AddPair('stamp', base64encode(ByteArray));
+          end;
+          Body := JSONObject.ToString;
 
-          Body := Body + ','#10'  "stamp": "' + base64StreamStamp.DataString + '"'#10;
+        except on E:EIdHTTPProtocolException  do
+                    ShowMessages('Ошибка: ' + e.ErrorMessage);
         end;
-        Body := Body + #10 + '}';
-      except on E:EIdHTTPProtocolException  do
-                  ShowMessages('Ошибка: ' + e.ErrorMessage);
+      finally
+        JSONObject.Free;
       end;
     finally
       FreeAndNil(fileStreamStamp);
-      FreeAndNil(base64StreamStamp);
+
       FreeAndNil(fileStreamSing);
-      FreeAndNil(base64StreamSing);
     end;
 
-//    Body := '{' +
-//            '"signature": "0KHRgNC40LLQtdGCLCDQvNC+0LbQtdC90LjRjw==",' +
-//            '"stamp": "0JrQsNGA0YHQvtCy0L7QtNGB"' +
-//            '}';
-
     IdHTTP.Request.Clear;
-    IdHTTP.Request.ContentType := 'text/plain';
-    IdHTTP.Request.ContentEncoding := 'UTF-8';
-    IdHTTP.Request.Accept := '*/*';
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+
+
+
+
+
+
+
     IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    //IdHTTP.Request.Accept := '*/*';
+    //IdHTTP.Request.Connection := 'keep-alive';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
     //IdHTTP.Request.Connection := 'keep-alive';
     IdHTTP.Request.CustomHeaders.FoldLines := False;
     IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
@@ -6234,7 +6320,7 @@ begin
       begin
         FKeyUserNameParam.Value := F.ReadString('SignResult', 'UserName', '');
         Result := True;
-      end else ShowError('Ошибка ' + F.ReadString('SignResult', 'Ошибка', ''));;
+      end else ShowMessages('Ошибка ' + F.ReadString('SignResult', 'Ошибка', ''));;
     Except
     end;
   finally
