@@ -6179,20 +6179,8 @@ begin
     IdHTTP.Request.Clear;
     IdHTTP.Request.ContentType := 'application/json';
     IdHTTP.Request.ContentEncoding := 'utf-8';
-
-
-
-
-
-
-
     IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
     //IdHTTP.Request.Accept := '*/*';
-    //IdHTTP.Request.Connection := 'keep-alive';
-    IdHTTP.Request.CustomHeaders.FoldLines := False;
-    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
-    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
-
     //IdHTTP.Request.Connection := 'keep-alive';
     IdHTTP.Request.CustomHeaders.FoldLines := False;
     IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
