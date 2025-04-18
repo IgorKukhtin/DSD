@@ -34,7 +34,7 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
      -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inServiceDate, inServiceDate, NULL, NULL, NULL, vbUserId);
+    PERFORM lpCheckPeriodClose_auditor (inServiceDate, inServiceDate, NULL, NULL, NULL, vbUserId);
 
     -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
     PERFORM lpCheck_UserRole_8813637 (vbUserId);
@@ -128,7 +128,7 @@ BEGIN
                                                      AND ObjectBoolean_CompensationNot.DescId    = zc_ObjectBoolean_PersonalServiceList_CompensationNot()
                                                      AND ObjectBoolean_CompensationNot.ValueData = TRUE
                          -- Исключить из расчета компенсации для отпуска
-                         WHERE ObjectBoolean_CompensationNot.ObjectId IS NULL
+                         --WHERE ObjectBoolean_CompensationNot.ObjectId IS NULL     --временно убрали 18,04,2025
       
                          GROUP BY MIContainer.MovementId
                                 , MIContainer.MovementDescId
