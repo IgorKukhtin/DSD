@@ -48,9 +48,12 @@ BEGIN
                                )
                                AND vbIsTushenka = FALSE)
                             OR (Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30102() -- Доходы + Продукция + Тушенка
-                               AND vbIsTushenka = TRUE)
+                               AND vbIsTushenka = TRUE
+                               )
                             OR ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (5064881) -- СО-ПОСОЛ
                             OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (5064881) -- СО-ПОСОЛ
+                            -- СО-СВИНИНА ПРОДАЖА маг
+                            OR ObjectLink_Goods_InfoMoney.ObjectId = 10691948 -- КОВБАСА ДЛЯ СМАЖЕННЯ ДОМАШНЯ н/ф зі свинини охолоджений
                        )
       SELECT 0 AS MovementItemId
            , tmp.GoodsId
