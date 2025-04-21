@@ -189,6 +189,8 @@
 			<DCCReference Include="..\SOURCE\Pdfium\PdfiumCtrl.pas"/>
 			<DCCReference Include="..\SOURCE\Pdfium\PdfiumLib.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\invoice_comdoc_vchasno.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\invoice_delnote_base.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>
