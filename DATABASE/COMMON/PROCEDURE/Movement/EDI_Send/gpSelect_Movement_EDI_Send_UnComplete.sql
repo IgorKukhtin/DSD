@@ -66,23 +66,27 @@ BEGIN
 
                  -- ВН - Delnot, автоматическая отправка
                , CASE -- этим никогда
-                      WHEN Object_Retail.Id = 8873723 -- Кошик
-                           THEN FALSE
+                      --WHEN Object_Retail.Id = 8873723 -- Кошик
+                      --     THEN FALSE
 
                       -- НЕ НАДО - временно Рост Харьков + Чудо-Маркет
-                      WHEN Object_Retail.Id IN (310862  -- Рост Харьков
-                                              , 2473612 -- Чудо-Маркет
-                                               )
-                           THEN FALSE
+                      --WHEN Object_Retail.Id IN (310862  -- Рост Харьков
+                      --                        , 2473612 -- Чудо-Маркет
+                      --                         )
+                      --     THEN FALSE
 
                       -- если надо
                       -- WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiDelnot.ValueData = TRUE
                       --     THEN TRUE
 
-                      -- временно Всем
+                      -- только если стоит признак
                       WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND (MovementBoolean_EdiDelnot.ValueData = TRUE
                                                                                  OR MovementBoolean_EdiComdoc.ValueData = TRUE
                                                                                    )
+                       -- признак
+                       AND ObjectBoolean_Juridical_EdiDelnot.ValueData = TRUE
+
+                           -- отправили
                            THEN TRUE
 
                       ELSE FALSE
@@ -91,21 +95,27 @@ BEGIN
 
                  -- ВН - Comdoc, автоматическая отправка
                , CASE -- этим никогда
-                      WHEN Object_Retail.Id = 8873723 -- Кошик
-                           THEN FALSE
+                      --WHEN Object_Retail.Id = 8873723 -- Кошик
+                      --     THEN FALSE
 
                       -- НАДО - временно Рост Харьков + Чудо-Маркет
-                      WHEN Object_Retail.Id IN (310862  -- Рост Харьков
-                                              , 2473612 -- Чудо-Маркет
-                                               )
-                       AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND (MovementBoolean_EdiDelnot.ValueData = TRUE
+                      --WHEN Object_Retail.Id IN (310862  -- Рост Харьков
+                      --                        , 2473612 -- Чудо-Маркет
+                      --                         )
+                      -- AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND (MovementBoolean_EdiDelnot.ValueData = TRUE
+                      --                                                           OR MovementBoolean_EdiComdoc.ValueData = TRUE
+                      --                                                             )
+                      --     THEN TRUE
+
+                      -- только если стоит признак
+                      WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND (MovementBoolean_EdiDelnot.ValueData = TRUE
                                                                                  OR MovementBoolean_EdiComdoc.ValueData = TRUE
                                                                                    )
-                           THEN TRUE
+                       -- признак
+                       AND ObjectBoolean_Juridical_EdiComdoc.ValueData = TRUE
 
-                      -- если надо
-                      -- WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE AND ObjectBoolean_Juridical_EdiComdoc.ValueData = TRUE
-                      --     THEN TRUE
+                           -- отправили
+                           THEN TRUE
 
                       ELSE FALSE
                  END:: Boolean AS isEdiComdoc
@@ -202,21 +212,21 @@ BEGIN
                                        AND ObjectBoolean_Juridical_VchasnoEdi.DescId    = zc_ObjectBoolean_Juridical_VchasnoEdi()
                                      --AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
 
-                -- ВН - Comdoc, автоматическая отправка
-                LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_EdiComdoc
-                                        ON ObjectBoolean_Juridical_EdiComdoc.ObjectId  = Object_JuridicalTo.Id
-                                       AND ObjectBoolean_Juridical_EdiComdoc.DescId    = zc_ObjectBoolean_Juridical_isEdiComdoc()
                 -- ВН - Delnot, автоматическая отправка
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_EdiDelnot
                                         ON ObjectBoolean_Juridical_EdiDelnot.ObjectId  = Object_JuridicalTo.Id
                                        AND ObjectBoolean_Juridical_EdiDelnot.DescId    = zc_ObjectBoolean_Juridical_isEdiDelnot()
+                -- ВН - Comdoc, автоматическая отправка
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_EdiComdoc
+                                        ON ObjectBoolean_Juridical_EdiComdoc.ObjectId  = Object_JuridicalTo.Id
+                                       AND ObjectBoolean_Juridical_EdiComdoc.DescId    = zc_ObjectBoolean_Juridical_isEdiComdoc()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                      ON ObjectLink_Juridical_Retail.ObjectId = Object_JuridicalTo.Id
                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
                 LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
-                --EDI
+                -- док.EDI
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_EDI
                                                ON MovementLinkMovement_Order_EDI.MovementId = MovementLinkMovement_Order.MovementChildId
                                               AND MovementLinkMovement_Order_EDI.DescId = zc_MovementLinkMovement_Order()

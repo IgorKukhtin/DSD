@@ -15,8 +15,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
 RETURNS Integer
 AS
 $BODY$
-  DECLARE vbOperDate         TDateTime;
+  DECLARE vbOperDate          TDateTime;
   DECLARE vbStatusId          Integer;
+  DECLARE vbStatusId_Next     Integer;
   DECLARE vbMovementDescId    Integer;
   DECLARE vbInvNumber         TVarChar;
   DECLARE vbIsErased          Boolean;
@@ -46,9 +47,10 @@ BEGIN
 
 
      -- определ€ем <—татус>
-     SELECT StatusId, OperDate, InvNumber, DescId INTO vbStatusId, vbOperDate, vbInvNumber, vbMovementDescId FROM Movement WHERE Id = inMovementId;
+     SELECT StatusId, COALESCE (StatusId_Next, 0), OperDate, InvNumber, DescId INTO vbStatusId, vbStatusId_Next, vbOperDate, vbInvNumber, vbMovementDescId FROM Movement WHERE Id = inMovementId;
      -- проверка - проведенные/удаленные документы »змен€ть нельз€ + !!!временно захардкодил -12345!!!
-     IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inUserId, 0) NOT IN (-12345, zc_Enum_Process_Auto_PartionClose()) -- , 5 
+     IF vbStatusId_Next <> zc_Enum_Status_UnComplete()
+        AND vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inUserId, 0) NOT IN (-12345, zc_Enum_Process_Auto_PartionClose()) -- , 5 
         AND inDescId <> zc_MI_Sign() AND inDescId <> zc_MI_Message() -- AND inDescId <> zc_MI_Detail()
         AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_OrderExternal() OR inDescId <> zc_MI_Child())
         AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_ChangePercent() OR inDescId <> zc_MI_Child())

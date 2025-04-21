@@ -17,6 +17,7 @@ RETURNS Integer
 AS
 $BODY$
   DECLARE vbStatusId Integer;
+  DECLARE vbStatusId_Next Integer;
 BEGIN
 
      -- меняем параметр
@@ -54,15 +55,17 @@ BEGIN
         UPDATE Movement SET DescId = inDescId, InvNumber = inInvNumber, OperDate = inOperDate, ParentId = inParentId
                           , AccessKeyId = CASE WHEN inDescId = zc_Movement_OrderExternal() THEN inAccessKeyId ELSE AccessKeyId END
         WHERE Id = ioId
-        RETURNING StatusId INTO vbStatusId;
+        RETURNING StatusId, COALESCE (StatusId_Next, 0) INTO vbStatusId, vbStatusId_Next;
 
         --
-        IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inParentId, 0) = 0 AND ioId <> 24400262
+        IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inParentId, 0) = 0 -- AND ioId <> 24400262
+           AND vbStatusId_Next <> zc_Enum_Status_UnComplete()
         THEN
             RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> невозможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
         END IF;
         --
-        IF vbStatusId = zc_Enum_Status_Complete() AND COALESCE (inParentId, 0) <> 0 AND ioId <> 24400262
+        IF vbStatusId = zc_Enum_Status_Complete() AND COALESCE (inParentId, 0) <> 0 -- AND ioId <> 24400262
+           AND vbStatusId_Next <> zc_Enum_Status_UnComplete()
         THEN
             RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> невозможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
         END IF;

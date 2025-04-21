@@ -53,7 +53,7 @@ end if;
      THEN
          -- попробуем исправить ... закомментил, т.к. не проверил как оно работает
          /**/
-         UPDATE Movement SET StatusId = zc_Enum_Status_Erased()
+         UPDATE Movement SET StatusId = zc_Enum_Status_Erased(), StatusId_next = zc_Enum_Status_UnComplete()
          WHERE Movement.DescId = zc_Movement_EDI()
            AND Movement.OperDate = inOrderOperDate
            AND Movement.Id IN (SELECT tmp.Id

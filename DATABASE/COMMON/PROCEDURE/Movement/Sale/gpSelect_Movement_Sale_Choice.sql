@@ -50,6 +50,7 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbIsXleb Boolean;
+   DECLARE vbIsVinnica Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
@@ -57,6 +58,9 @@ BEGIN
 
      -- !!!Хлеб!!!
      vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = vbUserId);
+     
+     -- !!!Vinnica!!!
+     vbIsVinnica:= EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId = zc_Enum_Process_AccessKey_DocumentVinnica());
 
 
      -- Результат
@@ -74,6 +78,8 @@ BEGIN
                          UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
+                         -- Винница видит Львов
+                         UNION SELECT zc_Enum_Process_AccessKey_DocumentLviv() WHERE vbIsVinnica = TRUE
                               )
         , tmpBranchJuridical_all AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId, COALESCE (ObjectLink_Unit.ChildObjectId, 0) AS UnitId
                                      FROM ObjectLink AS ObjectLink_Juridical

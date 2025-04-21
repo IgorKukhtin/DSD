@@ -27,7 +27,7 @@ BEGIN
      IF inComment <> ''
      THEN
          -- вернули статус, Не проведен - значит Не отправлен
-         UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Id = inId AND StatusId <> zc_Enum_Status_UnComplete();
+         UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete(), StatusId_next = zc_Enum_Status_UnComplete() WHERE Id = inId AND StatusId <> zc_Enum_Status_UnComplete();
 
          -- сохранили свойство
          PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inId, inComment);
@@ -35,7 +35,7 @@ BEGIN
 
      ELSE
          -- установили статус, Проведен - значит отправлен
-         UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inId;
+         UPDATE Movement SET StatusId = zc_Enum_Status_Complete(), StatusId_next = zc_Enum_Status_Complete() WHERE Id = inId;
 
          -- сохранили свойство <Дата/Время когда отправили>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inId, CURRENT_TIMESTAMP);
