@@ -12,6 +12,7 @@ AS
 $BODY$
   DECLARE vbMovementDescId Integer;
   DECLARE vbStatusId Integer;
+  DECLARE vbStatusId_next Integer;
   DECLARE vbOperDate TDateTime;
   DECLARE vbOperDate_Begin1 TDateTime;
 BEGIN
@@ -22,9 +23,11 @@ if inMovementId  = 30603865 AND 1=0
 THEN RETURN; END IF;
 
      -- нашли
-     SELECT DescId, StatusId, OperDate INTO vbMovementDescId, vbStatusId, vbOperDate FROM Movement WHERE Id = inMovementId;
+     SELECT DescId, StatusId, StatusId_next, OperDate INTO vbMovementDescId, vbStatusId, vbStatusId_next, vbOperDate FROM Movement WHERE Id = inMovementId;
      -- !!!выход!!!
      IF vbStatusId <> zc_Enum_Status_Complete() AND inSession <> '' THEN RETURN; END IF;
+     -- !!!выход!!!
+     IF vbStatusId_next = zc_Enum_Status_UnComplete() THEN RETURN; END IF;
      
 if CURRENT_TIMESTAMP between '10.02.2025 7:33' and '10.02.2025 7:35'
 then
