@@ -72,6 +72,8 @@ type
     bbPrint_4218: TdxBarButton;
     actPrint_4134: TdsdPrintAction;
     bbPrint_4134: TdxBarButton;
+    actPrint_its: TdsdPrintAction;
+    bbPrint_its: TdxBarButton;
   private
     { Private declarations }
   public

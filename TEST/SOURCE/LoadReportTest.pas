@@ -531,6 +531,7 @@ begin
   LoadReportFromFile('Акт обвалки (4001)', ReportPath + '\Производство\Акт обвалки (4001).fr3');
   exit;
   }
+  LoadReportFromFile('Акт обвалки (its)', ReportPath + '\Производство\Акт обвалки (its).fr3');
   LoadReportFromFile('Акт обвалки (4134)', ReportPath + '\Производство\Акт обвалки (4134).fr3');
 
   LoadReportFromFile('Акт обвалки (4218)', ReportPath + '\Производство\Акт обвалки (4218).fr3');
