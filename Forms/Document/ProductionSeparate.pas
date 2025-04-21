@@ -87,6 +87,10 @@ type
     bbsPrintAr: TdxBarSubItem;
     actPrint_4218: TdsdPrintAction;
     bbPrint_4218: TdxBarButton;
+    actPrint_4134: TdsdPrintAction;
+    actPrint_its: TdsdPrintAction;
+    bbPrint_4134: TdxBarButton;
+    bbPrint_its: TdxBarButton;
   private
     { Private declarations }
   public

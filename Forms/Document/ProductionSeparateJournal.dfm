@@ -22,6 +22,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 478
+        ExplicitLeft = 40
+        ExplicitTop = 3
         ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1137,8 +1139,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       item
         Component = JuridicalBasisGuides
       end>
-    Left = 408
-    Top = 344
+    Left = 400
+    Top = 288
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_ProductionSeparate'
