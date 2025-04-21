@@ -2507,6 +2507,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 52
+      OnClick = cbCompleteIncomeBNClick
     end
   end
   object LogPanel: TPanel
