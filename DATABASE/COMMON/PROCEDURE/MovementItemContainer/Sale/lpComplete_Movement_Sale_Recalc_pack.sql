@@ -36,7 +36,7 @@ then
 end if;
 
      --
-     UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete();
+     UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete(), StatusId_next = zc_Enum_Status_UnComplete() WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete();
 
      -- Сохранили Протокол
      PERFORM lpInsert_MovementItemProtocol (tmpMI.MovementItemId, inUserId, FALSE)
@@ -199,7 +199,7 @@ end if;
      --
      IF vbStatusId = zc_Enum_Status_Complete()
      THEN
-         UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = inMovementId;
+         UPDATE Movement SET StatusId = zc_Enum_Status_Complete(), StatusId_next = zc_Enum_Status_Complete() WHERE Movement.Id = inMovementId;
      END IF;
 
 
