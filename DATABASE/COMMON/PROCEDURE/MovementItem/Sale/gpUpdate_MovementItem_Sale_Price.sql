@@ -70,7 +70,10 @@ BEGIN
          END IF;
          --
          -- Распроводим Документ
-         UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Id = inMovementId;
+         UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete(), StatusId_next = zc_Enum_Status_UnComplete() WHERE Id = inMovementId;
+          -- 0.2. Удаляем все проводки
+         PERFORM lpDelete_MovementItemContainer (inMovementId);
+         --
          -- сохранили протокол
          PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
          
