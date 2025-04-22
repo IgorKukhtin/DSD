@@ -137,18 +137,21 @@ type
     function Get_НомерДокументу: UnicodeString;
     function Get_ДатаДокументу: UnicodeString;
     function Get_НомерЗамовлення: UnicodeString;
+    function Get_ДатаЗамовлення: UnicodeString;
     function Get_ТипДокументу: UnicodeString;
     function Get_КодТипуДокументу: UnicodeString;
     function Get_ДокПідстава: IXMLДокПідставаType;
     procedure Set_НомерДокументу(Value: UnicodeString);
     procedure Set_ДатаДокументу(Value: UnicodeString);
     procedure Set_НомерЗамовлення(Value: UnicodeString);
+    procedure Set_ДатаЗамовлення(Value: UnicodeString);
     procedure Set_ТипДокументу(Value: UnicodeString);
     procedure Set_КодТипуДокументу(Value: UnicodeString);
     { Methods & Properties }
     property НомерДокументу: UnicodeString read Get_НомерДокументу write Set_НомерДокументу;
     property ДатаДокументу: UnicodeString read Get_ДатаДокументу write Set_ДатаДокументу;
     property НомерЗамовлення: UnicodeString read Get_НомерЗамовлення write Set_НомерЗамовлення;
+    property ДатаЗамовлення: UnicodeString read Get_ДатаЗамовлення write Set_ДатаЗамовлення;
     property ТипДокументу: UnicodeString read Get_ТипДокументу write Set_ТипДокументу;
     property КодТипуДокументу: UnicodeString read Get_КодТипуДокументу write Set_КодТипуДокументу;
     property ДокПідстава: IXMLДокПідставаType read Get_ДокПідстава;
@@ -377,12 +380,14 @@ type
     function Get_НомерДокументу: UnicodeString;
     function Get_ДатаДокументу: UnicodeString;
     function Get_НомерЗамовлення: UnicodeString;
+    function Get_ДатаЗамовлення: UnicodeString;
     function Get_ТипДокументу: UnicodeString;
     function Get_КодТипуДокументу: UnicodeString;
     function Get_ДокПідстава: IXMLДокПідставаType;
     procedure Set_НомерДокументу(Value: UnicodeString);
     procedure Set_ДатаДокументу(Value: UnicodeString);
     procedure Set_НомерЗамовлення(Value: UnicodeString);
+    procedure Set_ДатаЗамовлення(Value: UnicodeString);
     procedure Set_ТипДокументу(Value: UnicodeString);
     procedure Set_КодТипуДокументу(Value: UnicodeString);
   public
@@ -633,6 +638,7 @@ begin
   ChildNodes['ДатаДокументу'].NodeValue := Value;
 end;
 
+
 function TXMLЗаголовокType.Get_НомерЗамовлення: UnicodeString;
 begin
   Result := ChildNodes['НомерЗамовлення'].Text;
@@ -641,6 +647,16 @@ end;
 procedure TXMLЗаголовокType.Set_НомерЗамовлення(Value: UnicodeString);
 begin
   ChildNodes['НомерЗамовлення'].NodeValue := Value;
+end;
+
+function TXMLЗаголовокType.Get_ДатаЗамовлення: UnicodeString;
+begin
+  Result := ChildNodes['ДатаЗамовлення'].Text;
+end;
+
+procedure TXMLЗаголовокType.Set_ДатаЗамовлення(Value: UnicodeString);
+begin
+  ChildNodes['ДатаЗамовлення'].NodeValue := Value;
 end;
 
 function TXMLЗаголовокType.Get_ТипДокументу: UnicodeString;
