@@ -22,8 +22,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 478
-        ExplicitLeft = 40
-        ExplicitTop = 3
+        ExplicitLeft = -152
+        ExplicitTop = -40
         ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1246,7 +1246,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ProductionSeparate_Print'
+    StoredProcName = 'gpSelect_Movement_ProductionSeparate'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
