@@ -77,6 +77,9 @@ type
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     StorageLineName_in: TcxGridDBColumn;
+    cxLabel9: TcxLabel;
+    GuidesPriceList: TdsdGuides;
+    edPriceList: TcxButtonEdit;
   private
     { Private declarations }
   public

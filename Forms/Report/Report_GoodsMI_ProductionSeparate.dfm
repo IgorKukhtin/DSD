@@ -5,27 +5,26 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -449
   ExplicitWidth = 1359
   ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 99
+    Top = 105
     Width = 1343
-    Height = 328
+    Height = 322
     TabOrder = 3
     ExplicitTop = 99
     ExplicitWidth = 1343
     ExplicitHeight = 328
-    ClientRectBottom = 328
+    ClientRectBottom = 322
     ClientRectRight = 1343
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1343
       ExplicitHeight = 328
       inherited cxGrid: TcxGrid
         Width = 1343
-        Height = 328
+        Height = 322
         ExplicitWidth = 1343
         ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -269,9 +268,9 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
   end
   inherited Panel: TPanel
     Width = 1343
-    Height = 73
+    Height = 79
     ExplicitWidth = 1343
-    ExplicitHeight = 73
+    ExplicitHeight = 79
     inherited deStart: TcxDateEdit
       Left = 108
       Properties.SaveTime = False
@@ -416,6 +415,22 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' "'#1056#1072#1089#1095#1080#1090#1099#1074#1072#1102#1090#1089#1103'"'
       TabOrder = 18
       Width = 178
+    end
+    object cxLabel9: TcxLabel
+      Left = 484
+      Top = 54
+      Caption = #1055#1088#1072#1081#1089' '#1087#1083#1072#1085' '#1086#1073#1074#1072#1083#1082#1072':'
+    end
+    object edPriceList: TcxButtonEdit
+      Left = 596
+      Top = 53
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 20
+      Width = 147
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -1018,6 +1033,14 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId_norm'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 208
@@ -1280,8 +1303,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 464
-    Top = 24
+    Left = 424
+    Top = 8
   end
   object ChildGoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -1309,8 +1332,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 680
-    Top = 24
+    Left = 784
+    Top = 48
   end
   object ChildGoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -1340,5 +1363,34 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       end>
     Left = 904
     Top = 19
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PriceListId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PriceListName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 624
+    Top = 48
   end
 end
