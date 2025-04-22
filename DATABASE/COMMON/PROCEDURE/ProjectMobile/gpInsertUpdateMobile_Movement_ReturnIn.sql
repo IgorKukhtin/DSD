@@ -37,6 +37,8 @@ $BODY$
    DECLARE vbCurrencyId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbStatusId Integer;
+   DECLARE vbUnitId_find Integer;
+   DECLARE vbUnitId_ret_find Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -54,6 +56,16 @@ BEGIN
       THEN
            -- RAISE EXCEPTION 'Ошибка. % НДС = 0', '%';
            inVATPercent:= 20;
+      END IF;
+      
+
+      -- Поиск, для проверки
+      SELECT gpGet.UnitId, gpGet.UnitId_ret INTO vbUnitId_find, vbUnitId_ret_find FROM gpGetMobile_Object_Const (inSession:= inSession) AS gpGet;
+
+      -- замена
+      IF vbUnitId_find > 0 AND COALESCE (inUnitId, 0) NOT IN (vbUnitId_find, COALESCE (vbUnitId_ret_find, 0))
+      THEN
+          inUnitId:= vbUnitId_find;
       END IF;
 
 
