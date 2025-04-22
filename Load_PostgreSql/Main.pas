@@ -263,6 +263,7 @@ type
     Count_errEdit: TEdit;
     DeadlockLabel: TLabel;
     DeadlockEdit: TEdit;
+    cbUnComplete_StatusId_next: TCheckBox;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -353,6 +354,8 @@ type
     procedure pCompleteDocument_Promo;
     procedure pCompleteDocument_Currency;
     procedure pUpdateTransport_PartnerCount;
+
+    procedure pUnCompleteDocument_StatusId_next;
 
     // Documents :
 
@@ -1978,6 +1981,9 @@ procedure TMainForm.StartProcess;
 
                UnitCodeSendOnPriceEdit.Text:='autoALL('+DateToStr(zc_Enum_GlobalConst_StartDate_Auto_PrimeCost)+')';
 
+               //UnComplete - StatusId_next
+               if (GroupId_branch <=0) and (((not cbHistoryCost_8379.Checked) and (not cbHistoryCost_8374.Checked) and (not cbHistoryCost_oth.Checked)) or cbHistoryCost_0.Checked)
+               then cbUnComplete_StatusId_next.Checked:=true;
                //Привязка Возвраты
                if (GroupId_branch <=0) and (((not cbHistoryCost_8379.Checked) and (not cbHistoryCost_8374.Checked) and (not cbHistoryCost_oth.Checked)) or cbHistoryCost_0.Checked)
                then cbReturnIn_Auto.Checked:=true;
@@ -3089,6 +3095,9 @@ begin
      if (not fStop)and(GroupId_branch <= 0) and ((ParamStr(6)<>'next-') or (isPeriodTwo = FALSE))
      then pInsertHistoryCost(FALSE);
      //
+     //
+     // ВСЕГДА - UnComplete Для StatusId_next
+     if (not fStop)and(GroupId_branch <= 0) then pUnCompleteDocument_StatusId_next;
      // ВСЕГДА - Расчет акций
      if (not fStop)and(GroupId_branch <= 0) then pCompleteDocument_Promo;
      // ВСЕГДА - загрузка курсов
@@ -4019,6 +4028,66 @@ begin
      end;
      //
      myLogMemo_add('end Расчет курс. разн.');
+     myDisabledCB(cbCurrency);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pUnCompleteDocument_StatusId_next;
+var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
+    i,SaveRecord:Integer;
+    MSec_complete:Integer;
+    isSale_str:String;
+begin
+     if (not cbUnComplete_StatusId_next.Checked)or(not cbUnComplete_StatusId_next.Enabled) then exit;
+     //
+     myEnabledCB(cbUnComplete_StatusId_next);
+     //
+     fromZConnection.Connected:=false;
+     with fromZQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select * from gpComplete_SelectAll_Sybase_StatusId_next('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(DateToStr(Date-1))+')');
+        Add('order by OperDate,MovementId,InvNumber');
+        //Open;
+        fTryOpenSq(fromZQuery);
+
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+
+        myLogMemo_add('start UnComplete Для StatusId_next ' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + DateToStr(Date-1));
+        cbCurrency.Caption:='('+IntToStr(RecordCount)+') StatusId_next.';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc_two.StoredProcName:='gpUnComplete_Movement_StatusId_next';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             if not myExecToStoredProc_two then ;//exit;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myLogMemo_add('end UnComplete Для StatusId_next');
      myDisabledCB(cbCurrency);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------

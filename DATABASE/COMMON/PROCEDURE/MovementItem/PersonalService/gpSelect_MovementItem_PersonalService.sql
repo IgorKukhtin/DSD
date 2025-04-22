@@ -817,6 +817,7 @@ BEGIN
 
             , tmpAll.Amount :: TFloat           AS Amount
 
+              -- К выплате (итог)
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
@@ -834,6 +835,7 @@ BEGIN
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
               ) :: TFloat AS AmountCash
+
               -- Остаток к выдаче (из кассы) грн
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)
             + (-1) *  CASE WHEN 1=0 AND vbUserId = 5

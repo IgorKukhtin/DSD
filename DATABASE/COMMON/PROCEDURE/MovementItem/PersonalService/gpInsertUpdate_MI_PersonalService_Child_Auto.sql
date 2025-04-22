@@ -284,11 +284,14 @@ end if;
                                                                         , inSummCardRecalc         := 0
                                                                         , inSummCardSecondRecalc   := 0
                                                                         , inSummCardSecondCash     := 0
+                                                                        , inSummAvCardSecondRecalc := 0
+
                                                                         , inSummNalogRecalc        := 0
                                                                         , inSummNalogRetRecalc     := 0
                                                                         , inSummMinus              := 0
                                                                         , inSummAdd                := 0
                                                                         , inSummAddOthRecalc       := 0
+
                                                                         , inSummHoliday            := 0
                                                                         , inSummSocialIn           := 0
                                                                         , inSummSocialAdd          := 0
@@ -302,6 +305,7 @@ end if;
                                                                         , inSummAuditAdd           := 0
                                                                         , inSummHouseAdd           := 0 
                                                                         , inSummAvanceRecalc       := 0
+
                                                                         , inNumber                 := ''
                                                                         , inComment                := ''
                                                                         , inInfoMoneyId            := vbInfoMoneyId_def
@@ -407,11 +411,14 @@ end if;
                                                           , inSummCardRecalc         := COALESCE (MIFloat_SummCardRecalc.ValueData, 0)
                                                           , inSummCardSecondRecalc   := COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0)
                                                           , inSummCardSecondCash     := COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
+                                                          , inSummAvCardSecondRecalc := COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)
+
                                                           , inSummNalogRecalc        := COALESCE (MIFloat_SummNalogRecalc.ValueData, 0)
                                                           , inSummNalogRetRecalc     := COALESCE (MIFloat_SummNalogRetRecalc.ValueData, 0)
                                                           , inSummMinus              := COALESCE (MIFloat_SummMinus.ValueData, 0)
                                                           , inSummAdd                := COALESCE (MIFloat_SummAdd.ValueData, 0)
                                                           , inSummAddOthRecalc       := COALESCE (MIFloat_SummAddOthRecalc.ValueData, 0)
+
                                                           , inSummHoliday            := COALESCE (MIFloat_SummHoliday.ValueData, 0)
                                                           , inSummSocialIn           := COALESCE (MIFloat_SummSocialIn.ValueData, 0)
                                                           , inSummSocialAdd          := COALESCE (MIFloat_SummSocialAdd.ValueData, 0)
@@ -425,6 +432,7 @@ end if;
                                                           , inSummAuditAdd           := COALESCE (MIFloat_SummAuditAdd.ValueData, 0)
                                                           , inSummHouseAdd           := COALESCE (MIFloat_SummHouseAdd.ValueData, 0)
                                                           , inSummAvanceRecalc       := COALESCE (MIFloat_SummAvanceRecalc.ValueData,0)
+
                                                           , inNumber                 := ''
                                                           , inComment                := MIString_Comment.ValueData
                                                           , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
@@ -449,6 +457,10 @@ end if;
             LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
                                         ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecondRecalc
+                                        ON MIFloat_SummAvCardSecondRecalc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummAvCardSecondRecalc.DescId         = zc_MIFloat_SummAvCardSecondRecalc()
+
             LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
                                         ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()

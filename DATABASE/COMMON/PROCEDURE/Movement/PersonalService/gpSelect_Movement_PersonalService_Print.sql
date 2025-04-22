@@ -17,6 +17,7 @@ $BODY$
     DECLARE vbServiceDateId         Integer;
     DECLARE vbPersonalServiceListId Integer;
     DECLARE vbServiceDate           TDateTime;
+    DECLARE vbMovementId_pay_last   Integer;
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
@@ -56,6 +57,29 @@ BEGIN
      -- !!!Проверка прав роль - Ограничение - нет доступа к просмотру ведомость Админ ЗП!!!
      PERFORM lpCheck_UserRole_11026035 (vbPersonalServiceListId, vbUserId);
 
+
+     -- !!!Последняя выплата по ведомости!!!
+     vbMovementId_pay_last:= COALESCE ((SELECT Movement.Id
+                              FROM Movement
+                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                          AND MovementItem.DescId     = zc_MI_Master()
+                                                          AND MovementItem.isErased   = FALSE
+                                                        --AND vbUserId <> 5
+                                   -- за этот месяц
+                                   INNER JOIN MovementItemDate AS MIDate_ServiceDate
+                                                           ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
+                                                          AND MIDate_ServiceDate.DescId         = zc_MIDate_ServiceDate()
+                                                          AND MIDate_ServiceDate.ValueData      = vbServiceDate
+                                   -- нужная ведомость
+                                   INNER JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                                    ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                                   AND MILinkObject_MoneyPlace.ObjectId       = vbPersonalServiceListId
+                                                                   AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                              WHERE Movement.DescId   = zc_Movement_Cash()
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                              ORDER BY Movement.OperDate DESC, Movement.Id DESC
+                              LIMIT 1
+                             ), 0);
 
      --
      OPEN Cursor1 FOR
@@ -794,6 +818,8 @@ BEGIN
      , tmpMI_pay_data AS (SELECT tmpMIContainer_pay_data.MovementId
                                , MILinkObject_MoneyPlace.ObjectId AS PersonalServiceId
                                , Object.ValueData                 AS PersonalServiceName
+                                 -- если не Ведомость а сотрудник
+                                 -- , Object.DescId                    AS ObjectDescId
                           FROM (SELECT DISTINCT tmpMIContainer_pay_data.MovementId FROM tmpMIContainer_pay_data
                                ) AS tmpMIContainer_pay_data
                                    INNER JOIN MovementItem ON MovementItem.MovementId = tmpMIContainer_pay_data.MovementId
@@ -805,7 +831,7 @@ BEGIN
                                                                    AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
                                    LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
                          )
-                                                                   
+
 
      , tmpMIContainer_pay AS (SELECT -- Amount_avance
                                      -- SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
@@ -815,9 +841,26 @@ BEGIN
                                                   -- аванс по ведомости
                                                  OR (MIContainer.MovementDescId = zc_Movement_Cash()
                                                  AND tmpMI_pay_data.PersonalServiceName ILIKE '%АВАНС%'
+                                                 -- задваивается
+                                                 AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_Cash_PersonalCardSecond()
+                                                 --
                                                  AND MIContainer.Amount > 0
                                                     )
+                                                  -- НЕ аванс, но выплачено ранее
+                                                 OR (MIContainer.MovementDescId = zc_Movement_Cash()
+                                                 AND MIContainer.MovementId     <> vbMovementId_pay_last
+                                                 AND vbMovementId_pay_last      <> 0
+                                                 -- обычная выплата
+                                                 AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService())
+                                                 -- выплатили напрямую
+                                                 -- AND tmpMI_pay_data.ObjectDescId IN (zc_Object_Personal())
+                                                 --
+                                                 AND MIContainer.Amount > 0
+                                                    )
+
+                                                    -- !!!учитывается как Аванс
                                                     THEN MIContainer.Amount
+
                                                ELSE 0
                                           END
                                           -- аванс по ведомости
@@ -843,8 +886,24 @@ BEGIN
                                                   -- аванс по ведомости
                                                  OR (MIContainer.MovementDescId = zc_Movement_Cash()
                                                  AND tmpMI_pay_data.PersonalServiceName ILIKE '%АВАНС%'
+                                                 -- задваивается
+                                                 AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_Cash_PersonalCardSecond()
+                                                 --
                                                  AND MIContainer.Amount > 0
                                                     )
+
+                                                  -- НЕ аванс, но выплачено ранее
+                                                 OR (MIContainer.MovementDescId = zc_Movement_Cash()
+                                                 AND MIContainer.MovementId     <> vbMovementId_pay_last
+                                                 AND vbMovementId_pay_last      <> 0
+                                                 -- обычная выплата
+                                                 AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService())
+                                                 -- выплатили напрямую
+                                                 --AND tmpMI_pay_data.ObjectDescId IN (zc_Object_Personal())
+                                                 --
+                                                 AND MIContainer.Amount > 0
+                                                    )
+
                                                     -- !!! без аванса
                                                     THEN 0
 
@@ -1110,8 +1169,9 @@ BEGIN
             , tmpAll.SummTransportTaxi      :: TFloat AS SummTransportTaxi
             , tmpAll.SummPhone              :: TFloat AS SummPhone
 
---            , ( 1 * COALESCE (tmpMIContainer_pay.Amount_avance, 0) + COALESCE (tmpAll.SummAvance, 0)) :: TFloat AS Amount_avance
-            , case when vbUserId = 5 and 1=0 then tmpAll.SummAvance else COALESCE (tmpMIContainer_pay.Amount_avance, 0) + COALESCE (tmpAll.SummAvance, 0) end :: TFloat AS Amount_avance
+              -- Amount_avance
+            , (COALESCE (tmpAll.SummAvance, 0) + COALESCE (tmpMIContainer_pay.Amount_avance, 0)) :: TFloat AS Amount_avance
+              --
             , (-1 * tmpMIContainer_pay.Amount_avance_ret)  :: TFloat AS Amount_avance_ret
 
               -- Выплата по ведм. грн

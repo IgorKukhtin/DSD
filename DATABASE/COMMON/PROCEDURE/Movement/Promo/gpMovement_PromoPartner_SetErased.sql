@@ -30,7 +30,7 @@ BEGIN
     outIsErased := TRUE;
 
     -- Обязательно меняем
-    UPDATE Movement SET StatusId = zc_Enum_Status_Erased() WHERE Id = inMovementId
+    UPDATE Movement SET StatusId = zc_Enum_Status_Erased(), StatusId_next = zc_Enum_Status_Erased() WHERE Id = inMovementId
     RETURNING ParentId INTO vbMovementId;
 
     -- проверка - связанные документы Изменять нельзя

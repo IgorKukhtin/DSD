@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , Address TVarChar, GPSN TFloat, GPSE TFloat
              , PaidKindId Integer, PaidKindName TVarChar, PaidKindId_contract Integer, PaidKindName_contract TVarChar
              , ContractStateKindCode Integer
-             , ContractComment TVarChar  
+             , ContractComment TVarChar
              , isNotTareReturning Boolean
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
@@ -55,8 +55,11 @@ BEGIN
 
    -- определяется уровень доступа
    vbIsUserOrder:= EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0);
+   -- Группа Юр.Лиц
    vbObjectId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId), 0);
+   -- Филиал
    vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
+   -- если
    vbIsConstraint:= vbObjectId_Constraint > 0 OR vbBranchId_Constraint > 0;
 
 
@@ -83,6 +86,132 @@ BEGIN
      , tmpObject_Contract_View AS (SELECT * FROM Object_Contract_View)
      , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
      , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
+
+          -- Физ.лица Филиала
+        , _tmpMemberBranch AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                                      -- в каких он Филиалах
+                                    , ObjectLink_Unit_Branch.ChildObjectId     AS BranchId
+                                      -- № п/п - по Дате перевода
+                                    , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId ORDER BY COALESCE (ObjectDate_Personal_Send.ValueData, zc_DateStart()) DESC) AS Ord
+                               FROM ObjectLink AS ObjectLink_Personal_Unit
+                                    INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = ObjectLink_Personal_Unit.ObjectId
+                                                                        AND Object_Personal.isErased = FALSE
+                                    -- Ограничение - Филиал
+                                    INNER JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                          ON ObjectLink_Unit_Branch.ObjectId      = ObjectLink_Personal_Unit.ChildObjectId
+                                                         AND ObjectLink_Unit_Branch.DescId        = zc_ObjectLink_Unit_Branch()
+                                    -- Дата перевода
+                                    LEFT JOIN ObjectDate AS ObjectDate_Personal_Send
+                                                         ON ObjectDate_Personal_Send.ObjectId = Object_Personal.Id
+                                                        AND ObjectDate_Personal_Send.DescId   = zc_ObjectDate_Personal_Send()
+                                    -- Дата увольнения
+                                    LEFT JOIN ObjectDate AS ObjectDate_Personal_Out
+                                                         ON ObjectDate_Personal_Out.ObjectId = Object_Personal.Id
+                                                        AND ObjectDate_Personal_Out.DescId   = zc_ObjectDate_Personal_Out()
+                                    -- нашли MemberId
+                                    INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                          ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                         AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+                               WHERE ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                 -- Дата увольнения
+                                 AND COALESCE (ObjectDate_Personal_Out.ValueData, zc_DateEnd()) > CURRENT_DATE
+                                 -- если надо
+                                 AND vbBranchId_Constraint                > 0
+                              )
+          -- Юр лица + Контрагенты для Физ.лица Филиала
+        , _tmpJuridicalBranch AS (
+                                     -- Только Контрагенты
+                                     SELECT DISTINCT
+                                            0 AS JuridicalId
+                                          , ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
+                                     FROM _tmpMemberBranch
+                                          -- Сотрудник для MemberId
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
+                                                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                          -- Сотрудник (супервайзер)
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId        = zc_ObjectLink_Partner_Personal()
+                                          -- нашли Юр.лицо
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                     -- нашли последнюю Дату перевода
+                                     WHERE _tmpMemberBranch.Ord = 1
+                                       -- здесь Филиал
+                                       AND _tmpMemberBranch.BranchId = vbBranchId_Constraint
+
+                                    -- Только Контрагенты
+                                    UNION
+                                     SELECT DISTINCT
+                                            0 AS JuridicalId
+                                          , ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
+                                     FROM _tmpMemberBranch
+                                          -- Сотрудник для MemberId
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
+                                                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                          -- Сотрудник (торговый)
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId        = zc_ObjectLink_Partner_PersonalTrade()
+                                          -- нашли Юр.лицо
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                     -- нашли последнюю Дату перевода
+                                     WHERE _tmpMemberBranch.Ord = 1
+                                       -- здесь Филиал
+                                       AND _tmpMemberBranch.BranchId = vbBranchId_Constraint
+
+                                    -- Все Юр.лица
+                                    UNION
+                                     SELECT DISTINCT
+                                            ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                          , 0 AS PartnerId
+                                     FROM _tmpMemberBranch
+                                          -- Сотрудник для MemberId
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
+                                                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                          -- Сотрудники (ответственное лицо) - Договор
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Contract_Personal.DescId        = zc_ObjectLink_Contract_Personal()
+                                          -- нашли Юр.лицо
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                                ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_Personal.ObjectId
+                                                               AND ObjectLink_Contract_Juridical.DescId   = zc_ObjectLink_Contract_Juridical()
+                                     -- нашли последнюю Дату перевода
+                                     WHERE _tmpMemberBranch.Ord = 1
+                                       -- здесь Филиал
+                                       AND _tmpMemberBranch.BranchId = vbBranchId_Constraint
+
+                                    -- Все Юр.лица
+                                    UNION
+                                     SELECT DISTINCT
+                                            ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                          , 0 AS PartnerId
+                                     FROM _tmpMemberBranch
+                                          -- Сотрудник для MemberId
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
+                                                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                          --  Сотрудники (торговый) - Договор
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Contract_Personal.DescId        = zc_ObjectLink_Contract_PersonalTrade()
+                                          -- нашли Юр.лицо
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                                ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_Personal.ObjectId
+                                                               AND ObjectLink_Contract_Juridical.DescId   = zc_ObjectLink_Contract_Juridical()
+                                     -- нашли последнюю Дату перевода
+                                     WHERE _tmpMemberBranch.Ord = 1
+                                       -- здесь Филиал
+                                       AND _tmpMemberBranch.BranchId = vbBranchId_Constraint
+                                 )
+   -- Результат
    SELECT
          Object_Contract_View.ContractId      :: Integer   AS Id
        , Object_Contract_View.ContractCode    :: Integer   AS Code
@@ -108,7 +237,7 @@ BEGIN
        , Object_PaidKind_contract.ValueData  AS PaidKindName_contract
 
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
-       , ObjectString_Comment.ValueData AS ContractComment 
+       , ObjectString_Comment.ValueData AS ContractComment
        , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
 
        , Object_Route.Id               AS RouteId
@@ -131,11 +260,11 @@ BEGIN
        , Object_MemberTake6.Id             AS MemberTakeId6
        , Object_MemberTake6.ValueData      AS MemberTakeName6
        , Object_MemberTake7.Id             AS MemberTakeId7
-       , Object_MemberTake7.ValueData      AS MemberTakeName7 
+       , Object_MemberTake7.ValueData      AS MemberTakeName7
 
        , Object_MemberTake.Id        AS personalTakeId
        , Object_MemberTake.ValueData AS personalTakeName
- 
+
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupName
@@ -160,8 +289,8 @@ BEGIN
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner
-         LEFT JOIN ObjectString AS ObjectString_GLNCode 
-                                ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
+         LEFT JOIN ObjectString AS ObjectString_GLNCode
+                                ON ObjectString_GLNCode.ObjectId = Object_Partner.Id
                                AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
 
          LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
@@ -172,14 +301,14 @@ BEGIN
                               AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
-         
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
-                              ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
          LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Partner_RouteSorting.ChildObjectId
-         
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
          LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Unit
                               ON ObjectLink_PersonalTrade_Unit.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
@@ -189,35 +318,35 @@ BEGIN
                              AND ObjectLink_Unit_Branch_PersonalTrade.DescId = zc_ObjectLink_Unit_Branch()
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
-                              ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
          LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake1
-                              ON ObjectLink_Partner_MemberTake1.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake1.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake1.DescId = zc_ObjectLink_Partner_MemberTake1()
          LEFT JOIN Object AS Object_MemberTake1 ON Object_MemberTake1.Id = ObjectLink_Partner_MemberTake1.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake2
-                              ON ObjectLink_Partner_MemberTake2.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake2.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake2.DescId = zc_ObjectLink_Partner_MemberTake2()
          LEFT JOIN Object AS Object_MemberTake2 ON Object_MemberTake2.Id = ObjectLink_Partner_MemberTake2.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake3
-                              ON ObjectLink_Partner_MemberTake3.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake3.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake3.DescId = zc_ObjectLink_Partner_MemberTake3()
          LEFT JOIN Object AS Object_MemberTake3 ON Object_MemberTake3.Id = ObjectLink_Partner_MemberTake3.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake4
-                              ON ObjectLink_Partner_MemberTake4.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake4.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake4.DescId = zc_ObjectLink_Partner_MemberTake4()
          LEFT JOIN Object AS Object_MemberTake4 ON Object_MemberTake4.Id = ObjectLink_Partner_MemberTake4.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake5
-                              ON ObjectLink_Partner_MemberTake5.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake5.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake5.DescId = zc_ObjectLink_Partner_MemberTake5()
          LEFT JOIN Object AS Object_MemberTake5 ON Object_MemberTake5.Id = ObjectLink_Partner_MemberTake5.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake6
-                              ON ObjectLink_Partner_MemberTake6.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake6.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake6.DescId = zc_ObjectLink_Partner_MemberTake6()
          LEFT JOIN Object AS Object_MemberTake6 ON Object_MemberTake6.Id = ObjectLink_Partner_MemberTake6.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake7
-                              ON ObjectLink_Partner_MemberTake7.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake7.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake7.DescId = zc_ObjectLink_Partner_MemberTake7()
          LEFT JOIN Object AS Object_MemberTake7 ON Object_MemberTake7.Id = ObjectLink_Partner_MemberTake7.ChildObjectId
 
@@ -236,6 +365,14 @@ BEGIN
        --LEFT JOIN tmpContractPartner_Juridical ON tmpContractPartner_Juridical.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
        --                                      AND tmpContractPartner_Juridical.PartnerId   = ObjectLink_Partner_Juridical.ObjectId
        --LEFT JOIN tmpContractPartner_Juridical ON tmpContractPartner_Juridical.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId
+
+         -- Юр лица для Физ.лица Филиала
+         LEFT JOIN _tmpJuridicalBranch ON _tmpJuridicalBranch.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                      AND _tmpJuridicalBranch.JuridicalId > 0
+         -- Контрагенты для Физ.лица Филиала
+         LEFT JOIN _tmpJuridicalBranch AS _tmpPartnerBranch
+                                       ON _tmpPartnerBranch.PartnerId = Object_Partner.Id
+                                      AND _tmpPartnerBranch.PartnerId > 0
 
          LEFT JOIN tmpObject_Contract_View AS Object_Contract_View
                                            ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
@@ -288,19 +425,19 @@ BEGIN
         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
-                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Route.DescId = CASE WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() THEN zc_ObjectLink_Partner_Route30201() ELSE zc_ObjectLink_Partner_Route() END
          LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
 
          LEFT JOIN ObjectString AS ObjectString_Address
                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
-         LEFT JOIN ObjectFloat AS Partner_GPSN 
+         LEFT JOIN ObjectFloat AS Partner_GPSN
                                ON Partner_GPSN.ObjectId = Object_Partner.Id
-                              AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()  
+                              AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()
          LEFT JOIN ObjectFloat AS Partner_GPSE
                                ON Partner_GPSE.ObjectId = Object_Partner.Id
-                              AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE() 
+                              AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE()
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -328,8 +465,15 @@ BEGIN
           OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 8379 AND vbBranchId_Constraint = 3080683)
           -- филиал Львов + филиал Киев
           OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 3080683 AND vbBranchId_Constraint = 8379)
+
+          -- Юр лица для Физ.лица Филиала
+          OR _tmpJuridicalBranch.JuridicalId > 0
+          -- или Контрагенты
+          OR _tmpPartnerBranch.PartnerId > 0
+
           --
           OR vbIsConstraint = FALSE
+          --
           OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
                                  , 17344 -- Білла 9221,Запорожье,ул.Яценко,2*500239
                                  , 79360 -- ВК № 37 Вел.Киш.,Запорожье,ГОРЬКОГО,71
@@ -419,7 +563,7 @@ BEGIN
 
    FROM Object AS Object_ArticleLoss
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ArticleLoss.DescId
-         LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_InfoMoney 
+         LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_InfoMoney
                               ON ObjectLink_ArticleLoss_InfoMoney.ObjectId = Object_ArticleLoss.Id
                              AND ObjectLink_ArticleLoss_InfoMoney.DescId = zc_ObjectLink_ArticleLoss_InfoMoney()
          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_ArticleLoss_InfoMoney.ChildObjectId
@@ -432,12 +576,12 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Address
                                 ON ObjectString_Address.ObjectId = Object_ArticleLoss.Id
                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
-         LEFT JOIN ObjectFloat AS Partner_GPSN 
+         LEFT JOIN ObjectFloat AS Partner_GPSN
                                ON Partner_GPSN.ObjectId = Object_ArticleLoss.Id
-                              AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()  
+                              AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()
          LEFT JOIN ObjectFloat AS Partner_GPSE
                                ON Partner_GPSE.ObjectId = Object_ArticleLoss.Id
-                              AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE() 
+                              AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE()
 
    WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
   ;
@@ -470,7 +614,7 @@ BEGIN
                                                       , MAX (tmpContractCondition_Value_all.ChangePercent)        :: TFloat AS ChangePercent
                                                       , MAX (tmpContractCondition_Value_all.ChangePercentPartner) :: TFloat AS ChangePercentPartner
                                                       , MAX (tmpContractCondition_Value_all.ChangePrice)          :: TFloat AS ChangePrice
-                                                      
+
                                                       , MAX (tmpContractCondition_Value_all.DayCalendar) :: TFloat AS DayCalendar
                                                       , MAX (tmpContractCondition_Value_all.DayBank)     :: TFloat AS DayBank
                                                       , CASE WHEN 0 <> MAX (tmpContractCondition_Value_all.DayCalendar)
@@ -479,14 +623,140 @@ BEGIN
                                                                  THEN (MAX (tmpContractCondition_Value_all.DayBank)     :: Integer) :: TVarChar || ' Б.дн.'
                                                              ELSE '0 дн.'
                                                         END :: TVarChar  AS DelayDay
-                                                
+
                                                       , MAX (tmpContractCondition_Value_all.StartDate) :: TDateTime AS StartDate
                                                       , MAX (tmpContractCondition_Value_all.EndDate)   :: TDateTime AS EndDate
                                                  FROM tmpContractCondition_Value_all
                                                  GROUP BY tmpContractCondition_Value_all.ContractId
                                                 )
+       -- Юр лица - Для ВСЕХ Филиалов
      , tmpOB_isBranchAll AS (SELECT * FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId   = zc_ObjectBoolean_Juridical_isBranchAll())
 
+          -- Физ.лица Филиала
+        , _tmpMemberBranch AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                                      -- в каких он Филиалах
+                                    , ObjectLink_Unit_Branch.ChildObjectId     AS BranchId
+                                      -- № п/п - по Дате перевода
+                                    , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId ORDER BY COALESCE (ObjectDate_Personal_Send.ValueData, zc_DateStart()) DESC) AS Ord
+                               FROM ObjectLink AS ObjectLink_Personal_Unit
+                                    INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = ObjectLink_Personal_Unit.ObjectId
+                                                                        AND Object_Personal.isErased = FALSE
+                                    -- Ограничение - Филиал
+                                    INNER JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                          ON ObjectLink_Unit_Branch.ObjectId      = ObjectLink_Personal_Unit.ChildObjectId
+                                                         AND ObjectLink_Unit_Branch.DescId        = zc_ObjectLink_Unit_Branch()
+                                    -- Дата перевода
+                                    LEFT JOIN ObjectDate AS ObjectDate_Personal_Send
+                                                         ON ObjectDate_Personal_Send.ObjectId = Object_Personal.Id
+                                                        AND ObjectDate_Personal_Send.DescId   = zc_ObjectDate_Personal_Send()
+                                    -- Дата увольнения
+                                    LEFT JOIN ObjectDate AS ObjectDate_Personal_Out
+                                                         ON ObjectDate_Personal_Out.ObjectId = Object_Personal.Id
+                                                        AND ObjectDate_Personal_Out.DescId   = zc_ObjectDate_Personal_Out()
+                                    -- нашли MemberId
+                                    INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                          ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                         AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+                               WHERE ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                 -- Дата увольнения
+                                 AND COALESCE (ObjectDate_Personal_Out.ValueData, zc_DateEnd()) > CURRENT_DATE
+                                 -- если надо
+                                 AND vbBranchId_Constraint                > 0
+                              )
+          -- Юр лица + Контрагенты для Физ.лица Филиала
+        , _tmpJuridicalBranch AS (
+                                     -- Только Контрагенты
+                                     SELECT DISTINCT
+                                            0 AS JuridicalId
+                                          , ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
+                                     FROM _tmpMemberBranch
+                                          -- Сотрудник для MemberId
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
+                                                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                          -- Сотрудник (супервайзер)
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId        = zc_ObjectLink_Partner_Personal()
+                                          -- нашли Юр.лицо
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                     -- нашли последнюю Дату перевода
+                                     WHERE _tmpMemberBranch.Ord = 1
+                                       -- здесь Филиал
+                                       AND _tmpMemberBranch.BranchId = vbBranchId_Constraint
+
+                                    -- Только Контрагенты
+                                    UNION
+                                     SELECT DISTINCT
+                                            0 AS JuridicalId
+                                          , ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
+                                     FROM _tmpMemberBranch
+                                          -- Сотрудник для MemberId
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
+                                                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                          -- Сотрудник (торговый)
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId        = zc_ObjectLink_Partner_PersonalTrade()
+                                          -- нашли Юр.лицо
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                     -- нашли последнюю Дату перевода
+                                     WHERE _tmpMemberBranch.Ord = 1
+                                       -- здесь Филиал
+                                       AND _tmpMemberBranch.BranchId = vbBranchId_Constraint
+
+                                    -- Все Юр.лица
+                                    UNION
+                                     SELECT DISTINCT
+                                            ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                          , 0 AS PartnerId
+                                     FROM _tmpMemberBranch
+                                          -- Сотрудник для MemberId
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
+                                                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                          -- Сотрудники (ответственное лицо) - Договор
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Contract_Personal.DescId        = zc_ObjectLink_Contract_Personal()
+                                          -- нашли Юр.лицо
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                                ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_Personal.ObjectId
+                                                               AND ObjectLink_Contract_Juridical.DescId   = zc_ObjectLink_Contract_Juridical()
+                                     -- нашли последнюю Дату перевода
+                                     WHERE _tmpMemberBranch.Ord = 1
+                                       -- здесь Филиал
+                                       AND _tmpMemberBranch.BranchId = vbBranchId_Constraint
+
+                                    -- Все Юр.лица
+                                    UNION
+                                     SELECT DISTINCT
+                                            ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                          , 0 AS PartnerId
+                                     FROM _tmpMemberBranch
+                                          -- Сотрудник для MemberId
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
+                                                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                          --  Сотрудники (торговый) - Договор
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Contract_Personal.DescId        = zc_ObjectLink_Contract_PersonalTrade()
+                                          -- нашли Юр.лицо
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                                ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_Personal.ObjectId
+                                                               AND ObjectLink_Contract_Juridical.DescId   = zc_ObjectLink_Contract_Juridical()
+                                     -- нашли последнюю Дату перевода
+                                     WHERE _tmpMemberBranch.Ord = 1
+                                       -- здесь Филиал
+                                       AND _tmpMemberBranch.BranchId = vbBranchId_Constraint
+                                 )
+   -- Результат
    SELECT DISTINCT
          Object_Contract_View.ContractId      :: Integer   AS Id
        , Object_Contract_View.ContractCode    :: Integer   AS Code
@@ -512,7 +782,7 @@ BEGIN
        , Object_PaidKind_contract.ValueData  AS PaidKindName_contract
 
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
-       , ObjectString_Comment.ValueData AS ContractComment 
+       , ObjectString_Comment.ValueData AS ContractComment
        , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
 
        , Object_Route.Id               AS RouteId
@@ -535,11 +805,11 @@ BEGIN
        , Object_MemberTake6.Id             AS MemberTakeId6
        , Object_MemberTake6.ValueData      AS MemberTakeName6
        , Object_MemberTake7.Id             AS MemberTakeId7
-       , Object_MemberTake7.ValueData      AS MemberTakeName7 
+       , Object_MemberTake7.ValueData      AS MemberTakeName7
 
        , Object_MemberTake.Id        AS personalTakeId
        , Object_MemberTake.ValueData AS personalTakeName
- 
+
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupName
        , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -563,8 +833,8 @@ BEGIN
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner
-         LEFT JOIN ObjectString AS ObjectString_GLNCode 
-                                ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
+         LEFT JOIN ObjectString AS ObjectString_GLNCode
+                                ON ObjectString_GLNCode.ObjectId = Object_Partner.Id
                                AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
 
          LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
@@ -575,14 +845,14 @@ BEGIN
                               AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
-         
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
-                              ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
          LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Partner_RouteSorting.ChildObjectId
-         
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
          LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Unit
                               ON ObjectLink_PersonalTrade_Unit.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
@@ -601,35 +871,35 @@ BEGIN
                              AND ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
-                              ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
          LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake1
-                              ON ObjectLink_Partner_MemberTake1.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake1.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake1.DescId = zc_ObjectLink_Partner_MemberTake1()
          LEFT JOIN Object AS Object_MemberTake1 ON Object_MemberTake1.Id = ObjectLink_Partner_MemberTake1.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake2
-                              ON ObjectLink_Partner_MemberTake2.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake2.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake2.DescId = zc_ObjectLink_Partner_MemberTake2()
          LEFT JOIN Object AS Object_MemberTake2 ON Object_MemberTake2.Id = ObjectLink_Partner_MemberTake2.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake3
-                              ON ObjectLink_Partner_MemberTake3.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake3.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake3.DescId = zc_ObjectLink_Partner_MemberTake3()
          LEFT JOIN Object AS Object_MemberTake3 ON Object_MemberTake3.Id = ObjectLink_Partner_MemberTake3.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake4
-                              ON ObjectLink_Partner_MemberTake4.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake4.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake4.DescId = zc_ObjectLink_Partner_MemberTake4()
          LEFT JOIN Object AS Object_MemberTake4 ON Object_MemberTake4.Id = ObjectLink_Partner_MemberTake4.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake5
-                              ON ObjectLink_Partner_MemberTake5.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake5.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake5.DescId = zc_ObjectLink_Partner_MemberTake5()
          LEFT JOIN Object AS Object_MemberTake5 ON Object_MemberTake5.Id = ObjectLink_Partner_MemberTake5.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake6
-                              ON ObjectLink_Partner_MemberTake6.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake6.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake6.DescId = zc_ObjectLink_Partner_MemberTake6()
          LEFT JOIN Object AS Object_MemberTake6 ON Object_MemberTake6.Id = ObjectLink_Partner_MemberTake6.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake7
-                              ON ObjectLink_Partner_MemberTake7.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake7.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake7.DescId = zc_ObjectLink_Partner_MemberTake7()
          LEFT JOIN Object AS Object_MemberTake7 ON Object_MemberTake7.Id = ObjectLink_Partner_MemberTake7.ChildObjectId
 
@@ -639,6 +909,14 @@ BEGIN
        --LEFT JOIN tmpContractPartner_Juridical ON tmpContractPartner_Juridical.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
        --                                      AND tmpContractPartner_Juridical.PartnerId   = ObjectLink_Partner_Juridical.ObjectId
        --LEFT JOIN tmpContractPartner_Juridical ON tmpContractPartner_Juridical.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId
+
+         -- Юр лица для Физ.лица Филиала
+         LEFT JOIN _tmpJuridicalBranch ON _tmpJuridicalBranch.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                      AND _tmpJuridicalBranch.JuridicalId > 0
+         -- Контрагенты для Физ.лица Филиала
+         LEFT JOIN _tmpJuridicalBranch AS _tmpPartnerBranch
+                                       ON _tmpPartnerBranch.PartnerId = Object_Partner.Id
+                                      AND _tmpPartnerBranch.PartnerId > 0
 
          LEFT JOIN tmpObject_Contract_View AS Object_Contract_View
                                            ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
@@ -692,20 +970,21 @@ BEGIN
         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
 
         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
-                             ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
+                             ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id
                             AND ObjectLink_Partner_Route.DescId = CASE WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() THEN zc_ObjectLink_Partner_Route30201() ELSE zc_ObjectLink_Partner_Route() END
         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
 
         LEFT JOIN ObjectString AS ObjectString_Address
                                ON ObjectString_Address.ObjectId = Object_Partner.Id
                               AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
-        LEFT JOIN ObjectFloat AS Partner_GPSN 
+        LEFT JOIN ObjectFloat AS Partner_GPSN
                               ON Partner_GPSN.ObjectId = Object_Partner.Id
-                             AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()  
+                             AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()
         LEFT JOIN ObjectFloat AS Partner_GPSE
                               ON Partner_GPSE.ObjectId = Object_Partner.Id
-                             AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE() 
+                             AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE()
 
+        -- эти Юр лица - Для ВСЕХ Филиалов
         LEFT JOIN tmpOB_isBranchAll AS ObjectBoolean_isBranchAll
                                     ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
                                 -- AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
@@ -738,8 +1017,17 @@ BEGIN
           OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 8379 AND vbBranchId_Constraint = 3080683)
           -- филиал Львов + филиал Киев
           OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 3080683 AND vbBranchId_Constraint = 8379)
+
+          -- Юр лица для Физ.лица Филиала
+          OR _tmpJuridicalBranch.JuridicalId > 0
+          -- или Контрагенты
+          OR _tmpPartnerBranch.PartnerId > 0
+
+          -- Юр лица - Для ВСЕХ Филиалов
+          OR ObjectBoolean_isBranchAll.ValueData = TRUE
           --
           OR vbIsConstraint = FALSE
+          --
           OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
                                  , 17344 -- Білла 9221,Запорожье,ул.Яценко,2*500239
                                  , 79360 -- ВК № 37 Вел.Киш.,Запорожье,ГОРЬКОГО,71
@@ -750,7 +1038,6 @@ BEGIN
                                  , 128902 -- ФОЗЗИ  ФУД, Запорожье Ленина,147
                                  , 128903 -- ФОЗЗИ  ФУД, Запорожье,ул.Иванова,1а
                                   )
-          OR ObjectBoolean_isBranchAll.ValueData = TRUE
           OR ObjectLink_Partner_Juridical.ChildObjectId IN (408130  -- АГРО СИРОВИНА ТОВ
                                                           , 528407  -- ОПТТОРГ-15 ТОВ
                                                           , 3136014 -- СХІДТОРГ 2018 ТОВ
@@ -786,7 +1073,7 @@ BEGIN
        , NULL :: TVarChar AS PaidKindName_contract
 
        , NULL :: Integer ContractStateKindCode
-       , NULL :: TVarChar AS ContractComment 
+       , NULL :: TVarChar AS ContractComment
        , FALSE:: Boolean  AS isNotTareReturning
 
        , NULL :: Integer AS RouteId
@@ -835,7 +1122,7 @@ BEGIN
 
    FROM Object AS Object_ArticleLoss
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ArticleLoss.DescId
-         LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_InfoMoney 
+         LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_InfoMoney
                               ON ObjectLink_ArticleLoss_InfoMoney.ObjectId = Object_ArticleLoss.Id
                              AND ObjectLink_ArticleLoss_InfoMoney.DescId = zc_ObjectLink_ArticleLoss_InfoMoney()
          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_ArticleLoss_InfoMoney.ChildObjectId
@@ -848,12 +1135,12 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Address
                                 ON ObjectString_Address.ObjectId = Object_ArticleLoss.Id
                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
-         LEFT JOIN ObjectFloat AS Partner_GPSN 
+         LEFT JOIN ObjectFloat AS Partner_GPSN
                                ON Partner_GPSN.ObjectId = Object_ArticleLoss.Id
-                              AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()  
+                              AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()
          LEFT JOIN ObjectFloat AS Partner_GPSE
                                ON Partner_GPSE.ObjectId = Object_ArticleLoss.Id
-                              AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE() 
+                              AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE()
 
    WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
      AND Object_ArticleLoss.isErased = FALSE
@@ -865,7 +1152,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ContractPartnerOrderChoice (Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

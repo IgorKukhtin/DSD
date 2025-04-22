@@ -19,7 +19,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 423
+    Width = 442
     Height = 664
     Align = alClient
     DataSource = DataSource
@@ -138,7 +138,7 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 703
+    Left = 722
     Top = 0
     Width = 9
     Height = 664
@@ -146,6 +146,7 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
+    ExplicitLeft = 703
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -741,13 +742,15 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 712
+    Left = 731
     Top = 0
-    Width = 173
+    Width = 141
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitLeft = 735
+    ExplicitTop = -6
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -1435,7 +1438,7 @@ object MainForm: TMainForm
       Visible = False
     end
     object cbBranchSendOnPrice: TCheckBox
-      Left = 137
+      Left = 114
       Top = 647
       Width = 110
       Height = 17
@@ -1645,13 +1648,14 @@ object MainForm: TMainForm
     end
   end
   object CompleteDocumentPanel: TPanel
-    Left = 885
+    Left = 872
     Top = 0
-    Width = 236
+    Width = 249
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
+    ExplicitLeft = 873
     object Label3: TLabel
       Left = 6
       Top = 22
@@ -2264,7 +2268,7 @@ object MainForm: TMainForm
     object cbInsertHistoryCost_andReComplete: TCheckBox
       Tag = 30
       Left = 15
-      Top = 354
+      Top = 351
       Width = 200
       Height = 17
       Caption = '10. !!!'#1057'/'#1057' + '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077'!!!'
@@ -2344,7 +2348,7 @@ object MainForm: TMainForm
     object cbHistoryCost_diff: TCheckBox
       Tag = 30
       Left = 15
-      Top = 369
+      Top = 364
       Width = 107
       Height = 17
       Caption = #1089'/'#1089' "'#1054#1082#1088#1091#1075#1083#1077#1085#1080#1103'"'
@@ -2356,6 +2360,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 42
+      Visible = False
       OnClick = cbCompleteIncomeBNClick
     end
     object cbLastCost: TCheckBox
@@ -2405,7 +2410,7 @@ object MainForm: TMainForm
     object cbReturnIn_Auto: TCheckBox
       Tag = 30
       Left = 96
-      Top = 421
+      Top = 429
       Width = 141
       Height = 17
       Caption = #1055#1088#1080#1074#1103#1079#1082#1072' '#1042#1086#1079#1074#1088#1072#1090#1099
@@ -2436,7 +2441,7 @@ object MainForm: TMainForm
     object cbPromo: TCheckBox
       Tag = 30
       Left = 96
-      Top = 403
+      Top = 413
       Width = 141
       Height = 17
       Caption = #1056#1072#1089#1095#1077#1090' '#1072#1082#1094#1080#1081
@@ -2452,7 +2457,7 @@ object MainForm: TMainForm
     object cbCurrency: TCheckBox
       Tag = 30
       Left = 96
-      Top = 385
+      Top = 396
       Width = 141
       Height = 17
       Caption = #1056#1072#1089#1095#1077#1090' '#1082#1091#1088#1089#1086#1074#1099#1093' '#1088#1072#1079#1085'.'
@@ -2466,8 +2471,8 @@ object MainForm: TMainForm
       OnClick = cbCompleteIncomeBNClick
     end
     object cbOnlyTush: TCheckBox
-      Left = 97
-      Top = 439
+      Left = 104
+      Top = 445
       Width = 128
       Height = 17
       Caption = #1058#1086#1083#1100#1082#1086' '#1058#1091#1096#1077#1085#1082#1072
@@ -2478,6 +2483,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 50
+      Visible = False
     end
     object MovementId_startEdit: TEdit
       Left = 128
@@ -2487,9 +2493,25 @@ object MainForm: TMainForm
       TabOrder = 51
       Text = '0'
     end
+    object cbUnComplete_StatusId_next: TCheckBox
+      Tag = 30
+      Left = 96
+      Top = 379
+      Width = 155
+      Height = 17
+      Caption = 'UnComplete - StatusId_next'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clHighlight
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 52
+      OnClick = cbCompleteIncomeBNClick
+    end
   end
   object LogPanel: TPanel
-    Left = 423
+    Left = 442
     Top = 0
     Width = 280
     Height = 664
@@ -2501,6 +2523,7 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
     TabOrder = 5
+    ExplicitLeft = 423
     object PanelErr: TPanel
       Left = 1
       Top = 1

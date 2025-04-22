@@ -185,6 +185,34 @@ BEGIN
      END IF;
 
 
+     -- проверка ключ доступа
+     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+     OR EXISTS (SELECT 1
+                FROM ObjectLink
+                     INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
+                                                                    AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                WHERE ObjectLink.DescId   = zc_ObjectLink_PersonalServiceList_Member()
+                  AND ObjectLink.ObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList())
+               )
+               
+     THEN
+         IF NOT EXISTS (SELECT ObjectLink_User_Member.ObjectId
+                        FROM ObjectLink
+                             INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
+                                                                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                         WHERE ObjectLink.DescId = zc_ObjectLink_PersonalServiceList_Member()
+                           AND ObjectLink.ObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList())
+                       )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не установлено Физ.лицо (пользователь).%для Ведомость = <%>.', CHR (13), lfGet_Object_ValueData_sh (vbPersonalServiceListId);
+         END IF;
+     END IF;
+
+     IF COALESCE (vbPersonalServiceListId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Ведомость не установлена.';
+     END IF;
+
      -- !!!ВАЖНО!!!
      -- определяем ключ доступа
      vbAccessKeyId:= CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)

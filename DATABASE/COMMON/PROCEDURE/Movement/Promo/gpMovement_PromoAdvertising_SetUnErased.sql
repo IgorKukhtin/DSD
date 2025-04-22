@@ -30,7 +30,7 @@ BEGIN
     outIsErased := FALSE;
 
     -- Обязательно меняем
-    UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Id = inMovementId
+    UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete(), StatusId_next = zc_Enum_Status_UnComplete() WHERE Id = inMovementId
     RETURNING ParentId INTO vbMovementId;
 
     -- проверка - связанные документы Изменять нельзя

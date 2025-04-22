@@ -47,7 +47,7 @@ BEGIN
      IF ioId > 0
      THEN
          -- вернули статус, Не проведен - значит Не отправлен
-         UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Id = ioId AND StatusId <> zc_Enum_Status_UnComplete();
+         UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete(), StatusId_next = zc_Enum_Status_UnComplete() WHERE Id = ioId AND StatusId <> zc_Enum_Status_UnComplete();
 
          -- сохранили свойство <Дата/Время изменения>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
@@ -83,37 +83,16 @@ BEGIN
          -- если схема Vchasno - EDI
          IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbJuridicalId AND OB.DescId = zc_ObjectBoolean_Juridical_VchasnoEdi() AND OB.ValueData = TRUE)
          -- этим никогда
-         AND NOT EXISTS (SELECT 1
-                         FROM ObjectLink AS OL
-                         WHERE OL.ObjectId  = vbJuridicalId AND OL.DescId = zc_ObjectLink_Juridical_Retail()
-                           AND OL.ChildObjectId IN (8873723 -- Кошик
-                                                   )
-                        )
+         --AND NOT EXISTS (SELECT 1
+         --                FROM ObjectLink AS OL
+         --                WHERE OL.ObjectId  = vbJuridicalId AND OL.DescId = zc_ObjectLink_Juridical_Retail()
+         --                  AND OL.ChildObjectId IN (8873723 -- Кошик
+         --                                          )
+         --               )
          THEN
-             -- Если Comdoc
-             IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbJuridicalId AND OB.DescId = zc_ObjectBoolean_Juridical_isEdiComdoc() AND OB.ValueData = TRUE)
-                -- временно Рост Харьков + Чудо-Маркет
-            AND EXISTS (SELECT 1
-                        FROM ObjectLink AS OL
-                        WHERE OL.ObjectId  = vbJuridicalId AND OL.DescId = zc_ObjectLink_Juridical_Retail()
-                          AND OL.ChildObjectId IN (310862  -- Рост Харьков
-                                                 , 2473612 -- Чудо-Маркет
-                                                  )
-                       )
+             -- Если Delnot
+             IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbJuridicalId AND OB.DescId = zc_ObjectBoolean_Juridical_isEdiDelnot() AND OB.ValueData = TRUE)
              THEN
-                 -- Добавили Отправку Comdoc
-                 PERFORM gpInsertUpdate_Movement_EDI_Send (ioId       := 0
-                                                         , inParentId := inParentId
-                                                         , inDescCode := 'zc_MovementBoolean_EdiComdoc'
-                                                         , inSession  := inSession
-                                                          );
-                     
-             -- временно Отключил - Если Delnot
-             --ELSEIF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbJuridicalId AND OB.DescId = zc_ObjectBoolean_Juridical_isEdiDelnot() AND OB.ValueData = TRUE)
-             --THEN
-
-             -- временно ВСЕМ
-             ELSE
                  -- Добавили Отправку Delnot
                  PERFORM gpInsertUpdate_Movement_EDI_Send (ioId       := 0
                                                          , inParentId := inParentId
@@ -121,7 +100,18 @@ BEGIN
                                                          , inSession  := inSession
                                                           );
              END IF;
-             
+
+             -- Если Comdoc
+             IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbJuridicalId AND OB.DescId = zc_ObjectBoolean_Juridical_isEdiComdoc() AND OB.ValueData = TRUE)
+             THEN
+                 -- Добавили Отправку Comdoc
+                 PERFORM gpInsertUpdate_Movement_EDI_Send (ioId       := 0
+                                                         , inParentId := inParentId
+                                                         , inDescCode := 'zc_MovementBoolean_EdiComdoc'
+                                                         , inSession  := inSession
+                                                          );
+             END IF;
+
          END IF; -- если схема Vchasno - EDI
 
      END IF; -- если Desadv

@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS lpUnComplete_Movement (Integer, Integer);
 CREATE OR REPLACE FUNCTION lpUnComplete_Movement(
     IN inMovementId        Integer  , -- ключ объекта <Документ>
     IN inUserId            Integer    -- Пользователь
-)                              
+)
   RETURNS VOID
 AS
 $BODY$
@@ -39,16 +39,35 @@ BEGIN
   -- 1.1. Проверки на "распроведение" / "удаление"
   IF vbStatusId_old = zc_Enum_Status_Complete() THEN PERFORM lpCheck_Movement_Status (inMovementId, inUserId); END IF;
 
-  -- 1.2. Обязательно меняем статус документа
-  UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete(), StatusId_next = zc_Enum_Status_UnComplete() WHERE Id = inMovementId
-  RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
+
+  -- если для Пользователя - Новая схема - ***StatusId_next
+  IF zfCheck_User_StatusId_next (inUserId) = TRUE
+  THEN
+      -- 1.2. Обязательно меняем статус документа
+      UPDATE Movement SET StatusId = CASE WHEN zfCheck_Update_StatusId_next (vbStatusId_old, DescId) = TRUE
+                                               -- Новая схема - НЕ меняется Статус на zc_Enum_Status_UnComplete
+                                               THEN StatusId
+                                          -- меняется Статус на zc_Enum_Status_UnComplete
+                                          ELSE zc_Enum_Status_UnComplete()
+                                     END
+                          -- этот статус меняется ВСЕГДА
+                        , StatusId_next = zc_Enum_Status_UnComplete()
+      WHERE Id = inMovementId
+      RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
+  ELSE
+      -- 1.2. Обязательно меняем статус документа
+      UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete(), StatusId_next = zc_Enum_Status_UnComplete() WHERE Id = inMovementId
+      RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
+
+  END IF;
+
 
   -- !!! zc_Enum_Process_Auto_PrimeCost
   IF vbStatusId_old = zc_Enum_Status_Erased() AND vbDescId = zc_Movement_Transport() AND inUserId = zc_Enum_Process_Auto_PrimeCost()
   THEN
       RAISE EXCEPTION 'Ошибка.UnComplete zc_Movement_Transport AND zc_Enum_Process_Auto_PrimeCost where MovementId = <%>', inMovementId;
   END IF;
-      
+
 
   -- 1.0.2.
   vbOperDatePartner:= (SELECT MovementDate.ValueData
@@ -95,10 +114,10 @@ BEGIN
 
   -- для Админа  - Все Права
   IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
-  THEN 
+  THEN
   -- проверка прав для <AccessKey>
   IF vbDescId = zc_Movement_Sale()
-  THEN 
+  THEN
       IF lpGetAccessKey (inUserId, COALESCE ((SELECT MAX (ProcessId)FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Sale(), zc_Enum_Process_InsertUpdate_Movement_Sale_Partner())), zc_Enum_Process_InsertUpdate_Movement_Sale()))
          <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
          -- Проведение документов - нет проверки по филиалу
@@ -108,7 +127,7 @@ BEGIN
       END IF;
   ELSE
   IF vbDescId = zc_Movement_ReturnIn() AND NOT (lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn()) = zc_Enum_Process_AccessKey_DocumentDnepr() AND vbAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentKrRog(), zc_Enum_Process_AccessKey_DocumentZaporozhye()))
-  THEN 
+  THEN
       IF lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn()) -- (SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_ReturnIn())))
          <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
          -- Проведение документов - нет проверки по филиалу
@@ -120,7 +139,7 @@ BEGIN
       END IF;
   ELSE
   IF vbDescId = zc_Movement_Tax()
-  THEN 
+  THEN
       IF lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) -- (SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Tax())))
          <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
          -- Проведение документов - нет проверки по филиалу
@@ -132,7 +151,7 @@ BEGIN
       END IF;
   ELSE
   IF vbDescId = zc_Movement_TaxCorrective()
-  THEN 
+  THEN
       IF lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()) -- (SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_TaxCorrective())))
          <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
          -- Проведение документов - нет проверки по филиалу
@@ -149,10 +168,21 @@ BEGIN
   END IF;
 
 
-  -- 3.1. Удаляем все проводки
-  PERFORM lpDelete_MovementItemContainer (inMovementId);
-  -- 3.2. Удаляем все проводки для отчета
-  PERFORM lpDelete_MovementItemReport (inMovementId);
+  -- если для Пользователя - Новая схема - ***StatusId_next
+  IF zfCheck_User_StatusId_next (inUserId) = TRUE
+    -- если НЕ меняется Статус на zc_Enum_Status_UnComplete
+ AND zfCheck_Update_StatusId_next (vbStatusId_old, vbDescId) = TRUE
+  THEN
+      -- Проводки остаются
+      vbUserId_save:= vbUserId_save;
+  
+  ELSE
+      -- 3.1. Удаляем все проводки
+      PERFORM lpDelete_MovementItemContainer (inMovementId);
+      -- 3.2. Удаляем все проводки для отчета
+      PERFORM lpDelete_MovementItemReport (inMovementId);
+  END IF;
+
 
   -- 4. сохранили протокол
   IF inMovementId <> 0 --AND inUserId <> 5
@@ -163,7 +193,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpUnComplete_Movement (Integer, Integer) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
