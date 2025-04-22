@@ -13,7 +13,9 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integ
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                               , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
@@ -40,7 +42,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
     IN inWeightPackageSticker  TFloat   , -- вес 1-ого пакета
     IN inWeightTotal           TFloat   , -- вес в упаковки  
     IN inChangePercentAmount   TFloat   , -- % скидки для кол-ва
-    IN inDaysQ                 TFloat   , -- Изменение Даты произв в качественном 
+    IN inDaysQ                 TFloat   , -- Изменение Даты произв в качественном   
+
+    IN inWeightMin             TFloat  , -- Мин. вес
+    IN inWeightMax             TFloat  , -- Мах. вес
+    IN inHeight                TFloat  , -- Высота
+    IN inLength                TFloat  , -- Длина
+    IN inWidth                 TFloat  , -- Ширина
+
     IN inGoodsSubDate          TDateTime, --
     IN inisNotDate             Boolean  , -- если FALSE записать в inGoodsSubDate - NULL 
     IN inIsNotPack             Boolean  , -- не упаковывать
@@ -95,7 +104,7 @@ BEGIN
    END IF;   
 
    -- проверка - что б Админ ничего не ломал
-   IF vbUserId = 5 AND 1=1
+   IF vbUserId = 5 OR vbUserId = 9457 
    THEN
        RAISE EXCEPTION 'Ошибка.Нет прав - что б Админ ничего не ломал.';
    END IF;
@@ -164,7 +173,20 @@ BEGIN
    -- сохранили свойство <вес в упаковки>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightTotal(), ioId, inWeightTotal); 
    -- сохранили свойство <вес в упаковки>                                                                                                                              
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount(), ioId, inChangePercentAmount);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount(), ioId, inChangePercentAmount); 
+   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightMin(), ioId, inWeightMin);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightMax(), ioId, inWeightMax);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Height(), ioId, inHeight);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Length(), ioId, inLength);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Width(), ioId, inWidth);
+   
+   
    -- сохранили свойство <используется в заявках>
    --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_Order(), ioId, inIsOrder);
    -- сохранили свойство <Изменение Даты произв в качественном>                                                                                                                              
@@ -176,6 +198,12 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
+   -- проверка - что б Админ ничего не ломал
+   IF vbUserId = 5 OR vbUserId = 9457
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав - что б Админ ничего не ломал.';
+   END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -184,6 +212,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 22.04.25         * inWeightMin, inWeightMax, inHeight, inLength, inWidth 
  21.03.25         * WeightPackageKorob
  04.11.24         * inGoodsIncomeId, inGoodsKindIncomeId
  21.12.22         * inGoodsKindNewId

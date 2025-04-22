@@ -265,7 +265,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089
-            Options.Editing = False
             Width = 70
           end
           object WeightMax: TcxGridDBColumn
@@ -277,7 +276,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089
-            Options.Editing = False
             Width = 70
           end
           object Height: TcxGridDBColumn
@@ -288,7 +286,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object Length: TcxGridDBColumn
@@ -299,7 +296,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object Width: TcxGridDBColumn
@@ -310,7 +306,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object NormRem: TcxGridDBColumn
@@ -2187,6 +2182,51 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DaysQ'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightMin'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightMin'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightMax'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightMax'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHeight'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Height'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLength'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Length'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Width'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

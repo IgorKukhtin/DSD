@@ -2660,9 +2660,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2756,9 +2753,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
@@ -3140,7 +3134,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object cxLabel6: TcxLabel
       Left = 185
-      Top = 0
+      Top = 5
       Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
     end
     object edComment: TcxTextEdit
@@ -3167,8 +3161,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Width = 218
     end
     object cxLabel3: TcxLabel
-      Left = 288
-      Top = 0
+      Left = 292
+      Top = 5
       Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
     end
     object cxLabel4: TcxLabel
@@ -9505,7 +9499,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 912
+    Left = 880
     Top = 3
   end
   object spSelectPrint_grid: TdsdStoredProc
@@ -9543,7 +9537,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 847
+    Left = 807
     Top = 16
   end
   object spUpdate_CardSecond_num_not4000: TdsdStoredProc
