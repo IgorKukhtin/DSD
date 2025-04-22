@@ -56,6 +56,19 @@ BEGIN
      -- !!!обязательно!!! очистили таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
 
+
+     -- если Новая схема - StatusId_next
+     IF zfCheck_User_StatusId_next (inUserId) = TRUE AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId_next = zc_Enum_Status_UnComplete())
+     THEN
+         -- 0.1. теперь он Не проведен
+         UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Movement.Id = inMovementId;
+         -- 0.2. Удаляем все проводки
+         PERFORM lpDelete_MovementItemContainer (inMovementId);
+         -- 0.3. Удаляем все проводки для отчета
+         PERFORM lpDelete_MovementItemReport (inMovementId);
+     END IF;
+
+
      -- Эти параметры нужны для формирования Аналитик в проводках
      WITH tmpMember AS (SELECT lfSelect.MemberId, lfSelect.UnitId
                         FROM lfSelect_Object_Member_findPersonal (lfGet_User_Session (inUserId)) AS lfSelect

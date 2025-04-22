@@ -48,6 +48,18 @@ BEGIN
      END IF;
 
 
+     -- если Новая схема - StatusId_next
+     IF zfCheck_User_StatusId_next (inUserId) = TRUE AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId_next = zc_Enum_Status_UnComplete())
+     THEN
+         -- 0.1. теперь он Не проведен
+         UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Movement.Id = inMovementId;
+         -- 0.2. Удаляем все проводки
+         PERFORM lpDelete_MovementItemContainer (inMovementId);
+         -- 0.3. Удаляем все проводки для отчета
+         PERFORM lpDelete_MovementItemReport (inMovementId);
+     END IF;
+
+
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT Movement.DescId, Movement.OperDate
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From

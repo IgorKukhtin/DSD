@@ -5395,7 +5395,7 @@ begin
   ЕлектроннийДокумент.Заголовок.ДатаДокументу := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
 
   ЕлектроннийДокумент.Заголовок.НомерЗамовлення :=HeaderDataSet.FieldByName('InvNumberOrder').asString;
-  //ЕлектроннийДокумент.Заголовок.ДатаЗамовлення :=FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+  ЕлектроннийДокумент.Заголовок.ДатаЗамовлення :=FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
 
   with ЕлектроннийДокумент.Заголовок.ДокПідстава do
   begin

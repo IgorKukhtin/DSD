@@ -47,6 +47,16 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не определено значение <Вид НДС>.';
      END IF;
 
+     -- проверка - свойство должно быть установлено
+     IF inAmount < 0 AND inInvoiceKindId IN (zc_Enum_InvoiceKind_Pay(), zc_Enum_InvoiceKind_PrePay())
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для счета <%> заполнено значение <Кредит> = <%>.%Можно установить только значение <Дебет>.'
+                      , lfGet_Object_ValueData_sh (inTaxKindId)
+                      , zfConvert_FloatToString (-1  * inAmount)
+                      , CHR (13)
+                       ;
+     END IF;
+
      -- проверка - один счет на лодку
      IF inParentId > 0 AND inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
         AND EXISTS (SELECT 1

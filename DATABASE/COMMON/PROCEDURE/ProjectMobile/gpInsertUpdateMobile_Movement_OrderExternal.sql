@@ -30,6 +30,7 @@ $BODY$
    DECLARE vbPersonalId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbChangePercent TFloat;
+   DECLARE vbUnitId_find Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
@@ -51,6 +52,15 @@ BEGIN
                          ;
       END IF;
       
+      -- Поиск, для проверки
+      SELECT gpGet.UnitId INTO vbUnitId_find FROM gpGetMobile_Object_Const (inSession:= inSession) AS gpGet;
+
+      -- замена
+      IF vbUnitId_find > 0 AND COALESCE (inUnitId, 0) NOT IN (vbUnitId_find)
+      THEN
+          inUnitId:= vbUnitId_find;
+      END IF;
+
       -- Замена
       IF EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.ObjectId = inPartnerId AND ObjectLink.ObjectId = zc_ObjectLink_Partner_UnitMobile() AND ObjectLink.ChildObjectId > 0)
       THEN
