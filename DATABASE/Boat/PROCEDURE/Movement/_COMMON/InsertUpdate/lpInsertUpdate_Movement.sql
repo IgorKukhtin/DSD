@@ -18,10 +18,17 @@ $BODY$
   DECLARE vbStatusId Integer;
   DECLARE vbDescId   Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
+     -- проверка
      IF inOperDate <> DATE_TRUNC('DAY', inOperDate) THEN
         RAISE EXCEPTION 'Ошибка.inOperDate = <%>', inOperDate;
      END IF;
+
+     -- проверка
+     IF inOperDate < DATE_TRUNC ('YEAR', CURRENT_DATE - INTERVAL '3 YEAR')
+     THEN
+        RAISE EXCEPTION 'Ошибка.Дата = <%>', inOperDate;
+     END IF;
+
 
      -- меняем параметр
      IF inParentId = 0
