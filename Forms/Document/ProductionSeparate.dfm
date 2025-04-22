@@ -612,19 +612,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     object actPrint_its: TdsdPrintAction [12]
       Category = 'DSDLib'
       MoveParams = <
-        item
-          FromParam.Name = 'Id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'Id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'Id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+       >
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -661,20 +649,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     end
     object actPrint_4134: TdsdPrintAction [13]
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'Id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'Id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'Id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       StoredProc = spSelectPrint
       StoredProcList = <
         item
