@@ -6,14 +6,15 @@ CREATE OR REPLACE FUNCTION lpSetUnErased_MovementItem(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inUserId              Integer
-)                              
+)
   RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbMovementId Integer;
-   DECLARE vbStatusId Integer;
-   DECLARE vbDescId     Integer;
-   DECLARE vbMovementDescId Integer;
+   DECLARE vbMovementId      Integer;
+   DECLARE vbStatusId        Integer;
+   DECLARE vbStatusId_Next   Integer;
+   DECLARE vbDescId          Integer;
+   DECLARE vbMovementDescId  Integer;
 BEGIN
   -- !!!Только просмотр Аудитор!!!
   PERFORM lpCheckPeriodClose_auditor (NULL, NULL, NULL, inMovementItemId, NULL, inUserId);
@@ -22,7 +23,7 @@ BEGIN
   -- устанавливаем новое значение
   outIsErased := FALSE;
 
-  -- Обязательно меняем 
+  -- Обязательно меняем
   UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
          RETURNING MovementId, DescId INTO vbMovementId, vbDescId;
 
@@ -31,15 +32,18 @@ BEGIN
 
 
   -- определяем <Статус> и тип документа
-   SELECT StatusId ,DescId
- INTO vbStatusId, vbMovementDescId
+   SELECT StatusId, StatusId_Next, DescId
+          INTO vbStatusId, vbStatusId_Next, vbMovementDescId
    FROM Movement WHERE Id = vbMovementId;
 
   -- проверка - проведенные/удаленные документы Изменять нельзя
-  IF vbStatusId <> zc_Enum_Status_UnComplete()
-  AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_BankAccount() OR vbDescId <> zc_MI_Detail())
+  IF vbStatusId_Next      <> zc_Enum_Status_UnComplete()
+     AND vbStatusId       <> zc_Enum_Status_UnComplete()
+     AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_BankAccount()
+       OR vbDescId <> zc_MI_Detail()
+         )
   THEN
-      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.(%)', lfGet_Object_ValueData (vbStatusId), vbMovementId;
   END IF;
 
   -- пересчитали Итоговые суммы по накладной
@@ -48,11 +52,9 @@ BEGIN
   -- сохранили протокол
   PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= FALSE);
 
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpSetUnErased_MovementItem (Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

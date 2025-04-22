@@ -28,12 +28,12 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
      vbUserId:= lpGetUserBySession (inSession);
 
-/*
-if inSession <> '5' and 1=0
+
+if inOrderInvNumber ILIKE 'KLOTEST1' AND 1=0
 then
-    RAISE EXCEPTION 'Error';
+    RAISE EXCEPTION 'Error.<%>', inOrderInvNumber;
 end if;
-*/
+
      vbMovementId := NULL;
 
 
