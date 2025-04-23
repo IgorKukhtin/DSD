@@ -39,6 +39,8 @@ BEGIN
                                               ELSE COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ValueData, 0)
                                          END AS WeightPackageSticker
 
+                                       , COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageKorob.ValueData, 0) AS WeightPackageKorob
+
                                   FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                                              ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
@@ -71,6 +73,13 @@ BEGIN
                                              , 6899005 -- нар. 200
                                               )
                         THEN Object_GoodsKind.ValueData
+
+                   WHEN Object_Goods.ObjectCode IN (1217
+                                                  , 1218
+                                                  , 1219
+                                                   )
+                    AND tmpGoodsByGoodsKind.WeightPackageKorob > 0
+                        THEN Object_GoodsKind.ValueData
                    ELSE ''
               END :: TVarChar AS GoodsKindName
 
@@ -84,6 +93,13 @@ BEGIN
                                              , 7462698 -- нар. 180
                                              , 6899005 -- нар. 200
                                               )
+                        THEN tmpGoodsByGoodsKind.WeightPackageSticker
+
+                   WHEN Object_Goods.ObjectCode IN (1217
+                                                  , 1218
+                                                  , 1219
+                                                   )
+                    AND tmpGoodsByGoodsKind.WeightPackageKorob > 0
                         THEN tmpGoodsByGoodsKind.WeightPackageSticker
                    ELSE 0
               END :: TFloat AS WeightTare_0

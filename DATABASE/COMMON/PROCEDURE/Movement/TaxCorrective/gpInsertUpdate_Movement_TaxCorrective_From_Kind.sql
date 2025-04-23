@@ -78,7 +78,7 @@ BEGIN
 
 
      -- определяются параметры для <Налогового документа> из "текущего"
-     SELECT Movement.StatusId
+     SELECT CASE WHEN Movement.StatusId_next = zc_Enum_Status_UnComplete() THEN Movement.StatusId_next ELSE Movement.StatusId END
           , Movement.InvNumber
           , Movement.DescId AS MovementDescId
           , CASE WHEN Movement.DescId = zc_Movement_ReturnIn()
