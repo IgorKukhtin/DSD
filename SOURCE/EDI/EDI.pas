@@ -3561,7 +3561,7 @@ begin
       // Вулиця і номер будинку - Точка доставки
       DOCUMENTINVOICE_DRN.InvoiceParties.DeliveryPoint.StreetAndNumber := HeaderDataSet.FieldByName('StreetName_To').asString;
       // Поштовий код - Точка доставки
-      //try DESADV_fozz_Price.InvoiceParties.DeliveryPoint.PostalCode := StrToInt(HeaderDataSet.FieldByName('PostalCode_To').asString);except end;
+      DOCUMENTINVOICE_DRN.InvoiceParties.DeliveryPoint.PostalCode := HeaderDataSet.FieldByName('PostalCode_To').asString;
 
       with ItemsDataSet do
       begin
