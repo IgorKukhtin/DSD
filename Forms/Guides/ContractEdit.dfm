@@ -2,6 +2,7 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 713
   ClientWidth = 934
+  ExplicitTop = -70
   ExplicitWidth = 940
   ExplicitHeight = 742
   PixelsPerInch = 96
@@ -40,8 +41,8 @@
     Caption = #1042#1080#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object cxLabel4: TcxLabel [5]
-    Left = 127
-    Top = 201
+    Left = 126
+    Top = 195
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceComment: TcxTextEdit [6]
@@ -270,6 +271,8 @@
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
+    ExplicitLeft = 373
+    ExplicitTop = 5
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -565,12 +568,12 @@
     end
     object cxLabel37: TcxLabel
       Left = 7
-      Top = 273
+      Top = 278
       Caption = #1060#1080#1083#1080#1072#1083' ('#1088#1072#1089#1095#1077#1090#1099' '#1085#1072#1083')'
     end
     object edBranch: TcxButtonEdit
       Left = 7
-      Top = 289
+      Top = 295
       Properties.Buttons = <
         item
           Default = True
@@ -581,13 +584,44 @@
       Width = 218
     end
     object cbisNotTareReturning: TcxCheckBox
-      Left = 7
-      Top = 330
+      Left = 247
+      Top = 295
       Caption = #1053#1077#1090' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1090#1072#1088#1099
       ParentShowHint = False
       ShowHint = True
       TabOrder = 6
       Width = 122
+    end
+    object edJuridicalDoc_Next: TcxButtonEdit
+      Left = 7
+      Top = 333
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 218
+    end
+    object cxLabel38: TcxLabel
+      Left = 7
+      Top = 316
+      Caption = #1070#1088'. '#1083#1080#1094#1086' '#1080#1089#1090#1086#1088#1080#1103' ('#1087#1077#1095#1072#1090#1100' '#1076#1086#1082'.)'
+    end
+    object cxLabel39: TcxLabel
+      Left = 248
+      Top = 316
+      Caption = #1044#1072#1090#1072' '#1076#1077#1081#1089#1090#1074'. '#1070#1088'.'#1083'. '#1080#1089#1090#1086#1088#1080#1103
+    end
+    object edJuridicalDoc_NextDate: TcxDateEdit
+      Left = 248
+      Top = 333
+      EditValue = 0d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 10
+      Width = 147
     end
   end
   object cxLabel15: TcxLabel [33]
@@ -1013,7 +1047,7 @@
     Caption = #1073#1077#1079' '#1053#1044#1057' (0%)'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 86
+    TabOrder = 85
     Width = 92
   end
   object cbMarketNot: TcxCheckBox [84]
@@ -1596,6 +1630,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inJuridicalDoc_NextDate'
+        Value = Null
+        Component = edJuridicalDoc_NextDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inJuridicalId'
         Value = ''
         Component = GuidesJuridical
@@ -1622,6 +1664,14 @@
         Name = 'inJuridicalInvoiceId'
         Value = Null
         Component = GuidesJuridicalInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalDoc_NextId'
+        Value = Null
+        Component = GuidesJuridicalDoc_Next
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2347,6 +2397,28 @@
         Value = Null
         Component = cbMarketNot
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalDoc_NextId'
+        Value = Null
+        Component = GuidesJuridicalDoc_Next
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalDoc_NextName'
+        Value = Null
+        Component = GuidesJuridicalDoc_Next
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalDoc_NextDate'
+        Value = Null
+        Component = edJuridicalDoc_NextDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 432
@@ -3217,8 +3289,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 768
-    Top = 306
+    Left = 800
+    Top = 274
   end
   object GuidesBank: TdsdGuides
     KeyField = 'Id'
@@ -3397,8 +3469,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 365
-    Top = 306
+    Left = 309
+    Top = 338
   end
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
@@ -3632,7 +3704,37 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 464
-    Top = 275
+    Left = 576
+    Top = 267
+  end
+  object GuidesJuridicalDoc_Next: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalDoc_Next
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridicalDoc_Next
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridicalDoc_Next
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 461
+    Top = 322
   end
 end

@@ -72,6 +72,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Contract_Document() RETURNS Integer AS 
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Contract(), 'zc_ObjectDate_Contract_Document', 'Дата последнего документа' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Contract_Document');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Contract_JuridicalDoc_Next() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Contract_JuridicalDoc_Next'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Contract(), 'zc_ObjectDate_Contract_JuridicalDoc_Next', 'Дата с которой действует Юр. лица история(печать док.)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Contract_JuridicalDoc_Next');
+
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Calendar_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Calendar_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Contract(), 'zc_ObjectDate_Calendar_Value', 'Дата' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GlobalConst_ActualBankStatement');

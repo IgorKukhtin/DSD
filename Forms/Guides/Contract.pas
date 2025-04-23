@@ -365,6 +365,9 @@ type
     bbUpdate_Personal: TdxBarButton;
     cePersonal_update: TcxButtonEdit;
     isMarketNot: TcxGridDBColumn;
+    JuridicalDoc_NextCode: TcxGridDBColumn;
+    JuridicalDoc_NextName: TcxGridDBColumn;
+    JuridicalDoc_NextDate: TcxGridDBColumn;
 
   private
     { Private declarations }

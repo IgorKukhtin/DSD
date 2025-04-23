@@ -52,6 +52,9 @@ RETURNS TABLE (Id Integer, Code Integer
              , PriceListId Integer, PriceListName TVarChar
              , PriceListPromoId Integer, PriceListPromoName TVarChar
              , StartPromo TDateTime, EndPromo TDateTime
+
+             , JuridicalDoc_NextId Integer, JuridicalDoc_NextCode Integer, JuridicalDoc_NextName TVarChar
+             , JuridicalDoc_NextDate TDateTime
              
              , isErased Boolean
               )
@@ -160,6 +163,11 @@ BEGIN
            , CURRENT_DATE :: TDateTime AS StartPromo
            , CURRENT_DATE :: TDateTime AS EndPromo
 
+           , 0           ::Integer   AS JuridicalDoc_NextId
+           , 0           ::Integer   AS JuridicalDoc_NextCode
+           , ''          ::TVarChar  AS JuridicalDoc_NextName
+           , Null        ::TDateTime AS JuridicalDoc_NextDate
+
            , NULL :: Boolean  AS isErased
 
        FROM Object AS Object_PaidKind
@@ -267,6 +275,11 @@ BEGIN
            , COALESCE (ObjectDate_StartPromo.ValueData,CAST (CURRENT_DATE as TDateTime)) AS StartPromo
            , COALESCE (ObjectDate_EndPromo.ValueData,CAST (CURRENT_DATE as TDateTime))   AS EndPromo            
 
+           , Object_JuridicalDoc_Next.Id            ::Integer   AS JuridicalDoc_NextId
+           , Object_JuridicalDoc_Next.ObjectCode    ::Integer   AS JuridicalDoc_NextCode
+           , Object_JuridicalDoc_Next.ValueData     ::TVarChar  AS JuridicalDoc_NextName
+           , ObjectDate_JuridicalDoc_Next.ValueData ::TDateTime AS JuridicalDoc_NextDate
+
            , Object_Contract_View.isErased
 
        FROM Object_Contract_View
@@ -279,6 +292,11 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_End
                                  ON ObjectDate_End.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()                               
+
+            LEFT JOIN ObjectDate AS ObjectDate_JuridicalDoc_Next
+                                 ON ObjectDate_JuridicalDoc_Next.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectDate_JuridicalDoc_Next.DescId = zc_ObjectDate_Contract_JuridicalDoc_Next()
+
             LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                                  ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -437,6 +455,11 @@ BEGIN
                                 AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDoc_Next
+                                 ON ObjectLink_Contract_JuridicalDoc_Next.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectLink_Contract_JuridicalDoc_Next.DescId = zc_ObjectLink_Contract_JuridicalDoc_Next()
+            LEFT JOIN Object AS Object_JuridicalDoc_Next ON Object_JuridicalDoc_Next.Id = ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId
+
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
@@ -460,6 +483,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.04.25         *
  11.11.24         * isMarketNot
  26.09.23         * isNotTareReturning
  01.05.23         * isNotVat
