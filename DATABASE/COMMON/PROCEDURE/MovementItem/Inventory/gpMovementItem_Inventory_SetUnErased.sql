@@ -35,7 +35,7 @@ BEGIN
   -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
 
   -- определ€ем <—татус>
-  vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
+  vbStatusId := (SELECT CASE WHEN StatusId_next = zc_Enum_Status_UnComplete() THEN StatusId_next ELSE StatusId END FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы »змен€ть нельз€
   IF vbStatusId <> zc_Enum_Status_UnComplete()
   THEN

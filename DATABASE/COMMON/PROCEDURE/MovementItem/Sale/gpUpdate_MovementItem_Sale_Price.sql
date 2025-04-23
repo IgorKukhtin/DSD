@@ -26,7 +26,7 @@ BEGIN
 
 
      -- определяются параметры документа
-     SELECT Movement.StatusId
+     SELECT CASE WHEN Movement.StatusId_next = zc_Enum_Status_UnComplete() THEN Movement.StatusId_next ELSE Movement.StatusId END
           , Movement.InvNumber
           , Movement.OperDate
           , MovementLinkObject_PriceList.ObjectId AS PriceListId
