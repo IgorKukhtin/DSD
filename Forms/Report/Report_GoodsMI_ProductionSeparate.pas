@@ -77,6 +77,15 @@ type
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     StorageLineName_in: TcxGridDBColumn;
+    cxLabel9: TcxLabel;
+    GuidesPriceList: TdsdGuides;
+    edPriceList: TcxButtonEdit;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint_its: TdsdStoredProc;
+    actPrint_its: TdsdPrintAction;
+    bbsPrint: TdxBarSubItem;
+    bbPrint_its: TdxBarButton;
   private
     { Private declarations }
   public
