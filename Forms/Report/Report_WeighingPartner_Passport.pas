@@ -92,6 +92,7 @@ type
     macGetCheckDialog: TMultiAction;
     outMessageText: TShowMessageAction;
     Amount_sh_inv: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -12,9 +12,11 @@ $BODY$
    DECLARE vbServiceDate           TDateTime;
    DECLARE vbOperDate_currency     TDateTime;
    DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbServiceDateId         Integer;
    DECLARE vbMovementId_parent     Integer;
    DECLARE vbPositionId            Integer;
 
+   DECLARE vbParentId              Integer;
    DECLARE vbMovementItemId        Integer;
    DECLARE vbCashId                Integer;
    DECLARE vbCurrencyId            Integer;
@@ -29,8 +31,9 @@ $BODY$
    DECLARE vbSumm_diff_balance     TFloat;
    DECLARE vbIsCurrency_balance    Boolean;
 BEGIN
-     --
+     -- Ведомость начисления
      vbMovementId_parent:= (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId);
+
      --
      IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_parent AND Movement.DescId = zc_Movement_PersonalService())
      THEN
@@ -38,6 +41,8 @@ BEGIN
          vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId_parent AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
          -- определили <Месяц начислений:
          vbServiceDate:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_parent AND MD.DescId = zc_MovementDate_ServiceDate());
+         -- определили
+         vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
 
          --
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalServiceList(), inMovementId, vbPersonalServiceListId);
@@ -48,13 +53,148 @@ BEGIN
          FROM MovementItem
          WHERE MovementItem.MovementId = inMovementId
            AND MovementItem.DescId = zc_MI_Master();
+
+         -- проверка для !!!ведомость Ф2!!!
+         IF -- если ведомость Ф2
+            EXISTS (SELECT 1
+                    FROM Movement
+                         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                AND MovementItem.DescId = zc_MI_Master()
+                                                AND MovementItem.isErased = FALSE
+
+                         LEFT JOIN MovementItemFloat AS MIFloat_SummService
+                                                     ON MIFloat_SummService.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+
+                         /*LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
+                                                     ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()*/
+                         LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                                     ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+
+                         /*LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecond
+                                                     ON MIFloat_SummAvCardSecond.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_SummAvCardSecond.DescId = zc_MIFloat_SummAvCardSecond()*/
+                         LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecondRecalc
+                                                     ON MIFloat_SummAvCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
+
+                         /*LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
+                                                     ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()*/
+
+                         /*LEFT JOIN MovementItemFloat AS MIFloat_SummAvance
+                                                     ON MIFloat_SummAvance.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_SummAvance.DescId = zc_MIFloat_SummAvance()
+                         LEFT JOIN MovementItemFloat AS MIFloat_SummAvanceRecalc
+                                                     ON MIFloat_SummAvanceRecalc.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_SummAvanceRecalc.DescId         = zc_MIFloat_SummAvanceRecalc()*/
+                    -- Документ Ведомость начисления
+                    WHERE Movement.Id = vbMovementId_parent
+                     AND (MIFloat_SummCardSecondRecalc.ValueData <> 0
+                       OR MIFloat_SummAvCardSecondRecalc.ValueData <> 0
+                         )
+                   )
+            -- Есть Выплата
+            AND EXISTS (SELECT 1
+                        FROM Movement
+                        WHERE Movement.ParentId = vbMovementId_parent
+                          AND Movement.DescId   = zc_Movement_Cash()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                          AND Movement.Id       <> inMovementId
+                       )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для ведомость <%> %№ <%> от <%>.%Найдена выплата № <%> от <%>.'
+                           , lfGet_Object_ValueData_sh ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = vbMovementId_parent AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
+                           , CHR (13)
+                           , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_parent)
+                           , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_parent))
+                           , CHR (13)
+                           , (SELECT Movement.InvNumber
+                              FROM Movement
+                              WHERE Movement.ParentId = vbMovementId_parent
+                                AND Movement.DescId   = zc_Movement_Cash()
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                AND Movement.Id       <> inMovementId
+                              ORDER BY Movement.OperDate
+                              LIMIT 1
+                             )
+                           , (SELECT zfConvert_DateToString (Movement.OperDate)
+                              FROM Movement
+                              WHERE Movement.ParentId = vbMovementId_parent
+                                AND Movement.DescId   = zc_Movement_Cash()
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                AND Movement.Id       <> inMovementId
+                              ORDER BY Movement.OperDate
+                              LIMIT 1
+                             )
+                            ;
+         END IF;
+
+         -- Есть Выплата
+         IF EXISTS (SELECT 1
+                    FROM Movement
+                    WHERE Movement.ParentId = vbMovementId_parent
+                      AND Movement.DescId   = zc_Movement_Cash()
+                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                      AND Movement.Id       <> inMovementId
+                   )
+         THEN
+             -- Проверка по аналогичным суммам
+             IF EXISTS (WITH tmpMovementItem_curr AS (SELECT MovementItem.*
+                                                      FROM MovementItem
+                                                      WHERE MovementItem.MovementId = inMovementId
+                                                             AND MovementItem.DescId         = zc_MI_Child()
+                                                             AND MovementItem.isErased       = FALSE
+                                                     )
+                             tmpConaiter_list AS (SELECT DISTINCT
+                                                  FROM ContainerLinkObject AS CLO_PersonalServiceList
+                                                       INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                                                      ON CLO_ServiceDate.ContainerId = CLO_PersonalServiceList.ContainerId
+                                                                                     AND CLO_ServiceDate.ObjectId    = vbServiceDateId
+                                                                                     AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+                                                       INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                                      ON CLO_Personal.ContainerId = MIContainer.ContainerId
+                                                                                     AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
+                                                       INNER JOIN (SELECT DISTINCT tmpMovementItem_curr.ObjectId AS PersonalId FROM tmpMovementItem_curr
+                                                               ) MovementItem ON MovementItem.MovementId = inMovementId
+                                                    AND MovementItem.DescId         = zc_MI_Child()
+                                                    AND MovementItem_curr.isErased       = FALSE
+                                                         AND MovementItem_curr.ObjectId       = MovementItem.ObjectId
+                                                         
+                                                  WHERE CLO_PersonalServiceList.ObjectId = vbPersonalServiceListId
+                                                    AND CLO_PersonalServiceList.DescId   = zc_ContainerLinkObject_PersonalServiceList()
+                                                 )
+                           , tmpPersonal_debt AS (SELECT 
+                                                  FROM )
+                        SELECT 1
+                        FROM Movement
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId         = zc_MI_Child()
+                                                    AND MovementItem.isErased       = FALSE
+                             INNER JOIN MovementItem_curr ON MovementItem_curr.MovementId = inMovementId
+                                                         AND MovementItem_curr.DescId         = zc_MI_Child()
+                                                         AND MovementItem_curr.isErased       = FALSE
+                                                         -- сотрудник
+                                                         AND MovementItem_curr.ObjectId       = MovementItem.ObjectId
+                                                         -- Сумма совпала
+                                                         AND MovementItem_curr.Amount         = MovementItem.ObjectId.Amount
+                        WHERE Movement.ParentId = vbMovementId_parent
+                          AND Movement.DescId   = zc_Movement_Cash()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                          AND Movement.Id       <> inMovementId
+                       )
+             END IF;
+
+         END IF;
          
 
+     ELSE
+         -- определили <Месяц начислений:
+         vbServiceDate:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_parent AND MD.DescId = zc_MovementDate_ServiceDate());
+
      END IF;
-
-
-     -- определили <Месяц начислений:
-     vbServiceDate:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_parent AND MD.DescId = zc_MovementDate_ServiceDate());
      
      -- определили 
    --vbOperDate_currency:= DATE_TRUNC ('MONTH', (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)); -- + INTERVAL '1 MONTH';
@@ -106,12 +246,10 @@ BEGIN
         END IF;
 
 
-
      -- !!!формируются свойство <Месяц начислений> в элементах документа!!!
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), MovementItem.Id, vbServiceDate)
      FROM MovementItem
      WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child();
-
 
 
      -- определили для Валютного учета

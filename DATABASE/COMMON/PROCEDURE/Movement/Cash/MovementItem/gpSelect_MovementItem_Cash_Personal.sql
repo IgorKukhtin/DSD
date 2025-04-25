@@ -130,15 +130,15 @@ BEGIN
 
      -- определяем - !!! НЕ схема премии!!!
      vbIsOnly:= -- одинаковые ведомости
-              vbPersonalServiceListId = COALESCE ((SELECT MLO_PersonalServiceList.ObjectId
+              vbPersonalServiceListId = COALESCE ((SELECT MILO_PersonalServiceList.ObjectId
                                                    FROM MovementItem
-                                                        LEFT JOIN MovementItemLinkObject AS MLO_PersonalServiceList
-                                                                                         ON MLO_PersonalServiceList.MovementItemId = MovementItem.Id
-                                                                                        AND MLO_PersonalServiceList.DescId         = zc_MILinkObject_MoneyPlace()
+                                                        LEFT JOIN MovementItemLinkObject AS MILO_PersonalServiceList
+                                                                                         ON MILO_PersonalServiceList.MovementItemId = MovementItem.Id
+                                                                                        AND MILO_PersonalServiceList.DescId         = zc_MILinkObject_MoneyPlace()
                                                    WHERE MovementItem.MovementId = inMovementId
                                                      AND MovementItem.DescId     = zc_MI_Master()
                                                      AND MovementItem.isErased   = FALSE
-                                                 ))
+                                                 ), 0)
               -- это НЕ БН для распределения
           AND zc_Enum_PaidKind_FirstForm() <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPersonalServiceListId AND OL.DescId = zc_ObjectLink_PersonalServiceList_PaidKind()), 0)
               -- НЕ основная Ведомость
@@ -180,6 +180,7 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummAvanceRecalc
                                                                ON MIFloat_SummAvanceRecalc.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummAvanceRecalc.DescId         = zc_MIFloat_SummAvanceRecalc()*/
+                              -- Документ Ведомость начисления
                               WHERE Movement.Id = inParentId
                               AND (MIFloat_SummCardSecondRecalc.ValueData <> 0
                                 OR MIFloat_SummAvCardSecondRecalc.ValueData <> 0
@@ -1288,7 +1289,7 @@ BEGIN
                    ELSE tmpData_res.SummRemains_orig
               END
              ) :: TFloat AS SummRemains_diff_F2
-  
+
               --  временное поле, если надо при заливке сохранить "округление"
             , 0 :: TFloat AS SummRemains_diff_F2_tmp
 

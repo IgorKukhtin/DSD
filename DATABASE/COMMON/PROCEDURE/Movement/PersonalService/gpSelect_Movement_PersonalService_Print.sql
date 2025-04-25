@@ -1133,7 +1133,7 @@ BEGIN
              - COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)
              - COALESCE (tmpMIContainer_pay.Amount_service, 0)
                -- минус Сальдо на кінець
-             - COALESCE (tmpAll.AmountService_diff_end, 0)
+             - CASE WHEN vbUserId = 5 AND 1=0 THEN 0 ELSE COALESCE (tmpAll.AmountService_diff_end, 0) END
               ) :: TFloat AS AmountCash
 
               -- Начислено,грн

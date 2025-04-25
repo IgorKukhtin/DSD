@@ -145,17 +145,21 @@ BEGIN
                           );
      IF vbMovementId_check <> 0 -- AND inUserId <> 5
      THEN
-         RAISE EXCEPTION 'Ошибка.Найдена другая <Ведомость начисления> № <%> от <%> для <%> за <%>.Дублирование запрещено. <%> <%>  № <%> от <%> для <%> за <%>'
+         RAISE EXCEPTION 'Ошибка.Найдена другая <Ведомость начисления> № <%> от <%> %для <%> за <%>.%Ведомость не создана № <%> от <%> %для <%> за <%>.% <%> <%> '
                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_check)
                        , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_check))
-                       , lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = vbMovementId_check AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = vbMovementId_check AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
                        , zfCalc_MonthYearName ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = vbMovementId_check AND MovementDate.DescId = zc_MIDate_ServiceDate()))
-                       , vbMovementId_check
-                       , inMovementId
+                       , CHR (13)
                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
                        , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
-                       , lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
                        , zfCalc_MonthYearName ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate()))
+                       , CHR (13)
+                       , vbMovementId_check
+                       , inMovementId
                         ;
      END IF;
 
