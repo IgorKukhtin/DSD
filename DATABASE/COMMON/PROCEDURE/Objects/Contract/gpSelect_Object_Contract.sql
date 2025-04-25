@@ -25,7 +25,10 @@ RETURNS TABLE (Id Integer, Code Integer
              , RetailId Integer, RetailName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              , JuridicalDocumentId Integer, JuridicalDocumentCode Integer, JuridicalDocumentName TVarChar
-             , JuridicalInvoiceId Integer, JuridicalInvoiceCode Integer, JuridicalInvoiceName TVarChar
+             , JuridicalInvoiceId Integer, JuridicalInvoiceCode Integer, JuridicalInvoiceName TVarChar 
+             
+             , JuridicalDoc_NextId Integer, JuridicalDoc_NextCode Integer, JuridicalDoc_NextName TVarChar
+             , JuridicalDoc_NextDate TDateTime
              
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
@@ -202,7 +205,12 @@ BEGIN
        
        , Object_JuridicalInvoice.Id              AS JuridicalInvoiceId
        , Object_JuridicalInvoice.ObjectCode      AS JuridicalInvoiceCode
-       , Object_JuridicalInvoice.ValueData       AS JuridicalInvoiceName       
+       , Object_JuridicalInvoice.ValueData       AS JuridicalInvoiceName   
+       
+       , Object_JuridicalDoc_Next.Id            ::Integer   AS JuridicalDoc_NextId
+       , Object_JuridicalDoc_Next.ObjectCode    ::Integer   AS JuridicalDoc_NextCode
+       , Object_JuridicalDoc_Next.ValueData     ::TVarChar  AS JuridicalDoc_NextName
+       , ObjectDate_JuridicalDoc_Next.ValueData ::TDateTime AS JuridicalDoc_NextDate    
 
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
@@ -328,6 +336,10 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_Document
                              ON ObjectDate_Document.ObjectId = Object_Contract_View.ContractId
                             AND ObjectDate_Document.DescId = zc_ObjectDate_Contract_Document()
+
+        LEFT JOIN ObjectDate AS ObjectDate_JuridicalDoc_Next
+                             ON ObjectDate_JuridicalDoc_Next.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectDate_JuridicalDoc_Next.DescId = zc_ObjectDate_Contract_JuridicalDoc_Next()
 
         LEFT JOIN ObjectString AS ObjectString_InvNumberArchive
                                ON ObjectString_InvNumberArchive.ObjectId = Object_Contract_View.ContractId
@@ -513,6 +525,12 @@ BEGIN
         LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDoc_Next
+                             ON ObjectLink_Contract_JuridicalDoc_Next.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_JuridicalDoc_Next.DescId = zc_ObjectLink_Contract_JuridicalDoc_Next()
+        LEFT JOIN Object AS Object_JuridicalDoc_Next ON Object_JuridicalDoc_Next.Id = ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId                               
+
+
        /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListPromo
                              ON ObjectLink_Contract_PriceListPromo.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_PriceListPromo.DescId = zc_ObjectLink_Contract_PriceListPromo()
@@ -555,6 +573,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 23.04.25         *
  11.11.24         * isMarketNot
  26.09.23         * isNotTareReturning
  01.05.23         * NotVat

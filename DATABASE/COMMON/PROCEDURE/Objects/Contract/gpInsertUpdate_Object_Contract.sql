@@ -52,9 +52,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean
                                                       , Integer, TDateTime, TDateTime, TVarChar);*/
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                       , Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean
+                                                      , Integer, TDateTime, TDateTime, TVarChar);*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                      , Tfloat, Tfloat, TDateTime, TDateTime, TDateTime, TDateTime
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean
                                                       , Integer, TDateTime, TDateTime, TVarChar);
@@ -75,12 +81,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
 
     IN inSigningDate         TDateTime,     -- Дата заключения договора
     IN inStartDate           TDateTime,     -- Дата с которой действует договор
-    IN inEndDate             TDateTime,     -- Дата до которой действует договор    
+    IN inEndDate             TDateTime,     -- Дата до которой действует договор
+    IN inJuridicalDoc_NextDate TDateTime,   -- Дата с которой действует Юр. лица история(печать док.)   
     
     IN inJuridicalId         Integer  ,     -- Юридическое лицо
     IN inJuridicalBasisId    Integer  ,     -- Главное юридическое лицо
     IN inJuridicalDocumentId Integer  ,     -- Юридическое лицо (печать док.)
     IN inJuridicalInvoiceId  Integer  ,     -- Юридическое лицо (печать док. - реквизиты плательщика)
+    IN inJuridicalDoc_NextId Integer  ,     -- Юр. лица история(печать док.)
     
     IN inInfoMoneyId         Integer  ,     -- УП статья назначения
     IN inContractKindId      Integer  ,     -- Вид договора
@@ -444,6 +452,12 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_StartPromo(), ioId, DATE (inStartPromo));
       -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_EndPromo(), ioId, DATE (inEndPromo));
+
+   -- сохранили связь с <Юр. лица история(печать док.)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalDoc_Next(), ioId, inJuridicalDoc_NextId);
+   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_JuridicalDoc_Next(), ioId, CASE WHEN COALESCE (inJuridicalDoc_NextId,0) <> 0 THEN inJuridicalDoc_NextDate ELSE NULL END ::TDateTime);
    
    
      -- !!!обязательно!!! сформировали ключ
@@ -457,6 +471,12 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
+   
+   -- проверка - что б Админ ничего не ломал
+   IF vbUserId = 5 OR vbUserId = 9457
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав - что б Админ ничего не ломал.';
+   END IF;
 
 END;
 $BODY$
@@ -466,6 +486,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.04.25         * inJuridicalDoc_NextDate, inJuridicalDoc_NextId
  11.11.24         * inisMarketNot
  26.09.23         * inisNotTareReturning
  01.05.23         * inisNotVat

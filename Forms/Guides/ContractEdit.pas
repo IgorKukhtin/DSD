@@ -204,6 +204,11 @@ type
     cbMarketNot: TcxCheckBox;
     ProtocolOpenFormCondition: TdsdOpenForm;
     bb: TdxBarButton;
+    edJuridicalDoc_Next: TcxButtonEdit;
+    cxLabel38: TcxLabel;
+    GuidesJuridicalDoc_Next: TdsdGuides;
+    cxLabel39: TcxLabel;
+    edJuridicalDoc_NextDate: TcxDateEdit;
   private
     { Private declarations }
   public

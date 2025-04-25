@@ -1658,6 +1658,33 @@
           Options.Editing = False
           Width = 80
         end
+        object JuridicalDoc_NextCode: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1102#1088'. '#1083#1080#1094#1086' '#1080#1089#1090#1086#1088#1080#1103
+          DataBinding.FieldName = 'JuridicalDoc_NextCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1076' '#1102#1088'. '#1083#1080#1094#1086' '#1080#1089#1090#1086#1088#1080#1103' ('#1087#1077#1095#1072#1090#1100' '#1076#1086#1082'.)'
+          Options.Editing = False
+          Width = 70
+        end
+        object JuridicalDoc_NextName: TcxGridDBColumn
+          Caption = #1070#1088'. '#1083#1080#1094#1086' '#1080#1089#1090#1086#1088#1080#1103' ('#1087#1077#1095#1072#1090#1100' '#1076#1086#1082'.)'
+          DataBinding.FieldName = 'JuridicalDoc_NextName'
+          HeaderAlignmentHorz = taRightJustify
+          HeaderAlignmentVert = vaBottom
+          HeaderHint = #1070#1088'. '#1083#1080#1094#1086' '#1080#1089#1090#1086#1088#1080#1103' ('#1087#1077#1095#1072#1090#1100' '#1076#1086#1082'.)'
+          Options.Editing = False
+          Width = 90
+        end
+        object JuridicalDoc_NextDate: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1076#1077#1081#1089#1090#1074'. '#1070#1088'. '#1083#1080#1094#1086' '#1080#1089#1090#1086#1088#1080#1103
+          DataBinding.FieldName = 'JuridicalDoc_NextDate'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1044#1072#1090#1072' '#1089' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1070#1088'. '#1083#1080#1094#1086' '#1080#1089#1090#1086#1088#1080#1103' ('#1087#1077#1095#1072#1090#1100' '#1076#1086#1082'.)'
+          Options.Editing = False
+          Width = 70
+        end
       end
       object cxGridLevel: TcxGridLevel
         GridView = cxGridDBTableView
