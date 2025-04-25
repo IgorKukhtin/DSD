@@ -22,8 +22,6 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 478
-        ExplicitLeft = -152
-        ExplicitTop = -40
         ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView

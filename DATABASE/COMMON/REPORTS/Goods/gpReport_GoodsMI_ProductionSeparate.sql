@@ -7,8 +7,8 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTim
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
     IN inStartDate          TDateTime ,  
@@ -23,7 +23,6 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
     IN inChildGoodsId       Integer   ,
     IN inFromId             Integer   ,    -- от кого 
     IN inToId               Integer   ,    -- кому
-    IN inPriceListId_norm   Integer   ,
     IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
@@ -40,10 +39,6 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , ChildAmount TFloat, ChildSumm TFloat, Price TFloat
              , ChildPrice TFloat, Percent TFloat
              , Num Integer
-             -- 
-             , Separate_info TVarChar
-             , GroupStatId Integer, GroupStatName TVarChar, GoodsGroupNameFull TVarChar
-             , PricePlan TFloat
              )   
 AS
 $BODY$
@@ -115,11 +110,8 @@ BEGIN
           SELECT Id FROM Object_Unit_View ;   --SELECT Id FROM Object WHERE DescId = zc_Object_Unit();
     END IF;
 
-    --если не выбран прайс норма 
-    inPriceListId_norm := CASE WHEN COALESCE (inPriceListId_norm,0) = 0 THEN 12048635 ELSE inPriceListId_norm END;
 
-
-   -- Результат
+    -- Результат
     RETURN QUERY
     
     -- ограничиваем по виду документа  , по от кого / кому
@@ -376,20 +368,6 @@ BEGIN
            
            , CAST (ROW_NUMBER() OVER (PARTITION BY Object_Goods.ValueData, tmpOperationGroup.PartionGoods, tmpOperationGroup.InvNumber ORDER BY tmpOperationGroup.PartionGoods,tmpOperationGroup.InvNumber) AS Integer) AS Num
            
-           -- для печати
-          --мастер
-           , CASE WHEN Object_Goods.ObjectCode = 4218 -- ЖИВОЙ ВЕС СВИНИНА
-                       THEN 'Убой' -- 1
-                  WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId = 2007 -- СО- ЗАКУП. СВИН. Н\\Ж* зп жил
-                       THEN 'Разжиловка' -- 3
-                  ELSE 'Обвалка' -- '2-Обвалка'
-             END :: TVarChar AS Separate_info
-           
-          --чайлд  
-          , Object_GoodsGroupStat.Id        AS GroupStatId
-          , Object_GoodsGroupStat.ValueData AS GroupStatName
-          , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-          , 0 ::TFloat AS PricePlan
       FROM (SELECT CASE WHEN inIsMovement = True THEN tmpMI.MovementId ELSE 0 END                      AS MovementId
                  , CASE WHEN inIsMovement = True THEN tmpMI.InvNumber ELSE '' END                      AS InvNumber
                  , CASE WHEN inIsMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END AS OperDate
@@ -508,15 +486,6 @@ BEGIN
                     ON lfObjectHistory_PriceListItem.GoodsId = Object_GoodsChild.Id
                    AND lfObjectHistory_PriceListItem.GoodsKindId IS NULL
 
-             ------------------
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
-                                  ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_GoodsChild.Id
-                                 AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
-             LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = COALESCE (ObjectLink_Goods_GoodsGroupStat.ChildObjectId, 12045234)  --если не задано то группа "СО-не входит в выход"
-
-             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_GoodsChild.Id
-                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
       ORDER BY tmpOperationGroup.InvNumber
              , tmpOperationGroup.OperDate
              , tmpOperationGroup.PartionGoods 
