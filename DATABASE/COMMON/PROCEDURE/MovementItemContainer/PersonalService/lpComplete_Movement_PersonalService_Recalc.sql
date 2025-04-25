@@ -222,7 +222,7 @@ BEGIN
           -- Все документы в которые будем переносить сумму SummCardRecalc + SummCardSecondRecalc + SummAvCardSecondRecalc + SummNalogRecalc + SummNalogRetRecalc + SummChildRecalc + SummMinusExtRecalc + SummAddOthRecalc + SummFineOthRecalc + SummHospOthRecalc + SummCompensationRecalc (здесь нет документов в которых сумма "останется")
         , tmpMovement_to AS (SELECT MovementId, PersonalServiceListId, StatusId
                              FROM _tmpMovement_Recalc
-                             WHERE PaidKindId <> zc_Enum_PaidKind_FirstForm() OR isRecalc_next = TRUE
+                             WHERE (PaidKindId <> zc_Enum_PaidKind_FirstForm() OR isRecalc_next = TRUE)
                                AND EXISTS (SELECT 1 FROM tmpMI_from))
 
             -- Все элементы по которым будем искать куда переносить сумму SummCardRecalc + SummCardSecondRecalc + SummAvCardSecondRecalc + SummNalogRecalc + SummNalogRetRecalc + SummChildRecalc + SummMinusExtRecalc + SummAddOthRecalc + SummFineOthRecalc + SummHospOthRecalc + SummCompensationRecalc

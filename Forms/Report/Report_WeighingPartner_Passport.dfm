@@ -5,6 +5,7 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -124
   ExplicitWidth = 1034
   ExplicitHeight = 505
   PixelsPerInch = 96
@@ -909,6 +910,14 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object isErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
         end
       end
