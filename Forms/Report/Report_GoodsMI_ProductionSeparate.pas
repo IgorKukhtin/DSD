@@ -93,6 +93,16 @@ type
     spSelectPrint_its_mov: TdsdStoredProc;
     actPrint_its_mov: TdsdPrintAction;
     bbPrint_its_mov: TdxBarButton;
+    spSelectPrint_4001: TdsdStoredProc;
+    spSelectPrint_4218: TdsdStoredProc;
+    spSelectPrint_4134: TdsdStoredProc;
+    actPrint_4001_gov: TdsdPrintAction;
+    actPrint_4218: TdsdPrintAction;
+    actPrint_4134: TdsdPrintAction;
+    bbPrint_4001_gov: TdxBarButton;
+    bbPrint_4134: TdxBarButton;
+    bbPrint_4218: TdxBarButton;
+    bbSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public
