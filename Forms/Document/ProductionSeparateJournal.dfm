@@ -418,7 +418,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupStatName;GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GroupStatName;GoodsGroupCode;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item
@@ -520,7 +520,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupStatName;GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GroupStatName;GoodsGroupCode;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item
@@ -656,7 +656,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupStatName;GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GroupStatName;GoodsGroupCode;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item
@@ -859,7 +859,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupStatName;GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GroupStatName;GoodsGroupCode;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item
@@ -1244,7 +1244,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ProductionSeparate'
+    StoredProcName = 'gpSelect_Movement_ProductionSeparate_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

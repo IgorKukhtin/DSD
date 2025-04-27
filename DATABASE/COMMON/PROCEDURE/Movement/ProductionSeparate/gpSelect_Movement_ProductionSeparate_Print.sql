@@ -419,7 +419,7 @@ BEGIN
    ---даннык строк для курсора2 
     CREATE TEMP TABLE tmpCursor2 (GoodsCode Integer
                                 , GoodsName TVarChar
-                                , GoodsGroupName TVarChar
+                                , GoodsGroupCode Integer, GoodsGroupName TVarChar
                                 , GoodsGroupNameFull TVarChar
                                 , GroupStatId Integer
                                 , GroupStatName TVarChar
@@ -439,7 +439,8 @@ BEGIN
                                 , Persent_gr   Tfloat
                                 ) ON COMMIT DROP;
     INSERT INTO tmpCursor2 (GoodsCode 
-                                , GoodsName 
+                                , GoodsName
+                                , GoodsGroupCode 
                                 , GoodsGroupName 
                                 , GoodsGroupNameFull 
                                 , GroupStatId 
@@ -490,7 +491,8 @@ BEGIN
       , tmpData AS (SELECT Object_Goods.Id  			         AS GoodsId
                          , Object_Goods.ObjectCode  			 AS GoodsCode
                          , Object_Goods.ValueData   			 AS GoodsName
-                         , Object_GoodsGroup.ValueData   		 AS GoodsGroupName
+                         , Object_GoodsGroup.ObjectCode   		 AS GoodsGroupCode
+                         , Object_GoodsGroup.ValueData   		 AS GoodsGroupName                         
                          , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                          , Object_Measure.ValueData                    AS MeasureName
               
@@ -563,6 +565,7 @@ BEGIN
                      GROUP BY Object_Goods.ObjectCode
                          , Object_Goods.Id
                          , Object_Goods.ValueData
+                         , Object_GoodsGroup.ObjectCode
                          , Object_GoodsGroup.ValueData
                          , ObjectString_Goods_GoodsGroupFull.ValueData
                          , Object_Measure.ValueData
@@ -573,6 +576,7 @@ BEGIN
    , tmpDataCalc AS (SELECT tmpData.GoodsId
                           , tmpData.GoodsCode
                           , tmpData.GoodsName
+                          , tmpData.GoodsGroupCode
                           , tmpData.GoodsGroupName
                           , tmpData.GoodsGroupNameFull
                           , tmpData.MeasureName
@@ -615,6 +619,7 @@ BEGIN
 
      SELECT tmpData.GoodsCode
           , tmpData.GoodsName
+          , tmpData.GoodsGroupCode
           , tmpData.GoodsGroupName
           , tmpData.GoodsGroupNameFull 
           , Object_GoodsGroupStat.Id        AS GroupStatId
@@ -716,6 +721,7 @@ BEGIN
     OPEN Cursor2 FOR
      SELECT tmpCursor2.GoodsCode
           , tmpCursor2.GoodsName
+          , tmpCursor2.GoodsGroupCode
           , tmpCursor2.GoodsGroupName
           , tmpCursor2.GoodsGroupNameFull 
           , tmpCursor2.GroupStatId

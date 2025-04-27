@@ -293,6 +293,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
   inherited Panel: TPanel
     Width = 1343
     Height = 57
+    ExplicitLeft = -240
+    ExplicitTop = -24
     ExplicitWidth = 1343
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
