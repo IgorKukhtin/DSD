@@ -24,8 +24,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       inherited cxGrid: TcxGrid
         Width = 1097
         Height = 459
-        ExplicitLeft = 10
-        ExplicitTop = -96
         ExplicitWidth = 1097
         ExplicitHeight = 459
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -2154,7 +2152,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisClientCopy'
+        Name = 'inIsClientCopy'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCheck_status'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
@@ -2185,7 +2190,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisClientCopy'
+        Name = 'inIsClientCopy'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCheck_status'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput

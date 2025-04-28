@@ -407,6 +407,8 @@ type
     mactUpdateCardSecond_num_not4000: TMultiAction;
     spUpdate_CardSecond_num_not4000: TdsdStoredProc;
     bbUpdateCardSecond_num_not4000: TdxBarButton;
+    AmountService_diff_start: TcxGridDBColumn;
+    AmountService_diff_end: TcxGridDBColumn;
   private
     { Private declarations }
   public

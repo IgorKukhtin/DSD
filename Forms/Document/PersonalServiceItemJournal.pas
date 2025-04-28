@@ -114,6 +114,8 @@ type
     cxLabel30: TcxLabel;
     edInvNumberPersonalServiceList: TcxButtonEdit;
     GuidesPersonalServiceList: TdsdGuides;
+    AmountService_diff_start: TcxGridDBColumn;
+    AmountService_diff_end: TcxGridDBColumn;
   private
     { Private declarations }
   public
