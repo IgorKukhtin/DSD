@@ -368,6 +368,10 @@ type
     JuridicalDoc_NextCode: TcxGridDBColumn;
     JuridicalDoc_NextName: TcxGridDBColumn;
     JuridicalDoc_NextDate: TcxGridDBColumn;
+    spGetImportSettingId_JurDoc: TdsdStoredProc;
+    actGetImportSetting_JurDoc: TdsdExecStoredProc;
+    macStartLoad_JurDoc: TMultiAction;
+    bbStartLoad_JurDoc: TdxBarButton;
 
   private
     { Private declarations }

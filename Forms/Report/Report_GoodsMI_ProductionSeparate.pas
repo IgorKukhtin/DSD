@@ -77,15 +77,32 @@ type
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     StorageLineName_in: TcxGridDBColumn;
-    cxLabel9: TcxLabel;
-    GuidesPriceList: TdsdGuides;
-    edPriceList: TcxButtonEdit;
+    GuidesPriceListNorm: TdsdGuides;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint_its: TdsdStoredProc;
     actPrint_its: TdsdPrintAction;
     bbsPrint: TdxBarSubItem;
     bbPrint_its: TdxBarButton;
+    cxLabel9: TcxLabel;
+    edPriceListNorm: TcxButtonEdit;
+    bbPriceListNorm: TdxBarControlContainerItem;
+    bbLabel9: TdxBarControlContainerItem;
+    cbGroupPrint: TcxCheckBox;
+    bbGroupPrint: TdxBarControlContainerItem;
+    spSelectPrint_its_mov: TdsdStoredProc;
+    actPrint_its_mov: TdsdPrintAction;
+    bbPrint_its_mov: TdxBarButton;
+    spSelectPrint_4001: TdsdStoredProc;
+    spSelectPrint_4218: TdsdStoredProc;
+    spSelectPrint_4134: TdsdStoredProc;
+    actPrint_4001_gov: TdsdPrintAction;
+    actPrint_4218: TdsdPrintAction;
+    actPrint_4134: TdsdPrintAction;
+    bbPrint_4001_gov: TdxBarButton;
+    bbPrint_4134: TdxBarButton;
+    bbPrint_4218: TdxBarButton;
+    bbSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public

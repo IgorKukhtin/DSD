@@ -959,7 +959,7 @@ BEGIN
         , Object_Car.ObjectCode          AS CarCode
         , Object_Car.ValueData           AS CarName
         , Object_GoodsGroup.Id           AS GoodsGroupId 
-        , CASE WHEN ObjectLink_GoodsGroup.ChildObjectId = 1918 THEN Object_GoodsGroup.ObjectCode ELSE 0 END ::Integer AS GoodsGroupCode  --для сортировки в печати
+        , CASE WHEN ObjectLink_GoodsGroup.ChildObjectId = 1918 THEN Object_GoodsGroup.ObjectCode ELSE 0 END ::Integer AS GoodsGroupCode  --для сортировки в печати ко
         , Object_GoodsGroup.ValueData    AS GoodsGroupName
         , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
 

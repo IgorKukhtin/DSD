@@ -2153,6 +2153,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad_JurDoc'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -2333,6 +2337,10 @@
     end
     object bbUpdate_Personal: TdxBarButton
       Action = macUpdate_Personal
+      Category = 0
+    end
+    object bbStartLoad_JurDoc: TdxBarButton
+      Action = macStartLoad_JurDoc
       Category = 0
     end
   end
@@ -4200,6 +4208,36 @@
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1044#1086#1075#1086#1074#1086#1088#1072' ('#1092#1080#1079#1086#1073#1084#1077#1085')'
       ImageIndex = 41
     end
+    object actGetImportSetting_JurDoc: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_JurDoc
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_JurDoc
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object macStartLoad_JurDoc: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_JurDoc
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'('#1087#1077#1095#1072#1090#1100' '#1076#1086#1082'.) '#1080#1079' '#1101#1082#1089#1077#1083#1103'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1087#1077#1095#1072#1090#1100' '#1076#1086#1082'.)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'('#1087#1077#1095#1072#1090#1100' '#1076#1086#1082'.)'
+      ImageIndex = 41
+    end
     object actInsertUpdateCP_grid: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -5597,5 +5635,37 @@
     PackSize = 1
     Left = 648
     Top = 264
+  end
+  object spGetImportSettingId_JurDoc: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TContractForm;zc_Object_ImportSetting_Contract_JuridicalDoc'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 136
   end
 end

@@ -517,7 +517,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupStatName;GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GroupStatName;GoodsGroupCode;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item
@@ -554,7 +554,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupStatName;GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GroupStatName;GoodsGroupCode;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item
@@ -611,8 +611,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     end
     object actPrint_its: TdsdPrintAction [12]
       Category = 'DSDLib'
-      MoveParams = <
-       >
+      MoveParams = <>
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -629,7 +628,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupStatName;GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GroupStatName;GoodsGroupCode;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item
@@ -666,7 +665,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupStatName;GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GroupStatName;GoodsGroupCode;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item
@@ -700,7 +699,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GoodsGroupCode;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item

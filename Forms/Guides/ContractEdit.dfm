@@ -2,7 +2,6 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 713
   ClientWidth = 934
-  ExplicitTop = -70
   ExplicitWidth = 940
   ExplicitHeight = 742
   PixelsPerInch = 96
@@ -41,8 +40,8 @@
     Caption = #1042#1080#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object cxLabel4: TcxLabel [5]
-    Left = 126
-    Top = 195
+    Left = 127
+    Top = 201
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceComment: TcxTextEdit [6]
@@ -271,8 +270,6 @@
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
-    ExplicitLeft = 373
-    ExplicitTop = 5
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -1047,7 +1044,7 @@
     Caption = #1073#1077#1079' '#1053#1044#1057' (0%)'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 85
+    TabOrder = 84
     Width = 92
   end
   object cbMarketNot: TcxCheckBox [84]
