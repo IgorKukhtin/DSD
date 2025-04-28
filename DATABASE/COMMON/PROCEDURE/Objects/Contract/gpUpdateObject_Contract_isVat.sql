@@ -1,10 +1,10 @@
--- Function: gpUpdateObject_Contract_isVat()
+  -- Function: gpUpdateObject_Contract_isVat()
 
 DROP FUNCTION IF EXISTS gpUpdateObject_Contract_isVat (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateObject_Contract_isVat(
-    IN inId                  Integer   , -- Ключ объекта <Документ>
-    IN inisVAT               Boolean   , -- Проверен
+    IN inId                  Integer   , -- Ключ объекта
+    IN inisVAT               Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -22,7 +22,7 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_VAT(), inId, inisVAT);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+     PERFORM lpInsert_ObjectProtocol (inObjectId:= inId, inUserId:= vbUserId, inIsUpdate:= TRUE, inIsErased:= NULL);
   
 END;
 $BODY$

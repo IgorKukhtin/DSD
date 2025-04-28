@@ -3,8 +3,8 @@
 DROP FUNCTION IF EXISTS gpUpdate_Object_Contract_isWMS (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Contract_isWMS(
-    IN inId                  Integer   , -- Ключ объекта <Документ>
-    IN inisWMS               Boolean   , -- Проверен
+    IN inId                  Integer   , -- Ключ объекта
+    IN inisWMS               Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -22,7 +22,7 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_isWMS(), inId, inisWMS);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+     PERFORM lpInsert_ObjectProtocol (inObjectId:= inId, inUserId:= vbUserId, inIsUpdate:= TRUE, inIsErased:= NULL);
   
 END;
 $BODY$

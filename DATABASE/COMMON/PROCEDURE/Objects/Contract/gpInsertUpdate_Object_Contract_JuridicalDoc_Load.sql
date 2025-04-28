@@ -55,12 +55,36 @@ BEGIN
     IF COALESCE (TRIM (inJuridicalName), '') <> ''
     THEN 
          -- поиск юр.лица
-         vbJuridicalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalName) LIMIT 1);
+         vbJuridicalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalName) );
          IF COALESCE (vbJuridicalId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо <%> не найдено.', inJuridicalName;
+             RAISE EXCEPTION 'Ошибка-1.Значение Юридическое лицо <%> не найдено.', inJuridicalName;
          END IF;
     END IF;
+    
+    
+    IF COALESCE (TRIM (inJuridicalDocName), '') <> ''
+    THEN 
+         -- поиск юр.лица
+         vbJuridicalDocId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDocName) );
+         IF COALESCE (vbJuridicalDocId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка-2.Значение Юридическое лицо <%> не найдено.', inJuridicalDocName;
+         END IF;
+    END IF;
+
+
+    IF COALESCE (TRIM (inJuridicalDoc_NextName), '') <> ''
+    THEN 
+         -- поиск юр.лица
+         vbJuridicalDoc_NextId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDoc_NextName) );
+         IF COALESCE (vbJuridicalDoc_NextId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка-3.Значение Юридическое лицо <%> не найдено.', inJuridicalDoc_NextName;
+         END IF;
+    END IF;
+
+
 
     IF COALESCE (inContractCode, 0) <> 0
     THEN 
@@ -87,6 +111,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalDoc_Next(), vbContractId, vbJuridicalDoc_NextId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_JuridicalDoc_Next(), vbContractId, inJuridicalDoc_NextDate ::TDateTime);
+
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (inObjectId:= vbContractId, inUserId:= vbUserId, inIsUpdate:= TRUE, inIsErased:= NULL);
 
    -- проверка - что б Админ ничего не ломал
    IF vbUserId = 5 OR vbUserId = 9457
