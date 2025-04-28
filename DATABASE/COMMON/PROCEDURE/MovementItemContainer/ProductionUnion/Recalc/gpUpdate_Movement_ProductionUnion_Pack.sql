@@ -16,6 +16,8 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Pack());
 
+   IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) >=15 THEN RETURN; END IF;
+
    --
    --IF EXTRACT (MONTH FROM inStartDate) IN (2) THEN RETURN; END IF;
    --IF EXTRACT (DAY FROM inStartDate) <= 11 THEN RETURN; END IF;

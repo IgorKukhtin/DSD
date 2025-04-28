@@ -255,7 +255,9 @@ BEGIN
                                                 , inUserId         := inUserId)
      FROM (SELECT _tmpResult.MovementId FROM _tmpResult WHERE _tmpResult.isDelete = FALSE AND _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId) AS tmp
           INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                             AND (Movement.StatusId      = zc_Enum_Status_UnComplete()
+                               OR Movement.StatusId_next = zc_Enum_Status_UnComplete()
+                                 )
     ;
 
      END IF; -- if inIsUpdate = TRUE -- !!!т.е. не всегда!!!
