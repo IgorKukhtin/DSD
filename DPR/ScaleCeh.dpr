@@ -128,7 +128,9 @@ uses
   DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
   dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas',
   DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
-  DialogTare in '..\Scale\DialogTare.pas' {DialogTareForm};
+  DialogTare in '..\Scale\DialogTare.pas' {DialogTareForm},
+  invoice_comdoc_vchasno in '..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
+  invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas';
 
 {$R *.res}
 

@@ -592,8 +592,8 @@ end;
 procedure TDialogTareForm.EditPartionCellKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-    if Key=13
-    then ActiveControl:=bbOk;
+    //if Key=13
+    //then ActiveControl:=bbOk;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogTareForm.FormCloseQuery(Sender: TObject;var CanClose: Boolean);
