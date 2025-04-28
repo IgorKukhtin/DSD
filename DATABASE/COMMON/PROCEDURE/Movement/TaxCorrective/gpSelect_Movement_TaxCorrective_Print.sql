@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_TaxCorrective_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_TaxCorrective_Print(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inisClientCopy      Boolean  , -- копия для клиента
+    IN inIsClientCopy      Boolean  , -- копия для клиента
+    IN inIsCheck_status    Boolean  , -- копия для клиента
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -28,7 +30,7 @@ $BODY$
     DECLARE vbOperDate_begin TDateTime;
 
     DECLARE vbIsNPP_calc Boolean;
-    
+
     DECLARE vbMovementId_tax Integer;
     DECLARE vbOperDate_Tax TDateTime;
     DECLARE vbOperDate_Tax_Tax TDateTime;
@@ -192,12 +194,13 @@ BEGIN
                                    ON MovementString_InvNumberRegistered_tax.MovementId = MovementLinkMovement_Child.MovementChildId
                                   AND MovementString_InvNumberRegistered_tax.DescId = zc_MovementString_InvNumberRegistered()
      ;
-     
+
 --  IF vbUserId = 5 THEN RAISE EXCEPTION 'Ошибка.<%>  <%>', vbOperDate_Tax, vbOperDate_begin; end if;
 
-/* пока убрал, т.к. проверка сумм происходит в непроведенном состоянии, надо или добавить параметр - "когда ругаться" или сделать еще одну печать-проверку
+     -- пока убрал, т.к. проверка сумм происходит в непроведенном состоянии, надо или добавить параметр - "когда ругаться" или сделать еще одну печать-проверку
      -- очень важная проверка
      IF COALESCE (vbMovementId_TaxCorrective, 0) = 0 OR COALESCE (vbStatusId_TaxCorrective, 0) <> zc_Enum_Status_Complete()
+        AND inIsCheck_status = TRUE
      THEN
          IF COALESCE (vbMovementId_TaxCorrective, 0) = 0
          THEN
@@ -214,7 +217,7 @@ BEGIN
          -- это уже странная ошибка
          RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective());
      END IF;
-*/
+
 
      -- определяется параметр
      vbGoodsPropertyId:= (SELECT zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId), 0) -- ObjectLink_Juridical_GoodsProperty.ChildObjectId
@@ -443,7 +446,7 @@ BEGIN
                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
                         LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                                ON ObjectString_Goods_BUH.ObjectId = tmp.GoodsId
-                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()  
+                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
                         LEFT JOIN ObjectDate AS ObjectDate_BUH
                                              ON ObjectDate_BUH.ObjectId = tmp.GoodsId
                                             AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
@@ -589,7 +592,7 @@ BEGIN
                                                LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                                                                     ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
                                                                    AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
-                                               LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+                                               LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
                                                -- Сотрудник (бухгалтер) подписант
                                                INNER JOIN ObjectString AS ObjectString_PersonalBookkeeper
                                                                        ON ObjectString_PersonalBookkeeper.ObjectId = Object_Branch.Id
@@ -881,7 +884,7 @@ BEGIN
                             LEFT JOIN ObjectString AS PersonalSigning_INN
                                                    ON PersonalSigning_INN.ObjectId = COALESCE (tmpBranch_PersonalBookkeeper_partner.MemberId, Object_PersonalSigning_partner.MemberId)
                                                   AND PersonalSigning_INN.DescId   = zc_ObjectString_Member_INN()
-                            
+
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                                          ON MovementLinkObject_DocumentTaxKind.MovementId = tmpMovement.Id
@@ -961,8 +964,8 @@ BEGIN
                                                  WHERE ObjectHistory_JuridicalDetails_ViewByDate.JuridicalId IN (SELECT DISTINCT tmpMovement_Data.ToId FROM tmpMovement_Data
                                                                                                            UNION SELECT DISTINCT tmpMovement_Data.FromId FROM tmpMovement_Data)
                                                   )
-                                                  
-                                                  
+
+
    , tmpData_all AS
       -- РЕЗУЛЬТАТ
      (SELECT inMovementId                                                   AS inMovementId
@@ -1051,9 +1054,9 @@ BEGIN
            , tmpMLM_Child.OperDate_Child                                    AS OperDate_Child
            , tmpMLM_Child.OperDate_begin_Child                              AS OperDate_begin_Child
 
-           , CASE WHEN inisClientCopy=TRUE
+           , CASE WHEN inIsClientCopy=TRUE
                   THEN 'X' ELSE '' END                                      AS CopyForClient
-           , CASE WHEN inisClientCopy=TRUE
+           , CASE WHEN inIsClientCopy=TRUE
                   THEN '' ELSE 'X' END                                      AS CopyForUs
 
            , tmpMLM_Child.MovementId_Child  AS x11
@@ -1393,10 +1396,10 @@ BEGIN
 
            , CASE WHEN tmpContract.ContractId = 888997 --  в корректировках по Сильпо (только по 12 договору) в печатной форме - Все сводные корректировки, которые будут формироваться с привязкой до 01.10.2023 должны выгружаться без отметки "До зведеної податкової накладної".
                    AND vbOperDate_Tax_Tax < '01.10.2023' THEN ''
-                  
+
                 --WHEN tmpContract.ContractId = 888997 --  в корректировках по Сильпо (только по 12 договору) в печатной форме - Все сводные корректировки, которые будут формироваться с привязкой до 01.10.2023 должны выгружаться без отметки "До зведеної податкової накладної".
                 -- AND vbUserId = 5 THEN EXTRACT (MONTH FROM vbOperDate_Tax_Tax) :: TVarChar
-                  
+
                   WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay())
                    AND vbOperDate_begin < '01.12.2018' THEN 'X'
                   WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay(), zc_Enum_DocumentTaxKind_ChangeErr())
@@ -2105,7 +2108,7 @@ BEGIN
                                                              , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
                                                               )
                                    THEN '104'
-                              
+
                               ELSE tmpData_all.KindCode
                          END AS KindCode
                        , tmpData_all.KindName
@@ -2372,7 +2375,7 @@ BEGIN
                    AND LENGTH(trim (tmpData_all.OKPO_To)) = 10
                    AND tmpData_all.INN_To <> '100000000000'
                   THEN '2'
-                  WHEN COALESCE (tmpData_all.OKPO_To,'') IN ('100000000000', '300000000000','') 
+                  WHEN COALESCE (tmpData_all.OKPO_To,'') IN ('100000000000', '300000000000','')
                   THEN ''
                   ELSE '1'
              END :: TVarChar AS Code_To
@@ -2400,10 +2403,10 @@ BEGIN
                    AND tmpData_all.INN_From <> '100000000000'
                   THEN '2'
                   WHEN COALESCE (tmpData_all.OKPO_From,'') <> ''
-                  THEN '1' 
+                  THEN '1'
                   ELSE ''
              END ::TVarChar AS Code_From
-           
+
            , tmpData_all.InvNumberBranch_From
            , tmpData_all.NumberVAT_From
            , tmpData_all.AccounterName_From
@@ -2781,5 +2784,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 7418138, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 14>";
--- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 5812683, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 15>";
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 7418138, inIsClientCopy:= FALSE, inIsCheck_status:= TRUE, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 14>";
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 5812683, inIsClientCopy:= FALSE, inIsCheck_status:= TRUE, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 15>";

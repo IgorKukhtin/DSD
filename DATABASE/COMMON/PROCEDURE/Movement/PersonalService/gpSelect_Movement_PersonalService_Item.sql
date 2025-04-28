@@ -39,7 +39,17 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FineSubjectId Integer, FineSubjectName TVarChar
              , UnitFineSubjectId Integer, UnitFineSubjectName TVarChar
              --, StaffListSummKindName TVarChar
-             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, AmountCash_rem TFloat, AmountCash_pay TFloat
+
+             , Amount TFloat
+
+               -- Сальдо на початок
+             , AmountService_diff_start TFloat
+               -- Сальдо на кінець
+             , AmountService_diff_end TFloat
+              -- К выплате (итог)
+             , AmountToPay TFloat
+               --
+             , AmountCash TFloat, AmountCash_rem TFloat, AmountCash_pay TFloat
              , SummService TFloat
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummAvCardSecond TFloat, SummAvCardSecondRecalc TFloat
              , SummCardSecondDiff TFloat, SummCardSecondCash TFloat 
@@ -390,6 +400,7 @@ BEGIN
 
       -- <Карта БН (округление) - 2ф>
     , tmpMIContainer_find_diff AS (SELECT MIContainer.MovementItemId
+                                        , MIContainer.MovementId
                                         , MIContainer.ContainerId
                                         , ROW_NUMBER() OVER (PARTITION BY MIContainer.ContainerId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
                                    FROM MovementItemContainer AS MIContainer
@@ -404,13 +415,18 @@ BEGIN
                                      AND (MIContainer.Amount <> 0) --  OR vbUserId = 5
 	                          )
       -- <Карта БН (округление) - 2ф>
-    , tmpMIContainer_diff AS (SELECT SUM (MIContainer.Amount) AS AmountService_diff
+    , tmpMIContainer_diff AS (SELECT SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff
+                                   , -1 * SUM (CASE WHEN MIContainer.OperDate < MD_ServiceDate.ValueData + INTERVAL '1 MONTH' AND MIContainer.MovementDescId = zc_Movement_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_start
+                                   , 1 * SUM (CASE WHEN MIContainer.OperDate >= MD_ServiceDate.ValueData + INTERVAL '1 MONTH' OR MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_end
                                    , tmpMIContainer_find_diff.MovementItemId
                               FROM tmpMIContainer_find_diff
+                                   LEFT JOIN MovementDate AS MD_ServiceDate
+                                                          ON MD_ServiceDate.MovementId = tmpMIContainer_find_diff.MovementId
+                                                         AND MD_ServiceDate.DescId     = zc_MIDate_ServiceDate()
                                    INNER JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.ContainerId    = tmpMIContainer_find_diff.ContainerId
                                                                    AND MIContainer.DescId         = zc_MIContainer_Summ()
-                                                                   AND MIContainer.MovementDescId = zc_Movement_PersonalService()
+                                                                   AND MIContainer.MovementDescId IN (zc_Movement_PersonalService(), zc_Movement_Cash())
                                                                    -- <Карта БН (округление) - 2ф>
                                                                    AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_PersonalService_SummDiff()
                                                                    --and 1=0
@@ -897,6 +913,11 @@ BEGIN
             --, COALESCE (tmpMIChild.StaffListSummKindName,'') ::TVarChar AS StaffListSummKindName
 
             , tmpAll.Amount :: TFloat           AS Amount
+
+              -- Сальдо на початок
+            , COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0) :: TFloat AS AmountService_diff_start
+              -- Сальдо на кінець
+            , COALESCE (tmpMIContainer_diff.AmountService_diff_end, 0)   :: TFloat AS AmountService_diff_end
 
               -- К выплате (итог)
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)

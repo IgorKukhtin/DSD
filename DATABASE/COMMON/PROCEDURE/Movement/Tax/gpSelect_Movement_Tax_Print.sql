@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar)
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Print(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inisClientCopy      Boolean  , -- копия для клиента
+    IN inIsClientCopy      Boolean  , -- копия для клиента
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -272,7 +272,8 @@ order by 4*/
 -- IF vbUserId = 5 THEN RAISE EXCEPTION 'Ошибка.<%>', vbOperDate_begin; end if;
 
      -- очень важная проверка
-     IF COALESCE (vbMovementId_Tax, 0) = 0 OR (COALESCE (vbStatusId_Tax, 0) <> zc_Enum_Status_Complete() AND vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())
+     --IF COALESCE (vbMovementId_Tax, 0) = 0 OR (COALESCE (vbStatusId_Tax, 0) <> zc_Enum_Status_Complete() AND vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())
+     IF COALESCE (vbMovementId_Tax, 0) = 0 OR COALESCE (vbStatusId_Tax, 0) <> zc_Enum_Status_Complete()
      THEN
          IF COALESCE (vbMovementId_Tax, 0) = 0
          THEN
@@ -589,9 +590,9 @@ order by 4*/
            , COALESCE (MovementDate_COMDOC.ValueData, COALESCE (Movement_EDI.OperDate, MovementDate_OperDatePartnerEDI.ValueData))    AS OperDatePartnerEDI_tax
            , COALESCE (MovementDate_COMDOC.ValueData, COALESCE (Movement_EDI.OperDate, MovementDate_OperDatePartnerEDI.ValueData))    AS OperDatePartnerEDI
 
-           , CASE WHEN inisClientCopy = TRUE
+           , CASE WHEN inIsClientCopy = TRUE
                   THEN 'X' ELSE '' END                  AS CopyForClient
-           , CASE WHEN inisClientCopy = TRUE
+           , CASE WHEN inIsClientCopy = TRUE
                   THEN '' ELSE 'X' END                  AS CopyForUs
            , CASE WHEN (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN 'X' ELSE '' END                  AS ERPN
@@ -1359,7 +1360,7 @@ order by 4*/
              , 'gpSelect_Movement_Tax_Print'
                -- ProtocolData
              , inMovementId        :: TVarChar
-    || ', ' || inisClientCopy      :: TVarChar
+    || ', ' || inIsClientCopy      :: TVarChar
     || ', ' || inSession
               ;*/
 
@@ -1394,7 +1395,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
  11.04.14                                                       *
  02.04.14                                                       *  PriceWVAT PriceNoVAT round to 2 sign
  01.04.14                                                       *  MIFloat_Price.ValueData <> 0
- 31.03.14                                                       *  + inisClientCopy
+ 31.03.14                                                       *  + inIsClientCopy
  23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
  06.03.14                                                       *
  24.02.14                                                       *  add PriceNoVAT, PriceWVAT, AmountSummNoVAT, AmountSummWVAT
@@ -1427,4 +1428,4 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId:= 171760, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId:= 171760, inIsClientCopy:= FALSE, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
