@@ -590,7 +590,7 @@ BEGIN
                           , tmpData.PriceNorm
                
                           , tmpData.isLoss
-               
+ 
                           --доп расчет для печати 4002
                           --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
                          -- , tmpData.Price_kol_E

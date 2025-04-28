@@ -30,7 +30,7 @@ BEGIN
         RETURN;
     END IF;
     -- Проверка
-    IF COALESCE(inJuridicalName, '') = ''
+    IF COALESCE(TRIM (inJuridicalName), '') = ''
     THEN
         RETURN;
     END IF;
@@ -44,7 +44,7 @@ BEGIN
     IF COALESCE (TRIM (inPaidKindName), '') <> ''
     THEN 
          -- поиск ФО
-         vbPaidKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PaidKind() AND UPPER(Object.ValueData) = TRIM (UPPER(inPaidKindName)) LIMIT 1);
+         vbPaidKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PaidKind() AND Object.ValueData ILIKE inPaidKindName);
          IF COALESCE (vbPaidKindId, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Значение Форма оплаты <%> не найдено.', inPaidKindName;
@@ -55,7 +55,7 @@ BEGIN
     IF COALESCE (TRIM (inJuridicalName), '') <> ''
     THEN 
          -- поиск юр.лица
-         vbJuridicalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND UPPER (Object.ValueData) = TRIM(UPPER (inJuridicalName)) LIMIT 1);
+         vbJuridicalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalName) LIMIT 1);
          IF COALESCE (vbJuridicalId, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо <%> не найдено.', inJuridicalName;
@@ -73,7 +73,11 @@ BEGIN
                          );
          IF COALESCE (vbContractId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Договор <(%) %> не найдено.', inContractCode, inContractName;
+             RAISE EXCEPTION 'Ошибка.Договор <(%) %> не найден %для <%> + <%>.'
+                           , inContractCode, inContractName
+                           , CHR (13)
+                           , lfGet_Object_ValueData_sh (vbJuridicalId), lfGet_Object_ValueData_sh (vbPaidKindId)
+                            ;
          END IF;
     END IF;
 
