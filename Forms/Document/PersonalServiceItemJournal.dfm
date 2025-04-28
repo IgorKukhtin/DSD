@@ -5,6 +5,8 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -344
+  ExplicitTop = -217
   ExplicitWidth = 1237
   ExplicitHeight = 744
   PixelsPerInch = 96
@@ -492,6 +494,16 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummCardSecond_Avance
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountService_diff_start
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountService_diff_end
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -802,6 +814,16 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummCardSecond_Avance
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountService_diff_start
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountService_diff_end
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -1037,6 +1059,16 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             Options.Editing = False
             Width = 75
           end
+          object AmountService_diff_start: TcxGridDBColumn
+            Caption = #1057#1072#1083#1100#1076#1086' '#1085#1072' '#1087#1086#1095#1072#1090#1086#1082
+            DataBinding.FieldName = 'AmountService_diff_start'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object SummService: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'SummService'
@@ -1142,6 +1174,16 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             HeaderHint = 
               #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1085#1072' '#1082#1086#1087#1077#1081#1082#1080' '#1076#1083#1103' '#1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'., '#1090'.'#1082'. '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077' '#1076#1086' ' +
               '10-90 '#1082#1086#1087'.'
+            Width = 70
+          end
+          object AmountService_diff_end: TcxGridDBColumn
+            Caption = #1057#1072#1083#1100#1076#1086' '#1085#1072' '#1082#1110#1085#1077#1094#1100
+            DataBinding.FieldName = 'AmountService_diff_end'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object SummCardSecondCash: TcxGridDBColumn
@@ -1526,6 +1568,7 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1078#1080#1083#1100#1077
+            Options.Editing = False
             Width = 70
           end
           object DaySkip: TcxGridDBColumn

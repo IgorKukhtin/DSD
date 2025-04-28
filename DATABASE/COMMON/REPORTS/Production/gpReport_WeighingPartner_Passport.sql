@@ -73,6 +73,8 @@ RETURNS TABLE (MovementId Integer, ItemName TVarChar, ItemName_inf TVarChar
              , BoxName_8   TVarChar
              , BoxName_9   TVarChar
              , BoxName_10  TVarChar
+
+             , isErased    Boolean
               )
 AS
 $BODY$
@@ -132,7 +134,7 @@ BEGIN
                                                                     AND MLO_To.ObjectId   = zc_Unit_RK()
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.DescId     = zc_MI_Master()
-                                                    AND MovementItem.isErased   = FALSE
+                                                  --AND MovementItem.isErased   = FALSE
                              -- с признаком Автоматически
                              INNER JOIN MovementItemBoolean AS MIB_isAuto
                                                             ON MIB_isAuto.MovementItemId = MovementItem.Id
@@ -201,10 +203,11 @@ BEGIN
                     , MovementItem.Id
                     , MovementItem.ObjectId
                     , MovementItem.Amount
+                    , MovementItem.isErased
                FROM tmpMovement
                      INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                             AND MovementItem.DescId     = zc_MI_Master()
-                                            AND MovementItem.isErased   = FALSE
+                                          --AND MovementItem.isErased   = FALSE
                      -- с признаком Автоматически
                      LEFT JOIN MovementItemBoolean AS MIB_isAuto
                                                    ON MIB_isAuto.MovementItemId = MovementItem.Id
@@ -640,6 +643,8 @@ BEGIN
 
                , tmpData.BoxName_1 ::TVarChar, tmpData.BoxName_2 ::TVarChar, tmpData.BoxName_3 ::TVarChar, tmpData.BoxName_4 ::TVarChar, tmpData.BoxName_5 ::TVarChar
                , tmpData.BoxName_6 ::TVarChar, tmpData.BoxName_7 ::TVarChar, tmpData.BoxName_8 ::TVarChar, tmpData.BoxName_9 ::TVarChar, tmpData.BoxName_10 ::TVarChar
+
+               , tmpData.isErased
 
           FROM tmpData
                LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = tmpData.Id
