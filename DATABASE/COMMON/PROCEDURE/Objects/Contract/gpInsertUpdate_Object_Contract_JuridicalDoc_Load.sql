@@ -53,7 +53,13 @@ BEGIN
 
     
     IF COALESCE (TRIM (inJuridicalName), '') <> ''
-    THEN 
+    THEN
+         -- проверка на несколько значений 
+         IF (SELECT COUNT (*) FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalName)) > 1
+         THEN 
+             RAISE EXCEPTION 'ќшибка.«начение ёридическое лицо <%>  найдено более одного раза.', inJuridicalName;
+         END IF;
+          
          -- поиск юр.лица
          vbJuridicalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalName) );
          IF COALESCE (vbJuridicalId, 0) = 0
@@ -65,6 +71,11 @@ BEGIN
     
     IF COALESCE (TRIM (inJuridicalDocName), '') <> ''
     THEN 
+         IF (SELECT COUNT (*) FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDocName)) > 1
+         THEN 
+             RAISE EXCEPTION 'ќшибка.«начение ёридическое лицо <%>  найдено более одного раза.', inJuridicalDocName;
+         END IF;
+
          -- поиск юр.лица
          vbJuridicalDocId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDocName) );
          IF COALESCE (vbJuridicalDocId, 0) = 0
@@ -76,6 +87,11 @@ BEGIN
 
     IF COALESCE (TRIM (inJuridicalDoc_NextName), '') <> ''
     THEN 
+         IF (SELECT COUNT (*) FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDoc_NextName)) > 1
+         THEN 
+             RAISE EXCEPTION 'ќшибка.«начение ёридическое лицо <%>  найдено более одного раза.', inJuridicalDoc_NextName;
+         END IF;
+
          -- поиск юр.лица
          vbJuridicalDoc_NextId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDoc_NextName) );
          IF COALESCE (vbJuridicalDoc_NextId, 0) = 0
