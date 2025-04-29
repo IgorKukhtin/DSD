@@ -11,7 +11,10 @@ $BODY$
 BEGIN
 
     -- дКЪ МЕЦН бяецдю - мер
-    IF  inUserId = zc_Enum_Process_Auto_PrimeCost()
+    IF  inUserId IN (zc_Enum_Process_Auto_PrimeCost()
+                   , zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Defroster()
+                   , zc_Enum_Process_Auto_PartionDate()
+                    )
     THEN
         RETURN FALSE;
 
