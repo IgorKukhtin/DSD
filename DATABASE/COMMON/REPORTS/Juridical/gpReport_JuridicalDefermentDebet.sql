@@ -503,10 +503,21 @@ BEGIN
                                                    AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
                                LEFT JOIN Object AS Object_PersonalCollation ON Object_PersonalCollation.Id = ObjectLink_Contract_PersonalCollation.ChildObjectId
 
+                               -- Юридическое лицо(печать док.)
                                LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
                                                     ON ObjectLink_Contract_JuridicalDocument.ObjectId = tmpData_All.ContractId
                                                    AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
-                               LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
+                               -- Дата для Юр. лица история(печать док.)
+                               LEFT JOIN ObjectDate AS ObjectDate_JuridicalDoc_Next
+                                                    ON ObjectDate_JuridicalDoc_Next.ObjectId  = tmpData_All.ContractId
+                                                   AND ObjectDate_JuridicalDoc_Next.DescId    = zc_ObjectDate_Contract_JuridicalDoc_Next()
+                                                   AND ObjectDate_JuridicalDoc_Next.ValueData <= inOperDate
+                               -- Юридическое лицо история(печать док.)
+                               LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDoc_Next
+                                                    ON ObjectLink_Contract_JuridicalDoc_Next.ObjectId = ObjectDate_JuridicalDoc_Next.ObjectId
+                                                   AND ObjectLink_Contract_JuridicalDoc_Next.DescId   = zc_ObjectLink_Contract_JuridicalDoc_Next()
+                               -- Юридическое лицо(печать док.)
+                               LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = COALESCE (ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId, ObjectLink_Contract_JuridicalDocument.ChildObjectId)
 
                                LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 

@@ -164,10 +164,22 @@ BEGIN
                                               ON ObjectString_ToAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
                                              AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
 
+                       -- Юридическое лицо(печать док.)
                        LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
                                             ON ObjectLink_Contract_JuridicalDocument.ObjectId = MovementLinkObject_Contract.ObjectId
                                            AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
                                            AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+                       -- Дата для Юр. лица история(печать док.)
+                       LEFT JOIN ObjectDate AS ObjectDate_JuridicalDoc_Next
+                                            ON ObjectDate_JuridicalDoc_Next.ObjectId  = MovementLinkObject_Contract.ObjectId
+                                           AND ObjectDate_JuridicalDoc_Next.DescId    = zc_ObjectDate_Contract_JuridicalDoc_Next()
+                                           AND MovementLinkObject_PaidKind.ObjectId   = zc_Enum_PaidKind_SecondForm()
+                                           AND ObjectDate_JuridicalDoc_Next.ValueData <= MovementDate_OperDatePartner.ValueData
+                       -- Юридическое лицо история(печать док.)
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDoc_Next
+                                            ON ObjectLink_Contract_JuridicalDoc_Next.ObjectId = ObjectDate_JuridicalDoc_Next.ObjectId
+                                           AND ObjectLink_Contract_JuridicalDoc_Next.DescId   = zc_ObjectLink_Contract_JuridicalDoc_Next()
+                                           AND MovementLinkObject_PaidKind.ObjectId           = zc_Enum_PaidKind_SecondForm()
 
                        LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                             ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
@@ -179,10 +191,12 @@ BEGIN
                                            AND COALESCE (MovementLinkObject_Contract.ObjectId,0) = 0
 
                        LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                           ON OH_JuridicalDetails_From.JuridicalId = COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId
+                                                                           ON OH_JuridicalDetails_From.JuridicalId = COALESCE (ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId
+                                                                                                                             , ObjectLink_Contract_JuridicalDocument.ChildObjectId
                                                                                                                              , ObjectLink_Contract_JuridicalBasis.ChildObjectId
                                                                                                                              , ObjectLink_Unit_Juridical.ChildObjectId
-                                                                                                                             , Object_From.Id)
+                                                                                                                             , Object_From.Id
+                                                                                                                              )
                                                                           AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                           AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
 

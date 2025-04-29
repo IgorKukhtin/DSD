@@ -273,13 +273,30 @@ BEGIN
                          , ObjectLink_Juridical_JuridicalGroup.ChildObjectId
                 )
 
+      -- ёридическое лицо(печать док.)
     , tmpObjectLink_Contract AS (SELECT ObjectLink.*
                                  FROM ObjectLink
                                  WHERE ObjectLink.ObjectId IN (SELECT RESULT.ContractId FROM RESULT)
-                                 AND ObjectLink.DescId IN (zc_ObjectLink_Contract_JuridicalDocument())
+                                 AND ObjectLink.DescId     = zc_ObjectLink_Contract_JuridicalDocument()
                                 )
+      -- ёридическое лицо истори€(печать док.)
+    , tmpObjectLink_Contract_next AS (SELECT ObjectLink.*
+                                      FROM ObjectLink
+                                           -- ƒата дл€ ёр. лица истори€(печать док.)
+                                           INNER JOIN ObjectDate AS ObjectDate_JuridicalDoc_Next
+                                                                 ON ObjectDate_JuridicalDoc_Next.ObjectId  = ObjectLink.ObjectId
+                                                                AND ObjectDate_JuridicalDoc_Next.DescId    = zc_ObjectDate_Contract_JuridicalDoc_Next()
+                                                                AND ObjectDate_JuridicalDoc_Next.ValueData <= inOperDate
+                                      WHERE ObjectLink.ObjectId IN (SELECT RESULT.ContractId FROM RESULT)
+                                        AND ObjectLink.DescId   = zc_ObjectLink_Contract_JuridicalDoc_Next()
+                                     )
 
-    , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View AS tmp WHERE tmp.JuridicalId IN (SELECT tmpObjectLink_Contract.ChildObjectId FROM tmpObjectLink_Contract))
+    , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View AS tmp
+                                                 WHERE tmp.JuridicalId IN (SELECT tmpObjectLink_Contract.ChildObjectId FROM tmpObjectLink_Contract
+                                                                          UNION
+                                                                           SELECT tmpObjectLink_Contract_next.ChildObjectId FROM tmpObjectLink_Contract_next
+                                                                          )
+                                                )
 
     , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId IN (SELECT RESULT.InfoMoneyId FROM RESULT))
 
@@ -454,11 +471,18 @@ BEGIN
                                         AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
                     LEFT JOIN Object AS Object_PersonalCollation ON Object_PersonalCollation.Id = ObjectLink_Contract_PersonalCollation.ChildObjectId
          
+                    -- ёридическое лицо(печать док.)
                     LEFT JOIN tmpObjectLink_Contract AS ObjectLink_Contract_JuridicalDocument
                                                      ON ObjectLink_Contract_JuridicalDocument.ObjectId = RESULT.ContractId
                                                     AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
-                    LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
+                    -- ёридическое лицо истори€(печать док.)
+                    LEFT JOIN tmpObjectLink_Contract_next AS ObjectLink_Contract_JuridicalDoc_Next
+                                                          ON ObjectLink_Contract_JuridicalDoc_Next.ObjectId = RESULT.ContractId
+                                                         AND ObjectLink_Contract_JuridicalDoc_Next.DescId   = zc_ObjectLink_Contract_JuridicalDoc_Next()
+                    -- ёридическое лицо(печать док.)
+                    LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = COALESCE (ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId, ObjectLink_Contract_JuridicalDocument.ChildObjectId)
          
+
                     LEFT JOIN tmpObjectHistory_JuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
          
                     LEFT JOIN tmpInfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = RESULT.InfoMoneyId
@@ -550,6 +574,6 @@ $BODY$
 -- SELECT * FROM lpReport_JuridicalDefermentPayment365 (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inStartDate_sale:= CURRENT_DATE, inEndDate_sale:= CURRENT_DATE, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inUserId:= 5);
 
  /*  select * from lpReport_JuridicalDefermentPayment365  
-   (inOperDate := ('27.08.2022')::TDateTime , inEmptyParam := ('01.01.2016')::TDateTime ,inStartDate_sale:= CURRENT_DATE, inEndDate_sale:= CURRENT_DATE
+   (inOperDate := ('27.08.2028')::TDateTime , inEmptyParam := ('01.01.2028')::TDateTime ,inStartDate_sale:= CURRENT_DATE, inEndDate_sale:= CURRENT_DATE
     , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 301310 , inJuridicalGroupId := 0 ,  inUserId:= 5);
   */

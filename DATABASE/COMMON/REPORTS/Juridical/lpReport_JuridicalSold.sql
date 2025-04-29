@@ -684,10 +684,22 @@ BEGIN
                                AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
            LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId
 
+           -- Юридическое лицо(печать док.)
            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
                                 ON ObjectLink_Contract_JuridicalDocument.ObjectId = Operation.ContractId
                                AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
-           LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
+           -- Дата для Юр. лица история(печать док.)
+           LEFT JOIN ObjectDate AS ObjectDate_JuridicalDoc_Next
+                                ON ObjectDate_JuridicalDoc_Next.ObjectId  = Operation.ContractId
+                               AND ObjectDate_JuridicalDoc_Next.DescId    = zc_ObjectDate_Contract_JuridicalDoc_Next()
+                               AND ObjectDate_JuridicalDoc_Next.ValueData <= inStartDate
+           -- Юридическое лицо история(печать док.)
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDoc_Next
+                                ON ObjectLink_Contract_JuridicalDoc_Next.ObjectId = ObjectDate_JuridicalDoc_Next.ObjectId
+                               AND ObjectLink_Contract_JuridicalDoc_Next.DescId   = zc_ObjectLink_Contract_JuridicalDoc_Next()
+           -- Юридическое лицо(печать док.)
+           LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = COALESCE (ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId, ObjectLink_Contract_JuridicalDocument.ChildObjectId)
+
 
            LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Operation.JuridicalId
@@ -786,4 +798,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpReport_JuridicalSold (inStartDate:= '13.12.2022', inEndDate:= '13.12.2022', inStartDate_sale:= NULL, inEndDate_sale:= NULL, inAccountId:= 0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inPaidKindId:= 0, inBranchId:= 0, inJuridicalGroupId:= 257169, inCurrencyId:= 76965, inIsPartionMovement:= FALSE, inUserId:= zfCalc_UserAdmin() :: Integer);
+-- SELECT * FROM lpReport_JuridicalSold (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inStartDate_sale:= NULL, inEndDate_sale:= NULL, inAccountId:= 1, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inPaidKindId:= 0, inBranchId:= 0, inJuridicalGroupId:= 257169, inCurrencyId:= 76965, inIsPartionMovement:= FALSE, inUserId:= zfCalc_UserAdmin() :: Integer);

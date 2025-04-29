@@ -106,15 +106,28 @@ BEGIN
 
 
      -- нашли
-     SELECT MAX (COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId, COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, zc_Juridical_Basis())))
-          , MIN (COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId, COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, zc_Juridical_Basis())))
+     SELECT MAX (COALESCE (ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId, ObjectLink_Contract_JuridicalDocument.ChildObjectId, ObjectLink_Contract_JuridicalBasis.ChildObjectId, zc_Juridical_Basis()))
+          , MIN (COALESCE (ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId, ObjectLink_Contract_JuridicalDocument.ChildObjectId, ObjectLink_Contract_JuridicalBasis.ChildObjectId, zc_Juridical_Basis()))
            INTO vbJuridicalId1_Basis
               , vbJuridicalId2_Basis
      FROM _tmpSummContract_all
+          -- Юридическое лицо(печать док.)
           LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
                                ON ObjectLink_Contract_JuridicalDocument.ObjectId = _tmpSummContract_all.ContractId
                               AND ObjectLink_Contract_JuridicalDocument.DescId   = zc_ObjectLink_Contract_JuridicalDocument()
                               AND inPaidKindId                                   = zc_Enum_PaidKind_SecondForm()
+          -- Дата для Юр. лица история(печать док.)
+          LEFT JOIN ObjectDate AS ObjectDate_JuridicalDoc_Next
+                               ON ObjectDate_JuridicalDoc_Next.ObjectId  = _tmpSummContract_all.ContractId
+                              AND ObjectDate_JuridicalDoc_Next.DescId    = zc_ObjectDate_Contract_JuridicalDoc_Next()
+                              AND inPaidKindId                           = zc_Enum_PaidKind_SecondForm()
+                              AND ObjectDate_JuridicalDoc_Next.ValueData <= inOperDate
+          -- Юридическое лицо история(печать док.)
+          LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDoc_Next
+                               ON ObjectLink_Contract_JuridicalDoc_Next.ObjectId = ObjectDate_JuridicalDoc_Next.ObjectId
+                              AND ObjectLink_Contract_JuridicalDoc_Next.DescId   = zc_ObjectLink_Contract_JuridicalDoc_Next()
+                              AND inPaidKindId                                   = zc_Enum_PaidKind_SecondForm()
+
           LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                ON ObjectLink_Contract_JuridicalBasis.ObjectId = _tmpSummContract_all.ContractId
                               AND ObjectLink_Contract_JuridicalBasis.DescId   = zc_ObjectLink_Contract_JuridicalBasis()
@@ -304,4 +317,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalBalance (inOperDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inJuridicalId:= 0, inPartnerId:= 0, inContractId:= 0, inAccountId:= 0, inPaidKindId:= 0, inInfoMoneyId:= 0, inCurrencyId:=0, inSession:= zfCalc_UserAdmin()); 
+-- SELECT * FROM gpReport_JuridicalBalance (inOperDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inJuridicalId:= 0, inPartnerId:= 0, inContractId:= 0, inAccountId:= 1, inPaidKindId:= 0, inInfoMoneyId:= 0, inCurrencyId:=0, inSession:= zfCalc_UserAdmin()); 
