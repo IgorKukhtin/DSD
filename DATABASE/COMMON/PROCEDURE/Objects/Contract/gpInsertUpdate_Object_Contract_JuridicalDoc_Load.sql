@@ -57,14 +57,14 @@ BEGIN
          -- проверка на несколько значений 
          IF (SELECT COUNT (*) FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalName)) > 1
          THEN 
-             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо <%>  найдено более одного раза.', inJuridicalName;
+             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(1) <%>  найдено более одного раза.', inJuridicalName;
          END IF;
           
          -- поиск юр.лица
          vbJuridicalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalName) );
          IF COALESCE (vbJuridicalId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка-1.Значение Юридическое лицо <%> не найдено.', inJuridicalName;
+             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(1) <%> не найдено.', inJuridicalName;
          END IF;
     END IF;
     
@@ -73,14 +73,14 @@ BEGIN
     THEN 
          IF (SELECT COUNT (*) FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDocName)) > 1
          THEN 
-             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо <%>  найдено более одного раза.', inJuridicalDocName;
+             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(2) <%>  найдено более одного раза.', inJuridicalDocName;
          END IF;
 
          -- поиск юр.лица
          vbJuridicalDocId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDocName) );
          IF COALESCE (vbJuridicalDocId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка-2.Значение Юридическое лицо <%> не найдено.', inJuridicalDocName;
+             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(2) <%> не найдено.', inJuridicalDocName;
          END IF;
     END IF;
 
@@ -89,14 +89,14 @@ BEGIN
     THEN 
          IF (SELECT COUNT (*) FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDoc_NextName)) > 1
          THEN 
-             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо <%>  найдено более одного раза.', inJuridicalDoc_NextName;
+             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(3) <%>  найдено более одного раза.', inJuridicalDoc_NextName;
          END IF;
 
          -- поиск юр.лица
          vbJuridicalDoc_NextId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDoc_NextName) );
          IF COALESCE (vbJuridicalDoc_NextId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка-3.Значение Юридическое лицо <%> не найдено.', inJuridicalDoc_NextName;
+             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(3) <%> не найдено.', inJuridicalDoc_NextName;
          END IF;
     END IF;
 
@@ -125,7 +125,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalDocument(), vbContractId, vbJuridicalDocId);
    -- сохранили связь с <Юр. лица история(печать док.)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalDoc_Next(), vbContractId, vbJuridicalDoc_NextId);
-   -- сохранили свойство <>
+   -- сохранили свойство <Дата для Юр. лица история(печать док.)>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_JuridicalDoc_Next(), vbContractId, inJuridicalDoc_NextDate ::TDateTime);
 
    -- сохранили протокол

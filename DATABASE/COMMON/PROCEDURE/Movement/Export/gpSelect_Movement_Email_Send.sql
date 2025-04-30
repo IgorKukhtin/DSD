@@ -277,14 +277,31 @@ BEGIN
                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
              LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+
+             -- Юридическое лицо(печать док.)
              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
                                   ON ObjectLink_Contract_JuridicalDocument.ObjectId = MovementLinkObject_Contract.ObjectId
                                  AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
                                  AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+             -- Дата для Юр. лица история(печать док.)
+             LEFT JOIN ObjectDate AS ObjectDate_JuridicalDoc_Next
+                                  ON ObjectDate_JuridicalDoc_Next.ObjectId  = MovementLinkObject_Contract.ObjectId
+                                 AND ObjectDate_JuridicalDoc_Next.DescId    = zc_ObjectDate_Contract_JuridicalDoc_Next()
+                                 AND MovementLinkObject_PaidKind.ObjectId   = zc_Enum_PaidKind_SecondForm()
+                                 AND ObjectDate_JuridicalDoc_Next.ValueData <= MovementDate_OperDatePartner.ValueData
+             -- Юридическое лицо история(печать док.)
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDoc_Next
+                                  ON ObjectLink_Contract_JuridicalDoc_Next.ObjectId = ObjectDate_JuridicalDoc_Next.ObjectId
+                                 AND ObjectLink_Contract_JuridicalDoc_Next.DescId   = zc_ObjectLink_Contract_JuridicalDoc_Next()
+                                 AND MovementLinkObject_PaidKind.ObjectId           = zc_Enum_PaidKind_SecondForm()
+
              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                   ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
                                  AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
-             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId, ObjectLink_Contract_JuridicalBasis.ChildObjectId)
+             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = COALESCE (ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId
+                                                                                             , ObjectLink_Contract_JuridicalDocument.ChildObjectId
+                                                                                             , ObjectLink_Contract_JuridicalBasis.ChildObjectId
+                                                                                              )
 
              LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                  ON OH_JuridicalDetails_From.JuridicalId = Object_JuridicalBasis.Id

@@ -122,14 +122,30 @@ BEGIN
 
      --
      OPEN Cursor1 FOR
-       SELECT CASE WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isJuridicalDocument
+       SELECT CASE WHEN COALESCE (ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId, ObjectLink_Contract_JuridicalDocument.ChildObjectId) > 0 THEN TRUE ELSE FALSE END AS isJuridicalDocument
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            -- Юридическое лицо(печать док.)
             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
                                  ON ObjectLink_Contract_JuridicalDocument.ObjectId = vbContractId -- MovementLinkObject_Contract.ObjectId
                                 AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
                                 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
+            -- Дата для Юр. лица история(печать док.)
+          LEFT JOIN ObjectDate AS ObjectDate_JuridicalDoc_Next
+                               ON ObjectDate_JuridicalDoc_Next.ObjectId  = vbContractId -- MovementLinkObject_Contract.ObjectId
+                              AND ObjectDate_JuridicalDoc_Next.DescId    = zc_ObjectDate_Contract_JuridicalDoc_Next()
+                              AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
+                              AND ObjectDate_JuridicalDoc_Next.ValueData >= MovementDate_OperDatePartner.ValueData
+          -- Юридическое лицо история(печать док.)
+          LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDoc_Next
+                               ON ObjectLink_Contract_JuridicalDoc_Next.ObjectId = ObjectDate_JuridicalDoc_Next.ObjectId
+                              AND ObjectLink_Contract_JuridicalDoc_Next.DescId   = zc_ObjectLink_Contract_JuridicalDoc_Next()
+                              AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
+
        WHERE Movement.Id = inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
@@ -415,7 +431,10 @@ BEGIN
            , COALESCE (Object_Member_Driver.ValueData, vbPersonalName)  AS MemberName_Driver
            , MovementString_Comment.ValueData           AS Comment
  
-           , CASE WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isJuridicalDocument
+           , CASE WHEN COALESCE (ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId, ObjectLink_Contract_JuridicalDocument.ChildObjectId) > 0
+                       THEN TRUE
+                  ELSE FALSE
+             END AS isJuridicalDocument
 
            , (SELECT MS_InvNumberPartner.ValueData
               FROM tmpMovement
@@ -550,10 +569,23 @@ BEGIN
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                 AND View_Contract.InvNumber <> '-'
 
+            -- Юридическое лицо(печать док.)
             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
                                  ON ObjectLink_Contract_JuridicalDocument.ObjectId = vbContractId -- MovementLinkObject_Contract.ObjectId
                                 AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
                                 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
+            -- Дата для Юр. лица история(печать док.)
+            LEFT JOIN ObjectDate AS ObjectDate_JuridicalDoc_Next
+                                 ON ObjectDate_JuridicalDoc_Next.ObjectId  = vbContractId -- MovementLinkObject_Contract.ObjectId
+                                AND ObjectDate_JuridicalDoc_Next.DescId    = zc_ObjectDate_Contract_JuridicalDoc_Next()
+                                AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
+                                AND ObjectDate_JuridicalDoc_Next.ValueData <= MovementDate_OperDatePartner.ValueData
+            -- Юридическое лицо история(печать док.)
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDoc_Next
+                                 ON ObjectLink_Contract_JuridicalDoc_Next.ObjectId = ObjectDate_JuridicalDoc_Next.ObjectId
+                                AND ObjectLink_Contract_JuridicalDoc_Next.DescId   = zc_ObjectLink_Contract_JuridicalDoc_Next()
+                                AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
+
 -- ============================
             --по контрагенту находим юр.лицо
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -566,7 +598,7 @@ BEGIN
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, tmpMovement.OperDate) <  OH_JuridicalDetails_From.EndDate
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId, COALESCE (View_Contract.JuridicalBasisId, Object_To.Id))
+                                                                ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId, ObjectLink_Contract_JuridicalDocument.ChildObjectId, View_Contract.JuridicalBasisId, Object_To.Id)
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, tmpMovement.OperDate) >= OH_JuridicalDetails_To.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, tmpMovement.OperDate) <  OH_JuridicalDetails_To.EndDate
 -- bank account
