@@ -501,10 +501,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     object actPrint_4218: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintGV
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintGV
         end>
       Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1046#1042')'
       Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1046#1042')'
@@ -649,10 +649,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     object actPrint_4134: TdsdPrintAction [13]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint4134
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint4134
         end>
       Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1057#1074#1080#1085#1080#1085#1072' '#1053#1050')'
       Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1057#1074#1080#1085#1080#1085#1072' '#1053#1050')'
@@ -1988,8 +1988,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 767
-    Top = 176
+    Left = 783
+    Top = 120
   end
   object spSelectPrintCeh: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionSeparate_Ceh_Print'
@@ -2097,5 +2097,53 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     PackSize = 1
     Left = 96
     Top = 427
+  end
+  object spSelectPrintGV: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ProductionSeparateGV_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 767
+    Top = 240
+  end
+  object spSelectPrint4134: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ProductionSeparateGV_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 767
+    Top = 288
   end
 end
