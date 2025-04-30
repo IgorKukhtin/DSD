@@ -16,17 +16,17 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1064
-    ExplicitHeight = 257
+    ExplicitHeight = 325
     ClientRectBottom = 325
     ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1064
-      ExplicitHeight = 257
+      ExplicitHeight = 325
       inherited cxGrid: TcxGrid
         Width = 1064
         Height = 325
         ExplicitWidth = 1064
-        ExplicitHeight = 257
+        ExplicitHeight = 325
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -555,7 +555,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 60
           end
           object InsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1077
             DataBinding.FieldName = 'InsertDate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -565,7 +565,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 84
           end
           object InsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100'  '#1089#1086#1079#1076#1072#1085#1080#1103
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1085#1080#1077
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -573,7 +573,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             Width = 97
           end
           object UpdateDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
             Visible = False
             HeaderAlignmentHorz = taCenter

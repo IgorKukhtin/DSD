@@ -20,12 +20,15 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId   Integer;
+   DECLARE vbIsPaper Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Loss());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- Роль - ТОЛЬКО Склад Бумаги
+     vbIsPaper:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12168285);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -37,10 +40,12 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (0 AS TFloat)                               AS TotalCount
-             , 0                     		                AS FromId
-             , CAST ('' AS TVarChar) 	                        AS FromName
-             , 0                     	 	                AS ToId
-             , CAST ('' AS TVarChar) 	 	                AS ToName
+             , Object_From.Id                                   AS FromId
+             , Object_From.ValueData                            AS FromName
+               -- Не ошибка
+             , Object_From.Id                                   AS ToId
+             , Object_From.ValueData                            AS ToName
+               --
              , 0                     		                AS ArticleLossId
              , CAST ('' AS TVarChar) 		                AS ArticleLossName
              , CAST ('' as TVarChar) 		                AS Comment
@@ -51,7 +56,9 @@ BEGIN
              , CAST ('' AS TVarChar) 	 	                AS AssetName_top 
              , 0                                            AS MovementId_Production
              , CAST ('' AS TVarChar)                        AS InvNumber_ProductionFull
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN Object AS Object_From ON Object_From.Id = CASE WHEN vbIsPaper = TRUE THEN zc_Unit_Paper() END
+         ;
 
      ELSE
 

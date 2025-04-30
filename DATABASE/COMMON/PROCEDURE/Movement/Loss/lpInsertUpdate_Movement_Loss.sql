@@ -33,6 +33,19 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на изменение документа списания № <%> от <%>.', lfGet_Object_ValueData (inUserId), inInvNumber, DATE (inOperDate);
      END IF;
      
+
+     -- ограничение прав - ТОЛЬКО Склад Бумаги
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = 12168285)
+        AND COALESCE (inFromId, 0) <> zc_Unit_Paper()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав формировать документ списание для <%>.%Можно формировать только для <%>.'
+                       , lfGet_Object_ValueData_sh (inFromId)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (zc_Unit_Paper())
+                        ;
+     END IF;
+
+
      -- определяем ключ доступа !!!то что захардкоженно - временно!!!
      vbAccessKeyId:= zfGet_AccessKey_onUnit (inFromId, zc_Enum_Process_InsertUpdate_Movement_Loss(), inUserId);
 

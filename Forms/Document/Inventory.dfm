@@ -386,12 +386,50 @@ inherited InventoryForm: TInventoryForm
             Caption = #1064#1090#1088#1080#1093#1082#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'IdBarCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object OperDate: TcxGridDBColumn
             DataBinding.FieldName = 'OperDate'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             VisibleForCustomization = False
+            Width = 70
+          end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1077
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object InsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1085#1080#1077
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object UpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object UpdateName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
         end
@@ -400,6 +438,9 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheet_PartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0

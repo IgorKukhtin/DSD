@@ -169,6 +169,10 @@ type
     bbMISetErasedPC: TdxBarButton;
     bbMISetUnErasedPc: TdxBarButton;
     isErased_ch4: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
+    InsertName: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
+    UpdateName: TcxGridDBColumn;
   private
     { Private declarations }
   public

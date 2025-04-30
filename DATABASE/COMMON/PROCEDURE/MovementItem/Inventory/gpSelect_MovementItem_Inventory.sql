@@ -4,10 +4,10 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_Inventory (Integer, Boolean, TVarC
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
-    IN inMovementId  Integer      , -- пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
-    IN inSession     TVarChar       -- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_old TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
@@ -30,6 +30,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartionGoodsId Integer
              , IdBarCode TVarChar
              , OperDate TDateTime 
+               --
+             , InsertName TVarChar, UpdateName TVarChar
+             , InsertDate TDateTime, UpdateDate TDateTime
              
            --  , Price_Partion     TFloat
              )
@@ -40,7 +43,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbStatusId Integer;
 BEGIN
-     -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Inventory());
      vbUserId:= lpGetUserBySession (inSession);
 
@@ -72,7 +75,7 @@ BEGIN
                               AS lfObjectHistory_PriceListItem
                          WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                         )  
-           -- пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+           -- цены по прайсу
           , tmpPricePR AS (SELECT lfObjectHistory_PriceListItem.GoodsId
                                 , lfObjectHistory_PriceListItem.GoodsKindId
                                 , lfObjectHistory_PriceListItem.ValuePrice AS Price
@@ -81,7 +84,7 @@ BEGIN
                            WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                           )
 
-            --пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            --колво движения из проводок
           , tmpContainer AS (SELECT MIContainer.MovementItemId
                                  , SUM (MIContainer.Amount) AS Amount
                              FROM MovementItemContainer AS MIContainer
@@ -138,6 +141,12 @@ BEGIN
            , Null ::TDateTime  AS OperDate
          --  , CAST (NULL AS TFloat)           AS Price_Partion
            
+             -- Протокол       
+           , '' ::TVarChar       AS InsertName
+           , '' ::TVarChar       AS UpdateName
+           , NULL ::TDateTime    AS InsertDate
+           , NULL ::TDateTime    AS UpdateDate
+
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
@@ -151,8 +160,8 @@ BEGIN
                                        ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                       AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId   = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
-                                                        AND (ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- пїЅпїЅпїЅпїЅ + пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ + пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
-                                                          OR ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_10100() -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ + пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+                                                        AND (ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
+                                                          OR ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                                             )
              WHERE Object_Goods.DescId = zc_Object_Goods()
                AND Object_Goods.isErased = FALSE
@@ -183,7 +192,7 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ 2 пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ
+            -- привязываем цены 2 раза по виду товара и без
             LEFT JOIN tmpPrice AS tmpPrice_Kind 
                                ON tmpPrice_Kind.GoodsId = tmpGoods.GoodsId
                               AND COALESCE (tmpPrice_Kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
@@ -192,7 +201,7 @@ BEGIN
                               AND tmpPrice.GoodsKindId IS NULL
 
 
-            -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 2 пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ
+            -- привязываем цены по прайсу 2 раза по виду товара и без
             LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
                                  ON tmpPricePR_Kind.GoodsId = tmpGoods.GoodsId
                                 AND COALESCE (tmpPricePR_Kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
@@ -249,7 +258,7 @@ BEGIN
            , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
            , MovementItem.isErased              AS isErased
            
-           -- пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+           -- из партии
            , Object_PartionGoods.Id                AS PartionGoodsId
            , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.Id) :: TVarChar AS IdBarCode
            , Null ::TDateTime  AS OperDate
@@ -351,7 +360,7 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ 2 пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ
+            -- привязываем цены 2 раза по виду товара и без
             LEFT JOIN tmpPrice AS tmpPrice_Kind 
                                ON tmpPrice_Kind.GoodsId = MovementItem.ObjectId
                               AND COALESCE (tmpPrice_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
@@ -363,34 +372,34 @@ BEGIN
                                              ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
-            -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+            -- свойства из партии
             LEFT JOIN ObjectDate AS ObjectDate_Value 
-                                 ON ObjectDate_Value.ObjectId = MILinkObject_PartionGoods.ObjectId                      -- пїЅпїЅпїЅпїЅ
+                                 ON ObjectDate_Value.ObjectId = MILinkObject_PartionGoods.ObjectId                      -- дата
                                 AND ObjectDate_Value.DescId = zc_ObjectDate_PartionGoods_Value()
             LEFT JOIN ObjectString AS ObjectString_PartNumber
-                                   ON ObjectString_PartNumber.ObjectId = MILinkObject_PartionGoods.ObjectId             -- пїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ
+                                   ON ObjectString_PartNumber.ObjectId = MILinkObject_PartionGoods.ObjectId             -- сер. номер
                                   AND ObjectString_PartNumber.DescId = zc_ObjectString_PartionGoods_PartNumber()
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_Price_Partion 
-                                  ON ObjectFloat_Price_Partion.ObjectId = MILinkObject_PartionGoods.ObjectId                 -- пїЅпїЅпїЅпїЅ
+            LEFT JOIN ObjectFloat AS ObjectFloat_Price_Partion
+                                  ON ObjectFloat_Price_Partion.ObjectId = MILinkObject_PartionGoods.ObjectId                 -- цена
                                  AND ObjectFloat_Price_Partion.DescId = zc_ObjectFloat_PartionGoods_Price()    
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit 
-                                 ON ObjectLink_Unit.ObjectId = MILinkObject_PartionGoods.ObjectId		                -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                                 ON ObjectLink_Unit.ObjectId = MILinkObject_PartionGoods.ObjectId		                -- подразделение
                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
             LEFT JOIN Object AS Object_Unit_Partion ON Object_Unit_Partion.Id = ObjectLink_Unit.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Storage 
-                                 ON ObjectLink_Storage.ObjectId = MILinkObject_PartionGoods.ObjectId	                -- пїЅпїЅпїЅпїЅпїЅ
+                                 ON ObjectLink_Storage.ObjectId = MILinkObject_PartionGoods.ObjectId	                -- склад
                                 AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
             LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId  
 
             LEFT JOIN ObjectLink AS ObjectLink_PartionModel 
-                                 ON ObjectLink_PartionModel.ObjectId = MILinkObject_PartionGoods.ObjectId	            -- пїЅпїЅпїЅпїЅпїЅпїЅ
+                                 ON ObjectLink_PartionModel.ObjectId = MILinkObject_PartionGoods.ObjectId	            -- Модель
                                 AND ObjectLink_PartionModel.DescId = zc_ObjectLink_PartionGoods_Storage()
             LEFT JOIN Object AS Object_PartionModel_Partion ON Object_PartionModel_Partion.Id = ObjectLink_PartionModel.ChildObjectId
 
-            -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 2 пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ
+            -- привязываем цены по прайсу 2 раза по виду товара и без
             LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
                                  ON tmpPricePR_Kind.GoodsId = MovementItem.ObjectId
                                 AND COALESCE (tmpPricePR_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
@@ -419,7 +428,7 @@ BEGIN
             WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT _tmpMI_all.Id FROM _tmpMI_all)
            ;
 
-    -- RAISE EXCEPTION 'пїЅпїЅпїЅпїЅпїЅпїЅ.<%>  <%>', (select count(*) from _tmpMI_all), (select count(*) from tmpMIF_all);
+    -- RAISE EXCEPTION 'Ошибка.<%>  <%>', (select count(*) from _tmpMI_all), (select count(*) from tmpMIF_all);
 
 
      RETURN QUERY
@@ -432,7 +441,7 @@ BEGIN
                         )
 
 
-           -- пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+           -- цены по прайсу
           , tmpPricePR AS (SELECT lfObjectHistory_PriceListItem.GoodsId
                                 , lfObjectHistory_PriceListItem.GoodsKindId
                                 , lfObjectHistory_PriceListItem.ValuePrice AS Price
@@ -440,7 +449,7 @@ BEGIN
                                 AS lfObjectHistory_PriceListItem
                            WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                           )
-            --пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            --колво движения из проводок
           , tmpContainer AS (SELECT MIContainer.MovementItemId
                                  , SUM (MIContainer.Amount) AS Amount
                              FROM MovementItemContainer AS MIContainer
@@ -475,7 +484,15 @@ BEGIN
                            FROM MovementItemDate
                            WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
                           )
-       -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+          , tmpMI_protocol AS (SELECT MovementItemProtocol.*
+                                      -- № п/п - первый
+                                    , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id ASC) AS Ord_min
+                                      -- № п/п - последний
+                                    , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id DESC) AS Ord_max
+                               FROM MovementItemProtocol
+                               WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
+                              )
+       -- Результат
        SELECT
              MovementItem.Id                     AS Id
            , Object_Goods.Id                     AS GoodsId
@@ -541,10 +558,16 @@ BEGIN
 
            , MovementItem.isErased               AS isErased
 
-           -- Id пїЅпїЅпїЅпїЅпїЅпїЅ
+           -- Id партии
            , Object_PartionGoods.Id              AS PartionGoodsId
            , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.Id) :: TVarChar AS IdBarCode
            , Null ::TDateTime  AS OperDate
+
+             -- Протокол
+           , Object_Insert.ValueData    AS InsertName
+           , Object_Update.ValueData    AS UpdateName
+           , tmpMI_protocol_min.OperDate    AS InsertDate
+           , tmpMI_protocol_max.OperDate    AS UpdateDate
 
        FROM tmpMI_all AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -639,7 +662,7 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ 2 пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ
+            -- привязываем цены 2 раза по виду товара и без
             LEFT JOIN tmpPrice AS tmpPrice_Kind 
                                ON tmpPrice_Kind.GoodsId = MovementItem.ObjectId
                               AND COALESCE (tmpPrice_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
@@ -651,34 +674,34 @@ BEGIN
                                              ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
-            -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+            -- свойства из партии
             LEFT JOIN ObjectDate AS ObjectDate_Value 
-                                 ON ObjectDate_Value.ObjectId = MILinkObject_PartionGoods.ObjectId                      -- пїЅпїЅпїЅпїЅ
+                                 ON ObjectDate_Value.ObjectId = MILinkObject_PartionGoods.ObjectId                      -- дата
                                 AND ObjectDate_Value.DescId = zc_ObjectDate_PartionGoods_Value()
             LEFT JOIN ObjectString AS ObjectString_PartNumber
-                                   ON ObjectString_PartNumber.ObjectId = MILinkObject_PartionGoods.ObjectId             -- пїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ
+                                   ON ObjectString_PartNumber.ObjectId = MILinkObject_PartionGoods.ObjectId             -- сер. номер
                                   AND ObjectString_PartNumber.DescId = zc_ObjectString_PartionGoods_PartNumber()
                                 
             LEFT JOIN ObjectFloat AS ObjectFloat_Price_Partion 
-                                  ON ObjectFloat_Price_Partion.ObjectId = MILinkObject_PartionGoods.ObjectId                 -- пїЅпїЅпїЅпїЅ
-                                 AND ObjectFloat_Price_Partion.DescId = zc_ObjectFloat_PartionGoods_Price()    
+                             ON ObjectFloat_Price_Partion.ObjectId = MILinkObject_PartionGoods.ObjectId                 -- цена
+                            AND ObjectFloat_Price_Partion.DescId = zc_ObjectFloat_PartionGoods_Price()    
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit 
-                                 ON ObjectLink_Unit.ObjectId = MILinkObject_PartionGoods.ObjectId		               -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                                 ON ObjectLink_Unit.ObjectId = MILinkObject_PartionGoods.ObjectId		               -- подразделение
                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
             LEFT JOIN Object AS Object_Unit_Partion ON Object_Unit_Partion.Id = ObjectLink_Unit.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Storage 
-                                 ON ObjectLink_Storage.ObjectId = MILinkObject_PartionGoods.ObjectId	                -- пїЅпїЅпїЅпїЅпїЅ
+                                 ON ObjectLink_Storage.ObjectId = MILinkObject_PartionGoods.ObjectId	                -- склад
                                 AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
             LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId 
 
             LEFT JOIN ObjectLink AS ObjectLink_PartionModel 
-                                 ON ObjectLink_PartionModel.ObjectId = MILinkObject_PartionGoods.ObjectId	            -- пїЅпїЅпїЅпїЅпїЅпїЅ
+                                 ON ObjectLink_PartionModel.ObjectId = MILinkObject_PartionGoods.ObjectId	            -- Модель
                                 AND ObjectLink_PartionModel.DescId = zc_ObjectLink_PartionGoods_Storage()
             LEFT JOIN Object AS Object_PartionModel_Partion ON Object_PartionModel_Partion.Id = ObjectLink_PartionModel.ChildObjectId
             
-            -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 2 пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ
+            -- привязываем цены по прайсу 2 раза по виду товара и без
             LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
                                  ON tmpPricePR_Kind.GoodsId = MovementItem.ObjectId
                                 AND COALESCE (tmpPricePR_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
@@ -687,7 +710,18 @@ BEGIN
                                 AND tmpPricePR.GoodsKindId IS NULL  
             
             LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = MovementItem.Id
-       ;
+
+            -- № п/п - первый
+            LEFT JOIN tmpMI_protocol AS tmpMI_protocol_min
+                                     ON tmpMI_protocol_min.MovementItemId = MovementItem.Id
+                                    AND tmpMI_protocol_min.Ord_min        = 1
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = tmpMI_protocol_min.UserId
+            -- № п/п - последний
+            LEFT JOIN tmpMI_protocol AS tmpMI_protocol_max
+                                     ON tmpMI_protocol_max.MovementItemId = MovementItem.Id
+                                    AND tmpMI_protocol_max.Ord_max        = 1
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = tmpMI_protocol_max.UserId
+           ;
 
      END IF;
 
@@ -698,11 +732,11 @@ $BODY$
 
 
 /*
- пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ
-               пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ.пїЅ.   пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ.пїЅ.   пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ.пїЅ.   пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ.A.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
  22.01.24         * GoodsName_old
  27.05.23         *
- 02.12.19         * пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ 02.12.19         * цена с учетом вида товара
  19.12.18         *
  31.03.15         * add GoodsGroupNameFull, MeasureName
  01.09.14                                                       * add Unit, Storage
@@ -713,6 +747,6 @@ $BODY$
  18.07.13         *
 */
 
--- пїЅпїЅпїЅпїЅ
+-- тест
 -- SELECT * FROM gpSelect_MovementItem_Inventory (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItem_Inventory (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')

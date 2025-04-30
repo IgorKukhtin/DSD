@@ -24,8 +24,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbIsIrna Boolean;
+   DECLARE vbUserId  Integer;
+   DECLARE vbIsIrna  Boolean;
+   DECLARE vbIsPaper Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Loss());
@@ -33,6 +34,9 @@ BEGIN
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+     
+     -- Роль - ТОЛЬКО Склад Бумаги
+     vbIsPaper:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12168285);
 
 
      -- !!!Ирна!!!
@@ -172,6 +176,7 @@ BEGIN
        WHERE vbUserId <> 300550 -- Рибалко Вікторія Віталіївна
          AND vbUserId <> 929721 -- Решетова И.А.
          AND COALESCE (Movement_Production.StatusId, 0) <> zc_Enum_Status_Erased()
+         AND (MovementLinkObject_From.ObjectId = zc_Unit_Paper() OR vbIsPaper = FALSE)
 
       UNION ALL
        SELECT
@@ -293,6 +298,7 @@ BEGIN
              )
             )
           AND COALESCE (Movement_Production.StatusId, 0) <> zc_Enum_Status_Erased()
+          AND (MovementLinkObject_From.ObjectId = zc_Unit_Paper() OR vbIsPaper = FALSE)
           ;
 
 END;

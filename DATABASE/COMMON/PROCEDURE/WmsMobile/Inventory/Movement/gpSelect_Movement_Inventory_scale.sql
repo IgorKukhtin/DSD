@@ -661,13 +661,13 @@ BEGIN
 
            , 0  ::Integer AS CountPack
            , 0  ::TFloat  AS WeightPack
-           , 0  ::TFloat AS WeightPack_calc
+           , 0  ::TFloat  AS WeightPack_calc
 
-             -- Протокол       
-           , '' ::TVarChar       AS InsertName
-           , '' ::TVarChar       AS UpdateName
-           , NULL ::TDateTime    AS InsertDate
-           , NULL ::TDateTime    AS UpdateDate
+             -- Протокол
+           , Object_Insert.ValueData    AS InsertName
+           , Object_Update.ValueData    AS UpdateName
+           , MIDate_Insert.ValueData    AS InsertDate
+           , MIDate_Update.ValueData    AS UpdateDate
 
            , MovementItem.isErased      AS isErased
 
@@ -681,7 +681,7 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
             -- Протокол
-            /*LEFT JOIN tmpMIDate AS MIDate_Insert
+            LEFT JOIN tmpMIDate AS MIDate_Insert
                                 ON MIDate_Insert.MovementItemId = MovementItem.Id
                                AND MIDate_Insert.DescId         = zc_MIDate_Insert()
             LEFT JOIN tmpMIDate AS MIDate_Update
@@ -699,7 +699,7 @@ BEGIN
                               ON MILO_Update.MovementItemId = MovementItem.Id
                              AND MILO_Update.DescId         = zc_MILinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
-            */
+            
  
            LEFT JOIN ObjectFloat AS OF_Weight
                                  ON OF_Weight.ObjectId = Object_Goods.Id

@@ -224,6 +224,18 @@ BEGIN
               AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)
              ;
 
+     -- ограничение прав - ТОЛЬКО Склад Бумаги
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12168285)
+        AND COALESCE (inLocationId, 0) <> zc_Unit_Paper()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав формировать документ списание для <%>.%Можно формировать только для <%>.'
+                       , lfGet_Object_ValueData_sh (inLocationId)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (zc_Unit_Paper())
+                        ;
+     END IF;
+
+
     -- таблица -
     CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;

@@ -86,6 +86,18 @@ BEGIN
       END IF;
 
 
+     -- ограничение прав - ТОЛЬКО Склад Бумаги
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12168285)
+        AND COALESCE (inFromId, 0) <> zc_Unit_Paper()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав формировать документ списание для <%>.%Можно формировать только для <%>.'
+                       , lfGet_Object_ValueData_sh (inFromId)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (zc_Unit_Paper())
+                        ;
+     END IF;
+
+
 
      /*IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoods')
      THEN

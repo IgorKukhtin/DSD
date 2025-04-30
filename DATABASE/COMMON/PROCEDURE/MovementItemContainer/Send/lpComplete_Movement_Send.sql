@@ -491,10 +491,18 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_PartionCell ON ObjectLink_PartionCell.ObjectId      = CLO_PartionGoods.ObjectId
                                                                              AND ObjectLink_PartionCell.DescId        = zc_ObjectLink_PartionGoods_PartionCell()
 
+                               -- без Товар в пути
+                               LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                             ON CLO_Account.ContainerId = Container.Id
+                                                            AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+
                           WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
                                                                , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                                 )
                             AND COALESCE (CLO_GoodsKind.ObjectId, 0) = tmpMI.GoodsKindId
+                            -- без Товар в пути
+                            AND CLO_Account.ObjectId IS NULL
+                            --
                             AND (tmpMI.PartionGoodsDate_From <> zc_DateStart()
                               OR tmpMI.PartionGoodsId_real   <> 0
                                 )

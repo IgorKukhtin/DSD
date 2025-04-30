@@ -132,7 +132,7 @@ BEGIN
                             ;
          END IF;
 
-         -- Есть Выплата
+         -- если Есть Выплата
          IF EXISTS (SELECT 1
                     FROM Movement
                     WHERE Movement.ParentId = vbMovementId_parent
