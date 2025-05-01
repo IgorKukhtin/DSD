@@ -129,6 +129,13 @@ type
     actSPPrintTTNProcName: TdsdExecStoredProc;
     actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    spUpdate_TotalLines: TdsdStoredProc;
+    actUpdate_TotalLines: TdsdExecStoredProc;
+    macUpdate_TotalLines_list: TMultiAction;
+    macUpdate_TotalLines: TMultiAction;
+    bbUpdate_TotalLines: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    Separator: TdxBarSeparator;
   private
     { Private declarations }
   public

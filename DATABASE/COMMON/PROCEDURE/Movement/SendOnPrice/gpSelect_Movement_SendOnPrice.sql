@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCountTare TFloat, TotalCount TFloat, TotalCountPartner TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalCountKgFrom TFloat, TotalCountShFrom TFloat, TotalSummFrom TFloat
+             , TotalLines TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar, RouteGroupName TVarChar, RouteName TVarChar, PersonalName TVarChar
              , MovementId_Order Integer, InvNumber_Order TVarChar
@@ -104,6 +105,8 @@ BEGIN
            , MovementFloat_TotalCountKgFrom.ValueData       AS TotalCountKgFrom
            , MovementFloat_TotalCountShFrom.ValueData       AS TotalCountShFrom
            , MovementFloat_TotalSummFrom.ValueData          AS TotalSummFrom
+
+           , MovementFloat_TotalLines.ValueData  ::TFloat   AS TotalLines
 
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
@@ -252,6 +255,10 @@ BEGIN
                                     ON MovementFloat_TotalSummFrom.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalLines
+                                    ON MovementFloat_TotalLines.MovementId = Movement.Id
+                                   AND MovementFloat_TotalLines.DescId = zc_MovementFloat_TotalLines()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -397,6 +404,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.05.25         * TotalLines
  13.02.20         *
  11.10.18         *
  05.10.16         * add inJuridicalBasisId

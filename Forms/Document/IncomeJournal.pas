@@ -155,6 +155,11 @@ type
     spSelectPrint_reestr: TdsdStoredProc;
     actSelectPrint_reestr: TdsdPrintAction;
     bbSelectPrint_reestr: TdxBarButton;
+    spUpdate_TotalLines: TdsdStoredProc;
+    actUpdate_TotalLines: TdsdExecStoredProc;
+    macUpdate_TotalLines_list: TMultiAction;
+    macUpdate_TotalLines: TMultiAction;
+    bbUpdate_TotalLines: TdxBarButton;
   private
   public
   end;

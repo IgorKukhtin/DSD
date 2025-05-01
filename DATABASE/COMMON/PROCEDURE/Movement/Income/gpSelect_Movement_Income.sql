@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
              , TotalHeadCount TFloat, TotalLiveWeight TFloat
+             , TotalLines TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , isCurrencyUser Boolean 
              , isPriceDiff Boolean
@@ -99,6 +100,8 @@ BEGIN
            , COALESCE (MovementFloat_TotalHeadCount.ValueData, 0)  :: TFloat AS TotalHeadCount
            , COALESCE (MovementFloat_TotalLiveWeight.ValueData, 0) :: TFloat AS TotalLiveWeight
 
+           , MovementFloat_TotalLines.ValueData  ::TFloat   AS TotalLines
+           
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
            , COALESCE (MovementFloat_ParValue.ValueData, 1) :: TFloat              AS ParValue
            , COALESCE (MovementBoolean_CurrencyUser.ValueData, FALSE) ::Boolean    AS isCurrencyUser
@@ -234,6 +237,10 @@ BEGIN
                                     ON MovementFloat_ParValue.MovementId = Movement.Id
                                    AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalLines
+                                    ON MovementFloat_TotalLines.MovementId = Movement.Id
+                                   AND MovementFloat_TotalLines.DescId = zc_MovementFloat_TotalLines()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -338,6 +345,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 01.05.25         * TotalLines
  07.12.24         * TotalLiveWeight, TotalHeadCount
  08.10.24         * isPriceDiff
  17.07.24         * CurrencyUser

@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , TotalCountSh TFloat, TotalCountKg TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , TotalSummChange TFloat, TotalSumm TFloat
+             , TotalLines TFloat
              , CurrencyValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -360,6 +361,7 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSummChange.ValueData    AS TotalSummChange
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , MovementFloat_TotalLines.ValueData  ::TFloat   AS TotalLines
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
@@ -545,6 +547,10 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalLines
+                                    ON MovementFloat_TotalLines.MovementId = Movement.Id
+                                   AND MovementFloat_TotalLines.DescId = zc_MovementFloat_TotalLines()
+
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
@@ -722,6 +728,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.05.25         * TotalLines
  07.11.24         *
  16.02.23         * TransportGoods
  28.04.22         * add  OrderReturnTare

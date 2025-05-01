@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Loss(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalCountSh TFloat, TotalCountKg TFloat
+             , TotalLines TFloat
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar
              , ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
@@ -63,6 +64,7 @@ BEGIN
            , MovementFloat_TotalCount.ValueData      AS TotalCount
            , MovementFloat_TotalCountSh.ValueData    AS TotalCountSh
            , MovementFloat_TotalCountKg.ValueData    AS TotalCountKg
+           , MovementFloat_TotalLines.ValueData  ::TFloat   AS TotalLines
            , Object_From.Id                          AS FromId
            , Object_From.ValueData                   AS FromName
            , ObjectDesc_from.ItemName                AS ItemName_from
@@ -120,6 +122,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalLines
+                                    ON MovementFloat_TotalLines.MovementId = Movement.Id
+                                   AND MovementFloat_TotalLines.DescId = zc_MovementFloat_TotalLines()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId = Movement.Id
@@ -188,6 +194,7 @@ BEGIN
            , MovementFloat_TotalCount.ValueData      AS TotalCount
            , MovementFloat_TotalCountSh.ValueData    AS TotalCountSh
            , MovementFloat_TotalCountKg.ValueData    AS TotalCountKg
+           , MovementFloat_TotalLines.ValueData  ::TFloat AS TotalLines
            , Object_From.Id                          AS FromId
            , Object_From.ValueData                   AS FromName
            , ObjectDesc_from.ItemName                AS ItemName_from
@@ -235,6 +242,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalLines
+                                    ON MovementFloat_TotalLines.MovementId = Movement.Id
+                                   AND MovementFloat_TotalLines.DescId = zc_MovementFloat_TotalLines()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId = Movement.Id
@@ -309,6 +320,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.05.25         * TotalLines
  13.12.22         * add MovementId_Production
  11.10.18         *
  27.03.17         *
