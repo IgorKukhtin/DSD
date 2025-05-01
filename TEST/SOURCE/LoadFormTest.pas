@@ -1105,14 +1105,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome20202JournalForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
   //exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-  //exit;
+  exit;
   {//
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangePriceUserDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangePriceUserDialogForm');
@@ -1189,14 +1189,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionCellEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionCellEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   //exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
-  //exit;
+  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalChoiceForm');
@@ -1375,19 +1375,20 @@ begin
 end;
 procedure TLoadFormTest.LoadSendOnPriceFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceJournalChoiceForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceJournalChoiceForm');
   // exit;
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPrice_ReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPrice_ReestrJournalForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceJournalForm');
-   exit;
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPrice_BranchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPrice_BranchForm');
   exit;
@@ -1642,7 +1643,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
-  //exit;
+  exit;
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
@@ -1745,16 +1746,16 @@ end;
 
 procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalChoiceForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
-  //exit;
+  exit;
   // возврат поставщику от покупателя
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerForm');
@@ -1766,13 +1767,13 @@ end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
 
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
 

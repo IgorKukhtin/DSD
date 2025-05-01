@@ -402,10 +402,10 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintGV
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintGV
         end>
       Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1087#1088#1086#1095#1077#1077')'
       Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1087#1088#1086#1095#1077#1077')'
@@ -504,10 +504,10 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint4134
+      StoredProc = spSelectPrintGV
       StoredProcList = <
         item
-          StoredProc = spSelectPrint4134
+          StoredProc = spSelectPrintGV
         end>
       Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1057#1074#1080#1085#1080#1085#1072' '#1053#1050')'
       Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1057#1074#1080#1085#1080#1085#1072' '#1053#1050')'
@@ -1450,29 +1450,5 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     PackSize = 1
     Left = 519
     Top = 336
-  end
-  object spSelectPrint4134: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ProductionSeparateGV_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 511
-    Top = 384
   end
 end

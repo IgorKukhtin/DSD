@@ -400,7 +400,13 @@ type
     bbtPrintBoxTotal: TdxBarButton;
     spSelectPrintBox_PartnerTotal: TdsdStoredProc;
     actPrintBoxTotalPartner: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrintBoxTotalPartner: TdxBarButton;
+    TotalLines: TcxGridDBColumn;
+    spUpdate_TotalLines: TdsdStoredProc;
+    actUpdate_TotalLines: TdsdExecStoredProc;
+    macUpdate_TotalLines: TMultiAction;
+    macUpdate_TotalLines_list: TMultiAction;
+    bbUpdate_TotalLines: TdxBarButton;
   private
     { Private declarations }
   public

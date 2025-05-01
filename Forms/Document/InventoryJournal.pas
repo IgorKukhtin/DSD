@@ -51,6 +51,11 @@ type
     ItemName_from: TcxGridDBColumn;
     ItemName_to: TcxGridDBColumn;
     isList: TcxGridDBColumn;
+    spUpdate_TotalLines: TdsdStoredProc;
+    actUpdate_TotalLines: TdsdExecStoredProc;
+    macUpdate_TotalLines_list: TMultiAction;
+    macUpdate_TotalLines: TMultiAction;
+    bbUpdate_TotalLines: TdxBarButton;
   private
     { Private declarations }
   public

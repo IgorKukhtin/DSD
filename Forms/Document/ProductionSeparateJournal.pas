@@ -75,7 +75,6 @@ type
     actPrint_its: TdsdPrintAction;
     bbPrint_its: TdxBarButton;
     spSelectPrintGV: TdsdStoredProc;
-    spSelectPrint4134: TdsdStoredProc;
   private
     { Private declarations }
   public

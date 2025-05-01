@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat
+             , TotalCount TFloat, TotalSumm TFloat 
+             , TotalLines TFloat
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , PriceListId Integer, PriceListName TVarChar
@@ -58,6 +59,7 @@ BEGIN
            , zfCalc_StatusName_next (Object_Status.ValueData, Movement.StatusId, Movement.StatusId_next) ::TVarChar AS StatusName
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , MovementFloat_TotalLines.ValueData  ::TFloat   AS TotalLines
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
            , ObjectDesc_from.ItemName                   AS ItemName_from
@@ -101,6 +103,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalLines
+                                    ON MovementFloat_TotalLines.MovementId = Movement.Id
+                                   AND MovementFloat_TotalLines.DescId = zc_MovementFloat_TotalLines()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupIn
                                       ON MovementBoolean_GoodsGroupIn.MovementId = Movement.Id
@@ -146,6 +152,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 01.05.25         * TotalLines
  25.05.22         *
  22.07.21         *
  18.09.17         *

@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat, TotalCountSh TFloat, TotalCountKg TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummChange TFloat, TotalSumm TFloat, TotalSummCurrency TFloat
+             , TotalLines TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , isCurrencyUser Boolean
@@ -64,7 +65,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PersonalCode_Collation Integer
              , PersonalName_Collation TVarChar
              , UnitName_Collation TVarChar
-             , BranchName_Collation TVarChar
+             , BranchName_Collation TVarChar 
              )
 AS
 $BODY$
@@ -378,6 +379,7 @@ end if;
                                                             , zc_MovementFloat_ParValue()
                                                             , zc_MovementFloat_CurrencyPartnerValue()
                                                             , zc_MovementFloat_ParPartnerValue()
+                                                            , zc_MovementFloat_TotalLines()
                                                              )
                               )
    /* , tmpMovementFloat_VATPercent AS (SELECT MovementFloat.*
@@ -828,6 +830,7 @@ end if;
            , MovementFloat_TotalSummChange.ValueData        AS TotalSummChange
            , MovementFloat_TotalSumm.ValueData              AS TotalSumm
            , MovementFloat_AmountCurrency.ValueData         AS TotalSummCurrency
+           , MovementFloat_TotalLines.ValueData  ::TFloat   AS TotalLines
 
            , MovementFloat_CurrencyValue.ValueData          AS CurrencyValue
            , MovementFloat_ParValue.ValueData               AS ParValue
@@ -1077,6 +1080,10 @@ end if;
                                        ON MovementFloat_AmountCurrency.MovementId = Movement.Id
                                       AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
 
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalLines
+                                       ON MovementFloat_TotalLines.MovementId =  Movement.Id
+                                      AND MovementFloat_TotalLines.DescId = zc_MovementFloat_TotalLines()
+
             LEFT JOIN tmpMovementFloat AS MovementFloat_CurrencyValue
                                        ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                       AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
@@ -1284,6 +1291,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.05.25         * TotalLines
  14.04.25         *
  07.11.24         *
  16.08.24         *
