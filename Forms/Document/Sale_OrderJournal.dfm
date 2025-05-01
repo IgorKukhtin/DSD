@@ -84,6 +84,11 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummChange
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalLines
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -145,6 +150,11 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = ToName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalLines
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -319,6 +329,16 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object TotalLines: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'.'
+            DataBinding.FieldName = 'TotalLines'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082
+            Options.Editing = False
+            Width = 70
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'

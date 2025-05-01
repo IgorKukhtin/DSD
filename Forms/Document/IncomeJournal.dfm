@@ -132,6 +132,11 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalLiveWeight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalLines
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -193,6 +198,11 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalLiveWeight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalLines
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList

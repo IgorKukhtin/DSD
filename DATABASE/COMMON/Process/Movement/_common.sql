@@ -3,6 +3,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_UpdateMovement_isCopy() RETURNS Integ
 
 -- Документ <...>
 CREATE OR REPLACE FUNCTION zc_Enum_Process_UpdateMovement_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_UpdateMovement_Branch' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Movement_TotalLines() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Movement_TotalLines' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+
+
 
 -- Документ <...>
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_MI_Price_Currency() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_MI_Price_Currency' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -28,6 +31,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UpdateMovement_Branch
                                   , inName:= 'Проведение документов - нет проверки по филиалу.'
                                   , inEnumName:= 'zc_Enum_Process_UpdateMovement_Branch');
 
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Movement_TotalLines()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 2
+                                  , inName:= 'Изменение документа - Заполнение Итого количества строк документа.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Movement_TotalLines');
+                                  
 -- Документ <>
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_MI_Price_Currency()
                                   , inDescId:= zc_Object_Process()

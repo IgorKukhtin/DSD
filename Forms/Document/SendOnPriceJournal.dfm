@@ -91,6 +91,11 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalLines
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -157,6 +162,11 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalLines
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
