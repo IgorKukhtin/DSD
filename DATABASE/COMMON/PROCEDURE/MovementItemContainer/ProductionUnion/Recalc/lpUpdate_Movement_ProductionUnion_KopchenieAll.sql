@@ -191,12 +191,12 @@ BEGIN
          -- AND tmpMI_find.OperDate = inEndDate
          ;
 
-
+/*
     RAISE EXCEPTION 'ok.  <%>  %'
       , (SELECT SUM (_tmpResult.Amount) FROM _tmpResult WHERE _tmpResult.GoodsId = 4597067 and _tmpResult.DescId = zc_MI_Master())
       , (SELECT SUM (_tmpResult.Amount) FROM _tmpResult WHERE _tmpResult.GoodsId = 4597067 and _tmpResult.DescId = zc_MI_Child())
       ;
-
+*/
     -- Проверка
     IF EXISTS (SELECT 1 FROM _tmpResult WHERE _tmpResult.Amount < 0)
     THEN             RAISE EXCEPTION 'Error. Amount < 0 find <%> Amount = <%> (<%>)'
