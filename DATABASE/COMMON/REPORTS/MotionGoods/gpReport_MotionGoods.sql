@@ -227,8 +227,10 @@ BEGIN
      -- ограничение прав - ТОЛЬКО Склад Бумаги
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12168285)
         AND COALESCE (inLocationId, 0) <> zc_Unit_Paper()
+        -- таки надо?
+        -- AND 1=0
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав формировать документ списание для <%>.%Можно формировать только для <%>.'
+         RAISE EXCEPTION 'Ошибка.Нет прав формировать отчет для <%>.%Можно формировать только для <%>.'
                        , lfGet_Object_ValueData_sh (inLocationId)
                        , CHR (13)
                        , lfGet_Object_ValueData_sh (zc_Unit_Paper())
