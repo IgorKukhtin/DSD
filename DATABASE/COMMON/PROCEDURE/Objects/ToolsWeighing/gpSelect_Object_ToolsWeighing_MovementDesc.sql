@@ -588,7 +588,7 @@ BEGIN
          -- AND (_tmpToolsWeighing.isDocPartner = FALSE OR vbUserId in (5, 6604558))
          -- Голота К.О.
          --AND (_tmpToolsWeighing.Number <> 80 OR vbUserId IN (5, 6604558) OR inBranchCode <> 201)
-         AND (_tmpToolsWeighing.Number <> 42 OR vbUserId IN (5, 6604558) OR inBranchCode <> 301)
+         -- AND (_tmpToolsWeighing.Number <> 42 OR vbUserId IN (5, 6604558) OR inBranchCode <> 301)
 
       UNION
        -- это группы
