@@ -299,8 +299,10 @@ BEGIN
                                tmpContainer.PaidKindId,
                                tmpContainer.PartionMovementId,
                                tmpContainer.CurrencyId,
-                               MAX (tmpContainer.MovementId)     AS MovementId,
-                               MAX (tmpContainer.OperDate)       AS OperDate,
+                               --
+                               CASE WHEN MovementString_InvNumberInvoice.ValueData <> '' THEN 0                 ELSE tmpContainer.MovementId  END AS MovementId,
+                               CASE WHEN MovementString_InvNumberInvoice.ValueData <> '' THEN NULL :: TDateTime ELSE tmpContainer.OperDate    END AS OperDate,
+                               --
                                MAX (tmpContainer.MovementItemId) AS MovementItemId,
 
                                SUM (tmpContainer.MovementSumm)          AS MovementSumm,
@@ -324,9 +326,9 @@ BEGIN
                                  tmpContainer.PaidKindId,
                                  tmpContainer.PartionMovementId,
                                  tmpContainer.CurrencyId,
-                                 -- !!! tmpContainer.MovementId,
-                                 -- !!! tmpContainer.OperDate,
-                                 -- !!! tmpContainer.MovementItemId,
+                                 CASE WHEN MovementString_InvNumberInvoice.ValueData <> '' THEN 0                 ELSE tmpContainer.MovementId END,
+                                 CASE WHEN MovementString_InvNumberInvoice.ValueData <> '' THEN NULL :: TDateTime ELSE tmpContainer.OperDate   END,
+                                 -- tmpContainer.MovementItemId,
                                  -- tmpContainer.ContainerId,
                                  tmpContainer.isNotBalance,
                                  tmpContainer.PartnerId

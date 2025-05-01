@@ -906,20 +906,23 @@ END IF;
                             END AS SummCardSecondRecalc
 
                             -- подставили на первое место
-                          , CASE WHEN vbBankId_num_1 = 1 THEN tmpListPersonal.BankId_1
-                                 WHEN vbBankId_num_2 = 1 THEN tmpListPersonal.BankId_2
-                                 WHEN vbBankId_num_3 = 1 THEN tmpListPersonal.BankId_3
+                          , CASE -- vbBankId_num_1 - кто первый
+                                 WHEN vbBankId_num_1 = 1 THEN tmpListPersonal.BankId_1
+                                 WHEN vbBankId_num_1 = 2 THEN tmpListPersonal.BankId_2
+                                 WHEN vbBankId_num_1 = 3 THEN tmpListPersonal.BankId_3
                             END AS BankId_1
 
                             -- подставили на второе место
-                          , CASE WHEN vbBankId_num_1 = 2 THEN tmpListPersonal.BankId_1
+                          , CASE -- vbBankId_num_2 - кто второй
+                                 WHEN vbBankId_num_2 = 1 THEN tmpListPersonal.BankId_1
                                  WHEN vbBankId_num_2 = 2 THEN tmpListPersonal.BankId_2
-                                 WHEN vbBankId_num_3 = 2 THEN tmpListPersonal.BankId_3
+                                 WHEN vbBankId_num_2 = 3 THEN tmpListPersonal.BankId_3
                             END AS BankId_2
 
                             -- подставили на третье место
-                          , CASE WHEN vbBankId_num_1 = 3 THEN tmpListPersonal.BankId_1
-                                 WHEN vbBankId_num_2 = 3 THEN tmpListPersonal.BankId_2
+                          , CASE -- vbBankId_num_2 - кто третий
+                                 WHEN vbBankId_num_3 = 1 THEN tmpListPersonal.BankId_1
+                                 WHEN vbBankId_num_3 = 2 THEN tmpListPersonal.BankId_2
                                  WHEN vbBankId_num_3 = 3 THEN tmpListPersonal.BankId_3
                             END AS BankId_3
 
@@ -1579,7 +1582,7 @@ from _tmpMI where _tmpMI.MemberId = 239655)
 -- !!!тест
 -- PERFORM gpComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
 
-IF vbUserId = 5 and 1=1
+IF vbUserId = 5 and 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.test=ok   %'
   , (            SELECT sum (coalesce (MIF_SummCardSecondRecalc.ValueData, 0))

@@ -20,12 +20,18 @@ BEGIN
      -- определили признак
      -- inIsMail:= NOT inIsMail;
 
-     -- сохранили свойство
-     -- PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inId, inIsMail);
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inId, TRUE);
+     -- временно без Админа
+     IF vbUserId <> 5 OR 1=0
+     THEN
+         -- сохранили свойство
+         -- PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inId, inIsMail);
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inId, TRUE);
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+
+     END IF;
+
   
 END;
 $BODY$

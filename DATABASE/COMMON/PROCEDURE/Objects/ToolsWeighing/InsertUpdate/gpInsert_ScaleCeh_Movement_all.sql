@@ -453,7 +453,9 @@ BEGIN
      IF vbMovementDescId = zc_Movement_Inventory()
      THEN
            -- Проверка
-           vbOperDate_invent:= (SELECT CASE WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId IN (8447) -- ЦЕХ колбасный
+           vbOperDate_invent:= (SELECT CASE WHEN inBranchCode = 1 AND 1=0
+                                                 THEN inOperDate
+                                            WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId IN (8447) -- ЦЕХ колбасный
                                                  THEN inOperDate
                                             WHEN inBranchCode = 102 AND MovementLinkObject_From.ObjectId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
                                                  THEN inOperDate
@@ -624,7 +626,9 @@ BEGIN
                                                THEN lpInsertUpdate_Movement_Inventory
                                                    (ioId                    := 0
                                                   , inInvNumber             := CAST (NEXTVAL ('movement_Inventory_seq') AS TVarChar)
-                                                  , inOperDate              := CASE WHEN inBranchCode = 102 AND FromId IN (8447) -- ЦЕХ колбасный
+                                                  , inOperDate              := CASE WHEN inBranchCode = 1 AND 1=0
+                                                                                         THEN inOperDate
+                                                                                    WHEN inBranchCode = 102 AND FromId IN (8447) -- ЦЕХ колбасный
                                                                                          THEN inOperDate
                                                                                     WHEN inBranchCode = 102 AND FromId NOT IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
                                                                                          THEN inOperDate
@@ -1249,7 +1253,7 @@ BEGIN
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
-                                                        , inPartionGoodsDate    := tmp.PartionGoodsDate
+                                                        , inPartionGoodsDate    := CASE WHEN tmp.PartionGoodsDate <> zc_DateStart() THEN tmp.PartionGoodsDate ELSE NULL END
                                                         , inPrice               := 0 -- !!!не ошибка, здесь не формируется!!!
                                                         , inSumm                := 0 -- !!!не ошибка, здесь не формируется!!!
                                                         , inHeadCount           := tmp.HeadCount
@@ -1334,7 +1338,8 @@ BEGIN
 
                            , '' AS PartNumber
 
-                           , zc_DateStart() :: TDateTime AS PartionGoodsDate
+                         --, zc_DateStart() :: TDateTime AS PartionGoodsDate
+                           , NULL :: TDateTime AS PartionGoodsDate
 
                            , '' AS PartionGoods
 
