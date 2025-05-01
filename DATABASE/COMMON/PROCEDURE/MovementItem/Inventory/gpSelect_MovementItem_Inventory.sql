@@ -263,6 +263,12 @@ BEGIN
            , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.Id) :: TVarChar AS IdBarCode
            , Null ::TDateTime  AS OperDate
            
+             -- Протокол       
+           , '' ::TVarChar       AS InsertName
+           , '' ::TVarChar       AS UpdateName
+           , NULL ::TDateTime    AS InsertDate
+           , NULL ::TDateTime    AS UpdateDate
+
 /*         , ObjectFloat_Price_Partion.ValueData   AS Price_Partion
            
            , Object_Storage_Partion.Id             AS StorageId_Partion
