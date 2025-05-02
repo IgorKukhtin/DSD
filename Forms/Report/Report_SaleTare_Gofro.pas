@@ -61,6 +61,8 @@ type
     spSelectPrintBox_PartnerTotal: TdsdStoredProc;
     actPrintBoxTotalPartner: TdsdPrintAction;
     bbPrintBoxTotalPartner: TdxBarButton;
+    ObjectCode: TcxGridDBColumn;
+    ObjectName: TcxGridDBColumn;
   private
     { Private declarations }
   public

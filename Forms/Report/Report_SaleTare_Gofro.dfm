@@ -43,6 +43,11 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = BoxCount
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = BoxCount_calc2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -64,6 +69,11 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = BoxCount
+            end
+            item
+              Format = ',0.;-,0.; ;'
+              Kind = skSum
+              Column = BoxCount_calc2
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -178,6 +188,22 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
             HeaderAlignmentVert = vaCenter
             Width = 198
           end
+          object ObjectCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088' '#1043#1055
+            DataBinding.FieldName = 'ObjectCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ObjectName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' '#1043#1055
+            DataBinding.FieldName = 'ObjectName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 156
+          end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1092#1072#1082#1090
             DataBinding.FieldName = 'Amount'
@@ -189,13 +215,25 @@ inherited Report_SaleTare_GofroForm: TReport_SaleTare_GofroForm
             Width = 83
           end
           object BoxCount_calc: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090
+            Caption = '***'#1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
             DataBinding.FieldName = 'BoxCount_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 86
+          end
+          object BoxCount_calc2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'BoxCount_calc2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 86
           end
           object BoxCount: TcxGridDBColumn
