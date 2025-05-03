@@ -739,7 +739,6 @@ type
     actIncomeAsset: TdsdOpenForm;
     N130: TMenuItem;
     N131: TMenuItem;
-    N132: TMenuItem;
     N126: TMenuItem;
     N127: TMenuItem;
     N128: TMenuItem;
@@ -1555,6 +1554,9 @@ type
     miPersonalCashVinnica: TMenuItem;
     actReport_Inventory_WeighingFact: TdsdOpenForm;
     miReport_Inventory_WeighingFact: TMenuItem;
+    actReport_PrintForms_byMovement: TdsdOpenForm;
+    miPrintForms_byMovement: TMenuItem;
+    N267: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
