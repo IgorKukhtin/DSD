@@ -55,29 +55,119 @@ BEGIN
     IF COALESCE (TRIM (inJuridicalName), '') <> ''
     THEN
          -- проверка на несколько значений 
-         IF (SELECT COUNT (*) FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalName)) > 1
-         THEN 
-             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(1) <%>  найдено более одного раза.', inJuridicalName;
+         IF 1 < (SELECT COUNT (*) FROM Object
+                 WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE
+                   AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) = zfCalc_Text_replace (TRIM (inJuridicalName), CHR (39), '`' )
+                )
+         
+         THEN
+             -- временно - Выход
+             -- RETURN;
+             --
+             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(1) <%> найдено более одного раза.', inJuridicalName;
          END IF;
           
-         -- поиск юр.лица
-         vbJuridicalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalName) );
+         -- поиск-1 юр.лица
+         vbJuridicalId := (SELECT Object.Id FROM Object
+                           WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE
+                             AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) = zfCalc_Text_replace (TRIM (inJuridicalName), CHR (39), '`' )
+                          );
+
+         -- если не нашли - после 1
+         IF COALESCE (vbJuridicalId, 0) = 0
+         THEN
+             -- проверка на несколько значений 
+             IF 1 < (SELECT COUNT (*) FROM Object
+                     WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE
+                       AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) ILIKE zfCalc_Text_replace (TRIM (inJuridicalName), CHR (39), '`' )
+                    )
+             
+             THEN 
+                 -- временно - Выход
+                 -- RETURN;
+                 --
+                 RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(1) <%> найдено более одного раза.', inJuridicalName;
+             END IF;
+         
+            -- поиск-2 юр.лица
+            vbJuridicalId := (SELECT Object.Id FROM Object
+                              WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE
+                                AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) ILIKE zfCalc_Text_replace (TRIM (inJuridicalName), CHR (39), '`' )
+                             );
+         END IF;
+
+         -- если не нашли - после 2
+         IF COALESCE (vbJuridicalId, 0) = 0
+         THEN
+             -- проверка на несколько значений 
+             IF 1 < (SELECT COUNT (*) FROM Object
+                     WHERE Object.DescId = zc_Object_Juridical() -- AND Object.isErased = FALSE
+                       AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) = zfCalc_Text_replace (TRIM (inJuridicalName), CHR (39), '`' )
+                    )
+             
+             THEN 
+                 -- временно - Выход
+                 -- RETURN;
+                 --
+                 RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(1) <%> найдено более одного раза.', inJuridicalName;
+             END IF;
+
+             -- поиск-3 юр.лица
+             vbJuridicalId := (SELECT Object.Id FROM Object
+                               WHERE Object.DescId = zc_Object_Juridical() -- AND Object.isErased = FALSE
+                                 AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) = zfCalc_Text_replace (TRIM (inJuridicalName), CHR (39), '`' )
+                              );
+         END IF;
+
+         -- если не нашли - после 3
+         IF COALESCE (vbJuridicalId, 0) = 0
+         THEN
+             -- проверка на несколько значений 
+             IF 1 < (SELECT COUNT (*) FROM Object
+                     WHERE Object.DescId = zc_Object_Juridical() -- AND Object.isErased = FALSE
+                       AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) ILIKE zfCalc_Text_replace (TRIM (inJuridicalName), CHR (39), '`' )
+                    )
+             
+             THEN 
+                 -- временно - Выход
+                 -- RETURN;
+                 --
+                 RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(1) <%> найдено более одного раза.', inJuridicalName;
+             END IF;
+
+             -- поиск-4 юр.лица
+             vbJuridicalId := (SELECT Object.Id FROM Object
+                               WHERE Object.DescId = zc_Object_Juridical() -- AND Object.isErased = FALSE
+                                 AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) ILIKE zfCalc_Text_replace (TRIM (inJuridicalName), CHR (39), '`' )
+                              );
+         END IF;
+
+         -- Проверка - если не нашли - после 4
          IF COALESCE (vbJuridicalId, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(1) <%> не найдено.', inJuridicalName;
          END IF;
+
     END IF;
     
     
     IF COALESCE (TRIM (inJuridicalDocName), '') <> ''
     THEN 
-         IF (SELECT COUNT (*) FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDocName)) > 1
+         IF 1 < (SELECT COUNT (*) FROM Object
+                 WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE
+                   AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) ILIKE zfCalc_Text_replace (TRIM (inJuridicalDocName), CHR (39), '`' )
+                )
          THEN 
-             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(2) <%>  найдено более одного раза.', inJuridicalDocName;
+             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(2) <%> найдено более одного раза.', inJuridicalDocName;
          END IF;
 
          -- поиск юр.лица
-         vbJuridicalDocId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDocName) );
+         vbJuridicalDocId := (SELECT Object.Id FROM Object
+                              WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE
+                                AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) ILIKE zfCalc_Text_replace (TRIM (inJuridicalDocName), CHR (39), '`' )
+                             );
+
+         -- Проверка
          IF COALESCE (vbJuridicalDocId, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(2) <%> не найдено.', inJuridicalDocName;
@@ -87,13 +177,21 @@ BEGIN
 
     IF COALESCE (TRIM (inJuridicalDoc_NextName), '') <> ''
     THEN 
-         IF (SELECT COUNT (*) FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDoc_NextName)) > 1
+         IF 1 < (SELECT COUNT (*) FROM Object
+                 WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE
+                   AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) ILIKE zfCalc_Text_replace (TRIM (inJuridicalDoc_NextName), CHR (39), '`' )
+                 )
          THEN 
-             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(3) <%>  найдено более одного раза.', inJuridicalDoc_NextName;
+             RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(3) <%> найдено более одного раза.', inJuridicalDoc_NextName;
          END IF;
 
          -- поиск юр.лица
-         vbJuridicalDoc_NextId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE AND TRIM (Object.ValueData) ILIKE TRIM (inJuridicalDoc_NextName) );
+         vbJuridicalDoc_NextId := (SELECT Object.Id FROM Object
+                                   WHERE Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE
+                                     AND zfCalc_Text_replace (TRIM (Object.ValueData), CHR (39), '`' ) ILIKE zfCalc_Text_replace (TRIM (inJuridicalDoc_NextName), CHR (39), '`' )
+                                  );
+
+         -- Проверка
          IF COALESCE (vbJuridicalDoc_NextId, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Значение Юридическое лицо(3) <%> не найдено.', inJuridicalDoc_NextName;
@@ -111,6 +209,8 @@ BEGIN
                            AND tmp_View.PaidKindId  = vbPaidKindId
                            AND tmp_View.ContractCode = inContractCode
                          );
+
+         -- Проверка
          IF COALESCE (vbContractId, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Договор <(%) %> не найден %для <%> + <%>.'
