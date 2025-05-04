@@ -284,10 +284,11 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Account(), inDescId:= zc_Object_PrintKind(), inCode:= 2, inName:= 'Счет', inEnumName:= 'zc_Enum_PrintKind_Account');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Transport(), inDescId:= zc_Object_PrintKind(), inCode:= 3, inName:= 'ТТН', inEnumName:= 'zc_Enum_PrintKind_Transport');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Quality(), inDescId:= zc_Object_PrintKind(), inCode:= 4, inName:= 'Качественное', inEnumName:= 'zc_Enum_PrintKind_Quality');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Pack(), inDescId:= zc_Object_PrintKind(), inCode:= 5, inName:= 'Упаковочный', inEnumName:= 'zc_Enum_PrintKind_Pack');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Spec(), inDescId:= zc_Object_PrintKind(), inCode:= 6, inName:= 'Спецификация', inEnumName:= 'zc_Enum_PrintKind_Spec');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Pack(), inDescId:= zc_Object_PrintKind(), inCode:= 5, inName:= 'Упаковочный (клиенту)', inEnumName:= 'zc_Enum_PrintKind_Pack');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Spec(), inDescId:= zc_Object_PrintKind(), inCode:= 6, inName:= 'Спецификация (клиенту)', inEnumName:= 'zc_Enum_PrintKind_Spec');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Tax(), inDescId:= zc_Object_PrintKind(), inCode:= 7, inName:= 'Налоговая', inEnumName:= 'zc_Enum_PrintKind_Tax');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_TransportBill(), inDescId:= zc_Object_PrintKind(), inCode:= 8, inName:= 'Транспортная', inEnumName:= 'zc_Enum_PrintKind_TransportBill');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_PackGross(), inDescId:= zc_Object_PrintKind(), inCode:= 9, inName:= 'Упаковочный (охрана)', inEnumName:= 'zc_Enum_PrintKind_TransportBill');
 
      -- !!! Типы счетов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_Active(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Активный', inEnumName:= 'zc_Enum_AccountKind_Active');
