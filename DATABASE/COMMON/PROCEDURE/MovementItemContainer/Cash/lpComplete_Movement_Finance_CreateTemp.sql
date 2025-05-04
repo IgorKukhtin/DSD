@@ -14,8 +14,8 @@ BEGIN
      THEN
          DELETE FROM _tmpMI_Sale;
      ELSE
-     -- таблица - элементы продаж дл€ распределени€ «атрат по накладным
-     CREATE TEMP TABLE _tmpMI_Sale (MI_Id_sale Integer, PartnerId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, AmountWeight TFloat) ON COMMIT DROP;
+         -- таблица - элементы продаж дл€ распределени€ «атрат по накладным
+         CREATE TEMP TABLE _tmpMI_Sale (MI_Id_sale Integer, PartnerId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, AmountWeight TFloat) ON COMMIT DROP;
      
      END IF;
 
@@ -23,20 +23,20 @@ BEGIN
      THEN
          DELETE FROM _tmpItem;
      ELSE
-     -- таблица - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, OperSumm_Currency TFloat, OperSumm_Diff TFloat, OperSumm_Asset TFloat, OperSumm_Diff_Asset TFloat, Price TFloat
-                               , MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, ContainerId_Diff Integer, ProfitLossId_Diff Integer
-                               , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
-                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
-                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId_Balance Integer, BusinessId_ProfitLoss Integer, JuridicalId_Basis Integer
-                               , UnitId Integer, PositionId Integer, PersonalServiceListId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer, ServiceDateId Integer, ContractId Integer, PaidKindId Integer
-                               , PartionMovementId Integer, PartionGoodsId Integer, AssetId Integer
-                               , AnalyzerId Integer, ObjectIntId_Analyzer Integer, ObjectExtId_Analyzer Integer, ContainerId_Analyzer Integer, ContainerIntId_analyzer Integer
-                               , CurrencyId Integer
-                               , CarId Integer, NDSKindId Integer, DivisionPartiesId Integer, JuridicalId Integer
-                               , IsActive Boolean, IsMaster Boolean
-                                ) ON COMMIT DROP;
+         -- таблица - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
+         CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, OperSumm_Currency TFloat, OperSumm_Diff TFloat, OperSumm_Asset TFloat, OperSumm_Diff_Asset TFloat, Price TFloat
+                                   , MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, ContainerId_Diff Integer, ProfitLossId_Diff Integer
+                                   , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
+                                   , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
+                                   , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                   , BusinessId_Balance Integer, BusinessId_ProfitLoss Integer, JuridicalId_Basis Integer
+                                   , UnitId Integer, PositionId Integer, PersonalServiceListId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer, ServiceDateId Integer, ContractId Integer, PaidKindId Integer
+                                   , PartionMovementId Integer, PartionGoodsId Integer, AssetId Integer
+                                   , AnalyzerId Integer, ObjectIntId_Analyzer Integer, ObjectExtId_Analyzer Integer, ContainerId_Analyzer Integer, ContainerIntId_analyzer Integer
+                                   , CurrencyId Integer
+                                   , CarId Integer, NDSKindId Integer, DivisionPartiesId Integer, JuridicalId Integer
+                                   , IsActive Boolean, IsMaster Boolean
+                                    ) ON COMMIT DROP;
      END IF;
 
 END;$BODY$
