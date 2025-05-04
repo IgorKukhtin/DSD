@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS lpGet_Object_Juridical_PrintKindItem (Integer, TVarChar)
 DROP FUNCTION IF EXISTS lpGet_Object_Juridical_PrintKindItem (Integer);
 
 CREATE OR REPLACE FUNCTION lpGet_Object_Juridical_PrintKindItem(
-    IN inId          Integer        -- Юридические лица 
+    IN inId          Integer        -- Юридические лица
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , RetailId Integer, RetailName TVarChar
@@ -28,7 +28,7 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Object_Juridical_PrintKindItem());
-     
+
        RETURN QUERY
        WITH tmpPrintKindItem AS (SELECT * FROM lpSelect_Object_PrintKindItem())
        SELECT
@@ -60,7 +60,7 @@ BEGIN
 
        FROM Object AS Object_Juridical
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
+                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
@@ -71,15 +71,18 @@ BEGIN
                                  ON ObjectLink_Juridical_PrintKindItem.ObjectId = Object_Juridical.Id
                                 AND ObjectLink_Juridical_PrintKindItem.DescId = zc_ObjectLink_Juridical_PrintKindItem()
 
-            LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id = CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId > 0 THEN ObjectLink_Retail_PrintKindItem.ChildObjectId ELSE ObjectLink_Juridical_PrintKindItem.ChildObjectId END
-
+            LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id = CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId > 0
+                                                                          -- Всегда для Торговая сеть
+                                                                          THEN ObjectLink_Retail_PrintKindItem.ChildObjectId
+                                                                     -- Всегда для Юр лицо
+                                                                     ELSE ObjectLink_Juridical_PrintKindItem.ChildObjectId
+                                                                END
        WHERE Object_Juridical.Id = inId;
 
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpGet_Object_Juridical_PrintKindItem (Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

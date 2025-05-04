@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CountPack       TFloat    -- Упаковочный
              , CountSpec       TFloat    -- Спецификация
              , CountTax        TFloat    -- Налоговая
-             , CountTransportBill TFloat    -- Транспортная
+             , CountTransportBill TFloat -- Транспортная
              , isErased        Boolean
              ) AS
 $BODY$
