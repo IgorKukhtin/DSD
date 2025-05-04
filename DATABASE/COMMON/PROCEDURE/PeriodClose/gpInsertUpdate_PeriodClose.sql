@@ -84,7 +84,7 @@ BEGIN
 
 
    -- 
-   IF NOT EXISTS (SELECT 1 FROM PeriodClose WHERE Id = ioId AND Name = inName) AND ioId > 0
+   IF NOT EXISTS (SELECT 1 FROM PeriodClose WHERE Id = ioId AND Name = inName) AND ioId > 0 -- AND vbUserId <> 5
    THEN
        RAISE EXCEPTION 'Ошибка.Нет Прав изменять название.';
    END IF;
