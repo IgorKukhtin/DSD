@@ -525,19 +525,39 @@ BEGIN
            , OS_Measure_InternalCode.ValueData  AS MeasureIntCode
 
            , tmpMI.Amount                    AS Amount
-           , tmpMI.AmountPartner             AS AmountPartner
+           --, tmpMI.AmountPartner             AS AmountPartner
+           --COALESCE (zc_MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()  при таком условии в кол- должен печататься вес и цена за кг
+           , CASE WHEN COALESCE (vbCurrencyPartnerId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                  THEN CAST (tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )  AS NUMERIC (16,3))  --вес
+                  ELSE tmpMI.AmountPartner
+             END AS AmountPartner
+  
            , (tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) :: TFloat AS AmountPartner_Weight
 
            , tmpMI.CountForPrice             AS CountForPrice
            , tmpMI.Price                     AS Price
-           , CASE WHEN vbCurrencyDocumentId = zc_Enum_Currency_Basis() AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()
+           /*, CASE WHEN vbCurrencyDocumentId = zc_Enum_Currency_Basis() AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()
                        THEN 0
                   WHEN vbCurrencyDocumentId = vbCurrencyPartnerId
                        THEN tmpMI.Price
                        -- так переводится в валюту vbCurrencyPartnerId
                   ELSE CAST (tmpMI.Price * CASE WHEN vbCurrencyPartnerValue <> 0 THEN vbParPartnerValue / vbCurrencyPartnerValue ELSE 0 END AS NUMERIC (16, 3))
              END AS Price_Curr
-
+             */
+             --для валюты цена за кг
+             , CAST (CASE WHEN (tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) <> 0
+                    THEN (CASE WHEN vbCurrencyDocumentId = zc_Enum_Currency_Basis() AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()
+                                    THEN 0
+                               WHEN vbCurrencyDocumentId = vbCurrencyPartnerId
+                                    THEN tmpMI.Price
+                                    -- так переводится в валюту vbCurrencyPartnerId
+                               ELSE CAST (tmpMI.Price * CASE WHEN vbCurrencyPartnerValue <> 0 THEN vbParPartnerValue / vbCurrencyPartnerValue ELSE 0 END AS NUMERIC (16, 3))
+                          END) * tmpMI.AmountPartner
+                           / (tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) 
+                    ELSE 0
+               END 
+             AS NUMERIC (16, 2)) AS Price_Curr
+            
              -- сумма в валюте
            , CAST (
              CASE WHEN vbCurrencyDocumentId = zc_Enum_Currency_Basis() AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()
@@ -670,4 +690,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_ExpInvoice_Print (Integer,TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_ExpInvoice_Print (inMovementId := 570596, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Sale_ExpInvoice_Print (inMovementId := 30701004, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";

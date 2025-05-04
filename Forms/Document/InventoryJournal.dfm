@@ -71,6 +71,11 @@ inherited InventoryJournalForm: TInventoryJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalLines
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -114,6 +119,11 @@ inherited InventoryJournalForm: TInventoryJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalLines
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False

@@ -16,10 +16,12 @@ RETURNS TABLE(OperDate TDateTime, OperDatePartner TDateTime
             , ToId Integer, ToCode Integer, ToName TVarChar 
             , ContractId Integer, ContractCode Integer, ContractName TVarChar 
             , InvNumberOrder TVarChar
-            , isGoodsBox Boolean
+            , isGoodsBox Boolean 
+            , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar
             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
             , GoodsGroupNameFull TVarChar
-			, Amount TFloat, BoxCount TFloat, BoxCount_calc TFloat
+			, Amount TFloat, BoxCount TFloat
+			, BoxCount_calc TFloat, BoxCount_calc2 TFloat
 			, MovementId Integer , InvNumber TVarChar
 )
 AS
@@ -77,6 +79,7 @@ BEGIN
 
    , tmpMI AS (SELECT MovementItem.MovementId
                     , MovementItem.Id
+                    , 0                     AS ObjectId
                     , MovementItem.ObjectId AS GoodsId
                     , COALESCE (MovementItem.Amount,0) AS Amount
                     , 0                     AS BoxCount
@@ -85,9 +88,9 @@ BEGIN
               UNION
                SELECT MovementItem.MovementId
                     , MovementItem.Id
-                    --, MovementItem.ObjectId AS GoodsId
+                    , MovementItem.ObjectId      AS ObjectId
                     , MILinkObject_Box.ObjectId  AS GoodsId
-                    , 0        AS Amount
+                    , COALESCE (MovementItem.Amount,0) AS Amount
                     , COALESCE (MIFloat_BoxCount.ValueData,0) AS BoxCount
                FROM tmpMI_All AS MovementItem
                     INNER JOIN tmpMIF_Box AS MIFloat_BoxCount
@@ -128,6 +131,9 @@ BEGIN
    , tmpGoodsPropertyValue AS (SELECT tmpMI.MovementId
                                     , tmpMI.Id
                                     , ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId AS GoodsBoxId
+                                    , ObjectFloat_BoxCount.ValueData       AS BoxCount
+                                    , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+                                    , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId,0) AS GoodsKindId
                                FROM tmpMI
                                      LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_GoodsProperty
                                                                      ON MovementLinkObject_GoodsProperty.MovementId = tmpMI.MovementId
@@ -135,9 +141,9 @@ BEGIN
 
                                      LEFT JOIN tmpMLO_GoodsKind AS MILinkObject_GoodsKind
                                                                 ON MILinkObject_GoodsKind.MovementItemId = tmpMI.Id
-
+                                     
                                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                                                           ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId =  MovementLinkObject_GoodsProperty.ObjectId
+                                                           ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = MovementLinkObject_GoodsProperty.ObjectId
                                                           AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
 
                                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
@@ -154,8 +160,50 @@ BEGIN
                                                            ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                           AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                                           AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId,0)
-                               )
 
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                                           ON ObjectFloat_BoxCount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                          AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
+                               ) 
+
+   , tmpGoodsPropertyValue_GP AS (SELECT tmpMI.MovementId
+                                    , tmpMI.Id
+                                    , ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId AS GoodsBoxId
+                                    , ObjectFloat_BoxCount.ValueData       AS BoxCount
+                                    , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+                                    , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId,0) AS GoodsKindId
+                               FROM tmpMI
+                                     LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_GoodsProperty
+                                                                     ON MovementLinkObject_GoodsProperty.MovementId = tmpMI.MovementId
+                                                                    AND MovementLinkObject_GoodsProperty.DescId = zc_MovementLinkObject_GoodsProperty()
+
+                                     LEFT JOIN tmpMLO_GoodsKind AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = tmpMI.Id
+
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                           ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = MovementLinkObject_GoodsProperty.ObjectId
+                                                          AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                                                           ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                          AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+                                                          --and ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId > 0
+
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                           ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                          AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                                          AND tmpMI.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                           ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                          AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                                          AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId,0)
+
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                                           ON ObjectFloat_BoxCount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                          AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
+                               )
+                               
            --
            SELECT Movement.OperDate   ::TDateTime        AS OperDate
                 , MovementDate_OperDatePartner.ValueData AS OperDatePartner
@@ -170,7 +218,11 @@ BEGIN
                 , Object_Contract.ValueData           AS ContractName 
                 , MovementString_InvNumberOrder.ValueData  ::TVarChar AS InvNumberOrder
                 , COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) :: Boolean AS isGoodsBox
-
+                --продукция
+                , Object_Object.Id                    AS ObjectId
+                , Object_Object.ObjectCode            AS ObjectCode
+                , Object_Object.ValueData             AS ObjectName
+                 --тара
                 , Object_Goods.Id                     AS GoodsId
                 , Object_Goods.ObjectCode             AS GoodsCode
                 , Object_Goods.ValueData              AS GoodsName
@@ -182,6 +234,7 @@ BEGIN
                             THEN COALESCE (tmpMI.BoxCount,0)
                             ELSE 0
                        END)   :: TFloat  AS BoxCount_calc
+                , SUM (CASE WHEN COALESCE (tmpGoodsPropertyValue_GP.BoxCount, 0) <> 0 THEN COALESCE (tmpMI.Amount,0) /tmpGoodsPropertyValue_GP.BoxCount ELSE 0 END ) :: TFloat  AS BoxCount_calc2    -- "Кол-во у покуп." / "Кол-во ед. в ящ."
 
                 , CASE WHEN inisDetail = TRUE THEN Movement.Id ELSE 0 END         ::Integer AS MovementId
                 , CASE WHEN inisDetail = TRUE THEN Movement.InvNumber ELSE '' END ::TVarChar AS InvNumber
@@ -222,10 +275,16 @@ BEGIN
 
                 LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.MovementId = tmpMI.MovementId
                                                AND tmpGoodsPropertyValue.Id = tmpMI.Id
+                                            --   AND tmpGoodsPropertyValue.GoodsId = 
                 --LEFT JOIN Object AS Object_GoodsBox ON Object_GoodsBox.Id = tmpGoodsPropertyValue.GoodsBoxId
 
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpGoodsPropertyValue.GoodsBoxId, tmpMI.GoodsId)
+                LEFT JOIN Object AS Object_Object ON Object_Object.Id = tmpMI.ObjectId
 
+                LEFT JOIN tmpGoodsPropertyValue_GP ON tmpGoodsPropertyValue_GP.MovementId = tmpMI.MovementId
+                                                  AND tmpGoodsPropertyValue_GP.Id = tmpMI.Id
+                                                  AND tmpGoodsPropertyValue_GP.GoodsId = tmpMI.ObjectId
+                                            --   AND tmpGoodsPropertyValue.GoodsId = 
            GROUP BY  Movement.OperDate
                 , MovementDate_OperDatePartner.ValueData
                 , Object_From.Id
@@ -244,7 +303,11 @@ BEGIN
                 , Object_Contract.Id
                 , Object_Contract.ObjectCode
                 , Object_Contract.ValueData
-                , MovementString_InvNumberOrder.ValueData
+                , MovementString_InvNumberOrder.ValueData 
+                --
+                , Object_Object.Id
+                , Object_Object.ObjectCode
+                , Object_Object.ValueData
            ;
 END;
 $BODY$
