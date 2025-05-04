@@ -142,49 +142,125 @@ BEGIN
                    )
          THEN
              -- Проверка по аналогичным суммам
-             IF EXISTS (WITH tmpMovementItem_curr AS (SELECT MovementItem.*
-                                                      FROM MovementItem
-                                                      WHERE MovementItem.MovementId = inMovementId
-                                                             AND MovementItem.DescId         = zc_MI_Child()
-                                                             AND MovementItem.isErased       = FALSE
-                                                     )
-                             tmpConaiter_list AS (SELECT DISTINCT
-                                                  FROM ContainerLinkObject AS CLO_PersonalServiceList
-                                                       INNER JOIN ContainerLinkObject AS CLO_ServiceDate
-                                                                                      ON CLO_ServiceDate.ContainerId = CLO_PersonalServiceList.ContainerId
-                                                                                     AND CLO_ServiceDate.ObjectId    = vbServiceDateId
-                                                                                     AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
-                                                       INNER JOIN ContainerLinkObject AS CLO_Personal
-                                                                                      ON CLO_Personal.ContainerId = MIContainer.ContainerId
-                                                                                     AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
-                                                       INNER JOIN (SELECT DISTINCT tmpMovementItem_curr.ObjectId AS PersonalId FROM tmpMovementItem_curr
-                                                               ) MovementItem ON MovementItem.MovementId = inMovementId
-                                                    AND MovementItem.DescId         = zc_MI_Child()
-                                                    AND MovementItem_curr.isErased       = FALSE
-                                                         AND MovementItem_curr.ObjectId       = MovementItem.ObjectId
-                                                         
-                                                  WHERE CLO_PersonalServiceList.ObjectId = vbPersonalServiceListId
-                                                    AND CLO_PersonalServiceList.DescId   = zc_ContainerLinkObject_PersonalServiceList()
-                                                 )
-                           , tmpPersonal_debt AS (SELECT 
-                                                  FROM )
-                        SELECT 1
-                        FROM Movement
-                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                    AND MovementItem.DescId         = zc_MI_Child()
-                                                    AND MovementItem.isErased       = FALSE
-                             INNER JOIN MovementItem_curr ON MovementItem_curr.MovementId = inMovementId
-                                                         AND MovementItem_curr.DescId         = zc_MI_Child()
-                                                         AND MovementItem_curr.isErased       = FALSE
-                                                         -- сотрудник
-                                                         AND MovementItem_curr.ObjectId       = MovementItem.ObjectId
-                                                         -- Сумма совпала
-                                                         AND MovementItem_curr.Amount         = MovementItem.ObjectId.Amount
-                        WHERE Movement.ParentId = vbMovementId_parent
-                          AND Movement.DescId   = zc_Movement_Cash()
-                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                          AND Movement.Id       <> inMovementId
-                       )
+             IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpPersonalServiceList_debt')
+             THEN
+                 DELETE FROM _tmpPersonalServiceList_debt;
+             ELSE
+                 -- таблица - элементы продаж для распределения Затрат по накладным
+                 CREATE TEMP TABLE _tmpPersonalServiceList_debt (MovementId_find Integer, OperDate_find TDateTime, InvNumber_find TVarChar, PersonalId Integer, Amount_debt TFloat, Amount_curr TFloat, Amount TFloat) ON COMMIT DROP;
+             END IF;
+
+             -- Проверка по аналогичным суммам
+             INSERT INTO  _tmpPersonalServiceList_debt (MovementId_find, OperDate_find, InvNumber_find, PersonalId, Amount_debt, Amount_curr, Amount)
+                WITH -- Кому выплата сейчас
+                     tmpMovementItem_curr AS (SELECT MovementItem.*
+                                              FROM MovementItem
+                                              WHERE MovementItem.MovementId = inMovementId
+                                                AND MovementItem.DescId     = zc_MI_Child()
+                                                AND MovementItem.isErased   = FALSE
+                                             )
+                     -- список - Остатки
+                   , tmpConaiter_list AS (SELECT DISTINCT
+                                                 CLO_PersonalServiceList.ContainerId AS ContainerId
+                                               , CLO_Unit.ObjectId                   AS UnitId
+                                               , CLO_Personal.ObjectId               AS PersonalId
+                                               , Container.Amount                    AS Amount
+                                          FROM ContainerLinkObject AS CLO_PersonalServiceList
+                                               -- за один Месяц
+                                               INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                                              ON CLO_ServiceDate.ContainerId = CLO_PersonalServiceList.ContainerId
+                                                                             AND CLO_ServiceDate.ObjectId    = vbServiceDateId
+                                                                             AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+                                               INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                              ON CLO_Personal.ContainerId = CLO_PersonalServiceList.ContainerId
+                                                                             AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
+                                               INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                              ON CLO_Unit.ContainerId = CLO_PersonalServiceList.ContainerId
+                                                                             AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                               -- Кому выплата
+                                               INNER JOIN (SELECT DISTINCT tmpMovementItem_curr.ObjectId AS PersonalId FROM tmpMovementItem_curr
+                                                          ) AS MovementItem
+                                                            ON MovementItem.PersonalId = CLO_Personal.ObjectId
+                                               INNER JOIN Container ON Container.Id      = CLO_PersonalServiceList.ContainerId
+                                                                   AND Container.DescId  = zc_Container_Summ()
+                                          -- одна ведомость
+                                          WHERE CLO_PersonalServiceList.ObjectId = vbPersonalServiceListId
+                                            AND CLO_PersonalServiceList.DescId   = zc_ContainerLinkObject_PersonalServiceList()
+                                         )
+                     -- Список Выплата сейчас больше чем Долг
+                   , tmpPersonal_debt AS (SELECT tmpMovementItem_curr.PersonalId
+                                                 -- Итого Остаток к Выплате
+                                               , COALESCE (tmpConaiter_list.Amount, 0) AS Amount_debt
+                                                 -- Итого Выплата сейчас
+                                               , tmpMovementItem_curr.Amount           AS Amount_curr
+                                          FROM -- Итого Выплата сейчас
+                                               (SELECT tmpMovementItem_curr.ObjectId AS PersonalId
+                                                     , SUM (tmpMovementItem_curr.Amount) AS Amount
+                                                FROM tmpMovementItem_curr
+                                                GROUP BY tmpMovementItem_curr.ObjectId
+                                               ) AS tmpMovementItem_curr
+                                               -- Итого Остаток к Выплате
+                                               LEFT JOIN (SELECT tmpConaiter_list.PersonalId
+                                                               , SUM (tmpConaiter_list.Amount) AS Amount
+                                                          FROM tmpConaiter_list
+                                                          GROUP BY tmpConaiter_list.PersonalId
+                                                         ) AS tmpConaiter_list
+                                                           ON tmpConaiter_list.PersonalId = tmpMovementItem_curr.PersonalId
+                                          --
+                                          WHERE COALESCE (tmpConaiter_list.Amount, 0) < tmpMovementItem_curr.Amount
+                                         )
+                -- Результат
+                SELECT Movement.Id           AS MovementId_find
+                     , Movement.OperDate     AS OperDate_find
+                     , Movement.InvNumber    AS InvNumber_find
+                       --
+                     , MovementItem.ObjectId AS PersonalId
+                       -- Итого Остаток к Выплате
+                     , tmpPersonal_debt.Amount_debt
+                       -- Итого Выплата сейчас
+                     , tmpPersonal_debt.Amount_curr
+                       -- Выплата сейчас
+                     , tmpMovementItem_curr.Amount
+                FROM Movement
+                     -- Все другие выплаты
+                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                            AND MovementItem.DescId         = zc_MI_Child()
+                                            AND MovementItem.isErased       = FALSE
+                     -- Кому выплата сейчас
+                     INNER JOIN tmpMovementItem_curr ON tmpMovementItem_curr.MovementId = inMovementId
+                                                    -- Сотрудник
+                                                    AND tmpMovementItem_curr.ObjectId   = MovementItem.ObjectId
+                                                    -- Сумма совпала
+                                                    AND tmpMovementItem_curr.Amount     = MovementItem.Amount
+
+                     -- Выплата сейчас больше чем Долг
+                     INNER JOIN tmpPersonal_debt ON tmpPersonal_debt.PersonalId = MovementItem.ObjectId
+
+                WHERE Movement.ParentId = vbMovementId_parent
+                  AND Movement.DescId   = zc_Movement_Cash()
+                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                  AND Movement.Id       <> inMovementId
+               ;
+
+
+             -- Проверка
+             IF EXISTS (SELECT 1 FROM _tmpPersonalServiceList_debt)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для ведомость <%> %№ <%> от <%>.%Найдена выплата № <%> от <%>.%Для Сотрудника = <%>.%Сумма выплаты = <%>.%Итого Остаток к выплате = <%>.'
+                               , lfGet_Object_ValueData_sh ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = vbMovementId_parent AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
+                               , CHR (13)
+                               , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_parent)
+                               , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_parent))
+                               , CHR (13)
+                               , (SELECT _tmpPersonalServiceList_debt.InvNumber_find                          FROM _tmpPersonalServiceList_debt ORDER BY _tmpPersonalServiceList_debt.Amount DESC, _tmpPersonalServiceList_debt.PersonalId ASC LIMIT 1)
+                               , (SELECT zfConvert_DateToString (_tmpPersonalServiceList_debt.OperDate_find)  FROM _tmpPersonalServiceList_debt ORDER BY _tmpPersonalServiceList_debt.Amount DESC, _tmpPersonalServiceList_debt.PersonalId ASC LIMIT 1)
+                               , CHR (13)
+                               , (SELECT lfGet_Object_ValueData_sh  (_tmpPersonalServiceList_debt.PersonalId) FROM _tmpPersonalServiceList_debt ORDER BY _tmpPersonalServiceList_debt.Amount DESC, _tmpPersonalServiceList_debt.PersonalId ASC LIMIT 1)
+                               , CHR (13)
+                               , (SELECT zfConvert_FloatToString  (_tmpPersonalServiceList_debt.Amount)       FROM _tmpPersonalServiceList_debt ORDER BY _tmpPersonalServiceList_debt.Amount DESC, _tmpPersonalServiceList_debt.PersonalId ASC LIMIT 1)
+                               , CHR (13)
+                               , (SELECT zfConvert_FloatToString  (_tmpPersonalServiceList_debt.Amount_debt)  FROM _tmpPersonalServiceList_debt ORDER BY _tmpPersonalServiceList_debt.Amount DESC, _tmpPersonalServiceList_debt.PersonalId ASC LIMIT 1)
+                                ;
              END IF;
 
          END IF;
