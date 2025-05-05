@@ -1086,14 +1086,18 @@ order by 4*/
                        END 
              END                             AS MeasureCode
 
-           , tmpMI.Amount                    AS Amount
+             -- дл€ валюты в печать вместо кол-ва передавать вес
+           , CASE WHEN COALESCE (vbCurrencyPartnerId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                  THEN CAST (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )  AS NUMERIC (16,3))  --вес
+                  ELSE tmpMI.Amount
+             END AS Amount
 
-           --, tmpMI.Amount                    AS AmountPartner 
-           --дл€ валюты в печать вместо кол-ва передавать вес
+             -- дл€ валюты в печать вместо кол-ва передавать вес
            , CASE WHEN COALESCE (vbCurrencyPartnerId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
                   THEN CAST (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )  AS NUMERIC (16,3))  --вес
                   ELSE tmpMI.Amount
              END AS AmountPartner
+         --, tmpMI.Amount                    AS AmountPartner 
 
            , tmpMI.Price
            , tmpMI.CountForPrice
