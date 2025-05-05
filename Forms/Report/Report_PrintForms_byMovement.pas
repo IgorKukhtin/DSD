@@ -69,6 +69,7 @@ type
     actPrint_TTN: TdsdPrintAction;
     actSPPrintTTNProcName: TdsdExecStoredProc;
     mactPrint_TTN: TMultiAction;
+    TotalPage_All: TcxGridDBColumn;
   private
     { Private declarations }
   public

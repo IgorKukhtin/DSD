@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpReport_PrintForms_byMovement(
 )
 RETURNS TABLE (Id Integer, Invnumber TVarChar, OperDate TDateTime
              , MovementDescName TVarChar
-             , TotalLines TFloat
+             , TotalLines TFloat 
+             , TotalPage_1 TFloat, TotalPage_2 TFloat, TotalPage_3 TFloat, TotalPage_4 TFloat
+             , TotalPage_5 TFloat, TotalPage_6 TFloat, TotalPage_7 TFloat, TotalPage_8 TFloat
              , FormPrintName TVarChar
              , InsertName TVarChar, BranchName_Ins TVarChar
              , UnitCode_Ins Integer, UnitName_Ins TVarChar
@@ -84,7 +86,7 @@ BEGIN
 
   , tmpMLM AS (SELECT MovementLinkMovement.*
                FROM MovementLinkMovement
-               WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+               WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                  AND MovementLinkMovement.DescId IN (zc_MovementLinkMovement_TransportGoods()
                                                    )
                )
@@ -99,9 +101,22 @@ BEGIN
                          FROM MovementFloat
                          WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                            AND MovementFloat.DescId IN (zc_MovementFloat_TotalLines()
+                                                      , zc_MovementFloat_TotalPage_1()
+                                                      , zc_MovementFloat_TotalPage_2()
+                                                      , zc_MovementFloat_TotalPage_3()
+                                                      , zc_MovementFloat_TotalPage_4()
+                                                      , zc_MovementFloat_TotalPage_5()
+                                                      , zc_MovementFloat_TotalPage_6()
+                                                      , zc_MovementFloat_TotalPage_7()
+                                                      , zc_MovementFloat_TotalPage_8()
                                                         )
                          )
-
+  , tmpMovementBoolean AS (SELECT MovementBoolean.*
+                           FROM MovementBoolean
+                           WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                             AND MovementBoolean.DescId IN (zc_MovementBoolean_PriceWithVAT()
+                                                               )
+                           )
 
   , tmpData AS (
                 SELECT Movement.Id                   ::Integer
@@ -337,9 +352,9 @@ BEGIN
                                            ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                           AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
 
-                      LEFT JOIN MovementBoolean AS MB_PriceWithVAT
-                                                ON MB_PriceWithVAT.MovementId = Movement.Id
-                                               AND MB_PriceWithVAT.DescId     = zc_MovementBoolean_PriceWithVAT()
+                      LEFT JOIN tmpMovementBoolean AS MB_PriceWithVAT
+                                                   ON MB_PriceWithVAT.MovementId = Movement.Id
+                                                  AND MB_PriceWithVAT.DescId     = zc_MovementBoolean_PriceWithVAT()
               
                       LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
               
@@ -424,7 +439,17 @@ BEGIN
              , tmpData.Invnumber           ::TVarChar 
              , tmpData.OperDate            ::TDateTime
              , tmpData.MovementDescName    ::TVarChar
+
              , MovementFloat_TotalLines.ValueData ::TFloat AS TotalLines 
+             , MovementFloat_TotalPage_1.ValueData ::TFloat AS TotalPage_1
+             , MovementFloat_TotalPage_2.ValueData ::TFloat AS TotalPage_2
+             , MovementFloat_TotalPage_3.ValueData ::TFloat AS TotalPage_3
+             , MovementFloat_TotalPage_4.ValueData ::TFloat AS TotalPage_4
+             , MovementFloat_TotalPage_5.ValueData ::TFloat AS TotalPage_5
+             , MovementFloat_TotalPage_6.ValueData ::TFloat AS TotalPage_6
+             , MovementFloat_TotalPage_7.ValueData ::TFloat AS TotalPage_7
+             , MovementFloat_TotalPage_8.ValueData ::TFloat AS TotalPage_8
+
              , tmpData.PrintFormName       ::TVarChar AS PrintFormName
              , Object_Insert.ValueData     ::TVarChar AS InsertName
              , Object_Branch.ValueData     ::TVarChar AS BranchName_Ins
@@ -441,7 +466,7 @@ BEGIN
              , Object_Juridical.Id         ::Integer  AS JuridicalId
              , Object_Juridical.ValueData  ::TVarChar AS JuridicalName
              , Object_Retail.ValueData     ::TVarChar AS RetailName
-             , 0 ::Integer AS MovementId_sale --для ттн
+             , tmpData.MovementId_sale ::Integer AS MovementId_sale --для ттн
         FROM tmpData
              LEFT JOIN Object AS Object_Insert    ON Object_Insert.Id = tmpData.InsertId              
              LEFT JOIN Object AS Object_PrintKind ON Object_PrintKind.Id = tmpData.PrintKindId
@@ -465,6 +490,31 @@ BEGIN
                                         ON MovementFloat_TotalLines.MovementId = tmpData.Id
                                        AND MovementFloat_TotalLines.DescId     = zc_MovementFloat_TotalLines()
 
+             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalPage_1
+                                        ON MovementFloat_TotalPage_1.MovementId = tmpData.Id
+                                       AND MovementFloat_TotalPage_1.DescId     = zc_MovementFloat_TotalPage_1()
+             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalPage_2
+                                        ON MovementFloat_TotalPage_2.MovementId = tmpData.Id
+                                       AND MovementFloat_TotalPage_2.DescId     = zc_MovementFloat_TotalPage_2()
+             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalPage_3
+                                        ON MovementFloat_TotalPage_3.MovementId = tmpData.Id
+                                       AND MovementFloat_TotalPage_3.DescId     = zc_MovementFloat_TotalPage_3()
+             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalPage_4
+                                        ON MovementFloat_TotalPage_4.MovementId = tmpData.Id
+                                       AND MovementFloat_TotalPage_4.DescId     = zc_MovementFloat_TotalPage_4()
+             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalPage_5
+                                        ON MovementFloat_TotalPage_5.MovementId = tmpData.Id
+                                       AND MovementFloat_TotalPage_5.DescId     = zc_MovementFloat_TotalPage_5()
+             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalPage_6
+                                        ON MovementFloat_TotalPage_6.MovementId = tmpData.Id
+                                       AND MovementFloat_TotalPage_6.DescId     = zc_MovementFloat_TotalPage_6()
+             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalPage_7
+                                        ON MovementFloat_TotalPage_7.MovementId = tmpData.Id
+                                       AND MovementFloat_TotalPage_7.DescId     = zc_MovementFloat_TotalPage_7()
+             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalPage_8
+                                        ON MovementFloat_TotalPage_8.MovementId = tmpData.Id
+                                       AND MovementFloat_TotalPage_8.DescId     = zc_MovementFloat_TotalPage_8()
+
         order by 1,4, 5
  
    ;
@@ -482,4 +532,5 @@ $BODY$
  02.05.25         *
 */
 -- тест
- --SELECT * FROM gpReport_PrintForms_byMovement ('30.04.2025','01.05.2025',zc_Movement_ReturnIn(),'5')
+ --SELECT * FROM gpReport_PrintForms_byMovement ('30.04.2025','01.05.2025',zc_Movement_ReturnIn(),'5') 
+ 

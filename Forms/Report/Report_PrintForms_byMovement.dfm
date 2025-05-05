@@ -24,11 +24,112 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
         ExplicitWidth = 990
         ExplicitHeight = 539
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalLines
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_8
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_All
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = FormPrintName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalLines
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_8
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPage_All
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -61,6 +162,103 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 106
+          end
+          object TotalLines: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088#1086#1082
+            DataBinding.FieldName = 'TotalLines'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalPage_1: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1053#1072#1082#1083#1072#1076#1085#1072#1103
+            DataBinding.FieldName = 'TotalPage_1'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalPage_2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1050#1072#1077#1089#1090#1074'.'
+            DataBinding.FieldName = 'TotalPage_2'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalPage_3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1058#1058#1053
+            DataBinding.FieldName = 'TotalPage_3'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1058#1058#1053
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalPage_4: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103
+            DataBinding.FieldName = 'TotalPage_4'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalPage_5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1059#1087#1072#1082#1086#1074'. '#1086#1093#1088'.'
+            DataBinding.FieldName = 'TotalPage_5'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = ' '#9#1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1091#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1086#1093#1088#1072#1085#1077
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalPage_6: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1059#1087#1072#1082#1086#1074'. '#1082#1083#1080#1077#1085#1090
+            DataBinding.FieldName = 'TotalPage_6'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1091#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1082#1083#1080#1077#1085#1090#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalPage_7: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+            DataBinding.FieldName = 'TotalPage_7'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalPage_8: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1057#1095#1077#1090
+            DataBinding.FieldName = 'TotalPage_8'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1089#1095#1077#1090
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalPage_All: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'.'#1048#1090#1086#1075#1086
+            DataBinding.FieldName = 'TotalPage_All'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1048#1058#1054#1043#1054
+            Width = 70
           end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
@@ -283,18 +481,7 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
     end
     object mactPrint_Sale: TMultiAction
       Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       ActionList = <
         item
           Action = actSPPrintSaleProcName_Sale
@@ -346,19 +533,7 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
     end
     object actPrint_QualityDoc: TdsdPrintAction
       Category = 'Print_QualityDoc'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       StoredProc = spSelectPrint_Quality
       StoredProcList = <
         item
@@ -397,19 +572,7 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
     end
     object mactPrint_QualityDoc: TMultiAction
       Category = 'Print_QualityDoc'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       ActionList = <
         item
           Action = actDialog_QualityDoc
@@ -426,19 +589,7 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
     end
     object actPrint_ReturnIn: TdsdPrintAction
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       StoredProc = spSelectPrint_returnIn
       StoredProcList = <
         item
@@ -516,19 +667,7 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
     end
     object actPrint_TTN: TdsdPrintAction
       Category = 'Print_TTN'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       StoredProc = spSelectPrint_TTN
       StoredProcList = <
         item
@@ -580,19 +719,7 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
     end
     object mactPrint_TTN: TMultiAction
       Category = 'Print_TTN'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       ActionList = <
         item
           Action = actSPPrintTTNProcName
@@ -736,11 +863,8 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
       ImageIndex = 20
     end
     object bbPrint_TTN: TdxBarButton
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Action = mactPrint_TTN
       Category = 0
-      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      Visible = ivAlways
-      ImageIndex = 15
     end
     object bbPrint_QualityDoc: TdxBarButton
       Action = mactPrint_QualityDoc
