@@ -350,14 +350,14 @@ BEGIN
        )     
     
     ---чайлд
-     /*   --  ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)"
+        --  ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)"   - Id = 18886
       , tmpPrice AS (SELECT lfSelect.GoodsId     AS GoodsId
                           , lfSelect.GoodsKindId AS GoodsKindId
                           , lfSelect.ValuePrice
-                     FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18886 /*zc_PriceList_ProductionSeparate()*/, inOperDate:= vbOperDate) AS lfSelect
+                     FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18886 /*zc_PriceList_ProductionSeparate()*/, inOperDate:= inEndDate) AS lfSelect
                     )
-     */
-        --ПРАЙС - ПЛАН обвалка (сырье)
+     
+        --ПРАЙС - ПЛАН обвалка (сырье)  Id = 18889
       , tmpPricePlan AS (SELECT lfSelect.GoodsId     AS GoodsId
                               , lfSelect.GoodsKindId AS GoodsKindId
                               , lfSelect.ValuePrice
@@ -394,10 +394,11 @@ BEGIN
                                      THEN TRUE
                                 ELSE FALSE
                            END :: Boolean AS isLoss
-              
+                         
+                         , COALESCE (tmpPrice.ValuePrice, 0) :: TFloat AS PricePlan
                          --доп расчет для печати 
                            --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
-                         , COALESCE (tmpPricePlan.ValuePrice, 0) :: TFloat AS PricePlan
+                         --, COALESCE (tmpPricePlan.ValuePrice, 0) :: TFloat AS PricePlan
                          --кол F  - сумма плановая =  плановая цена * количество
                          , (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0)))::TFloat     AS SummaPlan        --kol_F 
                          , SUM (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0))) OVER () AS TotalSummaPlan   --Total_kol_F 
@@ -409,7 +410,10 @@ BEGIN
                          LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                                 ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
                                                AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-             
+
+                         LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
+                                           ANd tmpPrice.GoodsKindId IS NULL
+
                          LEFT JOIN tmpPricePlan ON tmpPricePlan.GoodsId = MovementItem.ObjectId
                                                ANd tmpPricePlan.GoodsKindId IS NULL
 
@@ -424,7 +428,7 @@ BEGIN
                             , Object_Goods.Id
                             , Object_Goods.ValueData
                             , ObjectString_Goods_GoodsGroupFull.ValueData
-                            , COALESCE (tmpPricePlan.ValuePrice, 0)
+                            , COALESCE (tmpPrice.ValuePrice, 0)
                             , ObjectLink_Goods_GoodsGroup.ChildObjectId
                             , COALESCE (tmpPriceNorm.ValuePrice, 0)
                             , Object_GoodsGroup.ObjectCode

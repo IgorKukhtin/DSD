@@ -48,6 +48,8 @@ $BODY$
 
     DECLARE vbOperDate_Begin1 TDateTime;
     DECLARE vbInfoMoneyId Integer;
+    
+    DECLARE vbMeasure_kg       TVarChar;
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -304,6 +306,12 @@ order by 4*/
                                         AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
      WHERE Movement.Id = inMovementId;
 
+    --для валюты показывать кг и код кг
+    SELECT Object.ValueData
+     INTO vbMeasure_kg
+    FROM Object
+    WHERE Object.DescId = zc_Object_Measure()
+       AND Object.Id = zc_Measure_Kg();
 
      -- Данные по заголовку налоговой
      OPEN Cursor1 FOR
@@ -1075,15 +1083,21 @@ order by 4*/
 
            , CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbInfoMoneyId <> zc_Enum_InfoMoney_30201() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (vbMeasure_DocumentTaxKind, '') <> ''
                   THEN vbMeasure_DocumentTaxKind
-                  ELSE Object_Measure.ValueData
+                  ELSE CASE WHEN COALESCE (vbCurrencyPartnerId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                            THEN vbMeasure_kg  --кг
+                            ELSE Object_Measure.ValueData
+                       END 
              END              AS MeasureName
 
            , CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbInfoMoneyId <> zc_Enum_InfoMoney_30201() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (vbMeasureCode_DocumentTaxKind, '') <> ''
                   THEN vbMeasureCode_DocumentTaxKind
-                  ELSE CASE WHEN Object_Measure.ObjectCode=1 THEN '0301'
-                            WHEN Object_Measure.ObjectCode IN (2, 102) THEN '2009'
-                            ELSE ''     
-                       END 
+                  ELSE CASE WHEN COALESCE (vbCurrencyPartnerId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                            THEN '0301'
+                            ELSE CASE WHEN Object_Measure.ObjectCode=1 THEN '0301'
+                                      WHEN Object_Measure.ObjectCode IN (2, 102) THEN '2009'
+                                      ELSE ''     
+                                 END
+                            END 
              END                             AS MeasureCode
 
            , tmpMI.Amount                    AS Amount
@@ -1117,22 +1131,23 @@ order by 4*/
                        AS PriceNoVAT
            */
             --для валюты цена за кг
-           , CAST (CASE WHEN COALESCE (vbCurrencyPartnerId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
-                  THEN CASE WHEN (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) <> 0
-                            THEN
-                                (tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                                         THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
-                                                         ELSE tmpMI.Price
-                                                END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                                ) / (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ))
-                            ELSE 0
-                       END
+           , CASE WHEN COALESCE (vbCurrencyPartnerId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                  THEN CAST (CASE WHEN (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) <> 0
+                                  THEN
+                                      (tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                                               THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
+                                                               ELSE tmpMI.Price
+                                                      END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                                      ) / (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ))
+                                  ELSE 0
+                             END AS NUMERIC (16,4))
                        
-                  ELSE CASE WHEN vbPriceWithVAT = TRUE
-                            THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4))
-                            ELSE tmpMI.Price
-                       END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-             END AS NUMERIC (16,2) )AS PriceNoVAT
+                  ELSE CAST (CASE WHEN vbPriceWithVAT = TRUE
+                                  THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4))
+                                  ELSE tmpMI.Price
+                             END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                             AS NUMERIC (16,2))
+             END AS PriceNoVAT
 
            , CASE WHEN vbPriceWithVAT = FALSE
                   THEN CAST (tmpMI.Price + tmpMI.Price * (vbVATPercent / 100) AS NUMERIC (16, 4))
