@@ -659,10 +659,10 @@ BEGIN
               
                          --доп расчет для печати 4002
                          --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
-                         --  , COALESCE (tmpPricePlan.ValuePrice, 0)  AS Price_kol_E
-                         --кол F  - сумма плановая =E16*C16
-                         , (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0)))::TFloat     AS kol_F 
-                         , SUM (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0))) OVER () AS Total_kol_F 
+                         , COALESCE (tmpPricePlan.ValuePrice, 0) :: TFloat AS PricePlan
+                         --кол F  - сумма плановая =  плановая цена * количество
+                         , (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0)))::TFloat     AS SummaPlan        --kol_F 
+                         , SUM (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0))) OVER () AS TotalSummaPlan   --Total_kol_F 
                          -- - НОРМА ВЫХОДОВ обвалка
                          , COALESCE (tmpPriceNorm.ValuePrice, 0)  AS PriceNorm
                     FROM tmpMI AS MovementItem
@@ -731,18 +731,17 @@ BEGIN
                
                           , tmpData.isLoss
                
-                          --доп расчет для печати 4002
-                          --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
-                         -- , tmpData.Price_kol_E
-                          --кол F  - сумма плановая =E16*C16
-                          , tmpData.kol_F 
-                          , tmpData.Total_kol_F
-                          -- кол G  итого сумма по kol_F дел на  kol_F т.е. доля
-                          , CASE WHEN COALESCE (tmpData.Total_kol_F,0) <> 0 THEN tmpData.kol_F / tmpData.Total_kol_F ELSE 0 END :: TFloat AS kol_G
+                          --доп расчет для печати 
+                          , tmpData.SummaPlan 
+                          , tmpData.TotalSummaPlan
+                          -- кол G  итого сумма по SummaPlan дел на  SummaPlan т.е. доля
+                          , CASE WHEN COALESCE (tmpData.TotalSummaPlan,0) <> 0 THEN tmpData.SummaPlan / tmpData.TotalSummaPlan ELSE 0 END :: TFloat AS Summa_dolyaPlan
                           --
                           , CASE WHEN COALESCE (tmpData.Amount,0) <> 0 
-                                 THEN (tmpData.kol_F - 
-                                      ( (tmpData.Total_kol_F - tmpCursor1.summheadcount1) * CASE WHEN COALESCE (tmpData.Total_kol_F,0) <> 0 THEN tmpData.kol_F / tmpData.Total_kol_F ELSE 0 END)/* kol_H*/      
+                                 THEN (tmpData.SummaPlan - 
+                                      ( (tmpData.TotalSummaPlan -  (COALESCE (tmpCursor1.SummIncome,0) + COALESCE (tmpCursor1.SummCostIncome,0))  
+                                         ) 
+                                         * CASE WHEN COALESCE (tmpData.TotalSummaPlan,0) <> 0 THEN tmpData.SummaPlan / tmpData.TotalSummaPlan ELSE 0 END)   /* kol_H*/      
                                       )  /*kol_i */ 
                                       / COALESCE (tmpData.Amount,0) 
                                       ELSE 0 
@@ -776,20 +775,12 @@ BEGIN
 
           , tmpData.isLoss
 
-          --доп расчет для печати 4002
-          --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
-          --кол F  - сумма плановая =E16*C16
-          --, tmpData.kol_F 
-          --, tmpData.Total_kol_F  --итого сумма плановая
-          -- кол G  итого сумма по kol_F дел на  kol_F т.е. доля
-          --, tmpData.kol_G
-          --
           , tmpData.PriceFact ::TFloat       --расчет по файлу 
           , (tmpData.PriceFact * COALESCE (tmpData.Amount,0)) ::TFloat AS SummFact
-          , tmpData.Count_gr                 -- кол.товаров в группе
+          , tmpData.Count_gr  ::TFloat               -- кол.товаров в группе
           , ROUND (tmpData.Count_gr / 2.0 , 0) ::TFloat AS Str_print     --для вывода значения % выхода по группе 
-          , tmpData.Persent_v                --% выхода 
-          , tmpData.Persent_gr               --% выхода по группе 
+          , tmpData.Persent_v   ::TFloat             --% выхода 
+          , tmpData.Persent_gr  ::TFloat             --% выхода по группе 
       FROM tmpDataCalc AS tmpData
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                   ON ObjectLink_Goods_GoodsGroupStat.ObjectId = tmpData.GoodsId
