@@ -250,10 +250,10 @@ inherited LossJournalForm: TLossJournalForm
     Width = 919
     ExplicitWidth = 919
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 45658d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 45658d
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -620,6 +620,14 @@ inherited LossJournalForm: TLossJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChecked'
         end
         item
@@ -674,6 +682,10 @@ inherited LossJournalForm: TLossJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
     end
     object bbPrint: TdxBarButton
       Action = actPrint
