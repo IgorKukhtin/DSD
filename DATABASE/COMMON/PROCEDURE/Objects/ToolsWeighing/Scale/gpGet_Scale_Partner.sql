@@ -221,10 +221,10 @@ BEGIN
             , CASE WHEN tmpJuridicalPrint.CountMovement > 0 THEN tmpJuridicalPrint.CountMovement ELSE 2 END :: TFloat AS CountMovement
               -- Счет
             , COALESCE (tmpJuridicalPrint.isAccount,   FALSE) :: Boolean AS isAccount,   COALESCE (tmpJuridicalPrint.CountAccount, 0)        :: TFloat  AS CountAccount
-              -- ТТН или Транспортная
+              -- ТТН или Транспортная - Всегда для БН
             , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() THEN TRUE ELSE COALESCE (tmpJuridicalPrint.isTransport, FALSE) END :: Boolean AS isTransport
             , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() THEN 1    ELSE COALESCE (tmpJuridicalPrint.CountTransport, 0)  END :: TFloat  AS CountTransport
-              -- Качественное - Всегда - Доходы + Мясное сырье
+              -- Качественное - Всегда для Доходы + Мясное сырье
             , CASE WHEN inInfoMoneyId = zc_Enum_InfoMoney_30201() THEN TRUE ELSE COALESCE (tmpJuridicalPrint.isQuality,   FALSE)         END :: Boolean AS isQuality
             , CASE WHEN inInfoMoneyId = zc_Enum_InfoMoney_30201() THEN 1    ELSE COALESCE (tmpJuridicalPrint.CountQuality, 0)            END :: TFloat  AS CountQuality
               -- упаковочный клиенту
