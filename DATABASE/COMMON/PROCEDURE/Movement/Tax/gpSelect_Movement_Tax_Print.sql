@@ -1134,11 +1134,11 @@ order by 4*/
            , CASE WHEN COALESCE (vbCurrencyPartnerId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
                   THEN CAST (CASE WHEN (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) <> 0
                                   THEN
-                                      (tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                     CAST (tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
                                                                THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
                                                                ELSE tmpMI.Price
                                                       END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                                      ) / (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ))
+                                       AS NUMERIC (16,2)) / (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ))
                                   ELSE 0
                              END AS NUMERIC (16,4))
                        
