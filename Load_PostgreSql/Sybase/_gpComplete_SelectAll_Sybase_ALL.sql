@@ -22,6 +22,10 @@ BEGIN
     --    inGroupId:= 0;
     -- END IF;
 
+    -- IF inGroupId <=0 THEN
+    --    inIsBefoHistoryCost:= TRUE;
+    -- END IF;
+
 IF inIsBefoHistoryCost = TRUE
 THEN
     inGroupId:= -1;
