@@ -757,11 +757,19 @@ BEGIN
             , tmpAll.MemberId_Personal
             , ObjectString_Member_INN.ValueData             AS INN
             , Object_Personal.Code1C                        AS Code1C
+
+              -- № карточного счета ЗП - первая форма
             , ObjectString_Member_Card.ValueData            AS Card
+              -- № карточного счета ЗП - Ф2(Восток) 
             , ObjectString_Member_CardSecond.ValueData      AS CardSecond
+              -- IBAN карточного счета ЗП - первая форма 
             , ObjectString_Member_CardIBAN.ValueData        AS CardIBAN
-            , ObjectString_Member_CardIBANSecond.ValueData  AS CardIBANSecond  
+              -- IBAN карточного счета ЗП - Ф2(Восток)
+            , ObjectString_Member_CardIBANSecond.ValueData  AS CardIBANSecond
+
+              -- Номер банковской карточки ЗП Ф1
             , ObjectString_Member_CardBank.ValueData        ::TVarChar  AS CardBank
+              -- Номер банковской карточки ЗП Ф2
             , ObjectString_Member_CardBankSecond.ValueData  ::TVarChar  AS CardBankSecond 
             
             , ObjectString_Member_CardBankSecondTwo.ValueData  ::TVarChar  AS CardBankSecondTwo
