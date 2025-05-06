@@ -1580,8 +1580,8 @@ uses
   invoice_comdoc_vchasno in '..\..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
   invoice_delnote_base in '..\..\SOURCE\EDI\invoice_delnote_base.pas',
   JuridicalEdit in '..\..\Forms\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
-  Report_PrintForms_byMovement in '..\..\Forms\Report\Report_PrintForms_byMovement.pas' {Report_PrintForms_byMovementForm: TParentForm},
-  Report_PrintForms_byMovementDialog in '..\..\Forms\Report\Report_PrintForms_byMovementDialog.pas' {Report_PrintForms_byMovementDialogForm: TParentForm};
+  Report_PrintForms_byMovementDialog in '..\..\Forms\Report\Report_PrintForms_byMovementDialog.pas' {Report_PrintForms_byMovementDialogForm: TParentForm},
+  Report_PrintForms_byMovement in '..\..\Forms\Report\Report_PrintForms_byMovement.pas' {Report_PrintForms_byMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

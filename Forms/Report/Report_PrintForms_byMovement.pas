@@ -35,6 +35,41 @@ type
     GuidesMovementDesc: TdsdGuides;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    bbsPrintSale: TdxBarSubItem;
+    bbsReturnIn: TdxBarSubItem;
+    spGetReportName_Sale: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    PrintItemsSverkaCDS: TClientDataSet;
+    spSelectPrint_Sale: TdsdStoredProc;
+    actPrint_Sale: TdsdPrintAction;
+    actSPPrintSaleProcName_Sale: TdsdExecStoredProc;
+    mactPrint_Sale: TMultiAction;
+    bbtPrint_Sale: TdxBarButton;
+    spGetReportNameTransport: TdsdStoredProc;
+    bbPrint_Transport: TdxBarButton;
+    spGetReportNameQuality: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actDialog_QualityDoc: TdsdOpenForm;
+    actPrint_Quality_ReportName: TdsdExecStoredProc;
+    actPrint_QualityDoc: TdsdPrintAction;
+    mactPrint_QualityDoc: TMultiAction;
+    spSelectPrint_Quality: TdsdStoredProc;
+    bbPrint_TTN: TdxBarButton;
+    bbPrint_QualityDoc: TdxBarButton;
+    PrintKindName: TcxGridDBColumn;
+    spGetReportName_ReturnIn: TdsdStoredProc;
+    actPrint_ReturnIn: TdsdPrintAction;
+    actSPPrintProcName_ReturnIn: TdsdExecStoredProc;
+    mactPrint_ReturnIn: TMultiAction;
+    bbPrint_ReturnIn: TdxBarButton;
+    spSelectPrint_returnIn: TdsdStoredProc;
+    spGetReporNameTTN: TdsdStoredProc;
+    spSelectPrint_TTN: TdsdStoredProc;
+    actPrint_TTN: TdsdPrintAction;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
+    mactPrint_TTN: TMultiAction;
+    TotalPage_All: TcxGridDBColumn;
   private
     { Private declarations }
   public

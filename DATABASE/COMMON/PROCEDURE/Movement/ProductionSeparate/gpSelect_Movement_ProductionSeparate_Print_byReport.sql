@@ -602,12 +602,15 @@ BEGIN
                           , lfSelect.GoodsKindId AS GoodsKindId
                           , lfSelect.ValuePrice
                      FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18886 /*zc_PriceList_ProductionSeparate()*/, inOperDate:= inEndDate) AS lfSelect
-                    )
+                    )     
+        -- ПРАЙС - ПЛАН обвалка (сырье)  Id = 18889
+        --  ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)"   - Id = 18886
+        
         --ПРАЙС - ПЛАН обвалка (сырье)
       , tmpPricePlan AS (SELECT lfSelect.GoodsId     AS GoodsId
                               , lfSelect.GoodsKindId AS GoodsKindId
                               , lfSelect.ValuePrice
-                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18889, inOperDate:= inEndDate) AS lfSelect
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18886, inOperDate:= inEndDate) AS lfSelect          --18889
                         )
         --ПРАЙС - НОРМА ВЫХОДОВ обвалка  - для расчета  % выхода норма 
       , tmpPriceNorm AS (SELECT lfSelect.GoodsId     AS GoodsId
@@ -647,7 +650,7 @@ BEGIN
                          , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) :: TFloat	 AS HeadCount
                          , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN SUM (COALESCE (tmpMIContainer.Amount,0)) / SUM (MovementItem.Amount) ELSE 0 END AS SummPrice
                          , SUM (COALESCE (tmpMIContainer.Amount,0))      AS Summ
-                         , COALESCE (tmpPrice.ValuePrice, 0) :: TFloat AS PricePlan
+                         , COALESCE (tmpPrice.ValuePrice, 0)   :: TFloat AS PricePlan
               
                          , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId IN (1966 -- СО-НЕ ВХОД. В ВЫХОД маг
                                                                                  , 1967 -- ****СО-ПОТЕРИ - _toolsView_GoodsProperty_Obvalka_isLoss_TWO
@@ -659,7 +662,7 @@ BEGIN
               
                          --доп расчет для печати 4002
                          --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
-                         , COALESCE (tmpPricePlan.ValuePrice, 0) :: TFloat AS PricePlan
+                         , COALESCE (tmpPricePlan.ValuePrice, 0) :: TFloat AS PricePlan_1
                          --кол F  - сумма плановая =  плановая цена * количество
                          , (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0)))::TFloat     AS SummaPlan        --kol_F 
                          , SUM (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0))) OVER () AS TotalSummaPlan   --Total_kol_F 

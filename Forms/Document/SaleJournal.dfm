@@ -958,8 +958,11 @@ inherited SaleJournalForm: TSaleJournalForm
     end
   end
   inherited Panel: TPanel
+    Top = 26
     Width = 1374
     Height = 55
+    ExplicitLeft = 464
+    ExplicitTop = 344
     ExplicitWidth = 1374
     ExplicitHeight = 55
     inherited deStart: TcxDateEdit
@@ -5488,10 +5491,6 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbTax'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -6423,8 +6422,8 @@ inherited SaleJournalForm: TSaleJournalForm
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 644
-    Top = 302
+    Left = 668
+    Top = 310
   end
   object spChecked: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_Checked'
@@ -6538,7 +6537,7 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 535
+    Left = 503
     Top = 344
   end
   object spGetReporNameTax: TdsdStoredProc
@@ -6588,8 +6587,8 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
-    Top = 416
+    Left = 728
+    Top = 424
   end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -6657,8 +6656,8 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 447
-    Top = 280
+    Left = 431
+    Top = 248
   end
   object spTax: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
@@ -7455,8 +7454,8 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 503
-    Top = 320
+    Left = 447
+    Top = 312
   end
   object spDelete_LockUnique: TdsdStoredProc
     StoredProcName = 'gpDelete_LockUnique_byPrint'
