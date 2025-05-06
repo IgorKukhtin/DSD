@@ -1,5 +1,5 @@
 -- Function: gpSelect_Movement_Tax_Print()
-
+  
 DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Print(
@@ -1100,7 +1100,11 @@ order by 4*/
                             END 
              END                             AS MeasureCode
 
-           , tmpMI.Amount                    AS Amount
+             -- для валюты в печать вместо кол-ва передавать вес
+           , CASE WHEN COALESCE (vbCurrencyPartnerId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                  THEN CAST (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )  AS NUMERIC (16,3))  --вес
+                  ELSE tmpMI.Amount
+             END AS Amount
 
            --, tmpMI.Amount                    AS AmountPartner 
            --для валюты в печать вместо кол-ва передавать вес
