@@ -583,6 +583,7 @@ BEGIN
                             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Fuel ON View_InfoMoney_Fuel.InfoMoneyId = zc_Enum_InfoMoney_20401()
                                                                                   AND Object.DescId                   = zc_Object_Fuel()
 
+                            -- —Œ-›Ã”À‹—»»
                             LEFT JOIN _tmpList_Goods_1942 ON _tmpList_Goods_1942.GoodsId = MovementItem.ObjectId
 
                             LEFT JOIN tmpMIF_all AS MIFloat_Count
@@ -763,8 +764,18 @@ BEGIN
 
              , (_tmp.ContainerId) AS ContainerId_Goods -- !!!
              , _tmp.GoodsId
+               --
              , _tmp.GoodsKindId
-             , CASE WHEN _tmp.GoodsKindId <> zc_GoodsKind_WorkProgress() THEN NULL ELSE _tmp.GoodsKindId_complete END AS GoodsKindId_complete
+               --
+             , CASE -- ‰Îˇ ÷≈’ “Û¯ÂÌÍ‡
+                    WHEN vbUnitId = 2790412  AND _tmp.GoodsKindId_complete > 0
+                         THEN _tmp.GoodsKindId_complete
+                    -- ÂÒÎË Õ≈ œ‘-√œ
+                    WHEN _tmp.GoodsKindId <> zc_GoodsKind_WorkProgress()
+                         THEN NULL
+                    ELSE _tmp.GoodsKindId_complete
+               END AS GoodsKindId_complete
+
              , _tmp.AssetId
              , _tmp.PartionGoods
              , _tmp.PartionGoodsDate

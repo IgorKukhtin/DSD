@@ -5301,6 +5301,7 @@ WHERE COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0) < tm
 --LIMIT 1
 */
 
+-- Ôîðà ÒÎÂ - update ObjectBoolean set ValueData = TRUE where ObjectId = 15616  AND DescId   = zc_ObjectBoolean_Juridical_isNotRealGoods()
 -- select gpComplete_All_Sybase(    28014347 ,  false    , '')
 -- select gpComplete_All_Sybase(    28016453 ,  false    , '')
 -- select gpComplete_All_Sybase(    28013693 ,  false    , '')

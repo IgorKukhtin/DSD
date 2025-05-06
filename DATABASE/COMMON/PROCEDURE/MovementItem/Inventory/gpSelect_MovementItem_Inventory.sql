@@ -533,7 +533,9 @@ BEGIN
            , CASE WHEN MILinkObject_GoodsKind.ObjectId > 0 THEN Object_GoodsKind.ValueData WHEN vbUserId = 5 THEN '***' || Object_GoodsKind.ValueData ELSE Object_GoodsKind.ValueData END :: TVarChar AS GoodsKindName
 
            , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
-           , (COALESCE (Object_GoodsKindComplete.ValueData, '') || CASE WHEN vbUserId = 5 AND Object_PartionGoods_container.ValueData <> ''
+           , (COALESCE (Object_GoodsKindComplete.ValueData, '') || CASE WHEN vbUserId = 5
+                                                                             THEN ''
+                                                                        WHEN vbUserId = 5 AND Object_PartionGoods_container.ValueData <> ''
                                                                              THEN '***'  || Object_PartionGoods_container.ValueData
                                                                         WHEN vbUserId = 5 AND Object_PartionGoods_container.Id <> 0
                                                                              THEN '***'  || Object_PartionGoods_container.Id :: TVarChar || ' * ' || COALESCE (MIFloat_ContainerId.ContainerId, 0)
