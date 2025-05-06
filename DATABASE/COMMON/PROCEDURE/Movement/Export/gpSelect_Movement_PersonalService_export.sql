@@ -42,7 +42,7 @@ BEGIN
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
      -- *** Временная таблица для сбора результата
-     CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar, INN TVarChar, CardIBAN TVarChar) ON COMMIT DROP;
      /*
      -- Проверка
      IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Export() AND MB.ValueData = TRUE) AND vbUserId <> 5
@@ -298,12 +298,14 @@ BEGIN
                      ||  ' PAYER_BANK_BRANCHID="' || '300528' || '"'                        
        
                      -- Транзитный счет предприятия. Определяется по ЗКП ведомости из доп. параметра привязки ЗКП к предприятию; если для привязки определено несколько счетов, то надо подставить счет с минимальным ID; если для привязки не определено ни одного счета, то при импорте система выдаст ошибку
-                     || ' PAYER_BANK_ACCOUNTNO="' || '29241009900000' || '"'                         
+                        -- 1) поля PAYER_BANK_ACCOUNTNO не потрібно заповняти
+                     || ' PAYER_BANK_ACCOUNTNO="' /*|| '29241009900000' ||*/ '"'                         
                    --|| ' PAYER_BANK_ACCOUNTNO="' || 'UA293005280000029241009900000' || '"'                         
                      -- IBAN транзитного счета предприятия.
                      || ' PAYER_BANK_ACCOUNTIBAN="' || 'UA293005280000029241009900000' || '"'            
                      -- Счёт для списания средств
-                     ||      ' PAYER_ACCOUNTNO="' || '26000301367079' || '"'                
+                              -- 1) поля PAYER_ACCOUNTNO не потрібно заповняти
+                     ||      ' PAYER_ACCOUNTNO="' /*|| '26000301367079'*/ || '"'                
                    --||      ' PAYER_ACCOUNTNO="' || 'UA173005280000026000301367079' || '"'                
                      -- IBAN cчёта для списания средств
                      || ' PAYER_ACCOUNTIBAN ="' || 'UA173005280000026000301367079' || '"'                         
@@ -326,18 +328,21 @@ BEGIN
            -- Строчная часть
            INSERT INTO _tmpResult(NPP, RowData) VALUES (-10, '<EMPLOYEES>');
            --
-           INSERT INTO _tmpResult (NPP, RowData)
+           INSERT INTO _tmpResult (NPP, RowData, INN, CardIBAN)
                    SELECT ROW_NUMBER() OVER (ORDER BY gpSelect.card) AS NPP
                         , '<EMPLOYEE'
-                               -- Табельный номер сотрудника
+                               -- ИНН сотрудника
                                ||  ' IDENTIFYCODE="' || TRIM (gpSelect.INN) || '"'
 
                                -- Табельный номер сотрудника
                                -- ||         ' TABNO="' || gpSelect.MemberId || '"'
 
                                -- Номер карточного (или другого) счёта
-                               || ' CARDACCOUNTNO="' || TRIM (gpSelect.card) || '"'
-                                    || ' CARDIBAN="' || TRIM (gpSelect.CardIBAN) || '"'
+                                   -- 1) поля CARDACCOUNTNO не потрібно заповняти
+                               || ' CARDACCOUNTNO="' /*|| TRIM (gpSelect.card)*/ || '"'
+
+                               -- IBAN карточного счета ЗП - первая форма 
+                               || ' CARDIBAN="' || TRIM (gpSelect.CardIBAN) || '"'
                                
                                -- Фамилия сотрудника - Прізвище співробітника
                                ||      ' LASTNAME="' || zfCalc_Word_Split (inValue:= gpSelect.PersonalName, inSep:= ' ', inIndex:= 1) || '"'
@@ -355,6 +360,12 @@ BEGIN
                                --||' ' ||'року"'
 
                                || '/>'
+
+                               -- для проверки - ИНН сотрудника
+                       , TRIM (COALESCE (gpSelect.INN, '')) AS INN
+                         -- IBAN карточного счета ЗП - первая форма 
+                       , TRIM (COALESCE (gpSelect.CardIBAN, '')) AS CardIBAN
+
                    FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId
                                                              , inShowAll    := FALSE
                                                              , inIsErased   := FALSE
