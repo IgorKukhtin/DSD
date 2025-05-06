@@ -215,7 +215,7 @@ BEGIN
                             AND PrintForms_View.ReportType = 'TransportGoods'
                             AND PrintForms_View.DescId = zc_Movement_TransportGoods()
                 WHERE Movement.DescId = zc_Movement_TransportGoods()
-             UNION
+  /*           UNION
                 SELECT Movement.Id                   ::Integer
                      , Movement.Invnumber            ::TVarChar 
                      , Movement.OperDate             ::TDateTime
@@ -275,7 +275,7 @@ BEGIN
                               OR*/ OH_JuridicalDetails.OKPO NOT IN ('32294926', '40720198', '32294897')
                                 )
                 WHERE Movement.DescId = zc_Movement_Sale()
-             UNION 
+      */       UNION 
                 SELECT Movement.Id                   ::Integer
                      , Movement.Invnumber            ::TVarChar 
                      , Movement.OperDate             ::TDateTime

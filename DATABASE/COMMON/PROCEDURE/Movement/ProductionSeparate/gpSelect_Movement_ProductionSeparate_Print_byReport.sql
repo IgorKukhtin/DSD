@@ -546,6 +546,7 @@ BEGIN
     CREATE TEMP TABLE tmpCursor2 (MovementId Integer
                                 , GoodsCode Integer
                                 , GoodsName TVarChar
+                                , GoodsGroupCode Integer
                                 , GoodsGroupName TVarChar
                                 , GoodsGroupNameFull TVarChar
                                 , GroupStatId Integer
@@ -567,7 +568,8 @@ BEGIN
                                 ) ON COMMIT DROP;
     INSERT INTO tmpCursor2 (MovementId
                           , GoodsCode 
-                          , GoodsName 
+                          , GoodsName
+                          , GoodsGroupCode 
                           , GoodsGroupName 
                           , GoodsGroupNameFull 
                           , GroupStatId 
@@ -604,21 +606,17 @@ BEGIN
                      FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18886 /*zc_PriceList_ProductionSeparate()*/, inOperDate:= inEndDate) AS lfSelect
                     )     
         -- ПРАЙС - ПЛАН обвалка (сырье)  Id = 18889
-        --  ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)"   - Id = 18886
-        
-        --ПРАЙС - ПЛАН обвалка (сырье)
       , tmpPricePlan AS (SELECT lfSelect.GoodsId     AS GoodsId
                               , lfSelect.GoodsKindId AS GoodsKindId
                               , lfSelect.ValuePrice
-                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18886, inOperDate:= inEndDate) AS lfSelect          --18889
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 18889, inOperDate:= inEndDate) AS lfSelect          --18889
                         )
         --ПРАЙС - НОРМА ВЫХОДОВ обвалка  - для расчета  % выхода норма 
       , tmpPriceNorm AS (SELECT lfSelect.GoodsId     AS GoodsId
                               , lfSelect.GoodsKindId AS GoodsKindId
                               , lfSelect.ValuePrice
                          FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId_norm, inOperDate:= inEndDate) AS lfSelect
-                        )                              
-  
+                        )
 
       , tmpData AS (WITH 
                     tmpMI AS (SELECT MovementItem.*
@@ -640,12 +638,13 @@ BEGIN
                          , Object_Goods.Id  			         AS GoodsId
                          , Object_Goods.ObjectCode  			 AS GoodsCode
                          , Object_Goods.ValueData   			 AS GoodsName
+                         , Object_GoodsGroup.ObjectCode   		 AS GoodsGroupCode
                          , Object_GoodsGroup.ValueData   		 AS GoodsGroupName
                          , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                          , Object_Measure.ValueData                    AS MeasureName
               
                          , SUM (MovementItem.Amount)::TFloat		 AS Amount 
-                         , SUM (SUM (COALESCE (MovementItem.Amount,0))) OVER (PARTITION BY ObjectString_Goods_GoodsGroupFull.ValueData) ::TFloat AS  TotalAmount_gr
+                         , SUM (SUM (COALESCE (MovementItem.Amount,0))) OVER (PARTITION BY ObjectString_Goods_GoodsGroupFull.ValueData, MovementItem.MovementId) ::TFloat AS  TotalAmount_gr
                          , SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) :: TFloat  AS LiveWeight
                          , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) :: TFloat	 AS HeadCount
                          , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN SUM (COALESCE (tmpMIContainer.Amount,0)) / SUM (MovementItem.Amount) ELSE 0 END AS SummPrice
@@ -662,10 +661,10 @@ BEGIN
               
                          --доп расчет для печати 4002
                          --кол.E - плановая цена - ПРАЙС - ПЛАН обвалка (сырье)
-                         , COALESCE (tmpPricePlan.ValuePrice, 0) :: TFloat AS PricePlan_1
+                         --, COALESCE (tmpPricePlan.ValuePrice, 0) :: TFloat AS PricePlan_1
                          --кол F  - сумма плановая =  плановая цена * количество
                          , (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0)))::TFloat     AS SummaPlan        --kol_F 
-                         , SUM (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0))) OVER () AS TotalSummaPlan   --Total_kol_F 
+                         , SUM (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0))) OVER (PARTITION BY MovementItem.MovementId) AS TotalSummaPlan   --Total_kol_F 
                          -- - НОРМА ВЫХОДОВ обвалка
                          , COALESCE (tmpPriceNorm.ValuePrice, 0)  AS PriceNorm
                     FROM tmpMI AS MovementItem
@@ -708,7 +707,8 @@ BEGIN
                      GROUP BY MovementItem.MovementId
                             , Object_Goods.ObjectCode
                             , Object_Goods.Id
-                            , Object_Goods.ValueData
+                            , Object_Goods.ValueData 
+                            , Object_GoodsGroup.ObjectCode
                             , Object_GoodsGroup.ValueData
                             , ObjectString_Goods_GoodsGroupFull.ValueData
                             , Object_Measure.ValueData
@@ -720,6 +720,7 @@ BEGIN
                           , tmpData.GoodsId
                           , tmpData.GoodsCode
                           , tmpData.GoodsName
+                          , tmpData.GoodsGroupCode
                           , tmpData.GoodsGroupName
                           , tmpData.GoodsGroupNameFull
                           , tmpData.MeasureName
@@ -762,6 +763,7 @@ BEGIN
      SELECT tmpData.MovementId
           , tmpData.GoodsCode
           , tmpData.GoodsName
+          , tmpData.GoodsGroupCode
           , tmpData.GoodsGroupName
           , tmpData.GoodsGroupNameFull 
           , Object_GoodsGroupStat.Id        AS GroupStatId
@@ -873,7 +875,8 @@ BEGIN
 
            --
            , tmpCursor2.GoodsCode
-           , tmpCursor2.GoodsName
+           , tmpCursor2.GoodsName 
+           , tmpCursor2.GoodsGroupCode
            , tmpCursor2.GoodsGroupName
            , tmpCursor2.GoodsGroupNameFull 
            , tmpCursor2.GroupStatId
@@ -919,7 +922,7 @@ BEGIN
            , MAX (tmpCursor1.OperDate_partion) AS OperDate_partion
            , tmpCursor1.GoodsNameMaster
            ,  (tmpCursor1.CountMaster) AS CountMaster
-           , SUM (tmpCursor1.CountMaster_4134) AS CountMaster_4134
+           , SUM (COALESCE (tmpCursor1.CountMaster_4134,0)) AS CountMaster_4134
            , (tmpCursor1.SummMaster) AS SummMaster
            , (tmpCursor1.HeadCountMaster) AS HeadCountMaster
            , (tmpCursor1.SummMaster / tmpCursor1.CountMaster) AS PriceMaster
@@ -952,7 +955,8 @@ BEGIN
 
            --  tmpCursor2
           , tmpCursor1.GoodsCode
-          , tmpCursor1.GoodsName
+          , tmpCursor1.GoodsName 
+          , tmpCursor1.GoodsGroupCode
           , tmpCursor1.GoodsGroupName
           , tmpCursor1.GoodsGroupNameFull 
           , tmpCursor1.GroupStatId
@@ -966,7 +970,7 @@ BEGIN
           , tmpCursor1.PricePlan
           , tmpCursor1.PriceNorm
           , tmpCursor1.isLoss
-          , (SUM (tmpCursor1.SummFact) / SUM (tmpCursor1.Amount)) AS PriceFact  --, tmpCursor1.PriceFact                --расчет по файлу 
+          , CASE WHEN  inisPartion = TRUE THEN (SUM (tmpCursor1.SummFact) / SUM (tmpCursor1.Amount)) ELSE PriceFact END AS PriceFact  --, tmpCursor1.PriceFact                --расчет по файлу 
           , SUM (tmpCursor1.SummFact) AS SummFact
            --
            , SUM (tmpCursor1.Amount_GroupStat_yes) AS Amount_GroupStat_yes
@@ -1002,7 +1006,8 @@ BEGIN
              , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.InvNumber END
              , tmpCursor1.GoodsNameMaster
              , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.FromName END
-             , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.PersonalPackerName END
+             , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.PersonalPackerName END  
+             , CASE WHEN  inisPartion = TRUE THEN 0 ELSE PriceFact END 
              , tmpCursor1.GoodsNameIncome
              , tmpCursor1.CountMaster
              , tmpCursor1.SummMaster
@@ -1013,7 +1018,8 @@ BEGIN
   
              --  tmpCursor2
             , tmpCursor1.GoodsCode
-            , tmpCursor1.GoodsName
+            , tmpCursor1.GoodsName 
+            , tmpCursor1.GoodsGroupCode
             , tmpCursor1.GoodsGroupName
             , tmpCursor1.GoodsGroupNameFull 
             , tmpCursor1.GroupStatId
@@ -1052,6 +1058,7 @@ BEGIN
      SELECT tmpCursor2.MovementId
           , tmpCursor2.GoodsCode
           , tmpCursor2.GoodsName
+          , tmpCursor2.GoodsGroupCode
           , tmpCursor2.GoodsGroupName
           , tmpCursor2.GoodsGroupNameFull 
           , tmpCursor2.GroupStatId
