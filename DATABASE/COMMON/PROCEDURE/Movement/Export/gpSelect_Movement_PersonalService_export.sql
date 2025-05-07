@@ -42,7 +42,7 @@ BEGIN
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
      -- *** Временная таблица для сбора результата
-     CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar, INN TVarChar, CardIBAN TVarChar) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar, INN TVarChar, CardIBAN TVarChar, LASTNAME TVarChar, FIRSTNAME TVarChar, MIDDLENAME TVarChar, AMOUNT TFloat) ON COMMIT DROP;
      /*
      -- Проверка
      IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Export() AND MB.ValueData = TRUE) AND vbUserId <> 5
@@ -299,13 +299,13 @@ BEGIN
        
                      -- Транзитный счет предприятия. Определяется по ЗКП ведомости из доп. параметра привязки ЗКП к предприятию; если для привязки определено несколько счетов, то надо подставить счет с минимальным ID; если для привязки не определено ни одного счета, то при импорте система выдаст ошибку
                         -- 1) поля PAYER_BANK_ACCOUNTNO не потрібно заповняти
-                     || ' PAYER_BANK_ACCOUNTNO="' /*|| '29241009900000' ||*/ '"'                         
+                     || ' PAYER_BANK_ACCOUNTNO="' || /*'29241009900000' ||*/ '"'                         
                    --|| ' PAYER_BANK_ACCOUNTNO="' || 'UA293005280000029241009900000' || '"'                         
                      -- IBAN транзитного счета предприятия.
                      || ' PAYER_BANK_ACCOUNTIBAN="' || 'UA293005280000029241009900000' || '"'            
                      -- Счёт для списания средств
                               -- 1) поля PAYER_ACCOUNTNO не потрібно заповняти
-                     ||      ' PAYER_ACCOUNTNO="' /*|| '26000301367079'*/ || '"'                
+                     ||      ' PAYER_ACCOUNTNO="' || /*'26000301367079' ||*/ '"'                
                    --||      ' PAYER_ACCOUNTNO="' || 'UA173005280000026000301367079' || '"'                
                      -- IBAN cчёта для списания средств
                      || ' PAYER_ACCOUNTIBAN ="' || 'UA173005280000026000301367079' || '"'                         
@@ -328,7 +328,7 @@ BEGIN
            -- Строчная часть
            INSERT INTO _tmpResult(NPP, RowData) VALUES (-10, '<EMPLOYEES>');
            --
-           INSERT INTO _tmpResult (NPP, RowData, INN, CardIBAN)
+           INSERT INTO _tmpResult (NPP, RowData, INN, CardIBAN, LASTNAME, FIRSTNAME, MIDDLENAME, AMOUNT)
                    SELECT ROW_NUMBER() OVER (ORDER BY gpSelect.card) AS NPP
                         , '<EMPLOYEE'
                                -- ИНН сотрудника
@@ -339,7 +339,7 @@ BEGIN
 
                                -- Номер карточного (или другого) счёта
                                    -- 1) поля CARDACCOUNTNO не потрібно заповняти
-                               || ' CARDACCOUNTNO="' /*|| TRIM (gpSelect.card)*/ || '"'
+                               || ' CARDACCOUNTNO="' || /*TRIM (gpSelect.card)||*/  '"'
 
                                -- IBAN карточного счета ЗП - первая форма 
                                || ' CARDIBAN="' || TRIM (gpSelect.CardIBAN) || '"'
@@ -361,10 +361,18 @@ BEGIN
 
                                || '/>'
 
-                               -- для проверки - ИНН сотрудника
+                         -- для проверки - ИНН сотрудника
                        , TRIM (COALESCE (gpSelect.INN, '')) AS INN
-                         -- IBAN карточного счета ЗП - первая форма 
+                         -- для проверки - 1.1.IBAN карт. счета ЗП - первая форма 
                        , TRIM (COALESCE (gpSelect.CardIBAN, '')) AS CardIBAN
+                         -- Фамилия сотрудника - Прізвище співробітника
+                       , zfCalc_Word_Split (inValue:= gpSelect.PersonalName, inSep:= ' ', inIndex:= 1) AS LASTNAME
+                         -- Имя сотрудника - Ім’я співробітника
+                       , zfCalc_Word_Split (inValue:= gpSelect.PersonalName, inSep:= ' ', inIndex:= 2) AS FIRSTNAME
+                         -- Отчество сотрудника - По батькові співробітника
+                       , zfCalc_Word_Split (inValue:= gpSelect.PersonalName, inSep:= ' ', inIndex:= 3) AS MIDDLENAME
+                         -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
+                       , CAST (COALESCE (gpSelect.SummCardRecalc, 0)  + COALESCE (gpSelect.SummHosp, 0) AS NUMERIC (16, 2)) AS AMOUNT
 
                    FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId
                                                              , inShowAll    := FALSE
@@ -373,6 +381,38 @@ BEGIN
                                                               ) AS gpSelect
                    WHERE gpSelect.SummCardRecalc <> 0
                   ;
+
+           -- проверка - Строчная часть
+           IF EXISTS (SELECT 1 FROM _tmpResult WHERE _tmpResult.NPP > 0 AND _tmpResult.CardIBAN = '')
+           THEN
+                RAISE EXCEPTION 'Ошибка.Для Сотрудника %<%> %<%> %<%> %сумма = <%> %не установлено значение <1.1.IBAN карточного счета ЗП - первая форма>.'
+                              , CHR (13)
+                              , (SELECT _tmpResult.LASTNAME FROM _tmpResult WHERE _tmpResult.NPP > 0 AND _tmpResult.CardIBAN = '' ORDER BY _tmpResult.NPP LIMIT 1)
+                              , CHR (13)
+                              , (SELECT _tmpResult.FIRSTNAME FROM _tmpResult WHERE _tmpResult.NPP > 0 AND _tmpResult.CardIBAN = '' ORDER BY _tmpResult.NPP LIMIT 1)
+                              , CHR (13)
+                              , (SELECT _tmpResult.MIDDLENAME FROM _tmpResult WHERE _tmpResult.NPP > 0 AND _tmpResult.CardIBAN = '' ORDER BY _tmpResult.NPP LIMIT 1)
+                              , CHR (13)
+                              , (SELECT zfConvert_FloatToString (_tmpResult.AMOUNT) FROM _tmpResult WHERE _tmpResult.NPP > 0 AND _tmpResult.CardIBAN = '' ORDER BY _tmpResult.NPP LIMIT 1)
+                              , CHR (13)
+                               ;
+           END IF;
+           -- проверка - Строчная часть
+           IF EXISTS (SELECT 1 FROM _tmpResult WHERE _tmpResult.NPP > 0 AND _tmpResult.INN = '')
+           THEN
+                RAISE EXCEPTION 'Ошибка.Для Сотрудника %<%> %<%> %<%> %сумма = <%> %не установлено значение <ИНН>.'
+                              , CHR (13)
+                              , (SELECT _tmpResult.LASTNAME FROM _tmpResult WHERE _tmpResult.NPP > 0 AND _tmpResult.INN = '' ORDER BY _tmpResult.NPP LIMIT 1)
+                              , CHR (13)
+                              , (SELECT _tmpResult.FIRSTNAME FROM _tmpResult WHERE _tmpResult.NPP > 0 AND _tmpResult.INN = '' ORDER BY _tmpResult.NPP LIMIT 1)
+                              , CHR (13)
+                              , (SELECT _tmpResult.MIDDLENAME FROM _tmpResult WHERE _tmpResult.NPP > 0 AND _tmpResult.INN = '' ORDER BY _tmpResult.NPP LIMIT 1)
+                              , CHR (13)
+                              , (SELECT zfConvert_FloatToString (_tmpResult.AMOUNT) FROM _tmpResult WHERE _tmpResult.NPP > 0 AND _tmpResult.INN = '' ORDER BY _tmpResult.NPP LIMIT 1)
+                              , CHR (13)
+                               ;
+           END IF;
+
 
            -- последние строчки XML
            INSERT INTO _tmpResult (NPP, RowData) VALUES ((SELECT COUNT(*) FROM _tmpResult) + 1, '</EMPLOYEES>');
