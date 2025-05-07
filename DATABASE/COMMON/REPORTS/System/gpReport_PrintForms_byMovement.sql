@@ -206,7 +206,7 @@ BEGIN
                 WHERE Movement.DescId = zc_Movement_Sale()
                 )
 
-  , tmpData AS (
+  , tmpData AS (--все простые формы
                 SELECT Movement.Id                   ::Integer
                      , Movement.Invnumber            ::TVarChar 
                      , Movement.OperDate             ::TDateTime
@@ -246,7 +246,7 @@ BEGIN
                                           ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                          AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
 
-                WHERE Movement.DescId NOT IN (zc_Movement_TransportGoods(), zc_Movement_Sale(), zc_Movement_ReturnIn()) 
+                WHERE Movement.DescId NOT IN (zc_Movement_TransportGoods(), zc_Movement_Sale(), zc_Movement_ReturnIn(),zc_Movement_QualityDoc()) 
              UNION 
                 SELECT Movement.Id                   ::Integer
                      , Movement.Invnumber            ::TVarChar 
