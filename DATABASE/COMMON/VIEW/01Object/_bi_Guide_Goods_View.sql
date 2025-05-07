@@ -26,9 +26,9 @@ AS
           --дата с которой действует новый Код УКТ ЗЕД
           , ObjectDate_Goods_UKTZED_new.ValueData   ::TDateTime AS DateUKTZED_new
           --Дата до которой действует Название товара(бухг.)
-          , ObjectDate_BUH.ValueData       :: TDateTime AS Date_BUH
+          , ObjectDate_BUH.ValueData                :: TDateTime AS Date_BUH
           --Дата прихода от поставщика
-          , ObjectDate_In.ValueData       :: TDateTime AS InDate
+          , ObjectDate_In.ValueData                 :: TDateTime AS InDate
           --Ознака імпортованого товару
           , ObjectString_Goods_TaxImport.ValueData  ::TVarChar AS TaxImport
           --Послуги згідно з ДКПП
@@ -38,24 +38,24 @@ AS
           --Примечание
           , ObjectString_Goods_Comment.ValueData    ::TVarChar AS Comment
           --Вес товара
-          , ObjectFloat_Weight.ValueData         ::TFloat AS Weight
+          , ObjectFloat_Weight.ValueData            ::TFloat  AS Weight
           --Вес втулки
-          , ObjectFloat_WeightTare.ValueData     ::TFloat AS WeightTare
+          , ObjectFloat_WeightTare.ValueData        ::TFloat  AS WeightTare
           --Кол-во для веса
-          , ObjectFloat_CountForWeight.ValueData ::TFloat AS CountForWeight
+          , ObjectFloat_CountForWeight.ValueData    ::TFloat  AS CountForWeight
           ----Кол-во партий из рецептуры для замеса
-          , ObjectFloat_CountReceipt.ValueData   ::TFloat AS CountReceipt
+          , ObjectFloat_CountReceipt.ValueData      ::TFloat  AS CountReceipt
           --Код АЛАН
-          , ObjectFloat_ObjectCode_Basis.ValueData ::Integer AS BasisCode
+          , ObjectFloat_ObjectCode_Basis.ValueData  ::Integer AS BasisCode
 
            --Ирна
           , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)       :: Boolean AS isIrna
           --Признак - ОС
           , COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE)      :: Boolean AS isAsset
           --Партии поставщика в учете количеств
-          , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)   :: Boolean AS isPartionCount
+          , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)     :: Boolean AS isPartionCount
           --Партии поставщика в учете себестоимости
-          , COALESCE (ObjectBoolean_PartionSumm.ValueData, TRUE)     :: Boolean AS isPartionSumm          
+          , COALESCE (ObjectBoolean_PartionSumm.ValueData, TRUE)       :: Boolean AS isPartionSumm          
           --Показывать реальное назв.
           , COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE)         :: Boolean AS isNameOrig
           --Учет по дате партии
@@ -64,25 +64,25 @@ AS
           , COALESCE (ObjectBoolean_Goods_HeadCount.ValueData, FALSE)  :: Boolean AS isHeadCount
 
           --Группы товаров
-          , Object_GoodsGroup.Id                    AS GoodsGroupId 
-          , Object_GoodsGroup.ObjectCode            AS GoodsGroupCode
-          , Object_GoodsGroup.ValueData             AS GoodsGroupName
+          , Object_GoodsGroup.Id                 AS GoodsGroupId 
+          , Object_GoodsGroup.ObjectCode         AS GoodsGroupCode
+          , Object_GoodsGroup.ValueData          AS GoodsGroupName
           --Группы товаров(статистика)
-          , Object_GoodsGroupStat.Id            AS GroupStatId 
-          , Object_GoodsGroupStat.ObjectCode    AS GroupStatCode
-          , Object_GoodsGroupStat.ValueData     AS GroupStatName
+          , Object_GoodsGroupStat.Id             AS GroupStatId 
+          , Object_GoodsGroupStat.ObjectCode     AS GroupStatCode
+          , Object_GoodsGroupStat.ValueData      AS GroupStatName
           --Группа товаров(аналитика)
           , Object_GoodsGroupAnalyst.Id          AS GoodsGroupAnalystId
           , Object_GoodsGroupAnalyst.ObjectCode  AS GoodsGroupAnalysCode
           , Object_GoodsGroupAnalyst.ValueData   AS GoodsGroupAnalystName          
           --Торговые марки
-          , Object_TradeMark.Id                 AS TradeMarkId
-          , Object_TradeMark.ObjectCode         AS TradeMarkCode
-          , Object_TradeMark.ValueData          AS TradeMarkName
+          , Object_TradeMark.Id                  AS TradeMarkId
+          , Object_TradeMark.ObjectCode          AS TradeMarkCode
+          , Object_TradeMark.ValueData           AS TradeMarkName
           --Единицы измерения
-          , Object_Measure.Id               AS MeasureId
-          , Object_Measure.ObjectCode       AS MeasureCode
-          , Object_Measure.ValueData        AS MeasureName 
+          , Object_Measure.Id                    AS MeasureId
+          , Object_Measure.ObjectCode            AS MeasureCode
+          , Object_Measure.ValueData             AS MeasureName 
           --Единицы измерения - Международное наименование
           , ObjectString_Measure_InternalName.ValueData ::TVarChar AS InternalName
           --Единицы измерения - Международный код 
@@ -99,55 +99,55 @@ AS
           , Object_InfoMoney_View.InfoMoneyDestinationCode
           , Object_InfoMoney_View.InfoMoneyDestinationName
           --Бизнесы
-          , Object_Business.Id           AS BusinessId
-          , Object_Business.ObjectCode   AS BusinessCode
-          , Object_Business.ValueData    AS BusinessName
+          , Object_Business.Id               AS BusinessId
+          , Object_Business.ObjectCode       AS BusinessCode
+          , Object_Business.ValueData        AS BusinessName
           --Виды топлива
-          , Object_Fuel.Id               AS FuelId
-          , Object_Fuel.ObjectCode       AS FuelCode
-          , Object_Fuel.ValueData        AS FuelName
+          , Object_Fuel.Id                   AS FuelId
+          , Object_Fuel.ObjectCode           AS FuelCode
+          , Object_Fuel.ValueData            AS FuelName
           --Признак товара
-          , Object_GoodsTag.Id           AS GoodsTagId
-          , Object_GoodsTag.ObjectCode   AS GoodsTagCode
-          , Object_GoodsTag.ValueData    AS GoodsTagName
+          , Object_GoodsTag.Id               AS GoodsTagId
+          , Object_GoodsTag.ObjectCode       AS GoodsTagCode
+          , Object_GoodsTag.ValueData        AS GoodsTagName
           --Производственная площадка
           , Object_GoodsPlatform.Id          AS GoodsPlatformId
           , Object_GoodsPlatform.ObjectCode  AS GoodsPlatformCode
           , Object_GoodsPlatform.ValueData   AS GoodsPlatformName
           --Поставщик
-          , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInId
-          , Object_PartnerIn.ObjectCode   :: TVarChar  AS PartnerInCode
-          , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
+          , Object_PartnerIn.Id              AS PartnerInId
+          , Object_PartnerIn.ObjectCode      AS PartnerInCode
+          , Object_PartnerIn.ValueData       AS PartnerInName
           --Связь товаров с базовым
-          , Object_Goods_basis.Id             AS GoodsId_basis
-          , Object_Goods_basis.ObjectCode     AS GoodsCode_basis
-          , Object_Goods_basis.ValueData      AS GoodsName_basis
+          , Object_Goods_basis.Id            AS GoodsId_basis
+          , Object_Goods_basis.ObjectCode    AS GoodsCode_basis
+          , Object_Goods_basis.ValueData     AS GoodsName_basis
           --Связь товаров с главным
-          , Object_Goods_main.Id              AS GoodsId_main
-          , Object_Goods_main.ObjectCode      AS GoodsCode_main
-          , Object_Goods_main.ValueData       AS GoodsName_main
+          , Object_Goods_main.Id             AS GoodsId_main
+          , Object_Goods_main.ObjectCode     AS GoodsCode_main
+          , Object_Goods_main.ValueData      AS GoodsName_main
           --Основное средство (назначение ТМЦ) 
-          , Object_Asset.Id          AS AssetId
-          , Object_Asset.ObjectCode  AS AssetCode
-          , Object_Asset.ValueData   AS AssetName
+          , Object_Asset.Id                  AS AssetId
+          , Object_Asset.ObjectCode          AS AssetCode
+          , Object_Asset.ValueData           AS AssetName
           --Основное средство (на каком оборудовании производится) 
-          , Object_AssetProd.Id             AS AssetProdId
-          , Object_AssetProd.ObjectCode     AS AssetProdCode
-          , Object_AssetProd.ValueData      AS AssetProdName
+          , Object_AssetProd.Id              AS AssetProdId
+          , Object_AssetProd.ObjectCode      AS AssetProdCode
+          , Object_AssetProd.ValueData       AS AssetProdName
           --Аналитический классификатор
-          , Object_GoodsGroupProperty.Id             AS GoodsGroupPropertyId
-          , Object_GoodsGroupProperty.ObjectCode     AS GoodsGroupPropertyCode
-          , Object_GoodsGroupProperty.ValueData      AS GoodsGroupPropertyName
+          , Object_GoodsGroupProperty.Id                 AS GoodsGroupPropertyId
+          , Object_GoodsGroupProperty.ObjectCode         AS GoodsGroupPropertyCode
+          , Object_GoodsGroupProperty.ValueData          AS GoodsGroupPropertyName
           --Аналитический классификатор - Группа
-          , Object_GoodsGroupPropertyParent.Id             AS GoodsGroupPropertyId_Parent
-          , Object_GoodsGroupPropertyParent.ObjectCode     AS GoodsGroupPropertyCode_Parent
-          , Object_GoodsGroupPropertyParent.ValueData      AS GoodsGroupPropertyName_Parent
+          , Object_GoodsGroupPropertyParent.Id           AS GoodsGroupPropertyId_Parent
+          , Object_GoodsGroupPropertyParent.ObjectCode   AS GoodsGroupPropertyCode_Parent
+          , Object_GoodsGroupPropertyParent.ValueData    AS GoodsGroupPropertyName_Parent
           --Аналитический классификатор - Ідентифікаційний номер тварини від якої отримано сировину
           , ObjectString_QualityINN.ValueData ::TVarChar AS QualityINN          
           --Аналитическая группа Направление
-          , Object_GoodsGroupDirection.Id           AS GoodsGroupDirectionId 
-          , Object_GoodsGroupDirection.ObjectCode   AS GoodsGroupDirectionCode
-          , Object_GoodsGroupDirection.ValueData    AS GoodsGroupDirectionName
+          , Object_GoodsGroupDirection.Id                AS GoodsGroupDirectionId 
+          , Object_GoodsGroupDirection.ObjectCode        AS GoodsGroupDirectionCode
+          , Object_GoodsGroupDirection.ValueData         AS GoodsGroupDirectionName
             
             
             
