@@ -204,6 +204,9 @@ END IF;
 
           -- INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = Movement.Id
 
+          -- Филиал Винница
+          -- INNER JOIN ObjectLink ON ObjectLink.ObjectId = MLO_From.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch() AND ObjectLink.ChildObjectId = 11920989
+
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
 --      AND Movement.DescId IN (zc_Movement_Loss())
 --      AND Movement.DescId IN (zc_Movement_Send())

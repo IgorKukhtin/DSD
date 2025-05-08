@@ -154,7 +154,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-        WHERE (MILO_Insert.ObjectId = vbUserId OR inIsAllUser = TRUE)
+        WHERE (MILO_Insert.ObjectId = vbUserId OR inIsAllUser = TRUE OR vbUserId = 5)
           AND (COALESCE(inFilter, '') = '' OR Object_Goods.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%' 
                                            OR Object_GoodsKind.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%' 
                                            OR ObjectString_Goods_GoodsGroupFull.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%'

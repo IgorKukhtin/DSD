@@ -162,6 +162,7 @@ end if;
                                                      , 8381    -- 9. филиал Харьков
                                                      , 8379    -- 2. филиал Киев
                                                      , 3080683 -- филиал Львов
+                                                     , 11920989-- Филиал Винница
                                                       )
       UNION
        SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
@@ -941,8 +942,9 @@ RAISE INFO '_end tmpContainerList on ContainerId_count = .<%>  <%>'
        ;
 
 -- INSERT INTO _tmpMaster (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm)
---    RAISE EXCEPTION 'Ошибка.<%>', (select _tmpMaster.IncomeCount from _tmpMaster where _tmpMaster.ContainerId = 156902)
---    , (select _tmpMaster.IncomeSumm from _tmpMaster where _tmpMaster.ContainerId = 156902)
+--    RAISE EXCEPTION 'Ошибка.<%>  <%>'
+--    , (select _tmpMaster.calcCount from _tmpMaster where _tmpMaster.ContainerId = 11000222)
+--    , (select _tmpMaster.calcSumm from _tmpMaster  where _tmpMaster.ContainerId = 11000222)
 --    ;
 
 
@@ -4398,4 +4400,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2022', inEndDate:= '28.02.2022', inBranchId:= 0, inItearationCount:= 200, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (3705946, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.07.2024', inEndDate:= '31.07.2024', inBranchId:= 0, inItearationCount:= 100, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (4504111)
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2024', inEndDate:= '30.11.2024', inBranchId:= 3080683 , inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (4200836)
+ SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.04.2025', inEndDate:= '30.04.2025', inBranchId:= 0 , inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (11000222)
