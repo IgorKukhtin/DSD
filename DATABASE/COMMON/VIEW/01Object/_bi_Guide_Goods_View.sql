@@ -145,9 +145,9 @@ AS
           --Аналитический классификатор - Ідентифікаційний номер тварини від якої отримано сировину
           , ObjectString_QualityINN.ValueData ::TVarChar AS QualityINN          
           --Аналитическая группа Направление
-          , Object_GoodsGroupDirection.Id                AS GoodsGroupDirectionId 
-          , Object_GoodsGroupDirection.ObjectCode        AS GoodsGroupDirectionCode
-          , Object_GoodsGroupDirection.ValueData         AS GoodsGroupDirectionName
+          , Object_GoodsGroupDirection.Id               AS GoodsGroupDirectionId 
+          , Object_GoodsGroupDirection.ObjectCode       AS GoodsGroupDirectionCode
+          , Object_GoodsGroupDirection.ValueData        AS GoodsGroupDirectionName
             
             
             
