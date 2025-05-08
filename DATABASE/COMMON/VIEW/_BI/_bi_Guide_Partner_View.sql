@@ -1,15 +1,18 @@
 -- View: _bi_Guide_Partner_View
 
--- DROP VIEW IF EXISTS _bi_Guide_Partner_View;
---Справочник Контрагенты
+ DROP VIEW IF EXISTS _bi_Guide_Partner_View;
+
+-- Справочник Контрагенты
 CREATE OR REPLACE VIEW _bi_Guide_Partner_View
 AS
-       SELECT 
-             Object_Partner.Id         AS Id 
+       SELECT
+             Object_Partner.Id         AS Id
            , Object_Partner.ObjectCode AS Code
            , Object_Partner.ValueData  AS Name
+             -- Признак "Удален да/нет"
            , Object_Partner.isErased   AS isErased
-           --Условное обозначение
+
+             --Условное обозначение
            , ObjectString_ShortName.ValueData   AS ShortName
            --Код GLN - место доставки
            , ObjectString_GLNCode.ValueData     AS GLNCode
@@ -56,7 +59,7 @@ AS
            --Продавец-1 - % от товарооборота
            , ObjectFloat_TaxSale_MemberSaler1.ValueData  ::TFloat  AS TaxSale_MemberSaler1
            --Продавец-2 - % от товарооборота
-           , ObjectFloat_TaxSale_MemberSaler2.ValueData  ::TFloat  AS TaxSale_MemberSaler2           
+           , ObjectFloat_TaxSale_MemberSaler2.ValueData  ::TFloat  AS TaxSale_MemberSaler2
            --GPS координаты точки доставки (широта)
            , COALESCE (Partner_GPSN.ValueData,0)         ::Tfloat  AS GPSN
            --GPS координаты точки доставки (долгота)
@@ -72,28 +75,29 @@ AS
            , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)       :: Boolean AS isIrna
            --Отгрузка в гофро
            , COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) :: Boolean AS isGoodsBox
-                  
-           --Юридические лица
+
+             -- Юридическое лицо
            , Object_Juridical.Id               AS JuridicalId
            , Object_Juridical.ObjectCode       AS JuridicalCode
            , Object_Juridical.ValueData        AS JuridicalName
-           --Маршруты
+             -- Маршрут
            , Object_Route.Id                   AS RouteId
            , Object_Route.ObjectCode           AS RouteCode
            , Object_Route.ValueData            AS RouteName
-           --Маршруты 30201
+             -- Маршрут Мясное сырье
            , Object_Route_30201.Id             AS RouteId_30201
            , Object_Route_30201.ObjectCode     AS RouteCode_30201
            , Object_Route_30201.ValueData      AS RouteName_30201
-           --Физ лицо (сотрудник экспедитор)  --для любого дня недели (используется если не установлено значение для д.н.)
+
+             -- Физ лицо (сотрудник экспедитор)  --для любого дня недели (используется если не установлено значение для д.н.)
            , Object_MemberTake.Id              AS MemberTakeId
            , Object_MemberTake.ObjectCode      AS MemberTakeCode
            , Object_MemberTake.ValueData       AS MemberTakeName
-           --Физ лицо (Продавец-1)
+             -- Физ лицо (Продавец-1)
            , Object_MemberSaler1.Id            AS MemberSaler1Id
            , Object_MemberSaler1.ObjectCode    AS MemberSaler1Code
            , Object_MemberSaler1.ValueData     AS MemberSaler1Name
-           --Физ лицо (Продавец-2)
+             -- Физ лицо (Продавец-2)
            , Object_MemberSaler2.Id            AS MemberSaler2Id
            , Object_MemberSaler2.ObjectCode    AS MemberSaler2Code
            , Object_MemberSaler2.ValueData     AS MemberSaler2Name
@@ -128,7 +132,7 @@ AS
            --Прайс-лист
            , Object_PriceList.Id               AS PriceListId
            , Object_PriceList.ObjectCode       AS PriceListCode
-           , Object_PriceList.ValueData        AS PriceListName           
+           , Object_PriceList.ValueData        AS PriceListName
            --Прайс-лист(Акционный)
            , Object_PriceListPromo.Id          AS PriceListPromoId
            , Object_PriceListPromo.ObjectCode  AS PriceListPromoCode
@@ -231,7 +235,7 @@ AS
          --Код GLN - место доставки
          LEFT JOIN ObjectString AS ObjectString_GLNCode
                                 ON ObjectString_GLNCode.ObjectId = Object_Partner.Id
-                               AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()         
+                               AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
          --Код GLN - Покупатель
          LEFT JOIN ObjectString AS ObjectString_GLNCodeJuridical
                                 ON ObjectString_GLNCodeJuridical.ObjectId = Object_Partner.Id
@@ -239,15 +243,15 @@ AS
          --Код GLN - Получатель
          LEFT JOIN ObjectString AS ObjectString_GLNCodeRetail
                                 ON ObjectString_GLNCodeRetail.ObjectId = Object_Partner.Id
-                               AND ObjectString_GLNCodeRetail.DescId = zc_ObjectString_Partner_GLNCodeRetail()         
+                               AND ObjectString_GLNCodeRetail.DescId = zc_ObjectString_Partner_GLNCodeRetail()
          --Адрес точки доставки
          LEFT JOIN ObjectString AS ObjectString_Address
                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
-                               AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()         
+                               AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
          --Номер дома
          LEFT JOIN ObjectString AS ObjectString_HouseNumber
                                 ON ObjectString_HouseNumber.ObjectId = Object_Partner.Id
-                               AND ObjectString_HouseNumber.DescId = zc_ObjectString_Partner_HouseNumber()         
+                               AND ObjectString_HouseNumber.DescId = zc_ObjectString_Partner_HouseNumber()
          --Номер корпуса
          LEFT JOIN ObjectString AS ObjectString_CaseNumber
                                 ON ObjectString_CaseNumber.ObjectId = Object_Partner.Id
@@ -264,7 +268,7 @@ AS
          --Примечание(для Накладной продажи)
          LEFT JOIN ObjectString AS ObjectString_Movement
                                 ON ObjectString_Movement.ObjectId = Object_Partner.Id
-                               AND ObjectString_Movement.DescId = zc_ObjectString_Partner_Movement()         
+                               AND ObjectString_Movement.DescId = zc_ObjectString_Partner_Movement()
          --Юридические лица
          LEFT JOIN ObjectString AS ObjectString_Terminal
                                 ON ObjectString_Terminal.ObjectId = Object_Partner.Id
@@ -290,7 +294,7 @@ AS
                                 ON ObjectString_Delivery.ObjectId = Object_Partner.Id
                                AND ObjectString_Delivery.DescId = zc_ObjectString_Partner_Delivery()
 
-         --Дата начала акции 
+         --Дата начала акции
          LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                               ON ObjectDate_StartPromo.ObjectId = Object_Partner.Id
                              AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Partner_StartPromo()
@@ -307,25 +311,25 @@ AS
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
                               ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
-         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId         
+         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
          --Маршруты 30201
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route_30201
                               ON ObjectLink_Partner_Route_30201.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Route_30201.DescId = zc_ObjectLink_Partner_Route30201()
-         LEFT JOIN Object AS Object_Route_30201 ON Object_Route_30201.Id = ObjectLink_Partner_Route_30201.ChildObjectId         
+         LEFT JOIN Object AS Object_Route_30201 ON Object_Route_30201.Id = ObjectLink_Partner_Route_30201.ChildObjectId
          --Физ лицо (сотрудник экспедитор)
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
                               ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
-         LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId         
+         LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
          --Физ лицо (Продавец-1)
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberSaler1
-                              ON ObjectLink_Partner_MemberSaler1.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberSaler1.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberSaler1.DescId = zc_ObjectLink_Partner_MemberSaler1()
-         LEFT JOIN Object AS Object_MemberSaler1 ON Object_MemberSaler1.Id = ObjectLink_Partner_MemberSaler1.ChildObjectId         
+         LEFT JOIN Object AS Object_MemberSaler1 ON Object_MemberSaler1.Id = ObjectLink_Partner_MemberSaler1.ChildObjectId
          --Физ лицо (Продавец-2)
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberSaler2
-                              ON ObjectLink_Partner_MemberSaler2.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberSaler2.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberSaler2.DescId = zc_ObjectLink_Partner_MemberSaler2()
          LEFT JOIN Object AS Object_MemberSaler2 ON Object_MemberSaler2.Id = ObjectLink_Partner_MemberSaler2.ChildObjectId
          --ФИО сотрудник (супервайзер)
@@ -340,12 +344,12 @@ AS
          LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
          --ФИО Сотрудник (мерчандайзер)
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalMerch
-                              ON ObjectLink_Partner_PersonalMerch.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_PersonalMerch.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_PersonalMerch.DescId = zc_ObjectLink_Partner_PersonalMerch()
          LEFT JOIN Object AS Object_PersonalMerch ON Object_PersonalMerch.Id = ObjectLink_Partner_PersonalMerch.ChildObjectId
          --ФИО Сотрудники (подписант)
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalSigning
-                              ON ObjectLink_Partner_PersonalSigning.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_PersonalSigning.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_PersonalSigning.DescId = zc_ObjectLink_Partner_PersonalSigning()
          LEFT JOIN Object AS Object_PersonalSigning ON Object_PersonalSigning.Id = ObjectLink_Partner_PersonalSigning.ChildObjectId
          --Регион
@@ -399,9 +403,9 @@ AS
                              AND ObjectLink_Partner_UnitMobile.DescId = zc_ObjectLink_Partner_UnitMobile()
          LEFT JOIN Object AS Object_UnitMobile ON Object_UnitMobile.Id = ObjectLink_Partner_UnitMobile.ChildObjectId
 
+       WHERE Object_Partner.DescId = zc_Object_Partner()
+      ;
 
-       WHERE Object_Partner.DescId = zc_Object_Partner();
-     
 ALTER TABLE _bi_Guide_Partner_View  OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/

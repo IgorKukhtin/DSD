@@ -1,17 +1,21 @@
 -- View: _bi_Guide_GoodsKind_View
 
--- DROP VIEW IF EXISTS _bi_Guide_GoodsKind_View;
---Справочник Виды товаров
+DROP VIEW IF EXISTS _bi_Guide_GoodsKind_View;
+
+-- Справочник Виды товаров
 CREATE OR REPLACE VIEW _bi_Guide_GoodsKind_View
 AS
-       SELECT 
-             Object_GoodsKind.Id         AS Id 
+       SELECT
+             Object_GoodsKind.Id         AS Id
            , Object_GoodsKind.ObjectCode AS Code
            , Object_GoodsKind.ValueData  AS Name
+             -- Признак "Удален да/нет"
            , Object_GoodsKind.isErased   AS isErased
+
        FROM Object AS Object_GoodsKind
-       WHERE Object_GoodsKind.DescId = zc_Object_GoodsKind();
-     
+       WHERE Object_GoodsKind.DescId = zc_Object_GoodsKind()
+      ;
+
 ALTER TABLE _bi_Guide_GoodsKind_View  OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/

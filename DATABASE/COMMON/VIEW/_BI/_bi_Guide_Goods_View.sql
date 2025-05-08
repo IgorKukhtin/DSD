@@ -1,16 +1,24 @@
 -- View: _bi_Guide_Goods_View
 
--- DROP VIEW IF EXISTS _bi_Guide_Goods_View;
---Справочник Товары
+DROP VIEW IF EXISTS _bi_Guide_Goods_View;
+
+-- Справочник Товары
 CREATE OR REPLACE VIEW _bi_Guide_Goods_View
 AS
-     SELECT 
-            Object_Goods.Id                AS Id 
+     SELECT
+            Object_Goods.Id                AS Id
           , Object_Goods.ObjectCode        AS Code
           , Object_Goods.ValueData         AS Name
+            -- Признак "Удален да/нет"
           , Object_Goods.isErased          AS isErased
-          --Название сокращенное
-          , ObjectString_Goods_ShortName.ValueData :: TVarChar AS ShortName 
+
+            -- Группа товаров
+          , Object_GoodsGroup.Id           AS GoodsGroupId
+          , Object_GoodsGroup.ObjectCode   AS GoodsGroupCode
+          , Object_GoodsGroup.ValueData    AS GoodsGroupName
+
+            -- Название сокращенное
+          , ObjectString_Goods_ShortName.ValueData :: TVarChar AS ShortName
           --Название товара(русс.)
           , COALESCE (zfCalc_Text_replace (ObjectString_Goods_RUS.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_RUS
           --Название товара(бухг.)
@@ -33,7 +41,7 @@ AS
           , ObjectString_Goods_TaxImport.ValueData  ::TVarChar AS TaxImport
           --Послуги згідно з ДКПП
           , ObjectString_Goods_DKPP.ValueData       ::TVarChar AS DKPP
-          --Код виду діяльності сільск-господар товаровиробника 
+          --Код виду діяльності сільск-господар товаровиробника
           , ObjectString_Goods_TaxAction.ValueData  ::TVarChar AS TaxAction
           --Примечание
           , ObjectString_Goods_Comment.ValueData    ::TVarChar AS Comment
@@ -48,113 +56,101 @@ AS
           --Код АЛАН
           , ObjectFloat_ObjectCode_Basis.ValueData  ::Integer AS BasisCode
 
-           --Ирна
+            --Ирна
           , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)       :: Boolean AS isIrna
-          --Признак - ОС
+            --Признак - ОС
           , COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE)      :: Boolean AS isAsset
-          --Партии поставщика в учете количеств
+            --Партии поставщика в учете количеств
           , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)     :: Boolean AS isPartionCount
-          --Партии поставщика в учете себестоимости
-          , COALESCE (ObjectBoolean_PartionSumm.ValueData, TRUE)       :: Boolean AS isPartionSumm          
-          --Показывать реальное назв.
+            --Партии поставщика в учете себестоимости
+          , COALESCE (ObjectBoolean_PartionSumm.ValueData, TRUE)       :: Boolean AS isPartionSumm
+            --Показывать реальное назв.
           , COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE)         :: Boolean AS isNameOrig
-          --Учет по дате партии
+            --Учет по дате партии
           , COALESCE (ObjectBoolean_Goods_PartionDate.ValueData, FALSE):: Boolean AS isPartionDate
           --Проверка Количество голов
           , COALESCE (ObjectBoolean_Goods_HeadCount.ValueData, FALSE)  :: Boolean AS isHeadCount
 
-          --Группы товаров
-          , Object_GoodsGroup.Id                 AS GoodsGroupId 
-          , Object_GoodsGroup.ObjectCode         AS GoodsGroupCode
-          , Object_GoodsGroup.ValueData          AS GoodsGroupName
-          --Группы товаров(статистика)
-          , Object_GoodsGroupStat.Id             AS GroupStatId 
+            --Группа товаров(статистика)
+          , Object_GoodsGroupStat.Id             AS GroupStatId
           , Object_GoodsGroupStat.ObjectCode     AS GroupStatCode
           , Object_GoodsGroupStat.ValueData      AS GroupStatName
-          --Группа товаров(аналитика)
+            --Группа товаров(аналитика)
           , Object_GoodsGroupAnalyst.Id          AS GoodsGroupAnalystId
           , Object_GoodsGroupAnalyst.ObjectCode  AS GoodsGroupAnalysCode
-          , Object_GoodsGroupAnalyst.ValueData   AS GoodsGroupAnalystName          
-          --Торговые марки
+          , Object_GoodsGroupAnalyst.ValueData   AS GoodsGroupAnalystName
+            --Торговая марка
           , Object_TradeMark.Id                  AS TradeMarkId
           , Object_TradeMark.ObjectCode          AS TradeMarkCode
           , Object_TradeMark.ValueData           AS TradeMarkName
-          --Единицы измерения
+            --Единица измерения
           , Object_Measure.Id                    AS MeasureId
           , Object_Measure.ObjectCode            AS MeasureCode
-          , Object_Measure.ValueData             AS MeasureName 
-          --Единицы измерения - Международное наименование
+          , Object_Measure.ValueData             AS MeasureName
+            --Единица измерения - Международное наименование
           , ObjectString_Measure_InternalName.ValueData ::TVarChar AS InternalName
-          --Единицы измерения - Международный код 
+            --Единица измерения - Международный код
           , ObjectString_Measure_InternalCode.ValueData ::TVarChar AS InternalCode
-            
-          --Статьи назначения
+
+            -- УП Статья назначения
           , Object_InfoMoney_View.InfoMoneyId
           , Object_InfoMoney_View.InfoMoneyCode
           , Object_InfoMoney_View.InfoMoneyName
-          , Object_InfoMoney_View.InfoMoneyGroupId
           , Object_InfoMoney_View.InfoMoneyGroupCode
           , Object_InfoMoney_View.InfoMoneyGroupName
-          , Object_InfoMoney_View.InfoMoneyDestinationId
           , Object_InfoMoney_View.InfoMoneyDestinationCode
           , Object_InfoMoney_View.InfoMoneyDestinationName
-          --Бизнесы
+            -- Бизнес
           , Object_Business.Id               AS BusinessId
           , Object_Business.ObjectCode       AS BusinessCode
           , Object_Business.ValueData        AS BusinessName
-          --Виды топлива
+            --Вид топлива
           , Object_Fuel.Id                   AS FuelId
           , Object_Fuel.ObjectCode           AS FuelCode
           , Object_Fuel.ValueData            AS FuelName
-          --Признак товара
+            --Признак товара
           , Object_GoodsTag.Id               AS GoodsTagId
           , Object_GoodsTag.ObjectCode       AS GoodsTagCode
           , Object_GoodsTag.ValueData        AS GoodsTagName
-          --Производственная площадка
+           --Производственная площадка
           , Object_GoodsPlatform.Id          AS GoodsPlatformId
           , Object_GoodsPlatform.ObjectCode  AS GoodsPlatformCode
           , Object_GoodsPlatform.ValueData   AS GoodsPlatformName
-          --Поставщик
+            --Поставщик
           , Object_PartnerIn.Id              AS PartnerInId
           , Object_PartnerIn.ObjectCode      AS PartnerInCode
           , Object_PartnerIn.ValueData       AS PartnerInName
-          --Связь товаров с базовым
+           -- Связь товаров с базовым (Производство)
           , Object_Goods_basis.Id            AS GoodsId_basis
           , Object_Goods_basis.ObjectCode    AS GoodsCode_basis
           , Object_Goods_basis.ValueData     AS GoodsName_basis
-          --Связь товаров с главным
+            -- Связь товаров с главным (Производство)
           , Object_Goods_main.Id             AS GoodsId_main
           , Object_Goods_main.ObjectCode     AS GoodsCode_main
           , Object_Goods_main.ValueData      AS GoodsName_main
-          --Основное средство (назначение ТМЦ) 
+            -- Основное средство (назначение ТМЦ)
           , Object_Asset.Id                  AS AssetId
           , Object_Asset.ObjectCode          AS AssetCode
           , Object_Asset.ValueData           AS AssetName
-          --Основное средство (на каком оборудовании производится) 
+            -- Основное средство (на каком оборудовании производится)
           , Object_AssetProd.Id              AS AssetProdId
           , Object_AssetProd.ObjectCode      AS AssetProdCode
           , Object_AssetProd.ValueData       AS AssetProdName
-          --Аналитический классификатор
+            -- Аналитический классификатор
           , Object_GoodsGroupProperty.Id                 AS GoodsGroupPropertyId
           , Object_GoodsGroupProperty.ObjectCode         AS GoodsGroupPropertyCode
           , Object_GoodsGroupProperty.ValueData          AS GoodsGroupPropertyName
-          --Аналитический классификатор - Группа
+            -- Аналитический классификатор - Группа
           , Object_GoodsGroupPropertyParent.Id           AS GoodsGroupPropertyId_Parent
           , Object_GoodsGroupPropertyParent.ObjectCode   AS GoodsGroupPropertyCode_Parent
           , Object_GoodsGroupPropertyParent.ValueData    AS GoodsGroupPropertyName_Parent
-          --Аналитический классификатор - Ідентифікаційний номер тварини від якої отримано сировину
-          , ObjectString_QualityINN.ValueData ::TVarChar AS QualityINN          
-          --Аналитическая группа Направление
-          , Object_GoodsGroupDirection.Id               AS GoodsGroupDirectionId 
+            --Аналитический классификатор - Ідентифікаційний номер тварини від якої отримано сировину
+          , ObjectString_QualityINN.ValueData ::TVarChar AS QualityINN
+            -- Аналитическая группа Направление
+          , Object_GoodsGroupDirection.Id               AS GoodsGroupDirectionId
           , Object_GoodsGroupDirection.ObjectCode       AS GoodsGroupDirectionCode
           , Object_GoodsGroupDirection.ValueData        AS GoodsGroupDirectionName
-            
-            
-            
-            
-            
-            
-            
+
        FROM Object AS Object_Goods
            --Название сокращенное
            LEFT JOIN ObjectString AS ObjectString_Goods_ShortName
@@ -196,10 +192,10 @@ AS
            LEFT JOIN ObjectString AS ObjectString_Goods_DKPP
                                   ON ObjectString_Goods_DKPP.ObjectId = Object_Goods.Id
                                  AND ObjectString_Goods_DKPP.DescId = zc_ObjectString_Goods_DKPP()
-           --Код виду діяльності сільск-господар товаровиробника 
+           --Код виду діяльності сільск-господар товаровиробника
            LEFT JOIN ObjectString AS ObjectString_Goods_TaxAction
                                   ON ObjectString_Goods_TaxAction.ObjectId = Object_Goods.Id
-                                 AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()         
+                                 AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()
            --дата с которой действует новый Код УКТ ЗЕД
            LEFT JOIN ObjectDate AS ObjectDate_Goods_UKTZED_new
                                 ON ObjectDate_Goods_UKTZED_new.ObjectId = Object_Goods.Id
@@ -211,7 +207,7 @@ AS
            --Дата прихода от поставщика
            LEFT JOIN ObjectDate AS ObjectDate_In
                                 ON ObjectDate_In.ObjectId = Object_Goods.Id
-                               AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()           
+                               AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()
            --Вес товара
            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
@@ -226,7 +222,7 @@ AS
                                 AND ObjectFloat_CountForWeight.DescId = zc_ObjectFloat_Goods_CountForWeight()
            --Кол-во партий из рецептуры для замеса
            LEFT JOIN ObjectFloat AS ObjectFloat_CountReceipt
-                                 ON ObjectFloat_CountReceipt.ObjectId = Object_Goods.Id 
+                                 ON ObjectFloat_CountReceipt.ObjectId = Object_Goods.Id
                                 AND ObjectFloat_CountReceipt.DescId = zc_ObjectFloat_Goods_CountReceipt()
            --Код АЛАН
            LEFT JOIN ObjectFloat AS ObjectFloat_ObjectCode_Basis
@@ -238,7 +234,7 @@ AS
                                   AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
            --Признак - ОС
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
-                                   ON ObjectBoolean_Goods_Asset.ObjectId = Object_Goods.Id 
+                                   ON ObjectBoolean_Goods_Asset.ObjectId = Object_Goods.Id
                                   AND ObjectBoolean_Goods_Asset.DescId = zc_ObjectBoolean_Goods_Asset()
            --Партии поставщика в учете количеств
            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
@@ -254,11 +250,11 @@ AS
                                   AND ObjectBoolean_NameOrig.DescId = zc_ObjectBoolean_Goods_NameOrig()
            --Проверка Количество голов
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_HeadCount
-                                   ON ObjectBoolean_Goods_HeadCount.ObjectId = Object_Goods.Id 
+                                   ON ObjectBoolean_Goods_HeadCount.ObjectId = Object_Goods.Id
                                   AND ObjectBoolean_Goods_HeadCount.DescId = zc_ObjectBoolean_Goods_HeadCount()
            --Учет по дате партии
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_PartionDate
-                                   ON ObjectBoolean_Goods_PartionDate.ObjectId = Object_Goods.Id 
+                                   ON ObjectBoolean_Goods_PartionDate.ObjectId = Object_Goods.Id
                                   AND ObjectBoolean_Goods_PartionDate.DescId = zc_ObjectBoolean_Goods_PartionDate()
            --Группы товаров
            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -285,20 +281,22 @@ AS
                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-           --Единицы измерения - Международное наименование
+
+           -- Единицы измерения - Международное наименование
            LEFT JOIN ObjectString AS ObjectString_Measure_InternalName
                                   ON ObjectString_Measure_InternalName.ObjectId = Object_Measure.Id
-                                 AND ObjectString_Measure_InternalName.DescId = zc_ObjectString_Measure_InternalName()           
-           --Единицы измерения - Международный код
+                                 AND ObjectString_Measure_InternalName.DescId = zc_ObjectString_Measure_InternalName()
+           -- Единицы измерения - Международный код
            LEFT JOIN ObjectString AS ObjectString_Measure_InternalCode
                                   ON ObjectString_Measure_InternalCode.ObjectId = Object_Measure.Id
-                                 AND ObjectString_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()           
-           --Статьи назначения
+                                 AND ObjectString_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()
+           -- УП Статья назначения
            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
-                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                               AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-           --Бизнесы
+
+           -- Бизнесы
            LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
                                 ON ObjectLink_Goods_Business.ObjectId = Object_Goods.Id
                                AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
@@ -322,7 +320,7 @@ AS
            LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
                                 ON ObjectLink_Goods_PartnerIn.ObjectId = Object_Goods.Id
                                AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
-           LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId                      
+           LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
            --Связь товаров с базовым
            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsBasis
                                 ON ObjectLink_Goods_GoodsBasis.ObjectId = Object_Goods.Id
@@ -342,7 +340,7 @@ AS
            LEFT JOIN ObjectLink AS ObjectLink_Goods_AssetProd
                                 ON ObjectLink_Goods_AssetProd.ObjectId = Object_Goods.Id
                                AND ObjectLink_Goods_AssetProd.DescId = zc_ObjectLink_Goods_AssetProd()
-           LEFT JOIN Object AS Object_AssetProd ON Object_AssetProd.Id = ObjectLink_Goods_AssetProd.ChildObjectId           
+           LEFT JOIN Object AS Object_AssetProd ON Object_AssetProd.Id = ObjectLink_Goods_AssetProd.ChildObjectId
            --Аналитический классификатор
            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
                                 ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = Object_Goods.Id
@@ -353,7 +351,7 @@ AS
                                 ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
                                AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
            LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
-           --Аналитический классификатор - Ідентифікаційний номер тварини від якої отримано сировину 
+           --Аналитический классификатор - Ідентифікаційний номер тварини від якої отримано сировину
            LEFT JOIN ObjectString AS ObjectString_QualityINN
                                   ON ObjectString_QualityINN.ObjectId = Object_GoodsGroupProperty.Id
                                  And ObjectString_QualityINN.DescId = zc_ObjectString_GoodsGroupProperty_QualityINN()
@@ -361,11 +359,11 @@ AS
            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupDirection
                                 ON ObjectLink_Goods_GoodsGroupDirection.ObjectId = Object_Goods.Id
                                AND ObjectLink_Goods_GoodsGroupDirection.DescId = zc_ObjectLink_Goods_GoodsGroupDirection()
-           LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = ObjectLink_Goods_GoodsGroupDirection.ChildObjectId           
+           LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = ObjectLink_Goods_GoodsGroupDirection.ChildObjectId
 
+     WHERE Object_Goods.DescId = zc_Object_Goods()
+    ;
 
-     WHERE Object_Goods.DescId = zc_Object_Goods();
-     
 ALTER TABLE _bi_Guide_Goods_View  OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
