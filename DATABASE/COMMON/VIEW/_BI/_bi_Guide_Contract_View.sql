@@ -2,7 +2,7 @@
 
  DROP VIEW IF EXISTS _bi_Guide_Contract_View;
 
--- Справочник Контрагенты
+-- Справочник Договора
 CREATE OR REPLACE VIEW _bi_Guide_Contract_View
 AS
   WITH -- ВСЕ Условия договора
@@ -291,7 +291,7 @@ ALTER TABLE _bi_Guide_Contract_View  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 07.05.25         *
+ 08.05.25         *
 */
 
 -- тест

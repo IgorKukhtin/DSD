@@ -165,6 +165,7 @@ AS
            , Object_UnitMobile.Id              AS UnitMobileId
            , Object_UnitMobile.ObjectCode      AS UnitMobileCode
            , Object_UnitMobile.ValueData       AS UnitMobileName
+
        FROM Object AS Object_Partner
          --За сколько дней принимается заказ
          LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
