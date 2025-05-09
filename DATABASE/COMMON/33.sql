@@ -2,14 +2,14 @@
 
 -- select * from _tmpContainerList_partion_2024_07  where ContainerId_count = 9162190
 -- select * from _tmpContainerList_2024_07  where ContainerId_count in (9154730)
--- select * from MovementItemContainer where MovementItemContainer.ContainerId = 8651068 and MovementItemContainer.OperDate between '01.12.2024' and '31.12.2024'
--- insert into historycost_2024_12 select * from historycost where StartDate = '01.12.2024'
--- select * from historycost where StartDate = '01.12.2024' and ContainerId = 177282
--- SELECT * FROM HistoryCost WHERE '01.03.2025' = StartDate and ContainerId in (SELECT Id FROM Container WHERE ParentId in (4120409))
+-- select * from MovementItemContainer where MovementItemContainer.ContainerId = 8651068 and MovementItemContainer.OperDate between '01.04.2025' and '30.04.2025'
+-- insert into historycost_2024_12 select * from historycost where StartDate = '01.04.2025'
+-- select * from historycost where StartDate = '01.04.2025' and ContainerId = 177282
+-- SELECT * FROM HistoryCost WHERE '01.04.2025' = StartDate and ContainerId in (SELECT Id FROM Container WHERE ParentId in (4120409))
 
 -- !!!Project!!!
 /*
--- select * from MovementItemContainer where MovementItemContainer.ContainerId = 309211 and MovementItemContainer.OperDate between '01.03.2025' and '31.01.2025'
+-- select * from MovementItemContainer where MovementItemContainer.ContainerId = 309211 and MovementItemContainer.OperDate between '01.04.2025' and '30.04.2025'
 -- select * from MovementItemContainer where MovementItemId = 313557437 and ContainerId in (SELECT Id FROM Container WHERE ParentId in (309211, 4120409))
 select * 
 from Container 
@@ -32,7 +32,7 @@ with -- Список zc_Container_Count + MIContainer
                                         and ContainerLinkObject.Descid = zc_ContainerLinkObject_Unit()
                                         and ContainerLinkObject.ObjectId = zc_Unit_RK()
                 join MovementItemContainer on MovementItemContainer.ContainerId = Container.Id
-                                          and MovementItemContainer.OperDate between '01.03.2025' and '31.03.2025'
+                                          and MovementItemContainer.OperDate between '01.04.2025' and '30.04.2025'
                                           and MovementItemContainer.Amount <> 0
                                           and MovementItemContainer.MovementDescId <> zc_Movement_Inventory()
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Account
@@ -66,7 +66,7 @@ with -- Список zc_Container_Count + MIContainer
                                                   on clo_GoodsKind.ContainerId = Container_Summ.Id
                                                  and clo_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind() 
                     left join Object on Object.Id = ContainerLinkObject.ObjectId 
-                    join HistoryCost on HistoryCost.StartDate = '01.03.2025' 
+                    join HistoryCost on HistoryCost.StartDate = '01.04.2025' 
                                     and HistoryCost.ContainerId = Container_Summ.Id
                                     and HistoryCost.Price > 1
                group by a.GoodsId, ContainerLinkObject.ObjectId , coalesce (clo_GoodsKind.ObjectId, 0), a.Id
@@ -120,7 +120,7 @@ with -- Список zc_Container_Count + MIContainer
 
 
       -- если не нашли цену
-      left join HistoryCost on '01.03.2025' = StartDate and HistoryCost.ContainerId = Container_Summ.Id
+      left join HistoryCost on '01.04.2025' = StartDate and HistoryCost.ContainerId = Container_Summ.Id
 
       -- если нашли цену по ключу
       join tmp_find on tmp_find.GoodsId           = a.GoodsId
@@ -217,27 +217,27 @@ left join ObjectDesc on ObjectDesc.Id = Object.DescId
 -- left join ContainerDesc on ContainerDesc.Id = Container.DescId
 where Container.Id =   109381
 
-select * from MovementItemContainer where ContainerId  = 109381 and OperDate between '01.03.2025' and  '31.03.2025'
-select * from miContainer_2024_12_1 where ContainerId  = 109381 and OperDate between '01.03.2025' and  '31.03.2025'
+select * from MovementItemContainer where ContainerId  = 109381 and OperDate between '01.04.2025' and  '30.04.2025'
+select * from miContainer_2024_12_1 where ContainerId  = 109381 and OperDate between '01.04.2025' and  '30.04.2025'
 
-select 1, * from MovementItemContainer where MovementId  = 30303624 and ContainerId  = 109381 and OperDate between '01.03.2025' and  '31.03.2025'
+select 1, * from MovementItemContainer where MovementId  = 30303624 and ContainerId  = 109381 and OperDate between '01.04.2025' and  '30.04.2025'
 union all
-select 2, * from miContainer_2024_12_1 where MovementId  = 30303624 and MovementItemId = 314255034 and OperDate between '01.03.2025' and  '31.03.2025' and DescId = 1
+select 2, * from miContainer_2024_12_1 where MovementId  = 30303624 and MovementItemId = 314255034 and OperDate between '01.04.2025' and  '30.04.2025' and DescId = 1
 order by 1
 
 
 -- insert into miContainer_2024_12_1 select * from movementitemcontainer where OperDate between '01.01.2025' and '31.01.2025'
 -- insert into historycost_2024_12_1 select * from historycost where StartDate = '01.01.2025'
 
-select 2, * from miContainer_2024_12_1 where MovementId  = 30303624 and MovementItemId = 314255035 and OperDate between '01.03.2025' and  '31.03.2025' and DescId = 1
+select 2, * from miContainer_2024_12_1 where MovementId  = 30303624 and MovementItemId = 314255035 and OperDate between '01.04.2025' and  '30.04.2025' and DescId = 1
 
 
 select * from MovementItem where Id  = 314181045
 
 
-select 1, sum (amount) from MovementItemContainer where  ContainerId  = 9646958 and OperDate between '01.03.2025' and  '31.03.2025'and DescId = 1
+select 1, sum (amount) from MovementItemContainer where  ContainerId  = 9646958 and OperDate between '01.04.2025' and  '30.04.2025'and DescId = 1
 union all
-select 2, * from miContainer_2024_12_1 where ContainerId  = 9764863 and OperDate between '01.03.2025' and  '31.03.2025' and DescId = 1
+select 2, * from miContainer_2024_12_1 where ContainerId  = 9764863 and OperDate between '01.04.2025' and  '30.04.2025' and DescId = 1
 order by 7, 4, 8, 6, 1
 
 
@@ -249,11 +249,11 @@ union all
 select 3, * from miContainer_2024_12_1 where MovementId  = 30144484 and DescId = 1  and ContainerId = 9646958
 
 
- SELECT 1, * FROM HistoryCost WHERE '01.03.2025' = StartDate and ContainerId = 280649
+ SELECT 1, * FROM HistoryCost WHERE '01.04.2025' = StartDate and ContainerId = 280649
 union
-SELECT 2, * FROM historycost_2024_12_1 WHERE '01.03.2025' = StartDate and ContainerId = 5275601
+SELECT 2, * FROM historycost_2024_12_1 WHERE '01.04.2025' = StartDate and ContainerId = 5275601
 union
-SELECT 3, * FROM historycost_2024_12_2 WHERE '01.03.2025' = StartDate and ContainerId = 5275601
+SELECT 3, * FROM historycost_2024_12_2 WHERE '01.04.2025' = StartDate and ContainerId = 5275601
 order by 1
 
 select *, xmin, CURRENT_TIMESTAMP from pg_replication_slots

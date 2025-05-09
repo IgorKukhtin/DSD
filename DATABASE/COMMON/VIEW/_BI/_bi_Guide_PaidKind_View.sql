@@ -2,7 +2,7 @@
 
  DROP VIEW IF EXISTS _bi_Guide_PaidKind_View;
 
--- Справочник Торговая сеть
+-- Справочник Форма оплаты
 CREATE OR REPLACE VIEW _bi_Guide_PaidKind_View
 AS
        SELECT

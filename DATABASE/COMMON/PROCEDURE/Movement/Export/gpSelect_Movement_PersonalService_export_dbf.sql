@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_export_dbf(
 RETURNS TABLE (ACCT_CARD   VarChar (29)
              , FIO         VarChar (50)
              , ID_CODE     VarChar (10)
-             , SUMA        NUMERIC (10,2)                                   
+             , SUMA        NUMERIC (10,2)
              )
 AS
 $BODY$
@@ -30,14 +30,15 @@ $BODY$
 
    DECLARE vbOperDate TDateTime;
 
+   DECLARE vbPersonalServiceListId Integer;
    DECLARE vbPSLExportKindId Integer;
    DECLARE vbBankName TVarChar;
    DECLARE vbMFO TVarChar;
    DECLARE vbBankAccountId Integer;
    DECLARE vbBankAccountName TVarChar;
    DECLARE vbContentType TVarChar;
-   DECLARE vbOnFlowType TVarChar; 
-   DECLARE vbKoeffSummCardSecond NUMERIC (16,10); 
+   DECLARE vbOnFlowType TVarChar;
+   DECLARE vbKoeffSummCardSecond NUMERIC (16,10);
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -57,12 +58,13 @@ BEGIN
                        , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
                        , CHR(13)
                         ;
-                         
+
      END IF;
-     
- 
+
+
      -- определили данные из ведомости начисления
-     SELECT Object_Bank.Id                 AS BankId             -- БАНК
+     SELECT MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
+          , Object_Bank.Id                 AS BankId             -- БАНК
           , Object_Bank.ValueData          AS BankName           -- БАНК
           , ObjectString_MFO.ValueData     AS MFO                --
           , Object_BankAccount.Id          AS BankAccountId      -- р/счет
@@ -71,7 +73,8 @@ BEGIN
           , ObjectString_ContentType.ValueData ::TVarChar   AS ContentType  -- Content-Type
           , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType   -- Вид начисления в банке
           , CAST ((ObjectFloat_KoeffSummCardSecond.ValueData/ 1000) AS NUMERIC (16,10))  AS KoeffSummCardSecond --Коэфф для выгрузки ведомости Банк 2ф.
-   INTO vbBankId, vbBankName, vbMFO
+   INTO vbPersonalServiceListId
+      , vbBankId, vbBankName, vbMFO
       , vbBankAccountId, vbBankAccountName
       , vbPSLExportKindId, vbContentType, vbOnFlowType
       , vbKoeffSummCardSecond
@@ -86,14 +89,14 @@ BEGIN
                                AND ObjectLink_PersonalServiceList_PSLExportKind.DescId = zc_ObjectLink_PersonalServiceList_PSLExportKind()
 
            LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_BankAccount
-                                ON ObjectLink_PersonalServiceList_BankAccount.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId 
+                                ON ObjectLink_PersonalServiceList_BankAccount.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
                                AND ObjectLink_PersonalServiceList_BankAccount.DescId = zc_ObjectLink_PersonalServiceList_BankAccount()
            LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_PersonalServiceList_BankAccount.ChildObjectId
 
-           LEFT JOIN ObjectString AS ObjectString_ContentType 
+           LEFT JOIN ObjectString AS ObjectString_ContentType
                                   ON ObjectString_ContentType.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
                                  AND ObjectString_ContentType.DescId = zc_ObjectString_PersonalServiceList_ContentType()
-           LEFT JOIN ObjectString AS ObjectString_OnFlowType 
+           LEFT JOIN ObjectString AS ObjectString_OnFlowType
                                   ON ObjectString_OnFlowType.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
                                  AND ObjectString_OnFlowType.DescId = zc_ObjectString_PersonalServiceList_OnFlowType()
 
@@ -115,18 +118,27 @@ BEGIN
 
      INSERT INTO _tmpResult (NPP, CARDIBAN, FIO, ID_CODE, SUMA)
 
-        SELECT ROW_NUMBER() OVER (ORDER BY gpSelect.card) AS NPP 
+        SELECT ROW_NUMBER() OVER (ORDER BY gpSelect.card) AS NPP
              , gpSelect.card         ::TVarChar AS CARDIBAN   -- Номер карточного (или другого) счёта
              , gpSelect.PersonalName ::TVarChar AS FIO        -- Фамилия сотрудника - Прізвище співробітника
              , gpSelect.INN          ::TVarChar AS ID_CODE    -- Табельный номер сотрудника
              , CAST (COALESCE (gpSelect.SummCardRecalc, 0) AS NUMERIC (10, 2))   AS SUMA        -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
-        FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId 
+        FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId
                                                   , inShowAll    := FALSE
                                                   , inIsErased   := FALSE
                                                   , inSession    := inSession
                                                    ) AS gpSelect
-        WHERE COALESCE (gpSelect.SummCardRecalc, 0) <> 0;  
+        WHERE COALESCE (gpSelect.SummCardRecalc, 0) <> 0;
 
+
+     ELSE
+         RAISE EXCEPTION 'Ошибка.Для ведомости <%>.%Необходимо установить банк <%>.%Сейчас установлен банк <%>.'
+                        , lfGet_Object_ValueData_sh (vbPersonalServiceListId)
+                        , CHR (13)
+                        , lfGet_Object_ValueData_sh (81283)
+                        , CHR (13)
+                        , lfGet_Object_ValueData_sh (vbBankId)
+                         ;
      END IF;
 
 
@@ -134,14 +146,14 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Export(), inMovementId, TRUE);
 
      -- Результат
-     RETURN QUERY   
-     
+     RETURN QUERY
+
      SELECT _tmpResult.CARDIBAN ::VarChar (29) AS ACCT_CARD
           , _tmpResult.FIO      ::VarChar (50)
           , _tmpResult.ID_CODE  ::VarChar (10)
           , _tmpResult.SUMA     ::NUMERIC (10,2)
      FROM _tmpResult
-     ORDER BY NPP; 
+     ORDER BY NPP;
 
 END;
 $BODY$

@@ -239,7 +239,9 @@ END IF;
           , (tmp.InvNumber || ' - ' || CASE WHEN tmp.BranchCode IN (1)     THEN tmp.BranchCode
                                             WHEN tmp.BranchCode IN (2, 12) THEN tmp.BranchCode + 100
                                             ELSE COALESCE (tmp.BranchCode, 0) + 1000
-                                       END :: TVarChar) :: TVarChar AS InvNumber
+                                       END :: TVarChar
+                                    || ' - ' || zfCalc_Word_Split (inValue:= tmp.Code, inSep:= '_', inIndex:= 3)
+            ) :: TVarChar AS InvNumber
           , tmp.Code
           , tmp.ItemName
           , CASE WHEN tmp.BranchCode IN (1)     THEN tmp.BranchCode

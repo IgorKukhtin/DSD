@@ -400,6 +400,8 @@ BEGIN
                                   FROM tmpContainer_Count
                                        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
                                                                                      AND MIContainer.OperDate >= inStartDate
+                                                                                     -- Голота К.О.
+                                                                                     -- AND MIContainer.OperDate <= CASE WHEN vbUserId IN (5, 6604558) THEN inEndDate ELSE zc_DateEnd() END
                                   GROUP BY tmpContainer_Count.ContainerId
                                          , tmpContainer_Count.LocationId
                                          , tmpContainer_Count.GoodsId
@@ -471,6 +473,8 @@ BEGIN
                                  FROM tmpContainer_Summ
                                       LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Summ.ContainerId_Summ
                                                                                     AND MIContainer.OperDate >= inStartDate
+                                                                                    -- Голота К.О.
+                                                                                    -- AND MIContainer.OperDate <= CASE WHEN vbUserId IN (5, 6604558) THEN inEndDate ELSE zc_DateEnd() END
                                  GROUP BY tmpContainer_Summ.AccountDirectionId
                                         , tmpContainer_Summ.ContainerId_Count
                                         , tmpContainer_Summ.ContainerId_Summ
@@ -1534,5 +1538,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2022', inEndDate:= '01.01.2022', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2022', inEndDate:= '01.01.2022', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inIsPartion := TRUE, inSession:= zfCalc_UserAdmin());
 -- SELECT * from gpReport_Goods(inStartDate := ('02.03.2025')::TDateTime , inEndDate := ('03.03.2025')::TDateTime , inUnitGroupId := 0 , inLocationId := 8451 , inGoodsGroupId := 1858 , inGoodsId := 341913 , inIsPartner := 'False' , inIsPartion := 'False', inSession := '5');

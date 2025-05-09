@@ -2,7 +2,7 @@
 
  DROP VIEW IF EXISTS _bi_Guide_InfoMoney_View;
 
--- Справочник Торговая сеть
+-- Справочник УП Статья назначения
 CREATE OR REPLACE VIEW _bi_Guide_InfoMoney_View
 AS
        SELECT
