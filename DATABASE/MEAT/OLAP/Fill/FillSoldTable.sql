@@ -197,8 +197,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                                               AND MovementItemContainer.DescId = zc_MIContainer_Summ()
                                                               AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                              -- !!!Расходы будущих периодов + Услуги по маркетингу!!!
                               INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
-                                                  AND Container.ObjectId = zc_Enum_Account_50401() -- !!!Расходы будущих периодов + Услуги по маркетингу!!!
+                                                  AND Container.ObjectId = zc_Enum_Account_50401()
 
                               LEFT JOIN ContainerLinkObject AS CLO_Juridical ON CLO_Juridical.ContainerId = Container.Id AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                               LEFT JOIN ContainerLinkObject AS CLO_PaidKind  ON CLO_PaidKind.ContainerId  = Container.Id AND CLO_PaidKind.DescId  = zc_ContainerLinkObject_PaidKind()
@@ -306,8 +307,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                                               AND MovementItemContainer.DescId = zc_MIContainer_Summ()
                                                               AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
-                              INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
-                                                  AND Container.ObjectId = zc_Enum_Account_70301() -- !!!
+                              -- !!! Услуги по маркетингу + Маркетинг
+                              INNER JOIN Container ON Container.Id       = MovementItemContainer.ContainerId
+                                                  AND Container.ObjectId = zc_Enum_Account_70301()
                               -- НАЛ
                               INNER JOIN ContainerLinkObject AS CLO_PaidKind
                                                              ON CLO_PaidKind.ContainerId = Container.Id

@@ -133,7 +133,7 @@ where HistoryCost.ContainerId IS NULL
   -- если вообще не нашли цену для ContainerId_goods
   AND tmp_find_all.ContainerId_goods IS NULL
 
- limit 200
+-- limit 200
 )
  select * from res order by ContainerId_goods
 -- select count(*)  from res 
