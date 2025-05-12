@@ -75,19 +75,24 @@ AS
                    , Object_Measure.ObjectCode                   AS MeasureCode
                    , Object_Measure.ValueData                    AS MeasureName
 
+                     -- Документ Заявка покупателя
+                   , Movement_Order.Id                           AS MovementId_order
+                   , Movement_Order.OperDate                     AS OperDate_order
+                   , Movement_Order.InvNumber                    AS InvNumber_order
+
                      -- Документ Акция
                    , MIFloat_PromoMovement.ValueData  :: Integer AS MovementId_promo
                      -- Признак Акция да/нет
                    , CASE WHEN MIFloat_PromoMovement.ValueData > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
 
                      -- Типы условия Бонус - нет
-                   , 0  :: Integer  AS ContractConditionKindId
+                   /*, 0  :: Integer  AS ContractConditionKindId
                    , '' :: TVarChar AS ContractConditionKindName
                      -- Вид бонуса - нет
                    , 0  :: Integer  AS BonusKindId
                    , '' :: TVarChar AS BonusKindName
                      -- % бонуса - нет
-                   , 0  :: TFloat   AS BonusTax
+                   , 0  :: TFloat   AS BonusTax*/
 
 
                      -- Вес Продажа - со склада
@@ -269,6 +274,12 @@ AS
                                          ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                         AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
+                   -- Документ Заявка покупателя - не из прводок
+                   LEFT JOIN MovementLinkMovement AS MLM_Order
+                                                  ON MLM_Order.MovementId = MIContainer.MovementId
+                                                 AND MLM_Order.DescId     = zc_MovementLinkMovement_Order()
+                   LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MLM_Order.MovementChildId
+
               GROUP BY MIContainer.MovementId
                        --, tmpAnalyzer.AnalyzerId
                      , MIContainer.MovementDescId
@@ -296,6 +307,9 @@ AS
                      , Object_Measure.ObjectCode
                      , Object_Measure.ValueData
                      , MIFloat_PromoMovement.ValueData
+                     , Movement_Order.Id
+                     , Movement_Order.OperDate
+                     , Movement_Order.InvNumber
 
 /*           UNION ALL
               -- Начисление Бонусов - Затраты
