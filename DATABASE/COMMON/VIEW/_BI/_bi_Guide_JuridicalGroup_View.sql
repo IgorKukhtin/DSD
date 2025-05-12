@@ -2,7 +2,7 @@
 
 DROP VIEW IF EXISTS _bi_Guide_JuridicalGroup_View;
 
---Справочник Группы юридических лиц
+-- Справочник Группы юридических лиц
 CREATE OR REPLACE VIEW _bi_Guide_JuridicalGroup_View
 AS
      SELECT 
@@ -12,13 +12,13 @@ AS
             -- Признак "Удален да/нет"
           , Object_JuridicalGroup.isErased   AS isErased
 
-            -- Родитель Группы
+            -- Родитель Группа
           , Object_Parent.Id                    AS ParentId 
           , Object_Parent.ObjectCode            AS ParentCode
           , Object_Parent.ValueData             AS ParentName
 
      FROM Object AS Object_JuridicalGroup
-          -- Родитель Группы
+          -- Родитель Группа
           LEFT JOIN ObjectLink AS ObjectLink_JuridicalGroup_Parent
                                ON ObjectLink_JuridicalGroup_Parent.ObjectId = Object_JuridicalGroup.Id
                               AND ObjectLink_JuridicalGroup_Parent.DescId = zc_ObjectLink_JuridicalGroup_Parent()

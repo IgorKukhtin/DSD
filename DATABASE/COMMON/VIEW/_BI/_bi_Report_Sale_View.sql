@@ -2,7 +2,7 @@
 
 DROP VIEW IF EXISTS _bi_Report_Sale_View;
 
--- Документы - Продажа
+-- Документы - Продажа/Возврат
 CREATE OR REPLACE VIEW _bi_Report_Sale_View
 AS
 
@@ -44,7 +44,7 @@ AS
                    , Movement.InvNumber
 
                      -- Юр. Лицо
-                   , CLO_Juridical.ObjectId                AS JuridicalId
+                   , CLO_Juridical.ObjectId                      AS JuridicalId
                      -- Контрагент
                    , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service()
                                THEN MIContainer.ObjectId_Analyzer
@@ -213,11 +213,11 @@ AS
                      -- Сумма с/с потери - Разница в весе - Возврат
                    , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) :: TFloat AS Return_SummCost_40200
 
-
                      -- Затраты - Сумма бонус по условиям - нет
-                   , 0 :: TFloat  AS BonusBasis
+/*                 , 0 :: TFloat  AS BonusBasis
                      -- Затраты - Сумма бонус "ручные"
                    , 0 :: TFloat  AS Bonus
+*/
 
               FROM tmpAnalyzer
                    -- Проводки
@@ -297,7 +297,7 @@ AS
                      , Object_Measure.ValueData
                      , MIFloat_PromoMovement.ValueData
 
-             UNION ALL
+/*           UNION ALL
               -- Начисление Бонусов - Затраты
               SELECT -- Id Документа
                      MovementItemContainer.MovementId
@@ -711,7 +711,7 @@ AS
                      , Object_BonusKind.Id
                      , Object_BonusKind.ValueData
                      , MIFloat_BonusValue.ValueData
-                     , ObjectLink_Contract_PaidKind.ChildObjectId
+                     , ObjectLink_Contract_PaidKind.ChildObjectId*/
         ;
 
 ALTER TABLE _bi_Report_Sale_View  OWNER TO postgres;
