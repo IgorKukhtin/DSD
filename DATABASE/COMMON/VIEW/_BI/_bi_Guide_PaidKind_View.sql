@@ -3,6 +3,14 @@
  DROP VIEW IF EXISTS _bi_Guide_PaidKind_View;
 
 -- Справочник Форма оплаты
+/*
+--Id элемента Формы оплаты
+Id
+-- Признак "Удален да/нет"
+isErased
+*/
+
+
 CREATE OR REPLACE VIEW _bi_Guide_PaidKind_View
 AS
        SELECT

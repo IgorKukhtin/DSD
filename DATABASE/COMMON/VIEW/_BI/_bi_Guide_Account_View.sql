@@ -3,6 +3,44 @@
  DROP VIEW IF EXISTS _bi_Guide_Account_View;
 
 -- Справочник Счета
+
+/*
+-- элемент Счет
+Id
+Code
+Name
+-- Признак "Удален да/нет"
+isErased
+--Группа счетов
+AccountGroupId
+AccountGroupCode
+AccountGroupName
+--Аналитики счетов - направления
+AccountDirectionId
+AccountDirectionCode
+AccountDirectionName
+--Статьи назначения - группа
+InfoMoneyGroupId
+InfoMoneyGroupCode
+InfoMoneyGroupName
+--Управленческие назначения
+InfoMoneyDestinationId
+InfoMoneyDestinationCode
+InfoMoneyDestinationName
+--Статьи назначения
+InfoMoneyId
+InfoMoneyCode
+InfoMoneyName
+--Типы Счетов
+AccountKindId
+AccountKindCode
+AccountKindName
+--Создан при проведении
+onComplete
+--Показать развернутым при печати
+isPrintDetail
+
+*/
 CREATE OR REPLACE VIEW _bi_Guide_Account_View
 AS
        SELECT
