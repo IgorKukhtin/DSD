@@ -108,6 +108,34 @@ StatusId_wms
 StatusCode_wms
 StatusName_wms
 
+-- Id строки
+MovementItemId
+--Удалена строка (Да/нет)
+isErased_mi
+--товар
+GoodsId
+--Вид товара
+GoodsKindId
+--Количество
+Amount
+--Цена
+Price
+--Цена из Эксайта
+PriceEDI
+--Цена за количество
+CountForPrice
+--(-)% Скидки (+)% Наценки
+ChangePercent_mi
+--Количество дозаказ
+AmountSecond
+--Сумма с ндс и скидкой
+Summ
+--MovementId-Акция
+MovementId_Promo
+--Протокол Дата/время начало
+StartBegin_mi
+--Протокол Дата/время завершение
+EndBegin_mi
 */
 
 
@@ -216,7 +244,42 @@ AS
            , Object_Status_wms.Id                       AS StatusId_wms
            , Object_Status_wms.ObjectCode               AS StatusCode_wms
            , Object_Status_wms.ValueData                AS StatusName_wms
+           --
+           , MovementItem.Id                              AS MovementItemId
+           --Удалена строка (Да/нет)
+           , MovementItem.isErased                        AS isErased_mi
+           --товар
+           , MovementItem.ObjectId                        AS GoodsId
+           --Вид товара
+           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+           --Количество
+           , MovementItem.Amount                           AS Amount
+           --Цена
+           , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+           --Цена из Эксайта
+           , COALESCE (MIFloat_PriceEDI.ValueData, 0)      AS PriceEDI
+           --Цена за количество
+           , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
+           --(-)% Скидки (+)% Наценки
+           , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent_mi
+           --Количество дозаказ
+           , MIFloat_AmountSecond.ValueData                AS AmountSecond
+           --Сумма с ндс и скидкой
+           , MIFloat_Summ.ValueData                        AS Summ
+           --MovementId-Акция
+           , MIFloat_PromoMovement.ValueData               AS MovementId_Promo
+           --Протокол Дата/время начало
+           , MIDate_StartBegin.ValueData                   AS StartBegin_mi
+           --Протокол Дата/время завершение
+           , MIDate_EndBegin.ValueData                     AS EndBegin_mi
 
+           -- Количество Вес
+           , MovementItem.Amount 
+             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weight
+           -- Количество Шт.
+           , MovementItem.Amount 
+             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END :: TFloat AS Amount_sh
+                                    
        FROM Movement
             --Вид статуса
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -236,9 +299,6 @@ AS
             LEFT JOIN MovementDate AS MovementDate_InsertMobile
                                    ON MovementDate_InsertMobile.MovementId = Movement.Id
                                   AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
-            LEFT JOIN MovementDate AS MovementDate_UpdateMobile
-                                   ON MovementDate_UpdateMobile.MovementId = Movement.Id
-                                  AND MovementDate_UpdateMobile.DescId = zc_MovementDate_UpdateMobile()
             --Протокол Дата/время начало
             LEFT JOIN MovementDate AS MovementDate_StartBegin
                                    ON MovementDate_StartBegin.MovementId = Movement.Id
@@ -413,6 +473,65 @@ AS
                                    ON MD_EndSale.MovementId =  Movement_Promo.Id
                                   AND MD_EndSale.DescId = zc_MovementDate_EndSale()
 
+            --строки документов
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                                  --AND MovementItem.isErased   = tmpIsErased.isErased
+            -- Товар
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            --Вид товаров
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+            --Цена
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            --Цена из Эксайта
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceEDI
+                                        ON MIFloat_PriceEDI.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceEDI.DescId = zc_MIFloat_PriceEDI()
+            --Цена за количество
+            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+            --Количество дозаказ
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                        ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+            --Сумма с ндс и скидкой
+            LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                        ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+            --MovementId-Акция
+            LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                        ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+            --(-)% Скидки (+)% Наценки
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+            --Протокол Дата/время начало
+            LEFT JOIN MovementItemDate AS MIDate_StartBegin
+                                       ON MIDate_StartBegin.MovementItemId = MovementItem.Id
+                                      AND MIDate_StartBegin.DescId         = zc_MIDate_StartBegin()
+            --Протокол Дата/время завершение
+            LEFT JOIN MovementItemDate AS MIDate_EndBegin
+                                       ON MIDate_EndBegin.MovementItemId = MovementItem.Id
+                                      AND MIDate_EndBegin.DescId         = zc_MIDate_EndBegin()
+
+            -- Ед.изм. Товара
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            -- Вес Товара
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+
         WHERE Movement.DescId = zc_Movement_OrderExternal()
           AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE
 
@@ -428,5 +547,5 @@ ALTER TABLE _bi_Doc_OrderExternal_View  OWNER TO postgres;
 */
 
 -- тест
--- SELECT _bi_Doc_OrderExternal_View.Id FROM _bi_Doc_OrderExternal_View 
+--SELECT _bi_Doc_OrderExternal_View.Id,_bi_Doc_OrderExternal_View.GoodsId  FROM _bi_Doc_OrderExternal_View 
 -- WHERE OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE
