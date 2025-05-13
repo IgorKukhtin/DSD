@@ -3,6 +3,88 @@
  DROP VIEW IF EXISTS _bi_Guide_Personal_View;
 
 -- Справочник Сотрудники
+
+/*
+--Сотрудник
+Id
+Code
+Name
+-- Признак "Удален да/нет"
+isErased
+--Физ лицо
+MemberId
+--Доступ просмотра
+AccesskeyId
+--Должности
+PositionId
+PositionCode
+Positionname
+--Разряд должности
+PositionlevelId
+PositionlevelCode
+Positionlevelname
+-- Подразделения  - Филиал
+BranchId
+BranchCode
+Branchname
+--Подразделения
+UnitId
+UnitCode
+Unitname
+--Группировки Сотрудников
+PersonalGroupId
+PersonalGroupCode
+PersonalGroupname
+--Дата приема
+DateIn
+--Дата увольнения
+Dateout
+--Дата перевода
+Datesend
+--Основное место работы
+isMain
+--Оформленный официально
+isOfficial
+--Линия производства 	
+StorageLineId
+StorageLineCode
+StorageLinename
+--Фамилия рекомендателя
+Member_ReferId
+Member_ReferCode
+Member_Refername
+--Фамилия наставника
+Member_MentorId
+Member_MentorCode
+Member_Mentorname
+--Причина увольнения
+ReasonOutId
+ReasonOutCode
+ReasonOutname
+--Ведомость начисления(главная) 	
+PersonalServiceListId
+PersonalServiceListName
+--Ведомость начисления(БН)
+PersonalServiceListOfficialId
+PersonalServiceListOfficialName
+--Ведомость начисления(аванс Карта Ф2)
+ServiceListId_AvanceF2
+ServiceListName_AvanceF2
+--Ведомость начисления(Карта Ф2)
+PersonalServiceListCardSecondId
+PersonalServiceListCardSecondName         
+--Режим работы (Шаблон табеля р.вр.)
+SheetWorkTimeId
+SheetWorkTimeName
+--Код 1С
+Code1C
+--Примечание
+Comment
+--Ирна
+isIrna
+
+*/
+
 CREATE OR REPLACE VIEW _bi_Guide_Personal_View
 AS
        SELECT

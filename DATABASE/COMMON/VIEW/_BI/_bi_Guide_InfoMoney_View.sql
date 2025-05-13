@@ -3,6 +3,34 @@
  DROP VIEW IF EXISTS _bi_Guide_InfoMoney_View;
 
 -- Справочник УП Статья назначения
+/*
+--УП Статья назначения
+Id
+Code
+Name
+-- Признак "Удален да/нет"
+isErased
+--Группы управленческих назначений
+InfoMoneyGroupId
+InfoMoneyGroupCode
+InfoMoneyGroupName
+--Управленческие назначения
+InfoMoneyDestinationId
+InfoMoneyDestinationCode
+InfoMoneyDestinationName
+--Статья отчета ДДС - приход
+CashFlowId_in
+CashFlowCode_in
+CashFlowName_in
+--Статья отчета ДДС - расход
+CashFlowId_out
+CashFlowCode_out
+CashFlowName_out
+--затраты по оплате
+isProfitLoss
+
+*/
+
 CREATE OR REPLACE VIEW _bi_Guide_InfoMoney_View
 AS
        SELECT

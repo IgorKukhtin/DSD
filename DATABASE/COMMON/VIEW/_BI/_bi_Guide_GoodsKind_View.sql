@@ -6,6 +6,8 @@ DROP VIEW IF EXISTS _bi_Guide_GoodsKind_View;
 /*
 --Id элемента Виды товаров
 Id
+Code
+Name
 -- Признак "Удален да/нет"
 isErased
 */

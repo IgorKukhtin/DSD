@@ -3,6 +3,141 @@
 DROP VIEW IF EXISTS _bi_Guide_Goods_View;
 
 -- Справочник Товары
+/*          
+--Товар
+Id
+Code
+Name
+-- Признак "Удален да/нет"
+isErased
+-- Группа товаров
+GoodsGroupId
+GoodsGroupCode
+GoodsGroupName
+-- Название сокращенное
+ShortName
+--Название товара(русс.)
+Name_RUS
+--Название товара(бухг.)
+Name_BUH
+--Название товара(для приложения Scale)
+Name_Scale
+--Полное название группы
+GoodsGroupNameFull
+--Код товару згідно з УКТ ЗЕД
+CodeUKTZED
+--новый Код товару згідно з УКТ ЗЕД
+CodeUKTZED_new
+--дата с которой действует новый Код УКТ ЗЕД
+DateUKTZED_new
+--Дата до которой действует Название товара(бухг.)
+Date_BUH
+--Дата прихода от поставщика
+InDate
+--Ознака імпортованого товару
+TaxImport
+--Послуги згідно з ДКПП
+DKPP
+--Код виду діяльності сільск-господар товаровиробника
+TaxAction
+--Примечание
+Comment
+--Вес товара
+Weight
+--Вес втулки
+WeightTare
+--Кол-во для веса
+CountForWeight
+----Кол-во партий из рецептуры для замеса
+CountReceipt
+--Код АЛАН
+BasisCode
+--Ирна
+isIrna
+--Признак - ОС
+isAsset
+--Партии поставщика в учете количеств
+isPartionCount
+--Партии поставщика в учете себестоимости
+isPartionSumm
+--Показывать реальное назв.
+isNameOrig
+--Учет по дате партии
+isPartionDate
+--Проверка Количество голов
+isHeadCount
+--Группа товаров(статистика)
+GroupStatId
+GroupStatCode
+GroupStatName
+--Группа товаров(аналитика)
+GoodsGroupAnalystId
+GoodsGroupAnalysCode
+GoodsGroupAnalystName
+--Торговая марка
+TradeMarkId
+TradeMarkCode
+TradeMarkName
+--Единица измерения
+MeasureId
+MeasureCode
+MeasureName
+--Единица измерения - Международное наименование
+InternalName
+--Единица измерения - Международный код
+InternalCode
+-- УП Статья назначения
+InfoMoneyId
+InfoMoneyCode
+InfoMoneyName
+-- Бизнес
+BusinessId
+BusinessCode
+BusinessName
+--Вид топлива
+FuelId
+FuelCode
+FuelName
+--Признак товара
+GoodsTagId
+GoodsTagCode
+GoodsTagName
+--Производственная площадка
+GoodsPlatformId
+GoodsPlatformCode
+GoodsPlatformName
+--Поставщик
+PartnerInId
+PartnerInCode
+PartnerInName
+-- Связь товаров с базовым (Производство)
+GoodsId_basis
+GoodsCode_basis
+GoodsName_basis
+-- Связь товаров с главным (Производство)
+GoodsId_main
+GoodsCode_main
+GoodsName_main
+-- Основное средство (назначение ТМЦ)
+AssetId
+AssetCode
+AssetName
+-- Основное средство (на каком оборудовании производится)
+AssetProdId
+AssetProdCode
+AssetProdName
+-- Аналитический классификатор
+GoodsGroupPropertyId
+GoodsGroupPropertyCode
+GoodsGroupPropertyName
+-- Аналитическая группа Направление
+GoodsGroupDirectionId
+GoodsGroupDirectionCode
+GoodsGroupDirectionName
+
+*/
+
+
 CREATE OR REPLACE VIEW _bi_Guide_Goods_View
 AS
      SELECT

@@ -33,15 +33,8 @@ ContractId
 
 -- Товар
 GoodsId
-GoodsCode
-GoodsName
 -- Вид Товара
 GoodsKindId
-GoodsKindCode
-GoodsKindName
--- Ед.изм. Товара
-MeasureCode
-MeasureName
 
 
  -- Документ Заявка покупателя
@@ -53,7 +46,6 @@ InvNumber_order
 MovementId_promo
 -- Признак Акция да/нет
 isPromo
-
 
 -- Вес Продажа - со склада
 Sale_Amount
