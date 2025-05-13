@@ -193,7 +193,7 @@ AS
          LEFT JOIN Objectboolean AS Objectboolean_official
                                  ON Objectboolean_official.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                 AND Objectboolean_official.descId = zc_Objectboolean_Member_official()
-         --Инна
+         --Ирна
          LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
                                  ON ObjectBoolean_Guide_Irna.ObjectId = Object_Personal.Id
                                 AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
@@ -215,6 +215,7 @@ ALTER TABLE _bi_GuIde_Personal_View  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.25         * all
  09.05.25                                        *
 */
 
