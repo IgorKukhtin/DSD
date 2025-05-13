@@ -2152,8 +2152,8 @@ BEGIN
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND (ContainerLinkObject_InfoMoneyDetail.ObjectId = 0 OR zc_isHistoryCost_byInfoMoneyDetail()= TRUE)
           --!!!AND (inIsLastComplete = FALSE OR (_tmpItem.OperCount * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0)) <> 0) -- !!!ќЅя«ј“≈Ћ№Ќќ!!! вставл€ем нули если это не последний раз (они нужны дл€ расчета с/с)
-           AND (_tmpItem.OperCount         * HistoryCost.Price <> 0
-             OR _tmpItem.OperCount_Partner * HistoryCost.Price <> 0
+           AND (_tmpItem.OperCount         * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) <> 0
+             OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) <> 0
                )
           -- AND ((ContainerLinkObject_InfoMoney.ObjectId <> zc_Enum_InfoMoney_80401()        -- + дл€ этой
           --   AND ContainerLinkObject_InfoMoneyDetail.ObjectId <> zc_Enum_InfoMoney_80401()) -- + ”ѕ = прибыль текущего периода
