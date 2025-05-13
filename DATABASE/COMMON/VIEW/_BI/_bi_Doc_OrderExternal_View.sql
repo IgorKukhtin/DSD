@@ -250,8 +250,12 @@ AS
            , MovementItem.isErased                        AS isErased_mi
            --товар
            , MovementItem.ObjectId                        AS GoodsId
+           , Object_Goods.ObjectCode                      AS GoodsCode
+           , Object_Goods.ValueData                       AS GoodsName
            --Вид товара
            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+           , Object_GoodsKind.ObjectCode                   AS GoodsKindCode
+           , Object_GoodsKind.ValueData                    AS GoodsKindName
            --Количество
            , MovementItem.Amount                           AS Amount
            --Цена
