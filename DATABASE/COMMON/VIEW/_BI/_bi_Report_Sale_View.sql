@@ -2,7 +2,130 @@
 
 DROP VIEW IF EXISTS _bi_Report_Sale_View;
 
+/*
 -- Документы - Продажа/Возврат
+-- данные:
+
+-- Id Документа
+MovementId
+-- Вид Документа
+ItemName
+-- Дата покупателя
+OperDate
+-- Дата Склад
+OperDate_sklad
+-- № Документа
+InvNumber
+
+-- Юр. Лицо
+JuridicalId
+-- Контрагент
+PartnerId
+
+-- УП Статья назначения
+InfoMoneyId
+-- Форма оплаты
+PaidKindId
+-- Филиал
+BranchId
+-- Договор
+ContractId
+
+-- Товар
+GoodsId
+-- Вид Товара
+GoodsKindId
+
+
+ -- Документ Заявка покупателя
+MovementId_order
+OperDate_order
+InvNumber_order
+
+-- Документ Акция
+MovementId_promo
+-- Признак Акция да/нет
+isPromo
+
+
+-- Вес Продажа - со склада
+Sale_Amount
+-- Шт.
+Sale_Amount_sh
+
+-- Вес Возврат - на склад
+Return_Amount
+-- Шт.
+Return_Amount_sh
+
+
+-- Акция - Вес Продажа
+AmountPartner_promo
+-- Шт.
+AmountPartner_promo_sh
+
+-- Вес Продажа у покупателя
+Sale_AmountPartner
+-- Шт.
+Sale_AmountPartner_sh
+
+-- Вес Возврат у покупателя
+Return_AmountPartner
+-- Шт.
+Return_AmountPartner_sh
+
+-- Вес Скидка за вес - Продажа
+Sale_Amount_10500
+-- Шт.
+Sale_Amount_10500_sh
+
+-- Вес потери - Разница в весе - Продажа
+Sale_Amount_40200
+-- Шт.
+Sale_Amount_40200_sh
+
+-- Вес потери - Разница в весе - Возврат
+Return_Amount_40200
+-- Шт.
+Return_Amount_40200_sh
+
+
+-- Акция - Сумма Продажи
+Sale_Summ_promo
+-- Сумма Продажи
+Sale_Summ
+-- Сумма Возврат
+Return_Summ
+
+-- Сумма Продажи - разница от цены Прайса ОПТ (скидка-виртуальная)
+Sale_Summ_10200
+-- Сумма Продажи - Скидка-акция
+Sale_Summ_10250
+-- Сумма Продажи - Скидка-дополнительная (% и т.п.)
+Sale_Summ_10300
+
+-- Сумма Возврат - Скидка-дополнительная (% и т.п.)
+Return_Summ_10300
+
+-- Акция - Сумма с/с Продажа
+Sale_SummCost_promo
+
+
+-- Сумма с/с Продажа
+Sale_SummCost
+-- Сумма с/с Скидка за вес - Продажа
+Sale_SummCost_10500
+-- Сумма с/с потери - Разница в весе - Продажа
+Sale_SummCost_40200
+
+-- Сумма с/с Возврат
+Return_SummCost
+-- Сумма с/с потери - Разница в весе - Возврат
+Return_SummCost_40200
+
+*/
+
+
 CREATE OR REPLACE VIEW _bi_Report_Sale_View
 AS
 
@@ -57,7 +180,7 @@ AS
                      -- Форма оплаты
                    , CLO_PaidKind.ObjectId                       AS PaidKindId
                      -- Форма оплаты - Договор начисления Бонус
-                   , CLO_PaidKind.ObjectId                       AS PaidKindId_bonus
+                   -- , CLO_PaidKind.ObjectId                       AS PaidKindId_bonus
                      -- Филиал
                    , MILinkObject_Branch.ObjectId                AS BranchId
                      -- Договор
