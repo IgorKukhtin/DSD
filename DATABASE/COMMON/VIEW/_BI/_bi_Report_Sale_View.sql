@@ -33,8 +33,15 @@ ContractId
 
 -- Товар
 GoodsId
+GoodsCode
+GoodsName
 -- Вид Товара
 GoodsKindId
+GoodsKindCode
+GoodsKindName
+-- Ед.изм. Товара
+MeasureCode
+MeasureName
 
 
  -- Документ Заявка покупателя
