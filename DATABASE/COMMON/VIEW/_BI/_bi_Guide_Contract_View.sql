@@ -3,6 +3,167 @@
  DROP VIEW IF EXISTS _bi_Guide_Contract_View;
 
 -- Справочник Договора
+/*
+--Договор
+ContractId
+ContractCode
+InvNumber
+-- Признак "Удален да/нет"
+isErased
+-- Юридическое лицо
+JuridicalId
+JuridicalCode
+JuridicalName
+-- Форма оплаты
+PaidKindCode
+PaidKindName
+-- Главное Юридическое лицо
+JuridicalId_basis
+JuridicalCode_basis
+JuridicalName_basis
+-- Юридическое лицо - печать док. - история
+JuridicalId_doc
+JuridicalCode_doc
+JuridicalName_doc
+--Юридические лица(печать док. - реквизиты плательщика)
+JuridicalInvoiceId
+JuridicalInvoiceCode
+JuridicalInvoiceName
+--Классификаторы свойств товаров
+GoodsPropertyId
+GoodsPropertyName
+-- 	Сотрудники (ответственное лицо)     
+PersonalId
+PersonalCode
+PersonalName
+--Сотрудники (торговый)
+PersonalTradeId
+PersonalTradeCode
+PersonalTradeName
+--Сотрудники (сверка)
+PersonalCollationId
+PersonalCollationCode
+PersonalCollationName
+--Сотрудники (подписант)
+PersonalSigningId
+PersonalSigningCode
+PersonalSigningName
+--Расчетный счет (вх.платеж)
+BankAccountId
+BankAccountName
+--Регион(договора)
+AreaContractId
+AreaContractName
+--Предмет договора
+ContractArticleId
+ContractArticleName
+--Банк(исх.платеж)
+BankId
+BankName
+--Филиал (расчеты нал)
+BranchId
+BranchName
+-- Дата с которой действует договор
+StartDate
+-- Дата до которой действует договор - расчет
+EndDate
+-- Дата до которой действует договор - информативно
+EndDate_real
+--Дата заключения договора
+SigningDate
+-- Тип пролонгаций договоров
+ContractTermKindName
+-- Период пролонгации в месяцах
+Term
+-- УП Статья назначения
+InfoMoneyId
+InfoMoneyCode
+InfoMoneyName
+-- Состояние договора
+ContractStateKindCode
+ContractStateKindName
+-- Группа признак договора
+ContractTagGroupCode
+ContractTagGroupName
+-- Признак договора
+ContractTagCode
+ContractTagName
+-- Вид договора - Код
+ContractKindCode
+-- Вид договора - Название
+ContractKindName
+-- Условие договора - (-)% Скидки (+)% Наценки
+ChangePercent
+-- Условие договора - % Наценки Павильоны (Приход покупателю)
+ChangePercentPartner
+-- Условие договора - Скидка в цене ГСМ
+ChangePrice
+-- Условие договора - Скидка в цене ГСМ
+DayCalendar
+-- Условие договора - Отсрочка в банковских днях
+DayBank
+-- Условие договора - Отсрочка в календарных днях
+DelayDay
+-- Период для условия с ....
+StartDate_condition
+-- Период для условия по ....
+EndDate_condition
+--По умолчанию (для вх. платежей) 
+isDefault
+--По умолчанию (для исх. платежей)
+isDefaultOut
+--Типовой
+isStandart
+--Служебная записка 
+isPersonal
+--Без группировки 
+isUnique
+--ставка 0% (таможня)
+isVat
+--клиент без НДС (ставка 0%)
+isNotVat
+--Ирна
+isIrna   
+--Физ обмен
+isRealEx
+--Нет возврата тары
+isNotTareReturning
+--Ораниченный доступ маркетинг
+isMarketNot
+--Отправка данных для ВМС
+isWMS
+--Кол-во дней для сводной налоговой
+DayTaxSummary
+--Количество докуметов по договору
+DocumentCount
+--Дата последнего документа
+DateDocument       
+--№ архивирования
+InvNumberArchive
+--Примечание
+Comment
+--Расчетный счет (исх.платеж)
+BankAccountExternal
+--Расчетный счет (покупателя)
+BankAccountPartner
+--Код GLN
+GLNCode
+--Код Поставщика
+PartnerCode
+--Дата начала акции   
+StartPromo
+--Дата окончания акции
+EndPromo     
+-- Пользователь (создание)
+InsertName
+-- Пользователь (корректировка)
+UpdateName
+--Дата создания
+InsertDate
+--Дата корректировки
+UpdateDate
+*/
+
 CREATE OR REPLACE VIEW _bi_Guide_Contract_View
 AS
   WITH -- ВСЕ Условия договора

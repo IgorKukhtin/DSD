@@ -3,6 +3,90 @@
 DROP VIEW IF EXISTS _bi_Guide_Juridical_View;
 
 -- Справочник Юридические лица
+/*
+-- Юридическое лицо
+Id
+Code
+Name
+-- Признак "Удален да/нет"
+isErased
+-- Группа
+JuridicalGroupId
+JuridicalGroupCode
+JuridicalGroupName
+-- Классификаторы свойств товаров
+GoodsPropertyId
+GoodsPropertyCode
+GoodsPropertyName
+-- Торговая сеть
+RetailId
+RetailCode
+RetailName
+-- Торговая сеть(отчет)
+RetailId_report
+RetailCode_report
+RetailName_report
+-- УП Статья назначения
+InfoMoneyId
+InfoMoneyCode
+InfoMoneyName
+--Прайс-лист
+PriceListId
+PriceListName
+--Прайс для возвратов по "старым ценам" - если не "1опт"
+PriceListId_Prior
+PriceListName_Prior
+--прайс только с покупателем Хлеб
+PriceListId_30103
+PriceListName_30103
+--прайс только с покупателем Сырье
+PriceListId_30201
+PriceListName_30201
+--Сегмент
+SectionId
+SectionCode
+SectionName
+-- нет cхемы с заменой факт/бухг отгрузка)
+isNotRealGoods
+-- Признак главное юридическое лицо (наша ли собственность это юр.лицо)
+isCorporate
+--Код GLN - Покупатель и/или Получатель
+GLNCode
+--Глобальный уникальный идентификатор
+GUID
+--Признак сводная налоговая
+isTaxSummary
+--Печать в накладной цену со скидкой
+isDiscountPrice
+--Печать в накладной цену с НДС (да/нет)
+isPriceWithVAT
+--Схема расчета цены с НДС (построчно)
+isVatPrice
+-- С какой даты схема расчета цены с НДС (построчно)
+VatPriceDate
+--нет формирования возврат тары от покупателя)
+isNotTare
+--10-ти значный код УКТ ЗЕД
+isLongUKTZED
+--Разрешен минимальный заказ
+isOrderMin
+--Ирна
+isIrna
+--Обработка на платформе Вчасно EDI
+isVchasnoEdi           
+--Н - Comdoc, автоматическая отправка
+isEdiComdoc
+--ВН - Delnot, автоматическая отправка
+isEdiDelnot
+--Кол-во дней для сводной налоговой
+DayTaxSummary
+--Минимальный заказ с суммой >= 
+SummOrderMin
+--Код АЛАН
+BasisCode
+
+*/
+
 CREATE OR REPLACE VIEW _bi_Guide_Juridical_View
 AS
      SELECT

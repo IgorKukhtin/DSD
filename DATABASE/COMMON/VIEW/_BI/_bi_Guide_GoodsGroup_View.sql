@@ -3,6 +3,58 @@
 DROP VIEW IF EXISTS _bi_Guide_GoodsGroup_View;
 
 -- Справочник Группы товаров
+
+/*
+-- Группа товаров
+Id
+Code
+Name
+-- Признак "Удален да/нет"
+isErased
+-- Родитель Группы
+ParentId
+ParentCode
+ParentName
+--Группы товаров(статистика)
+GroupStatId
+GroupStatCode
+GroupStatName
+--Торговая марка
+TradeMarkId
+TradeMarkCode
+TradeMarkName
+-- Признак товара
+GoodsTagId
+GoodsTagCode
+GoodsTagName
+-- Группа товаров(аналитика)
+GoodsGroupAnalystId
+GoodsGroupAnalystCode
+GoodsGroupAnalystName
+-- Производственная площадка
+GoodsPlatformId
+GoodsPlatformCode
+GoodsPlatformName
+-- УП Статьи назначения
+InfoMoneyId
+InfoMoneyCode
+InfoMoneyName
+--Код товару згідно з УКТ ЗЕД
+CodeUKTZED
+--новый Код товару згідно з УКТ ЗЕД
+CodeUKTZED_new
+--дата с которой действует новый Код УКТ ЗЕД
+DateUKTZED_new
+--Ознака імпортованого товару
+TaxImport
+--Послуги згідно з ДКПП
+DKPP
+--Код виду діяльності сільск-господар товаровиробника
+TaxAction
+--Признак - ОС
+isAsset
+
+*/
 CREATE OR REPLACE VIEW _bi_Guide_GoodsGroup_View
 AS
      SELECT

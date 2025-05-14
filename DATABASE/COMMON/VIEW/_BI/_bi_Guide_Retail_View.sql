@@ -3,6 +3,45 @@
  DROP VIEW IF EXISTS _bi_Guide_Retail_View;
 
 -- Справочник Торговая сеть
+/*
+--Торговая сеть
+Id
+Code
+Name
+ -- Признак "Удален да/нет"
+isErased
+--цена по дате заявки
+OperDateOrder
+--Разрешен минимальный заказ
+isOrderMin
+--Отправка данных для ВМС
+isWMS
+--Кол-во знаков для округления веса
+RoundWeight
+--Код GLN - Получатель
+GLNCode
+--Код GLN - Поставщик
+GLNCodeCorporate
+--ОКПО для налог. документов
+OKPO
+--Классификаторы свойств товаров
+GoodsPropertyId
+GoodsPropertyName
+--Сотрудник (Ответственный представитель маркетингового отдела)
+PersonalMarketingId
+PersonalMarketingName
+--Сотрудник (Ответственный представитель коммерческого отдела)
+PersonalTradeId
+PersonalTradeName
+--Категории покупателей
+ClientKindId
+ClientKindName
+--Заголовок для сети
+StickerHeaderId
+StickerHeaderName
+
+*/
+
 CREATE OR REPLACE VIEW _bi_Guide_Retail_View
 AS
        SELECT

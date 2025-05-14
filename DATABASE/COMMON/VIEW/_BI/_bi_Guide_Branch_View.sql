@@ -3,6 +3,57 @@
  DROP VIEW IF EXISTS _bi_Guide_Branch_View;
 
 -- Справочник Филиалы
+/*
+--Филиал
+Id
+Code
+Name
+--Доступ просмотра
+AccessKeyId
+-- Признак "Удален да/нет"
+isErased
+--номер филиала в налоговой
+InvNumber
+--місто складання
+PlaceOf
+--Сотрудник (бухгалтер)
+PersonalId
+PersonalName 
+--Сотрудник (комірник)
+PersonalStoreId
+PersonalStoreName
+--Сотрудник (бухгалтер)
+PersonalBookkeeperId
+PersonalBookkeeperName
+--Сотрудник (бухгалтер) подписант
+PersonalBookkeeper_sign
+--Водитель
+PersonalDriverId
+PersonalDriverName 
+--Водитель/Экспедитор
+Member1Id
+Member1Name 
+--Бухгалтер
+Member2Id
+Member2Name 
+--Ответственное лицо(відпуск дозволив)
+Member3Id
+Member3Name 
+--Ответственное лицо(здав)
+Member4Id
+Member4Name 
+--Подразделения (основной склад)
+UnitId
+UnitName
+--Подразделения (склад возвратов)
+UnitReturnId
+UnitReturnName
+--загрузка налоговых из медка
+IsMedoc
+--Партионный учет долгов нал
+IsPartionDoc
+
+*/
 CREATE OR REPLACE VIEW _bi_Guide_Branch_View
 AS
        SELECT

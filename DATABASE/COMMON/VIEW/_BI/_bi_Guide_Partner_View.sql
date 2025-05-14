@@ -1,7 +1,161 @@
 -- View: _bi_Guide_Partner_View
-
+--
  DROP VIEW IF EXISTS _bi_Guide_Partner_View;
 
+--спарвочник Контрагенты
+/*
+  Id Контрагента
+Id
+  -- Признак "Удален да/нет"
+isErased
+  --Условное обозначение
+ShortName
+--Код GLN - место доставки
+GLNCode
+--Код GLN - Покупатель
+GLNCodeJuridical
+--Код GLN - Получатель
+GLNCodeRetail
+--Адрес точки доставки
+Address
+--Номер дома
+HouseNumber
+--Номер корпуса
+CaseNumber
+--Номер квартиры
+RoomNumber
+--Глобальный уникальный идентификатор
+GUID
+--Примечание(для Накладной продажи)
+MovementComment
+--Код терминала
+Terminal
+--Номер филиала
+BranchCode
+--Название юр.лица для филиала
+BranchJur
+--График посещения
+Schedule
+--График Delivery
+Delivery
+--КАТОТТГ -система EDIN
+KATOTTG
+--За сколько дней принимается заказ
+PrepareDayCount
+--Через сколько дней оформляется документально
+DocumentDayCount
+--Категория ТТ
+Category
+--Код АЛАН
+BasisCode
+--супервайзер - % от товарооборота
+TaxSale_Personal
+--ТП - % от товарооборота
+axSale_PersonalTrade
+--Продавец-1 - % от товарооборота
+TaxSale_MemberSaler1
+--Продавец-2 - % от товарооборота
+TaxSale_MemberSaler2
+--GPS координаты точки доставки (широта)
+GPSN
+--GPS координаты точки доставки (долгота)
+GPSE
+--EDI - Подтверждение
+EdiOrdspr
+--EDI - Счет
+EdiInvoice
+--EDI - уведомление
+EdiDesadv
+--Ирна
+isIrna
+--Отгрузка в гофро
+isGoodsBox
+-- Юридическое лицо
+JuridicalId
+JuridicalCode
+JuridicalName
+-- Маршрут
+RouteId
+RouteCode
+RouteName
+-- Маршрут Мясное сырье
+RouteId_30201
+RouteCode_30201
+RouteName_30201
+-- Физ лицо (сотрудник экспедитор)  --для любого дня недели (используется если не установлено значение для д.н.)
+MemberTakeId
+MemberTakeCode
+MemberTakeName
+-- Физ лицо (Продавец-1)
+MemberSaler1Id
+MemberSaler1Code
+MemberSaler1Name
+-- Физ лицо (Продавец-2)
+MemberSaler2Id
+MemberSaler2Code
+MemberSaler2Name
+-- ФИО сотрудник (супервайзер)
+PersonalId
+PersonalCode
+PersonalName
+-- ФИО Сотрудник (торговый)
+PersonalTradeId
+PersonalTradeCode
+PersonalTradeName
+--ФИО Сотрудник (мерчандайзер)
+PersonalMerchId
+PersonalMerchCode
+PersonalMerchName
+--ФИО Сотрудники (подписант)
+PersonalSigningId
+PersonalSigningCode
+PersonalSigningName
+--Регион
+AreaId
+AreaObjectCode
+AreaName
+--Признак торговой точки
+PartnerTagId
+PartnerTagCode
+PartnerTagName
+--Прайс-лист
+PriceListId
+PriceListCode
+PriceListName
+--Прайс-лист(Акционный)
+PriceListPromoId
+PriceListPromoCode
+PriceListPromoName
+--Дата начала акции
+StartPromo
+--Дата окончания акции
+EndPromo
+--прайс для возвратов по "старым ценам" - если не "1опт"
+PriceListId_Prior
+PriceListCode_Prior
+PriceListName_Prior
+--прайс только с покупателем Хлеб
+PriceListId_30103
+PriceListCode_30103
+PriceListName_30103
+--прайс только с покупателем Сырье
+PriceListId_30201
+PriceListCode_30201
+PriceListName_30201
+--Улица/проспект
+StreetId
+StreetCode
+StreetName
+--Подразделение
+UnitId
+UnitCode
+UnitName
+--Подразделение(заявки мобильный)
+UnitMobileId
+UnitMobileCode
+UnitMobileName
+
+*/
 -- Справочник Контрагенты
 CREATE OR REPLACE VIEW _bi_Guide_Partner_View
 AS

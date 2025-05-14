@@ -3,6 +3,19 @@
 DROP VIEW IF EXISTS _bi_Guide_JuridicalGroup_View;
 
 -- Справочник Группы юридических лиц
+/*
+--Группа юридических лиц  
+Id 
+Code
+Name
+-- Признак "Удален да/нет"
+isErased
+-- Родитель Группа
+ParentId 
+ParentCode
+ParentName
+
+*/
 CREATE OR REPLACE VIEW _bi_Guide_JuridicalGroup_View
 AS
      SELECT 

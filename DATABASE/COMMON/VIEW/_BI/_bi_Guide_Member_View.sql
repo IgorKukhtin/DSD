@@ -2,7 +2,170 @@
 
  DROP VIEW IF EXISTS _bi_Guide_Member_View;
 
--- Справочник Фмз.лица
+-- Справочник Физ.лица
+/*
+--Физ.лицо
+Id
+Code
+Name
+-- Признак "Удален да/нет"
+isErased
+--Код 1С
+Code1C
+--ИНН
+INN
+--Водительское удостоверение
+DriverCertificate
+--№ карточного счета ЗП - первая форма
+Card
+--№ карточного счета ЗП - Ф2(Восток)
+CardSecond
+--№ карточного счета ЗП - алименты (удержание)
+CardChild
+--№ карточного счета IBAN ЗП - первая форма
+CardIBAN
+--№ карточного IBANсчета ЗП - Ф2(Восток)
+CardIBANSecond
+--Номер банковской карточки ЗП Ф1
+CardBank
+--Номер банковской карточки ЗП - Ф2(Восток)
+CardBankSecond 
+--Номер банковской карточки ЗП - Ф2(ОТП)    
+CardBankSecondTwo
+--№ карточного IBANсчета ЗП - Ф2(ОТП)
+CardIBANSecondTwo
+--№ карточного счета ЗП - Ф2(ОТП) 
+CardSecondTwo
+--Номер банковской карточки ЗП - Ф2(личный)
+CardBankSecondDiff
+--№ карточного IBANсчета ЗП - Ф2(личный)
+CardIBANSecondDiff
+--№ карточного счета ЗП - Ф2(личный) 
+CardSecondDiff
+--Примечание    
+Comment
+--Исключить из компенсации отпуска
+isNotCompensation
+--Bank - ЗП Ф1
+BankId
+BankName
+--Bank - Ф2(Восток)
+BankSecondId
+BankSecondName
+--Bank - алименты (удержание)
+BankChildId
+BankChildName
+--Bank - Ф2(ОТП)
+BankSecondTwoId
+BankSecondTwoName
+--Bank - Ф2(личный)
+BankSecondDiffId
+BankSecondDiffName
+--Статьи назначения
+InfoMoneyId
+InfoMoneyCode
+InfoMoneyName
+-- начальная дата для нормы авто лето
+StartSummerDate
+--Конечная дата для нормы авто лето
+EndSummerDate
+--норма авто литры лето
+SummerFuel
+--норма авто литры зима
+WinterFuel
+--амортизация за 1 км., грн.
+Reparation
+--лимит грн
+LimitMoney
+--лимит км
+LimitDistance
+--Подразделение(заявки мобильный)
+UnitMobileId
+UnitMobileCode
+UnitMobileName
+--Сотрудники/ Подразделения/Учредители  - На кого "переносятся" затраты в "Налоги с ЗП" или в "Мобильная связь" 
+ObjectToId
+ObjectToName
+DescName
+--Пол
+GenderId
+GenderName
+--Квалификация 
+MemberSkillId
+MemberSkillName
+--Источник информации о вакансии
+JobSourceId
+JobSourceName 
+--Область, адрес прописки
+RegionId
+RegionName
+--Область, адрес проживания
+RegionId_Real
+RegionName_Real
+--Город/село/пгт, адрес прописки
+CityId
+CityName
+--Город/село/пгт, адрес проживания
+CityId_Real
+CityName_Real
+--Улица, номер дома, номер квартиры, адрес прописки
+Street
+Street_Real
+--Маршрутка
+RouteNumId
+RouteNumName
+--Паспорт, дата рождения
+Birthday_Date
+--Ребенок 1, дата рождения
+Children1_Date
+--Ребенок 2, дата рождения
+Children2_Date
+--Ребенок 3, дата рождения
+Children3_Date
+--Ребенок 4, дата рождения
+Children4_Date
+--Ребенок 5, дата рождения
+Children5_Date
+--Паспорт, срок годности с
+PSP_StartDate
+--Паспорт, срок годности по
+PSP_EndDate
+--Декрет с
+Dekret_StartDate
+--Декрет по
+Dekret_EndDate
+--Ребенок 1, ФИО
+Children1
+--Ребенок 2, ФИО
+Children2
+--Ребенок 3, ФИО
+Children3
+--Ребенок 4, ФИО
+Children4
+--Ребенок 5, ФИО
+Children5
+--Судимости
+Law
+--Водительское удостоверение для вождения кары и т.п.
+DriverCertificateAdd
+--Паспорт, серия
+PSP_S
+--Паспорт, номер
+PSP_N
+--Паспорт, кем выдан
+PSP_W
+--Паспорт, дата выдачи
+PSP_D
+--GLN
+GLN  
+--E-Mail
+EMail
+--Phone
+Phone
+
+*/
+
+
 CREATE OR REPLACE VIEW _bi_Guide_Member_View
 AS
 WITH tmpPersonal AS (SELECT lfSelect.MemberId

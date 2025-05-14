@@ -3,6 +3,15 @@
 DROP VIEW IF EXISTS _bi_Guide_GoodsKind_View;
 
 -- Справочник Виды товаров
+/*
+--Id элемента Виды товаров
+Id
+Code
+Name
+-- Признак "Удален да/нет"
+isErased
+*/
+
 CREATE OR REPLACE VIEW _bi_Guide_GoodsKind_View
 AS
        SELECT

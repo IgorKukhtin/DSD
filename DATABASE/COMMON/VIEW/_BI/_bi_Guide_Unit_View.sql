@@ -3,6 +3,97 @@
  DROP VIEW IF EXISTS _bi_Guide_Unit_View;
 
 -- Справочник Подразделения
+/*
+--Подразделение  
+Id
+Code
+Name 
+AccessKeyId
+-- Признак "Удален да/нет"
+isErased
+-- Родитель Группа
+ParentId 
+ParentCode
+ParentName
+--Бизнес
+BusinessId
+BusinessCode
+BusinessName 
+--Филиалы
+BranchId
+BranchCode
+BranchName
+--Юридическое лицо(главное)
+JuridicalId
+JuridicalCode
+JuridicalName
+--Договора(кому выставляются затраты)
+ContractId
+InvNumber
+--Аналитики управленческих счетов - направление
+AccountDirectionId
+AccountDirectionCode
+AccountDirectionName
+--Регион
+AreaId
+AreaName
+--Город
+CityId
+CityName
+--Руководитель подразделения
+PersonalHeadId
+PersonalHeadCode
+PersonalHeadName
+--Руководитель подразделения - Подразделение
+UnitName_Head  
+--Руководитель подразделения - Филиал
+BranchName_Head
+--Подразделение, указывается если с/с возврата от покупателя берется из "альтернативного" подразделения
+UnitId_HistoryCost
+UnitCode_HistoryCost
+UnitName_HistoryCost
+--Учредитель
+FounderId
+FounderName
+--Департамент 1 уровня
+DepartmentId
+DepartmentName
+--Департамент 2-го уровня
+Department_twoId
+Department_twoName
+--Режим работы (Шаблон табеля р.вр.)
+SheetWorkTimeId
+SheetWorkTimeName
+--Свойство указывающее имеет ли элемент справочника подчиненные элементы
+isLeaf
+--Партии даты в учете
+isPartionDate
+--Партии по виду упак. для сырья
+isPartionGoodsKind
+--Учет батонов
+isCountCount
+--Партии для ГП и Тушенки
+isPartionGP
+--Ирна
+isIrna
+--Начисление аванс автомат.
+isAvance
+--Адрес
+Address
+--Примечание
+Comment
+--Формировать начисление зп автоматом
+isPersonalService
+--Дата/время когда сформировались начисление зп автоматом
+PersonalServiceDate
+--GLN - система EDIN
+GLN
+--КАТОТТГ - система EDIN
+KATOTTG
+--Адрес для EDIN - система EDIN
+AddressEDIN
+
+*/
 CREATE OR REPLACE VIEW _bi_Guide_Unit_View
 AS
        WITH

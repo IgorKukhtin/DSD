@@ -621,8 +621,9 @@ BEGIN
              CASE WHEN vbIsOrderByLine = TRUE THEN row_number() OVER (ORDER BY tmpMI.MovementItemId) ELSE 0 END :: Integer AS LineNum
            , zfFormat_BarCode (zc_BarCodePref_Object(), COALESCE (View_GoodsByGoodsKind.Id, Object_Goods.Id)) AS IdBarCode
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+           , Object_GoodsGroup.ObjectCode               AS GoodsGroupCode
            , Object_GoodsGroup.ValueData                AS GoodsGroupName
-           , Object_Goods.ObjectCode  			AS GoodsCode
+           , Object_Goods.ObjectCode  			        AS GoodsCode
            , Object_Goods.ValueData                     AS GoodsName
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, '') :: TVarChar  AS CodeSticker
@@ -787,6 +788,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.05.25         * GoodsGroupCode
  05.08.19         * WmsCellNum
  21.01.19         * BoxCount
  25.07.18         * CodeSticker
