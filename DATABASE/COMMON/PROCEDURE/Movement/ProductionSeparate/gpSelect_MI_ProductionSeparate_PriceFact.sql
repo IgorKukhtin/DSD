@@ -29,6 +29,11 @@ RETURNS TABLE (GoodsId Integer
              , Str_print TFloat     --для вывода значения % выхода по группе 
              , Persent_v TFloat                --% выхода 
              , Persent_gr TFloat               --% выхода по группе 
+ 
+             , TotalSummaPlan_calc TFloat       -- итого сумма по цене план* для расчета факта 
+             , SummaPlan_calc   TFloat          -- сумма по цене план* для расчета факта
+             , PricePlan_calc   TFloat  -- цена план* для расчета факта
+
                ) 
            
 AS
@@ -318,6 +323,7 @@ BEGIN
 
            , tmpIncomeAll.Amount_summ / tmpIncomeAll.Amount_count                              AS PriceIncome
            , tmpIncomeAll.Amount_summ / (tmpIncomeAll.Amount_count - tmpIncomeAll.CountPacker) AS PriceIncome1
+           , CASE WHEN COALESCE (tmpIncomeAll.AmountPartner,0) <> 0 THEN tmpIncomeAll.Amount_summ / (tmpIncomeAll.AmountPartner) ELSE 0 END AS PriceIncome2  -- по кол. поставщика
            
 
            , (tmpIncomeAll.Amount_count - tmpIncomeAll.CountPacker)      AS Count_CountPacker
@@ -452,15 +458,17 @@ BEGIN
                           -- кол G  итого сумма по SummaPlan дел на  SummaPlan т.е. доля
                           , CASE WHEN COALESCE (tmpData.TotalSummaPlan,0) <> 0 THEN tmpData.SummaPlan / tmpData.TotalSummaPlan ELSE 0 END :: TFloat AS Summa_dolyaPlan
                           --
-                          , CASE WHEN COALESCE (tmpData.Amount,0) <> 0 
+                          , CAST (CASE WHEN COALESCE (tmpData.Amount,0) <> 0 
                                  THEN (tmpData.SummaPlan - 
-                                      ( (tmpData.TotalSummaPlan -  (COALESCE (tmpCursor1.SummIncome,0) + COALESCE (tmpCursor1.SummCostIncome,0))  
+                                      ( (tmpData.TotalSummaPlan 
+                                        -- было минус это, в посл. файле иной расчет  - (COALESCE (tmpCursor1.SummIncome,0) + COALESCE (tmpCursor1.SummCostIncome,0))   
+                                        - ( CASE WHEN COALESCE (tmpCursor1.CountIncome,0) <>0 THEN ((tmpCursor1.PriceIncome2 * tmpCursor1.amountpartnerincome + COALESCE (tmpCursor1.SummCostIncome,0)) / tmpCursor1.CountIncome) ELSE 0 END * tmpCursor1.countmaster)
                                          ) 
                                          * CASE WHEN COALESCE (tmpData.TotalSummaPlan,0) <> 0 THEN tmpData.SummaPlan / tmpData.TotalSummaPlan ELSE 0 END)   /* kol_H*/      
                                       )  /*kol_i */ 
                                       / COALESCE (tmpData.Amount,0) 
                                       ELSE 0 
-                            END AS PriceFact
+                            END AS  NUMERIC(16,8)) AS PriceFact
                           , CASE WHEN COALESCE (tmpCursor1.countmaster,0) <> 0 THEN 100 * (COALESCE (tmpData.Amount,0)/ tmpCursor1.countmaster) ELSE 0 END         :: TFloat AS Persent_v 
                           , CASE WHEN COALESCE (tmpCursor1.countmaster,0) <> 0 THEN 100 * (COALESCE (tmpData.TotalAmount_gr,0)/ tmpCursor1.countmaster) ELSE 0 END :: TFloat AS Persent_gr
 
@@ -470,6 +478,7 @@ BEGIN
                       FROM tmpData
                            LEFT JOIN tmpCursor1 ON 1 = 1 
                       )
+
 
      SELECT tmpData.GoodsId
           , tmpData.GoodsCode
@@ -490,6 +499,10 @@ BEGIN
           , ROUND (tmpData.Count_gr / 2.0 , 0) ::TFloat AS Str_print     --для вывода значения % выхода по группе 
           , tmpData.Persent_v   ::TFloat             --% выхода 
           , tmpData.Persent_gr  ::TFloat             --% выхода по группе 
+          --для проверки
+          , tmpData.TotalSummaPlan ::TFloat  AS TotalSummaPlan_calc        -- итого сумма по цене план* для расчета факта 
+          , tmpData.SummaPlan      ::TFloat  AS SummaPlan_calc             -- сумма по цене план* для расчета факта
+          , CASE WHEN COALESCE (tmpData.Amount,0) <>0 THEN tmpData.SummaPlan / tmpData.Amount ELSE 0 END ::TFloat AS PricePlan_calc     -- цена план* для расчета факта
       FROM tmpDataCalc AS tmpData
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                   ON ObjectLink_Goods_GoodsGroupStat.ObjectId = tmpData.GoodsId
@@ -510,6 +523,7 @@ $BODY$
 
 -- тест
 -- 
---SELECT * FROM gpSelect_MI_ProductionSeparate_PriceFact (inStartDate := ('24.04.2025')::TDateTime , inEndDate := ('28.04.2025')::TDateTime , inMovementId:=0, inGoodsId := 4261, inPartionGoods := '4218-242592-24.04.2025' ::TVarChar , inSession:= zfCalc_UserAdmin());  --5225 живой вес
+--SELECT * FROM gpSelect_MI_ProductionSeparate_PriceFact (inStartDate := ('24.04.2025')::TDateTime , inEndDate := ('28.04.2025')::TDateTime , inMovementId:=31194601 , inGoodsId := 4261, inPartionGoods := '4218-242592-24.04.2025' ::TVarChar , inSession:= zfCalc_UserAdmin());  --5225 живой вес
+ --SELECT * FROM gpSelect_MI_ProductionSeparate_PriceFact (inStartDate := ('05.05.2025')::TDateTime , inEndDate := ('05.05.2025')::TDateTime , inMovementId:=31194601 , inGoodsId := 0, inPartionGoods := '4218-11956-05.05.2025' ::TVarChar , inSession:= zfCalc_UserAdmin());  --5225 живой вес
 
 
