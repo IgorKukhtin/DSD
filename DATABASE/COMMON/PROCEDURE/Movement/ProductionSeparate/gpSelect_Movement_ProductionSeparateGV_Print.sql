@@ -99,7 +99,8 @@ BEGIN
                              , AmountPartnerIncome TFloat, AmountPartnerSecondIncome TFloat
                              , HeadCount1  TFloat
                              , PriceIncome  Tfloat
-                             , PriceIncome1  Tfloat
+                             , PriceIncome1  Tfloat 
+                             , PriceIncome2  TFloat
                              , PriceTransport  Tfloat 
                              , SummCostIncome TFloat
                              , Count_CountPacker   Tfloat
@@ -129,6 +130,7 @@ BEGIN
                              , HeadCount1
                              , PriceIncome
                              , PriceIncome1
+                             , PriceIncome2
                              , PriceTransport
                              , SummCostIncome
                              , Count_CountPacker
@@ -374,6 +376,7 @@ BEGIN
 
            , tmpIncomeAll.Amount_summ / tmpIncomeAll.Amount_count                              AS PriceIncome
            , tmpIncomeAll.Amount_summ / (tmpIncomeAll.Amount_count - tmpIncomeAll.CountPacker) AS PriceIncome1
+           , CASE WHEN COALESCE (tmpIncomeAll.AmountPartner,0) <> 0 THEN tmpIncomeAll.Amount_summ / (tmpIncomeAll.AmountPartner) ELSE 0 END AS PriceIncome2  -- по кол. поставщика
            , 0 :: Tfloat                                                                       AS PriceTransport
            , tmpIncomeCost.AmountCost   ::TFloat                                               AS SummCostIncome
 
@@ -488,7 +491,7 @@ BEGIN
           , tmpData.Str_print                --для вывода значения % выхода по группе 
           , tmpData.Persent_v                --% выхода 
           , tmpData.Persent_gr               --% выхода по группе 
-      FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate, vbOperDate, 0, 0, vbPartionGoods, inSession) AS tmpData;
+      FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate, vbOperDate, inMovementId, 0, vbPartionGoods, inSession) AS tmpData;
        
 
     OPEN Cursor1 FOR
@@ -530,6 +533,7 @@ BEGIN
 
            , tmpCursor1.PriceIncome
            , tmpCursor1.PriceIncome1
+           , tmpCursor1.PriceIncome2
            , tmpCursor1.PriceTransport
            , tmpCursor1.SummCostIncome
 
