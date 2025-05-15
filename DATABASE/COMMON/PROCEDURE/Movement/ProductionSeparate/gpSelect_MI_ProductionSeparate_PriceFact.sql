@@ -383,10 +383,10 @@ BEGIN
                      AND MovementItem.isErased   = FALSE
                   )
 
-      , tmpData AS (SELECT Object_Goods.Id  			         AS GoodsId
-                         , Object_Goods.ObjectCode  			 AS GoodsCode
-                         , Object_Goods.ValueData   			 AS GoodsName
-                         , Object_GoodsGroup.ObjectCode   		 AS GoodsGroupCode
+      , tmpData AS (SELECT Object_Goods.Id                       AS GoodsId
+                         , Object_Goods.ObjectCode               AS GoodsCode
+                         , Object_Goods.ValueData                AS GoodsName
+                         , Object_GoodsGroup.ObjectCode          AS GoodsGroupCode
                          , Object_GoodsGroup.ValueData   		 AS GoodsGroupName 
                          , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                          , SUM (MovementItem.Amount)::TFloat		 AS Amount 

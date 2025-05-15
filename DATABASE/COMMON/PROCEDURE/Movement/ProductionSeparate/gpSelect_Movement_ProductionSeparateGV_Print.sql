@@ -102,7 +102,8 @@ BEGIN
                              , PriceIncome1  Tfloat 
                              , PriceIncome2  TFloat
                              , PriceTransport  Tfloat 
-                             , SummCostIncome TFloat
+                             , SummCostIncome TFloat 
+                             , CountDocIncome TFloat
                              , Count_CountPacker   Tfloat
                              , PercentCount   Tfloat
                              , CountSeparate Tfloat
@@ -133,6 +134,7 @@ BEGIN
                              , PriceIncome2
                              , PriceTransport
                              , SummCostIncome
+                             , CountDocIncome
                              , Count_CountPacker
                              , PercentCount
                              , CountSeparate
@@ -341,6 +343,7 @@ BEGIN
                        )
       --затраты из приходе поставщика
      , tmpIncomeCost AS (SELECT SUM (COALESCE (MovementFloat_AmountCost.ValueData,0)) AS AmountCost
+                              , COUnt (DISTINCT Movement.ParentId) AS CountDoc --количество документов прихода = кол-во скотовозов
                          FROM Movement
                               LEFT JOIN MovementFloat AS MovementFloat_AmountCost
                                                       ON MovementFloat_AmountCost.MovementId = Movement.Id
@@ -379,6 +382,7 @@ BEGIN
            , CASE WHEN COALESCE (tmpIncomeAll.AmountPartner,0) <> 0 THEN tmpIncomeAll.Amount_summ / (tmpIncomeAll.AmountPartner) ELSE 0 END AS PriceIncome2  -- по кол. поставщика
            , 0 :: Tfloat                                                                       AS PriceTransport
            , tmpIncomeCost.AmountCost   ::TFloat                                               AS SummCostIncome
+           , tmpIncomeCost.CountDoc     ::Integer                                              AS CountDocIncome
 
            , (tmpIncomeAll.Amount_count - tmpIncomeAll.CountPacker)      AS Count_CountPacker
            , 100 * tmpSeparateS.Amount_count / tmpIncomeAll.Amount_count AS PercentCount
@@ -535,7 +539,8 @@ BEGIN
            , tmpCursor1.PriceIncome1
            , tmpCursor1.PriceIncome2
            , tmpCursor1.PriceTransport
-           , tmpCursor1.SummCostIncome
+           , tmpCursor1.SummCostIncome   --затраты
+           , tmpCursor1.CountDocIncome   --количество документов прихода = кол-во скотовозов
 
            , tmpCursor1.Count_CountPacker
            , tmpCursor1.PercentCount
@@ -556,12 +561,8 @@ BEGIN
            LEFT JOIN tmpGoods_4134 ON 1 = 1
            --данные для товара 4134 из мастера
            LEFT JOIN (SELECT SUM (tmpCursor2.Amount) AS Amount
-                           /*, tmpCursor2.PricePlan
-                           , tmpCursor2.PriceFact ::TFloat
-                           , tmpCursor2.SummFact ::TFloat
-                           , tmpCursor2.Persent_v 
-                           */
-                      FROM tmpCursor2.GoodsCode = 4134    --4261  - 'товар код 4134'
+                      FROM tmpCursor2
+                      WHERE tmpCursor2.GoodsCode = 4134    --4261  - 'товар код 4134'
                       ) AS tmpMaster_4134 ON 1 = 1
       ;    
 
@@ -576,6 +577,8 @@ BEGIN
           , tmpCursor2.GoodsGroupNameFull 
           , tmpCursor2.GroupStatId
           , tmpCursor2.GroupStatName
+          --признак для печати группы статистики в итого по группам ставтистики
+          , CASE WHEN tmpCursor2.GroupStatId = 12045233 THEN TRUE ELSE FALSE END ::Boolean AS isPrintGroupStat
           , tmpCursor2.Amount
           , tmpCursor2.PricePlan
           , tmpCursor2.PriceNorm
@@ -585,7 +588,12 @@ BEGIN
           , tmpCursor2.Count_gr                 -- кол.товаров в группе
           , tmpCursor2.Str_print                --для вывода значения % выхода по группе 
           , tmpCursor2.Persent_v                --% выхода 
-          , tmpCursor2.Persent_gr               --% выхода по группе 
+          , tmpCursor2.Persent_gr               --% выхода по группе  
+          , SUM (CASE WHEN tmpCursor2.GroupStatId = 12045233 THEN tmpCursor2.Amount ELSE 0 END) OVER ()          ::TFloat AS Amount_GroupStat      --итого количество по группам статистики    - входит в выход
+          , SUM (CASE WHEN tmpCursor2.GroupStatId = 12045233 THEN tmpCursor2.SummFact ELSE 0 END) OVER ()        ::TFloat AS SummFact_GroupStat    --итого сумма факт по группам статистики    - входит в выход
+          , SUM (tmpCursor2.Amount) OVER (PARTITION BY tmpCursor2.GoodsGroupNameFull)   ::TFloat AS Amount_Group          --итого количество по группам товаров
+          , SUM (tmpCursor2.SummFact) OVER (PARTITION BY tmpCursor2.GoodsGroupNameFull) ::TFloat AS SummFact_Group        --итого сумма факт по группам товаров
+          
      FROM tmpCursor2;
         
     RETURN NEXT Cursor2;
