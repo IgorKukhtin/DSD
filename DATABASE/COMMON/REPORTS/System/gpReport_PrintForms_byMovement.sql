@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_PrintForms_byMovement(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Invnumber TVarChar, OperDate TDateTime
-             , MovementDesId Integer, MovementDescName TVarChar
+             , MovementDescId Integer, MovementDescName TVarChar
              , TotalLines TFloat
              , TotalPage_1 TFloat, TotalPage_2 TFloat, TotalPage_3 TFloat, TotalPage_4 TFloat
              , TotalPage_5 TFloat, TotalPage_6 TFloat, TotalPage_7 TFloat, TotalPage_8 TFloat
@@ -28,6 +28,13 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
+
+--     inStartDate:= '01.05.2025';
+  --   inEndDate  := CURRENT_DATE;
+     inStartDate:= CURRENT_DATE;
+     inEndDate  := CURRENT_DATE;
+--        WHERE tmpData.MovementDescId = zc_Movement_Sale()
+  --      order by 1,4, 5
 
    -- Результат
    RETURN QUERY
@@ -655,8 +662,9 @@ BEGIN
                                         ON MovementFloat_TotalPage_8.MovementId = tmpData.Id
                                        AND MovementFloat_TotalPage_8.DescId     = zc_MovementFloat_TotalPage_8()
 
+        WHERE tmpData.MovementDescId = zc_Movement_Sale()
         order by 1,4, 5
-
+        LIMIT 1
    ;
 
 
@@ -672,4 +680,4 @@ $BODY$
  02.05.25         *
 */
 -- тест
--- SELECT * FROM gpReport_PrintForms_byMovement ('30.04.2025','01.05.2025',zc_Movement_ReturnIn(),'5')
+-- SELECT * FROM gpReport_PrintForms_byMovement ('30.04.2025','01.05.2025',0,'5')
