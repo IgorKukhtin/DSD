@@ -41,6 +41,7 @@ BEGIN
 
      --партия для ЖВ
      vbvbPartionGoods_GV := CASE WHEN vbPartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (vbPartionGoods::TVarChar FROM 4)
+                                 WHEN vbPartionGoods ::TVarChar LIKE 'об-%' THEN SUBSTRING (vbPartionGoods::TVarChar FROM 4)
                                  ELSE vbPartionGoods ::TVarChar
                             END;
 
