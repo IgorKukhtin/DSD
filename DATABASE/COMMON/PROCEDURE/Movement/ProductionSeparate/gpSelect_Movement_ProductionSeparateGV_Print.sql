@@ -505,7 +505,7 @@ BEGIN
                             , tmpData.SummFact ::TFloat
                             , tmpData.Persent_v
                        FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 4261, vbvbPartionGoods_GV, inSession) AS tmpData         --4261  - 'товар код 4134'
-                       ) 
+                       )                       
 
      -- Результат
       SELECT tmpCursor1.InvNumber
@@ -549,10 +549,20 @@ BEGIN
            , tmpGoods_4134.GoodsName      AS GoodsName_4134
            , tmpGoods_4134.PriceFact      AS PriceFact_4134
            , tmpGoods_4134.Amount         AS Amount_4134
+           , tmpMaster_4134.Amount        AS AmountMaster_4134 --даные текущего документа
            , tmpGoods_4134.Persent_v :: TFloat AS Persent_4134
 
       FROM tmpCursor1
            LEFT JOIN tmpGoods_4134 ON 1 = 1
+           --данные для товара 4134 из мастера
+           LEFT JOIN (SELECT SUM (tmpCursor2.Amount) AS Amount
+                           /*, tmpCursor2.PricePlan
+                           , tmpCursor2.PriceFact ::TFloat
+                           , tmpCursor2.SummFact ::TFloat
+                           , tmpCursor2.Persent_v 
+                           */
+                      FROM tmpCursor2.GoodsCode = 4134    --4261  - 'товар код 4134'
+                      ) AS tmpMaster_4134 ON 1 = 1
       ;    
 
 
