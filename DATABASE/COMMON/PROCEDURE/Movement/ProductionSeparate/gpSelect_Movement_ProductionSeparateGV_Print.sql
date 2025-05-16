@@ -453,6 +453,9 @@ BEGIN
                                 , Str_print TFloat
                                 , Persent_v   Tfloat
                                 , Persent_gr   Tfloat
+                                , PricePlan_calc Tfloat
+                                , SummaPlan_calc Tfloat
+                                , TotalSummaPlan_calc Tfloat
                                 ) ON COMMIT DROP;
     INSERT INTO tmpCursor2 (GoodsCode 
                                 , GoodsName
@@ -474,7 +477,11 @@ BEGIN
                                 , Count_gr 
                                 , Str_print
                                 , Persent_v
-                                , Persent_gr)
+                                , Persent_gr
+                                , PricePlan_calc
+                                , SummaPlan_calc
+                                , TotalSummaPlan_calc
+                                )
 
     
      SELECT tmpData.GoodsCode
@@ -496,6 +503,11 @@ BEGIN
           , tmpData.Str_print                --для вывода значения % выхода по группе 
           , tmpData.Persent_v                --% выхода 
           , tmpData.Persent_gr               --% выхода по группе 
+
+          , tmpData.PricePlan_calc          
+          , tmpData.SummaPlan_calc
+          , tmpData.TotalSummaPlan_calc
+
       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate, vbOperDate, inMovementId, 0, vbPartionGoods, inSession) AS tmpData;
        
 
@@ -509,7 +521,7 @@ BEGIN
                             , tmpData.PriceFact ::TFloat
                             , tmpData.SummFact ::TFloat
                             , tmpData.Persent_v
-                       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 4261, vbvbPartionGoods_GV, inSession) AS tmpData         --4261  - 'товар код 4134'
+                       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 4261, vbvbPartionGoods_GV, inSession) AS tmpData       --4261  - 'товар код 4134'
                        )                       
 
      -- Результат
@@ -571,6 +583,37 @@ BEGIN
     RETURN NEXT Cursor1;
 
     OPEN Cursor2 FOR
+   
+    WITH 
+     --данные по партии для товара 4134 по партии
+     tmpFactGoods_4134 AS (SELECT tmpData.GoodsCode
+                            , tmpData.GoodsName
+                            , tmpData.Amount
+                            , tmpData.PricePlan
+                            , tmpData.PriceFact ::TFloat
+                            , tmpData.SummFact ::TFloat
+                            , tmpData.Persent_v
+                       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 4261, vbvbPartionGoods_GV, inSession) AS tmpData   --4261  - 'товар код 4134'
+                       )
+   , tmpData AS (
+                 SELECT tmpCursor2.*
+                      --Свинина НК
+                      , CAST (CASE WHEN COALESCE (tmpCursor2.Amount,0) <> 0 
+                           THEN (tmpCursor2.SummaPlan_Calc - 
+                                ( (tmpCursor2.TotalSummaPlan_Calc 
+                                  -- 
+                                  - ( COALESCE (tmpCursor1.CountMaster,0) * tmpFactGoods_4134.PriceFact )
+                                   ) 
+                                   * CASE WHEN COALESCE (tmpCursor2.TotalSummaPlan_Calc,0) <> 0 THEN tmpCursor2.SummaPlan_Calc / tmpCursor2.TotalSummaPlan_Calc ELSE 0 END)   /* kol_H*/      
+                                )  /*kol_i */ 
+                                / COALESCE (tmpCursor2.Amount,0) 
+                                ELSE 0 
+                      END AS  NUMERIC(16,8)) AS PriceFact_4134
+                 FROM tmpCursor2 
+                     LEFT JOIN tmpFactGoods_4134 ON 1=1
+                     LEFT JOIN tmpCursor1 ON 1=1
+                 ) 
+                        
      SELECT tmpCursor2.GoodsCode
           , tmpCursor2.GoodsName
           , tmpCursor2.GoodsGroupCode
@@ -585,7 +628,11 @@ BEGIN
           , tmpCursor2.PriceNorm
           , tmpCursor2.isLoss
           , tmpCursor2.PriceFact                --расчет по файлу 
-          , tmpCursor2.SummFact
+          , tmpCursor2.SummFact 
+          --
+          , tmpCursor2.PriceFact_4134
+          , (tmpCursor2.PriceFact_4134 * tmpCursor2.Amount) ::TFloat AS SummFact_4134
+          
           , tmpCursor2.Count_gr                 -- кол.товаров в группе
           , tmpCursor2.Str_print                --для вывода значения % выхода по группе 
           , tmpCursor2.Persent_v                --% выхода 
@@ -594,8 +641,11 @@ BEGIN
           , SUM (CASE WHEN tmpCursor2.GroupStatId = 12045233 THEN tmpCursor2.SummFact ELSE 0 END) OVER ()        ::TFloat AS SummFact_GroupStat    --итого сумма факт по группам статистики    - входит в выход
           , SUM (tmpCursor2.Amount) OVER (PARTITION BY tmpCursor2.GoodsGroupNameFull)   ::TFloat AS Amount_Group          --итого количество по группам товаров
           , SUM (tmpCursor2.SummFact) OVER (PARTITION BY tmpCursor2.GoodsGroupNameFull) ::TFloat AS SummFact_Group        --итого сумма факт по группам товаров
+ 
+          , SUM (CASE WHEN tmpCursor2.GroupStatId = 12045233 THEN (tmpCursor2.PriceFact_4134 * tmpCursor2.Amount) ELSE 0 END) OVER ()        ::TFloat AS SummFact_4134_GroupStat    --итого сумма факт по группам статистики    - входит в выход
+
           
-     FROM tmpCursor2;
+     FROM tmpData AS tmpCursor2;
         
     RETURN NEXT Cursor2;
 
@@ -611,5 +661,5 @@ $BODY$
 
 -- тест
 -- 
---SELECT * FROM gpSelect_Movement_ProductionSeparateGV_Print (inMovementId:= 30723210 , inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_ProductionSeparateGV_Print (inMovementId:= 30723210 , inSession:= zfCalc_UserAdmin());
 --FETCH ALL "<unnamed portal 98>";
