@@ -170,6 +170,9 @@ type
     bbPrintCell: TdxBarButton;
     bbsPrint: TdxBarSubItem;
     bbSeparator: TdxBarSeparator;
+    mactPrint_Order3: TMultiAction;
+    actPrint_3: TdsdPrintAction;
+    bbPrint_Order3: TdxBarButton;
   private
     { Private declarations }
   public

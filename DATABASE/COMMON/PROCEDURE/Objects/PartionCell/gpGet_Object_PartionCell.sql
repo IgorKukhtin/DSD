@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpGet_Object_PartionCell (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_PartionCell(
-    IN inId          Integer,       -- Единица измерения
+    IN inId          Integer,       -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
