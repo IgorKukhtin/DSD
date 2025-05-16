@@ -24,8 +24,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       inherited cxGrid: TcxGrid
         Width = 1540
         Height = 311
-        ExplicitLeft = 3
-        ExplicitTop = 24
         ExplicitWidth = 1540
         ExplicitHeight = 311
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -957,6 +955,226 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object isPartionCell_Many_1: TcxGridDBColumn
+            Caption = '1.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_1'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_2: TcxGridDBColumn
+            Caption = '2.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_2'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-2('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_3: TcxGridDBColumn
+            Caption = '3.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_3'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-3('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_4: TcxGridDBColumn
+            Caption = '4.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_4'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-4('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_5: TcxGridDBColumn
+            Caption = '5.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_5'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-5('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_6: TcxGridDBColumn
+            Caption = '6.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_6'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-6('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_7: TcxGridDBColumn
+            Caption = '7.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_7'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-7('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_8: TcxGridDBColumn
+            Caption = '8.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_8'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-8('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_9: TcxGridDBColumn
+            Caption = '9.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_9'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-9('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_10: TcxGridDBColumn
+            Caption = '10.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_10'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-10('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_11: TcxGridDBColumn
+            Caption = '11.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_11'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-11('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_12: TcxGridDBColumn
+            Caption = '12.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_12'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-12('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_13: TcxGridDBColumn
+            Caption = '13.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_13'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-13('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_14: TcxGridDBColumn
+            Caption = '14.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_14'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-14('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_15: TcxGridDBColumn
+            Caption = '15.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_15'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-15('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_16: TcxGridDBColumn
+            Caption = '16.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_16'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-16('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_17: TcxGridDBColumn
+            Caption = '17.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_17'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-17('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_18: TcxGridDBColumn
+            Caption = '18.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_18'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-18('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_19: TcxGridDBColumn
+            Caption = '19.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_19'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-19('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_20: TcxGridDBColumn
+            Caption = '20.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_20'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-20('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_21: TcxGridDBColumn
+            Caption = '21.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_21'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-21('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Many_22: TcxGridDBColumn
+            Caption = '22.5 '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isPartionCell_Many_22'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1074' '#1071#1095#1077#1081#1082#1072'-22('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
           end
           object Color_PartionGoodsDate: TcxGridDBColumn
             DataBinding.FieldName = 'Color_PartionGoodsDate'
