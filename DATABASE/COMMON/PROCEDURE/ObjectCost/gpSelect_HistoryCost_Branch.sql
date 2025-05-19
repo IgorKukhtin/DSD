@@ -117,7 +117,8 @@ BEGIN
                END :: Integer AS BranchCode
            , Object_Branch.ValueData  AS BranchName
              -- показали любой товар из переоценки - информативно
-           , (SELECT '(' || Object.ObjectCode :: TVarChar || ')' || Object.ValueData FROM tmpPrice LEFT JOIN Object ON Object.Id = tmpPrice.GoodsId WHERE tmpPrice.OperDate = tmp.EndDate /*AND tmpPrice.BranchId = tmp.BranchId*/ LIMIT 1) :: TVarChar AS GoodsName
+--           , (SELECT '(' || Object.ObjectCode :: TVarChar || ')' || Object.ValueData FROM tmpPrice LEFT JOIN Object ON Object.Id = tmpPrice.GoodsId WHERE tmpPrice.OperDate = tmp.EndDate /*AND tmpPrice.BranchId = tmp.BranchId*/ LIMIT 1) :: TVarChar AS GoodsName
+           , (SELECT '(' || STRING_AGG (Object.ObjectCode :: TVarChar, ';') || ')' FROM tmpPrice LEFT JOIN Object ON Object.Id = tmpPrice.GoodsId WHERE tmpPrice.OperDate = tmp.EndDate /*AND tmpPrice.BranchId = tmp.BranchId*/) :: TVarChar AS GoodsName
              -- сколько вообще переоценок в этом числе - информативно
            , (SELECT COUNT (*) FROM tmpPrice WHERE tmpPrice.OperDate = tmp.EndDate /*AND tmpPrice.BranchId = tmp.BranchId*/) :: Integer AS myCount
 
