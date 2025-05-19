@@ -65,13 +65,13 @@ type
     // VchasnoEDI
     procedure InsertUpdateOrderVchasnoEDI(ORDER: OrderXML.IXMLORDERType;
       spHeader, spList: TdsdStoredProc; lFileName, ADealId : String);
-    procedure UpdateOrderDESADVSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
-    procedure UpdateOrderORDERSPSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
+    procedure UpdateOrderDESADVSaveVchasnoEDI(AEDIId, Id_send : Integer; isError : Boolean);
+    procedure UpdateOrderORDERSPSaveVchasnoEDI(AEDIId, Id_send: Integer; isError : Boolean);
 
-    procedure UpdateOrderDELNOTSaveVchasnoEDI(AEDIId: Integer; DocumentId, VchasnoId: String; isError : Boolean);
-    procedure UpdateOrderCOMDOCSaveVchasnoEDI(AEDIId: Integer; DocumentId, VchasnoId: String; isError : Boolean);
+    procedure UpdateOrderDELNOTSaveVchasnoEDI(AEDIId, Id_send: Integer; DocumentId, VchasnoId: String; isError : Boolean);
+    procedure UpdateOrderCOMDOCSaveVchasnoEDI(AEDIId, Id_send: Integer; DocumentId, VchasnoId: String; isError : Boolean);
 
-    procedure UpdateOrderDELNOTSignVchasnoEDI(AEDIId: Integer; isError : Boolean);
+    procedure UpdateOrderDELNOTSignVchasnoEDI(AEDIId, Id_send: Integer; isError : Boolean);
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -518,15 +518,21 @@ begin
 
   FInsertEDIEvents := TdsdStoredProc.Create(nil);
   FInsertEDIEvents.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FInsertEDIEvents.Params.AddParam('inMovementId_send', ftInteger, ptInput, 0);
   FInsertEDIEvents.Params.AddParam('inEDIEvent', ftString, ptInput, '');
   FInsertEDIEvents.StoredProcName := 'gpInsert_Movement_EDIEvents';
   FInsertEDIEvents.OutputType := otResult;
 
   FInsertEDIEventsDoc := TdsdStoredProc.Create(nil);
   FInsertEDIEventsDoc.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FInsertEDIEventsDoc.Params.AddParam('inMovementId_send', ftInteger, ptInput, 0);
+  //DocumentId
   FInsertEDIEventsDoc.Params.AddParam('inDocumentId', ftString, ptInput, '');
+  //VchasnoId
   FInsertEDIEventsDoc.Params.AddParam('inVchasnoId', ftString, ptInput, '');
+  //Описание события
   FInsertEDIEventsDoc.Params.AddParam('inEDIEvent', ftString, ptInput, '');
+  //
   FInsertEDIEventsDoc.StoredProcName := 'gpInsert_Movement_EDIEvents';
   FInsertEDIEventsDoc.OutputType := otResult;
 
@@ -551,6 +557,7 @@ begin
 
   FUpdateEDIErrorState := TdsdStoredProc.Create(nil);
   FUpdateEDIErrorState.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FUpdateEDIErrorState.Params.AddParam('inMovementId_send', ftInteger, ptInput, 0);
   FUpdateEDIErrorState.Params.AddParam('inDocType', ftString, ptInput, '');
   FUpdateEDIErrorState.Params.AddParam('inOperDate', ftDateTime, ptInput, Date);
   FUpdateEDIErrorState.Params.AddParam('inInvNumber', ftString, ptInput, '');
@@ -4968,92 +4975,140 @@ begin
     FUpdateEDIVchasnoEDI.Execute;
 end;
 
-procedure TEDI.UpdateOrderDESADVSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
+procedure TEDI.UpdateOrderDESADVSaveVchasnoEDI(AEDIId, Id_send: Integer; isError : Boolean);
 begin
   if AEDIId <> 0 then
   begin
-    FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
-    FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
-    FUpdateEDIErrorState.Execute;
+     try
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := Id_send;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
+      FUpdateEDIErrorState.Execute;
+    finally
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := 0;
+    end;
 
-    FInsertEDIEvents.ParamByName('inMovementId').Value := AEDIId;
-    if isError = TRUE
-    then FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно Уведомление об отгрузке'
-    else FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Уведомление об отгрузке';
-    FInsertEDIEvents.Execute;
+    try
+      FInsertEDIEvents.ParamByName('inMovementId').Value := AEDIId;
+      FInsertEDIEvents.ParamByName('inMovementId_send').Value := Id_send;
+      if isError = TRUE
+      then FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно Уведомление об отгрузке'
+      else FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Уведомление об отгрузке';
+      FInsertEDIEvents.Execute;
+    finally
+      FInsertEDIEvents.ParamByName('inMovementId_send').Value := 0;
+    end;
   end;
 end;
 
-procedure TEDI.UpdateOrderORDERSPSaveVchasnoEDI(AEDIId: Integer; isError : Boolean);
+procedure TEDI.UpdateOrderORDERSPSaveVchasnoEDI(AEDIId, Id_send: Integer; isError : Boolean);
 begin
   if AEDIId <> 0 then
   begin
+    try
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := Id_send;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
+      FUpdateEDIErrorState.Execute;
+    finally
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := 0;
+    end;
 
-    FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
-    FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
-    FUpdateEDIErrorState.Execute;
-
-    FInsertEDIEvents.ParamByName('inMovementId').Value :=AEDIId;
-    if isError = TRUE
-    then FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно Подтверждение заказа'
-    else FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Подтверждение заказа';
-    FInsertEDIEvents.Execute;
+    try
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=AEDIId;
+      FInsertEDIEvents.ParamByName('inMovementId_send').Value := Id_send;
+      if isError = TRUE
+      then FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно Подтверждение заказа'
+      else FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Подтверждение заказа';
+      FInsertEDIEvents.Execute;
+    finally
+      FInsertEDIEvents.ParamByName('inMovementId_send').Value := 0;
+    end;
   end;
 end;
 
-procedure TEDI.UpdateOrderCOMDOCSaveVchasnoEDI(AEDIId: Integer; DocumentId, VchasnoId: String; isError : Boolean);
+procedure TEDI.UpdateOrderCOMDOCSaveVchasnoEDI(AEDIId, Id_send: Integer; DocumentId, VchasnoId: String; isError : Boolean);
 begin
   if AEDIId <> 0 then
   begin
 
-    FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
-    FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
-    FUpdateEDIErrorState.Execute;
+    try
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := Id_send;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
+      FUpdateEDIErrorState.Execute;
+    finally
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := 0;
+    end;
 
-    FInsertEDIEventsDoc.ParamByName('inMovementId').Value :=AEDIId;
-    FInsertEDIEventsDoc.ParamByName('inDocumentId').Value :=DocumentId;
-    FInsertEDIEventsDoc.ParamByName('inVchasnoId').Value :=VchasnoId;
-    if isError = TRUE
-    then FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно COMDOC-Расходная накладная'
-    else FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно COMDOC-Расходная накладная';
-    FInsertEDIEventsDoc.Execute;
+    try
+      FInsertEDIEventsDoc.ParamByName('inMovementId').Value :=AEDIId;
+      FInsertEDIEventsDoc.ParamByName('inMovementId_send').Value := Id_send;
+      FInsertEDIEventsDoc.ParamByName('inDocumentId').Value :=DocumentId;
+      FInsertEDIEventsDoc.ParamByName('inVchasnoId').Value :=VchasnoId;
+      if isError = TRUE
+      then FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно COMDOC-Расходная накладная'
+      else FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно COMDOC-Расходная накладная';
+      FInsertEDIEventsDoc.Execute;
+    finally
+      FInsertEDIEventsDoc.ParamByName('inMovementId_send').Value := 0;
+    end;
   end;
 end;
 
-procedure TEDI.UpdateOrderDELNOTSaveVchasnoEDI(AEDIId: Integer; DocumentId, VchasnoId: String; isError : Boolean);
+procedure TEDI.UpdateOrderDELNOTSaveVchasnoEDI(AEDIId, Id_send: Integer; DocumentId, VchasnoId: String; isError : Boolean);
 begin
   if AEDIId <> 0 then
   begin
 
-    FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
-    FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
-    FUpdateEDIErrorState.Execute;
+    try
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := Id_send;
+      FUpdateEDIErrorState.Execute;
+    finally
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := 0;
+    end;
 
-    FInsertEDIEventsDoc.ParamByName('inMovementId').Value :=AEDIId;
-    FInsertEDIEventsDoc.ParamByName('inDocumentId').Value :=DocumentId;
-    FInsertEDIEventsDoc.ParamByName('inVchasnoId').Value :=VchasnoId;
-    if isError = TRUE
-    then FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно DELNOT-Расходная накладная'
-    else FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно DELNOT-Расходная накладная';
-    FInsertEDIEventsDoc.Execute;
+    try
+      FInsertEDIEventsDoc.ParamByName('inMovementId').Value :=AEDIId;
+      FInsertEDIEventsDoc.ParamByName('inMovementId_send').Value := Id_send;
+      FInsertEDIEventsDoc.ParamByName('inDocumentId').Value :=DocumentId;
+      FInsertEDIEventsDoc.ParamByName('inVchasnoId').Value :=VchasnoId;
+      if isError = TRUE
+      then FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно DELNOT-Расходная накладная'
+      else FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно DELNOT-Расходная накладная';
+      FInsertEDIEventsDoc.Execute;
+    finally
+      FInsertEDIEventsDoc.ParamByName('inMovementId_send').Value := 0;
+    end;
   end;
 end;
 
 
-procedure TEDI.UpdateOrderDELNOTSignVchasnoEDI(AEDIId: Integer; isError : Boolean);
+procedure TEDI.UpdateOrderDELNOTSignVchasnoEDI(AEDIId, Id_send: Integer; isError : Boolean);
 begin
   if AEDIId <> 0 then
   begin
 
-    FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
-    FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
-    FUpdateEDIErrorState.Execute;
+    try
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := Id_send;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
+      FUpdateEDIErrorState.Execute;
+    finally
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := 0;
+    end;
 
-    FInsertEDIEvents.ParamByName('inMovementId').Value :=AEDIId;
-    if isError = TRUE
-    then FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Подписи Вчасно Расходная накладная'
-    else FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Подпись Вчасно Расходная накладная';
-    FInsertEDIEvents.Execute;
+    try
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=AEDIId;
+      FInsertEDIEvents.ParamByName('inMovementId_send').Value := Id_send;
+      if isError = TRUE
+      then FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Подписи Вчасно Расходная накладная'
+      else FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Подпись Вчасно Расходная накладная';
+      FInsertEDIEvents.Execute;
+    finally
+      FInsertEDIEvents.ParamByName('inMovementId_send').Value := 0;
+    end;
   end;
 end;
 
@@ -6497,7 +6552,7 @@ begin
        Stream.Free;
      end;
      //
-     EDI.UpdateOrderORDERSPSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger, not Result);
+     EDI.UpdateOrderORDERSPSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger, HeaderDataSet.FieldByName('MovementId_EDI_send').asInteger, not Result);
   end;
 
 end;
@@ -6521,7 +6576,7 @@ begin
        Stream.Free;
      end;
      //
-     EDI.UpdateOrderDESADVSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger, not Result);
+     EDI.UpdateOrderDESADVSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger, HeaderDataSet.FieldByName('MovementId_EDI_send').asInteger, not Result);
   end;
 
 end;
@@ -6546,6 +6601,7 @@ begin
      end;
      //
      EDI.UpdateOrderDELNOTSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger
+                                       , HeaderDataSet.FieldByName('MovementId_EDI_send').asInteger
                                        , FDocumentIdParam.Value, FVchasnoIdParam.Value
                                        , not Result
                                         );
@@ -6573,6 +6629,7 @@ begin
      end;
      //
      EDI.UpdateOrderCOMDOCSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger
+                                       , HeaderDataSet.FieldByName('MovementId_EDI_send').asInteger
                                        , FDocumentIdParam.Value, FVchasnoIdParam.Value
                                        , not Result
                                         );
@@ -6619,7 +6676,8 @@ begin
 
     // Запишем в базу чей ключ и дату
     EDI.UpdateOrderDELNOTSignVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger
-                                       , not Result
+                                      , HeaderDataSet.FieldByName('MovementId_EDI_send').asInteger
+                                      , not Result
                                         );
 
   finally
