@@ -237,13 +237,13 @@ BEGIN
 
         -- 01.05.2025
         ELSEIF vb_IsContainer_OLAP = TRUE AND inEndDate <= '30.04.2025'
-           AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.05.2025' AND Container_data.VerId = 1)
+           AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.05.2025' AND Container_data.VerId = 2)
            AND COALESCE (inGoodsId, 0) = 0
            AND 1=1
         THEN
             vbStartDate_olap:= '01.05.2025';
             --
-            vbVerId_olap:= 1; -- (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
+            vbVerId_olap:= 2; -- (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
 
         ELSE
             vb_IsContainer_OLAP:= FALSE;
@@ -1122,14 +1122,20 @@ end if;
                                                   ELSE 0
                                              END) AS SummSendOut
 
-                                       , SUM (CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
+                                       , SUM (CASE /*WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
+                                                   AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+and MIContainer.Id = 37276849975
+and inUserId = 5
+then 1*/
+                                                   WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
-                                                   AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                                   AND (MovementBoolean_HistoryCost.ValueData = TRUE AND MLO_To.ObjectId = MIContainer.WhereObjectId_analyzer)
                                                    AND _tmpContainer.AccountGroupId = zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
                                                    -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 --
                                                        THEN MIContainer.Amount
+
                                                   WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
@@ -1159,7 +1165,8 @@ end if;
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
-                                                   AND COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE
+                                                   AND (COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE OR MLO_To.ObjectId <> MIContainer.WhereObjectId_analyzer)
+
                                                    AND _tmpContainer.AccountGroupId = zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
                                                    -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 --
                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
@@ -1342,6 +1349,11 @@ end if;
                                        LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                                                  ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
                                                                 AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+
+                                       LEFT JOIN MovementLinkObject AS MLO_To
+                                                                    ON MLO_To.MovementId          = MIContainer.MovementId
+                                                                   AND MLO_To.DescId              = zc_MovementLinkObject_To()
+                                                                   AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
 
                                        LEFT JOIN tmpPriceList_Basis AS tmpPriceList_Basis_gk
                                                                     ON tmpPriceList_Basis_gk.GoodsId = _tmpContainer.GoodsId
