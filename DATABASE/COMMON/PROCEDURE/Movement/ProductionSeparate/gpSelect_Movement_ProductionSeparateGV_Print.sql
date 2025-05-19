@@ -639,6 +639,7 @@ BEGIN
           , tmpCursor2.Persent_gr               --% выхода по группе  
           , SUM (CASE WHEN tmpCursor2.GroupStatId = 12045233 THEN tmpCursor2.Amount ELSE 0 END) OVER ()          ::TFloat AS Amount_GroupStat      --итого количество по группам статистики    - входит в выход
           , SUM (CASE WHEN tmpCursor2.GroupStatId = 12045233 THEN tmpCursor2.SummFact ELSE 0 END) OVER ()        ::TFloat AS SummFact_GroupStat    --итого сумма факт по группам статистики    - входит в выход
+          , SUM (CASE WHEN tmpCursor2.GroupStatId = 12045233 THEN (tmpCursor2.PriceFact_4134 * tmpCursor2.Amount) ELSE 0 END) OVER ()   ::TFloat AS SummFact_4134_GroupStat    --итого сумма факт по группам статистики    - входит в выход для Свинина НК
           , SUM (tmpCursor2.Amount) OVER (PARTITION BY tmpCursor2.GoodsGroupNameFull)   ::TFloat AS Amount_Group          --итого количество по группам товаров
           , SUM (tmpCursor2.SummFact) OVER (PARTITION BY tmpCursor2.GoodsGroupNameFull) ::TFloat AS SummFact_Group        --итого сумма факт по группам товаров
  
