@@ -2463,7 +2463,9 @@ BEGIN
                              -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты
                            , tmpData_PartionCell_All_All.isClose_value_max
                              -- есть хоть одна закрыта€ €чейка
-                           , tmpData_PartionCell_All_All.isClose_value_min
+                           , tmpData_PartionCell_All_All.isClose_value_min 
+                           --
+                           , tmpData_PartionCell_All_All.isMany
                              --
                            , ROW_NUMBER() OVER (PARTITION BY tmpData_PartionCell_All_All.MovementId        -- ***
                                                            , tmpData_PartionCell_All_All.ToId              -- ***
