@@ -133,6 +133,9 @@ type
     bbPrint_OrderCell_Paket: TdxBarButton;
     actPrintCell_pak: TdsdPrintAction;
     mactPrint_OrderCell_pac: TMultiAction;
+    mactPrint_Order3: TMultiAction;
+    actPrint_3: TdsdPrintAction;
+    bbPrint_Order3: TdxBarButton;
   private
     { Private declarations }
   public

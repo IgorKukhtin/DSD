@@ -75,7 +75,6 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , PartionCellCode_21 Integer
              , PartionCellCode_22 Integer
 
-
              , PartionCellName_1   TVarChar
              , PartionCellName_2   TVarChar
              , PartionCellName_3   TVarChar
@@ -102,6 +101,29 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
 
              , PartionCellName_srch TVarChar
 
+             , isPartionCell_Many_1 Boolean
+             , isPartionCell_Many_2 Boolean
+             , isPartionCell_Many_3 Boolean
+             , isPartionCell_Many_4 Boolean
+             , isPartionCell_Many_5 Boolean
+             , isPartionCell_Many_6  Boolean
+             , isPartionCell_Many_7  Boolean
+             , isPartionCell_Many_8  Boolean
+             , isPartionCell_Many_9  Boolean
+             , isPartionCell_Many_10 Boolean
+             , isPartionCell_Many_11 Boolean
+             , isPartionCell_Many_12 Boolean
+             , isPartionCell_Many_13 Boolean
+             , isPartionCell_Many_14 Boolean
+             , isPartionCell_Many_15 Boolean
+             , isPartionCell_Many_16 Boolean
+             , isPartionCell_Many_17 Boolean
+             , isPartionCell_Many_18 Boolean
+             , isPartionCell_Many_19 Boolean
+             , isPartionCell_Many_20 Boolean
+             , isPartionCell_Many_21 Boolean
+             , isPartionCell_Many_22 Boolean
+             
              , ColorFon_1  Integer
              , ColorFon_2  Integer
              , ColorFon_3  Integer
@@ -480,11 +502,41 @@ BEGIN
                                                             )
                        )
 
+    , tmpMI_Boolean_Many AS (SELECT MovementItemBoolean.*
+                             FROM MovementItemBoolean
+                             WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
+                               AND MovementItemBoolean.DescId IN (zc_MIBoolean_PartionCell_Many_1()
+                                                                , zc_MIBoolean_PartionCell_Many_2()
+                                                                , zc_MIBoolean_PartionCell_Many_3()
+                                                                , zc_MIBoolean_PartionCell_Many_4()
+                                                                , zc_MIBoolean_PartionCell_Many_5()
+                                                                , zc_MIBoolean_PartionCell_Many_6()
+                                                                , zc_MIBoolean_PartionCell_Many_7()
+                                                                , zc_MIBoolean_PartionCell_Many_8()
+                                                                , zc_MIBoolean_PartionCell_Many_9()
+                                                                , zc_MIBoolean_PartionCell_Many_10()
+                                                                , zc_MIBoolean_PartionCell_Many_11()
+                                                                , zc_MIBoolean_PartionCell_Many_12()
+                                                                , zc_MIBoolean_PartionCell_Many_13()
+                                                                , zc_MIBoolean_PartionCell_Many_14()
+                                                                , zc_MIBoolean_PartionCell_Many_15()
+                                                                , zc_MIBoolean_PartionCell_Many_16()
+                                                                , zc_MIBoolean_PartionCell_Many_17()
+                                                                , zc_MIBoolean_PartionCell_Many_18()
+                                                                , zc_MIBoolean_PartionCell_Many_19()
+                                                                , zc_MIBoolean_PartionCell_Many_20()
+                                                                , zc_MIBoolean_PartionCell_Many_21()
+                                                                , zc_MIBoolean_PartionCell_Many_22()
+                                                                 )
+                            )
+                       
      , tmpMILO_PartionCell AS (SELECT MovementItemLinkObject.*
                                       -- оригинал
                                     , CASE WHEN MIF_PartionCell_real.ValueData > 0 THEN MIF_PartionCell_real.ValueData ELSE NULL END :: Integer AS PartionCellId_real
                                       -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты, дл€ этого потом MAX
                                     , CASE WHEN tmpMI_Boolean.ValueData = TRUE THEN 0 ELSE 1 END AS isClose_value
+                                    ---
+                                    , CASE WHEN COALESCE (tmpMI_Boolean_Many.ValueData, FALSE) = FALSE THEN 0 ELSE 1 END  AS isMany
                                FROM tmpMILO_PC AS MovementItemLinkObject
                                     LEFT JOIN tmpMI_Boolean ON tmpMI_Boolean.MovementItemId = MovementItemLinkObject.MovementItemId
                                                            AND tmpMI_Boolean.DescId         = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
@@ -584,6 +636,55 @@ BEGIN
                                                                                                                    THEN zc_MIFloat_PartionCell_real_22()
 
                                                                                                          END
+
+                                    LEFT JOIN tmpMI_Boolean_Many ON tmpMI_Boolean_Many.MovementItemId = MovementItemLinkObject.MovementItemId
+                                                                AND tmpMI_Boolean.DescId              = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_1()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_2()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_2()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_3()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_3()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_4()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_4()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_5()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_5()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_6()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_6()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_7()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_7()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_8()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_8()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_9()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_9()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_10()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_10()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_11()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_11()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_12()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_12()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_13()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_13()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_14()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_14()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_15()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_15()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_16()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_16()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_17()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_17()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_18()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_18()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_19()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_19()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_20()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_20()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_21()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_21()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_22()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_22()
+     
+                                                                                                   END
+
                               )
      , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
                              FROM MovementItemLinkObject
@@ -643,7 +744,7 @@ BEGIN
 
                             -- по €чейкам - вертикально
                           , CASE WHEN inIsCell = TRUE THEN COALESCE (tmpMILO_PartionCell.ObjectId, 0) ELSE 0 END AS PartionCellId
-
+                          
                       FROM tmpMovement AS Movement
                            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 
@@ -690,7 +791,7 @@ BEGIN
                                END
                              , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
 
-                             , COALESCE (tmpMILO_PartionCell.ObjectId, 0)
+                             , COALESCE (tmpMILO_PartionCell.ObjectId, 0)  
                      )
 
     -- –азвернули по €чейкам - вертикально
@@ -703,7 +804,8 @@ BEGIN
                                          , tmpData_list.PartionGoodsDate  -- ***
                                            -- группируетс€ по €чейкам
                                          , tmpData_list.DescId_milo
-                                         , tmpData_list.PartionCellId
+                                         , tmpData_list.PartionCellId    
+                                         , tmpData_list.isMany
                                            -- информативно
                                          , (tmpData_list.PartionCellId_real) AS PartionCellId_real
                                            -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты
@@ -735,7 +837,7 @@ BEGIN
                                                , CASE WHEN inIsMovement = TRUE
                                                       THEN MILinkObject_PartionCell.ObjectId
                                                       ELSE MILinkObject_PartionCell.ObjectId
-                                                 END AS PartionCellId
+                                                 END AS PartionCellId 
                                                  -- информативно
                                                , CASE WHEN 1=1 -- vbUserId = 5
                                                       THEN COALESCE (MILinkObject_PartionCell.PartionCellId_real, 0)
@@ -746,6 +848,8 @@ BEGIN
 
                                                  -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты
                                                , MILinkObject_PartionCell.isClose_value
+                                               
+                                               , MILinkObject_PartionCell.isMany
 
                                           FROM tmpMovement AS Movement
                                                INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
@@ -779,6 +883,7 @@ BEGIN
                                            , tmpData_list.PartionCellId
                                              -- информативно
                                            , (tmpData_list.PartionCellId_real)
+                                           , tmpData_list.isMany
                                    )
       -- “олько заполненные €чейки - є п/п
     , tmpData_PartionCell_All AS (SELECT tmpData_PartionCell_All_All.MovementId        -- ***
@@ -827,7 +932,9 @@ BEGIN
                                          -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты
                                        , tmpData_PartionCell_All_All.isClose_value_max
                                          -- есть хоть одна закрыта€ €чейка
-                                       , tmpData_PartionCell_All_All.isClose_value_min
+                                       , tmpData_PartionCell_All_All.isClose_value_min 
+                                       
+                                       , tmpData_PartionCell_All_All.isMany
 
                                          -- дл€ сортировки - горизонтально
                                        , ROW_NUMBER() OVER (PARTITION BY tmpData_PartionCell_All_All.MovementId        -- ***
@@ -1000,6 +1107,29 @@ BEGIN
                                    , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 21 AND tmpData_PartionCell_All.PartionCellId > 0 THEN CASE WHEN tmpData_PartionCell_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_21
                                    , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 22 AND tmpData_PartionCell_All.PartionCellId > 0 THEN CASE WHEN tmpData_PartionCell_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_22
 
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 1  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_1
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 2  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_2
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 3  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_3
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 4  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_4
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 5  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_5
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 6  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_6
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 7  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_7
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 8  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_8
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 9  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_9
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 10 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_10
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 11 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_11
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 12 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_12
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 13 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_13
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 14 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_14
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 15 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_15
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 16 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_16
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 17 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_17
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 18 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_18
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 19 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_19
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 20 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_20
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 21 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_21
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 22 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_22
+
                                      -- есть хоть одна закрыта€ €чейка
                                    , MIN (tmpData_PartionCell_All.isClose_value_min) AS isClose_value_min
 
@@ -1119,6 +1249,29 @@ BEGIN
                          , tmpData_PartionCell.PartionCellName_22       :: TVarChar
                          , tmpData_PartionCell.PartionCellName_ets      :: TVarChar
 
+                         , CASE WHEN tmpData_PartionCell.isMany_1  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_1 
+                         , CASE WHEN tmpData_PartionCell.isMany_2  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_2 
+                         , CASE WHEN tmpData_PartionCell.isMany_3  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_3 
+                         , CASE WHEN tmpData_PartionCell.isMany_4  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_4 
+                         , CASE WHEN tmpData_PartionCell.isMany_5  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_5 
+                         , CASE WHEN tmpData_PartionCell.isMany_6  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_6 
+                         , CASE WHEN tmpData_PartionCell.isMany_7  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_7 
+                         , CASE WHEN tmpData_PartionCell.isMany_8  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_8 
+                         , CASE WHEN tmpData_PartionCell.isMany_9  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_9 
+                         , CASE WHEN tmpData_PartionCell.isMany_10 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_10
+                         , CASE WHEN tmpData_PartionCell.isMany_11 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_11
+                         , CASE WHEN tmpData_PartionCell.isMany_12 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_12
+                         , CASE WHEN tmpData_PartionCell.isMany_13 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_13
+                         , CASE WHEN tmpData_PartionCell.isMany_14 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_14
+                         , CASE WHEN tmpData_PartionCell.isMany_15 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_15
+                         , CASE WHEN tmpData_PartionCell.isMany_16 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_16
+                         , CASE WHEN tmpData_PartionCell.isMany_17 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_17
+                         , CASE WHEN tmpData_PartionCell.isMany_18 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_18
+                         , CASE WHEN tmpData_PartionCell.isMany_19 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_19
+                         , CASE WHEN tmpData_PartionCell.isMany_20 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_20
+                         , CASE WHEN tmpData_PartionCell.isMany_21 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_21
+                         , CASE WHEN tmpData_PartionCell.isMany_22 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_22
+                         
                          , CASE WHEN COALESCE (tmpData_PartionCell.ColorFon_1,  0) = 0 THEN zc_Color_White() ELSE tmpData_PartionCell.ColorFon_1  END :: Integer   AS  ColorFon_1
                          , CASE WHEN COALESCE (tmpData_PartionCell.ColorFon_2,  0) = 0 THEN zc_Color_White() ELSE tmpData_PartionCell.ColorFon_2  END :: Integer   AS  ColorFon_2
                          , CASE WHEN COALESCE (tmpData_PartionCell.ColorFon_3,  0) = 0 THEN zc_Color_White() ELSE tmpData_PartionCell.ColorFon_3  END :: Integer   AS  ColorFon_3
@@ -1434,6 +1587,29 @@ BEGIN
    ||';'|| COALESCE (tmpResult.PartionCellName_22, '') ||';'|| COALESCE (tmpResult.PartionCellName_ets, '')
           , '-', '')
           ) :: TVarChar AS PartionCellName_srch
+
+        , tmpResult.isPartionCell_Many_1
+        , tmpResult.isPartionCell_Many_2
+        , tmpResult.isPartionCell_Many_3
+        , tmpResult.isPartionCell_Many_4
+        , tmpResult.isPartionCell_Many_5
+        , tmpResult.isPartionCell_Many_6
+        , tmpResult.isPartionCell_Many_7
+        , tmpResult.isPartionCell_Many_8
+        , tmpResult.isPartionCell_Many_9
+        , tmpResult.isPartionCell_Many_10
+        , tmpResult.isPartionCell_Many_11
+        , tmpResult.isPartionCell_Many_12
+        , tmpResult.isPartionCell_Many_13
+        , tmpResult.isPartionCell_Many_14
+        , tmpResult.isPartionCell_Many_15
+        , tmpResult.isPartionCell_Many_16
+        , tmpResult.isPartionCell_Many_17
+        , tmpResult.isPartionCell_Many_18
+        , tmpResult.isPartionCell_Many_19
+        , tmpResult.isPartionCell_Many_20
+        , tmpResult.isPartionCell_Many_21
+        , tmpResult.isPartionCell_Many_22
 
         , tmpResult.ColorFon_1
         , tmpResult.ColorFon_2
@@ -1915,11 +2091,41 @@ BEGIN
                                                             )
                        )
 
+    , tmpMI_Boolean_Many AS (SELECT MovementItemBoolean.*
+                             FROM MovementItemBoolean
+                             WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
+                               AND MovementItemBoolean.DescId IN (zc_MIBoolean_PartionCell_Many_1()
+                                                                , zc_MIBoolean_PartionCell_Many_2()
+                                                                , zc_MIBoolean_PartionCell_Many_3()
+                                                                , zc_MIBoolean_PartionCell_Many_4()
+                                                                , zc_MIBoolean_PartionCell_Many_5()
+                                                                , zc_MIBoolean_PartionCell_Many_6()
+                                                                , zc_MIBoolean_PartionCell_Many_7()
+                                                                , zc_MIBoolean_PartionCell_Many_8()
+                                                                , zc_MIBoolean_PartionCell_Many_9()
+                                                                , zc_MIBoolean_PartionCell_Many_10()
+                                                                , zc_MIBoolean_PartionCell_Many_11()
+                                                                , zc_MIBoolean_PartionCell_Many_12()
+                                                                , zc_MIBoolean_PartionCell_Many_13()
+                                                                , zc_MIBoolean_PartionCell_Many_14()
+                                                                , zc_MIBoolean_PartionCell_Many_15()
+                                                                , zc_MIBoolean_PartionCell_Many_16()
+                                                                , zc_MIBoolean_PartionCell_Many_17()
+                                                                , zc_MIBoolean_PartionCell_Many_18()
+                                                                , zc_MIBoolean_PartionCell_Many_19()
+                                                                , zc_MIBoolean_PartionCell_Many_20()
+                                                                , zc_MIBoolean_PartionCell_Many_21()
+                                                                , zc_MIBoolean_PartionCell_Many_22()
+                                                                 )
+                            )
+
      , tmpMILO_PartionCell AS (SELECT MovementItemLinkObject.*
                                       -- оригинал
                                     , CASE WHEN MIF_PartionCell_real.ValueData > 0 THEN MIF_PartionCell_real.ValueData ELSE NULL END :: Integer AS PartionCellId_real
                                       -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты
                                     , CASE WHEN tmpMI_Boolean.ValueData = TRUE THEN 0 ELSE 1 END AS isClose_value
+                                    --свойство несколько партий в €чейке
+                                    , CASE WHEN COALESCE (tmpMI_Boolean_Many.ValueData, FALSE) = FALSE THEN 0 ELSE 1 END  AS isMany 
                                FROM tmpMILO_PC AS MovementItemLinkObject
                                     LEFT JOIN tmpMI_Boolean ON tmpMI_Boolean.MovementItemId = MovementItemLinkObject.MovementItemId
                                                            AND tmpMI_Boolean.DescId         = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
@@ -2015,6 +2221,54 @@ BEGIN
                                                                                                                    THEN zc_MIFloat_PartionCell_real_22()
 
                                                                                                          END
+
+                                    LEFT JOIN tmpMI_Boolean_Many ON tmpMI_Boolean_Many.MovementItemId = MovementItemLinkObject.MovementItemId
+                                                                AND tmpMI_Boolean.DescId              = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_1()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_2()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_2()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_3()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_3()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_4()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_4()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_5()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_5()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_6()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_6()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_7()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_7()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_8()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_8()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_9()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_9()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_10()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_10()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_11()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_11()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_12()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_12()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_13()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_13()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_14()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_14()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_15()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_15()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_16()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_16()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_17()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_17()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_18()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_18()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_19()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_19()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_20()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_20()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_21()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_21()
+                                                                                                        WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_22()
+                                                                                                             THEN zc_MIBoolean_PartionCell_Many_22()
+     
+                                                                                                   END
                               )
      /*, tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
                              FROM _tmpMILO_GoodsKind AS MovementItemLinkObject
@@ -2137,6 +2391,8 @@ BEGIN
 
                                -- є п/п - — ¬ќ«Ќќ… - ¬—≈
                              , ROW_NUMBER() OVER (ORDER BY tmpData_list.GoodsId ASC) AS Ord_all
+                             
+                             , tmpData_list.isMany
 
                         FROM -- –асчет нужной €чейки по которой группировать
                              (SELECT DISTINCT
@@ -2162,6 +2418,7 @@ BEGIN
                                      -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты
                                    , MILinkObject_PartionCell.isClose_value
 
+                                   , MILinkObject_PartionCell.isMany
                               FROM tmpMovement AS Movement
                                    INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 
@@ -2186,7 +2443,8 @@ BEGIN
                                , tmpData_list.PartionGoodsDate  -- ***
                                  -- группируетс€ по €чейкам
                                , tmpData_list.DescId_milo
-                               , tmpData_list.PartionCellId
+                               , tmpData_list.PartionCellId 
+                               , tmpData_list.isMany
                        )
 
     , tmpObjectFloat_Level AS (SELECT * FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_PartionCell_Level() AND ObjectFloat.ValueData > 0)
@@ -2205,7 +2463,9 @@ BEGIN
                              -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты
                            , tmpData_PartionCell_All_All.isClose_value_max
                              -- есть хоть одна закрыта€ €чейка
-                           , tmpData_PartionCell_All_All.isClose_value_min
+                           , tmpData_PartionCell_All_All.isClose_value_min 
+                           --
+                           , tmpData_PartionCell_All_All.isMany
                              --
                            , ROW_NUMBER() OVER (PARTITION BY tmpData_PartionCell_All_All.MovementId        -- ***
                                                            , tmpData_PartionCell_All_All.ToId              -- ***
@@ -2358,6 +2618,29 @@ BEGIN
                                    , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 21 AND tmpData_PartionCell_All.PartionCellId > 0 THEN CASE WHEN tmpData_PartionCell_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_21
                                    , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 22 AND tmpData_PartionCell_All.PartionCellId > 0 THEN CASE WHEN tmpData_PartionCell_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_22
 
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 1  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_1
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 2  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_2
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 3  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_3
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 4  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_4
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 5  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_5
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 6  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_6
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 7  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_7
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 8  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_8
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 9  THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_9
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 10 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_10
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 11 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_11
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 12 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_12
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 13 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_13
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 14 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_14
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 15 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_15
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 16 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_16
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 17 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_17
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 18 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_18
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 19 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_19
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 20 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_20
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 21 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_21
+                                   , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 22 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_22
+
                                      -- есть хоть одна закрыта€ €чейка
                                    , MIN (tmpData_PartionCell_All.isClose_value_min) AS isClose_value_min
 
@@ -2476,6 +2759,29 @@ BEGIN
                     , tmpData_PartionCell.PartionCellName_ets       :: TVarChar
 
                     , '' :: TVarChar AS PartionCellName_srch
+
+                    , CASE WHEN tmpData_PartionCell.isMany_1  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_1 
+                    , CASE WHEN tmpData_PartionCell.isMany_2  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_2 
+                    , CASE WHEN tmpData_PartionCell.isMany_3  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_3 
+                    , CASE WHEN tmpData_PartionCell.isMany_4  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_4 
+                    , CASE WHEN tmpData_PartionCell.isMany_5  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_5 
+                    , CASE WHEN tmpData_PartionCell.isMany_6  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_6 
+                    , CASE WHEN tmpData_PartionCell.isMany_7  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_7 
+                    , CASE WHEN tmpData_PartionCell.isMany_8  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_8 
+                    , CASE WHEN tmpData_PartionCell.isMany_9  = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_9 
+                    , CASE WHEN tmpData_PartionCell.isMany_10 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_10
+                    , CASE WHEN tmpData_PartionCell.isMany_11 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_11
+                    , CASE WHEN tmpData_PartionCell.isMany_12 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_12
+                    , CASE WHEN tmpData_PartionCell.isMany_13 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_13
+                    , CASE WHEN tmpData_PartionCell.isMany_14 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_14
+                    , CASE WHEN tmpData_PartionCell.isMany_15 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_15
+                    , CASE WHEN tmpData_PartionCell.isMany_16 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_16
+                    , CASE WHEN tmpData_PartionCell.isMany_17 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_17
+                    , CASE WHEN tmpData_PartionCell.isMany_18 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_18
+                    , CASE WHEN tmpData_PartionCell.isMany_19 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_19
+                    , CASE WHEN tmpData_PartionCell.isMany_20 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_20
+                    , CASE WHEN tmpData_PartionCell.isMany_21 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_21
+                    , CASE WHEN tmpData_PartionCell.isMany_22 = 1 THEN TRUE ELSE FALSE END  :: Boolean AS isPartionCell_Many_22
 
                     , CASE WHEN COALESCE (tmpData_PartionCell.ColorFon_1,  0) = 0 THEN zc_Color_White() ELSE tmpData_PartionCell.ColorFon_1  END :: Integer  AS ColorFon_1
                     , CASE WHEN COALESCE (tmpData_PartionCell.ColorFon_2,  0) = 0 THEN zc_Color_White() ELSE tmpData_PartionCell.ColorFon_2  END :: Integer  AS ColorFon_2
@@ -2753,6 +3059,29 @@ BEGIN
         , tmpResult.PartionCellName_ets
 
         , '' :: TVarChar AS PartionCellName_srch
+
+        , tmpResult.isPartionCell_Many_1
+        , tmpResult.isPartionCell_Many_2
+        , tmpResult.isPartionCell_Many_3
+        , tmpResult.isPartionCell_Many_4
+        , tmpResult.isPartionCell_Many_5
+        , tmpResult.isPartionCell_Many_6
+        , tmpResult.isPartionCell_Many_7
+        , tmpResult.isPartionCell_Many_8
+        , tmpResult.isPartionCell_Many_9
+        , tmpResult.isPartionCell_Many_10
+        , tmpResult.isPartionCell_Many_11
+        , tmpResult.isPartionCell_Many_12
+        , tmpResult.isPartionCell_Many_13
+        , tmpResult.isPartionCell_Many_14
+        , tmpResult.isPartionCell_Many_15
+        , tmpResult.isPartionCell_Many_16
+        , tmpResult.isPartionCell_Many_17
+        , tmpResult.isPartionCell_Many_18
+        , tmpResult.isPartionCell_Many_19
+        , tmpResult.isPartionCell_Many_20
+        , tmpResult.isPartionCell_Many_21
+        , tmpResult.isPartionCell_Many_22
 
         , tmpResult.ColorFon_1
         , tmpResult.ColorFon_2

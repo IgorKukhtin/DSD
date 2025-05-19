@@ -48,6 +48,30 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , isPartionCell_Close_20 Boolean
              , isPartionCell_Close_21 Boolean
              , isPartionCell_Close_22 Boolean
+
+             , isPartionCell_Many_1 Boolean
+             , isPartionCell_Many_2 Boolean
+             , isPartionCell_Many_3 Boolean
+             , isPartionCell_Many_4 Boolean
+             , isPartionCell_Many_5 Boolean
+             , isPartionCell_Many_6  Boolean
+             , isPartionCell_Many_7  Boolean
+             , isPartionCell_Many_8  Boolean
+             , isPartionCell_Many_9  Boolean
+             , isPartionCell_Many_10 Boolean
+             , isPartionCell_Many_11 Boolean
+             , isPartionCell_Many_12 Boolean
+             , isPartionCell_Many_13 Boolean
+             , isPartionCell_Many_14 Boolean
+             , isPartionCell_Many_15 Boolean
+             , isPartionCell_Many_16 Boolean
+             , isPartionCell_Many_17 Boolean
+             , isPartionCell_Many_18 Boolean
+             , isPartionCell_Many_19 Boolean
+             , isPartionCell_Many_20 Boolean
+             , isPartionCell_Many_21 Boolean
+             , isPartionCell_Many_22 Boolean
+
               
              , PartionCellId_1     Integer
              , PartionCellCode_1   Integer
@@ -217,7 +241,30 @@ BEGIN
            , COALESCE (MIBoolean_PartionCell_Close_20.ValueData, FALSE) ::Boolean AS isPartionCell_Close_20
            , COALESCE (MIBoolean_PartionCell_Close_21.ValueData, FALSE) ::Boolean AS isPartionCell_Close_21
            , COALESCE (MIBoolean_PartionCell_Close_22.ValueData, FALSE) ::Boolean AS isPartionCell_Close_22
-            
+
+           , COALESCE (MIBoolean_PartionCell_Many_1.ValueData, FALSE) ::Boolean AS isPartionCell_Many_1
+           , COALESCE (MIBoolean_PartionCell_Many_2.ValueData, FALSE) ::Boolean AS isPartionCell_Many_2
+           , COALESCE (MIBoolean_PartionCell_Many_3.ValueData, FALSE) ::Boolean AS isPartionCell_Many_3
+           , COALESCE (MIBoolean_PartionCell_Many_4.ValueData, FALSE) ::Boolean AS isPartionCell_Many_4
+           , COALESCE (MIBoolean_PartionCell_Many_5.ValueData, FALSE) ::Boolean AS isPartionCell_Many_5
+           , COALESCE (MIBoolean_PartionCell_Many_6.ValueData, FALSE) ::Boolean AS isPartionCell_Many_6 
+           , COALESCE (MIBoolean_PartionCell_Many_7.ValueData, FALSE) ::Boolean AS isPartionCell_Many_7 
+           , COALESCE (MIBoolean_PartionCell_Many_8.ValueData, FALSE) ::Boolean AS isPartionCell_Many_8 
+           , COALESCE (MIBoolean_PartionCell_Many_9.ValueData, FALSE) ::Boolean AS isPartionCell_Many_9 
+           , COALESCE (MIBoolean_PartionCell_Many_10.ValueData, FALSE) ::Boolean AS isPartionCell_Many_10
+           , COALESCE (MIBoolean_PartionCell_Many_11.ValueData, FALSE) ::Boolean AS isPartionCell_Many_11
+           , COALESCE (MIBoolean_PartionCell_Many_12.ValueData, FALSE) ::Boolean AS isPartionCell_Many_12
+           , COALESCE (MIBoolean_PartionCell_Many_13.ValueData, FALSE) ::Boolean AS isPartionCell_Many_13
+           , COALESCE (MIBoolean_PartionCell_Many_14.ValueData, FALSE) ::Boolean AS isPartionCell_Many_14
+           , COALESCE (MIBoolean_PartionCell_Many_15.ValueData, FALSE) ::Boolean AS isPartionCell_Many_15
+           , COALESCE (MIBoolean_PartionCell_Many_16.ValueData, FALSE) ::Boolean AS isPartionCell_Many_16
+           , COALESCE (MIBoolean_PartionCell_Many_17.ValueData, FALSE) ::Boolean AS isPartionCell_Many_17
+           , COALESCE (MIBoolean_PartionCell_Many_18.ValueData, FALSE) ::Boolean AS isPartionCell_Many_18
+           , COALESCE (MIBoolean_PartionCell_Many_19.ValueData, FALSE) ::Boolean AS isPartionCell_Many_19
+           , COALESCE (MIBoolean_PartionCell_Many_20.ValueData, FALSE) ::Boolean AS isPartionCell_Many_20
+           , COALESCE (MIBoolean_PartionCell_Many_21.ValueData, FALSE) ::Boolean AS isPartionCell_Many_21
+           , COALESCE (MIBoolean_PartionCell_Many_22.ValueData, FALSE) ::Boolean AS isPartionCell_Many_22
+                       
            , Object_PartionCell_1.Id            AS PartionCellId_1
            , Object_PartionCell_1.ObjectCode    AS PartionCellCode_1
            , (/*Object_PartionCell_1.ObjectCode :: TVarChar || '-' ||*/  Object_PartionCell_1.ValueData ):: TVarChar       AS PartionCellName_1
@@ -649,8 +696,74 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Close_22
                                           ON MIBoolean_PartionCell_Close_22.MovementItemId = MovementItem.Id
                                          AND MIBoolean_PartionCell_Close_22.DescId = zc_MIBoolean_PartionCell_Close_22()
-            
-            
+            --
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_1
+                                          ON MIBoolean_PartionCell_Many_1.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_1.DescId = zc_MIBoolean_PartionCell_Many_1()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_2
+                                          ON MIBoolean_PartionCell_Many_2.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_2.DescId = zc_MIBoolean_PartionCell_Many_2()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_3
+                                          ON MIBoolean_PartionCell_Many_3.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_3.DescId = zc_MIBoolean_PartionCell_Many_3()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_4
+                                          ON MIBoolean_PartionCell_Many_4.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_4.DescId = zc_MIBoolean_PartionCell_Many_4()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_5
+                                          ON MIBoolean_PartionCell_Many_5.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_5.DescId = zc_MIBoolean_PartionCell_Many_5()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_6
+                                          ON MIBoolean_PartionCell_Many_6.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_6.DescId = zc_MIBoolean_PartionCell_Many_6()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_7
+                                          ON MIBoolean_PartionCell_Many_7.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_7.DescId = zc_MIBoolean_PartionCell_Many_7()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_8
+                                          ON MIBoolean_PartionCell_Many_8.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_8.DescId = zc_MIBoolean_PartionCell_Many_8()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_9
+                                          ON MIBoolean_PartionCell_Many_9.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_9.DescId = zc_MIBoolean_PartionCell_Many_9()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_10
+                                          ON MIBoolean_PartionCell_Many_10.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_10.DescId = zc_MIBoolean_PartionCell_Many_10()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_11
+                                          ON MIBoolean_PartionCell_Many_11.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_11.DescId = zc_MIBoolean_PartionCell_Many_11()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_12
+                                          ON MIBoolean_PartionCell_Many_12.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_12.DescId = zc_MIBoolean_PartionCell_Many_12()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_13
+                                          ON MIBoolean_PartionCell_Many_13.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_13.DescId = zc_MIBoolean_PartionCell_Many_13()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_14
+                                          ON MIBoolean_PartionCell_Many_14.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_14.DescId = zc_MIBoolean_PartionCell_Many_14()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_15
+                                          ON MIBoolean_PartionCell_Many_15.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_15.DescId = zc_MIBoolean_PartionCell_Many_15()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_16
+                                          ON MIBoolean_PartionCell_Many_16.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_16.DescId = zc_MIBoolean_PartionCell_Many_16()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_17
+                                          ON MIBoolean_PartionCell_Many_17.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_17.DescId = zc_MIBoolean_PartionCell_Many_17()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_18
+                                          ON MIBoolean_PartionCell_Many_18.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_18.DescId = zc_MIBoolean_PartionCell_Many_18()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_19
+                                          ON MIBoolean_PartionCell_Many_19.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_19.DescId = zc_MIBoolean_PartionCell_Many_19()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_20
+                                          ON MIBoolean_PartionCell_Many_20.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_20.DescId = zc_MIBoolean_PartionCell_Many_20()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_21
+                                          ON MIBoolean_PartionCell_Many_21.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_21.DescId = zc_MIBoolean_PartionCell_Many_21()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Many_22
+                                          ON MIBoolean_PartionCell_Many_22.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PartionCell_Many_22.DescId = zc_MIBoolean_PartionCell_Many_22()
+
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -669,6 +782,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.05.25         *
  29.05.24         *
  28.12.23         *
 */
