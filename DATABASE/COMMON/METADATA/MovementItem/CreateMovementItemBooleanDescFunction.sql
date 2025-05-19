@@ -314,10 +314,9 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_ReturnOut() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_ReturnOut', 'Возврат да/нет' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_ReturnOut'); 
 
-
-
-   
- 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_NotFact() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_NotFact'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_NotFact', 'Теоретический остаток да/нет' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_NotFact'); 
 
 
 
