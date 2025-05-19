@@ -8,11 +8,19 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_EDI_Send(
     IN inIsErased            Boolean   , --
     IN inSession             TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, ParentId Integer
+RETURNS TABLE (-- Документ для отправки в EDI
+               Id Integer
+               -- Документ продажа - отправка в EDI
+             , ParentId Integer
+               -- Документ заявка
+             , MovementId_order Integer
                --
              , isEdiOrdspr Boolean, isEdiInvoice Boolean, isEdiDesadv Boolean
                -- схема Vchasno - EDI
              , isVchasnoEDI Boolean
+               -- ошибка при отправке
+             , isError      Boolean
+             , isError_EDI  Boolean
                -- ВН - Comdoc, автоматическая отправка
              , isEdiComdoc Boolean
                -- ВН - Delnot, автоматическая отправка
@@ -20,6 +28,8 @@ RETURNS TABLE (Id Integer, ParentId Integer
                --
              , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime, OperDatePartner TDateTime
              , InvNumber_Parent TVarChar, OperDate_Parent TDateTime, OperDatePartner_Parent TDateTime
+             , InvNumber_order TVarChar, InvNumberPartner_order TVarChar, OperDate_order TDateTime
+
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, RetailId Integer, RetailName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , JuridicalName_To TVarChar
@@ -46,14 +56,22 @@ BEGIN
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
            SELECT
+                 -- Документ для отправки в EDI
                  Movement.Id                                    AS Id
+                 -- Документ продажа - отправка в EDI
                , Movement.ParentId                              AS ParentId
+                 -- Документ заявка
+               , Movement_order.Id                              AS MovementId_order
                  --
                , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
                , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
                , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
                  -- схема Vchasno - EDI
                , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '') <> '' THEN TRUE ELSE FALSE END ::Boolean AS isVchasnoEDI
+                 -- ошибка при отправке
+               , COALESCE (MovementBoolean_Error.ValueData, FALSE)      :: Boolean AS isError
+                 -- ошибка при отправке
+               , COALESCE (MovementBoolean_Error_EDI.ValueData, FALSE)  :: Boolean AS isError_EDI
                  -- ВН - Comdoc, автоматическая отправка
                , COALESCE (MovementBoolean_EdiComdoc.ValueData, FALSE)  :: Boolean AS isEdiComdoc
                  -- ВН - Delnot, автоматическая отправка
@@ -67,15 +85,20 @@ BEGIN
                , Movement_Parent.InvNumber                      AS InvNumber_Parent
                , Movement_Parent.OperDate                       AS OperDate_Parent
                , MovementDate_OperDatePartner_Parent.ValueData  AS OperDatePartner_Parent
+
+               , Movement_order.InvNumber                       AS InvNumber_order
+               , MS_InvNumberPartner_order.ValueData            AS InvNumberPartner_order
+               , Movement_order.OperDate                        AS OperDate_order
+
                , Object_From.Id                         AS FromId
                , Object_From.ValueData                  AS FromName
                , Object_To.Id                           AS ToId
                , Object_To.ValueData                    AS ToName
-               , Object_Retail.Id                               AS RetailId
-               , Object_Retail.ValueData                        AS RetailName
+               , Object_Retail.Id                       AS RetailId
+               , Object_Retail.ValueData                AS RetailName
                , Object_PaidKind.Id                     AS PaidKindId
                , Object_PaidKind.ValueData              AS PaidKindName
-               , Object_JuridicalTo.ValueData                   AS JuridicalName_To
+               , Object_JuridicalTo.ValueData           AS JuridicalName_To
 
                , Object_Status.ObjectCode               AS StatusCode
                , Object_Status.ValueData                AS StatusName
@@ -119,10 +142,14 @@ BEGIN
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiComdoc
                                           ON MovementBoolean_EdiComdoc.MovementId = Movement.Id
                                          AND MovementBoolean_EdiComdoc.DescId     = zc_MovementBoolean_EdiComdoc()
-                --  DELNOT-Видаткова Накладна 
+                -- DELNOT-Видаткова Накладна 
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiDelnot
                                           ON MovementBoolean_EdiDelnot.MovementId = Movement.Id
                                          AND MovementBoolean_EdiDelnot.DescId     = zc_MovementBoolean_EdiDelnot()
+                -- DELNOT-Видаткова Накладна 
+                LEFT JOIN MovementBoolean AS MovementBoolean_Error
+                                          ON MovementBoolean_Error.MovementId = Movement.Id
+                                         AND MovementBoolean_Error.DescId     = zc_MovementBoolean_Error()
 
                 LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
                 LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Parent.DescId
@@ -156,19 +183,27 @@ BEGIN
                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
                 LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
-                --получить zc_Movement_EDI через заказ покупателя
-                --заявка покупателя
+                -- заявка покупателя
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                ON MovementLinkMovement_Order.MovementId = Movement_Parent.Id
-                                              AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-                --EDI
+                                              AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
+                LEFT JOIN Movement AS Movement_order ON Movement_order.Id = MovementLinkMovement_Order.MovementChildId
+                LEFT JOIN MovementString AS MS_InvNumberPartner_order
+                                         ON MS_InvNumberPartner_order.MovementId =  Movement_order.Id
+                                        AND MS_InvNumberPartner_order.DescId     = zc_MovementString_InvNumberPartner()
+
+                -- zc_Movement_EDI - через заказ покупателя
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_EDI
                                                ON MovementLinkMovement_Order_EDI.MovementId = MovementLinkMovement_Order.MovementChildId
-                                              AND MovementLinkMovement_Order_EDI.DescId = zc_MovementLinkMovement_Order()
+                                              AND MovementLinkMovement_Order_EDI.DescId     = zc_MovementLinkMovement_Order()
 
                 LEFT JOIN MovementString AS MovementString_DealId
                                          ON MovementString_DealId.MovementId = MovementLinkMovement_Order_EDI.MovementChildId
                                         AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+                LEFT JOIN MovementBoolean AS MovementBoolean_Error_EDI
+                                          ON MovementBoolean_Error_EDI.MovementId = MovementLinkMovement_Order_EDI.MovementChildId
+                                         AND MovementBoolean_Error_EDI.DescId     = zc_MovementBoolean_Error()
+                                         
           ;
 
 END;

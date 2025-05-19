@@ -331,8 +331,10 @@ BEGIN
                                      AND (MIContainer.Amount <> 0) --  OR vbUserId = 5
 	                          )
       -- <Карта БН (округление) - 2ф>
-    , tmpMIContainer_diff AS (SELECT -1 * SUM (CASE WHEN MIContainer.OperDate < vbServiceDate + INTERVAL '1 MONTH' AND MIContainer.MovementDescId = zc_Movement_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_start
-                                   , 1 * SUM (CASE WHEN MIContainer.OperDate >= vbServiceDate + INTERVAL '1 MONTH' OR MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_end
+    , tmpMIContainer_diff AS (SELECT -1 * SUM (CASE WHEN MIContainer.OperDate < vbServiceDate + INTERVAL '1 MONTH' AND MIContainer.MovementDescId = zc_Movement_PersonalService() THEN MIContainer.Amount ELSE 0 END)
+                                     -1 * SUM (CASE WHEN MIContainer.OperDate < vbServiceDate + INTERVAL '1 MONTH' AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END)
+                                      AS AmountService_diff_start
+                                   , 1 * SUM (CASE WHEN MIContainer.OperDate >= vbServiceDate + INTERVAL '1 MONTH' /*OR MIContainer.MovementDescId = zc_Movement_Cash()*/ THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_end
                                    , tmpMIContainer_find_diff.MovementItemId
                               FROM tmpMIContainer_find_diff
                                    INNER JOIN MovementItemContainer AS MIContainer
@@ -858,6 +860,14 @@ BEGIN
                                                  AND MIContainer.Amount > 0
                                                     )
 
+                                                    -- !!!учитывается как Аванс
+                                                    THEN MIContainer.Amount
+
+                                               -- !!!исправляется ошибка!!!
+                                               WHEN MIContainer.MovementDescId = zc_Movement_Cash()
+                                                 AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_PersonalService_SummDiff()
+                                                 AND MIContainer.OperDate = '04.05.2025'
+                                                 --AND vbUserId = 5
                                                     -- !!!учитывается как Аванс
                                                     THEN MIContainer.Amount
 

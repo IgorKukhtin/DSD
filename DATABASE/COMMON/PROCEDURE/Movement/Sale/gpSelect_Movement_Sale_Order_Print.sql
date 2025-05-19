@@ -423,6 +423,7 @@ BEGIN
             , Object_GoodsKind.ValueData                  AS GoodsKindName
             , Object_GoodsGroup.ValueData   		  AS GoodsGroupName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , tmpResult1.MeasureId
             , tmpResult1.MeasureName
 
             , tmpResult1.Amount
@@ -463,7 +464,20 @@ BEGIN
                    ELSE 0
               END  :: TFloat AS CountDiff_B_tax
               
-            , CASE WHEN EXISTS (SELECT 1 FROM _tmpListMovement WHERE _tmpListMovement.FromId = zc_Unit_RK())
+            , CASE -- 10% -  на штучном товаре + если РК - подсвечивать отклонение
+                   WHEN EXISTS (SELECT 1 FROM _tmpListMovement WHERE _tmpListMovement.FromId = zc_Unit_RK())
+                    AND tmpResult1.MeasureId = zc_Measure_Sh()
+                        -- CountDiff_B_tax
+                    AND 9.99 < CASE WHEN tmpResult1.Amount_Order > 0
+                                         THEN tmpResult1.CountDiff_B / tmpResult1.Amount_Order * 100
+                                    WHEN tmpResult1.CountDiff_B <> 0
+                                         THEN 100
+                                    ELSE 0
+                               END  :: TFloat
+                        THEN TRUE
+                        
+                   -- 10% - ВК + Варус + если РК
+                   WHEN EXISTS (SELECT 1 FROM _tmpListMovement WHERE _tmpListMovement.FromId = zc_Unit_RK())
                     AND vbIsDiffTax_10 = TRUE
                         -- CountDiff_B_tax
                     AND 9.99 < CASE WHEN tmpResult1.Amount_Order > 0
@@ -474,6 +488,7 @@ BEGIN
                                END  :: TFloat
                         THEN TRUE
                         
+                   -- если РК
                    WHEN EXISTS (SELECT 1 FROM _tmpListMovement WHERE _tmpListMovement.FromId = zc_Unit_RK())
                         -- CountDiff_B_tax
                     AND 19.99 < CASE WHEN tmpResult1.Amount_Order > 0
@@ -484,6 +499,7 @@ BEGIN
                                 END  :: TFloat
                         THEN TRUE
                         
+                   -- Остальные
                    WHEN -- CountDiff_B_tax
                         19.99 < CASE WHEN tmpResult1.Amount_Order > 0
                                           THEN tmpResult1.CountDiff_B / tmpResult1.Amount_Order * 100
@@ -502,6 +518,7 @@ BEGIN
        FROM (SELECT tmpResult1.GoodsId
 
                   , tmpResult1.GoodsKindId
+                  , tmpResult1.MeasureId
                   , tmpResult1.MeasureName
       
                   , tmpResult1.Amount
@@ -568,7 +585,9 @@ BEGIN
              FROM ( SELECT tmpResult.GoodsId
                          , tmpResult.GoodsKindId
       
+                         , Object_Measure.Id           AS MeasureId
                          , Object_Measure.ValueData    AS MeasureName
+                         
                          
                          -- сгруппируем без партии, на печати партия не выводится
                          --, (CASE WHEN tmpResult.PartionGoods <> '' THEN tmpResult.PartionGoods WHEN tmpResult.PartionGoodsDate <> zc_DateStart() THEN TO_CHAR (tmpResult.PartionGoodsDate, 'DD.MM.YYYY') ELSE '' END) :: TVarChar AS PartionGoods
@@ -612,8 +631,9 @@ BEGIN
                                         ON ObjectFloat_Weight.ObjectId = tmpResult.GoodsId
                                        AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                    GROUP BY tmpResult.GoodsId
-                       , tmpResult.GoodsKindId
-                       , Object_Measure.ValueData 
+                          , tmpResult.GoodsKindId
+                          , Object_Measure.Id
+                          , Object_Measure.ValueData 
                     ) AS tmpResult1
              ) AS tmpResult1
 

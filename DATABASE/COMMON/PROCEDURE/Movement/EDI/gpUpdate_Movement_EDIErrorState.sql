@@ -1,16 +1,18 @@
--- Function: gpUpdate_Movement_EDI_Params()
+-- Function: gpUpdate_Movement_EDIErrorState()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_EDIErrorState (Integer, TVarChar, TDateTime, TVarChar, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdate_Movement_EDIErrorState (Integer, TVarChar, TDateTime, TVarChar, Boolean, TVarChar); - пока не удалять, здесь параметры для Project
+DROP FUNCTION IF EXISTS gpUpdate_Movement_EDIErrorState (Integer, Integer, TVarChar, TDateTime, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_EDIErrorState(
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ-EDI>
+    IN inMovementId_send     Integer   , -- Ключ объекта <Документ-Отправка-EDI>
     IN inDocType             TVarChar  , -- Тип документа
-    IN inOperDate            TDateTime , 
-    IN inInvNumber           TVarChar  , 
-    IN inIsError             Boolean   , -- 
+    IN inOperDate            TDateTime ,
+    IN inInvNumber           TVarChar  ,
+    IN inIsError             Boolean   , --
    OUT IsFind                Boolean   ,
     IN inSession             TVarChar     -- Пользователь
-)                              
+)
 RETURNS Boolean AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -22,8 +24,8 @@ BEGIN
    IsFind := false;
 
    IF COALESCE(inMovementId, 0) = 0 THEN
-      SELECT MAX(Movement.Id) INTO inMovementId 
-        FROM Movement 
+      SELECT MAX(Movement.Id) INTO inMovementId
+        FROM Movement
                               INNER JOIN MovementString AS MovementString_MovementDesc
                                                         ON MovementString_MovementDesc.MovementId =  Movement.Id
                                                        AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
@@ -37,7 +39,12 @@ BEGIN
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Error(), inMovementId, inIsError);
       IsFind := true;
    END IF;
-    
+
+   IF COALESCE(inMovementId_send, 0) <> 0 THEN
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Error(), inMovementId_send, inIsError);
+   END IF;
+
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -46,7 +53,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 16.02.15                        * 
+ 16.02.15                        *
 */
 
 -- тест

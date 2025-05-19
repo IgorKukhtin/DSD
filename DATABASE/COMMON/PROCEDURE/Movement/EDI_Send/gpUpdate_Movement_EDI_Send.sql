@@ -31,7 +31,7 @@ BEGIN
 
          -- сохранили свойство
          PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inId, inComment);
-         
+
 
      ELSE
          -- установили статус, Проведен - значит отправлен

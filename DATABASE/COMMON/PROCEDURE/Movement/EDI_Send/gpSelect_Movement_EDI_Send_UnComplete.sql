@@ -5,7 +5,10 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_EDI_Send_UnComplete (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Movement_EDI_Send_UnComplete(
     IN inSession             TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MovementId Integer
+RETURNS TABLE (-- Документ продажа - отправка в EDI
+               Id Integer
+               -- Документ для отправки в EDI
+             , MovementId Integer
                --
              , isEdiOrdspr Boolean, isEdiInvoice Boolean, isEdiDesadv Boolean
                -- схема Vchasno - EDI
@@ -50,7 +53,9 @@ BEGIN
                                                )
 
            SELECT
+                 -- Документ продажа - отправка в EDI
                  Movement.ParentId                              AS Id
+                 -- Документ для отправки в EDI
                , Movement.Id                                    AS MovementId
 
                , MovementBoolean_EdiOrdspr.ValueData            AS isEdiOrdspr
@@ -155,7 +160,7 @@ BEGIN
                                          ON MovementString_Comment.MovementId = Movement.Id
                                         AND MovementString_Comment.DescId     = zc_MovementString_Comment()
 
-                --  EDI - Подтверждение заказа 
+                --  EDI - Подтверждение заказа
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiOrdspr
                                           ON MovementBoolean_EdiOrdspr.MovementId = Movement.Id
                                          AND MovementBoolean_EdiOrdspr.DescId     = zc_MovementBoolean_EdiOrdspr()
@@ -167,7 +172,7 @@ BEGIN
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiDesadv
                                           ON MovementBoolean_EdiDesadv.MovementId = Movement.Id
                                          AND MovementBoolean_EdiDesadv.DescId     = zc_MovementBoolean_EdiDesadv()
-                --  DELNOT-Видаткова Накладна 
+                --  DELNOT-Видаткова Накладна
                 LEFT JOIN MovementBoolean AS MovementBoolean_EdiDelnot
                                           ON MovementBoolean_EdiDelnot.MovementId = Movement.Id
                                          AND MovementBoolean_EdiDelnot.DescId     = zc_MovementBoolean_EdiDelnot()
@@ -248,7 +253,7 @@ BEGIN
                AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
                  < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
                   )
-               
+
                OR -- Этих Отправляем 10-min
                   (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '10 MIN'
                AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
@@ -270,7 +275,7 @@ BEGIN
                   )*/
 
                 )
-           ORDER BY 
+           ORDER BY
                     CASE WHEN MovementBoolean_EdiOrdspr.ValueData  = TRUE THEN 1 ELSE 888 END
                   , CASE WHEN MovementBoolean_EdiInvoice.ValueData = TRUE THEN 2 ELSE 888 END
                   , CASE WHEN MovementBoolean_EdiDesadv.ValueData  = TRUE THEN 3 ELSE 888 END

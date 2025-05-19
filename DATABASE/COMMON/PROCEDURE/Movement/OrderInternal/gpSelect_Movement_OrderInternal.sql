@@ -31,14 +31,10 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
-
      vbUserId:= lpGetUserBySession (inSession);
+
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
      
@@ -126,9 +122,15 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
             
-         WHERE (Object_From.Id = inFromId OR inFromId = 0 OR (inFromId <> inToId AND Object_From.Id <> Object_To.Id AND inFromId <> 0 AND inToId <> 0))
-           AND (Object_To.Id   = inToId   OR inToId   = 0)
-           AND (COALESCE (MovementBoolean_Remains.ValueData, FALSE) = inIsRemains)
+         WHERE ((Object_From.Id = inFromId OR inFromId = 0 OR (inFromId <> inToId AND Object_From.Id <> Object_To.Id AND inFromId <> 0 AND inToId <> 0))
+            AND (Object_To.Id   = inToId   OR inToId   = 0)
+            AND (COALESCE (MovementBoolean_Remains.ValueData, FALSE) = inIsRemains)
+               )
+            -- Оибка когда - Склады База + Реализации + Дільниця делікатесів
+            OR (Object_From.Id = 8457 AND Object_To.Id = 8448
+            AND inFromId = 8457 AND inToId = 8446
+               )
+            -- OR vbUserId = 5
             ;
 
 END;

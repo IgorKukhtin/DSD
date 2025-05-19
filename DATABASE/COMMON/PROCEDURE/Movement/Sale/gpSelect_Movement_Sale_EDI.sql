@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_Sale_EDI()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_EDI (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_EDI (Integer, TVarChar);  - пока не удалять, здесь параметры для Project
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_EDI (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_EDI(
-    IN inMovementId    Integer,    -- ключ Документа
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inMovementId           Integer,    -- Ключ Документ продажа - отправка в EDI
+    IN inMovementId_EDI_send  Integer,    -- Ключ Документ-Отправка-EDI
+    IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -615,11 +617,17 @@ END IF;
                        THEN '9991027029468'
                   ELSE zfCalc_GLNCodeRetail
                                   (inGLNCode               := ObjectString_Partner_GLNCode.ValueData
-                                 , inGLNCodeRetail_partner := ObjectString_Partner_GLNCodeRetail.ValueData
+                                 , inGLNCodeRetail_partner := CASE WHEN TRIM (ObjectString_Partner_GLNCodeRetail.ValueData) = '4823036500001' THEN ObjectString_Partner_GLNCodeJuridical.ValueData ELSE ObjectString_Partner_GLNCodeRetail.ValueData END
                                  , inGLNCodeRetail         := ObjectString_Retail_GLNCode.ValueData
                                  , inGLNCodeJuridical      := ObjectString_Juridical_GLNCode.ValueData
                                   )
              END :: TVarChar AS RecipientGLNCode
+
+           , ObjectString_Partner_GLNCode.ValueData   AS x1
+           , CASE WHEN TRIM (ObjectString_Partner_GLNCodeRetail.ValueData) = '4823036500001' THEN ObjectString_Partner_GLNCodeJuridical.ValueData ELSE ObjectString_Partner_GLNCodeRetail.ValueData END  AS x2_1
+           , ObjectString_Partner_GLNCodeRetail.ValueData AS x2_2
+           , ObjectString_Retail_GLNCode.ValueData    AS x3
+           , ObjectString_Juridical_GLNCode.ValueData AS x4
 
            , CASE WHEN 1=0 AND OH_JuridicalDetails_To.JuridicalId = 15158 -- МЕТРО Кеш енд Кері Україна ТОВ
                        THEN '' -- если Метро, тогда наш = "пусто"
@@ -664,7 +672,8 @@ END IF;
            , OHS_JD_JuridicalAddress_CorrBank_From.ValueData    AS JuridicalAddressCorrBankFrom
 
 
-           , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0)         AS EDIId
+           , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0)  AS EDIId
+           , inMovementId_EDI_send                                   AS MovementId_EDI_send
 
            , BankAccount_To.BankName                            AS BankName_Int
            , BankAccount_To.Name                                AS BankAccount_Int
@@ -1419,4 +1428,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 30866920, inSession:=  '5'); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 30866920, inMovementId_send:= 0, inSession:=  '5'); -- FETCH ALL "<unnamed portal 1>";
