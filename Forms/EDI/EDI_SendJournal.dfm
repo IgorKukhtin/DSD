@@ -51,6 +51,24 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
             Options.Editing = False
             Width = 70
           end
+          object isError: TcxGridDBColumn [2]
+            Caption = #1054#1096#1080#1073#1082#1072' '#1086#1090#1087#1088#1072#1074#1082#1080
+            DataBinding.FieldName = 'isError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
+          end
+          object isError_EDI: TcxGridDBColumn [3]
+            Caption = #1054#1096#1080#1073#1082#1072' EDI'
+            DataBinding.FieldName = 'isError_EDI'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1096#1080#1073#1082#1072' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1076#1083#1103' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' EDI'
+            Options.Editing = False
+            Width = 55
+          end
           inherited colInvNumber: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
@@ -123,6 +141,31 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 81
+          end
+          object InvNumber_order: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumber_order'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object InvNumberPartner_order: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. EDI '#1047#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumberPartner_order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate_order: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+            DataBinding.FieldName = 'OperDate_order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086

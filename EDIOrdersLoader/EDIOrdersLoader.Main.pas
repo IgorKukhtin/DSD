@@ -199,7 +199,11 @@ begin
      then
           LogMemo.Lines.Add('!!! FIND ERROR !!!'
                           + ' InvNumber = <'+PrintHeaderCDS.FieldByName('InvNumber').asString + '>'
+                          //Документ продажа - отправка в EDI
                           + ' MovementId = <'+IntToStr (FormParams.ParamByName('MovementId_toEDI').Value) + '>'
+                          //Документ для отправки в EDI
+                          + ' MovementId_EDI_send = <'+IntToStr (FormParams.ParamByName('MovementId_EDI_send').Value) + '>'
+                          //
                           + ' RecordCount = <'+IntToStr (PrintHeaderCDS.RecordCount) + '>'
                            )
      else
@@ -555,8 +559,11 @@ begin
      while (not EOF) and ((gErr=FALSE) or (i<5)) do
      begin
           Application.ProcessMessages;
+          //Документ продажа - отправка в EDI
           FormParams.ParamByName('MovementId_toEDI').Value   := FieldByName('Id').AsInteger;
+          //Документ для отправки в EDI
           FormParams.ParamByName('MovementId_sendEDI').Value := FieldByName('MovementId').AsInteger;
+          //
           Application.ProcessMessages;
           // Попробовали отправить
           try

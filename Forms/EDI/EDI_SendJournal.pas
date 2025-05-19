@@ -42,6 +42,11 @@ type
     MovementDescName: TcxGridDBColumn;
     isEdiComdoc: TcxGridDBColumn;
     isEdiDelnot: TcxGridDBColumn;
+    InvNumber_order: TcxGridDBColumn;
+    InvNumberPartner_order: TcxGridDBColumn;
+    OperDate_order: TcxGridDBColumn;
+    isError: TcxGridDBColumn;
+    isError_EDI: TcxGridDBColumn;
   private
     { Private declarations }
   public
