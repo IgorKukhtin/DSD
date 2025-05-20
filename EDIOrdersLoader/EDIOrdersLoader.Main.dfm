@@ -10482,14 +10482,14 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Err_str_toEDI'
+        Name = 'MovementId_sendEDI'
         Value = Null
-        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MovementId_sendEDI'
+        Name = 'Err_str_toEDI'
         Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -11567,6 +11567,14 @@ object MainForm: TMainForm
         Value = Null
         Component = FormParams
         ComponentItem = 'MovementId_toEDI'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_EDI_send'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEDI'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

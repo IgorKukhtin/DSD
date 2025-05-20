@@ -50,6 +50,9 @@ BEGIN
                                                      , inUserId             := vbUserId
                                                       );
 
+     -- !!!исправляется ошибка!!!
+     --IF vbUserId <> 5 THEN
+	
      -- вернули <Остаток к выплате> + <Ост. к выпл. из кассы - без округлений>
      SELECT tmp.SummRemains, tmp.SummRemains_orig, tmp.SummRemains_diff_F2
             INTO outSummRemains, outSummRemains_orig, vbSummRemains_diff_F2
@@ -69,6 +72,8 @@ BEGIN
          ioSummRemains_diff_F2_tmp:= vbSummRemains_diff_F2;
      END IF;
 
+     -- !!!исправляется ошибка!!!
+     --END IF;
 
      -- сохранили связь с факт - <Выплата по ведомости (округление) - 2ф.>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ_diff_F2(), ioId, ioSummRemains_diff_F2_tmp);

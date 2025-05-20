@@ -12,15 +12,15 @@ RETURNS VOId
 AS
 $BODY$
 BEGIN
-  -- inStartDate:='01.06.2014';
-  --
-  DELETE FROM SoldTable WHERE OperDate BETWEEN inStartDate AND inEndDate;
+    -- inStartDate:='01.06.2014';
+    --
+    DELETE FROM SoldTable WHERE OperDate BETWEEN inStartDate AND inEndDate;
 
 
 /*
 update SoldTable set GoodsByGoodsKindId = tmpGoodsByGoodsKind.Id
 FROM (with tmpGoodsByGoodsKind AS (SELECT
-                                      ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS Id 
+                                      ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS Id
                                     , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
                                     , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
                                 FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -55,7 +55,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                        , SaleReturn_Summ, SaleReturn_Summ_10300, SaleReturn_SummCost, SaleReturn_SummCost_40200, SaleReturn_Amount_Weight, SaleReturn_Amount_Sh
                        , BonusBasis, Bonus, Plan_Weight, Plan_Summ
                        , Money_Summ, SendDebt_Summ, Money_SendDebt_Summ
-                       
+
                        , Sale_SummIn_pav, ReturnIn_SummIn_pav
 
                        , ContractConditionKindId, BonusKindId, BonusTax
@@ -65,7 +65,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
    WITH tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
       , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.* FROM Constant_ProfitLoss_AnalyzerId_View)
       , tmpGoodsByGoodsKind AS (SELECT
-                                      ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS Id 
+                                      ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS Id
                                     , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
                                     , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
                                 FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -642,7 +642,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
            , tmpResult.ContractConditionKindId
            , tmpResult.BonusKindId
            , tmpResult.BonusTax
-           
+
            , COALESCE (tmpGoodsByGoodsKind.Id, 0) AS GoodsByGoodsKindId
 
       FROM (SELECT tmpOperation.OperDate
@@ -834,7 +834,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
            , 0 AS ContractConditionKindId
            , 0 AS BonusKindId
            , 0 ::TFloat AS BonusTax
-           
+
            , 0 AS GoodsByGoodsKindId
 
    FROM Movement
@@ -899,6 +899,741 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 
 
 
+
+    -- ***BI - REPORT - реплика на сервер 192.168.0.197
+    IF inStartDate >= '01.01.2025'
+       -- !!!временно отладка!!!
+       AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) <> 8
+    THEN
+
+        -- если запустили для предыдущего месяца - !!!считаем его ТОЛЬКО до 15 числа ВКЛЮЧИТЕЛЬНО!!!
+        IF (EXTRACT (DAY FROM CURRENT_DATE) <= 15 AND DATE_TRUNC ('MONTH', inStartDate ) < DATE_TRUNC ('MONTH', CURRENT_DATE))
+           -- или принудительный пересчет
+           OR EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 5
+           -- или текущий месяц
+           OR DATE_TRUNC ('MONTH', inStartDate ) = DATE_TRUNC ('MONTH', CURRENT_DATE)
+        THEN
+            -- удаление - выбранный месяц - 2025 год
+            DELETE FROM _bi_Table_Report_Sale_2025 WHERE OperDate BETWEEN inStartDate AND inEndDate;
+
+            -- Заливка - выбранный месяц - 2025 год
+            INSERT INTO _bi_Table_Report_Sale_2025
+                    (
+                      -- Id Документа
+                      MovementId     ,
+                      -- Вид Документа
+                      MovementDescId ,
+                      -- Дата покупателя
+                      OperDate       ,
+                      -- Дата Склад
+                      OperDate_sklad ,
+                      -- № Документа
+                      InvNumber      ,
+
+                      -- Юр. Лицо
+                      JuridicalId    ,
+                      -- Контрагент
+                      PartnerId      ,
+
+                      -- УП Статья назначения
+                      InfoMoneyId    ,
+                      -- Форма оплаты
+                      PaidKindId     ,
+                      -- Филиал
+                      BranchId       ,
+                      -- Договор
+                      ContractId     ,
+
+                      -- Товар
+                      GoodsId        ,
+                      -- Вид Товара
+                      GoodsKindId    ,
+
+
+                      -- Документ Заявка покупателя
+                      MovementId_order    ,
+
+                      -- Документ Акция
+                      MovementId_promo    ,
+
+
+                      -- Вес Продажа - со склада
+                      Sale_Amount         ,
+                      -- Шт.
+                      Sale_Amount_sh      ,
+
+                      -- Вес Возврат - на склад
+                      Return_Amount      ,
+                      -- Шт.
+                      Return_Amount_sh   ,
+
+
+                      -- Акция - Вес Продажа
+                      AmountPartner_promo      ,
+                      -- Шт.
+                      AmountPartner_promo_sh   ,
+
+                      -- Вес Продажа у покупателя
+                      Sale_AmountPartner       ,
+                      -- Шт.
+                      Sale_AmountPartner_sh    ,
+
+                      -- Вес Возврат у покупателя
+                      Return_AmountPartner     ,
+                      -- Шт.
+                      Return_AmountPartner_sh  ,
+
+                      -- Вес Скидка за вес - Продажа
+                      Sale_Amount_10500        ,
+                      -- Шт.
+                      Sale_Amount_10500_sh     ,
+
+                      -- Вес потери - Разница в весе - Продажа
+                      Sale_Amount_40200        ,
+                      -- Шт.
+                      Sale_Amount_40200_sh     ,
+
+                      -- Вес потери - Разница в весе - Возврат
+                      Return_Amount_40200      ,
+                      -- Шт.
+                      Return_Amount_40200_sh   ,
+
+
+                      -- Акция - Сумма Продажи
+                      Sale_Summ_promo       ,
+                      -- Сумма Продажи
+                      Sale_Summ             ,
+                      -- Сумма Возврат
+                      Return_Summ           ,
+
+                      -- Сумма Продажи - разница от цены Прайса ОПТ (скидка-виртуальная)
+                      Sale_Summ_10200       ,
+                      -- Сумма Продажи - Скидка-акция
+                      Sale_Summ_10250       ,
+                      -- Сумма Продажи - Скидка-дополнительная (% и т.п.)
+                      Sale_Summ_10300       ,
+
+                      -- Сумма Возврат - Скидка-дополнительная (% и т.п.)
+                      Return_Summ_10300     ,
+
+                      -- Акция - Сумма с/с Продажа
+                      Sale_SummCost_promo   ,
+
+
+                      -- Сумма с/с Продажа
+                      Sale_SummCost         ,
+                      -- Сумма с/с Скидка за вес - Продажа
+                      Sale_SummCost_10500   ,
+                      -- Сумма с/с потери - Разница в весе - Продажа
+                      Sale_SummCost_40200   ,
+
+                      -- Сумма с/с Возврат
+                      Return_SummCost       ,
+                      -- Сумма с/с потери - Разница в весе - Возврат
+                      Return_SummCost_40200
+                     )
+
+            SELECT MovementId     ,
+                   -- Вид Документа
+                   MovementDescId ,
+                   -- Дата покупателя
+                   OperDate       ,
+                   -- Дата Склад
+                   OperDate_sklad ,
+                   -- № Документа
+                   zfConvert_StringToNumber (InvNumber),
+
+                   -- Юр. Лицо
+                   JuridicalId    ,
+                   -- Контрагент
+                   PartnerId      ,
+
+                   -- УП Статья назначения
+                   InfoMoneyId    ,
+                   -- Форма оплаты
+                   PaidKindId     ,
+                   -- Филиал
+                   BranchId       ,
+                   -- Договор
+                   ContractId     ,
+
+                   -- Товар
+                   GoodsId        ,
+                   -- Вид Товара
+                   GoodsKindId    ,
+
+
+                   -- Документ Заявка покупателя
+                   MovementId_order    ,
+
+                   -- Документ Акция
+                   MovementId_promo    ,
+
+
+                   -- Вес Продажа - со склада
+                   Sale_Amount         ,
+                   -- Шт.
+                   Sale_Amount_sh      ,
+
+                   -- Вес Возврат - на склад
+                   Return_Amount      ,
+                   -- Шт.
+                   Return_Amount_sh   ,
+
+
+                   -- Акция - Вес Продажа
+                   AmountPartner_promo      ,
+                   -- Шт.
+                   AmountPartner_promo_sh   ,
+
+                   -- Вес Продажа у покупателя
+                   Sale_AmountPartner       ,
+                   -- Шт.
+                   Sale_AmountPartner_sh    ,
+
+                   -- Вес Возврат у покупателя
+                   Return_AmountPartner     ,
+                   -- Шт.
+                   Return_AmountPartner_sh  ,
+
+                   -- Вес Скидка за вес - Продажа
+                   Sale_Amount_10500        ,
+                   -- Шт.
+                   Sale_Amount_10500_sh     ,
+
+                   -- Вес потери - Разница в весе - Продажа
+                   Sale_Amount_40200        ,
+                   -- Шт.
+                   Sale_Amount_40200_sh     ,
+
+                   -- Вес потери - Разница в весе - Возврат
+                   Return_Amount_40200      ,
+                   -- Шт.
+                   Return_Amount_40200_sh   ,
+
+
+                   -- Акция - Сумма Продажи
+                   Sale_Summ_promo       ,
+                   -- Сумма Продажи
+                   Sale_Summ             ,
+                   -- Сумма Возврат
+                   Return_Summ           ,
+
+                   -- Сумма Продажи - разница от цены Прайса ОПТ (скидка-виртуальная)
+                   Sale_Summ_10200       ,
+                   -- Сумма Продажи - Скидка-акция
+                   Sale_Summ_10250       ,
+                   -- Сумма Продажи - Скидка-дополнительная (% и т.п.)
+                   Sale_Summ_10300       ,
+
+                   -- Сумма Возврат - Скидка-дополнительная (% и т.п.)
+                   Return_Summ_10300     ,
+
+                   -- Акция - Сумма с/с Продажа
+                   Sale_SummCost_promo   ,
+
+
+                   -- Сумма с/с Продажа
+                   Sale_SummCost         ,
+                   -- Сумма с/с Скидка за вес - Продажа
+                   Sale_SummCost_10500   ,
+                   -- Сумма с/с потери - Разница в весе - Продажа
+                   Sale_SummCost_40200   ,
+
+                   -- Сумма с/с Возврат
+                   Return_SummCost       ,
+                   -- Сумма с/с потери - Разница в весе - Возврат
+                   Return_SummCost_40200
+
+            FROM _bi_Report_Sale_View
+            WHERE OperDate BETWEEN inStartDate AND inEndDate
+           ;
+        END IF;
+
+
+        -- ***если запустили для предыдущего месяца - НУЖНО залить Текущий месяц
+        IF DATE_TRUNC ('MONTH', inStartDate ) < DATE_TRUNC ('MONTH', CURRENT_DATE)
+           -- если ночной пересчет
+           AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) <= 5
+        THEN
+            -- удаление - Текущий месяц - 2025 год
+            DELETE FROM _bi_Table_Report_Sale_2025 WHERE OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE) AND CURRENT_DATE - INTERVAL '1 DAY';
+
+            -- Заливка - Текущий месяц - 2025 год
+            INSERT INTO _bi_Table_Report_Sale_2025
+                    (
+                      -- Id Документа
+                      MovementId     ,
+                      -- Вид Документа
+                      MovementDescId ,
+                      -- Дата покупателя
+                      OperDate       ,
+                      -- Дата Склад
+                      OperDate_sklad ,
+                      -- № Документа
+                      InvNumber      ,
+
+                      -- Юр. Лицо
+                      JuridicalId    ,
+                      -- Контрагент
+                      PartnerId      ,
+
+                      -- УП Статья назначения
+                      InfoMoneyId    ,
+                      -- Форма оплаты
+                      PaidKindId     ,
+                      -- Филиал
+                      BranchId       ,
+                      -- Договор
+                      ContractId     ,
+
+                      -- Товар
+                      GoodsId        ,
+                      -- Вид Товара
+                      GoodsKindId    ,
+
+
+                      -- Документ Заявка покупателя
+                      MovementId_order    ,
+
+                      -- Документ Акция
+                      MovementId_promo    ,
+
+
+                      -- Вес Продажа - со склада
+                      Sale_Amount         ,
+                      -- Шт.
+                      Sale_Amount_sh      ,
+
+                      -- Вес Возврат - на склад
+                      Return_Amount      ,
+                      -- Шт.
+                      Return_Amount_sh   ,
+
+
+                      -- Акция - Вес Продажа
+                      AmountPartner_promo      ,
+                      -- Шт.
+                      AmountPartner_promo_sh   ,
+
+                      -- Вес Продажа у покупателя
+                      Sale_AmountPartner       ,
+                      -- Шт.
+                      Sale_AmountPartner_sh    ,
+
+                      -- Вес Возврат у покупателя
+                      Return_AmountPartner     ,
+                      -- Шт.
+                      Return_AmountPartner_sh  ,
+
+                      -- Вес Скидка за вес - Продажа
+                      Sale_Amount_10500        ,
+                      -- Шт.
+                      Sale_Amount_10500_sh     ,
+
+                      -- Вес потери - Разница в весе - Продажа
+                      Sale_Amount_40200        ,
+                      -- Шт.
+                      Sale_Amount_40200_sh     ,
+
+                      -- Вес потери - Разница в весе - Возврат
+                      Return_Amount_40200      ,
+                      -- Шт.
+                      Return_Amount_40200_sh   ,
+
+
+                      -- Акция - Сумма Продажи
+                      Sale_Summ_promo       ,
+                      -- Сумма Продажи
+                      Sale_Summ             ,
+                      -- Сумма Возврат
+                      Return_Summ           ,
+
+                      -- Сумма Продажи - разница от цены Прайса ОПТ (скидка-виртуальная)
+                      Sale_Summ_10200       ,
+                      -- Сумма Продажи - Скидка-акция
+                      Sale_Summ_10250       ,
+                      -- Сумма Продажи - Скидка-дополнительная (% и т.п.)
+                      Sale_Summ_10300       ,
+
+                      -- Сумма Возврат - Скидка-дополнительная (% и т.п.)
+                      Return_Summ_10300     ,
+
+                      -- Акция - Сумма с/с Продажа
+                      Sale_SummCost_promo   ,
+
+
+                      -- Сумма с/с Продажа
+                      Sale_SummCost         ,
+                      -- Сумма с/с Скидка за вес - Продажа
+                      Sale_SummCost_10500   ,
+                      -- Сумма с/с потери - Разница в весе - Продажа
+                      Sale_SummCost_40200   ,
+
+                      -- Сумма с/с Возврат
+                      Return_SummCost       ,
+                      -- Сумма с/с потери - Разница в весе - Возврат
+                      Return_SummCost_40200
+                     )
+
+            SELECT MovementId     ,
+                   -- Вид Документа
+                   MovementDescId ,
+                   -- Дата покупателя
+                   OperDate       ,
+                   -- Дата Склад
+                   OperDate_sklad ,
+                   -- № Документа
+                   zfConvert_StringToNumber (InvNumber),
+
+                   -- Юр. Лицо
+                   JuridicalId    ,
+                   -- Контрагент
+                   PartnerId      ,
+
+                   -- УП Статья назначения
+                   InfoMoneyId    ,
+                   -- Форма оплаты
+                   PaidKindId     ,
+                   -- Филиал
+                   BranchId       ,
+                   -- Договор
+                   ContractId     ,
+
+                   -- Товар
+                   GoodsId        ,
+                   -- Вид Товара
+                   GoodsKindId    ,
+
+
+                   -- Документ Заявка покупателя
+                   MovementId_order    ,
+
+                   -- Документ Акция
+                   MovementId_promo    ,
+
+
+                   -- Вес Продажа - со склада
+                   Sale_Amount         ,
+                   -- Шт.
+                   Sale_Amount_sh      ,
+
+                   -- Вес Возврат - на склад
+                   Return_Amount      ,
+                   -- Шт.
+                   Return_Amount_sh   ,
+
+
+                   -- Акция - Вес Продажа
+                   AmountPartner_promo      ,
+                   -- Шт.
+                   AmountPartner_promo_sh   ,
+
+                   -- Вес Продажа у покупателя
+                   Sale_AmountPartner       ,
+                   -- Шт.
+                   Sale_AmountPartner_sh    ,
+
+                   -- Вес Возврат у покупателя
+                   Return_AmountPartner     ,
+                   -- Шт.
+                   Return_AmountPartner_sh  ,
+
+                   -- Вес Скидка за вес - Продажа
+                   Sale_Amount_10500        ,
+                   -- Шт.
+                   Sale_Amount_10500_sh     ,
+
+                   -- Вес потери - Разница в весе - Продажа
+                   Sale_Amount_40200        ,
+                   -- Шт.
+                   Sale_Amount_40200_sh     ,
+
+                   -- Вес потери - Разница в весе - Возврат
+                   Return_Amount_40200      ,
+                   -- Шт.
+                   Return_Amount_40200_sh   ,
+
+
+                   -- Акция - Сумма Продажи
+                   Sale_Summ_promo       ,
+                   -- Сумма Продажи
+                   Sale_Summ             ,
+                   -- Сумма Возврат
+                   Return_Summ           ,
+
+                   -- Сумма Продажи - разница от цены Прайса ОПТ (скидка-виртуальная)
+                   Sale_Summ_10200       ,
+                   -- Сумма Продажи - Скидка-акция
+                   Sale_Summ_10250       ,
+                   -- Сумма Продажи - Скидка-дополнительная (% и т.п.)
+                   Sale_Summ_10300       ,
+
+                   -- Сумма Возврат - Скидка-дополнительная (% и т.п.)
+                   Return_Summ_10300     ,
+
+                   -- Акция - Сумма с/с Продажа
+                   Sale_SummCost_promo   ,
+
+
+                   -- Сумма с/с Продажа
+                   Sale_SummCost         ,
+                   -- Сумма с/с Скидка за вес - Продажа
+                   Sale_SummCost_10500   ,
+                   -- Сумма с/с потери - Разница в весе - Продажа
+                   Sale_SummCost_40200   ,
+
+                   -- Сумма с/с Возврат
+                   Return_SummCost       ,
+                   -- Сумма с/с потери - Разница в весе - Возврат
+                   Return_SummCost_40200
+
+            FROM _bi_Report_Sale_View
+            WHERE OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE) AND CURRENT_DATE - INTERVAL '1 DAY'
+           ;
+        END IF;
+
+    ELSEIF inStartDate < '01.01.2025'
+    THEN
+        -- удаление - ДО 2025 год
+        DELETE FROM _bi_Table_Report_Sale WHERE OperDate BETWEEN inStartDate AND inEndDate;
+
+        -- ***Заливка - ДО 2025 год
+        INSERT INTO _bi_Table_Report_Sale
+                (
+                  -- Id Документа
+                  MovementId     ,
+                  -- Вид Документа
+                  MovementDescId ,
+                  -- Дата покупателя
+                  OperDate       ,
+                  -- Дата Склад
+                  OperDate_sklad ,
+                  -- № Документа
+                  InvNumber      ,
+
+                  -- Юр. Лицо
+                  JuridicalId    ,
+                  -- Контрагент
+                  PartnerId      ,
+
+                  -- УП Статья назначения
+                  InfoMoneyId    ,
+                  -- Форма оплаты
+                  PaidKindId     ,
+                  -- Филиал
+                  BranchId       ,
+                  -- Договор
+                  ContractId     ,
+
+                  -- Товар
+                  GoodsId        ,
+                  -- Вид Товара
+                  GoodsKindId    ,
+
+
+                  -- Документ Заявка покупателя
+                  MovementId_order    ,
+
+                  -- Документ Акция
+                  MovementId_promo    ,
+
+
+                  -- Вес Продажа - со склада
+                  Sale_Amount         ,
+                  -- Шт.
+                  Sale_Amount_sh      ,
+
+                  -- Вес Возврат - на склад
+                  Return_Amount      ,
+                  -- Шт.
+                  Return_Amount_sh   ,
+
+
+                  -- Акция - Вес Продажа
+                  AmountPartner_promo      ,
+                  -- Шт.
+                  AmountPartner_promo_sh   ,
+
+                  -- Вес Продажа у покупателя
+                  Sale_AmountPartner       ,
+                  -- Шт.
+                  Sale_AmountPartner_sh    ,
+
+                  -- Вес Возврат у покупателя
+                  Return_AmountPartner     ,
+                  -- Шт.
+                  Return_AmountPartner_sh  ,
+
+                  -- Вес Скидка за вес - Продажа
+                  Sale_Amount_10500        ,
+                  -- Шт.
+                  Sale_Amount_10500_sh     ,
+
+                  -- Вес потери - Разница в весе - Продажа
+                  Sale_Amount_40200        ,
+                  -- Шт.
+                  Sale_Amount_40200_sh     ,
+
+                  -- Вес потери - Разница в весе - Возврат
+                  Return_Amount_40200      ,
+                  -- Шт.
+                  Return_Amount_40200_sh   ,
+
+
+                  -- Акция - Сумма Продажи
+                  Sale_Summ_promo       ,
+                  -- Сумма Продажи
+                  Sale_Summ             ,
+                  -- Сумма Возврат
+                  Return_Summ           ,
+
+                  -- Сумма Продажи - разница от цены Прайса ОПТ (скидка-виртуальная)
+                  Sale_Summ_10200       ,
+                  -- Сумма Продажи - Скидка-акция
+                  Sale_Summ_10250       ,
+                  -- Сумма Продажи - Скидка-дополнительная (% и т.п.)
+                  Sale_Summ_10300       ,
+
+                  -- Сумма Возврат - Скидка-дополнительная (% и т.п.)
+                  Return_Summ_10300     ,
+
+                  -- Акция - Сумма с/с Продажа
+                  Sale_SummCost_promo   ,
+
+
+                  -- Сумма с/с Продажа
+                  Sale_SummCost         ,
+                  -- Сумма с/с Скидка за вес - Продажа
+                  Sale_SummCost_10500   ,
+                  -- Сумма с/с потери - Разница в весе - Продажа
+                  Sale_SummCost_40200   ,
+
+                  -- Сумма с/с Возврат
+                  Return_SummCost       ,
+                  -- Сумма с/с потери - Разница в весе - Возврат
+                  Return_SummCost_40200
+                 )
+
+        SELECT MovementId     ,
+               -- Вид Документа
+               MovementDescId ,
+               -- Дата покупателя
+               OperDate       ,
+               -- Дата Склад
+               OperDate_sklad ,
+               -- № Документа
+               zfConvert_StringToNumber (InvNumber),
+
+               -- Юр. Лицо
+               JuridicalId    ,
+               -- Контрагент
+               PartnerId      ,
+
+               -- УП Статья назначения
+               InfoMoneyId    ,
+               -- Форма оплаты
+               PaidKindId     ,
+               -- Филиал
+               BranchId       ,
+               -- Договор
+               ContractId     ,
+
+               -- Товар
+               GoodsId        ,
+               -- Вид Товара
+               GoodsKindId    ,
+
+
+               -- Документ Заявка покупателя
+               MovementId_order    ,
+
+               -- Документ Акция
+               MovementId_promo    ,
+
+
+               -- Вес Продажа - со склада
+               Sale_Amount         ,
+               -- Шт.
+               Sale_Amount_sh      ,
+
+               -- Вес Возврат - на склад
+               Return_Amount      ,
+               -- Шт.
+               Return_Amount_sh   ,
+
+
+               -- Акция - Вес Продажа
+               AmountPartner_promo      ,
+               -- Шт.
+               AmountPartner_promo_sh   ,
+
+               -- Вес Продажа у покупателя
+               Sale_AmountPartner       ,
+               -- Шт.
+               Sale_AmountPartner_sh    ,
+
+               -- Вес Возврат у покупателя
+               Return_AmountPartner     ,
+               -- Шт.
+               Return_AmountPartner_sh  ,
+
+               -- Вес Скидка за вес - Продажа
+               Sale_Amount_10500        ,
+               -- Шт.
+               Sale_Amount_10500_sh     ,
+
+               -- Вес потери - Разница в весе - Продажа
+               Sale_Amount_40200        ,
+               -- Шт.
+               Sale_Amount_40200_sh     ,
+
+               -- Вес потери - Разница в весе - Возврат
+               Return_Amount_40200      ,
+               -- Шт.
+               Return_Amount_40200_sh   ,
+
+
+               -- Акция - Сумма Продажи
+               Sale_Summ_promo       ,
+               -- Сумма Продажи
+               Sale_Summ             ,
+               -- Сумма Возврат
+               Return_Summ           ,
+
+               -- Сумма Продажи - разница от цены Прайса ОПТ (скидка-виртуальная)
+               Sale_Summ_10200       ,
+               -- Сумма Продажи - Скидка-акция
+               Sale_Summ_10250       ,
+               -- Сумма Продажи - Скидка-дополнительная (% и т.п.)
+               Sale_Summ_10300       ,
+
+               -- Сумма Возврат - Скидка-дополнительная (% и т.п.)
+               Return_Summ_10300     ,
+
+               -- Акция - Сумма с/с Продажа
+               Sale_SummCost_promo   ,
+
+
+               -- Сумма с/с Продажа
+               Sale_SummCost         ,
+               -- Сумма с/с Скидка за вес - Продажа
+               Sale_SummCost_10500   ,
+               -- Сумма с/с потери - Разница в весе - Продажа
+               Sale_SummCost_40200   ,
+
+               -- Сумма с/с Возврат
+               Return_SummCost       ,
+               -- Сумма с/с потери - Разница в весе - Возврат
+               Return_SummCost_40200
+
+        FROM _bi_Report_Sale_View
+        WHERE OperDate BETWEEN inStartDate AND inEndDate
+       ;
+
+    END IF;
+
+    -- Протокол
     IF DATE_TRUNC ('MONTH', CURRENT_TIMESTAMP) = DATE_TRUNC ('MONTH', inEndDate)
        AND (EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 8 OR EXTRACT (DAY FROM CURRENT_TIMESTAMP) > 1)
     THEN
@@ -941,8 +1676,8 @@ group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
 --
 --      select * from Object where id = 8451
 -- update SoldTable set GoodsByGoodsKindId = tmpGoodsByGoodsKind.Id
- select distinct SoldTable .GoodsId FROM SoldTable, 
--- FROM 
+ select distinct SoldTable .GoodsId FROM SoldTable,
+-- FROM
     (select Object.Id AS GoodsId
            , ObjectLink_Goods_Business.ChildObjectId               AS BusinessId
            , ObjectLink_Goods_GoodsPlatform.ChildObjectId          AS GoodsPlatformId
@@ -977,7 +1712,7 @@ group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                 ON ObjectLink_Goods_Measure.ObjectId = Object.Id
                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-      
+
      ) AS tmp
 where tmp.GoodsId  = SoldTable .GoodsId
   AND SoldTable.OperDate BETWEEN '01.01.2022' AND '31.08.2022'

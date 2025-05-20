@@ -134,7 +134,9 @@ uses
   DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
   DialogIncome_PricePartner in '..\Scale\DialogIncome_PricePartner.pas' {DialogIncome_PricePartnerForm},
   DialogChangePercentAmount in '..\Scale\DialogChangePercentAmount.pas' {DialogChangePercentAmountForm},
-  GuidePartionCell in '..\ScaleCeh\GuidePartionCell.pas' {GuidePartionCellForm};
+  GuidePartionCell in '..\ScaleCeh\GuidePartionCell.pas' {GuidePartionCellForm},
+  invoice_comdoc_vchasno in '..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
+  invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas';
 
 {$R *.res}
 

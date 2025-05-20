@@ -17,10 +17,10 @@ $BODY$
   DECLARE vbIsSale Boolean;
   DECLARE vbIsReturnIn Boolean;
 BEGIN
-     IF inGroupId <=0 THEN
-        inIsBefoHistoryCost:= FALSE;
-        inGroupId:= 0;
-     END IF;
+     -- IF inGroupId <=0 THEN
+     --    inIsBefoHistoryCost:= FALSE;
+     --    inGroupId:= 0;
+     -- END IF;
 
     -- IF inGroupId <=0 THEN
     --    inIsBefoHistoryCost:= TRUE;

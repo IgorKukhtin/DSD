@@ -1,12 +1,13 @@
--- Function: gpInsert_Movement_EDIEvents() - для EDI - ДРУГОЙ НАБОР ПАРАМЕТРОВ
+-- Function: gpInsertUpdate_MI_EDI() - Криво для Vchasno - ДРУГОЙ НАБОР ПАРАМЕТРОВ
 
--- DROP FUNCTION IF EXISTS gpInsert_Movement_EDIEvents(Integer, TVarChar, TVarChar);
--- DROP FUNCTION IF EXISTS gpInsert_Movement_EDIEvents (Integer, TVarChar, TVarChar); - пока не удалять, здесь параметры для Project
-DROP FUNCTION IF EXISTS gpInsert_Movement_EDIEvents (Integer, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Movement_EDIEvents (Integer, TVarChar, TVarChar, TVarChar, TVarChar); - пока не удалять, здесь параметры для Project
+DROP FUNCTION IF EXISTS gpInsert_Movement_EDIEvents (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_EDIEvents(
     IN inMovementId          Integer   , -- Ключ объекта <Документ-EDI>
     IN inMovementId_send     Integer   , -- Ключ объекта <Документ-Отправка-EDI>
+    IN inDocumentId          TVarChar  , --
+    IN inVchasnoId           TVarChar  , --
     IN inEDIEvent            TVarChar  , -- Описание события
     IN inSession             TVarChar    -- Пользователь
 )
@@ -19,6 +20,25 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
    vbUserId := lpGetUserBySession(inSession);
+
+
+    IF COALESCE (inMovementId, 0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.inMovementId = 0.';
+    END IF;
+
+
+   IF TRIM (COALESCE (inDocumentId, '')) <> ''
+   THEN
+       PERFORM lpInsertUpdate_MovementString (zc_MovementString_DocumentId_vch(), inMovementId, inDocumentId);
+   END IF;
+
+
+   IF TRIM (COALESCE (inVchasnoId, '')) <> ''
+   THEN
+       PERFORM lpInsertUpdate_MovementString (zc_MovementString_VchasnoId(), inMovementId, inVchasnoId);
+   END IF;
+
 
    IF SUBSTRING (inEDIEvent FROM 1 FOR 1) = '{'
    THEN

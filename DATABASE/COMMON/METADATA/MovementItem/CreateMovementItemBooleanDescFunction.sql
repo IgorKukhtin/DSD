@@ -314,6 +314,9 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_ReturnOut() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_ReturnOut', 'Возврат да/нет' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_ReturnOut'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_NotFact() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_NotFact'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_NotFact', 'Теоретический остаток да/нет' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_NotFact'); 
 
 CREATE OR REPLACE FUNCTION zc_MIBoolean_PartionCell_Many_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Many_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
@@ -403,9 +406,6 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_PartionCell_Many_22() RETURNS Integer AS
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_PartionCell_Many_22', 'Несколько партий в Ячейка-22(да/нет)' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Many_22'); 
  
-
-
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

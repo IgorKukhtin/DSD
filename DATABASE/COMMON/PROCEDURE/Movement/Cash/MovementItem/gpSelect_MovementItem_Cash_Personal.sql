@@ -67,6 +67,7 @@ $BODY$
    DECLARE vbServiceDateId         Integer;
    DECLARE vbPersonalServiceListId Integer;
    DECLARE vbPersonalServiceList_NotRound Boolean;
+   DECLARE vbOperDate              TDateTime;
    DECLARE vbServiceDate           TDateTime;
    DECLARE vbIsOnly                Boolean;
    DECLARE vbIsCardSecond          Boolean;
@@ -80,6 +81,8 @@ BEGIN
      -- !!!
      vbKoeff_ro:= 100;
 
+     -- определяем
+     vbOperDate:= CASE WHEN inMovementId > 0 THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) END; -- WHEN vbUserId = 5 THEN '04.05.2025'
      -- определяем
      vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inParentId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
      -- определяем
@@ -209,7 +212,7 @@ BEGIN
                                                   AND MovementItem.DescId = zc_MI_Child()
                                                   AND MovementItem.isErased = tmpIsErased.isErased
                                                   AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)
-                                                  AND MovementItem.Amount <> 0
+                                                  --AND (MovementItem.Amount <> 0) -- OR vbUserId = 5
                            LEFT JOIN MovementItemFloat AS MIF_Summ_diff_F2
                                                        ON MIF_Summ_diff_F2.MovementItemId = MovementItem.Id
                                                       AND MIF_Summ_diff_F2.DescId         = zc_MIFloat_Summ_diff_F2()
@@ -232,6 +235,7 @@ BEGIN
                            LEFT JOIN MovementItemDate AS MIDate_ServiceDate
                                                       ON MIDate_ServiceDate.MovementItemId = MI_Master.Id
                                                      AND MIDate_ServiceDate.DescId         = zc_MIDate_ServiceDate()
+                      WHERE MovementItem.Amount <> 0 OR MIF_Summ_diff_F2.ValueData <> 0 -- OR vbUserId = 5
                      )
           , tmpMI AS (SELECT tmpMI_Child.MovementItemId
                            , tmpMI_Child.Amount
@@ -265,7 +269,7 @@ BEGIN
                                                   AND MovementItem.DescId = zc_MI_Master()
                                                   AND MovementItem.isErased = tmpIsErased.isErased
                                                   AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)
-                                                  AND MovementItem.Amount <> 0
+                                                  AND (MovementItem.Amount <> 0) --  OR vbUserId = 5
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
@@ -530,7 +534,7 @@ BEGIN
                                   OR MIFloat_SummTransportTaxi.ValueData <> 0
                                   OR MIFloat_SummPhone.ValueData <> 0
                                   OR MIFloat_SummCompensation.ValueData <> 0
-                                  -- OR vbUserId = 5
+                                  --OR vbUserId = 5
                                   --OR inShowAll = TRUE
                                     )
 
@@ -792,7 +796,17 @@ BEGIN
                                    --, MIContainer.MovementDescId
                              )
        -- <Карта БН (округление) - 2ф>
-     , tmpMIContainer_diff AS (SELECT SUM (MIContainer.Amount) AS AmountService_diff
+      , tmpMIContainer_diff AS (SELECT SUM (-- Округление по карте - ВСЕ
+                                          + CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalService() THEN MIContainer.Amount ELSE 0 END
+                                            -- Округление кассы - прошлый мес.
+                                          + CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash()
+                                                  AND (MIContainer.OperDate < vbServiceDate + INTERVAL '1 MONTH'
+                                                    -- !!!исправляется ошибка - т.е. ВСЕ округления!!!
+                                                    --OR (vbOperDate = '04.05.2025' AND vbServiceDate = '01.04.2025' AND vbUserId = 5)
+                                                    --OR vbUserId = 5
+                                                      )
+                                                      THEN MIContainer.Amount ELSE 0 END
+                                           ) AS AmountService_diff
                                    , tmpContainer.PersonalId
                                    , tmpContainer.UnitId
                                    , tmpContainer.PositionId
@@ -804,7 +818,7 @@ BEGIN
                                    INNER JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.ContainerId    = tmpContainer.ContainerId
                                                                    AND MIContainer.DescId         = zc_MIContainer_Summ()
-                                                                   AND MIContainer.MovementDescId = zc_Movement_PersonalService()
+                                                                   AND MIContainer.MovementDescId IN (zc_Movement_PersonalService(), zc_Movement_Cash())
                                                                    -- <Карта БН (округление) - 2ф>
                                                                    AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_PersonalService_SummDiff()
                                                                    --and 1=0
@@ -1273,7 +1287,7 @@ BEGIN
             , tmpData_res.Amount_service
 
               -- ***Ост. к выпл. из кассы - Округлили***
-            , CASE WHEN vbUserId = 5 OR 1=1
+            , CASE WHEN 1=1 -- OR vbUserId = 5
                         -- добавили Округление
                         THEN tmpData_res.SummRemains_orig
                            + (COALESCE (tmpData_res_diff_F2.SummRemains, 0) - COALESCE (tmpData_res_diff_F2.SummRemains_orig, 0))
@@ -1284,7 +1298,7 @@ BEGIN
             , tmpData_res.SummRemains_orig
 
               -- ***Расчет - сумма округлений - КАССА***
-            , (CASE WHEN vbUserId = 5 OR 1=1
+            , (CASE WHEN 1=1 -- OR vbUserId = 5
                         THEN COALESCE (tmpData_res_diff_F2.SummRemains, 0) - COALESCE (tmpData_res_diff_F2.SummRemains_orig, 0)
                    ELSE tmpData_res.SummRemains_orig
               END
@@ -1317,7 +1331,15 @@ BEGIN
                               -- ***Ост. к выпл. из кассы - без округлений***
                             , SUM (tmpData_res.SummRemains_orig) AS SummRemains_orig
                               -- ***Ост. к выпл. из кассы - Округлили***
-                            , ROUND (SUM (tmpData_res.SummRemains_orig) / vbKoeff_ro, 0) * 100 AS SummRemains
+                            , CASE WHEN (ROUND (SUM (tmpData_res.SummRemains_orig) / vbKoeff_ro, 0) * 100 >= 100 
+                                      OR ROUND (SUM (tmpData_res.SummRemains_orig) / vbKoeff_ro, 0) * 100 <= 100 
+                                        )
+                                    --AND vbUserId = 5
+                                    AND 1=0
+                                   -- !!!исправляется ошибка!!!
+                                   THEN 0
+                                   ELSE ROUND (SUM (tmpData_res.SummRemains_orig) / vbKoeff_ro, 0) * 100
+                              END AS SummRemains
                        FROM tmpData_res
                        -- только для Этой Ведомости
                        WHERE vbPersonalServiceList_NotRound = FALSE
@@ -1339,6 +1361,118 @@ $BODY$
  20.06.17         * add SummCardSecondCash
  04.04.15                                        * all
  16.09.14         *
+*/
+
+/*
+
+!!!исправляется ошибка!!!
+
+-- переброска переходящий долг за март в начально сальдо май
+
+with tmpContainer AS (SELECT CLO_ServiceDate.ContainerId
+                                   , CLO_Personal.ObjectId as PersonalId
+                                   , CLO_Unit.ObjectId as UnitId
+                                   , CLO_Position.ObjectId as PositionId
+                                   , CLO_InfoMoney.ObjectId AS InfoMoneyId
+                                   , CLO_PersonalServiceList.ObjectId as PersonalServiceListId
+                              FROM ContainerLinkObject AS CLO_ServiceDate
+                                   INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                  ON CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                                                 AND CLO_Personal.ContainerId = CLO_ServiceDate.ContainerId
+                                   INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                                  ON CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                                                 AND CLO_InfoMoney.ContainerId = CLO_ServiceDate.ContainerId
+                                   INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                  ON CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                 AND CLO_Unit.ContainerId = CLO_ServiceDate.ContainerId
+                                   INNER JOIN ContainerLinkObject AS CLO_Position
+                                                                  ON CLO_Position.DescId = zc_ContainerLinkObject_Position()
+                                                                 AND CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
+                                   INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                                  ON CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
+                                                                 AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
+                             --WHERE  CLO_ServiceDate.ObjectId = 11904357 -- select lpInsertFind_Object_ServiceDate (inOperDate:= '01.04.2025');
+                             WHERE  CLO_ServiceDate.ObjectId = 11746866 -- select lpInsertFind_Object_ServiceDate (inOperDate:= '01.05.2025');
+                                AND CLO_ServiceDate.DescId = zc_ContainerLinkObject_ServiceDate()
+                              )
+      , tmpMIContainer_diff AS (SELECT SUM (-- Округление кассы - прошлый мес.
+                                            CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash()
+                                               -- AND MIContainer.OperDate < '01.05.2025' -- vbServiceDate + INTERVAL '1 MONTH'
+                                                  AND MIContainer.OperDate < '01.06.2025' -- vbServiceDate + INTERVAL '1 MONTH'
+                                                      THEN MIContainer.Amount ELSE 0 END
+                                           ) AS AmountService_diff
+                                   , tmpContainer.PersonalId
+                                   , tmpContainer.UnitId
+                                   , tmpContainer.PositionId
+                                   , tmpContainer.InfoMoneyId
+                                   , tmpContainer.PersonalServiceListId
+                                   , MAX (MIContainer.MovementId) AS MovementId_find
+                                   , MAX (tmpContainer.ContainerId) AS ContainerId_find
+                              FROM tmpContainer
+                                   INNER JOIN MovementItemContainer AS MIContainer
+                                                                    ON MIContainer.ContainerId    = tmpContainer.ContainerId
+                                                                   AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                   AND MIContainer.MovementDescId IN (zc_Movement_Cash()) -- zc_Movement_PersonalService(),
+                                                                   -- <Карта БН (округление) - 2ф>
+                                                                   AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_PersonalService_SummDiff()
+                                                                   --and 1=0
+                              GROUP BY tmpContainer.PersonalId
+                                     , tmpContainer.UnitId
+                                     , tmpContainer.PositionId
+                                     , tmpContainer.InfoMoneyId
+                                     , tmpContainer.PersonalServiceListId
+                             )
+ select distinct Object.* , Object_p.*, AmountService_diff, Container.Amount, MovementId_find
+-- select sum (Container.Amount)
+from tmpMIContainer_diff 
+join Object on Object.Id = PersonalServiceListId
+join Object as Object_p on Object_p.Id = PersonalId
+
+join Container  on Container.Id = ContainerId_find and Container.Amount = AmountService_diff
+ and Container.Amount <> 0
+
+where AmountService_diff <> 0 
+-- and PersonalServiceListId = 8265915 -- Відомість Розподільчий комплекс
+-- and PersonalServiceListId = 298665  -- Відомість Дільниця м'ясної сировини
+-- and PersonalServiceListId = 296000  -- Відомість Адміністративно-господарський відділ
+ -- and PersonalServiceListId = 7560179 -- Відомість Цех ковбасних виробів
+-- and PersonalServiceListId = 293559 -- Відомість Бухгалтерія
+-- and PersonalServiceListId = 419644 -- Відомість Виробничий майданчик  №2
+-- and PersonalServiceListId =  293430 -- Відомість відділу аналітики та контролю продажів
+--and PersonalServiceListId =  10359856 -- Відомість відділу аналітичних систем та даних
+-- 9316846;128;357;" Відомість відділу ВТМ"
+--and PersonalServiceListId =  4560083 -- Відомість відділу заявок
+-- and PersonalServiceListId =   4538168 -- ;128;271;" Відомість відділу з підбору і розвитку персоналу"
+-- and PersonalServiceListId =   293429 -- Відомість відділу маркетингу та реклами"
+-- and PersonalServiceListId =   4538167 -- Відомість відділу матеріально-технічного постачання"
+-- and PersonalServiceListId =    559274 -- Відомість відділу продажів м`ясної сировини"
+-- 302043;128;139;" Відомість відділу транспортної логістики Дніпро"
+-- and PersonalServiceListId =  345740 -- Відомість відділу якості
+-- and PersonalServiceListId = 7318256 -- Відомість Департамент експлуатації
+--  and PersonalServiceListId = 8269388 -- ;128;335;" Відомість Дільниці підготовки до продажу м`ясної сировини"
+-- and PersonalServiceListId = 293425 -- Відомість Дільниці термічної обробки"
+-- and PersonalServiceListId =  293404 -- Відомість Дільниця делікатесів
+-- 298665 -- Відомість Дільниця м'ясної сировини
+ -- and PersonalServiceListId =  8269394 -- Відомість Дільниця обліку і реалізації м`ясної сировини
+-- 469623 -- Відомість Економічний відділ
+-- and PersonalServiceListId =  345598 -- Відомість ІТР офіс
+-- and PersonalServiceListId =  --" Відомість комерційного відділу ЗЕД"
+-- and PersonalServiceListId =  559271 -- Відомість павільйони ставка
+-- and PersonalServiceListId =  295837-- Відомість Склад забезпечення виробництва"
+-- and PersonalServiceListId =   8265922-- Відомість Склад Повернень"
+-- 296127;128;123;" Відомість Цех ковбаса+делікатеси"
+-- 346777;128;154;" Відомість Цех ковбасних виробів Керівники"
+ -- 8265914;128;332;" Відомість Цех пакування"
+-- 295833;128;109;" Відомість Цех сирокопчених ковбас"
+
+and PersonalServiceListId = 293443 -- ;128;1;"Ведомость Админ"
+
+ 
+order by 4, Object_p.ValueData
+
+-- select * from Movement where Id =  31259168
+-- select * from MovementDesc where Id =  13
+
 */
 
 -- тест
