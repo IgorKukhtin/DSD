@@ -191,6 +191,10 @@ type
     actPrint_PackGross_send_PageCount: TdsdPrintAction;
     actPrint_Pack_PageCount: TdsdPrintAction;
     actPrint_Spec_PageCount: TdsdPrintAction;
+    mactPrint_Account_PageCount: TMultiAction;
+    actPrint_Account_PageCount: TdsdPrintAction;
+    actPrint_OrderExternal_PageCount: TdsdPrintAction;
+    spSelectPrint_OrderExternal_srv_r: TdsdStoredProc;
   private
   end;
   //

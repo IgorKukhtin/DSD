@@ -3,6 +3,8 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
   ClientHeight = 596
   ClientWidth = 990
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -113
+  ExplicitTop = -108
   ExplicitWidth = 1006
   ExplicitHeight = 635
   PixelsPerInch = 96
@@ -21,6 +23,8 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
       inherited cxGrid: TcxGrid
         Width = 990
         Height = 539
+        ExplicitLeft = -32
+        ExplicitTop = -3
         ExplicitWidth = 990
         ExplicitHeight = 539
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -131,7 +135,9 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
               Kind = skSum
               Column = TotalPage_All
             end>
-          OptionsData.Editing = False
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -145,6 +151,39 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 83
+          end
+          object PrintKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1087#1077#1095#1072#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'PrintKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object FormPrintName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1055#1077#1095#1072#1090#1080
+            DataBinding.FieldName = 'FormPrintName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
@@ -172,28 +211,37 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             Options.Editing = False
             Width = 70
           end
+          object TotalPage_All: TcxGridDBColumn
+            Caption = #1057#1090#1088#1072#1085#1080#1094' '#1048#1090#1086#1075#1086
+            DataBinding.FieldName = 'TotalPage_All'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 70
+          end
           object TotalPage_1: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1053#1072#1082#1083#1072#1076#1085#1072#1103
+            Caption = #1057#1090#1088#1072#1085#1080#1094' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
             DataBinding.FieldName = 'TotalPage_1'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1053#1072#1082#1083#1072#1076#1085#1072#1103
             Options.Editing = False
             Width = 70
           end
           object TotalPage_2: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1050#1072#1077#1089#1090#1074'.'
+            Caption = #1057#1090#1088#1072#1085#1080#1094' '#1050#1072#1095#1077#1089#1090#1074'.'
             DataBinding.FieldName = 'TotalPage_2'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
             Options.Editing = False
             Width = 70
           end
           object TotalPage_3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1058#1058#1053
+            Caption = #1057#1090#1088#1072#1085#1080#1094' '#1058#1058#1053
             DataBinding.FieldName = 'TotalPage_3'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -203,61 +251,53 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             Width = 70
           end
           object TotalPage_4: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103
+            Caption = #1057#1090#1088#1072#1085#1080#1094' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' ('#1082#1083#1080#1077#1085#1090')'
             DataBinding.FieldName = 'TotalPage_4'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1082#1083#1080#1077#1085#1090')'
             Options.Editing = False
             Width = 70
           end
           object TotalPage_5: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1059#1087#1072#1082#1086#1074'. '#1086#1093#1088'.'
+            Caption = #1057#1090#1088#1072#1085#1080#1094' '#1059#1087#1072#1082'. '#1086#1093#1088'.'
             DataBinding.FieldName = 'TotalPage_5'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = ' '#9#1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1091#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1086#1093#1088#1072#1085#1077
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' '#1086#1093#1088#1072#1085#1077
             Options.Editing = False
             Width = 70
           end
           object TotalPage_6: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1059#1087#1072#1082#1086#1074'. '#1082#1083#1080#1077#1085#1090
+            Caption = #1057#1090#1088#1072#1085#1080#1094' '#1059#1087#1072#1082'. '#1082#1083#1080#1077#1085#1090
             DataBinding.FieldName = 'TotalPage_6'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1091#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1082#1083#1080#1077#1085#1090#1091
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' '#1082#1083#1080#1077#1085#1090#1091
             Options.Editing = False
             Width = 70
           end
           object TotalPage_7: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+            Caption = #1057#1090#1088#1072#1085#1080#1094' '#1057#1087#1077#1094'.'
             DataBinding.FieldName = 'TotalPage_7'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
             Options.Editing = False
             Width = 70
           end
           object TotalPage_8: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'. '#1057#1095#1077#1090
+            Caption = #1057#1090#1088#1072#1085#1080#1094' '#1057#1095#1077#1090
             DataBinding.FieldName = 'TotalPage_8'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1089#1095#1077#1090
+            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1057#1095#1077#1090
             Options.Editing = False
-            Width = 70
-          end
-          object TotalPage_All: TcxGridDBColumn
-            Caption = #1057#1090#1088#1072#1085#1080#1094' '#1048#1090#1086#1075#1086
-            DataBinding.FieldName = 'TotalPage_All'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
             Width = 70
           end
           object FromName: TcxGridDBColumn
@@ -265,6 +305,7 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object ToName: TcxGridDBColumn
@@ -272,6 +313,7 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object RetailName: TcxGridDBColumn
@@ -279,6 +321,7 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object JuridicalName: TcxGridDBColumn
@@ -286,62 +329,77 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
-          object FormPrintName: TcxGridDBColumn
-            Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-            DataBinding.FieldName = 'FormPrintName'
+          object BranchName_Ins: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1060#1048#1054')'
+            DataBinding.FieldName = 'BranchName_Ins'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 94
-          end
-          object PrintKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1087#1077#1095#1072#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            DataBinding.FieldName = 'PrintKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
+            Options.Editing = False
+            Width = 100
           end
           object InsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079'. '#1089#1086#1079#1076'.'
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' ('#1060#1048#1054')'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 134
           end
-          object BranchName_Ins: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083
-            DataBinding.FieldName = 'BranchName_Ins'
+          object PositionName_Ins: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1060#1048#1054')'
+            DataBinding.FieldName = 'PositionName_Ins'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 61
+            Width = 128
           end
           object UnitCode_Ins: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087'.'
+            Caption = #1050#1086#1076' '#1087#1086#1076#1088'. ('#1060#1048#1054')'
             DataBinding.FieldName = 'UnitCode_Ins'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 35
           end
           object UnitName_Ins: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1060#1048#1054')'
             DataBinding.FieldName = 'UnitName_Ins'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 113
           end
-          object PositionName_Ins: TcxGridDBColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'PositionName_Ins'
+          object Id: TcxGridDBColumn
+            DataBinding.FieldName = 'Id'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 128
+            Width = 55
+          end
+          object MovementId_sale: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId_sale'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
         end
       end

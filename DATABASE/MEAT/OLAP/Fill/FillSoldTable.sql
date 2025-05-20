@@ -909,12 +909,15 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
         -- если запустили для предыдущего месяца - !!!считаем его ТОЛЬКО до 15 числа ВКЛЮЧИТЕЛЬНО!!!
         IF (EXTRACT (DAY FROM CURRENT_DATE) <= 15 AND DATE_TRUNC ('MONTH', inStartDate ) < DATE_TRUNC ('MONTH', CURRENT_DATE))
            -- или принудительный пересчет
-           OR EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 5
+           OR EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 5 -- OR EXTRACT (HOUR FROM CURRENT_TIMESTAMP) IN (0, 23)
            -- или текущий месяц
            OR DATE_TRUNC ('MONTH', inStartDate ) = DATE_TRUNC ('MONTH', CURRENT_DATE)
         THEN
+
+--    RAISE EXCEPTION 'Ошибка-1. <%>  <%>', inStartDate, CURRENT_DATE - INTERVAL '1 DAY';
+
             -- удаление - выбранный месяц - 2025 год
-            DELETE FROM _bi_Table_Report_Sale_2025 WHERE OperDate BETWEEN inStartDate AND inEndDate;
+            DELETE FROM _bi_Table_Report_Sale_2025 WHERE OperDate BETWEEN inStartDate AND CURRENT_DATE - INTERVAL '1 DAY';
 
             -- Заливка - выбранный месяц - 2025 год
             INSERT INTO _bi_Table_Report_Sale_2025
@@ -1146,8 +1149,51 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                    Return_SummCost_40200
 
             FROM _bi_Report_Sale_View
-            WHERE OperDate BETWEEN inStartDate AND inEndDate
+            WHERE OperDate BETWEEN inStartDate AND CURRENT_DATE - INTERVAL '1 DAY'
            ;
+
+  -- Протокол
+  INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        SELECT 5 AS UserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , 0 AS Value1
+             , 0 AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - CLOCK_TIMESTAMP()) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО 
+             , NULL AS Time2
+               -- сколько всего выполнялась проц 
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ 
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'FillSoldTable'
+               -- ProtocolData
+             , 'FillSoldTable-1'
+    || ' ' || zfConvert_DateToString (inStartDate)
+  || ' - ' || zfConvert_DateToString (CURRENT_DATE - INTERVAL '1 DAY')
+              ;
+
         END IF;
 
 
@@ -1156,6 +1202,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
            -- если ночной пересчет
            AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) <= 5
         THEN
+
+--    RAISE EXCEPTION 'Ошибка-2. <%>  <%>',  DATE_TRUNC ('MONTH', CURRENT_DATE), CURRENT_DATE - INTERVAL '1 DAY';
+
             -- удаление - Текущий месяц - 2025 год
             DELETE FROM _bi_Table_Report_Sale_2025 WHERE OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE) AND CURRENT_DATE - INTERVAL '1 DAY';
 
@@ -1391,6 +1440,48 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
             FROM _bi_Report_Sale_View
             WHERE OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE) AND CURRENT_DATE - INTERVAL '1 DAY'
            ;
+
+  -- Протокол
+  INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        SELECT 5 AS UserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , 0 AS Value1
+             , 0 AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - CLOCK_TIMESTAMP()) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО 
+             , NULL AS Time2
+               -- сколько всего выполнялась проц 
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ 
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'FillSoldTable'
+               -- ProtocolData
+             , 'FillSoldTable-2'
+    || ' ' || zfConvert_DateToString (DATE_TRUNC ('MONTH', CURRENT_DATE))
+  || ' - ' || zfConvert_DateToString (CURRENT_DATE - INTERVAL '1 DAY')
+              ;
         END IF;
 
     ELSEIF inStartDate < '01.01.2025'

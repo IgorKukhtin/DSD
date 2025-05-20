@@ -4472,6 +4472,8 @@ begin
                   // это расчет кол-ва страниц ѕ≈„ј“»
                   then begin frxPrintForm_calc:= true;
                              i_param:= i;
+                             //!!!исправил ошибку, откуда?? приходит режим дизайна формы
+                             ADesignReport:= FALSE;
                        end;
 
         // если есть такой параметр, тогда без диалога
@@ -4628,7 +4630,8 @@ begin
             begin
                 PrepareReport;
                 ShowPreparedReport;
-                AParams[i_param+1].Value:= FReport.Preview.PreviewPages.Count;// .PagesCount;
+                //AParams[i_param+1].Value:= FReport.Preview.PreviewPages.Count;// .PagesCount;
+                AParams.ParamByName('frxPrintForm_count').Value:= FReport.Preview.PreviewPages.Count;// .PagesCount;
                 ClosePreview(Self);
             end
 

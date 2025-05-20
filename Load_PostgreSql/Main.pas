@@ -266,6 +266,8 @@ type
     cbUnComplete_StatusId_next: TCheckBox;
     bbPrintForm_calc: TButton;
     cbPrintForm_calc: TCheckBox;
+    toZConnection_master: TZConnection;
+    toSqlQuery_master: TZQuery;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -360,6 +362,8 @@ type
     function fExecSqToQuery_noErr_two (mySql:String):Boolean;
     function fExecSqToQuery_noErr_three (mySql:String):Boolean;
 
+    function fExecSqToQuery_master (mySql:String):Boolean;
+
     function fTryOpenSq (myComponent:TZQuery):Boolean;
     function fTryExecStoredProc(toStoredProc:TdsdStoredProc):Boolean;
 
@@ -412,13 +416,21 @@ type
 
     // Print
     function PrintForm_Sale_PageCount_calc (MovementId:Integer):Integer;
-    function PrintForm_Quality_PageCount_calc (MovementId:Integer):Integer;
-    function PrintForm_TransportGoods_PageCount_calc (MovementId:Integer):Integer;
-    function PrintForm_PackGross_PageCount_calc (MovementId:Integer):Integer;
-    function PrintForm_PackGross_Send_PageCount_calc (MovementId:Integer):Integer;
     function PrintForm_SendOnPrice_PageCount_calc (MovementId:Integer):Integer;
     function PrintForm_Send_PageCount_calc (MovementId:Integer):Integer;
     function PrintForm_Loss_PageCount_calc (MovementId:Integer):Integer;
+    function PrintForm_OrderExternal_PageCount_calc (MovementId:Integer):Integer;
+
+    function PrintForm_Quality_PageCount_calc (MovementId:Integer):Integer;
+    function PrintForm_TransportGoods_PageCount_calc (MovementId:Integer):Integer;
+
+    function PrintForm_PackGross_PageCount_calc (MovementId:Integer):Integer;
+    function PrintForm_PackGross_Send_PageCount_calc (MovementId:Integer):Integer;
+
+    function PrintForm_Pack_PageCount_calc (MovementId:Integer):Integer;
+    function PrintForm_Spec_PageCount_calc (MovementId:Integer):Integer;
+    function PrintForm_Account_PageCount_calc (MovementId:Integer):Integer;
+
 
   public
     procedure StartProcess;
@@ -1023,6 +1035,40 @@ begin
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fExecSqToQuery_master (mySql:String):Boolean;
+var i:LongInt;fExec:Boolean;
+begin
+     i:=0;
+     fExec:=false;
+     //
+     with toSqlQuery_master,Sql do begin
+        Clear;
+        Add(mySql);
+        //try ExecSql except ShowMessage('fExecSqToQuery'+#10+#13+mySql);Result:=false;exit;end;
+        while not fExec do
+           try
+               if Connection.Connected = false then Connection.Connected:=true;
+               //ShowMessage('start');
+               ExecSql;fExec:=true;
+           except on E:Exception
+           do begin
+                Connection.Connected:=false;
+                //
+                myLogMemo_add(' err fExecSqToQuery ' +#10+#13+mySql);
+                myLogMemo_add('');
+                myLogMemo_add(E.Message);
+                //
+                i:= i + 1;
+                if i mod 10 = 0 then MyDelay(10 * 60 * 1000)
+                else MyDelay(1 * 60 * 1000);
+                //
+                if fStop = true then exit;;
+               end;
+           end;
+     end;
+     Result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fExecSqToQuery (mySql:String):Boolean;
 var i:LongInt;fExec:Boolean;
 begin
@@ -1055,7 +1101,6 @@ begin
      end;
      Result:=true;
 end;
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fOpenSqToQuery_two (mySql:String):Boolean;
 var i:LongInt;
@@ -1755,6 +1800,42 @@ begin
      zc_rvNo:=1;
      //
      try
+         if ParamStr(1)='alan_dp_ua_print' then
+         begin
+             with toZConnection do begin
+                Connected:=false;
+                HostName:='integer-srv-r.alan.dp.ua';
+                //HostName:='localhost';
+                User:='project';
+                Password:='sqoII5szOnrcZxJVF1BL';
+                Database:='project';
+                Port:=5432;
+                Connected:=true;
+                //
+                isGlobalLoad:=zc_rvYes;
+                if Connected
+                then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+                else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+                Connected:=false;
+             end;
+             with toZConnection_master do begin
+                Connected:=false;
+                HostName:='integer-srv.alan.dp.ua';
+                //HostName:='localhost';
+                User:='project';
+                Password:='sqoII5szOnrcZxJVF1BL';
+                Database:='project';
+                Port:=5432;
+                Connected:=true;
+                //
+                isGlobalLoad:=zc_rvYes;
+                if Connected
+                then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+                else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+                Connected:=false;
+             end;
+         end
+         else
          if ParamStr(1)='alan_dp_ua_22' then
          with toZConnection do begin
             Connected:=false;
@@ -2768,12 +2849,93 @@ begin
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.PrintForm_OrderExternal_PageCount_calc (MovementId:Integer):Integer;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+     //
+     with UtilPrintForm.actPrint_OrderExternal_PageCount do
+     begin
+       Params.ParamByName('frxPrintForm_calc').Value:= TRUE;
+       CopiesCount:=1;
+       WithOutPreview:= FALSE;
+       Execute;
+       //
+       Result:= Params.ParamByName('frxPrintForm_count').Value;
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.PrintForm_Pack_PageCount_calc (MovementId:Integer):Integer;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+     //
+     with UtilPrintForm.actPrint_Pack_PageCount do
+     begin
+       Params.ParamByName('frxPrintForm_calc').Value:= TRUE;
+       CopiesCount:=1;
+       WithOutPreview:= FALSE;
+       Execute;
+       //
+       Result:= Params.ParamByName('frxPrintForm_count').Value;
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.PrintForm_Spec_PageCount_calc (MovementId:Integer):Integer;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+     //
+     with UtilPrintForm.actPrint_Spec_PageCount do
+     begin
+       Params.ParamByName('frxPrintForm_calc').Value:= TRUE;
+       CopiesCount:=1;
+       WithOutPreview:= FALSE;
+       Execute;
+       //
+       Result:= Params.ParamByName('frxPrintForm_count').Value;
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.PrintForm_Account_PageCount_calc (MovementId:Integer):Integer;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+     //
+     with UtilPrintForm.actPrint_Account_PageCount do
+     begin
+       Params.ParamByName('frxPrintForm_calc').Value:= TRUE;
+       CopiesCount:=1;
+       WithOutPreview:= FALSE;
+       //!!!
+       UtilPrintForm.mactPrint_Account_PageCount.Execute;
+       //
+       Result:= Params.ParamByName('frxPrintForm_count').Value;
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.bbPrintForm_calcClick(Sender: TObject);
 var i,SaveRecord:Integer;
     frxPrintForm_count_calc:Integer;
 begin
      cbPrintForm_calc.Checked:= TRUE;
+
+     // замена на SRV-R
+     UtilPrintForm.actPrint_Sale_PageCount.StoredProc.StoredProcName:= 'gpSelect_Movement_Sale_Print_srv_r';
+     UtilPrintForm.actPrint_OrderExternal_PageCount.StoredProc.StoredProcName:= 'gpSelect_Movement_OrderExternal_Print_srv_r';
 
      if (not cbPrintForm_calc.Checked)or(not cbPrintForm_calc.Enabled) then exit;
      //
@@ -2783,92 +2945,127 @@ begin
      fromZConnection.Connected:=false;
      with fromZQuery,Sql do begin
         fOpenFromZQuery ('select * from gpReport_PrintForms_byMovement('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+', 0, '+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)+')'
-                       +' order by OperDate,MovementId_sale,Id,PrintKindId');
+                       +' order by OperDate,Id,MovementId_sale,PrintKindId');
         //
         myLogMemo_add('start Расчет PrintForm' + '('+IntToStr(RecordCount)+') за период ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
-        cbPromo.Caption:='('+IntToStr(RecordCount)+') Расчет PrintForm';
+        cbPrintForm_calc.Caption:='('+IntToStr(RecordCount)+') Расчет PrintForm';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
         //
+        Gauge.Visible:=true;
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc_two.StoredProcName:='gpUpdate_Movement_Sale_PrintForm_TotalPage';
+        {toStoredProc_two.StoredProcName:='gpUpdate_Movement_Sale_PrintForm_TotalPage';
         toStoredProc_two.OutputType := otResult;
         toStoredProc_two.Params.Clear;
         toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc_two.Params.AddParam ('inMovementId_sale',ftInteger,ptInput, 0);
         toStoredProc_two.Params.AddParam ('inMovementDescId',ftInteger,ptInput, 0);
         toStoredProc_two.Params.AddParam ('inPrintKindId',ftInteger,ptInput, 0);
-        toStoredProc_two.Params.AddParam ('inTotalPageCount',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inTotalPageCount',ftInteger,ptInput, 0);}
         //
         while not EOF do
         begin
+             // старт
+             frxPrintForm_count_calc:= 0;
              //!!!
              if fStop then begin exit;end;
              //
              //toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              //if not myExecToStoredProc_two then ;//exit;
 
-             if ((FieldByName('MovementDescId').AsString = zc_Movement_Sale)
+             if ((FieldByName('MovementDescId').AsString  = zc_Movement_Sale)
               or ((FieldByName('MovementDescId').AsString = zc_Movement_Loss)
+             // !!!Не все списание!!!
              //and(FieldByName('isCeh').AsBoolean=false)and(FieldByName('isGoodsComplete').AsBoolean=true)
                 ))
-              and(FieldByName('PrintKindId').AsString = zc_Enum_PrintKind_Movement)
+             and(FieldByName('PrintKindId').AsString    = zc_Enum_PrintKind_Movement)
              then
-                 // 1-1
+                 // 1-1 - Sale or Loss - Movement
                  frxPrintForm_count_calc:= PrintForm_Sale_PageCount_calc (FieldByName('Id').AsInteger)
+
+             else
+             if (FieldByName('MovementDescId').AsString = zc_Movement_SendOnPrice)
+             and(FieldByName('PrintKindId').AsString    = zc_Enum_PrintKind_Movement)
+             then
+                 // 1-2 - SendOnPrice + Movement
+                 frxPrintForm_count_calc:= PrintForm_SendOnPrice_PageCount_calc (FieldByName('Id').AsInteger)
+
+             else
+             if (FieldByName('MovementDescId').AsString = zc_Movement_Send)
+             and(FieldByName('PrintKindId').AsString    = zc_Enum_PrintKind_Movement)
+             then
+                 // 1-3 - Send + Movement
+                 frxPrintForm_count_calc:= PrintForm_Send_PageCount_calc (FieldByName('Id').AsInteger)
+
+             else
+             if (FieldByName('MovementDescId').AsString = zc_Movement_Loss)
+             and(FieldByName('PrintKindId').AsString    = zc_Enum_PrintKind_Movement)
+             then
+                 // 1-4 - Loss + Movement
+                 frxPrintForm_count_calc:= PrintForm_Loss_PageCount_calc (FieldByName('Id').AsInteger)
+
+             else
+             if (FieldByName('MovementDescId').AsString = zc_Movement_OrderExternal)
+             and(FieldByName('PrintKindId').AsString    = zc_Enum_PrintKind_Movement)
+             then
+                 // 1-5 - OrderExternal + Movement
+                 frxPrintForm_count_calc:= PrintForm_OrderExternal_PageCount_calc (FieldByName('Id').AsInteger)
+
 
              else
              if (FieldByName('MovementDescId').AsString = zc_Movement_QualityDoc)
              then
-                 // 2
+                 // 2 - QualityDoc
                  frxPrintForm_count_calc:= PrintForm_Quality_PageCount_calc (FieldByName('MovementId_sale').AsInteger)
 
              else
              if (FieldByName('MovementDescId').AsString = zc_Movement_TransportGoods)
              then
-                 // 3
+                 // 3 - TransportGoods
                  frxPrintForm_count_calc:= PrintForm_TransportGoods_PageCount_calc (FieldByName('MovementId_sale').AsInteger)
+
 
              else
              if (FieldByName('PrintKindId').AsString = zc_Enum_PrintKind_PackGross)
             and (FieldByName('MovementDescId').AsString <> zc_Movement_Send)
              then
-                 // 5-1
+                 // 5-1 - Sale + SendOnPrice + ... - PackGross
                  frxPrintForm_count_calc:= PrintForm_PackGross_PageCount_calc (FieldByName('Id').AsInteger)
 
              else
              if (FieldByName('PrintKindId').AsString = zc_Enum_PrintKind_PackGross)
             and (FieldByName('MovementDescId').AsString = zc_Movement_Send)
              then
-                 // 5-2
+                 // 5-2 - Send - PackGross
                  frxPrintForm_count_calc:= PrintForm_PackGross_Send_PageCount_calc (FieldByName('Id').AsInteger)
 
-             else
-             if (FieldByName('MovementDescId').AsString = zc_Movement_SendOnPrice)
-             then
-                 // 1-2
-                 frxPrintForm_count_calc:= PrintForm_SendOnPrice_PageCount_calc (FieldByName('Id').AsInteger)
 
              else
-             if (FieldByName('MovementDescId').AsString = zc_Movement_Send)
+             if (FieldByName('PrintKindId').AsString = zc_Enum_PrintKind_Pack)
              then
-                 // 1-3
-                 frxPrintForm_count_calc:= PrintForm_Send_PageCount_calc (FieldByName('Id').AsInteger)
+                 // 6 - Pack
+                 frxPrintForm_count_calc:= PrintForm_Pack_PageCount_calc (FieldByName('Id').AsInteger)
 
              else
-             if (FieldByName('MovementDescId').AsString = zc_Movement_Loss)
+             if (FieldByName('PrintKindId').AsString = zc_Enum_PrintKind_Spec)
              then
-                 // 1-4
-                 frxPrintForm_count_calc:= PrintForm_Loss_PageCount_calc (FieldByName('Id').AsInteger)
+                 // 7 - Spec
+                 frxPrintForm_count_calc:= PrintForm_Spec_PageCount_calc (FieldByName('Id').AsInteger)
+
+             else
+             if (FieldByName('PrintKindId').AsString = zc_Enum_PrintKind_Account)
+             then
+                 // 8 - Account
+                 frxPrintForm_count_calc:= PrintForm_Account_PageCount_calc (FieldByName('Id').AsInteger)
              ;
              //
              //
              myLogMemo_add('-----');
              myLogMemo_add(IntToStr(FieldByName('Id').AsInteger));
-             myLogMemo_add(FieldByName('MovementDescName').AsString);
+             myLogMemo_add(FieldByName('PrintKindName').AsString + ' - ' + FieldByName('MovementDescName').AsString);
              myLogMemo_add(FieldByName('InvNumber').AsString);
              myLogMemo_add(DateToStr(FieldByName('OperDate').AsDateTime));
              myLogMemo_add(IntToStr(frxPrintForm_count_calc));
@@ -2878,12 +3075,22 @@ begin
              Application.ProcessMessages;
              //
              //
-             toStoredProc_two.Params.ParamByName('inMovementId').Value     :=FieldByName('Id').AsInteger;
+             {toStoredProc_two.Params.ParamByName('inMovementId').Value     :=FieldByName('Id').AsInteger;
              toStoredProc_two.Params.ParamByName('inMovementId_sale').Value:=FieldByName('MovementId_sale').AsInteger;
              toStoredProc_two.Params.ParamByName('inMovementDescId').Value :=FieldByName('MovementDescId').AsInteger;
              toStoredProc_two.Params.ParamByName('inPrintKindId').Value    :=FieldByName('PrintKindId').AsInteger;
              toStoredProc_two.Params.ParamByName('inTotalPageCount').Value :=frxPrintForm_count_calc;
-             if myExecToStoredProc_two then ;
+             if myExecToStoredProc_two then ;}
+
+             //
+              fExecSqToQuery_master ('select * from gpUpdate_Movement_Sale_PrintForm_TotalPage'
+                                             + '(' + FieldByName('Id').AsString
+                                             + ',' + FieldByName('MovementId_sale').AsString
+                                             + ',' + FieldByName('MovementDescId').AsString
+                                             + ',' + FieldByName('PrintKindId').AsString
+                                             + ',' + IntToStr(frxPrintForm_count_calc)
+                                             + ',' + FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                             + ')');
              //
              //
              Next;
@@ -2892,6 +3099,9 @@ begin
              Application.ProcessMessages;
         end;
      end;
+     //
+     Gauge.Visible:=false;
+     Gauge.Progress:=0;
      //
      myLogMemo_add('end Расчет PrintForm');
      myDisabledCB(cbPrintForm_calc);

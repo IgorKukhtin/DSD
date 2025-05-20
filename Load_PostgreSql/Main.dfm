@@ -38,6 +38,7 @@ object MainForm: TMainForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 666
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -2674,7 +2675,7 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 88
+    Left = 56
     Top = 496
   end
   object toStoredProc: TdsdStoredProc
@@ -3220,5 +3221,26 @@ object MainForm: TMainForm
       'select * from Object order by 1 desc')
     Left = 152
     Top = 552
+  end
+  object toZConnection_master: TZConnection
+    ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
+    Catalog = 'public'
+    DesignConnection = True
+    Port = 0
+    Password = 'sqoII5szOnrcZxJVF1BL'
+    Protocol = 'postgresql-9'
+    Left = 128
+    Top = 312
+  end
+  object toSqlQuery_master: TZQuery
+    Connection = toZConnection_master
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 152
+    Top = 272
   end
 end
