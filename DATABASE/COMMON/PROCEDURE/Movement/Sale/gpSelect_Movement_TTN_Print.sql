@@ -71,6 +71,7 @@ BEGIN
 
      IF TRIM (COALESCE (vbMemberName1_check, '')) = ''
          AND 1=1
+         AND vbUserId <> zc_Enum_Process_Auto_PrimeCost()
      THEN
          RAISE EXCEPTION 'Ошибка.Нет данных для <отримав водій/експедитор>.';
      END IF;
@@ -177,6 +178,7 @@ BEGIN
 
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+       AND vbUserId <> zc_Enum_Process_Auto_PrimeCost()
     THEN
         IF vbStatusId = zc_Enum_Status_Erased()
         THEN

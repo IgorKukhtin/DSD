@@ -187,6 +187,11 @@ BEGIN
      END IF;
 
 
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (ioId);
+
+
+     -- сохранили протокол
      IF vbIsInsert = TRUE
      THEN
          -- сохранили свойство <Дата создания> - при загрузке с моб устр., здесь дата загрузки
@@ -194,11 +199,6 @@ BEGIN
          -- сохранили связь с <Пользователь>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
      END IF;
-
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (ioId);
-
 
      -- IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      -- THEN
