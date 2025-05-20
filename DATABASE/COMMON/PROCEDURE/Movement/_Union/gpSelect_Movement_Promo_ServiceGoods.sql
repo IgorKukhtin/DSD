@@ -115,7 +115,10 @@ BEGIN
                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
                                 AND Movement.DescId = zc_Movement_PromoAdvertising()
                               )
+
+
          --получаем договора из  PromoPartner
+          --получаем договора из  PromoPartner
          , tmpPromoPartner AS (WITH
                                tmpMov AS (SELECT Movement.*
                                           FROM Movement
@@ -124,13 +127,31 @@ BEGIN
                                             AND Movement.DescId = zc_Movement_PromoPartner()
                                           )
 
-                             , tmpMLO AS (SELECT MovementLinkObject.* 
+                             , tmpMLO_C AS (SELECT MovementLinkObject.* 
                                           FROM MovementLinkObject
                                           WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov) 
                                             AND MovementLinkObject.DescId IN (zc_MovementLinkObject_Contract()
-                                                                            , zc_MovementLinkObject_Partner()
                                                                             )
                                           )
+                             , tmpMLO_P AS (SELECT MovementLinkObject.* 
+                                          FROM MovementLinkObject
+                                          WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov) 
+                                            AND MovementLinkObject.DescId IN (zc_MovementLinkObject_Partner()
+                                                                            )
+                                          )
+        
+                             , tmp AS (SELECT Movement.ParentId
+                                            , MovementLinkObject_Contract.ObjectId              AS ContractId
+                                            , MovementLinkObject_Partner.ObjectId  AS PartnerId 
+                                          FROM tmpMov AS Movement 
+                                              LEFT JOIN tmpMLO_C AS MovementLinkObject_Contract
+                                                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                              LEFT JOIN tmpMLO_P AS MovementLinkObject_Partner
+                                                                           ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                                                          AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner() -- and 1=0 
+                                        )
+ 
                                SELECT 
                                    Movement.ParentId
                                  , Object_Contract.Id              AS ContractId
@@ -139,38 +160,32 @@ BEGIN
                                  , Object_ContractTag.ValueData    AS ContractTagName
                                  , STRING_AGG (DISTINCT Object_Juridical.ValueData, ';')  AS JuridicalName 
                                  , STRING_AGG (DISTINCT Object_Retail.ValueData, ';')     AS RetailName
-                               FROM tmpMov AS Movement 
-                                   LEFT JOIN tmpMLO AS MovementLinkObject_Contract
-                                                                ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                   LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+                               FROM tmp AS Movement
+                                   LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = Movement.ContractId 
+                                   LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Movement.PartnerId  
 
-                                   LEFT JOIN tmpMLO AS MovementLinkObject_Partner
-                                                                ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                                               AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-                                   LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
-
-                                   LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                   LEFT  JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                                                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                                             AND Object_Partner.DescId = zc_Object_Partner()
-                                   LEFT OUTER JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId)
+                                                             AND Object_Partner.DescId = zc_Object_Partner()  
+                                   LEFT  JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Movement.PartnerId)
 
-                                   LEFT OUTER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                              ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_Partner.Id)
-                                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                   LEFT OUTER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+                                   LEFT  JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                              ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Movement.PartnerId)
+                                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()  
+                                   LEFT  JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
                                    LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
                                                         ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
-                                                       AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
-                                   LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId                           
+                                                       AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()  
+                                   LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId                  
                                GROUP BY Movement.ParentId
                                       , Object_Contract.Id
                                       , Object_Contract.ObjectCode
                                       , Object_Contract.ValueData
                                       , Object_ContractTag.ValueData
                                ) 
+
 
          , tmpInfoMoney AS (WITH
                                tmpMov AS (SELECT Movement.*
@@ -225,7 +240,7 @@ BEGIN
                            GROUP BY MovementItem.MovementId
                              )
  
- 
+
        , tmpMovementDate AS (SELECT MovementDate.* 
                             FROM MovementDate
                             WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement) 
@@ -301,6 +316,8 @@ BEGIN
                               WHERE tmpMovement.DescId = zc_Movement_Promo()
                                 AND (COALESCE (tmpMI_promo.SummMarket,0) <> 0 OR tmpInfoMoney.InfoMoneyId_Market > 0)
                              )
+
+
 
 
         -- Результат
@@ -477,8 +494,7 @@ BEGIN
              LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpPomo_params.InfoMoneyId
              LEFT JOIN tmpPromoPartner ON tmpPromoPartner.ParentId = Movement.Id
                                       AND Movement.DescId = zc_Movement_Promo()
-            
-        ;
+                    ;
 
 END;
 $BODY$
