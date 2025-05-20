@@ -59,6 +59,10 @@ BEGIN
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_5(), inId, inisPartionCell_Close_5);
 
+     if vbUserId = 9457 
+     then
+         RAISE EXCEPTION 'Test. Ok';
+     end if; 
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);

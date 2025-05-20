@@ -525,7 +525,10 @@ BEGIN
      END IF;
 
 
-
+     if vbUserId = 9457 
+     then
+         RAISE EXCEPTION 'Test. Ok';
+     end if; 
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
