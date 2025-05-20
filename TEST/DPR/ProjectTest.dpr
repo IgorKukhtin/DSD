@@ -1581,7 +1581,9 @@ uses
   invoice_delnote_base in '..\..\SOURCE\EDI\invoice_delnote_base.pas',
   JuridicalEdit in '..\..\Forms\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   Report_PrintForms_byMovementDialog in '..\..\Forms\Report\Report_PrintForms_byMovementDialog.pas' {Report_PrintForms_byMovementDialogForm: TParentForm},
-  Report_PrintForms_byMovement in '..\..\Forms\Report\Report_PrintForms_byMovement.pas' {Report_PrintForms_byMovementForm: TParentForm};
+  Report_PrintForms_byMovement in '..\..\Forms\Report\Report_PrintForms_byMovement.pas' {Report_PrintForms_byMovementForm: TParentForm},
+  Report_Send_PartionCell_many in '..\..\Forms\Report\Report_Send_PartionCell_many.pas' {Report_Send_PartionCell_manyForm: TParentForm},
+  PartionCellCheckisManyEdit in '..\..\Forms\Guides\PartionCellCheckisManyEdit.pas' {PartionCellCheckisManyEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

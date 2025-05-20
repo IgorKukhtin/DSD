@@ -1,7 +1,7 @@
-object PartionCellCheckEditForm: TPartionCellCheckEditForm
+object PartionCellCheckisManyEditForm: TPartionCellCheckisManyEditForm
   Left = 0
   Top = 0
-  Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1074#1099#1073#1086#1088'  <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
+  Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1074#1099#1073#1086#1088'  <'#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081'>'
   ClientHeight = 168
   ClientWidth = 427
   Color = clBtnFace
@@ -20,7 +20,7 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
     Left = 111
     Top = 30
     Properties.ReadOnly = True
-    TabOrder = 1
+    TabOrder = 0
     Width = 258
   end
   object cxLabel1: TcxLabel
@@ -29,13 +29,13 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 91
+    Left = 88
     Top = 120
     Width = 75
     Height = 25
     Action = actGet_check
     Default = True
-    TabOrder = 3
+    TabOrder = 2
   end
   object cxButton2: TcxButton
     Left = 235
@@ -45,35 +45,48 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 4
+    TabOrder = 3
   end
   object cxLabel2: TcxLabel
-    Left = 10
+    Left = 8
     Top = 8
     Caption = #1050#1086#1076
   end
   object edCode: TcxCurrencyEdit
-    Left = 10
+    Left = 11
     Top = 30
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 94
   end
-  object cePSW: TcxTextEdit
+  object cbisMany: TcxCheckBox
     Left = 111
-    Top = 63
-    Properties.EchoMode = eemPassword
-    Properties.PasswordChar = '*'
-    TabOrder = 0
-    Width = 258
+    Top = 74
+    Hint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1076#1072'/'#1085#1077#1090
+    Caption = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1076#1072'/'#1085#1077#1090
+    Properties.ReadOnly = False
+    TabOrder = 6
+    Width = 159
   end
-  object cxLabel9: TcxLabel
-    Left = 63
-    Top = 64
-    Caption = #1055#1072#1088#1086#1083#1100
+  object edNum: TcxCurrencyEdit
+    Left = 11
+    Top = 74
+    EditValue = 0.000000000000000000
+    ParentShowHint = False
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
+    ShowHint = False
+    TabOrder = 7
+    Width = 94
+  end
+  object cxLabel3: TcxLabel
+    Left = 11
+    Top = 57
+    Caption = #8470' '#1103#1095#1077#1081#1082#1080
   end
   object ActionList: TActionList
     Left = 192
@@ -96,10 +109,10 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_check
+      StoredProc = spUpdate_isMany_byReport
       StoredProcList = <
         item
-          StoredProc = spGet_check
+          StoredProc = spUpdate_isMany_byReport
         end>
       Caption = 'Ok'
     end
@@ -108,33 +121,39 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       PostDataSetBeforeExecute = False
     end
   end
-  object spGet_check: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_PartionCell_check'
+  object spUpdate_isMany_byReport: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Send_isMany_byReport'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioIsLock_record'
+        Name = 'inMovementItemId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'ioIsLock_record'
-        DataType = ftBoolean
-        ParamType = ptInputOutput
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPSW'
+        Name = 'inPartionCellNum'
+        Value = Null
+        Component = edNum
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMany'
         Value = ''
-        Component = cePSW
-        DataType = ftString
+        Component = cbisMany
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -151,9 +170,30 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioIsLock_record'
+        Name = 'isMany'
         Value = Null
+        Component = cbisMany
         DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionCellNum_last'
+        Value = Null
+        Component = edNum
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementItemId'
+        Value = Null
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 336
@@ -188,7 +228,6 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
       item
         Name = 'PSW'
         Value = Null
-        Component = cePSW
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -201,8 +240,8 @@ object PartionCellCheckEditForm: TPartionCellCheckEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 80
+    Left = 128
+    Top = 96
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

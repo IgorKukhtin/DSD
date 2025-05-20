@@ -1557,6 +1557,8 @@ type
     actReport_PrintForms_byMovement: TdsdOpenForm;
     miPrintForms_byMovement: TMenuItem;
     N267: TMenuItem;
+    actReport_Send_PartionCell_many: TdsdOpenForm;
+    miReport_Send_PartionCell_many: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

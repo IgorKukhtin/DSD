@@ -123,6 +123,30 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , isPartionCell_Many_20 Boolean
              , isPartionCell_Many_21 Boolean
              , isPartionCell_Many_22 Boolean
+
+             --фон дл€ €чейки если несколько партий
+             , ColorFon_Many1     Integer
+             , ColorFon_Many2     Integer
+             , ColorFon_Many3     Integer
+             , ColorFon_Many4     Integer
+             , ColorFon_Many5     Integer
+             , ColorFon_Many6     Integer
+             , ColorFon_Many7     Integer
+             , ColorFon_Many8     Integer
+             , ColorFon_Many9     Integer
+             , ColorFon_Many10    Integer
+             , ColorFon_Many11    Integer
+             , ColorFon_Many12    Integer
+             , ColorFon_Many13    Integer
+             , ColorFon_Many14    Integer
+             , ColorFon_Many15    Integer
+             , ColorFon_Many16    Integer
+             , ColorFon_Many17    Integer
+             , ColorFon_Many18    Integer
+             , ColorFon_Many19    Integer
+             , ColorFon_Many20    Integer
+             , ColorFon_Many21    Integer
+             , ColorFon_Many22    Integer
              
              , ColorFon_1  Integer
              , ColorFon_2  Integer
@@ -1611,6 +1635,30 @@ BEGIN
         , tmpResult.isPartionCell_Many_21
         , tmpResult.isPartionCell_Many_22
 
+        --фон дл€ €чейки если несколько партий
+        , CASE WHEN tmpResult.isPartionCell_Many_1 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many1
+        , CASE WHEN tmpResult.isPartionCell_Many_2 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many2
+        , CASE WHEN tmpResult.isPartionCell_Many_3 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many3
+        , CASE WHEN tmpResult.isPartionCell_Many_4 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many4
+        , CASE WHEN tmpResult.isPartionCell_Many_5 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many5
+        , CASE WHEN tmpResult.isPartionCell_Many_6 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many6
+        , CASE WHEN tmpResult.isPartionCell_Many_7 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many7
+        , CASE WHEN tmpResult.isPartionCell_Many_8 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many8
+        , CASE WHEN tmpResult.isPartionCell_Many_9 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many9
+        , CASE WHEN tmpResult.isPartionCell_Many_10 = FALSE THEN zc_Color_White() ELSE zc_Color_Red() END :: Integer  AS ColorFon_Many10
+        , CASE WHEN tmpResult.isPartionCell_Many_11 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many11
+        , CASE WHEN tmpResult.isPartionCell_Many_12 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many12
+        , CASE WHEN tmpResult.isPartionCell_Many_13 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many13
+        , CASE WHEN tmpResult.isPartionCell_Many_14 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many14
+        , CASE WHEN tmpResult.isPartionCell_Many_15 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many15
+        , CASE WHEN tmpResult.isPartionCell_Many_16 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many16
+        , CASE WHEN tmpResult.isPartionCell_Many_17 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many17
+        , CASE WHEN tmpResult.isPartionCell_Many_18 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many18
+        , CASE WHEN tmpResult.isPartionCell_Many_19 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many19
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many20
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many21
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many22
+
         , tmpResult.ColorFon_1
         , tmpResult.ColorFon_2
         , tmpResult.ColorFon_3
@@ -2829,6 +2877,7 @@ BEGIN
                     , CASE WHEN COALESCE (tmpData_PartionCell.Color_21, 0) = 0 THEN zc_Color_Black() ELSE tmpData_PartionCell.Color_21 END :: Integer  AS Color_21
                     , CASE WHEN COALESCE (tmpData_PartionCell.Color_22, 0) = 0 THEN zc_Color_Black() ELSE tmpData_PartionCell.Color_22 END :: Integer  AS Color_22
 
+
                       -- есть хоть одна закрыта€ €чейка
                     , CASE WHEN tmpData_MI.isPartionCell_max > 0 AND tmpData_PartionCell.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
                       -- —формированы данные по €чейкам (да/нет)
@@ -3083,10 +3132,34 @@ BEGIN
         , tmpResult.isPartionCell_Many_21
         , tmpResult.isPartionCell_Many_22
 
-        , tmpResult.ColorFon_1
-        , tmpResult.ColorFon_2
-        , tmpResult.ColorFon_3
-        , tmpResult.ColorFon_4
+        --фон дл€ €чейки если несколько партий
+        , CASE WHEN tmpResult.isPartionCell_Many_1 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many1
+        , CASE WHEN tmpResult.isPartionCell_Many_2 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many2
+        , CASE WHEN tmpResult.isPartionCell_Many_3 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many3
+        , CASE WHEN tmpResult.isPartionCell_Many_4 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many4
+        , CASE WHEN tmpResult.isPartionCell_Many_5 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many5
+        , CASE WHEN tmpResult.isPartionCell_Many_6 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many6
+        , CASE WHEN tmpResult.isPartionCell_Many_7 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many7
+        , CASE WHEN tmpResult.isPartionCell_Many_8 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many8
+        , CASE WHEN tmpResult.isPartionCell_Many_9 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many9
+        , CASE WHEN tmpResult.isPartionCell_Many_10 = FALSE THEN zc_Color_White() ELSE zc_Color_Red() END :: Integer  AS ColorFon_Many10
+        , CASE WHEN tmpResult.isPartionCell_Many_11 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many11
+        , CASE WHEN tmpResult.isPartionCell_Many_12 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many12
+        , CASE WHEN tmpResult.isPartionCell_Many_13 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many13
+        , CASE WHEN tmpResult.isPartionCell_Many_14 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many14
+        , CASE WHEN tmpResult.isPartionCell_Many_15 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many15
+        , CASE WHEN tmpResult.isPartionCell_Many_16 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many16
+        , CASE WHEN tmpResult.isPartionCell_Many_17 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many17
+        , CASE WHEN tmpResult.isPartionCell_Many_18 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many18
+        , CASE WHEN tmpResult.isPartionCell_Many_19 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many19
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many20
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many21
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many22
+                                                                                                                                 
+        , tmpResult.ColorFon_1                                                                                                   
+        , tmpResult.ColorFon_2                                                                                                   
+        , tmpResult.ColorFon_3                                                                                                
+        , tmpResult.ColorFon_4                                                                                               
         , tmpResult.ColorFon_5
         , tmpResult.ColorFon_6
         , tmpResult.ColorFon_7

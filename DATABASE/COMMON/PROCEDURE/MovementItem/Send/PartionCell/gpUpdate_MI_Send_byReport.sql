@@ -46,6 +46,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
     IN inDescId_milo_num       Integer, --є пп
     IN inIsRePack              Boolean, --є пп
    OUT outPartionCellId_last   Integer,
+   OUT outPartionCellNum_last  Integer, --номер последней €чейки
 
  INOUT ioPartionCellName_1     TVarChar, --
  INOUT ioPartionCellName_2     TVarChar,
@@ -318,7 +319,8 @@ BEGIN
 
 
      -- обнул€ем последнюю измененную €чейку
-     outPartionCellId_last := NULL ::Integer;
+     outPartionCellId_last := NULL ::Integer; 
+     outPartionCellNum_last:= NULL ::Integer;
 
 /*
 if zfConvert_StringToNumber (ioPartionCellName_1) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 1)) > 0   then ioPartionCellName_1     := right (ioPartionCellName_1,  LENGTH(ioPartionCellName_1) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 2)) > 0 THEN 2 ELSE 1 END); end if;
@@ -2358,6 +2360,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_1 ::Integer;
+             outPartionCellNum_last := 1 ::Integer;
 
          ELSE
              -- прив€зали €чейку
@@ -2369,6 +2372,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_1 ::Integer;
+             outPartionCellNum_last := 1 ::Integer;
              vbIsClose_1:= FALSE;
 
          END IF;
@@ -2423,6 +2427,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_2 ::Integer;
+             outPartionCellNum_last := 2 ::Integer;
 
          ELSE
              -- прив€зали €чейку
@@ -2434,6 +2439,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_2 ::Integer;
+             outPartionCellNum_last := 2 ::Integer;
              vbIsClose_2:= FALSE;
 
          END IF;
@@ -2488,6 +2494,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_3 ::Integer;
+             outPartionCellNum_last := 3 ::Integer;
 
          ELSE
              -- прив€зали €чейку
@@ -2499,6 +2506,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_3 ::Integer;
+             outPartionCellNum_last := 3 ::Integer;
              vbIsClose_3:= FALSE;
 
          END IF;
@@ -2553,6 +2561,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_4 ::Integer;
+             outPartionCellNum_last := 4 ::Integer;
 
          ELSE
              -- прив€зали €чейку
@@ -2564,6 +2573,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_4 ::Integer;
+             outPartionCellNum_last := 4 ::Integer;
              vbIsClose_4:= FALSE;
 
          END IF;
@@ -2618,6 +2628,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_5 ::Integer;
+             outPartionCellNum_last := 5 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -2629,6 +2640,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_5 ::Integer;
+             outPartionCellNum_last := 5 ::Integer;
              vbIsClose_5:= FALSE;
 
          END IF;
@@ -2683,6 +2695,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_6 ::Integer;
+             outPartionCellNum_last := 6 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -2694,6 +2707,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_6 ::Integer;
+             outPartionCellNum_last := 6 ::Integer;
              vbIsClose_6:= FALSE;
 
          END IF;
@@ -2748,6 +2762,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_7 ::Integer;
+             outPartionCellNum_last := 7 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -2759,6 +2774,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_7 ::Integer;
+             outPartionCellNum_last := 7 ::Integer;
              vbIsClose_7:= FALSE;
 
          END IF;
@@ -2813,6 +2829,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_8 ::Integer;
+             outPartionCellNum_last := 8 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -2824,6 +2841,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              --записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_8 ::Integer;
+             outPartionCellNum_last := 8 ::Integer;
              vbIsClose_8:= FALSE;
 
          END IF;
@@ -2878,6 +2896,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_9 ::Integer;
+             outPartionCellNum_last := 9 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -2889,6 +2908,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_9 ::Integer;
+             outPartionCellNum_last := 9 ::Integer;
              vbIsClose_9:= FALSE;
 
          END IF;
@@ -2943,6 +2963,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_10 ::Integer;
+             outPartionCellNum_last := 10 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -2954,6 +2975,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_10 ::Integer;
+             outPartionCellNum_last := 10 ::Integer;
              vbIsClose_10:= FALSE;
 
          END IF;
@@ -3008,6 +3030,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              --записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_11 ::Integer;
+             outPartionCellNum_last := 11 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3019,6 +3042,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              --записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_11 ::Integer;
+             outPartionCellNum_last := 11 ::Integer;
              vbIsClose_11:= FALSE;
 
          END IF;
@@ -3073,6 +3097,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_12 ::Integer;
+             outPartionCellNum_last := 12 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3084,6 +3109,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_12 ::Integer;
+             outPartionCellNum_last := 12 ::Integer;
              vbIsClose_12:= FALSE;
 
          END IF;
@@ -3138,6 +3164,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_13 ::Integer;
+             outPartionCellNum_last := 13 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3149,6 +3176,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_13 ::Integer;
+             outPartionCellNum_last := 13 ::Integer;
              vbIsClose_13:= FALSE;
 
          END IF;
@@ -3203,6 +3231,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_14 ::Integer;
+             outPartionCellNum_last := 14 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3214,6 +3243,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_14 ::Integer;
+             outPartionCellNum_last := 14 ::Integer;
              vbIsClose_14:= FALSE;
 
          END IF;
@@ -3268,6 +3298,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_15 ::Integer;
+             outPartionCellNum_last := 15 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3279,6 +3310,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_15 ::Integer;
+             outPartionCellNum_last := 15 ::Integer;
              vbIsClose_15:= FALSE;
 
          END IF;
@@ -3333,6 +3365,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_16 ::Integer;
+             outPartionCellNum_last := 16 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3344,6 +3377,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_16 ::Integer;
+             outPartionCellNum_last := 16 ::Integer;
              vbIsClose_16:= FALSE;
 
          END IF;
@@ -3398,6 +3432,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_17 ::Integer;
+             outPartionCellNum_last := 17 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3409,6 +3444,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_17 ::Integer;
+             outPartionCellNum_last := 17 ::Integer;
              vbIsClose_17:= FALSE;
 
          END IF;
@@ -3462,7 +3498,8 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              END IF;
 
              -- записываем последнюю измененную €чейку
-             outPartionCellId_last := vbPartionCellId_18 ::Integer;
+             outPartionCellId_last := vbPartionCellId_18 ::Integer; 
+             outPartionCellNum_last := 18 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3474,6 +3511,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_18 ::Integer;
+             outPartionCellNum_last := 18 ::Integer;
              vbIsClose_18:= FALSE;
 
          END IF;
@@ -3528,6 +3566,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_19 ::Integer;
+             outPartionCellNum_last := 19 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3539,6 +3578,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_19 ::Integer;
+             outPartionCellNum_last := 19 ::Integer;
              vbIsClose_19:= FALSE;
 
          END IF;
@@ -3593,6 +3633,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_20 ::Integer;
+             outPartionCellNum_last := 20 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3604,6 +3645,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_20 ::Integer;
+             outPartionCellNum_last := 20 ::Integer;
              vbIsClose_20:= FALSE;
 
          END IF;
@@ -3657,7 +3699,8 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              END IF;
 
              -- записываем последнюю измененную €чейку
-             outPartionCellId_last := vbPartionCellId_21 ::Integer;
+             outPartionCellId_last := vbPartionCellId_21 ::Integer; 
+             outPartionCellNum_last := 21 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3669,6 +3712,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_21 ::Integer;
+             outPartionCellNum_last := 21 ::Integer;
              vbIsClose_21:= FALSE;
 
          END IF;
@@ -3723,6 +3767,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_22 ::Integer;
+             outPartionCellNum_last := 22 ::Integer;
 
          ELSE
              -- 3.1.прив€зали €чейку
@@ -3734,6 +3779,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_22 ::Integer;
+             outPartionCellNum_last := 22 ::Integer;
              vbIsClose_22:= FALSE;
 
          END IF;
@@ -3819,28 +3865,28 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      END IF;
 
      --outPartionCellId_last := COALESCE (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, 0);
-     IF     COALESCE(ioPartionCellId_1,0) <> COALESCE (vbPartionCellId_1, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_1, 0);
-     ELSEIF COALESCE(ioPartionCellId_2,0) <> COALESCE (vbPartionCellId_2, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_2, 0);
-     ELSEIF COALESCE(ioPartionCellId_3,0) <> COALESCE (vbPartionCellId_3, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_3, 0);
-     ELSEIF COALESCE(ioPartionCellId_4,0) <> COALESCE (vbPartionCellId_4, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_4, 0);
-     ELSEIF COALESCE(ioPartionCellId_5,0) <> COALESCE (vbPartionCellId_5, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_5, 0);
-     ELSEIF COALESCE(ioPartionCellId_6,0) <> COALESCE (vbPartionCellId_6, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_6, 0);
-     ELSEIF COALESCE(ioPartionCellId_7,0) <> COALESCE (vbPartionCellId_7, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_7, 0);
-     ELSEIF COALESCE(ioPartionCellId_8,0) <> COALESCE (vbPartionCellId_8, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_8, 0);
-     ELSEIF COALESCE(ioPartionCellId_9,0) <> COALESCE (vbPartionCellId_9, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_9, 0);
-     ELSEIF COALESCE(ioPartionCellId_10,0)<> COALESCE (vbPartionCellId_10, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_10, 0);
-     ELSEIF COALESCE(ioPartionCellId_11,0)<> COALESCE (vbPartionCellId_11, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_11, 0);
-     ELSEIF COALESCE(ioPartionCellId_12,0)<> COALESCE (vbPartionCellId_12, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_12, 0);
-     ELSEIF COALESCE(ioPartionCellId_13,0)<> COALESCE (vbPartionCellId_13, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_13, 0);
-     ELSEIF COALESCE(ioPartionCellId_14,0)<> COALESCE (vbPartionCellId_14, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_14, 0);
-     ELSEIF COALESCE(ioPartionCellId_15,0)<> COALESCE (vbPartionCellId_15, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_15, 0);
-     ELSEIF COALESCE(ioPartionCellId_16,0)<> COALESCE (vbPartionCellId_16, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_16, 0);
-     ELSEIF COALESCE(ioPartionCellId_17,0)<> COALESCE (vbPartionCellId_17, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_17, 0);
-     ELSEIF COALESCE(ioPartionCellId_18,0)<> COALESCE (vbPartionCellId_18, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_18, 0);
-     ELSEIF COALESCE(ioPartionCellId_19,0)<> COALESCE (vbPartionCellId_19, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_19, 0);
-     ELSEIF COALESCE(ioPartionCellId_20,0)<> COALESCE (vbPartionCellId_20, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_20, 0);
-     ELSEIF COALESCE(ioPartionCellId_21,0)<> COALESCE (vbPartionCellId_21, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_21, 0);
-     ELSEIF COALESCE(ioPartionCellId_22,0)<> COALESCE (vbPartionCellId_22, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_22, 0);
+     IF     COALESCE(ioPartionCellId_1,0) <> COALESCE (vbPartionCellId_1, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_1, 0); outPartionCellNum_last := 1 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_2,0) <> COALESCE (vbPartionCellId_2, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_2, 0); outPartionCellNum_last := 2 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_3,0) <> COALESCE (vbPartionCellId_3, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_3, 0); outPartionCellNum_last := 3 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_4,0) <> COALESCE (vbPartionCellId_4, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_4, 0); outPartionCellNum_last := 4 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_5,0) <> COALESCE (vbPartionCellId_5, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_5, 0); outPartionCellNum_last := 5 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_6,0) <> COALESCE (vbPartionCellId_6, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_6, 0); outPartionCellNum_last := 6 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_7,0) <> COALESCE (vbPartionCellId_7, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_7, 0); outPartionCellNum_last := 7 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_8,0) <> COALESCE (vbPartionCellId_8, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_8, 0); outPartionCellNum_last := 8 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_9,0) <> COALESCE (vbPartionCellId_9, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_9, 0); outPartionCellNum_last := 9 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_10,0)<> COALESCE (vbPartionCellId_10, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_10, 0); outPartionCellNum_last := 10 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_11,0)<> COALESCE (vbPartionCellId_11, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_11, 0); outPartionCellNum_last := 11 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_12,0)<> COALESCE (vbPartionCellId_12, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_12, 0); outPartionCellNum_last := 12 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_13,0)<> COALESCE (vbPartionCellId_13, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_13, 0); outPartionCellNum_last := 13 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_14,0)<> COALESCE (vbPartionCellId_14, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_14, 0); outPartionCellNum_last := 14 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_15,0)<> COALESCE (vbPartionCellId_15, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_15, 0); outPartionCellNum_last := 15 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_16,0)<> COALESCE (vbPartionCellId_16, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_16, 0); outPartionCellNum_last := 16 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_17,0)<> COALESCE (vbPartionCellId_17, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_17, 0); outPartionCellNum_last := 17 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_18,0)<> COALESCE (vbPartionCellId_18, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_18, 0); outPartionCellNum_last := 18 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_19,0)<> COALESCE (vbPartionCellId_19, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_19, 0); outPartionCellNum_last := 19 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_20,0)<> COALESCE (vbPartionCellId_20, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_20, 0); outPartionCellNum_last := 20 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_21,0)<> COALESCE (vbPartionCellId_21, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_21, 0); outPartionCellNum_last := 21 ::Integer;
+     ELSEIF COALESCE(ioPartionCellId_22,0)<> COALESCE (vbPartionCellId_22, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_22, 0); outPartionCellNum_last := 22 ::Integer;
      END IF;
 
 
@@ -3941,6 +3987,11 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
    -- сохранили протокол
      --PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
+     if vbUserId = 9457 
+     then
+         RAISE EXCEPTION 'Test. Ok';
+     end if;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -3948,7 +3999,7 @@ $BODY$
 /*
  »—“ќ–»я –ј«–јЅќ“ »: ƒј“ј, ј¬“ќ–
                ‘елонюк ».¬.    ухтин ».¬.    лиментьев  .».
-
+ 19.05.25         * add outPartionCellNum_last
  04.01.24         *
 */
 

@@ -2216,6 +2216,9 @@ end;
 
 procedure TLoadFormTest.LoadPartionCellFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellCheckisManyEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCellCheckisManyEditForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellCheckEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellCheckEditForm');
@@ -2664,6 +2667,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
   }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCell_manyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCell_manyForm');
+  exit;
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellForm'));
