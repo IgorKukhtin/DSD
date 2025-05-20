@@ -88,7 +88,10 @@ uses
   PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
   DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
   invoice_comdoc_vchasno in '..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
-  invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas';
+  invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas',
+  UtilScale in '..\Scale\Util\UtilScale.pas',
+  UtilPrint in '..\Scale\Util\UtilPrint.pas' {UtilPrintForm},
+  FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas';
 
 {$R *.res}
 
@@ -97,6 +100,7 @@ begin
   Logger.Enabled := FindCmdLineSwitch('log');
 
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TUtilPrintForm, UtilPrintForm);
   MainForm.Show;
   MainForm.StartProcess;
   Application.Run;

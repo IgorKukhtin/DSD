@@ -164,11 +164,11 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             Width = 106
           end
           object TotalLines: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088#1086#1082
+            Caption = #1057#1090#1088#1086#1082' '#1048#1090#1086#1075#1086
             DataBinding.FieldName = 'TotalLines'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082' '#1074' '#1044#1086#1082#1091#1084#1077#1085#1090#1077
             Options.Editing = False
             Width = 70
           end
@@ -253,11 +253,11 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             Width = 70
           end
           object TotalPage_All: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088'.'#1048#1090#1086#1075#1086
+            Caption = #1057#1090#1088#1072#1085#1080#1094' '#1048#1090#1086#1075#1086
             DataBinding.FieldName = 'TotalPage_All'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' - '#1048#1058#1054#1043#1054
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1072#1085#1080#1094' '#1074' '#1087#1077#1095#1072#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
             Width = 70
           end
           object FromName: TcxGridDBColumn
@@ -352,10 +352,12 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
     ExplicitWidth = 990
     inherited deStart: TcxDateEdit
       Left = 107
+      EditValue = 45658d
       Properties.SaveTime = False
       ExplicitLeft = 107
     end
     inherited deEnd: TcxDateEdit
+      EditValue = 45658d
       Properties.SaveTime = False
     end
     object cxLabel4: TcxLabel
@@ -488,8 +490,6 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
         end
         item
           Action = actPrint_Sale
-        end
-        item
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1055#1088#1086#1076#1072#1078#1080
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1055#1088#1086#1076#1072#1078#1080
@@ -574,9 +574,6 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
       Category = 'Print_QualityDoc'
       MoveParams = <>
       ActionList = <
-        item
-          Action = actDialog_QualityDoc
-        end
         item
           Action = actPrint_Quality_ReportName
         end
@@ -689,8 +686,8 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
         item
           Name = 'Id'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Sale'
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TTN'
@@ -1279,8 +1276,8 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
