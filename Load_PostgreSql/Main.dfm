@@ -48,12 +48,13 @@ object MainForm: TMainForm
       ExplicitWidth = 1307
     end
     object OKGuideButton: TButton
-      Left = 254
+      Left = 344
       Top = 25
-      Width = 96
+      Width = 38
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' GUIDE'
       DragMode = dmAutomatic
+      Enabled = False
       TabOrder = 0
       OnClick = OKGuideButtonClick
     end
@@ -93,11 +94,12 @@ object MainForm: TMainForm
       TabOrder = 4
     end
     object OKDocumentButton: TButton
-      Left = 356
+      Left = 388
       Top = 25
-      Width = 80
+      Width = 37
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082
+      Enabled = False
       TabOrder = 5
       OnClick = OKDocumentButtonClick
     end
@@ -136,6 +138,15 @@ object MainForm: TMainForm
       TabOrder = 9
       OnClick = Button2Click
     end
+    object bbPrintForm_calc: TButton
+      Left = 249
+      Top = 25
+      Width = 89
+      Height = 25
+      Caption = 'PrintForm_calc'
+      TabOrder = 10
+      OnClick = bbPrintForm_calcClick
+    end
   end
   object GuidePanel: TPanel
     Left = 722
@@ -146,7 +157,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitLeft = 703
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -749,8 +759,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitLeft = 735
-    ExplicitTop = -6
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -1655,7 +1663,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitLeft = 873
     object Label3: TLabel
       Left = 6
       Top = 22
@@ -1940,8 +1947,8 @@ object MainForm: TMainForm
     end
     object cbCompleteSaleInt: TCheckBox
       Tag = 30
-      Left = 55
-      Top = 536
+      Left = 23
+      Top = 530
       Width = 34
       Height = 17
       Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int - '#1041#1053
@@ -1957,8 +1964,8 @@ object MainForm: TMainForm
     end
     object cbCompleteReturnInInt: TCheckBox
       Tag = 30
-      Left = 111
-      Top = 536
+      Left = 63
+      Top = 530
       Width = 37
       Height = 17
       Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int - '#1041#1053
@@ -2026,8 +2033,8 @@ object MainForm: TMainForm
       OnClick = cbCompleteIncomeBNClick
     end
     object cbSelectData_afterLoad: TCheckBox
-      Left = 15
-      Top = 569
+      Left = 6
+      Top = 567
       Width = 176
       Height = 17
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1076#1072#1085#1085#1099#1093' '
@@ -2038,6 +2045,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 21
+      Visible = False
       WordWrap = True
     end
     object cbSelectData_afterLoad_Sale: TCheckBox
@@ -2094,8 +2102,8 @@ object MainForm: TMainForm
       Text = '8459'
     end
     object cbBeforeSave: TCheckBox
-      Left = 15
-      Top = 553
+      Left = 79
+      Top = 567
       Width = 146
       Height = 17
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2106,6 +2114,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 26
+      Visible = False
     end
     object SessionIdEdit: TEdit
       Left = 128
@@ -2509,6 +2518,20 @@ object MainForm: TMainForm
       TabOrder = 52
       OnClick = cbCompleteIncomeBNClick
     end
+    object cbPrintForm_calc: TCheckBox
+      Left = 16
+      Top = 549
+      Width = 217
+      Height = 17
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' PrintForm - Count'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 53
+    end
   end
   object LogPanel: TPanel
     Left = 442
@@ -2523,7 +2546,6 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
     TabOrder = 5
-    ExplicitLeft = 423
     object PanelErr: TPanel
       Left = 1
       Top = 1

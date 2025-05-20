@@ -177,9 +177,24 @@ type
     actPrintBoxTotalPartner: TdsdPrintAction;
     spSelectPrint_Pack_send: TdsdStoredProc;
     actPrint_PackGross_send: TdsdPrintAction;
+    mactPrint_Sale_PageCount: TMultiAction;
+    //
+    actPrint_Sale_PageCount: TdsdPrintAction;
+    mactPrint_QualityDoc_PageCount: TMultiAction;
+    actPrint_QualityDoc_PageCount: TdsdPrintAction;
+    mactPrint_TTN_PageCount: TMultiAction;
+    actPrint_TTN_PageCount: TdsdPrintAction;
+    actPrint_SendOnPrice_PageCount: TdsdPrintAction;
+    actPrint_Send_PageCount: TdsdPrintAction;
+    actPrint_Loss_PageCount: TdsdPrintAction;
+    actPrint_PackGross_PageCount: TdsdPrintAction;
+    actPrint_PackGross_send_PageCount: TdsdPrintAction;
+    actPrint_Pack_PageCount: TdsdPrintAction;
+    actPrint_Spec_PageCount: TdsdPrintAction;
   private
   end;
-
+  //
+  //
   function Print_Movement (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
   function Print_MovementDiff (MovementDescId,MovementId:Integer):Boolean;
   function Print_MovementReestrKind (MovementId_Reestr:Integer):Boolean;
