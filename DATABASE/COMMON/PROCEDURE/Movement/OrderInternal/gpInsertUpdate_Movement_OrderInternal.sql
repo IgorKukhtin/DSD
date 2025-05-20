@@ -69,6 +69,16 @@ BEGIN
      -- пересчитали »тоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
+
+     -- сохранили протокол
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <ƒата создани€> - при загрузке с моб устр., здесь дата загрузки
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили св€зь с <ѕользователь>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, vbUserId);
+     END IF;
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 

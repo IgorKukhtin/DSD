@@ -29,7 +29,7 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
-   DECLARE vbIsInsert Boolean;
+   DECLARE vbIsInsert    Boolean;
    DECLARE vbMovementId_CarInfo Integer;
    DECLARE vbRetailId Integer;
 BEGIN
@@ -264,7 +264,11 @@ BEGIN
      -- сохранили связь с <Контрагент>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
 
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
+
+     -- сохранили протокол
      IF vbIsInsert = TRUE
      THEN
          -- сохранили свойство <Дата создания> - при загрузке с моб устр., здесь дата загрузки
@@ -272,9 +276,6 @@ BEGIN
          -- сохранили связь с <Пользователь>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
      END IF;
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
