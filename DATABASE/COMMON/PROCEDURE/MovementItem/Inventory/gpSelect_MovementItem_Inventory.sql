@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartionModelId Integer, PartionModelName TVarChar
              , PartionCellCode_1 Integer, PartionCellName_1 TVarChar
              , ContainerId Integer
+             , isNotFact Boolean
              , isErased Boolean
              , PartionGoodsId Integer
              , IdBarCode TVarChar
@@ -134,7 +135,9 @@ BEGIN
 
            , 0 :: Integer AS ContainerId
 
+           , FALSE        AS isNotFact
            , FALSE        AS isErased
+
 
            , 0 :: Integer                    AS PartionGoodsId
            , zfFormat_BarCode (zc_BarCodePref_Object(), tmpGoods.GoodsId) :: TVarChar AS IdBarCode
@@ -256,7 +259,9 @@ BEGIN
            , Object_PartionCell_1.ValueData     AS PartionCellName_1
 
            , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
-           , MovementItem.isErased              AS isErased
+
+           , COALESCE (MIBoolean_NotFact.ValueData, FALSE) :: Boolean AS isNotFact
+           , MovementItem.isErased                                    AS isErased
            
            -- из партии
            , Object_PartionGoods.Id                AS PartionGoodsId
@@ -282,6 +287,10 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemBoolean AS MIBoolean_NotFact
+                                          ON MIBoolean_NotFact.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_NotFact.DescId         = zc_MIBoolean_NotFact()
 
             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                         ON MIFloat_ContainerId.MovementItemId = MovementItem.Id

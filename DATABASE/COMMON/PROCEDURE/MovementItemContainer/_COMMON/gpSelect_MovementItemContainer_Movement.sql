@@ -545,6 +545,10 @@ BEGIN
                 , CASE WHEN Object_ProfitLoss_View.ProfitLossName_all IS NOT NULL
                             THEN Object_ProfitLoss_View.ProfitLossName_all
                        ELSE Object_Direction.ValueData || COALESCE (' *** ' || Object_Partner.ValueData, '')
+                  END
+               || CASE WHEN Object_Personal.ValueData            <> '' THEN COALESCE (' : ' || Object_ServiceDate.ValueData, '')
+                                                                         || COALESCE (' : ' || Object_PersonalServiceList.ValueData, '')
+                                                                        ELSE ''
                   END AS DirectionObjectName
 
                 , CASE WHEN Object_Destination.ValueData         <> '' THEN Object_Destination.Id
@@ -557,8 +561,11 @@ BEGIN
                        WHEN Object_PersonalServiceList.ValueData <> '' THEN Object_PersonalServiceList.ObjectCode
                   END                      :: Integer AS DestinationObjectCode
                 , CASE WHEN Object_Destination.ValueData         <> '' THEN Object_Destination.ValueData
-                       WHEN Object_Personal.ValueData            <> '' THEN COALESCE (Object_PersonalServiceList.ValueData || ' : ', '') || Object_Personal.ValueData
+                       WHEN Object_Personal.ValueData            <> '' THEN Object_Personal.ValueData
+                                                                       --|| COALESCE (Object_PersonalServiceList.ValueData || ' : ', '')
+                                                                       --|| COALESCE (' : '  || Object_ServiceDate.ValueData, '')
                        WHEN Object_PersonalServiceList.ValueData <> '' THEN Object_PersonalServiceList.ValueData
+
                   END                     :: TVarChar AS DestinationObjectName
                 , Object_GoodsGroup.ObjectCode        AS GoodsGroupCode
                 , Object_GoodsGroup.ValueData         AS GoodsGroupName
@@ -635,6 +642,7 @@ BEGIN
 
                 , CASE WHEN tmpMIContainer_Summ.isDestination = TRUE THEN ContainerLinkObject_PersonalServiceList.ObjectId ELSE 0 END AS PersonalServiceListId
                 , CASE WHEN tmpMIContainer_Summ.isDestination = TRUE THEN ContainerLinkObject_Personal.ObjectId            ELSE 0 END AS PersonalId
+                , CASE WHEN tmpMIContainer_Summ.isDestination = TRUE THEN CLO_ServiceDate.ObjectId                         ELSE 0 END AS ServiceDateId
 
                 , ContainerLinkObject_Partner.ObjectId             AS PartnerId
 
@@ -684,6 +692,10 @@ BEGIN
                  LEFT JOIN tmpCLO_find AS ContainerLinkObject_PersonalServiceList
                                        ON ContainerLinkObject_PersonalServiceList.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                       AND ContainerLinkObject_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
+                 LEFT JOIN tmpCLO_find AS CLO_ServiceDate
+                                       ON CLO_ServiceDate.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                      AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+
                  LEFT JOIN tmpCLO_find AS ContainerLinkObject_Car
                                        ON ContainerLinkObject_Car.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                       AND ContainerLinkObject_Car.DescId      = zc_ContainerLinkObject_Car()
@@ -747,6 +759,8 @@ BEGIN
 
                  LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpMIContainer_Summ.PersonalServiceListId
                  LEFT JOIN Object AS Object_Personal            ON Object_Personal.Id            = tmpMIContainer_Summ.PersonalId
+                 LEFT JOIN Object AS Object_ServiceDate         ON Object_ServiceDate.Id         = tmpMIContainer_Summ.ServiceDateId
+                 
 
                  LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = tmpMIContainer_Summ.JuridicalBasisId
                  LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpMIContainer_Summ.BusinessId
@@ -804,6 +818,8 @@ BEGIN
                    , Object_PersonalServiceList.Id
                    , Object_PersonalServiceList.ObjectCode
                    , Object_PersonalServiceList.ValueData
+                   , Object_ServiceDate.ValueData
+
                    , Object_GoodsKind.Id
                    , Object_GoodsKind.ValueData
                    , Object_Goods_Parent.ObjectCode

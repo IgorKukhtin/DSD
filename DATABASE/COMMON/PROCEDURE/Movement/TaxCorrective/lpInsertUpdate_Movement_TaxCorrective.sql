@@ -147,12 +147,6 @@ BEGIN
      -- пересчитали »тоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
-     IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
-     THEN
-         -- сохранили протокол
-         PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
-     END IF;
-
      -- сохранили "текуща€ дата", вместо "регистрации" - если нет или убрали электронна€ (т.е. регистраци€ медка)
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), tmp.MovementId, CURRENT_DATE)
      FROM (SELECT ioId AS MovementId /*WHERE vbIsInsert = TRUE AND CURRENT_DATE >= '01.04.2016'*/) AS tmp
@@ -160,6 +154,22 @@ BEGIN
                                    AND MovementBoolean.DescId = zc_MovementBoolean_Electron()
      WHERE COALESCE (MovementBoolean.ValueData, FALSE) = FALSE
     ;
+
+
+     -- сохранили протокол
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <ƒата создани€> - при загрузке с моб устр., здесь дата загрузки
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили св€зь с <ѕользователь>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+     END IF;
+
+     IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+     END IF;
 
 
 END;

@@ -158,6 +158,8 @@ BEGIN
                                               WHERE MovementItem.MovementId = inMovementId
                                                 AND MovementItem.DescId     = zc_MI_Child()
                                                 AND MovementItem.isErased   = FALSE
+                                                -- есть Выплата сейчас
+                                                AND MovementItem.Amount     <> 0
                                              )
                      -- список - Остатки
                    , tmpConaiter_list AS (SELECT DISTINCT
@@ -719,7 +721,7 @@ BEGIN
      END IF;
 
      -- проверка
-     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.OperSumm = 0)
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.OperSumm = 0 AND inUserId <> 5)
      THEN
          RAISE EXCEPTION 'Ошибка.Введите сумму.';
      END IF;

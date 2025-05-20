@@ -182,9 +182,9 @@ BEGIN
                                , tmpMI_income.GoodsKindId
 
                                  -- Распределили Кол-во Поставшик с учетом % скидки кол-во
-                               , CAST (tmpMI_partner_find.Amount_income_calc  * tmpMI_income.Amount / tmpMI_income_sum.Amount_sum AS NUMERIC (16, 2)) AS Amount_income_calc
+                               , CASE WHEN tmpMI_income_sum.Amount_sum > 0 THEN CAST (tmpMI_partner_find.Amount_income_calc  * tmpMI_income.Amount / tmpMI_income_sum.Amount_sum AS NUMERIC (16, 2)) ELSE tmpMI_partner_find.Amount_income_calc END AS Amount_income_calc
                                  -- Распределили Количество Поставщика - информативно
-                               , CAST (tmpMI_partner_find.AmountPartnerSecond * tmpMI_income.Amount / tmpMI_income_sum.Amount_sum AS NUMERIC (16, 2)) AS AmountPartnerSecond
+                               , CASE WHEN tmpMI_income_sum.Amount_sum > 0 THEN CAST (tmpMI_partner_find.AmountPartnerSecond * tmpMI_income.Amount / tmpMI_income_sum.Amount_sum AS NUMERIC (16, 2)) ELSE tmpMI_partner_find.AmountPartnerSecond END AS AmountPartnerSecond
                                  --
                                , tmpMI_income.VATPercent
                                , tmpMI_income.isPriceWithVAT
