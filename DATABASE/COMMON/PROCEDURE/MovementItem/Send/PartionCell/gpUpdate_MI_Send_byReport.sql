@@ -3989,7 +3989,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
      if vbUserId = 9457 
      then
-         RAISE EXCEPTION 'Test. Ok';
+         RAISE EXCEPTION 'Test. Ok <%> %', outPartionCellId_last, outPartionCellNum_last;
      end if;
 
 END;

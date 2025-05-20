@@ -1968,8 +1968,8 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
       Width = 144
     end
     object cbisMany: TcxCheckBox
-      Left = 914
-      Top = 6
+      Left = 924
+      Top = 10
       Hint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1076#1072'/'#1085#1077#1090
       Caption = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1076#1072'/'#1085#1077#1090
       Properties.ReadOnly = False
@@ -2964,6 +2964,39 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionGoodsDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsDate'
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
