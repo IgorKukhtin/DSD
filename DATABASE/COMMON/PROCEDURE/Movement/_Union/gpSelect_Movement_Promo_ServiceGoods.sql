@@ -63,7 +63,11 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- !!!Временно замена!!!
-     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+     IF inEndDate < CURRENT_DATE 
+     THEN 
+         inStartDate:= DATE_TRUNC ('MONTH', CURRENT_DATE);
+         inEndDate:= CURRENT_DATE; 
+     END IF;
 
 
      -- Результат

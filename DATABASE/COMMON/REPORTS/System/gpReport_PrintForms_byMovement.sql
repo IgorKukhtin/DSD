@@ -116,6 +116,7 @@ BEGIN
                         FROM Movement
                         WHERE Movement.DescId IN (SELECT DISTINCT tmpPrintForm.MovementDescId FROM tmpPrintForm)
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
                        )
   , tmpMLO AS (SELECT MovementLinkObject.*
                FROM MovementLinkObject
@@ -830,7 +831,8 @@ BEGIN
                                        AND MovementFloat_TotalPage_8.DescId     = zc_MovementFloat_TotalPage_8()
 
         -- WHERE tmpData.MovementDescId = zc_Movement_Sale()
-        -- WHERE tmpData.Id = 31267929 
+        -- WHERE tmpData.Id IN (30907282, 30907283)
+
         order by 1, 4, 5
         -- LIMIT 1
    ;
