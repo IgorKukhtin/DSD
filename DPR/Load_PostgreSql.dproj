@@ -75,7 +75,7 @@
 			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<Debugger_RunParams>alan_dp_ua</Debugger_RunParams>
+			<Debugger_RunParams>alan_dp_ua_print</Debugger_RunParams>
 			<DCC_ExeOutput>..\Bin</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -191,6 +191,11 @@
 			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\invoice_comdoc_vchasno.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\invoice_delnote_base.pas"/>
+			<DCCReference Include="..\Scale\Util\UtilScale.pas"/>
+			<DCCReference Include="..\Scale\Util\UtilPrint.pas">
+				<Form>UtilPrintForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\COMPONENT\FastReportAddOn.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

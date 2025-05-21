@@ -4259,7 +4259,7 @@ procedure TfrxReportExt.ExecuteReport(AReportName: String; ADataSets: TdsdDataSe
   AParams: TdsdParams; ACopiesCount: Integer = 1; APrinter : String = ''; AWithOutPreview:Boolean = False;
   ADesignReport:Boolean = False; AModal:Boolean = False; APreviewWindowMaximized:Boolean = True);
 var
-  I,J: Integer;
+  I, J, i_param: Integer;
   OldFieldIndexList: TStringList;
   DataSetList: TList;
   MemTableList: TList;
@@ -4269,7 +4269,7 @@ var
   ExpandedIdx: Integer;
   frxPDFExport1: TfrxPDFExport;
   frxXLSExport1: TfrxXLSExport;
-  frxPDFExport_find, frxXLSExport_find: Boolean;
+  frxPDFExport_find, frxXLSExport_find, frxPrintForm_calc: Boolean;
   frxPDFExport1_ShowDialog, frxXLSExport1_ShowDialog: Boolean;
   frxPDFExport1_Background,frxPDFExport1_EmbeddedFonts: Boolean;
   FileNameExport: String;
@@ -4447,6 +4447,8 @@ begin
       // это НЕ выгрузка в PFD + XLS
       frxPDFExport_find:=false;
       frxXLSExport_find:=false;
+      // это НЕ расчет кол-ва страниц ПЕЧАТИ
+      frxPrintForm_calc:=false;
       // Показывать диалог при печати в DBF
       frxPDFExport1_ShowDialog:=True;
       frxXLSExport1_ShowDialog:=True;
@@ -4461,9 +4463,18 @@ begin
       begin
         // если есть такой параметр, тогда это выгрузка в PFD
         if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxPDFExport_find')
-        then frxPDFExport_find:= true
+        then // это выгрузка в PFD
+             frxPDFExport_find:= true
         else if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxXLSExport_find')
-             then frxXLSExport_find:= true;
+             // это выгрузка в XLS
+             then frxXLSExport_find:= true
+             else if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxPrintForm_calc')
+                  // это расчет кол-ва страниц ПЕЧАТИ
+                  then begin frxPrintForm_calc:= true;
+                             i_param:= i;
+                             //!!!исправил ошибку, откуда?? приходит режим дизайна формы
+                             ADesignReport:= FALSE;
+                       end;
 
         // если есть такой параметр, тогда без диалога
         if (AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxPDFExport1_ShowDialog')) and
@@ -4549,6 +4560,7 @@ begin
             else PrintOptions.Printer := GetDefaultPrinter;
             PrepareReport;
             //
+            // это выгрузка в PFD
             if frxPDFExport_find = true then
             begin
                frxPDFExport1:= TfrxPDFExport.Create(Self);
@@ -4585,6 +4597,7 @@ begin
             end
 
             else
+            // это выгрузка в XLS
             if frxXLSExport_find = true then
             begin
                frxXLSExport1:= TfrxXLSExport.Create(Self);
@@ -4609,6 +4622,17 @@ begin
                finally
                  FreeAndNil(frxXLSExport1);
                end;
+            end
+            else
+            //
+            // это расчет кол-ва страниц ПЕЧАТИ
+            if frxPrintForm_calc = true then
+            begin
+                PrepareReport;
+                ShowPreparedReport;
+                //AParams[i_param+1].Value:= FReport.Preview.PreviewPages.Count;// .PagesCount;
+                AParams.ParamByName('frxPrintForm_count').Value:= FReport.Preview.PreviewPages.Count;// .PagesCount;
+                ClosePreview(Self);
             end
 
             else ShowPreparedReport;

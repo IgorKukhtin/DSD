@@ -16,19 +16,19 @@ BEGIN
      --vbUserId:= lpGetUserBySession (inSession);
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_TotalLines());
 
-     --не удаленные строки документа
+     -- строки документа
      outTotalLines := (SELECT COUNT (*) AS TotalLines 
                        FROM MovementItem
                        WHERE MovementItem.MovementId = inId
-                         AND MovementItem.DescId = zc_MI_Master()
-                         AND MovementItem.isErased = FALSE
+                         AND MovementItem.DescId     = zc_MI_Master()
+                         AND MovementItem.isErased   = FALSE
                        ) ::TFloat;
 
      -- сохранили свойство
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalLines(), inId, outTotalLines);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+     -- PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
   
 END;
 $BODY$

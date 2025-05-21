@@ -256,7 +256,7 @@ BEGIN
 	                          )
       -- <Карта БН (округление) - 2ф>
     , tmpMIContainer_diff AS (SELECT SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff
-                                   , -1 * SUM (CASE WHEN MIContainer.OperDate < vbServiceDate + INTERVAL '1 MONTH' AND MIContainer.MovementDescId = zc_Movement_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_start
+                                   , -1 * SUM (CASE WHEN MIContainer.OperDate < vbServiceDate + INTERVAL '1 MONTH' AND MIContainer.MovementDescId IN (zc_Movement_PersonalService(), zc_Movement_Cash()) THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_start
                                    , 1 * SUM (CASE WHEN MIContainer.OperDate >= vbServiceDate + INTERVAL '1 MONTH' OR MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_end
                                    , tmpMIContainer_find_diff.MovementItemId
                               FROM tmpMIContainer_find_diff

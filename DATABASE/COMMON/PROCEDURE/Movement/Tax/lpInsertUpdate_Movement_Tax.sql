@@ -159,6 +159,15 @@ BEGIN
        AND vbIsInsert = TRUE
     ;
 
+     -- сохранили протокол
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <ƒата создани€> - при загрузке с моб устр., здесь дата загрузки
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили св€зь с <ѕользователь>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+     END IF;
+
      IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
          -- сохранили протокол

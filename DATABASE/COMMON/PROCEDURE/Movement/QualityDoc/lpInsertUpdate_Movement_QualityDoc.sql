@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_QualityDoc (Integer, Integer, In
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_QualityDoc(
  INOUT ioId                         Integer   , -- Ключ объекта <Документ>
-    IN inMovementId_master          Integer   , -- 
-    IN inMovementId_child           Integer   , -- 
+    IN inMovementId_master          Integer   , --
+    IN inMovementId_child           Integer   , --
     IN inOperDateIn                 TDateTime , -- Дата і час виготовлення
     IN inOperDateOut                TDateTime , -- Дата відвантаження
     IN inCarId                      Integer   , -- Автомобиль
@@ -16,12 +16,13 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_QualityDoc(
     IN inCertificateSeries          TVarChar  , --
     IN inCertificateSeriesNumber    TVarChar  , --
     IN inUserId                     Integer     -- Пользователь
-)                              
+)
 RETURNS Integer
 AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
-   DECLARE vbOperDate TDateTime;
+   DECLARE vbIsInsert    Boolean;
+   DECLARE vbOperDate    TDateTime;
 BEGIN
      -- определяем ключ доступа and OperDate
      IF inMovementId_child <> 0
@@ -51,6 +52,9 @@ BEGIN
                                       , inUserId     := inUserId);
      END IF;
 
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
       -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId
@@ -82,6 +86,15 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_CertificateSeriesNumber(), ioId, inCertificateSeriesNumber);
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_QualityNumber(), ioId, inQualityNumber);
 
+
+     -- сохранили протокол
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <Дата создания>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь (создание)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+     END IF;
 
      -- проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := ioId

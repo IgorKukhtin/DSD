@@ -77,7 +77,7 @@ BEGIN
                                                     AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()           
                            WHERE Movement.DescId = zc_Movement_ContractGoods()
                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                            -- AND Movement.StatusId = zc_Enum_Status_Complete()
                          )
 
 
@@ -111,7 +111,7 @@ BEGIN
                     FROM MovementItem
                     WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                       AND MovementItem.DescId = zc_MI_Master()
-                      AND MovementItem.isErased = FALSE
+                      -- AND MovementItem.isErased = FALSE
                     )
  
         , tmpMILO AS (SELECT MovementItemLinkObject.*

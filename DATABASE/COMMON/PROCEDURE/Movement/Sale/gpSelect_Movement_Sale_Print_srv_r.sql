@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_Sale_Print()
+-- Function: gpSelect_Movement_Sale_Print_srv_r()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Print_srv_r (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Print(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Print_srv_r(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -286,65 +286,6 @@ END IF;
         RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
     END IF;
 
-    -- получаем данные для GoodsPropertyValue - нужны в обоих курсорах
-    CREATE TEMP TABLE tmpObject_GoodsPropertyValue (ObjectId Integer, GoodsId Integer, GoodsKindId Integer, Name TVarChar,
-                                                    Amount TFloat, AmountDoc TFloat, BoxCount TFloat,
-                                                    BarCode TVarChar, Article TVarChar,
-                                                    BarCodeGLN  TVarChar, ArticleGLN TVarChar,
-                                                    isWeigth Boolean) ON COMMIT DROP;
-    INSERT INTO  tmpObject_GoodsPropertyValue (ObjectId, GoodsId, GoodsKindId, Name, Amount, AmountDoc, BoxCount, BarCode, Article, BarCodeGLN, ArticleGLN, isWeigth)
-        SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
-             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
-             , Object_GoodsPropertyValue.ValueData  AS Name
-             , ObjectFloat_Amount.ValueData         AS Amount
-             , ObjectFloat_AmountDoc.ValueData      AS AmountDoc
-             , ObjectFloat_BoxCount.ValueData       AS BoxCount
-             , ObjectString_BarCode.ValueData       AS BarCode
-             , ObjectString_Article.ValueData       AS Article
-             , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
-             , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
-             , COALESCE (ObjectBoolean_Weigth.ValueData, FALSE) :: Boolean AS isWeigth
-        FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
-             ) AS tmpGoodsProperty
-             INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                                   ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
-                                  AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
-             LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-             LEFT JOIN ObjectFloat AS ObjectFloat_Amount
-                                   ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                  AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
-             LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
-                                   ON ObjectFloat_AmountDoc.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                  AND ObjectFloat_AmountDoc.DescId = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
-             LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
-                                   ON ObjectFloat_BoxCount.ObjectId = Object_GoodsPropertyValue.Id
-                                  AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
-             LEFT JOIN ObjectString AS ObjectString_BarCode
-                                    ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
-             LEFT JOIN ObjectString AS ObjectString_Article
-                                    ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
-
-             LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
-                                    ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
-             LEFT JOIN ObjectString AS ObjectString_ArticleGLN
-                                    ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
-
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
-                                     ON ObjectBoolean_Weigth.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                    AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
-
-             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
-                                  ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
-             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
-                                  ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                 AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
-         ;
 
 
     IF vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice()
@@ -377,7 +318,63 @@ END IF;
                   , vbTotalCountKg, vbTotalCountKg_only, vbTotalCountSh, vbTotalCountSh_Kg
 
         FROM
-       (SELECT SUM (CASE WHEN tmpMI.CountForPrice <> 0
+       (-- получаем данные для GoodsPropertyValue - нужны в обоих курсорах
+        WITH tmpObject_GoodsPropertyValue AS
+          (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                , Object_GoodsPropertyValue.ValueData  AS Name
+                , ObjectFloat_Amount.ValueData         AS Amount
+                , ObjectFloat_AmountDoc.ValueData      AS AmountDoc
+                , ObjectFloat_BoxCount.ValueData       AS BoxCount
+                , ObjectString_BarCode.ValueData       AS BarCode
+                , ObjectString_Article.ValueData       AS Article
+                , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
+                , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+                , COALESCE (ObjectBoolean_Weigth.ValueData, FALSE) :: Boolean AS isWeigth
+           FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                ) AS tmpGoodsProperty
+                INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                      ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                     AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                                      ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                     AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+                LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
+                                      ON ObjectFloat_AmountDoc.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                     AND ObjectFloat_AmountDoc.DescId = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
+                LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                      ON ObjectFloat_BoxCount.ObjectId = Object_GoodsPropertyValue.Id
+                                     AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
+                LEFT JOIN ObjectString AS ObjectString_BarCode
+                                       ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                LEFT JOIN ObjectString AS ObjectString_Article
+                                       ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+   
+                LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
+                                       ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+                LEFT JOIN ObjectString AS ObjectString_ArticleGLN
+                                       ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+   
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
+                                        ON ObjectBoolean_Weigth.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                       AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
+   
+                LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                     ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                    AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                     ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                    AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+            )
+
+        --
+        SELECT SUM (CASE WHEN tmpMI.CountForPrice <> 0
                               THEN CAST (tmpMI.Amount * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                          ELSE CAST (tmpMI.Amount * tmpMI.Price AS NUMERIC (16, 2))
                     END
@@ -488,7 +485,63 @@ END IF;
             -- Расчет шт для штучного товара, который нужно показать как кг, чтоб снять это кол-во с итого шт.
         SELECT TotalCountSh_Kg, TotalCountKg_only
                INTO vbTotalCountSh_Kg, vbTotalCountKg_only
-        FROM (SELECT -- для ШТ, если сво-во tmpObject_GoodsPropertyValue.isWeigth = TRUE, нужно єто кол-во снять с итого шт.
+        FROM (-- получаем данные для GoodsPropertyValue - нужны в обоих курсорах
+              WITH tmpObject_GoodsPropertyValue AS
+                    (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                          , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                          , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                          , Object_GoodsPropertyValue.ValueData  AS Name
+                          , ObjectFloat_Amount.ValueData         AS Amount
+                          , ObjectFloat_AmountDoc.ValueData      AS AmountDoc
+                          , ObjectFloat_BoxCount.ValueData       AS BoxCount
+                          , ObjectString_BarCode.ValueData       AS BarCode
+                          , ObjectString_Article.ValueData       AS Article
+                          , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
+                          , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+                          , COALESCE (ObjectBoolean_Weigth.ValueData, FALSE) :: Boolean AS isWeigth
+                     FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                          ) AS tmpGoodsProperty
+                          INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                               AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                          LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                          LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                                                ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                               AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+                          LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
+                                                ON ObjectFloat_AmountDoc.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                               AND ObjectFloat_AmountDoc.DescId = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
+                          LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                                ON ObjectFloat_BoxCount.ObjectId = Object_GoodsPropertyValue.Id
+                                               AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
+                          LEFT JOIN ObjectString AS ObjectString_BarCode
+                                                 ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                          LEFT JOIN ObjectString AS ObjectString_Article
+                                                 ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+             
+                          LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
+                                                 ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+                          LEFT JOIN ObjectString AS ObjectString_ArticleGLN
+                                                 ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+             
+                          LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
+                                                  ON ObjectBoolean_Weigth.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                 AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
+             
+                          LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                               ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                              AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                          LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                               ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                              AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                      )
+
+              --
+              SELECT -- для ШТ, если сво-во tmpObject_GoodsPropertyValue.isWeigth = TRUE, нужно єто кол-во снять с итого шт.
                      SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth,FALSE) = TRUE
                                     THEN tmpMI.Amount
                                ELSE 0
@@ -556,8 +609,61 @@ END IF;
                   );
      --
     OPEN Cursor1 FOR
---     WITH tmpObject_GoodsPropertyValue AS
-       WITH tmpBankAccount AS (SELECT ObjectLink_BankAccountContract_BankAccount.ChildObjectId             AS BankAccountId
+     -- получаем данные для GoodsPropertyValue - нужны в обоих курсорах
+        WITH tmpObject_GoodsPropertyValue AS
+          (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                , Object_GoodsPropertyValue.ValueData  AS Name
+                , ObjectFloat_Amount.ValueData         AS Amount
+                , ObjectFloat_AmountDoc.ValueData      AS AmountDoc
+                , ObjectFloat_BoxCount.ValueData       AS BoxCount
+                , ObjectString_BarCode.ValueData       AS BarCode
+                , ObjectString_Article.ValueData       AS Article
+                , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
+                , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+                , COALESCE (ObjectBoolean_Weigth.ValueData, FALSE) :: Boolean AS isWeigth
+           FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                ) AS tmpGoodsProperty
+                INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                      ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                     AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                                      ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                     AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+                LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
+                                      ON ObjectFloat_AmountDoc.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                     AND ObjectFloat_AmountDoc.DescId = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
+                LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                      ON ObjectFloat_BoxCount.ObjectId = Object_GoodsPropertyValue.Id
+                                     AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
+                LEFT JOIN ObjectString AS ObjectString_BarCode
+                                       ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                LEFT JOIN ObjectString AS ObjectString_Article
+                                       ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+   
+                LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
+                                       ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+                LEFT JOIN ObjectString AS ObjectString_ArticleGLN
+                                       ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+   
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
+                                        ON ObjectBoolean_Weigth.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                       AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
+   
+                LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                     ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                    AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                     ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                    AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+            )
+         , tmpBankAccount AS (SELECT ObjectLink_BankAccountContract_BankAccount.ChildObjectId             AS BankAccountId
                                     , COALESCE (ObjectLink_BankAccountContract_InfoMoney.ChildObjectId, 0) AS InfoMoneyId
                                     , COALESCE (ObjectLink_BankAccountContract_Unit.ChildObjectId, 0)      AS UnitId
                                FROM ObjectLink AS ObjectLink_BankAccountContract_BankAccount
@@ -1292,61 +1398,62 @@ END IF;
 
 
     OPEN Cursor2 FOR
-     WITH /*tmpObject_GoodsPropertyValue AS
-       (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
-             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
-             , Object_GoodsPropertyValue.ValueData  AS Name
-             , ObjectFloat_Amount.ValueData         AS Amount
-             , ObjectFloat_AmountDoc.ValueData      AS AmountDoc
-             , ObjectFloat_BoxCount.ValueData       AS BoxCount
-             , ObjectString_BarCode.ValueData       AS BarCode
-             , ObjectString_Article.ValueData       AS Article
-             , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
-             , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
-             , COALESCE (ObjectBoolean_Weigth.ValueData, FALSE) :: Boolean AS isWeigth
-        FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
-             ) AS tmpGoodsProperty
-             INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                                   ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
-                                  AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
-             LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-             LEFT JOIN ObjectFloat AS ObjectFloat_Amount
-                                   ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                  AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
-             LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
-                                   ON ObjectFloat_AmountDoc.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                  AND ObjectFloat_AmountDoc.DescId = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
-             LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
-                                   ON ObjectFloat_BoxCount.ObjectId = Object_GoodsPropertyValue.Id
-                                  AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
-             LEFT JOIN ObjectString AS ObjectString_BarCode
-                                    ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
-             LEFT JOIN ObjectString AS ObjectString_Article
-                                    ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+     -- получаем данные для GoodsPropertyValue - нужны в обоих курсорах
+     WITH tmpObject_GoodsPropertyValue AS
+          (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                , Object_GoodsPropertyValue.ValueData  AS Name
+                , ObjectFloat_Amount.ValueData         AS Amount
+                , ObjectFloat_AmountDoc.ValueData      AS AmountDoc
+                , ObjectFloat_BoxCount.ValueData       AS BoxCount
+                , ObjectString_BarCode.ValueData       AS BarCode
+                , ObjectString_Article.ValueData       AS Article
+                , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
+                , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+                , COALESCE (ObjectBoolean_Weigth.ValueData, FALSE) :: Boolean AS isWeigth
+           FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                ) AS tmpGoodsProperty
+                INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                      ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                     AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                                      ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                     AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+                LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
+                                      ON ObjectFloat_AmountDoc.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                     AND ObjectFloat_AmountDoc.DescId = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
+                LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                      ON ObjectFloat_BoxCount.ObjectId = Object_GoodsPropertyValue.Id
+                                     AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
+                LEFT JOIN ObjectString AS ObjectString_BarCode
+                                       ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                LEFT JOIN ObjectString AS ObjectString_Article
+                                       ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+   
+                LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
+                                       ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+                LEFT JOIN ObjectString AS ObjectString_ArticleGLN
+                                       ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                      AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+   
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
+                                        ON ObjectBoolean_Weigth.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                       AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
+   
+                LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                     ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                    AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                     ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                    AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+            )
 
-             LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
-                                    ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
-             LEFT JOIN ObjectString AS ObjectString_ArticleGLN
-                                    ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
-
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
-                                     ON ObjectBoolean_Weigth.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                    AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
-
-             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
-                                  ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
-             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
-                                  ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                 AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
-       )
-     ,*/
-       tmpObject_GoodsPropertyValueGroup AS
+     , tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.Name
              , tmpObject_GoodsPropertyValue.Article
@@ -1989,7 +2096,7 @@ END IF;
                -- во сколько закончилась
              , CLOCK_TIMESTAMP() AS Time5
                -- ProcName
-             , 'gpSelect_Movement_Sale_Print'
+             , 'gpSelect_Movement_Sale_Print_srv_r'
                -- ProtocolData
              , inMovementId :: TVarChar
     || ', ' || inSession
@@ -2003,7 +2110,7 @@ END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Sale_Print_srv_r (Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -2069,4 +2176,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 ++ PrintMovement_Transport36003603.fr3
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 18441615, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Sale_Print_srv_r (inMovementId:= 18441615, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";

@@ -25,6 +25,7 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
+   DECLARE vbIsInsert    Boolean;
 BEGIN
      -- определяем ключ доступа
      IF inMovementId_Sale <> 0
@@ -58,6 +59,9 @@ BEGIN
                                       , inUserId     := inUserId);
      END IF;
 
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
       -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_TransportGoods(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
@@ -96,6 +100,15 @@ BEGIN
        AND MovementLinkMovement.DescId = zc_MovementLinkMovement_TransportGoods()
        AND MovementLinkMovement.MovementId <> inMovementId_Sale
     ;
+
+     -- сохранили протокол
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <Дата создания>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь (создание)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+     END IF;
 
      -- 5.2. проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := ioId

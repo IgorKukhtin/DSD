@@ -1367,7 +1367,7 @@ $BODY$
 
 !!!исправляется ошибка!!!
 
--- переброска переходящий долг за март в начально сальдо май
+-- переброска начальное сальдо за апрель в начальное сальдо май
 
 with tmpContainer AS (SELECT CLO_ServiceDate.ContainerId
                                    , CLO_Personal.ObjectId as PersonalId

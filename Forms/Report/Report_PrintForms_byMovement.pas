@@ -70,6 +70,10 @@ type
     actSPPrintTTNProcName: TdsdExecStoredProc;
     mactPrint_TTN: TMultiAction;
     TotalPage_All: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
+    MovementId_sale: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public
