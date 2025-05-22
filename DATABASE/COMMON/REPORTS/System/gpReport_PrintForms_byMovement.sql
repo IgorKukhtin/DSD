@@ -318,9 +318,9 @@ BEGIN
                       LEFT JOIN tmpPrintForm ON tmpPrintForm.MovementDescId = Movement.DescId
 
                       -- связь Товаро-транспортная накладная с Продажа покупателю
-                      LEFT JOIN tmpMLM AS MovementLinkMovement_TransportGoods
-                                       ON MovementLinkMovement_TransportGoods.MovementChildId = Movement.Id
-                                      AND MovementLinkMovement_TransportGoods.DescId          = zc_MovementLinkMovement_TransportGoods()
+                      INNER JOIN tmpMLM AS MovementLinkMovement_TransportGoods
+                                        ON MovementLinkMovement_TransportGoods.MovementChildId = Movement.Id
+                                       AND MovementLinkMovement_TransportGoods.DescId          = zc_MovementLinkMovement_TransportGoods()
 
                       LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
                                                 ON MovementDate_OperDatePartner.MovementId = MovementLinkMovement_TransportGoods.MovementId
@@ -381,9 +381,10 @@ BEGIN
                       LEFT JOIN tmpPrintForm ON tmpPrintForm.MovementDescId = Movement.DescId
 
                       -- связь Качественное с Продажа покупателю
-                      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
-                                                     ON MovementLinkMovement_Child.MovementId = Movement.Id
-                                                    AND MovementLinkMovement_Child.DescId     = zc_MovementLinkMovement_Child()
+                      INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                                      ON MovementLinkMovement_Child.MovementId      = Movement.Id
+                                                     AND MovementLinkMovement_Child.DescId          = zc_MovementLinkMovement_Child()
+                                                     AND MovementLinkMovement_Child.MovementChildId > 0
 
                       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                    ON MovementLinkObject_To.MovementId = MovementLinkMovement_Child.MovementChildId
