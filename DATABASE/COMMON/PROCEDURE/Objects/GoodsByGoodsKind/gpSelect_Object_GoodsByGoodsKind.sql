@@ -604,11 +604,11 @@ BEGIN
 
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub_CEH
                                  ON ObjectLink_GoodsByGoodsKind_GoodsKindSub_CEH.ObjectId = Object_GoodsByGoodsKind_View.Id
-                                AND ObjectLink_GoodsByGoodsKind_GoodsKindSub_CEH.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+                                AND ObjectLink_GoodsByGoodsKind_GoodsKindSub_CEH.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub_CEH()
             LEFT JOIN Object AS Object_GoodsKindSub_CEH ON Object_GoodsKindSub_CEH.Id = ObjectLink_GoodsByGoodsKind_GoodsKindSub_CEH.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_GoodsSub_CEH_Measure
-                                 ON ObjectLink_GoodsSub_CEH_Measure.ObjectId = Object_GoodsSub.Id
+                                 ON ObjectLink_GoodsSub_CEH_Measure.ObjectId = Object_GoodsSub_CEH.Id
                                 AND ObjectLink_GoodsSub_CEH_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_MeasureSub_CEH ON Object_MeasureSub_CEH.Id = ObjectLink_GoodsSub_CEH_Measure.ChildObjectId
             
