@@ -1583,7 +1583,8 @@ uses
   Report_PrintForms_byMovementDialog in '..\..\Forms\Report\Report_PrintForms_byMovementDialog.pas' {Report_PrintForms_byMovementDialogForm: TParentForm},
   Report_PrintForms_byMovement in '..\..\Forms\Report\Report_PrintForms_byMovement.pas' {Report_PrintForms_byMovementForm: TParentForm},
   Report_Send_PartionCell_many in '..\..\Forms\Report\Report_Send_PartionCell_many.pas' {Report_Send_PartionCell_manyForm: TParentForm},
-  PartionCellCheckisManyEdit in '..\..\Forms\Guides\PartionCellCheckisManyEdit.pas' {PartionCellCheckisManyEditForm: TParentForm};
+  PartionCellCheckisManyEdit in '..\..\Forms\Guides\PartionCellCheckisManyEdit.pas' {PartionCellCheckisManyEditForm: TParentForm},
+  Send_PartionCell_isManyEdit in '..\..\Forms\Document\Send_PartionCell_isManyEdit.pas' {Send_PartionCell_isManyEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
