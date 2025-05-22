@@ -262,8 +262,8 @@ object PartionCellCheckisManyEditForm: TPartionCellCheckisManyEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 336
-    Top = 8
+    Left = 248
+    Top = 16
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_PartionCell'

@@ -144,6 +144,8 @@ type
     actContinueAction_isMany: TdsdContinueAction;
     mac_isMany: TMultiAction;
     actExecisManyForm: TdsdInsertUpdateAction;
+    actOpenForm_isManyEdit: TdsdOpenForm;
+    bbOpenForm_isManyEdit: TdxBarButton;
   private
     { Private declarations }
   public

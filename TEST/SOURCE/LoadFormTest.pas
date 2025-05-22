@@ -2668,9 +2668,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
   }
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_PartionCell_isManyEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSend_PartionCell_isManyEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCell_manyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCell_manyForm');
-  exit;
+ // exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
@@ -5037,14 +5040,14 @@ end;
 
  procedure TLoadFormTest.LoadWeighingProductionFormTest;
  begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
   //exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
   exit;

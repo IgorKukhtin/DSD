@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementDescNumber Integer
              , MovementDesc Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
+             , NumSecurity TFloat
              , PartionGoods TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , UserId Integer, UserName TVarChar
@@ -63,6 +64,7 @@ BEGIN
              , CAST ('' AS TVarChar) AS MovementDescName
 
              , CAST (0 AS TFloat)    AS WeighingNumber
+             , CAST (0 AS TFloat)    AS NumSecurity
 
              , CAST ('' AS TVarChar) AS PartionGoods
 
@@ -119,6 +121,7 @@ BEGIN
              , MovementDesc.Id                            AS MovementDesc
              , MovementDesc.ItemName                      AS MovementDescName
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
+             , MovementFloat_NumSecurity.ValueData        AS NumSecurity
 
              , MovementString_PartionGoods.ValueData      AS PartionGoods
 
@@ -188,6 +191,10 @@ BEGIN
                                     ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
 
+            LEFT JOIN MovementFloat AS MovementFloat_NumSecurity
+                                    ON MovementFloat_NumSecurity.MovementId =  Movement.Id
+                                   AND MovementFloat_NumSecurity.DescId = zc_MovementFloat_NumSecurity()
+
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
@@ -253,6 +260,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 22.05.25         * NumSecurity
  17.07.24         * isRePack
  15.11.22         * 
  06.09.21         *

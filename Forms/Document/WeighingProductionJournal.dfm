@@ -315,6 +315,22 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         Options.Editing = False
         Width = 70
       end
+      object NumSecurity: TcxGridDBColumn
+        Caption = #8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072
+        DataBinding.FieldName = 'NumSecurity'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object isNumSecurity: TcxGridDBColumn
+        Caption = #1054#1093#1088#1072#1085#1072' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isNumSecurity'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object UnitName_PersonalGroup: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076'. ('#8470#1073#1088#1080#1075#1072#1076#1099')'
         DataBinding.FieldName = 'UnitName_PersonalGroup'

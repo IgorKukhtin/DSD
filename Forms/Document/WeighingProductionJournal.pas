@@ -134,6 +134,8 @@ type
     cxGridDBTableViewColumn2: TcxGridDBColumn;
     BranchCode: TcxGridDBColumn;
     isRePack: TcxGridDBColumn;
+    NumSecurity: TcxGridDBColumn;
+    isNumSecurity: TcxGridDBColumn;
   private
   public
   end;

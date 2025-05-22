@@ -4,6 +4,7 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -42
   ExplicitWidth = 1556
   ExplicitHeight = 447
   PixelsPerInch = 96
@@ -2233,6 +2234,85 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
         end>
       Caption = 'actGetForm'
     end
+    object actOpenForm_isManyEdit: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081'> '#1087#1086' '#1074#1089#1077#1084' '#1103#1095#1077#1081#1082#1072#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081'> '#1087#1086' '#1074#1089#1077#1084' '#1103#1095#1077#1081#1082#1072#1084
+      ImageIndex = 43
+      FormName = 'TSend_PartionCell_isManyEditForm'
+      FormNameParam.Value = 'TSend_PartionCell_isManyEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionGoodsDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actOpenReport_PartionCell_history: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -3461,6 +3541,14 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenForm_isManyEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -3544,6 +3632,10 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
     end
     object bbOpenReport_PartionCell_GoodsHistory: TdxBarButton
       Action = actOpenReport_PartionCell_GoodsHistory
+      Category = 0
+    end
+    object bbOpenForm_isManyEdit: TdxBarButton
+      Action = actOpenForm_isManyEdit
       Category = 0
     end
   end

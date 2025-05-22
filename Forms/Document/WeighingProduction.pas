@@ -278,6 +278,8 @@ type
     spSelectMIPrintPassport: TdsdStoredProc;
     bbSelectMIPrintPassport: TdxBarButton;
     sbbPrint: TdxBarSubItem;
+    edNumSecurity: TcxCurrencyEdit;
+    cxLabel23: TcxLabel;
   private
   public
   end;

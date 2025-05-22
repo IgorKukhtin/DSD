@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MovementId_Order Integer, InvNumberOrder TVarChar
              , MovementDescNumber Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
+             , NumSecurity TFloat, isNumSecurity Boolean
              , PartionGoods TVarChar
              , isProductionIn Boolean, isAuto Boolean
              , isList Boolean 
@@ -79,7 +80,9 @@ BEGIN
 
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.ItemName                      AS MovementDescName
-             , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
+             , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber 
+             , MovementFloat_NumSecurity.ValueData        AS NumSecurity
+             , CASE WHEN MovementFloat_NumSecurity.ValueData < 0 THEN TRUE ELSE FALSE END ::Boolean AS isNumSecurity
 
              , MovementString_PartionGoods.ValueData      AS PartionGoods
              , MovementBoolean_isIncome.ValueData         AS isProductionIn
@@ -139,7 +142,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
                                     ON MovementFloat_WeighingNumber.MovementId =  Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
-
+            LEFT JOIN MovementFloat AS MovementFloat_NumSecurity
+                                    ON MovementFloat_NumSecurity.MovementId =  Movement.Id
+                                   AND MovementFloat_NumSecurity.DescId = zc_MovementFloat_NumSecurity()
+ 
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
                                       ON MovementBoolean_isIncome.MovementId =  Movement.Id
                                      AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
@@ -232,6 +238,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 22.05.25         * NumSecurity
  17.07.24         * isRePack
  15.11.22         * add BranchCode
  06.09.21         * isList

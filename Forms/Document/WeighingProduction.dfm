@@ -26,6 +26,7 @@ object WeighingProductionForm: TWeighingProductionForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 6
     object edInvNumber: TcxTextEdit
       Left = 113
       Top = 23
@@ -331,6 +332,26 @@ object WeighingProductionForm: TWeighingProductionForm
       ShowHint = True
       TabOrder = 35
       Width = 69
+    end
+    object edNumSecurity: TcxCurrencyEdit
+      Left = 1010
+      Top = 96
+      Enabled = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 3
+      Properties.DisplayFormat = ',0.'
+      Properties.ReadOnly = True
+      TabOrder = 36
+      Width = 106
+    end
+    object cxLabel23: TcxLabel
+      Left = 1010
+      Top = 81
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+      Caption = #8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072
+      ParentShowHint = False
+      ShowHint = True
     end
   end
   object cxPageControl: TcxPageControl
@@ -974,9 +995,6 @@ object WeighingProductionForm: TWeighingProductionForm
     object cxTabSheetPartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0
@@ -3145,6 +3163,13 @@ object WeighingProductionForm: TWeighingProductionForm
         Name = 'WeighingNumber'
         Value = 0.000000000000000000
         Component = edWeighingNumber
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NumSecurity'
+        Value = Null
+        Component = edNumSecurity
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

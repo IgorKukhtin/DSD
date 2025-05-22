@@ -849,11 +849,16 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalPage_8', 'страниц в печати - счет' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalPage_8');  
 
+ 
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_NumSecurity() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_NumSecurity'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_NumSecurity', 'Номер охранника' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_NumSecurity');  
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 22.05.25         * zc_MovementFloat_NumSecurity
  05.05.25         * zc_MovementFloat_TotalPage_1 ... 8
  01.05.25         * zc_MovementFloat_TotalLines
  06.12.24         * zc_MovementFloat_TotalLiveWeight
