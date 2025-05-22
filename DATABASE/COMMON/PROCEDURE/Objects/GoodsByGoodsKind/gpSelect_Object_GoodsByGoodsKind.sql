@@ -43,7 +43,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsPackId Integer, GoodsPackCode Integer, GoodsPackName TVarChar, MeasurePackName TVarChar
              , GoodsKindPackId Integer, GoodsKindPackName TVarChar
              , GoodsRealId Integer, GoodsRealCode Integer, GoodsRealName TVarChar, MeasureRealName TVarChar
-             , GoodsKindRealId Integer, GoodsKindRealName TVarChar 
+             , GoodsKindRealId Integer, GoodsKindRealName TVarChar
+             , GoodsSubId_CEH Integer, GoodsSubCode_CEH Integer, GoodsSubName_CEH TVarChar, MeasureSubName_CEH TVarChar
+             , GoodsKindSubId_CEH Integer, GoodsKindSubName_CEH TVarChar 
              , GoodsKindNewId Integer, GoodsKindNewName TVarChar
              , GoodsIncomeId Integer, GoodsIncomeCode Integer, GoodsIncomeName TVarChar, MeasureIncomeName TVarChar
              , GoodsKindIncomeId Integer, GoodsKindIncomeName TVarChar             
@@ -260,6 +262,13 @@ BEGIN
            , Object_MeasureReal.ValueData      AS MeasureRealName
            , Object_GoodsKindReal.Id           AS GoodsKindRealId
            , Object_GoodsKindReal.ValueData    AS GoodsKindRealName
+
+           , Object_GoodsSub_CEH.Id               AS GoodsSubId_CEH
+           , Object_GoodsSub_CEH.ObjectCode       AS GoodsSubCode_CEH
+           , Object_GoodsSub_CEH.ValueData        AS GoodsSubName_CEH
+           , Object_MeasureSub_CEH.ValueData      AS MeasureSubName_CEH
+           , Object_GoodsKindSub_CEH.Id           AS GoodsKindSubId_CEH
+           , Object_GoodsKindSub_CEH.ValueData    AS GoodsKindSubName_CEH
 
            , Object_GoodsKindNew.Id           AS GoodsKindNewId
            , Object_GoodsKindNew.ValueData    AS GoodsKindNewName
@@ -587,7 +596,22 @@ BEGIN
                                  ON ObjectLink_GoodsByGoodsKind_GoodsKindNew.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectLink_GoodsByGoodsKind_GoodsKindNew.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindNew()
             LEFT JOIN Object AS Object_GoodsKindNew ON Object_GoodsKindNew.Id = ObjectLink_GoodsByGoodsKind_GoodsKindNew.ChildObjectId
+            --
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub_CEH
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsSub_CEH.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsSub_CEH.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub_CEH()
+            LEFT JOIN Object AS Object_GoodsSub_CEH ON Object_GoodsSub_CEH.Id = ObjectLink_GoodsByGoodsKind_GoodsSub_CEH.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub_CEH
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsKindSub_CEH.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsKindSub_CEH.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+            LEFT JOIN Object AS Object_GoodsKindSub_CEH ON Object_GoodsKindSub_CEH.Id = ObjectLink_GoodsByGoodsKind_GoodsKindSub_CEH.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsSub_CEH_Measure
+                                 ON ObjectLink_GoodsSub_CEH_Measure.ObjectId = Object_GoodsSub.Id
+                                AND ObjectLink_GoodsSub_CEH_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_MeasureSub_CEH ON Object_MeasureSub_CEH.Id = ObjectLink_GoodsSub_CEH_Measure.ChildObjectId
+            
             --old
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis_old
                                  ON ObjectLink_GoodsByGoodsKind_GoodsBasis_old.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -638,6 +662,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.05.25        * 
  21.03.25        * WeightPackageKorob 
  20.01.25        * isEtiketka
  11.11.24        * GoodsSubDate
