@@ -1697,7 +1697,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Width = 103
     end
     object cbisCell: TcxCheckBox
-      Left = 874
+      Left = 882
       Top = 3
       Action = actRefreshCell
       Properties.ReadOnly = False
@@ -2831,7 +2831,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Caption = 'actContinueAction'
       Continue.Value = False
       Continue.Component = FormParams
-      Continue.ComponentItem = 'outisEdit'
+      Continue.ComponentItem = 'outisPrint'
       Continue.DataType = ftBoolean
       Continue.MultiSelectSeparator = ','
     end
