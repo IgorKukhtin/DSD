@@ -173,6 +173,7 @@ type
     InsertName: TcxGridDBColumn;
     UpdateDate: TcxGridDBColumn;
     UpdateName: TcxGridDBColumn;
+    isNotFact: TcxGridDBColumn;
   private
     { Private declarations }
   public

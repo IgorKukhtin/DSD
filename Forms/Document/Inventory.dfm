@@ -169,7 +169,14 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object Amount: TcxGridDBColumn [8]
+          object isNotFact: TcxGridDBColumn [8]
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1077#1086#1088#1080#1103
+            DataBinding.FieldName = 'isNotFact'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Amount: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -179,7 +186,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object Count: TcxGridDBColumn [9]
+          object Count: TcxGridDBColumn [10]
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1073#1072#1090#1086#1085#1086#1074' '#1080#1083#1080' '#1091#1087#1072#1082#1086#1074#1086#1082
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -190,7 +197,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object HeadCount: TcxGridDBColumn [10]
+          object HeadCount: TcxGridDBColumn [11]
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -201,7 +208,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object Price: TcxGridDBColumn [11]
+          object Price: TcxGridDBColumn [12]
             Caption = #1062#1077#1085#1072' ('#1087#1072#1088#1090#1080#1103')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -211,7 +218,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object Price_pr: TcxGridDBColumn [12]
+          object Price_pr: TcxGridDBColumn [13]
             Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'Price_pr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -438,9 +445,6 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheet_PartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0
@@ -2912,6 +2916,15 @@ inherited InventoryForm: TInventoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionModelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsNotFact'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotFact'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
