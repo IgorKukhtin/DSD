@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory_scale(
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , NumSecurity  TFloat
              , MovementItemId Integer
              , MovementId_pas Integer, MovementItemId_pas Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -97,6 +98,7 @@ BEGIN
                            , Movement.OperDate         AS OperDate
                            , Object_Status.ObjectCode  AS StatusCode
                            , Object_Status.ValueData   AS StatusName
+                           , MovementFloat_NumSecurity.ValueData  AS NumSecurity
                         FROM tmpStatus
                              INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                 AND Movement.DescId = zc_Movement_WeighingProduction()
@@ -121,6 +123,9 @@ BEGIN
                                                                     AND MB_isAuto.ValueData  = TRUE
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+                             LEFT JOIN MovementFloat AS MovementFloat_NumSecurity
+                                                     ON MovementFloat_NumSecurity.MovementId = Movement.Id
+                                                    AND MovementFloat_NumSecurity.DescId = zc_MovementFloat_NumSecurity()
                        )
         -- Элементы zc_Movement_WeighingProduction - здесь данные сканирование Паспорта - КПК
       , tmpMI AS (SELECT MovementItem.*
@@ -333,6 +338,7 @@ BEGIN
            , Movement.OperDate               AS OperDate
            , Movement.StatusCode             AS StatusCode
            , Movement.StatusName             AS StatusName
+           , Movement.NumSecurity  ::TFloat
 
            , MovementItem.Id                             AS MovementItemId
             -- данные Партии - Паспорта
@@ -585,6 +591,7 @@ BEGIN
            , Movement.OperDate               AS OperDate
            , Movement.StatusCode             AS StatusCode
            , Movement.StatusName             AS StatusName
+           , Movement.NumSecurity  ::TFloat
 
            , MovementItem.Id                             AS MovementItemId
             -- данные Партии - Паспорта
@@ -724,3 +731,24 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Inventory_scale (inStartDate:= '01.02.2025', inEndDate:= '28.02.2025', inIsErased := 'True', inSession := zfCalc_UserAdmin())
+
+/*
+  WITH 
+tmp AS (SELECT tmp.*
+, MovementFloat_NumSecurity.ValueData        AS NumSecurity
+ FROM gpSelect_Movement_Inventory_scale (inStartDate:= '25.04.2025', inEndDate:= '25.04.2025', inIsErased := 'false', inSession := zfCalc_UserAdmin()) AS tmp
+
+          
+)
+ 
+select tmp.GoodsCode, tmp2.GoodsCode, tmp.GoodsKindId, tmp2.GoodsKindId, tmp.PartionGoodsDate, tmp2.PartionGoodsDate
+from tmp
+    LEFT JOIN tmp AS tmp2 ON tmp2.Operdate = tmp.Operdate
+--and tmp2.StutusCode = tmp.StutusCode
+and tmp2.GoodsId = tmp.GoodsId
+and tmp2.GoodsKindId = tmp.GoodsKindId
+and tmp2.PartionGoodsDate = tmp.PartionGoodsDate
+and tmp2.NumSecurity <0
+where tmp.NumSecurity > 0
+--order by 10
+*/

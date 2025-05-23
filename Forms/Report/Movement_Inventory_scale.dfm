@@ -254,6 +254,16 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             HeaderAlignmentVert = vaCenter
             Width = 59
           end
+          object NumSecurity: TcxGridDBColumn
+            Caption = #8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072
+            DataBinding.FieldName = 'NumSecurity'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object MovementItemId_passport: TcxGridDBColumn
             Caption = #1064#1090#1088#1080#1093#1082#1086#1076
             DataBinding.FieldName = 'MovementItemId_passport'

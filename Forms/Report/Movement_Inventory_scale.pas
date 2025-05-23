@@ -71,6 +71,7 @@ type
     bb: TdxBarButton;
     spSelectPrint_gr: TdsdStoredProc;
     spSelectPrint_Mov_gr: TdsdStoredProc;
+    NumSecurity: TcxGridDBColumn;
   private
     { Private declarations }
   public
