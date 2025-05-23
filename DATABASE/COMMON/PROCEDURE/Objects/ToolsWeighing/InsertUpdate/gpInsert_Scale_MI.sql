@@ -84,7 +84,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
 
     IN inIsAmountPartnerSecond Boolean   , -- без оплаты да/нет - Кол-во поставщика
     IN inIsPriceWithVAT        Boolean   , -- Цена с НДС да/нет - для цена поставщика
-    IN inOperDate_ReturnOut    TDateTime   , -- Дата для цены возврат поставщику
+    IN inOperDate_ReturnOut    TDateTime , -- Дата для цены возврат поставщику
     IN inPricePartner          TFloat    , -- цена поставщика - из накладной - ввод в контроле
     IN inPriceIncome           TFloat    , -- цена по спецификации
     IN inAmountPartnerSecond   TFloat    , -- Кол-во поставщика - из накладной
@@ -132,7 +132,10 @@ $BODY$
 
    DECLARE vbRemainsCount_check TFloat;
 
-   DECLARE vbPrice_301         TFloat; -- !!!цена для Специй или для Сырья - цена ввод в контроле или по спецификации!!!
+   DECLARE vbPrice_301                 TFloat; -- !!!цена для Специй или для Сырья - цена ввод в контроле или по спецификации!!!
+   DECLARE vbPrice_301_check           TFloat; -- !!!цена для Сырья - по спецификации!!!
+   DECLARE vbPrice_301_notVat_check    TFloat; -- !!!цена для Сырья - по спецификации!!!
+   DECLARE vbPrice_301_addVat_check    TFloat; -- !!!цена для Сырья - по спецификации!!!
 
    DECLARE vbWeight_goods              TFloat;
    DECLARE vbWeightTare_goods          TFloat;
@@ -390,10 +393,89 @@ BEGIN
      THEN
          -- цена по спецификации
          vbPrice_301:= inPriceIncome;
+         
+         -- поиск цена по спецификации - для проверки
+         SELECT CASE WHEN inIsPriceWithVAT = TRUE
+                     -- цена с НДС
+                     THEN lpGet.ValuePrice_addVat
+
+                     WHEN inIsPriceWithVAT = FALSE
+                     -- цена без НДС
+                     THEN lpGet.ValuePrice_notVat
+
+                     WHEN FALSE = COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT()), FALSE)
+                     -- цена без НДС
+                     THEN lpGet.ValuePrice_notVat
+                     -- цена с НДС
+                     ELSE lpGet.ValuePrice_addVat
+                END
+              , lpGet.ValuePrice_notVat
+              , lpGet.ValuePrice_addVat
+                INTO vbPrice_301_check
+                   , vbPrice_301_notVat_check
+                   , vbPrice_301_addVat_check
+         FROM lpGet_MovementItem_ContractGoods (inOperDate    := vbOperDate
+                                              , inJuridicalId := 0
+                                              , inPartnerId   := 0
+                                              , inContractId  := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                              , inGoodsId     := 0
+                                              , inUserId      := vbUserId
+                                               ) AS lpGet
+         WHERE lpGet.GoodsId = inGoodsId
+         ORDER BY COALESCE (lpGet.ValuePrice_notVat, 0) DESC
+         LIMIT 1
+         ;
+                         
+
+         -- Проверка - 1
+         IF (vbPrice_301 <> vbPrice_301_notVat_check AND vbPrice_301 <> vbPrice_301_addVat_check AND vbPrice_301_check > 0)
+            -- не Документ поставщика
+            AND COALESCE (inPricePartner, 0) = 0
+            --
+            -- AND vbUserId IN (5)
+            -- AND 1=0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Цена документа = <%> не соответствует цене по спецификации = <%> или <%>.%Договор = <%>(%).%Дата = <%>.%с НДС = <%> + <%>'
+                            , zfConvert_FloatToString (vbPrice_301)
+                            , zfConvert_FloatToString (vbPrice_301_notVat_check)
+                            , zfConvert_FloatToString (vbPrice_301_addVat_check)
+                            , CHR (13)
+                            , lfGet_Object_ValueData ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract()))
+                            , (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                            , CHR (13)
+                            , zfConvert_DateToString (vbOperDate)
+                            , CHR (13)
+                            , inIsPriceWithVAT
+                            , (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT())
+                             ;
+         END IF;
+
+         -- Проверка - 2
+         IF (vbPrice_301 <> vbPrice_301_check AND vbPrice_301_check > 0) 
+            -- ДА Документ поставщика
+            AND inPricePartner <> 0
+            --
+            -- AND vbUserId IN (5)
+            -- AND 1=0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Цена документа = <%> не соответствует цене по спецификации = <%>.%Договор = <%>(%).%Дата = <%>.%с НДС = <%>'
+                            , zfConvert_FloatToString (vbPrice_301)
+                            , zfConvert_FloatToString (vbPrice_301_check)
+                            , CHR (13)
+                            , lfGet_Object_ValueData ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract()))
+                            , (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                            , CHR (13)
+                            , zfConvert_DateToString (vbOperDate)
+                            , CHR (13)
+                            , (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT())
+                             ;
+         END IF;
 
          -- Проверка
          IF COALESCE (inPriceIncome, 0) <= 0 AND vbMovementDescId = zc_Movement_Income()
+            -- Отменили проверку
             AND 1=0
+            --
             AND NOT EXISTS (SELECT 1
                             FROM ObjectLink AS ObjectLink_Goods_InfoMoney
                                  JOIN Object_InfoMoney_View AS View_InfoMoney

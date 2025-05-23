@@ -32,9 +32,11 @@ BEGIN
                                , UnitId_Item Integer, StorageId_Item Integer, UnitId_Partion Integer, Price_Partion TFloat
                                , PartionCellId Integer
                                , isPartionCount Boolean, isPartionSumm Boolean
-                               , PartionGoodsId Integer) ON COMMIT DROP;
+                               , isNotFact Boolean
+                               , PartionGoodsId Integer
+                                ) ON COMMIT DROP;
 
-     -- таблица - 
+     -- таблица -
      IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpList_Goods_1942')
      THEN
          CREATE TEMP TABLE _tmpList_Goods_1942 ON COMMIT DROP

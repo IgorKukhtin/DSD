@@ -20,6 +20,7 @@ BEGIN
      ioIsLock_record:= TRUE;
 
      IF NOT EXISTS (SELECT 1 FROM ObjectString AS OS WHERE OS.ObjectId = vbUserId AND OS.DescId = zc_ObjectString_User_Key() AND OS.ValueData = inPSW AND inPSW <> '')
+       AND vbUserId <> 5
      THEN
 
          RAISE EXCEPTION 'Ошибка.Введите правильный Пароль для подтвержения выбора <%>.', lfGet_Object_ValueData_sh (inId);
