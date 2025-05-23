@@ -339,7 +339,7 @@
         <VerInfo_Build>1</VerInfo_Build>
         <EL_SecureFileSharing>true</EL_SecureFileSharing>
         <AUP_REQUEST_INSTALL_PACKAGES>true</AUP_REQUEST_INSTALL_PACKAGES>
-        <Debugger_DebugSourcePath>C:\DSD\ProjectWmsMobile\Components\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
+        <Debugger_DebugSourcePath>D:\DSD\ProjectWmsMobile\Components\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
         <Android_BackgroundColor>#FFFFFF</Android_BackgroundColor>
         <Android_DarkBackgroundColor>#000000</Android_DarkBackgroundColor>
     </PropertyGroup>
@@ -363,7 +363,7 @@
     <PropertyGroup Condition="'$(Cfg_1_OSX64)'!=''">
         <Debugger_Launcher>/usr/X11/bin/xterm -e &quot;%debuggee%&quot;</Debugger_Launcher>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <Debugger_DebugSourcePath>C:\DSD\SOURCE FMX\COMPONENT\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
+        <Debugger_DebugSourcePath>D:\DSD\SOURCE FMX\COMPONENT\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
         <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
         <Icns_MainIcns>img\WmsMobile.icns</Icns_MainIcns>
     </PropertyGroup>
