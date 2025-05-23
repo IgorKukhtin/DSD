@@ -16,9 +16,10 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integ
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Boolean, Boolean, TVarChar);
 /*DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                                , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Boolean, Boolean, TVarChar);*/
+/*DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                               , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Boolean, Boolean, TVarChar);*/
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                               , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Boolean, Boolean, TVarChar);
-
+                                                               , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
@@ -57,6 +58,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
     IN inWidth                 TFloat  , -- Ўирина
 
     IN inGoodsSubDate          TDateTime, --
+    IN inGoodsSub_CEH_start    TDateTime, --
     IN inisNotDate             Boolean  , -- если FALSE записать в inGoodsSubDate - NULL 
     IN inIsNotPack             Boolean  , -- не упаковывать
     IN inSession               TVarChar 
@@ -136,6 +138,9 @@ BEGIN
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GoodsByGoodsKind_GoodsSub(), ioId, inGoodsSubDate);
    END IF;
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_CEH_start(), ioId, inGoodsSub_CEH_start);
 
    -- сохранили св€зь с <“овары  (перемещ.пересортица - расход)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsSubSend(), ioId, inGoodsSubSendId);

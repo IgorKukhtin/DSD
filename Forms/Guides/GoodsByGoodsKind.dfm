@@ -792,6 +792,14 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 62
           end
+          object GoodsSub_CEH_start: TcxGridDBColumn
+            Caption = '6.1.'#1044#1072#1090#1072' ('#1087#1077#1088#1077#1089#1086#1088'. '#1062#1045#1061'- '#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsSub_CEH_start'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072', '#1089' '#1082#1086#1090#1086#1088#1086#1081' '#1088#1072#1073#1086#1090#1072#1077#1090' ('#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1062#1045#1061' - '#1088#1072#1089#1093#1086#1076')'
+            Width = 80
+          end
           object GoodsSubCode_CEH: TcxGridDBColumn
             Caption = '6.1.'#1050#1086#1076' '#1090#1086#1074'. ('#1087#1077#1088#1077#1089#1086#1088#1090'. '#1062#1045#1061' - '#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsSubCode_CEH'
@@ -2373,6 +2381,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsSubDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsSub_CEH_start'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsSub_CEH_start'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -71,7 +71,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , EndDate_old  TDateTime
              , GoodsSubDate TDateTime 
              , isNotDate    Boolean
-             
+             , GoodsSub_CEH_start TDateTime
               )
 AS
 $BODY$
@@ -321,7 +321,8 @@ BEGIN
            , Object_Goods_main_old.ValueData        ::TVarChar   AS GoodsName_main_old
            , ObjectDate_End_old.ValueData           ::TDateTime  AS EndDate_old
            , ObjectDate_GoodsSub.ValueData          ::TDateTime  AS GoodsSubDate
-           , TRUE                                   ::Boolean    AS isNotDate
+           , TRUE                                   ::Boolean    AS isNotDate 
+           , ObjectDate_GoodsSub_CEH_start.ValueData :: TDateTime AS GoodsSub_CEH_start
        FROM tmpGoodsByGoodsKind AS Object_GoodsByGoodsKind_View
             /*LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
                                  ON ObjectLink_GoodsByGoodsKind_GoodsBasis.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -629,6 +630,10 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_GoodsSub
                                  ON ObjectDate_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectDate_GoodsSub.DescId = zc_ObjectDate_GoodsByGoodsKind_GoodsSub()
+
+            LEFT JOIN ObjectDate AS ObjectDate_GoodsSub_CEH_start
+                                 ON ObjectDate_GoodsSub_CEH_start.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectDate_GoodsSub_CEH_start.DescId = zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_CEH_start()
             --
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Receipt
                                  ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = Object_GoodsByGoodsKind_View.Id
