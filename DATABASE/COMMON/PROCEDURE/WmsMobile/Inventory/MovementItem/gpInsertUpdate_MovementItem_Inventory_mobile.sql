@@ -1,9 +1,13 @@
 -- Function: gpInsertUpdate_MovementItem_Inventory_mobile()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_mobile (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_mobile (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_mobile (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_mobile (Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory_mobile(
     IN inMovementItemId      Integer   , -- Ключ объекта <Элемент документа>
+    IN inNumSecurity         TVarChar  , -- Номер охранника
+    IN inIsNumSecurity       Boolean   , -- Режим охранника Да/нет
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -15,11 +19,28 @@ $BODY$
    DECLARE vbOperDate     TDateTime;
 
    DECLARE vbMovementItemId_find Integer;
-   DECLARE vbId Integer;
+   DECLARE vbId                  Integer;
+   DECLARE vbNumSecurity         Integer; -- Номер охранника
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory_mobile());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- Номер охранника
+     IF zfConvert_StringToNumber(inNumSecurity) > 0
+     THEN
+         vbNumSecurity:= zfConvert_StringToNumber(inNumSecurity);
+     ELSE 
+         vbNumSecurity:= zfConvert_StringToNumber(RIGHT (inNumSecurity, LENGTH (inNumSecurity) - 1));
+     END IF;
+
+
+     -- Проверка
+     IF COALESCE (vbNumSecurity, 0) <= 0
+     THEN
+         --
+         RAISE EXCEPTION 'Ошибка.Номер охранника не заполнен.';
+     END IF;
 
 
      -- Дата в зависимости от смены
@@ -101,6 +122,12 @@ BEGIN
                                                        AND MLO_User.DescId     = zc_MovementLinkObject_User()
                                                        AND MLO_User.ObjectId   = vbUserId
 
+                          -- Номер охранника 
+                          INNER JOIN MovementFloat AS MovementFloat_NumSecurity
+                                                   ON MovementFloat_NumSecurity.MovementId =  Movement.Id
+                                                  AND MovementFloat_NumSecurity.DescId     = zc_MovementFloat_NumSecurity()
+                                                  AND MovementFloat_NumSecurity.ValueData  = CASE WHEN inIsNumSecurity = TRUE THEN -1 * vbNumSecurity ELSE vbNumSecurity END
+
                      WHERE Movement.DescId = zc_Movement_WeighingProduction()
                        AND Movement.OperDate = vbOperDate
                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
@@ -148,6 +175,9 @@ BEGIN
                                                                    , inComment             := ''
                                                                    , inSession             := inSession
                                                                     );
+
+         -- сохранили - Номер охранника 
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NumSecurity(), vbMovementId, CASE WHEN inIsNumSecurity = TRUE THEN -1 * vbNumSecurity ELSE vbNumSecurity END :: TFloat);
 
          -- сохранили - Автоматический
          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), vbMovementId, TRUE);

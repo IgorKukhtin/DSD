@@ -287,6 +287,7 @@ BEGIN
                                                                                 , zc_Enum_InfoMoneyDestination_20400() -- ГСМ
                                                                                 , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                 , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                , zc_Enum_InfoMoneyDestination_21500() -- Общефирменные  + Маркетинг + Сувениры
                                                                                  )
                                AND inBranchCode BETWEEN 301 AND 310
                             UNION

@@ -12,6 +12,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory_mobile(
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+
+               -- Информация по охраннику
+             , NumSecurity_str TVarChar
+
              , MovementItemId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
@@ -92,6 +96,7 @@ BEGIN
                            , Movement.OperDate         AS OperDate
                            , Object_Status.ObjectCode  AS StatusCode
                            , Object_Status.ValueData   AS StatusName
+                           , MovementFloat_NumSecurity.ValueData AS NumSecurity
                         FROM tmpStatus
                              INNER JOIN Movement ON Movement.OperDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '5 DAY')
                                                 AND Movement.DescId = zc_Movement_WeighingProduction()
@@ -109,6 +114,10 @@ BEGIN
                                                       ON MovementFloat_MovementDesc.MovementId =  Movement.Id
                                                      AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
                                                      AND MovementFloat_MovementDesc.ValueData  = zc_Movement_Inventory() :: TFloat
+                             -- Номер охранника 
+                             LEFT JOIN MovementFloat AS MovementFloat_NumSecurity
+                                                     ON MovementFloat_NumSecurity.MovementId =  Movement.Id
+                                                    AND MovementFloat_NumSecurity.DescId     = zc_MovementFloat_NumSecurity()
                              -- Автоматический
                              INNER JOIN MovementBoolean AS MB_isAuto ON MB_isAuto.MovementId = Movement.Id
                                                                     AND MB_isAuto.DescId     = zc_MovementBoolean_isAuto()
@@ -201,6 +210,8 @@ BEGIN
            , Movement.OperDate               AS OperDate
            , Movement.StatusCode             AS StatusCode
            , Movement.StatusName             AS StatusName
+
+           , (CASE WHEN Movement.NumSecurity > 0 THEN '-' ELSE '+' END  || zfConvert_FloatToString (COALESCE (Movement.NumSecurity, 0))) :: TVarChar AS NumSecurity_str
 
            , MovementItem.Id                             AS MovementItemId
            , Object_Goods.Id          		         AS GoodsId

@@ -7,6 +7,9 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_Inventory_mobile(
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementItemId       Integer
+               -- Информация по охраннику
+             , NumSecurity_str      TVarChar
+
               -- Товар              
              , GoodsId              Integer
              , GoodsCode            Integer
@@ -202,6 +205,10 @@ BEGIN
         -- Результат
         SELECT
                MovementItem.Id                                     AS MovementItemId
+
+               -- Информация по охраннику
+             , (CASE WHEN MovementFloat_NumSecurity.ValueData > 0 THEN '-' ELSE '+' END  || zfConvert_FloatToString (COALESCE (MovementFloat_NumSecurity.ValueData, 0))) :: TVarChar AS NumSecurity_str
+
              , Object_Goods.Id                                     AS GoodsId
              , Object_Goods.ObjectCode                             AS GoodsCode
              , Object_Goods.ValueData                              AS GoodsName
@@ -325,6 +332,11 @@ BEGIN
                                         ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                        AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
              LEFT JOIN Movement ON Movement.Id =  MovementItem.MovementId
+
+             -- Номер охранника 
+             LEFT JOIN MovementFloat AS MovementFloat_NumSecurity
+                                     ON MovementFloat_NumSecurity.MovementId =  MovementItem.MovementId
+                                    AND MovementFloat_NumSecurity.DescId     = zc_MovementFloat_NumSecurity()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id

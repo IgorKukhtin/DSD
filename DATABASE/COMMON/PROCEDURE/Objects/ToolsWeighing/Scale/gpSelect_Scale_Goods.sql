@@ -86,6 +86,8 @@ BEGIN
 
 -- if vbUserId = 5 then return; end if;
 -- if vbUserId = 5 then inMovementId:= 7505643; end if;
+-- Тест ошибка Приход сырья
+-- if vbUserId = 5 then inOrderExternalId:= 0; inMovementId:=0; end if;
 
 
    IF (inBranchCode > 1000)
@@ -397,6 +399,7 @@ BEGIN
                                                                                            , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                            , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
                                                                                            , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
+                                                                                           , zc_Enum_InfoMoneyDestination_21500() -- Общефирменные  + Маркетинг + Сувениры
                                                                                             )
                                                 OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
                                                                                 , zc_Enum_InfoMoney_10106() -- Сыр
@@ -869,6 +872,7 @@ BEGIN
                                                                                 , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                 , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
                                                                                 , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
+                                                                                , zc_Enum_InfoMoneyDestination_21500() -- Общефирменные  + Маркетинг + Сувениры
                                                                                  )
                                      OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
                                                                      , zc_Enum_InfoMoney_10106() -- Сыр
@@ -965,6 +969,7 @@ BEGIN
                                                             , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                             , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
                                                             , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
+                                                            , zc_Enum_InfoMoneyDestination_21500() -- Общефирменные  + Маркетинг + Сувениры
                                                              )
                  OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
                                                  , zc_Enum_InfoMoney_10106() -- Сыр
@@ -1195,6 +1200,7 @@ BEGIN
                                    AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
                                                                                 , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
                                                                                 , zc_Enum_InfoMoneyDestination_20300() -- МНМА
+                                                                                , zc_Enum_InfoMoneyDestination_21500() -- Общефирменные  + Маркетинг + Сувениры
                                                                                  )
                                        )
                                 )
