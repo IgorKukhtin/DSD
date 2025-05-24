@@ -75,6 +75,16 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
+
+             -- документ охраны
+             , MovementId_security  Integer
+             , InvNumber_security   TVarChar
+             , OperDate_security    TDateTime
+             , InsertName_security  TVarChar
+             , UpdateName_security  TVarChar
+             , InsertDate_security  TDateTime
+             , UpdateDate_security  TDateTime
+             , isSecurity Boolean --Есть документ охраны
               )
 AS
 $BODY$
@@ -126,6 +136,7 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_NumSecurity
                                                      ON MovementFloat_NumSecurity.MovementId = Movement.Id
                                                     AND MovementFloat_NumSecurity.DescId = zc_MovementFloat_NumSecurity()
+                        --WHERE MovementFloat_NumSecurity.ValueData >= 0
                        )
         -- Элементы zc_Movement_WeighingProduction - здесь данные сканирование Паспорта - КПК
       , tmpMI AS (SELECT MovementItem.*
@@ -331,6 +342,146 @@ BEGIN
                       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
                  )
 
+     , tmpSecurity AS (SELECT Movement.Id                     AS MovementId
+                            , Movement.InvNumber              AS InvNumber
+                            , Movement.OperDate               AS OperDate
+                            , Movement.StatusCode             AS StatusCode
+                            , Movement.StatusName             AS StatusName
+                            , (Movement.NumSecurity * (-1))  ::TFloat AS NumSecurity
+                 
+                            , MovementItem.Id                             AS MovementItemId
+                             -- данные Партии - Паспорта
+                            , MovementItem_passport.MovementId            AS MovementId_pas
+                            , MIFloat_MovementItemId.ValueData ::Integer  AS MovementItemId_pas
+                 
+                            , Object_Goods.Id                             AS GoodsId
+                            , Object_Goods.ObjectCode                     AS GoodsCode
+                            , Object_Goods.ValueData                      AS GoodsName
+                            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                            , Object_GoodsKind.Id                         AS GoodsKindId
+                            , Object_GoodsKind.ValueData                  AS GoodsKindName
+                            , Object_Measure.Id                           AS MeasureId
+                            , Object_Measure.ValueData                    AS MeasureName
+                 
+                              -- партия - дата
+                            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
+                 
+                              -- Ш/К - паспорт
+                            , (zfFormat_BarCode (zc_BarCodePref_MI(), MIFloat_MovementItemId.ValueData :: Integer)
+                            || zfCalc_SummBarCode (zfFormat_BarCode (zc_BarCodePref_MI(), MIFloat_MovementItemId.ValueData :: Integer)) :: TVarChar
+                              ) :: TVarChar AS MovementItemId_passport
+                 
+                              -- № паспорта
+                            , tmpMIFloat_PartionNum_passport.ValueData :: Integer AS PartionNum
+                 
+                              -- Вес нетто
+                            , CASE WHEN OL_Measure.ChildObjectId = zc_Measure_Sh()
+                                        -- переводим из ШТ в ВЕС
+                                        THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+                                   ELSE MovementItem.Amount
+                              END :: TFloat AS Amount
+                 
+                              -- Шт
+                            , CASE WHEN OL_Measure.ChildObjectId = zc_Measure_Sh()
+                                        THEN MovementItem.Amount
+                                   ELSE 0
+                              END :: TFloat AS Amount_sh
+                            , MIFloat_RealWeight.ValueData              ::TFloat   AS RealWeight
+                            
+                            -- Протокол
+                            , Object_Insert.ValueData    AS InsertName
+                            , Object_Update.ValueData    AS UpdateName
+                            , MIDate_Insert.ValueData    AS InsertDate
+                            , MIDate_Update.ValueData    AS UpdateDate
+                      FROM tmpMovement AS Movement
+                            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+                
+                            LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = MovementItem.Id
+                
+                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                                  AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+                
+                            LEFT JOIN tmpMILO AS MILO_GoodsKind
+                                              ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILO_GoodsKind.ObjectId
+                
+                            -- партия - Дата
+                            LEFT JOIN tmpMIDate AS MIDate_PartionGoods
+                                                ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                               AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
+                
+                            -- Протокол
+                            LEFT JOIN tmpMIDate AS MIDate_Insert
+                                                ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                               AND MIDate_Insert.DescId         = zc_MIDate_Insert()
+                            LEFT JOIN tmpMIDate AS MIDate_Update
+                                                ON MIDate_Update.MovementItemId = MovementItem.Id
+                                               AND MIDate_Update.DescId         = zc_MIDate_Update()
+                
+                            -- Протокол
+                            LEFT JOIN tmpMILO AS MILO_Insert
+                                              ON MILO_Insert.MovementItemId = MovementItem.Id
+                                             AND MILO_Insert.DescId         = zc_MILinkObject_Insert()
+                            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+                
+                            -- Протокол
+                            LEFT JOIN tmpMILO AS MILO_Update
+                                              ON MILO_Update.MovementItemId = MovementItem.Id
+                                             AND MILO_Update.DescId         = zc_MILinkObject_Update()
+                            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+                
+                            -- Партия - Паспорт
+                            LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
+                                                 ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+                
+                           -- данные в Партии - Паспорта
+                           LEFT JOIN MovementItem AS MovementItem_passport ON MovementItem_passport.Id = MIFloat_MovementItemId.ValueData :: Integer
+
+                           -- № паспорта
+                           LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_PartionNum_passport
+                                                         ON tmpMIFloat_PartionNum_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                                        AND tmpMIFloat_PartionNum_passport.DescId         = zc_MIFloat_PartionNum()
+                           --
+                           LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
+                                                ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
+                                               AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
+
+                           LEFT JOIN ObjectFloat AS OF_Weight
+                                                 ON OF_Weight.ObjectId = Object_Goods.Id
+                                                AND OF_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                           LEFT JOIN ObjectLink AS OL_Measure
+                                                ON OL_Measure.ObjectId = Object_Goods.Id
+                                               AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Measure.ChildObjectId 
+                       WHERE COALESCE (Movement.NumSecurity,0) < 0
+                      )   
+
+     , tmpMovement_Data AS (SELECT Movement.Id                     AS Id
+                                 , Movement.InvNumber              AS InvNumber
+                                 , Movement.OperDate               AS OperDate
+                                 , Movement.StatusCode             AS StatusCode
+                                 , Movement.StatusName             AS StatusName
+                                 , Movement.NumSecurity  ::TFloat  AS NumSecurity
+                                 --
+                                 , MovementItem.Id                             AS MovementItemId 
+                                 , MovementItem.ObjectId                       AS ObjectId
+                                 , MovementItem.Amount                         AS Amount
+                                 , MovementItem.isErased                       AS isErased
+                                 --
+                                 , MIFloat_MovementItemId.ValueData ::Integer  AS MovementItemId_pas
+                            FROM tmpMovement AS Movement
+                                 INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+                                 -- Партия - Паспорт
+                                 LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
+                                                      ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+
+                            WHERE COALESCE (Movement.NumSecurity,0) >= 0 
+                            )
         -- Результат
         SELECT
              Movement.Id                     AS Id
@@ -340,10 +491,10 @@ BEGIN
            , Movement.StatusName             AS StatusName
            , Movement.NumSecurity  ::TFloat
 
-           , MovementItem.Id                             AS MovementItemId
+           , Movement.MovementItemId                     AS MovementItemId
             -- данные Партии - Паспорта
            , MovementItem_passport.MovementId            AS MovementId_pas
-           , MIFloat_MovementItemId.ValueData ::Integer  AS MovementItemId_pas
+           , Movement.MovementItemId_pas ::Integer  AS MovementItemId_pas
 
            , Object_Goods.Id                             AS GoodsId
            , Object_Goods.ObjectCode                     AS GoodsCode
@@ -358,8 +509,8 @@ BEGIN
            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
 
              -- Ш/К - паспорт
-           , (zfFormat_BarCode (zc_BarCodePref_MI(), MIFloat_MovementItemId.ValueData :: Integer)
-           || zfCalc_SummBarCode (zfFormat_BarCode (zc_BarCodePref_MI(), MIFloat_MovementItemId.ValueData :: Integer)) :: TVarChar
+           , (zfFormat_BarCode (zc_BarCodePref_MI(), Movement.MovementItemId_pas :: Integer)
+           || zfCalc_SummBarCode (zfFormat_BarCode (zc_BarCodePref_MI(), Movement.MovementItemId_pas :: Integer)) :: TVarChar
              ) :: TVarChar AS MovementItemId_passport
 
              -- № паспорта
@@ -372,13 +523,13 @@ BEGIN
              -- Вес нетто
            , CASE WHEN OL_Measure.ChildObjectId = zc_Measure_Sh()
                        -- переводим из ШТ в ВЕС
-                       THEN MovementItem.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
-                  ELSE MovementItem.Amount
+                       THEN Movement.Amount * (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))
+                  ELSE Movement.Amount
              END :: TFloat AS Amount
 
              -- Шт
            , CASE WHEN OL_Measure.ChildObjectId = zc_Measure_Sh()
-                       THEN MovementItem.Amount
+                       THEN Movement.Amount
                   ELSE 0
              END :: TFloat AS Amount_sh
 
@@ -438,143 +589,155 @@ BEGIN
            , MIDate_Insert.ValueData    AS InsertDate
            , MIDate_Update.ValueData    AS UpdateDate
 
-           , MovementItem.isErased      AS isErased
+           , Movement.isErased      AS isErased 
 
-        FROM tmpMovement AS Movement
-            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+           -- документ охраны
+           , tmpSecurity.MovementId     AS MovementId_security
+           , tmpSecurity.InvNumber      AS InvNumber_security
+           , tmpSecurity.OperDate       AS OperDate_security
+           
+           , tmpSecurity.InsertName     AS InsertName_security
+           , tmpSecurity.UpdateName     AS UpdateName_security
+           , tmpSecurity.InsertDate     AS InsertDate_security
+           , tmpSecurity.UpdateDate     AS UpdateDate_security
 
-            LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = MovementItem.Id
+           , CASE WHEN tmpSecurity.MovementId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSecurity --Есть документ охраны
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+        FROM tmpMovement_Data AS Movement
+            --INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+
+            LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = Movement.MovementItemId
+
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Movement.ObjectId
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN tmpMILO AS MILO_GoodsKind
-                              ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                              ON MILO_GoodsKind.MovementItemId = Movement.MovementItemId
                              AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILO_GoodsKind.ObjectId
 
             -- партия - Дата
             LEFT JOIN tmpMIDate AS MIDate_PartionGoods
-                                ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                ON MIDate_PartionGoods.MovementItemId = Movement.MovementItemId
                                AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
 
             -- Протокол
             LEFT JOIN tmpMIDate AS MIDate_Insert
-                                ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                ON MIDate_Insert.MovementItemId = Movement.MovementItemId
                                AND MIDate_Insert.DescId         = zc_MIDate_Insert()
             LEFT JOIN tmpMIDate AS MIDate_Update
-                                ON MIDate_Update.MovementItemId = MovementItem.Id
+                                ON MIDate_Update.MovementItemId = Movement.MovementItemId
                                AND MIDate_Update.DescId         = zc_MIDate_Update()
 
             -- Протокол
             LEFT JOIN tmpMILO AS MILO_Insert
-                              ON MILO_Insert.MovementItemId = MovementItem.Id
+                              ON MILO_Insert.MovementItemId = Movement.MovementItemId
                              AND MILO_Insert.DescId         = zc_MILinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
 
             -- Протокол
             LEFT JOIN tmpMILO AS MILO_Update
-                              ON MILO_Update.MovementItemId = MovementItem.Id
+                              ON MILO_Update.MovementItemId = Movement.MovementItemId
                              AND MILO_Update.DescId         = zc_MILinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
             -- ИТОГО Вес тары - факт
             LEFT JOIN tmpMIFloat AS MIFloat_WeightTare
-                                 ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
+                                 ON MIFloat_WeightTare.MovementItemId = Movement.MovementItemId
                                 AND MIFloat_WeightTare.DescId         = zc_MIFloat_WeightTare()
 
             LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
-                                 ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
+                                 ON MIFloat_RealWeight.MovementItemId = Movement.MovementItemId
                                 AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
 
             -- Партия - Паспорт
             LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
-                                 ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                 ON MIFloat_MovementItemId.MovementItemId = Movement.MovementItemId
                                 AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
 
            -- данные в Партии - Паспорта
-           LEFT JOIN MovementItem AS MovementItem_passport ON MovementItem_passport.Id = MIFloat_MovementItemId.ValueData :: Integer
+           LEFT JOIN MovementItem AS MovementItem_passport ON MovementItem_passport.Id = Movement.MovementItemId_pas--MIFloat_MovementItemId.ValueData :: Integer
            -- LEFT JOIN Movement AS Movement_passport ON Movement_passport.Id = MovementItem_passport.MovementId
 
            -- данные в Партии - Паспорта
            LEFT JOIN tmpMILO_passport AS tmpMILO_Box1_passport
-                                      ON tmpMILO_Box1_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                      ON tmpMILO_Box1_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                      AND tmpMILO_Box1_passport.DescId         = zc_MILinkObject_Box1()
            LEFT JOIN Object AS Object_Box_1 ON Object_Box_1.Id = tmpMILO_Box1_passport.ObjectId
 
            LEFT JOIN tmpMILO_passport AS tmpMILO_Box2_passport
-                                      ON tmpMILO_Box2_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                      ON tmpMILO_Box2_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                      AND tmpMILO_Box2_passport.DescId         = zc_MILinkObject_Box2()
            LEFT JOIN Object AS Object_Box_2 ON Object_Box_2.Id = tmpMILO_Box2_passport.ObjectId
 
            LEFT JOIN tmpMILO_passport AS tmpMILO_Box3_passport
-                                      ON tmpMILO_Box3_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                      ON tmpMILO_Box3_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                      AND tmpMILO_Box3_passport.DescId         = zc_MILinkObject_Box3()
            LEFT JOIN Object AS Object_Box_3 ON Object_Box_3.Id = tmpMILO_Box3_passport.ObjectId
 
            LEFT JOIN tmpMILO_passport AS tmpMILO_Box4_passport
-                                      ON tmpMILO_Box4_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                      ON tmpMILO_Box4_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                      AND tmpMILO_Box4_passport.DescId         = zc_MILinkObject_Box4()
            LEFT JOIN Object AS Object_Box_4 ON Object_Box_4.Id = tmpMILO_Box4_passport.ObjectId
 
            LEFT JOIN tmpMILO_passport AS tmpMILO_Box5_passport
-                                      ON tmpMILO_Box5_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                      ON tmpMILO_Box5_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                      AND tmpMILO_Box5_passport.DescId         = zc_MILinkObject_Box5()
            LEFT JOIN Object AS Object_Box_5 ON Object_Box_5.Id = tmpMILO_Box5_passport.ObjectId
 
            -- Ячейка хранения
            LEFT JOIN tmpMILO_passport AS tmpMILO_PartionCell_passport
-                                      ON tmpMILO_PartionCell_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                      ON tmpMILO_PartionCell_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                      AND tmpMILO_PartionCell_passport.DescId         = zc_MILinkObject_PartionCell()
            LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMILO_PartionCell_passport.ObjectId
 
            -- данные в Партии - Паспорта
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_CountTare1_passport
-                                         ON tmpMIFloat_CountTare1_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_CountTare1_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_CountTare1_passport.DescId         = zc_MIFloat_CountTare1()
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_CountTare2_passport
-                                         ON tmpMIFloat_CountTare2_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_CountTare2_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_CountTare2_passport.DescId         = zc_MIFloat_CountTare2()
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_CountTare3_passport
-                                         ON tmpMIFloat_CountTare3_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_CountTare3_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_CountTare3_passport.DescId         = zc_MIFloat_CountTare3()
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_CountTare4_passport
-                                         ON tmpMIFloat_CountTare4_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_CountTare4_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_CountTare4_passport.DescId         = zc_MIFloat_CountTare4()
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_CountTare5_passport
-                                         ON tmpMIFloat_CountTare5_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_CountTare5_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_CountTare5_passport.DescId         = zc_MIFloat_CountTare5()
 
            -- данные в Партии - Паспорта
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_WeightTare1_passport
-                                         ON tmpMIFloat_WeightTare1_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_WeightTare1_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_WeightTare1_passport.DescId         = zc_MIFloat_WeightTare1()
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_WeightTare2_passport
-                                         ON tmpMIFloat_WeightTare2_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_WeightTare2_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_WeightTare2_passport.DescId         = zc_MIFloat_WeightTare2()
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_WeightTare3_passport
-                                         ON tmpMIFloat_WeightTare3_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_WeightTare3_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_WeightTare3_passport.DescId         = zc_MIFloat_WeightTare3()
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_WeightTare4_passport
-                                         ON tmpMIFloat_WeightTare4_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_WeightTare4_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_WeightTare4_passport.DescId         = zc_MIFloat_WeightTare4()
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_WeightTare5_passport
-                                         ON tmpMIFloat_WeightTare5_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_WeightTare5_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_WeightTare5_passport.DescId         = zc_MIFloat_WeightTare5()
 
            -- упаковка
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_CountPack
-                                         ON tmpMIFloat_CountPack.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_CountPack.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_CountPack.DescId         = zc_MIFloat_CountPack()
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_WeightPack
-                                         ON tmpMIFloat_WeightPack.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_WeightPack.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_WeightPack.DescId         = zc_MIFloat_WeightPack()
 
            -- № паспорта
            LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_PartionNum_passport
-                                         ON tmpMIFloat_PartionNum_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                         ON tmpMIFloat_PartionNum_passport.MovementItemId = Movement.MovementItemId_pas  --MIFloat_MovementItemId.ValueData :: Integer
                                         AND tmpMIFloat_PartionNum_passport.DescId         = zc_MIFloat_PartionNum()
            --
            LEFT JOIN ObjectFloat AS OF_Weight
@@ -583,7 +746,12 @@ BEGIN
            LEFT JOIN ObjectLink AS OL_Measure
                                 ON OL_Measure.ObjectId = Object_Goods.Id
                                AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure()
-           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Measure.ChildObjectId
+           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Measure.ChildObjectId     
+           
+           LEFT JOIN tmpSecurity ON tmpSecurity.MovementItemId_pas = Movement.MovementItemId_pas ::Integer
+                                AND tmpSecurity.OperDate = Movement.OperDate
+                                AND tmpSecurity.NumSecurity = Movement.NumSecurity
+
        UNION
         SELECT
              Movement.Id                     AS Id
@@ -593,7 +761,7 @@ BEGIN
            , Movement.StatusName             AS StatusName
            , Movement.NumSecurity  ::TFloat
 
-           , MovementItem.Id                             AS MovementItemId
+           , Movement.MovementItemId                             AS MovementItemId
             -- данные Партии - Паспорта
            , tmpMI_Tara.MovementId_pas
            , tmpMI_Tara.MovementItemId_pas
@@ -676,12 +844,24 @@ BEGIN
            , MIDate_Insert.ValueData    AS InsertDate
            , MIDate_Update.ValueData    AS UpdateDate
 
-           , MovementItem.isErased      AS isErased
+           , Movement.isErased      AS isErased
 
-        FROM tmpMovement AS Movement
-            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+           -- документ охраны
+           , tmpSecurity.MovementId     AS MovementId_security
+           , tmpSecurity.InvNumber      AS InvNumber_security
+           , tmpSecurity.OperDate       AS OperDate_security
+           
+           , tmpSecurity.InsertName     AS InsertName_security
+           , tmpSecurity.UpdateName     AS UpdateName_security
+           , tmpSecurity.InsertDate     AS InsertDate_security
+           , tmpSecurity.UpdateDate     AS UpdateDate_security
 
-            LEFT JOIN tmpMI_Tara ON tmpMI_Tara.Id = MovementItem.Id
+           , CASE WHEN tmpSecurity.MovementId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSecurity --Есть документ охраны
+
+        FROM tmpMovement_Data AS Movement
+            --INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+
+            LEFT JOIN tmpMI_Tara ON tmpMI_Tara.Id = Movement.MovementItemId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Tara.GoodsId
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
@@ -689,21 +869,21 @@ BEGIN
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
             -- Протокол
             LEFT JOIN tmpMIDate AS MIDate_Insert
-                                ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                ON MIDate_Insert.MovementItemId = Movement.MovementItemId
                                AND MIDate_Insert.DescId         = zc_MIDate_Insert()
             LEFT JOIN tmpMIDate AS MIDate_Update
-                                ON MIDate_Update.MovementItemId = MovementItem.Id
+                                ON MIDate_Update.MovementItemId = Movement.MovementItemId
                                AND MIDate_Update.DescId         = zc_MIDate_Update()
 
             -- Протокол
             LEFT JOIN tmpMILO AS MILO_Insert
-                              ON MILO_Insert.MovementItemId = MovementItem.Id
+                              ON MILO_Insert.MovementItemId = Movement.MovementItemId
                              AND MILO_Insert.DescId         = zc_MILinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
 
             -- Протокол
             LEFT JOIN tmpMILO AS MILO_Update
-                              ON MILO_Update.MovementItemId = MovementItem.Id
+                              ON MILO_Update.MovementItemId = Movement.MovementItemId
                              AND MILO_Update.DescId         = zc_MILinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
             
@@ -716,8 +896,125 @@ BEGIN
                                AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure()
            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Measure.ChildObjectId
 
-          ;
+           -- документ охраны
+           LEFT JOIN tmpSecurity ON tmpSecurity.MovementItemId_pas = tmpMI_Tara.MovementItemId_pas ::Integer
+                                AND tmpSecurity.OperDate = Movement.OperDate
+                                AND tmpSecurity.NumSecurity = Movement.NumSecurity
 
+        WHERE COALESCE (Movement.NumSecurity,0) >=0 
+       UNION
+       --док. охраны - без склада
+        SELECT
+             0    ::Integer                 AS Id
+           , ''   ::TVarChar           AS InvNumber
+           , NULL ::TDateTime               AS OperDate
+           , 0    ::Integer            AS StatusCode
+           , ''   ::TVarChar             AS StatusName
+           , tmpSecurity.NumSecurity  ::TFloat
+
+           , tmpSecurity.MovementItemId                             AS MovementItemId
+            -- данные Партии - Паспорта
+           , tmpSecurity.MovementId_pas
+           , tmpSecurity.MovementItemId_pas
+
+           , tmpSecurity.GoodsId
+           , tmpSecurity.GoodsCode
+           , tmpSecurity.GoodsName
+           , tmpSecurity.GoodsGroupNameFull
+           , tmpSecurity.GoodsKindId
+           , tmpSecurity.GoodsKindName
+           , tmpSecurity.MeasureId
+           , tmpSecurity.MeasureName
+
+             -- партия - дата
+           , tmpSecurity.PartionGoodsDate
+
+             -- Ш/К - паспорт
+           , (zfFormat_BarCode (zc_BarCodePref_MI(), tmpSecurity.MovementItemId_pas)
+           || zfCalc_SummBarCode (zfFormat_BarCode (zc_BarCodePref_MI(), tmpSecurity.MovementItemId_pas)) :: TVarChar
+             ) :: TVarChar AS MovementItemId_passport
+
+             -- № паспорта
+           , tmpSecurity.PartionNum :: Integer AS PartionNum
+
+             -- Ячейка хранения
+           , 0  ::Integer AS PartionCellId
+           , '' ::TVarChar  AS PartionCellName
+
+             -- Вес нетто
+           , tmpSecurity.Amount :: TFloat AS Amount
+
+             -- Шт
+           , tmpSecurity.Amount_sh :: TFloat AS Amount_sh
+
+           --
+           , tmpSecurity.RealWeight ::TFloat   AS RealWeight
+           
+             -- ИТОГО Вес тары - факт
+           , 0 ::TFloat AS WeightTare
+
+             -- Поддон
+           , 0               AS BoxId_1
+           , ''::TVarChar    AS BoxName_1
+           , 0  :: Integer   AS CountTare_1
+           , 0  ::TFloat     AS WeightTare_1
+             -- Ящик
+           , 0                AS BoxId_2
+           , ''::TVarChar     AS BoxName_2
+           , 0  :: Integer    AS CountTare_2
+           , 0  ::TFloat      AS WeightTare_2
+             -- Ящик
+           , 0                AS BoxId_3
+           , ''::TVarChar     AS BoxName_3
+           , 0  :: Integer    AS CountTare_3
+           , 0  ::TFloat      AS WeightTare_3
+             -- Ящик
+           , 0                AS BoxId_4
+           , ''::TVarChar    AS BoxName_4
+           , 0  :: Integer    AS CountTare_4
+           , 0  ::TFloat              AS WeightTare_4
+             -- Ящик
+           , 0                AS BoxId_5
+           , '' ::TVarChar    AS BoxName_5
+           , 0  :: Integer    AS CountTare_5
+           , 0  ::TFloat      AS WeightTare_5
+
+             -- ИТОГО Кол-во Ящиков
+           , 0 :: Integer AS CountTare_calc
+             -- ИТОГО Вес всех Ящиков - расчет
+           , 0 :: TFloat  AS WeightTare_calc
+
+
+           , 0  ::Integer AS CountPack
+           , 0  ::TFloat  AS WeightPack
+           , 0  ::TFloat  AS WeightPack_calc
+
+             -- Протокол
+           , '' ::TVarChar       AS InsertName
+           , '' ::TVarChar       AS UpdateName
+           , NULL ::TDateTime    AS InsertDate
+           , NULL ::TDateTime    AS UpdateDate
+
+           , FALSE   ::Boolean      AS isErased
+
+           -- документ охраны
+           , tmpSecurity.MovementId     AS MovementId_security
+           , tmpSecurity.InvNumber      AS InvNumber_security
+           , tmpSecurity.OperDate       AS OperDate_security
+           
+           , tmpSecurity.InsertName     AS InsertName_security
+           , tmpSecurity.UpdateName     AS UpdateName_security
+           , tmpSecurity.InsertDate     AS InsertDate_security
+           , tmpSecurity.UpdateDate     AS UpdateDate_security
+
+           , TRUE::Boolean AS isSecurity -- документ охраны
+
+        FROM tmpSecurity
+            LEFT JOIN tmpMovement_Data ON tmpMovement_Data.Operdate = tmpSecurity.OperDate
+                                      AND tmpMovement_Data.NumSecurity = tmpSecurity.NumSecurity
+                                      AND tmpMovement_Data.MovementItemId_pas = tmpSecurity.MovementItemId_pas
+        WHERE tmpMovement_Data.Id IS NULL
+          ;
 
 END;
 $BODY$
@@ -732,23 +1029,9 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_Inventory_scale (inStartDate:= '01.02.2025', inEndDate:= '28.02.2025', inIsErased := 'True', inSession := zfCalc_UserAdmin())
 
-/*
-  WITH 
-tmp AS (SELECT tmp.*
-, MovementFloat_NumSecurity.ValueData        AS NumSecurity
- FROM gpSelect_Movement_Inventory_scale (inStartDate:= '25.04.2025', inEndDate:= '25.04.2025', inIsErased := 'false', inSession := zfCalc_UserAdmin()) AS tmp
 
-          
-)
- 
-select tmp.GoodsCode, tmp2.GoodsCode, tmp.GoodsKindId, tmp2.GoodsKindId, tmp.PartionGoodsDate, tmp2.PartionGoodsDate
-from tmp
-    LEFT JOIN tmp AS tmp2 ON tmp2.Operdate = tmp.Operdate
---and tmp2.StutusCode = tmp.StutusCode
-and tmp2.GoodsId = tmp.GoodsId
-and tmp2.GoodsKindId = tmp.GoodsKindId
-and tmp2.PartionGoodsDate = tmp.PartionGoodsDate
-and tmp2.NumSecurity <0
-where tmp.NumSecurity > 0
---order by 10
-*/
+--select * from gpSelect_Movement_Inventory_scale (inStartDate := ('25.04.2025')::TDateTime , inEndDate := ('25.04.2025')::TDateTime , inIsErased := 'False' ,  inSession := '9457') as tt
+--WHERE tt.GoodsCode = 1716;
+
+
+
