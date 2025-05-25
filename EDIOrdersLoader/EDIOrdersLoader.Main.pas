@@ -774,7 +774,8 @@ try
 //  Timer.Enabled:=False;
   Proccessing := True;
 
-  if ((Hour>=0) and (Hour<7)) or (Hour>=23)
+  if (((Hour>=0) and (Hour<7)) or (Hour>=23))
+  //and (1=0)
   then
   begin
        // !!! Только Отправка !!!

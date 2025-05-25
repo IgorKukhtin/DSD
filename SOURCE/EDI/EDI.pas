@@ -4936,19 +4936,26 @@ var
   i: integer;
   s : String;
 begin
-  with spHeader, ORDER do
-  begin
-    ParamByName('inOrderInvNumber').Value := NUMBER;
-    ParamByName('inOrderOperDate').Value := VarToDateTime(Date);
+  try
+    with spHeader, ORDER do
+    begin
+      ParamByName('inOrderInvNumber').Value := NUMBER;
+      ParamByName('inOrderOperDate').Value := VarToDateTime(Date);
 
-    ParamByName('inGLNPlace').Value := HEAD.DELIVERYPLACE;
-    ParamByName('inGLN').Value := HEAD.BUYER;
+      ParamByName('inGLNPlace').Value := HEAD.DELIVERYPLACE;
+      ParamByName('inGLN').Value := HEAD.BUYER;
+      ParamByName('inDealId').Value := ADealId;
 
-    Execute;
-    if ParamByName('isLoad').Value then Exit;
-    MovementId := ParamByName('MovementId').Value;
-    GoodsPropertyId := StrToInt(ParamByName('GoodsPropertyId').asString);
+      Execute;
+      if ParamByName('isLoad').Value then Exit;
+      MovementId := ParamByName('MovementId').Value;
+      GoodsPropertyId := StrToInt(ParamByName('GoodsPropertyId').asString);
+    end;
+  finally
+      // обнулили, чтоб не мешать EDI
+      spHeader.ParamByName('inDealId').Value := '';
   end;
+  //
   for i := 0 to ORDER.HEAD.POSITION.Count - 1 do
     with spList, ORDER.HEAD.POSITION[i] do
     begin
@@ -6487,44 +6494,99 @@ begin
 
   FDocTypeParam.Value := 1;
   FDocStatusParam.Value := 'new';
+//  FDocStatusParam.Value := 'rejected';
 
-  // Загрузим список заявок с Вчасно EDI
+  // Загрузим список заявок с Вчасно EDI - new
   DataSetCDS := TClientDataSet.Create(Nil);
   try
 
     if not GetVchasnoEDI(1, DataSetCDS) then
-      raise Exception.Create('Ошибка загрузки списка документов.');
+      raise Exception.Create('Ошибка загрузки списка документов-new.');
 
-    if DataSetCDS.RecordCount = 0 then
+    if DataSetCDS.RecordCount > 0 then
     begin
-      //ShowMessages('Нет накладных для загрузки.');
+        with TGaugeFactory.GetGauge(Caption, 0, DataSetCDS.RecordCount) do
+        begin
+          Start;
+          try
+            DataSetCDS.First;
+            while not DataSetCDS.Eof do
+            begin
+              FOrderParam.Value := DataSetCDS.FieldByName('Id').AsString;
+              if GetVchasnoEDI(2) then
+              begin
+                // создание документ
+                case EDIDocType of
+                  ediOrder: EDI.OrderLoadVchasnoEDI(Copy(FResultParam.Value, Max(POS('<', FResultParam.Value), 1), Length(FResultParam.Value)),
+                                                    FFileNameParam.Value, DataSetCDS.FieldByName('deal_id').AsString, FspHeader, FspList
+                                                   );
+                end;
+              end;
+              IncProgress(1);
+              DataSetCDS.Next;
+            end;
+            Result := true;
+          finally
+            Finish;
+          end;
+        end;
+
+        //
+        Result := false;
+        //
+        DataSetCDS.Free;
+        //
+        DataSetCDS := TClientDataSet.Create(Nil);
+        //
+        // загружаются rejected - ???отклоненный???
+        FDocStatusParam.Value := 'rejected';
+        // Загрузим список заявок с Вчасно EDI - rejected
+        if not GetVchasnoEDI(1, DataSetCDS) then
+          raise Exception.Create('Ошибка загрузки списка документов-rejected.');
+        //
+        if DataSetCDS.RecordCount > 0 then
+        begin
+            ShowMessages('Есть накладные-rejected для загрузки.');
+            with TGaugeFactory.GetGauge(Caption, 0, DataSetCDS.RecordCount) do
+            begin
+              Start;
+              try
+                DataSetCDS.First;
+                while not DataSetCDS.Eof do
+                begin
+                  FOrderParam.Value := DataSetCDS.FieldByName('Id').AsString;
+                  if GetVchasnoEDI(2) then
+                  begin
+                    // создание документ
+                    case EDIDocType of
+                      ediOrder: EDI.OrderLoadVchasnoEDI(Copy(FResultParam.Value, Max(POS('<', FResultParam.Value), 1), Length(FResultParam.Value)),
+                                                        FFileNameParam.Value, DataSetCDS.FieldByName('deal_id').AsString, FspHeader, FspList
+                                                       );
+                    end;
+                  end;
+                  IncProgress(1);
+                  DataSetCDS.Next;
+                end;
+                Result := true;
+              finally
+                Finish;
+              end;
+            end;
+        end
+
+        else
+        begin
+          //ShowMessages('Нет накладных-rejected для загрузки.');
+          Result := true;
+          Exit;
+        end;
+
+    end
+    else
+    begin
+      //ShowMessages('Нет накладных-new для загрузки.');
       Result := true;
       Exit;
-    end;
-
-    with TGaugeFactory.GetGauge(Caption, 0, DataSetCDS.RecordCount) do
-    begin
-      Start;
-      try
-        DataSetCDS.First;
-        while not DataSetCDS.Eof do
-        begin
-          FOrderParam.Value := DataSetCDS.FieldByName('Id').AsString;
-          if GetVchasnoEDI(2) then
-          begin
-            // создание документ
-            case EDIDocType of
-              ediOrder: EDI.OrderLoadVchasnoEDI(Copy(FResultParam.Value, Max(POS('<', FResultParam.Value), 1), Length(FResultParam.Value)),
-                                                FFileNameParam.Value, DataSetCDS.FieldByName('deal_id').AsString, FspHeader, FspList);
-            end;
-          end;
-          IncProgress(1);
-          DataSetCDS.Next;
-        end;
-        Result := true;
-      finally
-        Finish;
-      end;
     end;
 
   finally

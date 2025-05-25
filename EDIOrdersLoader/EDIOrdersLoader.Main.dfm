@@ -11425,6 +11425,13 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDealId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'gIsDelete'
         Value = Null
         Component = FormParams
