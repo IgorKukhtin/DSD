@@ -43,7 +43,7 @@ RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
              , CriticalDebtSum       TFloat    -- Сумма долга|После которого формирование заявки невозможно (default 1 грн.)
              , APIKey                TVarChar  -- APIKey для гугл карт
              , CriticalWeight        TFloat    -- Минимально допустимый Вес заявки
-             , isNumSecurity         Boolean   -- Режим охранника Да/нет
+           --, isNumSecurity         Boolean   -- Режим охранника Да/нет
 )
 AS
 $BODY$
@@ -250,7 +250,8 @@ BEGIN
 
             , 5::TFloat   AS CriticalWeight
 
-            , TRUE :: Boolean AS isNumSecurity
+            -- Режим охранника Да/нет
+            --, TRUE :: Boolean AS isNumSecurity
 
        FROM tmpPersonal
             LEFT JOIN gpGet_Object_MobileConst_BySession (inSession:= inSession) AS getMobileConst ON 1 = 1

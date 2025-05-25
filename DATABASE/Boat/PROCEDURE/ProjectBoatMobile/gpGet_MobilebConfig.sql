@@ -49,6 +49,8 @@ RETURNS TABLE (BarCodePref         TVarChar
              , isDictCodeSet    Boolean 
              , isDictCode       Boolean 
 
+               -- Режим охранника Да/нет
+             , isNumSecurity         Boolean
               )
 AS
 $BODY$
@@ -100,6 +102,9 @@ BEGIN
          -- Interne Nr
          , FALSE   AS isDictCodeSet 
          , FALSE   AS isDictCode 
+         
+           -- Режим охранника Да/нет
+         , TRUE :: Boolean AS isNumSecurity
      ; 
 
 END;
