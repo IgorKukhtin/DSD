@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_Movement_EDI()
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIOrder(
     IN inOrderInvNumber      TVarChar  , -- Номер документа
     IN inOrderOperDate       TDateTime , -- Дата документа
     IN inGLN                 TVarChar  , -- Код GLN - Покупатель
     IN inGLNPlace            TVarChar  , -- Код GLN - место доставки
+    IN inDealId              TVarChar  , -- ІД замовлення у системі ВЧАСНО
     IN gIsDelete             Boolean   , -- виртуальный, что б в компоненте понимать - надо ли удалять заявки "за сегодня", а "за вчера" - они удаляются всегда
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -102,16 +104,18 @@ end if;
 
 
      -- Проверка
-     IF 0 < (SELECT COUNT (*)
+     IF inDealId <> ''
+    AND 0 < (SELECT COUNT (*)
              FROM Movement
                   INNER JOIN MovementString AS MovementString_GLNPlaceCode
                                             ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
                                            AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
                                            AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                  -- Проверка Вчасно - есть ли этот DealId, тогда повторную загрузку не делаем
                   INNER JOIN MovementString AS MovementString_DealId
                                             ON MovementString_DealId.MovementId = Movement.Id
                                            AND MovementString_DealId.DescId     = zc_MovementString_DealId()
-                                           AND MovementString_DealId.ValueData  <> ''
+                                           AND MovementString_DealId.ValueData  = inDealId
              WHERE Movement.DescId = zc_Movement_EDI()
                AND Movement.OperDate = inOrderOperDate
                AND Movement.InvNumber = inOrderInvNumber
@@ -135,7 +139,7 @@ end if;
                   INNER JOIN MovementString AS MovementString_DealId
                                             ON MovementString_DealId.MovementId = Movement.Id
                                            AND MovementString_DealId.DescId     = zc_MovementString_DealId()
-                                           AND MovementString_DealId.ValueData  <> ''
+                                           AND MovementString_DealId.ValueData  = inDealId
 
                   LEFT JOIN MovementLinkObject AS MLO_GoodsProperty
                                                ON MLO_GoodsProperty.MovementId = Movement.Id
@@ -154,27 +158,49 @@ end if;
      END IF;
 
 
-     -- находим документ (по идее один товар - один GLN-код) + !!!по точке доставки!!!
-     vbMovementId:= (SELECT Movement.Id
-                     FROM Movement
-                          INNER JOIN MovementString AS MovementString_GLNPlaceCode
-                                                    ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
-                                                   AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
-                                                   AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
-                     WHERE Movement.DescId = zc_Movement_EDI()
-                       AND Movement.OperDate = inOrderOperDate
-                       AND Movement.InvNumber = inOrderInvNumber
-                       AND Movement.StatusId <> zc_Enum_Status_Erased()
-                     --AND vbUserId <> 5
-                    );
-
-     IF COALESCE(vbMovementId, 0) = 0 OR
-        NOT EXISTS (SELECT 1 FROM MovementBoolean
-                    WHERE MovementBoolean.MovementId = vbMovementId
-                      AND MovementBoolean.DescId = zc_MovementBoolean_isLoad()
-                      AND MovementBoolean.ValueData = TRUE)
+     IF inDealId <> ''
      THEN
+         -- находим документ (по идее один товар - один GLN-код) + !!!по точке доставки!!!
+         vbMovementId:= (SELECT Movement.Id
+                         FROM Movement
+                              INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                                        ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                                       AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                                       AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                              -- Проверка Вчасно - есть ли этот DealId, тогда повторную загрузку не делаем
+                              INNER JOIN MovementString AS MovementString_DealId
+                                                        ON MovementString_DealId.MovementId = Movement.Id
+                                                       AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+                                                       AND MovementString_DealId.ValueData  = inDealId
+                         WHERE Movement.DescId = zc_Movement_EDI()
+                           AND Movement.OperDate = inOrderOperDate
+                           AND Movement.InvNumber = inOrderInvNumber
+                           AND Movement.StatusId <> zc_Enum_Status_Erased()
+                         --AND vbUserId <> 5
+                        );
+     ELSE
+         -- находим документ (по идее один товар - один GLN-код) + !!!по точке доставки!!!
+         vbMovementId:= (SELECT Movement.Id
+                         FROM Movement
+                              INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                                        ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                                       AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                                       AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                         WHERE Movement.DescId = zc_Movement_EDI()
+                           AND Movement.OperDate = inOrderOperDate
+                           AND Movement.InvNumber = inOrderInvNumber
+                           AND Movement.StatusId <> zc_Enum_Status_Erased()
+                         --AND vbUserId <> 5
+                        );
+     END IF;
 
+     IF COALESCE(vbMovementId, 0) = 0
+        OR NOT EXISTS (SELECT 1 FROM MovementBoolean
+                       WHERE MovementBoolean.MovementId = vbMovementId
+                         AND MovementBoolean.DescId = zc_MovementBoolean_isLoad()
+                         AND MovementBoolean.ValueData = TRUE
+                      )
+     THEN
        -- определяется параметр
        vbDescCode:= (SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_OrderExternal());
        IF vbDescCode IS NULL
@@ -309,4 +335,4 @@ $BODY$
 
 -- тест
 --
--- select * from gpInsertUpdate_Movement_EDIOrder(inOrderInvNumber := 'MAIДB007537' , inOrderOperDate := ('21.01.2021')::TDateTime , inGLN := '9864066853281' , inGLNPlace := '9864232336358' , gIsDelete := 'True' ,  inSession := '14610');
+-- select * from gpInsertUpdate_Movement_EDIOrder(inOrderInvNumber := 'MAIДB007537' , inOrderOperDate := ('21.01.2021')::TDateTime , inGLN := '9864066853281' , inGLNPlace := '9864232336358' , inDealId:= '', gIsDelete := 'True' ,  inSession := '14610');

@@ -15,11 +15,11 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_EDI_Params());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- сохранили DealId внутрішній ІД замовлення у системі
+     -- сохранили DealId внутрішній ІД замовлення у системі, после этого повторную загрузку не делаем
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_DealId(), inMovementId, inDealId);
 
      -- сохранили
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), inMovementId, True);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), inMovementId, TRUE);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
