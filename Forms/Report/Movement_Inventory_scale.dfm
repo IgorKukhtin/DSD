@@ -254,6 +254,40 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             HeaderAlignmentVert = vaCenter
             Width = 59
           end
+          object NumSecurity: TcxGridDBColumn
+            Caption = #8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072
+            DataBinding.FieldName = 'NumSecurity'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object isSecurity: TcxGridDBColumn
+            Caption = #1044#1086#1082'. '#1086#1093#1088#1072#1085#1099' '#1044#1072'/'#1053#1077#1090
+            DataBinding.FieldName = 'isSecurity'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1045#1089#1090#1100' '#1076#1086#1082' '#1086#1093#1088#1072#1085#1099' '#1044#1072'/'#1053#1077#1090
+            Width = 70
+          end
+          object OperDate_security: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1086#1093#1088#1072#1085#1072')'
+            DataBinding.FieldName = 'OperDate_security'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 57
+          end
+          object InvNumber_security: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. ('#1086#1093#1088#1072#1085#1072')'
+            DataBinding.FieldName = 'InvNumber_security'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 59
+          end
           object MovementItemId_passport: TcxGridDBColumn
             Caption = #1064#1090#1088#1080#1093#1082#1086#1076
             DataBinding.FieldName = 'MovementItemId_passport'
@@ -584,6 +618,44 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object InsertDate_security: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1077' ('#1076#1086#1082'. '#1086#1093#1088#1072#1085#1072')'
+            DataBinding.FieldName = 'InsertDate_security'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 84
+          end
+          object InsertName_security: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' ('#1076#1086#1082'. '#1086#1093#1088#1072#1085#1072')'
+            DataBinding.FieldName = 'InsertName_security'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object UpdateDate_security: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.) ('#1076#1086#1082'. '#1086#1093#1088#1072#1085#1072')'
+            DataBinding.FieldName = 'UpdateDate_security'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object UpdateName_security: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.) ('#1076#1086#1082'. '#1086#1093#1088#1072#1085#1072')'
+            DataBinding.FieldName = 'UpdateName_security'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

@@ -171,7 +171,7 @@
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\GMLib_D27.bpl">GoogleMaps Library v1.5.5 (Copyright © Xavier Martнnez - cadetill)</Excluded_Packages>
+                    <Excluded_Packages Name="D:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\GMLib_D27.bpl">GoogleMaps Library v1.5.5 (Copyright © Xavier Martнnez - cadetill)</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3"/>

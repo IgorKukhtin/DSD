@@ -69,7 +69,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_BplOutput>..\BIN\Bpl\$(ProductVersion)</DCC_BplOutput>
-        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;frxe16;Zlib;vclie;GMLib_DXE2;GMLib_DXE2_VCL;ZLibExD27;fs27;frx27;frxDB27;frxe27;dxCoreRS27;cxLibraryRS27;dxGDIPlusRS27;dxThemeRS27;cxDataRS27;cxEditorsRS27;dxmdsRS27;cxPageControlRS27;dxLayoutControlRS27;dxComnRS27;cxTreeListRS27;cxExportRS27;dxBarRS27;dxBarExtItemsRS27;cxGridRS27;cxPivotGridRS27;cxVerticalGridRS27;dxSkinsCoreRS27;GMLib_D27_VCL;GMLib_D27;cxSchedulerRS27;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;ZComponentD27;ZDbcD27;ZPlainD27;ZCoreD27;ZParseSqlD27;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;frxe16;Zlib;vclie;GMLib_DXE2;GMLib_DXE2_VCL;ZLibExD27;fs27;frx27;frxDB27;frxe27;dxCoreRS27;cxLibraryRS27;dxGDIPlusRS27;dxThemeRS27;cxDataRS27;cxEditorsRS27;dxmdsRS27;cxPageControlRS27;dxLayoutControlRS27;dxComnRS27;cxTreeListRS27;cxExportRS27;dxBarRS27;dxBarExtItemsRS27;cxGridRS27;cxPivotGridRS27;cxVerticalGridRS27;dxSkinsCoreRS27;GMLib_D27_VCL;GMLib_D27;cxSchedulerRS27;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;ZComponentD27;ZDbcD27;ZPlainD27;ZCoreD27;ZParseSqlD27;bindcomp;RESTComponents;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -83,7 +83,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;vclie;GMLib_DXE2;GMLib_DXE2_VCL;dxCoreRS27;cxLibraryRS27;dxGDIPlusRS27;dxThemeRS27;cxDataRS27;cxEditorsRS27;dxmdsRS27;cxPageControlRS27;dxLayoutControlRS27;dxComnRS27;cxTreeListRS27;cxExportRS27;dxBarRS27;dxBarExtItemsRS27;cxGridRS27;cxPivotGridRS27;cxVerticalGridRS27;dxSkinsCoreRS27;GMLib_D27_VCL;GMLib_D27;cxSchedulerRS27;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;vclie;GMLib_DXE2;GMLib_DXE2_VCL;dxCoreRS27;cxLibraryRS27;dxGDIPlusRS27;dxThemeRS27;cxDataRS27;cxEditorsRS27;dxmdsRS27;cxPageControlRS27;dxLayoutControlRS27;dxComnRS27;cxTreeListRS27;cxExportRS27;dxBarRS27;dxBarExtItemsRS27;cxGridRS27;cxPivotGridRS27;cxVerticalGridRS27;dxSkinsCoreRS27;GMLib_D27_VCL;GMLib_D27;cxSchedulerRS27;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;bindcomp;RESTComponents;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -162,6 +162,8 @@
         <DCCReference Include="ZPlainD27.dcp"/>
         <DCCReference Include="ZCoreD27.dcp"/>
         <DCCReference Include="ZParseSqlD27.dcp"/>
+        <DCCReference Include="bindcomp.dcp"/>
+        <DCCReference Include="RESTComponents.dcp"/>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
         <DCCReference Include="..\SOURCE\UtilConst.pas"/>
         <DCCReference Include="..\SOURCE\CommonData.pas"/>
@@ -302,7 +304,7 @@
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\GMLib_D27.bpl">GoogleMaps Library v1.5.5 (Copyright © Xavier Martнnez - cadetill)</Excluded_Packages>
+                    <Excluded_Packages Name="D:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\GMLib_D27.bpl">GoogleMaps Library v1.5.5 (Copyright © Xavier Martнnez - cadetill)</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">

@@ -5524,10 +5524,6 @@
 				<Form>Report_Inventory_WeighingFactDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind.pas">
-				<Form>GoodsByGoodsKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\AmountForm_twoDialog.pas">
 				<Form>AmountForm_twoDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5564,6 +5560,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Send_PartionCell_isManyEdit.pas">
 				<Form>Send_PartionCell_isManyEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind.pas">
+				<Form>GoodsByGoodsKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

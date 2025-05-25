@@ -295,6 +295,13 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectDate_GoodsByGoodsKind_GoodsSub', 'Дата, с которой формируется пересорт расход' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsByGoodsKind_GoodsSub');
 
+ CREATE OR REPLACE FUNCTION zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_CEH_start() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_CEH_start'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_CEH_start', 'Дата с которой работает (пересортица ЦЕХ - расход)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_CEH_start');
+
+
+
+
 
  
 

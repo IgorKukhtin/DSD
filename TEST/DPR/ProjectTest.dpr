@@ -1573,7 +1573,6 @@ uses
   Report_WP_PassportPSWDialog in '..\..\Forms\Report\Report_WP_PassportPSWDialog.pas' {Report_WP_PassportPSWDialogForm: TParentForm},
   Report_Inventory_WeighingFact in '..\..\Forms\Report\Report_Inventory_WeighingFact.pas' {Report_Inventory_WeighingFactForm: TParentForm},
   Report_Inventory_WeighingFactDialog in '..\..\Forms\Report\Report_Inventory_WeighingFactDialog.pas' {Report_Inventory_WeighingFactDialogForm: TParentForm},
-  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
   AmountForm_twoDialog in '..\..\Forms\Document\AmountForm_twoDialog.pas' {AmountForm_twoDialogForm: TParentForm},
   ServiceDateDialog in '..\..\Forms\Document\ServiceDateDialog.pas' {ServiceDateDialogForm: TParentForm},
   ProductionSeparateJournal in '..\..\Forms\Document\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm: TParentForm},
@@ -1584,7 +1583,8 @@ uses
   Report_PrintForms_byMovement in '..\..\Forms\Report\Report_PrintForms_byMovement.pas' {Report_PrintForms_byMovementForm: TParentForm},
   Report_Send_PartionCell_many in '..\..\Forms\Report\Report_Send_PartionCell_many.pas' {Report_Send_PartionCell_manyForm: TParentForm},
   PartionCellCheckisManyEdit in '..\..\Forms\Guides\PartionCellCheckisManyEdit.pas' {PartionCellCheckisManyEditForm: TParentForm},
-  Send_PartionCell_isManyEdit in '..\..\Forms\Document\Send_PartionCell_isManyEdit.pas' {Send_PartionCell_isManyEditForm: TParentForm};
+  Send_PartionCell_isManyEdit in '..\..\Forms\Document\Send_PartionCell_isManyEdit.pas' {Send_PartionCell_isManyEditForm: TParentForm},
+  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

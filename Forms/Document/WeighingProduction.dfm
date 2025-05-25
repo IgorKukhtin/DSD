@@ -26,7 +26,6 @@ object WeighingProductionForm: TWeighingProductionForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 6
     object edInvNumber: TcxTextEdit
       Left = 113
       Top = 23

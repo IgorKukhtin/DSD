@@ -84,6 +84,8 @@ type
     spUpdate_isEtiketka: TdsdStoredProc;
     actUpdate_isEtiketka: TdsdDataSetRefresh;
     bbUpdate_isEtiketka: TdxBarButton;
+    GoodsKindSubCEHChoiceForm: TOpenChoiceForm;
+    GoodsSubCEHOpenChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

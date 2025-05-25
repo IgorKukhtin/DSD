@@ -25,7 +25,6 @@ package ProjectComponent_D27;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'DSD ProjectComponent'}
 {$IMPLICITBUILD ON}
 
 requires
@@ -71,7 +70,9 @@ requires
   ZDbcD27,
   ZPlainD27,
   ZCoreD27,
-  ZParseSqlD27;
+  ZParseSqlD27,
+  bindcomp,
+  RESTComponents;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
