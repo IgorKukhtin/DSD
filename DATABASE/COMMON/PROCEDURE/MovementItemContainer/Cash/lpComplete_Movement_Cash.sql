@@ -397,7 +397,7 @@ BEGIN
           SELECT -- курсова€ разница - будет дл€ ќѕи”
                  CASE WHEN tmpSumm.OperSumm_Currency <> 0 
                            THEN CAST (ABS (tmpSumm.OperSumm / tmpSumm.OperSumm_Currency) AS NUMERIC (16, 4))
-                      ELSE 0
+                      ELSE (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_CurrencyValue())
                  END AS CurrencyValue
                  --
                , 1 AS ParValue
@@ -721,7 +721,7 @@ BEGIN
      END IF;
 
      -- проверка
-     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.OperSumm = 0 AND inUserId <> 5)
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.OperSumm = 0) --  AND inUserId <> 5
      THEN
          RAISE EXCEPTION 'ќшибка.¬ведите сумму.';
      END IF;

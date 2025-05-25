@@ -1136,6 +1136,7 @@ BEGIN
                                                                                 , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                 , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
                                                                                 , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
+                                                                                , zc_Enum_InfoMoneyDestination_21500() -- Общефирменные  + Маркетинг + Сувениры
                                                                                  )
                                      OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
                                                                      , zc_Enum_InfoMoney_10106() -- Сыр

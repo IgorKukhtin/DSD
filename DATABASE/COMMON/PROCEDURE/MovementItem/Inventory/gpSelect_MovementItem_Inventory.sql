@@ -135,9 +135,10 @@ BEGIN
 
            , 0 :: Integer AS ContainerId
 
-           , FALSE        AS isNotFact
-           , FALSE        AS isErased
-
+            -- Остаток теория
+           , FALSE  :: Boolean AS isNotFact
+             --
+           , FALSE  :: Boolean AS isErased
 
            , 0 :: Integer                    AS PartionGoodsId
            , zfFormat_BarCode (zc_BarCodePref_Object(), tmpGoods.GoodsId) :: TVarChar AS IdBarCode
@@ -260,7 +261,9 @@ BEGIN
 
            , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
 
+             -- Остаток теория
            , COALESCE (MIBoolean_NotFact.ValueData, FALSE) :: Boolean AS isNotFact
+             --
            , MovementItem.isErased                                    AS isErased
            
            -- из партии
@@ -288,6 +291,7 @@ BEGIN
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
+            -- Остаток теория
             LEFT JOIN MovementItemBoolean AS MIBoolean_NotFact
                                           ON MIBoolean_NotFact.MovementItemId = MovementItem.Id
                                          AND MIBoolean_NotFact.DescId         = zc_MIBoolean_NotFact()
@@ -573,6 +577,9 @@ BEGIN
 
            , MIFloat_ContainerId.ContainerId
 
+             -- Остаток теория
+           , COALESCE (MIBoolean_NotFact.ValueData, FALSE) :: Boolean AS isNotFact
+             -- 
            , MovementItem.isErased               AS isErased
 
            -- Id партии
@@ -588,6 +595,11 @@ BEGIN
 
        FROM tmpMI_all AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            -- Остаток теория
+            LEFT JOIN MovementItemBoolean AS MIBoolean_NotFact
+                                          ON MIBoolean_NotFact.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_NotFact.DescId         = zc_MIBoolean_NotFact()
 
             LEFT JOIN tmpMIF_ContainerId AS MIFloat_ContainerId
                                          ON MIFloat_ContainerId.MovementItemId = MovementItem.Id

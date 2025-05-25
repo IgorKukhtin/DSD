@@ -1,4 +1,4 @@
--- Function: gpComplete_Movement_Inventory()
+ -- Function: gpComplete_Movement_Inventory()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Inventory  (Integer, Boolean, TVarChar);
 
@@ -1496,7 +1496,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyDestination ON ObjectLink_InfoMoneyDestination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId AND ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
 
         -- без - Остаток теория
-        WHERE tmpMI_find.isNotFact_value = FALSE
+        WHERE COALESCE (tmpMI_find.isNotFact_value, 0) = 0
 
        UNION ALL
         -- Батоны
@@ -1538,7 +1538,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyDestination ON ObjectLink_InfoMoneyDestination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId AND ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
         WHERE tmpContainer.ContainerId_Goods IS NULL
           -- без - Остаток теория
-          AND tmpMI_find.isNotFact_value = FALSE
+          AND COALESCE (tmpMI_find.isNotFact_value, 0) = 0
      ;
 
     -- !!!Оптимизация!!!
@@ -1682,7 +1682,7 @@ BEGIN
                        ) AS tmpMI_find ON tmpMI_find.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
         WHERE _tmpRemainsCount.ContainerId_Goods IS NULL
           -- без - Остаток теория
-          AND tmpMI_find.isNotFact_value = FALSE
+          AND COALESCE (tmpMI_find.isNotFact_value, 0) = 0
         GROUP BY tmpMI_find.MovementItemId
                , _tmpRemainsSumm.ContainerId_Goods
                , _tmpRemainsSumm.GoodsId
@@ -1769,7 +1769,9 @@ BEGIN
                          , BusinessId
                          , UnitId_Item, StorageId_Item, UnitId_Partion, Price_Partion
                          , isPartionCount, isPartionSumm
-                         , PartionGoodsId)
+                         , isNotFact
+                         , PartionGoodsId
+                          )
         SELECT _tmpRemainsCount.MovementItemId
              , _tmpRemainsCount.ContainerId_Goods
              , _tmpRemainsCount.ContainerId_count
@@ -1794,6 +1796,7 @@ BEGIN
              , 0 AS UnitId_Item, 0 AS StorageId_Item, 0 AS UnitId_Partion, 0 AS Price_Partion
              , FALSE AS isPartionCount -- эти параметры здесь уже не важны, т.к. уже есть ContainerId_Goods
              , FALSE AS isPartionSumm  -- эти параметры здесь уже не важны, т.к. уже есть ContainerId_Goods
+             , FALSE AS isNotFact
              , ContainerLinkObject_PartionGoods.ObjectId AS PartionGoodsId
         FROM _tmpRemainsCount
              LEFT JOIN _tmpItem ON _tmpItem.ContainerId_Goods = _tmpRemainsCount.ContainerId_Goods
@@ -2156,7 +2159,7 @@ end if;
                   OR vbIsLastOnMonth = TRUE
                     )
                 -- без - Остаток теория
-                AND _tmpItem.isNotFact_value = FALSE
+                AND _tmpItem.isNotFact = FALSE
 
              /*UNION ALL
               -- 1.1. это введенные остатки
@@ -2264,7 +2267,7 @@ end if;
                   OR vbIsLastOnMonth = TRUE
                     )
                 -- без - Остаток теория
-                AND tmpMI_find.isNotFact_value = FALSE
+                AND COALESCE (_tmpItem.isNotFact_value, 0) = 0
                 -- !!!
                 -- AND vbIsLastOnMonth_RK = FALSE
 

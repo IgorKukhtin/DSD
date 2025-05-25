@@ -81,6 +81,8 @@ BEGIN
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.ItemName                      AS MovementDescName
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber 
+
+               -- Номер охранника 
              , MovementFloat_NumSecurity.ValueData        AS NumSecurity
              , CASE WHEN MovementFloat_NumSecurity.ValueData < 0 THEN TRUE ELSE FALSE END ::Boolean AS isNumSecurity
 

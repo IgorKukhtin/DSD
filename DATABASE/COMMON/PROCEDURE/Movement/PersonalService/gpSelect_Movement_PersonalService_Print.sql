@@ -1105,6 +1105,7 @@ BEGIN
 
        -- Результат
        SELECT 0 :: Integer                            AS Id
+          --, (SELECT COUNT(*) FROM tmpMI WHERE tmpMI.PersonalId =  7929366) :: Integer AS tmpId
             , Object_Personal.Id                      AS PersonalId
             , Object_Personal.ObjectCode              AS PersonalCode
             , Object_Personal.ValueData               AS PersonalName
@@ -1223,12 +1224,14 @@ BEGIN
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
             --если печать из грида
-            INNER JOIN tmpMI_list ON tmpMI_list.PersonalId = tmpAll.PersonalId
+            INNER JOIN (SELECT DISTINCT tmpMI_list.PersonalId FROM tmpMI_list) AS tmpMI_list ON tmpMI_list.PersonalId = tmpAll.PersonalId
+                                   /*tmpMI_list.PersonalId = tmpAll.PersonalId
                                  AND tmpMI_list.PositionId = tmpAll.PositionId
                                  AND tmpMI_list.MemberId = tmpAll.MemberId
                                  AND tmpMI_list.UnitId = tmpAll.UnitId
                                  AND tmpMI_list.PersonalId = tmpAll.PersonalId
                                 -- AND inIsList = TRUE) OR (inIsList = FALSE)
+                                */
        WHERE 0 <> tmpAll.SummToPay
                 + tmpAll.SummNalog    - COALESCE (tmpMIContainer.SummNalog, 0)
                 - tmpAll.SummNalogRet + COALESCE (tmpMIContainer.SummNalogRet, 0)

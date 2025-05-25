@@ -801,8 +801,7 @@ end if;
                                 )
 
      -- Результат
-     SELECT
-             Movement.Id                                    AS Id
+     SELECT  Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
 --           , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
            , Movement.OperDate                              AS OperDate

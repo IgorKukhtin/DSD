@@ -464,11 +464,11 @@ BEGIN
                    ELSE 0
               END  :: TFloat AS CountDiff_B_tax
               
-            , CASE -- 10% -  на штучном товаре + если РК - подсвечивать отклонение
+            , CASE -- 10%, теперь 0% -  на штучном товаре + если РК - подсвечивать отклонение
                    WHEN EXISTS (SELECT 1 FROM _tmpListMovement WHERE _tmpListMovement.FromId = zc_Unit_RK())
                     AND tmpResult1.MeasureId = zc_Measure_Sh()
                         -- CountDiff_B_tax
-                    AND 9.99 < CASE WHEN tmpResult1.Amount_Order > 0
+                    AND 0.01 < CASE WHEN tmpResult1.Amount_Order > 0
                                          THEN tmpResult1.CountDiff_B / tmpResult1.Amount_Order * 100
                                     WHEN tmpResult1.CountDiff_B <> 0
                                          THEN 100

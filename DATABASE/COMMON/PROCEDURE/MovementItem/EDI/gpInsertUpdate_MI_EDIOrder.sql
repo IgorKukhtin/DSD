@@ -26,7 +26,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- Проверка
+     -- Проверка Вчасно - есть ли этот DealId, тогда повторную загрузку не делаем
      IF 0 < (SELECT COUNT (*)
              FROM Movement
                   INNER JOIN MovementString AS MovementString_DealId
