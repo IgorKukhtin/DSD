@@ -50,7 +50,9 @@ RETURNS TABLE (BarCodePref         TVarChar
              , isDictCode       Boolean 
 
                -- Режим охранника Да/нет
-             , isNumSecurity         Boolean
+             , isNumSecurity    Boolean
+               -- Кол-во охранников
+             , CountSecurity    Integer
               )
 AS
 $BODY$
@@ -104,7 +106,9 @@ BEGIN
          , FALSE   AS isDictCode 
          
            -- Режим охранника Да/нет
-         , TRUE :: Boolean AS isNumSecurity
+         , CASE WHEN vbUserId = 5 THEN TRUE ELSE FALSE END :: Boolean AS isNumSecurity
+           -- Кол-во охранников
+         , 3 :: Integer AS CountSecurity
      ; 
 
 END;
