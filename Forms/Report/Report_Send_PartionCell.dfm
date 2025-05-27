@@ -1711,7 +1711,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Caption = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1076#1072'/'#1085#1077#1090
       Properties.ReadOnly = False
       TabOrder = 8
-      Visible = False
       Width = 159
     end
   end
@@ -2653,7 +2652,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
-      AfterAction = macPrint_New
+      AfterAction = mac_isMany_Print
       BeforeAction = mactUpdateMainDS
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_MI_Send_byReport
