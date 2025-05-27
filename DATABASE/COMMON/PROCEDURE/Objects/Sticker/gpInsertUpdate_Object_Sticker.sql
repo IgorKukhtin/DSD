@@ -2,7 +2,8 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker(
  INOUT ioId                  Integer   , -- ключ объекта <Товар>
@@ -26,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker(
     IN inValue6              TFloat    , --
     IN inValue7              TFloat    , --
     IN inValue8              TFloat    , --
+    IN inValue9              TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -85,7 +87,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Sticker_Value7(), ioId, inValue7);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Sticker_Value8(), ioId, inValue8);
-   
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Sticker_Value9(), ioId, inValue9);
+      
    -- проверка "Вид продукта (Группа)"
    IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_StickerGroup() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inStickerGroupName)) AND TRIM (inStickerGroupName) <> '')
    THEN
@@ -197,6 +202,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.05.25         *
  01.09.23         *
  14.02.20         *
  23.10.17         *

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1090#1080#1082#1077#1090#1082#1091'>'
-  ClientHeight = 395
+  ClientHeight = 430
   ClientWidth = 687
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@
   end
   object cxButton1: TcxButton
     Left = 403
-    Top = 359
+    Top = 397
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -33,7 +33,7 @@
   end
   object cxButton2: TcxButton
     Left = 544
-    Top = 359
+    Top = 397
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -100,8 +100,8 @@
     Width = 327
   end
   object cxLabel8: TcxLabel
-    Left = 348
-    Top = 300
+    Left = 346
+    Top = 301
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceValue1: TcxCurrencyEdit
@@ -345,6 +345,17 @@
     TabOrder = 41
     Width = 171
   end
+  object cxLabel20: TcxLabel
+    Left = 19
+    Top = 384
+    Caption = #1074' '#1090#1086#1084#1091' '#1095#1080#1089#1083#1110' '#1083#1072#1082#1090#1086#1079#1080
+  end
+  object edValue9: TcxTextEdit
+    Left = 19
+    Top = 399
+    TabOrder = 43
+    Width = 312
+  end
   object ActionList: TActionList
     Left = 305
     Top = 40
@@ -548,10 +559,18 @@
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue9'
+        Value = Null
+        Component = edValue9
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 304
-    Top = 40
+    Left = 344
+    Top = 64
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -781,6 +800,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Value9'
+        Value = Null
+        Component = edValue9
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'isInfo'
         Value = Null
         Component = ceInfo
@@ -803,8 +829,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 281
-    Top = 96
+    Left = 345
+    Top = 128
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
