@@ -202,6 +202,11 @@ type
     cdsInventoryListTopPartionNumCaption: TStringField;
     cdsInventoryListCountTare_calcCaption: TStringField;
     cdsInventoryListTopCountTare_calcCaption: TStringField;
+    cdsInventoryListTopNumSecurity_str: TStringField;
+    cdsInventoryListNumSecurity_str: TStringField;
+    cdsInventoryEditNumSecurity_str: TStringField;
+    cdsInventoryListNumSecurity_strCaption: TStringField;
+    cdsInventoryListTopNumSecurity_strCaption: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure cdsChoiceCelListCalcFields(DataSet: TDataSet);
     procedure cdsChoiceCelListTopCalcFields(DataSet: TDataSet);
@@ -228,9 +233,9 @@ type
     function ConfirmChoiceCel(ABarCode: String) : Boolean;
 
     { загрузка инвентаризации по коду}
-    function DownloadInventoryBarCode(ABarCode: String) : Boolean;
+    function DownloadInventoryBarCode(ABarCode, ANumSecurity: String) : Boolean;
     { подтверждение инвентаризации}
-    function ConfirmInventory(AMovementItemId: Integer) : Boolean;
+    function ConfirmInventory(AMovementItemId: Integer; AinNumSecurity: String; AinIsNumSecurity: Boolean) : Boolean;
 
     procedure SetErasedChoiceCel(ADataSet: TClientDataset);
     procedure SetUnErasedChoiceCel(ADataSet: TClientDataset);
@@ -599,6 +604,7 @@ begin
   DataSet.FieldByName('PartionGoodsDateCaption').AsString := 'Партия: ' + DataSet.FieldByName('PartionGoodsDate').AsString;
   DataSet.FieldByName('PartionNumCaption').AsString := '№ паспорта: ' + DataSet.FieldByName('PartionNum').AsString;
   DataSet.FieldByName('CountTare_calcCaption').AsString := 'Ящиков: ' + DataSet.FieldByName('CountTare_calc').AsString;
+  DataSet.FieldByName('NumSecurity_strCaption').AsString := '№ охр.: ' + DataSet.FieldByName('NumSecurity_str').AsString;
 end;
 
 procedure TDM.cdsInventoryListTopCalcFields(DataSet: TDataSet);
@@ -607,6 +613,7 @@ begin
   DataSet.FieldByName('PartionGoodsDateCaption').AsString := 'Партия: ' + DataSet.FieldByName('PartionGoodsDate').AsString;
   DataSet.FieldByName('PartionNumCaption').AsString := '№ паспорта: ' + DataSet.FieldByName('PartionNum').AsString;
   DataSet.FieldByName('CountTare_calcCaption').AsString := 'Ящиков: ' + DataSet.FieldByName('CountTare_calc').AsString;
+  DataSet.FieldByName('NumSecurity_strCaption').AsString := '№ охр.: ' + DataSet.FieldByName('NumSecurity_str').AsString;
 end;
 
 procedure TDM.CheckUpdate;
@@ -713,6 +720,8 @@ begin
     StoredProc.Params.AddParam('isHideIlluminationButton', ftBoolean, ptOutput, frmMain.isHideIlluminationButton);
     StoredProc.Params.AddParam('isIlluminationModeSet', ftBoolean, ptOutput, False);
     StoredProc.Params.AddParam('isIlluminationMode', ftBoolean, ptOutput, frmMain.isIlluminationMode);
+    StoredProc.Params.AddParam('isNumSecurity', ftBoolean, ptOutput, False);
+    StoredProc.Params.AddParam('CountSecurity', ftInteger, ptOutput, 5);
 
     try
       StoredProc.Execute(false, false, false);
@@ -737,6 +746,11 @@ begin
         (StoredProc.ParamByName('isHideIlluminationButton').Value <> frmMain.isHideIlluminationButton) then frmMain.isHideIlluminationButton := StoredProc.ParamByName('isHideIlluminationButton').Value;
       if StoredProc.ParamByName('isIlluminationModeSet').Value and
         (StoredProc.ParamByName('isIlluminationMode').Value <> frmMain.isIlluminationMode) then frmMain.isIlluminationMode := StoredProc.ParamByName('isIlluminationMode').Value;
+
+      if StoredProc.ParamByName('isNumSecurity').Value <> frmMain.isNumSecurity then
+        frmMain.isNumSecurity := StoredProc.ParamByName('isNumSecurity').Value;
+      if StoredProc.ParamByName('CountSecurity').Value <> frmMain.CountSecurity then
+        frmMain.CountSecurity := StoredProc.ParamByName('CountSecurity').Value;
 
       Result := True;
     except
@@ -812,7 +826,7 @@ begin
 end;
 
 { загрузка инвентаризации по коду}
-function TDM.DownloadInventoryBarCode(ABarCode: String) : Boolean;
+function TDM.DownloadInventoryBarCode(ABarCode, ANumSecurity : String) : Boolean;
 var
   StoredProc : TdsdStoredProc;
 begin
@@ -834,6 +848,18 @@ begin
     try
       StoredProc.Execute(false, false, false);
       Result := cdsInventoryEdit.Active;
+
+      if Result and (cdsInventoryEdit.RecordCount = 1) and
+         (ANumSecurity <> cdsInventoryEditNumSecurity_str.AsString) then
+      begin
+        try
+          cdsInventoryEdit.Edit;
+          cdsInventoryEditNumSecurity_str.AsString := ANumSecurity;
+        finally
+          cdsInventoryEdit.Post;
+        end;
+      end;
+
     except
       on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
     end;
@@ -844,7 +870,7 @@ begin
 end;
 
 { подтверждение инвентаризации}
-function TDM.ConfirmInventory(AMovementItemId: Integer) : Boolean;
+function TDM.ConfirmInventory(AMovementItemId: Integer; AinNumSecurity: String; AinIsNumSecurity: Boolean) : Boolean;
 var
   StoredProc : TdsdStoredProc;
 begin
@@ -859,6 +885,8 @@ begin
     StoredProc.StoredProcName := 'gpInsertUpdate_MovementItem_Inventory_mobile';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, AMovementItemId);
+    StoredProc.Params.AddParam('inNumSecurity', ftString, ptInput, AinNumSecurity);
+    StoredProc.Params.AddParam('inIsNumSecurity', ftBoolean, ptInput, AinIsNumSecurity);
 
     try
       StoredProc.Execute(false, false, false);
