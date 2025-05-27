@@ -140,6 +140,13 @@ type
     spGet: TdsdStoredProc;
     actOpenReport_PartionCell_GoodsHistory: TdsdOpenForm;
     bbOpenReport_PartionCell_GoodsHistory: TdxBarButton;
+    actOpenForm_isManyEdit: TdsdOpenForm;
+    bbOpenForm_isManyEdit: TdxBarButton;
+    cbisMany: TcxCheckBox;
+    actContinueAction_isMany: TdsdContinueAction;
+    actExecisManyForm: TdsdInsertUpdateAction;
+    mac_isMany: TMultiAction;
+    mac_isMany_Print: TMultiAction;
   private
     { Private declarations }
   public

@@ -272,6 +272,14 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
             HeaderHint = #1045#1089#1090#1100' '#1076#1086#1082' '#1086#1093#1088#1072#1085#1099' '#1044#1072'/'#1053#1077#1090
             Width = 70
           end
+          object isDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1044#1072'/'#1053#1077#1090
+            DataBinding.FieldName = 'isDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1045#1089#1090#1100' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1076#1086#1082' '#1086#1093#1088#1072#1085#1099' '#1044#1072'/'#1053#1077#1090
+            Width = 70
+          end
           object OperDate_security: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1086#1093#1088#1072#1085#1072')'
             DataBinding.FieldName = 'OperDate_security'

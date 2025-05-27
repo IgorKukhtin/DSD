@@ -146,6 +146,7 @@ type
     actExecisManyForm: TdsdInsertUpdateAction;
     actOpenForm_isManyEdit: TdsdOpenForm;
     bbOpenForm_isManyEdit: TdxBarButton;
+    mac_Print_isMany: TMultiAction;
   private
     { Private declarations }
   public
