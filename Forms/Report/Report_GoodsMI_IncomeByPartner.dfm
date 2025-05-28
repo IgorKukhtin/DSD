@@ -68,6 +68,11 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
               Format = ',0.####'
               Kind = skSum
               Column = Summ_ProfitLoss
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = HeadCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -114,6 +119,11 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = HeadCount
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -298,6 +308,18 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object HeadCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
+            DataBinding.FieldName = 'HeadCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1089#1082#1083#1072#1076')'

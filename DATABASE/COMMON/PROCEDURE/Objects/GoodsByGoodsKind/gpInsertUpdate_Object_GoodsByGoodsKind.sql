@@ -18,8 +18,10 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integ
                                                                , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Boolean, Boolean, TVarChar);*/
 /*DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                                , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Boolean, Boolean, TVarChar);*/
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                               , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+/*DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                               , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Boolean, TVarChar);*/
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                               , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
@@ -41,7 +43,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
     IN inGoodsKindIncomeId     Integer  , -- Виды товаров факт приход
     IN inGoodsSubId_CEH        Integer  , -- Товары (пересортица ЦЕХ - расход)
     IN inGoodsKindSubId_CEH    Integer  , -- Виды товаров (пересортица ЦЕХ - расход)
-
+    IN inGoodsSubId_SendCEH        Integer  , -- Товары (перемещю.пересортица ЦЕХ - расход)
+    IN inGoodsKindSubId_SendCEH    Integer  , -- Виды товаров (пересортица ЦЕХ - расход)
+    
     IN inReceiptId             Integer  , -- Рецептуры
     IN inReceiptGPId           Integer  , -- Рецептура (схема с тушенкой)
     IN inWeightPackageKorob    TFloat   , -- вес 1-ого пакета для КОРОБКИ
@@ -59,6 +63,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
 
     IN inGoodsSubDate          TDateTime, --
     IN inGoodsSub_CEH_start    TDateTime, --
+    IN inGoodsSub_SendCEH_start  TDateTime, --
     IN inisNotDate             Boolean  , -- если FALSE записать в inGoodsSubDate - NULL 
     IN inIsNotPack             Boolean  , -- не упаковывать
     IN inSession               TVarChar 
@@ -141,6 +146,8 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_CEH_start(), ioId, inGoodsSub_CEH_start);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_SendCEH_start(), ioId, inGoodsSub_SendCEH_start);
 
    -- сохранили связь с <Товары  (перемещ.пересортица - расход)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsSubSend(), ioId, inGoodsSubSendId);
@@ -170,11 +177,16 @@ BEGIN
    -- сохранили связь с <Виды товаров  (факт приход)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindIncome(), ioId, inGoodsKindIncomeId);
 
+   -- сохранили связь с <Товары  (перем.пересортица цех- расход)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsSub_SendCEH(), ioId, inGoodsSubId_SendCEH);
+   -- сохранили связь с <Виды товаров  (перем.пересортица цех- расход)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub_SendCEH(), ioId, inGoodsKindSubId_SendCEH);
+
    -- сохранили связь с <Товары  (пересортица цех- расход)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsSub_CEH(), ioId, inGoodsSubId_CEH);
    -- сохранили связь с <Виды товаров  (пересортица цех- расход)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub_CEH(), ioId, inGoodsKindSubId_CEH);
-
+   
    -- сохранили связь с <Рецептурой>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_Receipt(), ioId, inReceiptId);
    -- сохранили связь с <Рецептурой>

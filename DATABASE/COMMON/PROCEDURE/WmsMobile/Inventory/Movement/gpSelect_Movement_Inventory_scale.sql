@@ -85,6 +85,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertDate_security  TDateTime
              , UpdateDate_security  TDateTime
              , isSecurity Boolean --Есть документ охраны
+             , isDiff Boolean
               )
 AS
 $BODY$
@@ -601,7 +602,8 @@ BEGIN
            , tmpSecurity.InsertDate     AS InsertDate_security
            , tmpSecurity.UpdateDate     AS UpdateDate_security
 
-           , CASE WHEN tmpSecurity.MovementId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSecurity --Есть документ охраны
+           , CASE WHEN tmpSecurity.MovementId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSecurity --Есть документ охраны 
+           , CASE WHEN tmpSecurity.MovementId IS NULL THEN TRUE ELSE FALSE END ::Boolean AS isDiff     --отклонение
 
         FROM tmpMovement_Data AS Movement
             --INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
@@ -856,7 +858,8 @@ BEGIN
            , tmpSecurity.InsertDate     AS InsertDate_security
            , tmpSecurity.UpdateDate     AS UpdateDate_security
 
-           , CASE WHEN tmpSecurity.MovementId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSecurity --Есть документ охраны
+           , CASE WHEN tmpSecurity.MovementId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSecurity --Есть документ охраны 
+           , CASE WHEN tmpSecurity.MovementId IS NULL THEN TRUE ELSE FALSE END ::Boolean AS isDiff     --отклонение
 
         FROM tmpMovement_Data AS Movement
             --INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
@@ -1007,7 +1010,8 @@ BEGIN
            , tmpSecurity.InsertDate     AS InsertDate_security
            , tmpSecurity.UpdateDate     AS UpdateDate_security
 
-           , TRUE::Boolean AS isSecurity -- документ охраны
+           , TRUE ::Boolean   AS isSecurity -- документ охраны
+           , TRUE ::Boolean   AS isDiff     --отклонение
 
         FROM tmpSecurity
             LEFT JOIN tmpMovement_Data ON tmpMovement_Data.Operdate = tmpSecurity.OperDate

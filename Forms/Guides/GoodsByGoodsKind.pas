@@ -86,6 +86,8 @@ type
     bbUpdate_isEtiketka: TdxBarButton;
     GoodsKindSubCEHChoiceForm: TOpenChoiceForm;
     GoodsSubCEHOpenChoice: TOpenChoiceForm;
+    GoodsKindSubSendCEHChoiceForm: TOpenChoiceForm;
+    GoodsSubSendCEHOpenChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -18,7 +18,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit, cxCheckBox, cxMemo;
+  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit, cxCheckBox, cxMemo,
+  dsdCommon;
 
 type
   TStickerEditForm = class(TParentForm)
@@ -82,6 +83,8 @@ type
     GuidesStickerFile_70_70: TdsdGuides;
     cxLabel19: TcxLabel;
     edStickerFile_70_70: TcxButtonEdit;
+    cxLabel20: TcxLabel;
+    edValue9: TcxTextEdit;
 
   private
     { Private declarations }

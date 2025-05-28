@@ -37,6 +37,7 @@ RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull
              , AmountPartner TFloat, AmountPartner_Weight TFloat , AmountPartner_Sh TFloat, PricePartner TFloat
              , AmountDiff_Weight TFloat, AmountDiff_Sh TFloat
              , Summ TFloat, Summ_ProfitLoss TFloat
+             , HeadCount TFloat
              , OperDate        TDateTime
              , OperDatePartner TDateTime
              , Invnumber       TVarChar
@@ -143,6 +144,7 @@ BEGIN
                  AND COALESCE (inUnitGroupId, 0) = 0
                  AND COALESCE (inUnitId, 0)      = 0
           )
+
     -- –ÂÁÛÎ¸Ú‡Ú
     SELECT Object_GoodsGroup.Id        AS GoodsGroupId
          , Object_GoodsGroup.ValueData AS GoodsGroupName
@@ -192,6 +194,8 @@ BEGIN
 
          , tmpOperationGroup.Summ            :: TFloat AS Summ
          , tmpOperationGroup.Summ_ProfitLoss :: TFloat AS Summ_ProfitLoss
+         
+         , tmpOperationGroup.HeadCount       :: TFloat AS HeadCount
 
          , tmpOperationGroup.OperDate        ::TDateTime AS OperDate
          , tmpOperationGroup.OperDatePartner ::TDateTime AS OperDatePartner
@@ -220,6 +224,7 @@ BEGIN
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.AmountPartner ELSE 0 END) AS AmountPartner_Sh
                 , SUM (tmpContainer.Summ + tmpContainer.Summ_ProfitLoss) AS Summ
                 , SUM (tmpContainer.Summ_ProfitLoss + tmpContainer.Summ_ProfitLoss_partner) AS Summ_ProfitLoss
+                , SUM (tmpContainer.HeadCount)                           AS HeadCount
 
            FROM (SELECT MIContainer.ContainerId                        AS ContainerId
                       , MIContainer.ObjectId_analyzer                  AS GoodsId
@@ -265,9 +270,15 @@ BEGIN
                                        THEN 1 * MIContainer.Amount
                                   ELSE 0
                              END) AS Summ_ProfitLoss
-
+                      --ÍÓÎ-‚Ó „ÓÎÓ‚
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS HeadCount
                  FROM MovementItemContainer AS MIContainer
                       INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+                      LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                  ON MIFloat_HeadCount.MovementItemId = MIContainer.MovementItemId
+                                                 AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                                 AND MIContainer.DescId = zc_MIContainer_Count()
+                                                 AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200()
                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                    AND MIContainer.MovementDescId = inDescId
                    -- AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_Income() THEN TRUE ELSE FALSE END
@@ -384,6 +395,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.05.25         * add HeadCount
  12.08.15                                        * all
  11.07.15         * add inUnitGroupId, inUnitId, inPaidKindId
  08.02.14         *

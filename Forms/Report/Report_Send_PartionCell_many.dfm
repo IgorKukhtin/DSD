@@ -4,7 +4,6 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -42
   ExplicitWidth = 1556
   ExplicitHeight = 447
   PixelsPerInch = 96
@@ -2235,7 +2234,7 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
       Caption = 'actGetForm'
     end
     object actOpenForm_isManyEdit: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'isMany'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081'> '#1087#1086' '#1074#1089#1077#1084' '#1103#1095#1077#1081#1082#1072#1084
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081'> '#1087#1086' '#1074#1089#1077#1084' '#1103#1095#1077#1081#1082#1072#1084
@@ -2924,7 +2923,7 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
     object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
-      AfterAction = mac_isMany
+      AfterAction = mac_Print_isMany
       BeforeAction = mactUpdateMainDS
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_MI_Send_byReport
@@ -2936,9 +2935,12 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
       DataSource = MasterDS
     end
     object actContinueAction_isMany: TdsdContinueAction
-      Category = 'DSDLib'
+      Category = 'isMany'
       MoveParams = <>
       Caption = 'actContinueAction'
+      Hint = 
+        #1042#1099#1079#1086#1074' '#1076#1080#1072#1083#1086#1075#1072' '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080' '#1044#1072' '#1089#1086#1086#1090#1074'. '#1087#1072#1088#1072#1084#1077#1090#1088#1072' '#1085#1072 +
+        ' '#1092#1086#1088#1084#1077
       Continue.Value = False
       Continue.Component = cbisMany
       Continue.DataType = ftBoolean
@@ -2999,7 +3001,7 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
       ImageIndex = 67
     end
     object actExecisManyForm: TdsdInsertUpdateAction
-      Category = 'DSDLib'
+      Category = 'isMany'
       MoveParams = <>
       Caption = 'actExecisManyForm'
       Hint = 'actExecisManyForm'
@@ -3208,7 +3210,7 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
       Caption = 'actContinueAction'
       Continue.Value = False
       Continue.Component = FormParams
-      Continue.ComponentItem = 'outisEdit'
+      Continue.ComponentItem = 'outisPrint'
       Continue.DataType = ftBoolean
       Continue.MultiSelectSeparator = ','
     end
@@ -3271,9 +3273,6 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
       Category = 'Print'
       MoveParams = <>
       ActionList = <
-        item
-          Action = actContinueAction
-        end
         item
           Action = actPrint_Pasport
         end>
@@ -3394,7 +3393,7 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
       Caption = 'actGet_ExecForm_next'
     end
     object mac_isMany: TMultiAction
-      Category = 'DSDLib'
+      Category = 'isMany'
       MoveParams = <>
       ActionList = <
         item
@@ -3404,6 +3403,18 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
           Action = actExecisManyForm
         end>
       Caption = 'mac_isMany'
+    end
+    object mac_Print_isMany: TMultiAction
+      Category = 'isMany'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mac_isMany
+        end
+        item
+          Action = macPrint_New
+        end>
+      Caption = 'mac_Print_isMany'
     end
   end
   inherited MasterDS: TDataSource
@@ -5353,8 +5364,8 @@ inherited Report_Send_PartionCell_manyForm: TReport_Send_PartionCell_manyForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 328
+    Left = 192
+    Top = 312
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_PartionCell'

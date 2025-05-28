@@ -1704,6 +1704,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       TabOrder = 7
       Width = 89
     end
+    object cbisMany: TcxCheckBox
+      Left = 988
+      Top = 3
+      Hint = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1076#1072'/'#1085#1077#1090
+      Caption = #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1076#1072'/'#1085#1077#1090
+      Properties.ReadOnly = False
+      TabOrder = 8
+      Width = 159
+    end
   end
   object PanelSearch: TPanel [2]
     Left = 0
@@ -2643,7 +2652,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
-      AfterAction = macPrint_New
+      AfterAction = mac_isMany_Print
       BeforeAction = mactUpdateMainDS
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_MI_Send_byReport
@@ -3016,6 +3025,209 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end>
       Caption = 'actGet_ExecForm_next'
     end
+    object actOpenForm_isManyEdit: TdsdOpenForm
+      Category = 'isMany'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081'> '#1087#1086' '#1074#1089#1077#1084' '#1103#1095#1077#1081#1082#1072#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081'> '#1087#1086' '#1074#1089#1077#1084' '#1103#1095#1077#1081#1082#1072#1084
+      ImageIndex = 43
+      FormName = 'TSend_PartionCell_isManyEditForm'
+      FormNameParam.Value = 'TSend_PartionCell_isManyEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionGoodsDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actContinueAction_isMany: TdsdContinueAction
+      Category = 'isMany'
+      MoveParams = <>
+      Caption = 'actContinueAction'
+      Hint = 
+        #1042#1099#1079#1086#1074' '#1076#1080#1072#1083#1086#1075#1072' '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080' '#1044#1072' '#1089#1086#1086#1090#1074'. '#1087#1072#1088#1072#1084#1077#1090#1088#1072' '#1085#1072 +
+        ' '#1092#1086#1088#1084#1077
+      Continue.Value = False
+      Continue.Component = cbisMany
+      Continue.DataType = ftBoolean
+      Continue.MultiSelectSeparator = ','
+    end
+    object actExecisManyForm: TdsdInsertUpdateAction
+      Category = 'isMany'
+      MoveParams = <>
+      Caption = 'actExecisManyForm'
+      Hint = #1080#1079#1084#1077#1085#1080#1090#1100' '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' ('#1076#1072'/'#1085#1077#1090') '
+      FormName = 'TPartionCellCheckisManyEditForm'
+      FormNameParam.Value = 'TPartionCellCheckisManyEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PartionCellId_last'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionCellNum_last'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PartionCellNum_last'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMany'
+          Value = False
+          Component = cbisMany
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionGoodsDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      isNotExecuteDialog = True
+      ActionType = acUpdate
+      IdFieldName = 'Id'
+    end
+    object mac_isMany: TMultiAction
+      Category = 'isMany'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actContinueAction_isMany
+        end
+        item
+          Action = actExecisManyForm
+        end>
+      Caption = 'mac_isMany'
+      Hint = #1080#1079#1084#1077#1085#1080#1090#1100' '#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081' ('#1076#1072'/'#1085#1077#1090') '
+    end
+    object mac_isMany_Print: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mac_isMany
+        end
+        item
+          Action = macPrint_New
+        end>
+      Caption = 'mac_isMany_Print'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -3152,6 +3364,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenForm_isManyEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -3235,6 +3455,10 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
     object bbOpenReport_PartionCell_GoodsHistory: TdxBarButton
       Action = actOpenReport_PartionCell_GoodsHistory
+      Category = 0
+    end
+    object bbOpenForm_isManyEdit: TdxBarButton
+      Action = actOpenForm_isManyEdit
       Category = 0
     end
   end

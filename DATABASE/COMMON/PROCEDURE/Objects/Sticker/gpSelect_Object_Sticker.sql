@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar -- , StickerName TVarC
              , Info TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
              , Value6 TFloat, Value7 TFloat, Value8 TFloat
+             , Value9 TVarChar
              , isErased Boolean
               )
 AS
@@ -109,6 +110,8 @@ BEGIN
                                 , ObjectFloat_Value6.ValueData      AS Value6
                                 , ObjectFloat_Value7.ValueData      AS Value7
                                 , ObjectFloat_Value8.ValueData      AS Value8
+                                
+                                , ObjectString_Value9.ValueData ::TVarChar AS Value9
 
                                 , Object_Sticker.isErased           AS isErased
                     
@@ -194,6 +197,10 @@ BEGIN
                                                        ON ObjectFloat_Value8.ObjectId = Object_Sticker.Id 
                                                       AND ObjectFloat_Value8.DescId = zc_ObjectFloat_Sticker_Value8()
 
+                                 LEFT JOIN ObjectString AS ObjectString_Value9
+                                                        ON ObjectString_Value9.ObjectId = Object_Sticker.Id 
+                                                       AND ObjectString_Value9.DescId = zc_ObjectString_Sticker_Value9()
+
                                  LEFT JOIN ObjectBlob AS ObjectBlob_Info
                                                       ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
                                                      AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
@@ -260,6 +267,8 @@ BEGIN
             , COALESCE (Object_Sticker.Value6, 0)            :: TFloat    AS Value6
             , COALESCE (Object_Sticker.Value7, 0)            :: TFloat    AS Value7
             , COALESCE (Object_Sticker.Value8, 0)            :: TFloat    AS Value8
+            
+            , COALESCE (Object_Sticker.Value9, '')           :: TVarChar  AS Value9
 
             , COALESCE (Object_Sticker.isErased, FALSE) :: Boolean           AS isErased
 
@@ -353,6 +362,8 @@ BEGIN
             , ObjectFloat_Value7.ValueData      AS Value7
             , ObjectFloat_Value8.ValueData      AS Value8
 
+            , ObjectString_Value9.ValueData ::TVarChar AS Value9
+
             , Object_Sticker.isErased           AS isErased
 
        FROM (SELECT Object_Sticker.* 
@@ -442,6 +453,10 @@ BEGIN
                                    ON ObjectFloat_Value8.ObjectId = Object_Sticker.Id 
                                   AND ObjectFloat_Value8.DescId = zc_ObjectFloat_Sticker_Value8()
 
+             LEFT JOIN ObjectString AS ObjectString_Value9
+                                    ON ObjectString_Value9.ObjectId = Object_Sticker.Id 
+                                   AND ObjectString_Value9.DescId = zc_ObjectString_Sticker_Value9()
+
              LEFT JOIN ObjectBlob AS ObjectBlob_Info
                                   ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
                                  AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
@@ -473,6 +488,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.05.25         *
  01.09.23         *
  14.02.20         *
  23.10.17         *

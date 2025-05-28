@@ -160,6 +160,7 @@ type
     NormInDays_gk: TcxGridDBColumn;
     isDiff_NormInDays_gk: TcxGridDBColumn;
     priisNormInDays_not_SP: TcxGridDBColumn;
+    Value9: TcxGridDBColumn;
 
   private
     { Private declarations }

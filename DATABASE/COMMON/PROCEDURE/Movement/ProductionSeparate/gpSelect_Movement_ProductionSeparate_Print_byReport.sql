@@ -127,8 +127,10 @@ BEGIN
                              , HeadCount1  TFloat
                              , PriceIncome  Tfloat
                              , PriceIncome1  Tfloat
+                             , PriceIncome2 TFloat
                              , PriceTransport  Tfloat 
-                             , SummCostIncome TFloat
+                             , SummCostIncome TFloat 
+                             , CountDocIncome TFloat
                              , Count_CountPacker   Tfloat
                              , PercentCount   Tfloat
                              , CountSeparate Tfloat
@@ -157,9 +159,11 @@ BEGIN
                              , AmountPartnerIncome, AmountPartnerSecondIncome
                              , HeadCount1
                              , PriceIncome
-                             , PriceIncome1
+                             , PriceIncome1 
+                             , PriceIncome2
                              , PriceTransport
-                             , SummCostIncome
+                             , SummCostIncome 
+                             , CountDocIncome
                              , Count_CountPacker
                              , PercentCount
                              , CountSeparate
@@ -440,7 +444,8 @@ BEGIN
                        )
       --затраты из приходе поставщика
      , tmpIncomeCost AS (SELECT SUM (COALESCE (MovementFloat_AmountCost.ValueData,0)) AS AmountCost
-                              , tmpIncome.MovementId_separate
+                              , tmpIncome.MovementId_separate 
+                              , COUNT (DISTINCT Movement.ParentId) AS CountDoc --количество документов прихода = кол-во скотовозов
                          FROM Movement
                               INNER JOIN (SELECT DISTINCT tmpIncome.MovementId, tmpIncome.MovementId_separate
                                           FROM tmpIncome
@@ -473,7 +478,8 @@ BEGIN
            , 0 ::TFloat AS CountMaster_4134
            , SUM (tmpMI_group.Amount_summ) OVER (PARTITION BY CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpMovement.MovementId END) AS SummMaster     --, tmpMI_group.Amount_summ  AS SummMaster
            , SUM (tmpMI_group.HeadCount) OVER (PARTITION BY CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpMovement.MovementId END) AS HeadCount     --, tmpMI_group.HeadCount    AS HeadCountMaster
-           , CASE WHEN tmpMI_group.Amount_count <> 0 THEN tmpMI_group.Amount_summ / tmpMI_group.Amount_count ELSE 0 END AS PriceMaster
+           --, CASE WHEN tmpMI_group.Amount_count <> 0 THEN tmpMI_group.Amount_summ - COALESCE (tmpIncomeCost.AmountCost,0)/ tmpMI_group.Amount_count ELSE 0 END AS PriceMaster 
+           , SUM ((tmpMI_group.Amount_summ - COALESCE (tmpIncomeCost.AmountCost,0)) /tmpMI_group.Amount_count ) OVER (PARTITION BY CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpMovement.MovementId END) AS PriceMaster
 
            , Object_From.ValueData            AS FromName
            , Object_PersonalPacker.ValueData  AS PersonalPackerName
@@ -489,9 +495,12 @@ BEGIN
            , CASE WHEN tmpIncomeAll.HeadCount <> 0 THEN tmpIncomeAll.Amount_count / tmpIncomeAll.HeadCount ELSE 0 END AS HeadCount1 -- цена головы из Income
 
            , tmpIncomeAll.Amount_summ / tmpIncomeAll.Amount_count                              AS PriceIncome
-           , tmpIncomeAll.Amount_summ / (tmpIncomeAll.Amount_count - tmpIncomeAll.CountPacker) AS PriceIncome1
+           , tmpIncomeAll.Amount_summ / (tmpIncomeAll.Amount_count - tmpIncomeAll.CountPacker) AS PriceIncome1 
+           , CASE WHEN COALESCE (tmpIncomeAll.AmountPartner,0) <> 0 THEN tmpIncomeAll.Amount_summ / (tmpIncomeAll.AmountPartner) ELSE 0 END AS PriceIncome2  -- по кол. поставщика
+
            , 0 :: Tfloat                                                                       AS PriceTransport
            , tmpIncomeCost.AmountCost   ::TFloat                                               AS SummCostIncome
+           , tmpIncomeCost.CountDoc     ::Integer                                              AS CountDocIncome
 
            , (tmpIncomeAll.Amount_count - tmpIncomeAll.CountPacker)      AS Count_CountPacker
            , 100 * tmpSeparateS.Amount_count / tmpIncomeAll.Amount_count AS PercentCount
@@ -741,7 +750,7 @@ BEGIN
                           -- кол G  итого сумма по SummaPlan дел на  SummaPlan т.е. доля
                           , CASE WHEN COALESCE (tmpData.TotalSummaPlan,0) <> 0 THEN tmpData.SummaPlan / tmpData.TotalSummaPlan ELSE 0 END :: TFloat AS Summa_dolyaPlan
                           --
-                          , CASE WHEN COALESCE (tmpData.Amount,0) <> 0 
+                          /*, CASE WHEN COALESCE (tmpData.Amount,0) <> 0 
                                  THEN (tmpData.SummaPlan - 
                                       ( (tmpData.TotalSummaPlan -  (COALESCE (tmpCursor1.SummIncome,0) + COALESCE (tmpCursor1.SummCostIncome,0))  
                                          ) 
@@ -749,12 +758,25 @@ BEGIN
                                       )  /*kol_i */ 
                                       / COALESCE (tmpData.Amount,0) 
                                       ELSE 0 
-                            END AS PriceFact
+                            END AS PriceFact     
+                          */  
+                          , CAST (CASE WHEN COALESCE (tmpData.Amount,0) <> 0 
+                                 THEN (tmpData.SummaPlan - 
+                                      ( (tmpData.TotalSummaPlan 
+                                        -- было минус это, в посл. файле иной расчет  - (COALESCE (tmpCursor1.SummIncome,0) + COALESCE (tmpCursor1.SummCostIncome,0))   
+                                        - ( CASE WHEN COALESCE (tmpCursor1.CountIncome,0) <>0 THEN ((tmpCursor1.PriceIncome2 * tmpCursor1.amountpartnerincome + COALESCE (tmpCursor1.SummCostIncome,0)) / tmpCursor1.CountIncome) ELSE 0 END * tmpCursor1.countmaster)
+                                         ) 
+                                         * CASE WHEN COALESCE (tmpData.TotalSummaPlan,0) <> 0 THEN tmpData.SummaPlan / tmpData.TotalSummaPlan ELSE 0 END)   /* kol_H*/      
+                                      )  /*kol_i */ 
+                                      / COALESCE (tmpData.Amount,0) 
+                                      ELSE 0 
+                            END AS  NUMERIC(16,8)) AS PriceFact                            
+                            
                           , CASE WHEN COALESCE (tmpCursor1.countmaster,0) <> 0 THEN 100 * (COALESCE (tmpData.Amount,0)/ tmpCursor1.countmaster) ELSE 0 END         :: TFloat AS Persent_v 
                           , CASE WHEN COALESCE (tmpCursor1.countmaster,0) <> 0 THEN 100 * (COALESCE (tmpData.TotalAmount_gr,0)/ tmpCursor1.countmaster) ELSE 0 END :: TFloat AS Persent_gr
 
                           -- сколько строк в группе
-                          , COUNT (*) OVER (PARTITION BY tmpData.GoodsGroupNameFull) AS Count_gr
+                          , COUNT (*) OVER (PARTITION BY tmpData.MovementId, tmpData.GoodsGroupNameFull) AS Count_gr
                              
                       FROM tmpData
                         LEFT JOIN tmpCursor1 ON tmpCursor1.MovementId = tmpData.MovementId 
@@ -860,8 +882,10 @@ BEGIN
            , tmpCursor1.HeadCount1 -- цена головы из Income
            , tmpCursor1.PriceIncome
            , tmpCursor1.PriceIncome1
+           , tmpCursor1.PriceIncome2           
            , tmpCursor1.PriceTransport
-           , tmpCursor1.SummCostIncome
+           , tmpCursor1.SummCostIncome 
+           , tmpCursor1.CountDocIncome
            , tmpCursor1.Count_CountPacker
            , tmpCursor1.PercentCount
            , tmpCursor1.CountSeparate
@@ -925,7 +949,8 @@ BEGIN
            , SUM (COALESCE (tmpCursor1.CountMaster_4134,0)) AS CountMaster_4134
            , (tmpCursor1.SummMaster) AS SummMaster
            , (tmpCursor1.HeadCountMaster) AS HeadCountMaster
-           , (tmpCursor1.SummMaster / tmpCursor1.CountMaster) AS PriceMaster
+           , tmpCursor1.PriceMaster
+           
            , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.FromName   END AS FromName
            , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.PersonalPackerName END ASPersonalPackerName
            , tmpCursor1.GoodsNameIncome
@@ -939,8 +964,10 @@ BEGIN
            , CASE WHEN SUM (tmpCursor1.HeadCountIncome) <> 0 THEN SUM (tmpCursor1.CountIncome) / SUM (tmpCursor1.HeadCountIncome) ELSE 0 END AS HeadCount1 -- цена головы из Income
            , (SUM (tmpCursor1.SummIncome) / SUM (tmpCursor1.CountIncome))                                        AS PriceIncome
            , (SUM (tmpCursor1.SummIncome) / (SUM (tmpCursor1.CountIncome) - SUM (tmpCursor1.CountPackerIncome))) AS PriceIncome1
+           , CASE WHEN SUM (COALESCE (tmpCursor1.AmountPartnerIncome,0)) <> 0 THEN (SUM (tmpCursor1.SummIncome) / (SUM (tmpCursor1.AmountPartnerIncome) )) ELSE 0 END ::TFloat AS PriceIncome2
            , 0 :: Tfloat                                                                                         AS PriceTransport
            , SUM (tmpCursor1.SummCostIncome)   ::TFloat                                                          AS SummCostIncome
+           , SUM (tmpCursor1.CountDocIncome)   ::TFloat                                                          AS CountDocIncome
            
            , SUM (tmpCursor1.Count_CountPacker) AS Count_CountPacker
            , 100 * (SUM (tmpCursor1.CountSeparate) /SUM (tmpCursor1.CountIncome)) AS PercentCount
@@ -952,7 +979,7 @@ BEGIN
            , CASE WHEN COALESCE (SUM (tmpCursor1.Amount_4134),0) <> 0 THEN SUM (tmpCursor1.summ) /SUM (tmpCursor1.Amount_4134) ELSE 0 END   AS summprice_4134
            , SUM (tmpCursor1.Amount_4134) AS Amount_4134
            , CASE WHEN COALESCE (SUM (tmpCursor1.CountMaster),0) <> 0 THEN 100  * SUM (tmpCursor1.Amount_4134) / SUM (tmpCursor1.CountMaster) ELSE 0 END :: TFloat AS Persent_4134
-
+           , SUM (tmpCursor1.Amount_4134)  AS amountmaster_4134
            --  tmpCursor2
           , tmpCursor1.GoodsCode
           , tmpCursor1.GoodsName 
@@ -970,7 +997,7 @@ BEGIN
           , tmpCursor1.PricePlan
           , tmpCursor1.PriceNorm
           , tmpCursor1.isLoss
-          , CASE WHEN  inisPartion = TRUE THEN (SUM (tmpCursor1.SummFact) / SUM (tmpCursor1.Amount)) ELSE PriceFact END AS PriceFact  --, tmpCursor1.PriceFact                --расчет по файлу 
+          , CASE WHEN  inisPartion = TRUE THEN (SUM (tmpCursor1.SummFact) / SUM (tmpCursor1.Amount)) ELSE MIN(tmpCursor1.PriceFact) END AS PriceFact  --, tmpCursor1.PriceFact                --расчет по файлу 
           , SUM (tmpCursor1.SummFact) AS SummFact
            --
            , SUM (tmpCursor1.Amount_GroupStat_yes) AS Amount_GroupStat_yes
@@ -1000,17 +1027,18 @@ BEGIN
            , TRIM (tmpGroup.GoodsGroupName10) AS   GoodsGroupName10
 
       FROM tmpData AS tmpCursor1
-           LEFT JOIN tmpGroup ON CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpGroup.MovementId END = CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpCursor1.MovementId END 
+           LEFT JOIN tmpGroup ON CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpGroup.MovementId END = CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpCursor1.MovementId END      
       GROUP BY CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.MovementId::TVarChar END
              , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.PartionGoods END
              , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.InvNumber END
              , tmpCursor1.GoodsNameMaster
              , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.FromName END
              , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.PersonalPackerName END  
-             , CASE WHEN  inisPartion = TRUE THEN 0 ELSE PriceFact END 
+             --, CASE WHEN  inisPartion = TRUE THEN 0 ELSE tmpCursor1.PriceFact END 
              , tmpCursor1.GoodsNameIncome
              , tmpCursor1.CountMaster
-             , tmpCursor1.SummMaster
+             , tmpCursor1.SummMaster 
+             , tmpCursor1.PriceMaster
              , tmpCursor1.HeadCountMaster
              , tmpCursor1.GoodsNameSeparate
              , tmpCursor1.Separate_info   

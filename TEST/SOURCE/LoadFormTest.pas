@@ -2621,11 +2621,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Inventory_WeighingFactDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Inventory_WeighingFactDialogForm');
   ///exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleForm');
-  exit;
-  {
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportDialogForm'));
@@ -2667,21 +2667,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
   }
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_PartionCell_isManyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSend_PartionCell_isManyEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCell_manyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCell_manyForm');
- // exit;
+  //exit;
   //
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellForm');
   exit;
-   {
-
+  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellRemainsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellRemainsDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellRemainsForm'));
@@ -3192,11 +3193,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_IncomeDialogForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeByPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_IncomeByPartnerForm');
   exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentDebetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentDebetForm');
   exit;
@@ -4252,11 +4253,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
-  {exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');
-  //
+  exit;
+  {//
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ObjectForm');
   }

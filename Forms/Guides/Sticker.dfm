@@ -351,6 +351,14 @@ object StickerForm: TStickerForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object Value9: TcxGridDBColumn
+        Caption = #1083#1072#1082#1090#1086#1079#1072
+        DataBinding.FieldName = 'Value9'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1074' '#1090#1086#1084#1091' '#1095#1080#1089#1083#1110' '#1083#1072#1082#1090#1086#1079#1080
+        Width = 70
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -2728,6 +2736,15 @@ object StickerForm: TStickerForm
         Component = ClientDataSet
         ComponentItem = 'Value8'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue9'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value9'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

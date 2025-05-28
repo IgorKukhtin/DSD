@@ -46,6 +46,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsKindRealId Integer, GoodsKindRealName TVarChar
              , GoodsSubId_CEH Integer, GoodsSubCode_CEH Integer, GoodsSubName_CEH TVarChar, MeasureSubName_CEH TVarChar
              , GoodsKindSubId_CEH Integer, GoodsKindSubName_CEH TVarChar 
+             , GoodsSubId_SendCEH Integer, GoodsSubCode_SendCEH Integer, GoodsSubName_SendCEH TVarChar, MeasureSubName_SendCEH TVarChar
+             , GoodsKindSubId_SendCEH Integer, GoodsKindSubName_SendCEH TVarChar 
              , GoodsKindNewId Integer, GoodsKindNewName TVarChar
              , GoodsIncomeId Integer, GoodsIncomeCode Integer, GoodsIncomeName TVarChar, MeasureIncomeName TVarChar
              , GoodsKindIncomeId Integer, GoodsKindIncomeName TVarChar             
@@ -71,7 +73,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , EndDate_old  TDateTime
              , GoodsSubDate TDateTime 
              , isNotDate    Boolean
-             , GoodsSub_CEH_start TDateTime
+             , GoodsSub_CEH_start TDateTime 
+             , GoodsSub_SendCEH_start TDateTime
               )
 AS
 $BODY$
@@ -270,6 +273,13 @@ BEGIN
            , Object_GoodsKindSub_CEH.Id           AS GoodsKindSubId_CEH
            , Object_GoodsKindSub_CEH.ValueData    AS GoodsKindSubName_CEH
 
+           , Object_GoodsSub_SendCEH.Id               AS GoodsSubId_SendCEH
+           , Object_GoodsSub_SendCEH.ObjectCode       AS GoodsSubCode_SendCEH
+           , Object_GoodsSub_SendCEH.ValueData        AS GoodsSubName_SendCEH
+           , Object_MeasureSub_SendCEH.ValueData      AS MeasureSubName_SendCEH
+           , Object_GoodsKindSub_SendCEH.Id           AS GoodsKindSubId_SendCEH
+           , Object_GoodsKindSub_SendCEH.ValueData    AS GoodsKindSubName_SendCEH
+
            , Object_GoodsKindNew.Id           AS GoodsKindNewId
            , Object_GoodsKindNew.ValueData    AS GoodsKindNewName
 
@@ -322,7 +332,8 @@ BEGIN
            , ObjectDate_End_old.ValueData           ::TDateTime  AS EndDate_old
            , ObjectDate_GoodsSub.ValueData          ::TDateTime  AS GoodsSubDate
            , TRUE                                   ::Boolean    AS isNotDate 
-           , ObjectDate_GoodsSub_CEH_start.ValueData :: TDateTime AS GoodsSub_CEH_start
+           , ObjectDate_GoodsSub_CEH_start.ValueData     :: TDateTime AS GoodsSub_CEH_start
+           , ObjectDate_GoodsSub_SendCEH_start.ValueData :: TDateTime AS GoodsSub_SendCEH_start
        FROM tmpGoodsByGoodsKind AS Object_GoodsByGoodsKind_View
             /*LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
                                  ON ObjectLink_GoodsByGoodsKind_GoodsBasis.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -612,7 +623,24 @@ BEGIN
                                  ON ObjectLink_GoodsSub_CEH_Measure.ObjectId = Object_GoodsSub_CEH.Id
                                 AND ObjectLink_GoodsSub_CEH_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_MeasureSub_CEH ON Object_MeasureSub_CEH.Id = ObjectLink_GoodsSub_CEH_Measure.ChildObjectId
-            
+ 
+             --
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub_SendCEH
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsSub_SendCEH.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsSub_SendCEH.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub_SendCEH()
+            LEFT JOIN Object AS Object_GoodsSub_SendCEH ON Object_GoodsSub_SendCEH.Id = ObjectLink_GoodsByGoodsKind_GoodsSub_SendCEH.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub_SendCEH
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsKindSub_SendCEH.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsKindSub_SendCEH.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub_SendCEH()
+            LEFT JOIN Object AS Object_GoodsKindSub_SendCEH ON Object_GoodsKindSub_SendCEH.Id = ObjectLink_GoodsByGoodsKind_GoodsKindSub_SendCEH.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsSub_SendCEH_Measure
+                                 ON ObjectLink_GoodsSub_SendCEH_Measure.ObjectId = Object_GoodsSub_SendCEH.Id
+                                AND ObjectLink_GoodsSub_SendCEH_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_MeasureSub_SendCEH ON Object_MeasureSub_SendCEH.Id = ObjectLink_GoodsSub_SendCEH_Measure.ChildObjectId
+
+           
             --old
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis_old
                                  ON ObjectLink_GoodsByGoodsKind_GoodsBasis_old.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -634,6 +662,10 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_GoodsSub_CEH_start
                                  ON ObjectDate_GoodsSub_CEH_start.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectDate_GoodsSub_CEH_start.DescId = zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_CEH_start()
+
+            LEFT JOIN ObjectDate AS ObjectDate_GoodsSub_SendCEH_start
+                                 ON ObjectDate_GoodsSub_SendCEH_start.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectDate_GoodsSub_SendCEH_start.DescId = zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_SendCEH_start()
             --
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Receipt
                                  ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -667,6 +699,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.05.25        *
  22.05.25        * 
  21.03.25        * WeightPackageKorob 
  20.01.25        * isEtiketka
