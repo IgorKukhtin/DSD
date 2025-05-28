@@ -484,7 +484,7 @@ begin
     OptionsMemo.Lines.Add('Текущий интервал: ' + IntToStr(IntervalVal) + ' : del = NO');
     OptionsMemo.Lines.Add('Host: ' +  actVchasnoEDIOrdeLoad.Host.Value);
     OptionsMemo.Lines.Add('UserName: Token' );
-    OptionsMemo.Lines.Add('Password: ' +  actVchasnoEDIOrdeLoad.Token.Value);
+    OptionsMemo.Lines.Add('Password: actVchasnoEDIOrdeLoad.Token.Value' {+  actVchasnoEDIOrdeLoad.Token.Value});
 
      if cbLoad.Checked = FALSE then
      begin

@@ -3474,7 +3474,10 @@ begin
 
       end;
       try ParamByName('inAmountOrder').Value := gfStrToFloat(ORDEREDQUANTITY); except ParamByName('inAmountOrder').Value := 0; end;
-      try ParamByName('inPriceOrder').Value := gfStrToFloat(ORDERPRICE); except ParamByName('inPriceOrder').Value := 0; end;
+      try if ORDERPRICE <> ''
+          then ParamByName('inPriceOrder').Value := gfStrToFloat(ORDERPRICE)
+          else ParamByName('inPriceOrder').Value := 0;
+      except ParamByName('inPriceOrder').Value := 0; end;
       Execute;
     end;
     //
@@ -4947,7 +4950,10 @@ begin
       ParamByName('inDealId').Value := ADealId;
 
       Execute;
+      //
+      // !!!Выход!!!
       if ParamByName('isLoad').Value then Exit;
+      //
       MovementId := ParamByName('MovementId').Value;
       GoodsPropertyId := StrToInt(ParamByName('GoodsPropertyId').asString);
     end;
@@ -6532,7 +6538,9 @@ begin
         end;
 
         //
-        Result := false;
+        // загружаются rejected - ???отклоненный???
+        //
+        {Result := false;
         //
         DataSetCDS.Free;
         //
@@ -6579,7 +6587,7 @@ begin
           //ShowMessages('Нет накладных-rejected для загрузки.');
           Result := true;
           Exit;
-        end;
+        end;}
 
     end
     else

@@ -77,10 +77,13 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsNumSecurity Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- Режим охранника Да/нет
+     vbIsNumSecurity:= EXISTS (SELECT 1 FROM gpGet_MobilebConfig (inSession:= inSession) AS gpGet WHERE gpGet.isNumSecurity = TRUE);
 
      -- Результат
      RETURN QUERY
@@ -96,7 +99,7 @@ BEGIN
                            , Movement.OperDate         AS OperDate
                            , Object_Status.ObjectCode  AS StatusCode
                            , Object_Status.ValueData   AS StatusName
-                           , MovementFloat_NumSecurity.ValueData AS NumSecurity
+                           , COALESCE (MovementFloat_NumSecurity.ValueData, 0) AS NumSecurity
                         FROM tmpStatus
                              INNER JOIN Movement ON Movement.OperDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '5 DAY')
                                                 AND Movement.DescId = zc_Movement_WeighingProduction()
@@ -445,6 +448,11 @@ BEGIN
           AND Movement.OperDate >= CURRENT_DATE
 
           AND (MILO_Insert.ObjectId = vbUserId OR inLimit > 10 OR vbUserId = 5)
+          
+          -- Режим охранника Да/нет
+          AND ((vbIsNumSecurity = TRUE AND Movement.NumSecurity  < 0)
+            OR (vbIsNumSecurity = FALSE AND Movement.NumSecurity >= 0)
+              )
 
         ORDER BY CASE WHEN inIsOrderBy = TRUE THEN Object_Goods.ValueData   ELSE NULL END ASC
                , CASE WHEN inIsOrderBy = FALSE THEN MIDate_Insert.ValueData ELSE NULL END DESC

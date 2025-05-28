@@ -130,7 +130,25 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.У пользователя <%> Не установлено значение <ФИО (Сотрудник)>.', lfGet_Object_ValueData (vbUserId);
      END IF;
      -- проверка - свойство должно быть установлено
-     IF COALESCE (vbUnitId, 0) =  0 THEN
+     IF COALESCE (vbUnitId, 0) =  0
+             AND NOT EXISTS (SELECT 1
+                             FROM ObjectLink AS ObjectLink_User_Member
+                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                       ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                      AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                  INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                           ON ObjectBoolean_Main.ObjectId  = ObjectLink_Personal_Member.ObjectId
+                                                          AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Personal_Main()
+                                                          AND ObjectBoolean_Main.ValueData = TRUE
+                                  INNER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                        ON ObjectLink_Personal_PersonalServiceList.ObjectId      = ObjectLink_Personal_Member.ObjectId
+                                                       AND ObjectLink_Personal_PersonalServiceList.DescId        = zc_ObjectLink_Personal_PersonalServiceList()
+                                                       -- Відомість Охорона
+                                                       AND ObjectLink_Personal_PersonalServiceList.ChildObjectId = 301885 
+                             WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                               AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                            )
+     THEN
         RAISE EXCEPTION 'Ошибка.У сотрудника <%> Не установлено значение <Подразделение>.', lfGet_Object_ValueData (vbPersonalId);
      END IF;
 

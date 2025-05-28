@@ -198,6 +198,10 @@ object DM: TDM
     object cdsInventoryListTopStatusCode: TIntegerField
       FieldName = 'StatusCode'
     end
+    object cdsInventoryListTopNumSecurity_str: TStringField
+      FieldName = 'NumSecurity_str'
+      Size = 255
+    end
     object cdsInventoryListTopGoodsId: TIntegerField
       FieldName = 'GoodsId'
     end
@@ -326,6 +330,12 @@ object DM: TDM
       Size = 50
       Calculated = True
     end
+    object cdsInventoryListTopNumSecurity_strCaption: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'NumSecurity_strCaption'
+      Size = 255
+      Calculated = True
+    end
   end
   object cdsInventoryList: TClientDataSet
     Aggregates = <>
@@ -338,6 +348,10 @@ object DM: TDM
     end
     object cdsInventoryListStatusCode: TIntegerField
       FieldName = 'StatusCode'
+    end
+    object cdsInventoryListNumSecurity_str: TStringField
+      FieldName = 'NumSecurity_str'
+      Size = 255
     end
     object cdsInventoryListGoodsId: TIntegerField
       FieldName = 'GoodsId'
@@ -467,6 +481,12 @@ object DM: TDM
       Size = 50
       Calculated = True
     end
+    object cdsInventoryListNumSecurity_strCaption: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'NumSecurity_strCaption'
+      Size = 255
+      Calculated = True
+    end
   end
   object cdsInventoryEdit: TClientDataSet
     Aggregates = <>
@@ -475,6 +495,10 @@ object DM: TDM
     Top = 180
     object cdsInventoryEditMovementItemId: TIntegerField
       FieldName = 'MovementItemId'
+    end
+    object cdsInventoryEditNumSecurity_str: TStringField
+      FieldName = 'NumSecurity_str'
+      Size = 255
     end
     object cdsInventoryEditGoodsId: TIntegerField
       FieldName = 'GoodsId'

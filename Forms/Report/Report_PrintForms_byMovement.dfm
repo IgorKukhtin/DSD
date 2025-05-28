@@ -3,8 +3,6 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
   ClientHeight = 596
   ClientWidth = 990
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -113
-  ExplicitTop = -108
   ExplicitWidth = 1006
   ExplicitHeight = 635
   PixelsPerInch = 96
@@ -23,8 +21,6 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
       inherited cxGrid: TcxGrid
         Width = 990
         Height = 539
-        ExplicitLeft = -32
-        ExplicitTop = -3
         ExplicitWidth = 990
         ExplicitHeight = 539
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -421,7 +417,7 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
     object cxLabel4: TcxLabel
       Left = 442
       Top = 6
-      Caption = #1042#1080#1076' '#1076#1086#1082#1091#1077#1085#1090#1072':'
+      Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072':'
     end
     object edMovementDesc: TcxButtonEdit
       Left = 523

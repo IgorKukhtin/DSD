@@ -286,6 +286,11 @@ type
     lvBox: TListView;
     Label19: TLabel;
     Label23: TLabel;
+    cbNumSecurity: TComboBox;
+    Edit9: TEdit;
+    Label25: TLabel;
+    LinkControlToField17: TLinkControlToField;
+    Label26: TLabel;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -424,6 +429,11 @@ type
     FInventoryMovementItemId: Integer;
     FInventoryBarCode: String;
 
+    // Режим охраника
+    FisNumSecurity: Boolean;
+    // Количество охраников
+    FCountSecurity: Integer;
+
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
     procedure CalcContentBoundsProc(Sender: TObject;
                                     var ContentBounds: TRectF);
@@ -480,6 +490,10 @@ type
     property isHideScanButton: boolean read FisHideScanButton write SetisHideScanButton;
     // Поссветка включена при старте сканирования
     property isIlluminationMode: boolean read GetisIlluminationMode write SetisIlluminationMode;
+    // Режим охраника
+    property isNumSecurity: boolean read FisNumSecurity write FisNumSecurity default False;
+    // Количество охраников
+    property CountSecurity: Integer read FCountSecurity write FCountSecurity default 5;
 
   end;
 
@@ -631,6 +645,8 @@ begin
   FBarCodePref := '0000';
   FDocBarCodePref := '2230';
   FItemBarCodePref := '2240';
+  FisNumSecurity := False;
+  FCountSecurity := 5;
   nWebServer:= 0;
 
   FFormsStack := TStack<TFormStackItem>.Create;
@@ -1001,7 +1017,7 @@ begin
      (DM.cdsInventoryEdit.RecordCount = 1) then
   begin
     try
-      DM.ConfirmInventory(FInventoryMovementItemId);
+      DM.ConfirmInventory(FInventoryMovementItemId, DM.cdsInventoryEditNumSecurity_str.AsString, FisNumSecurity);
     except
       on E : Exception do
       begin
@@ -1218,6 +1234,7 @@ begin
 end;
 
 procedure TfrmMain.SetInventoryScanButton;
+var I: Integer;
 begin
   bInventoryScanMode.ImageIndex := 13;
   bInventoryScanMode.TextSettings.FontColor := bInventoryScanSearch.TextSettings.FontColor;
@@ -1227,7 +1244,17 @@ begin
   bInventoryScanNull.TextSettings.FontColor := bInventoryScanSearch.TextSettings.FontColor;
   bInventoryScanNull.TextSettings.Font.Style := bInventoryScanSearch.TextSettings.Font.Style;
   bInventoryScanNull.TextSettings.Font.Size := bInventoryScanSearch.TextSettings.Font.Size;
-
+  Label26.TextSettings.FontColor := bInventoryScanSearch.TextSettings.FontColor;
+  Label26.TextSettings.Font.Style := bInventoryScanSearch.TextSettings.Font.Style;
+  Label26.TextSettings.Font.Size := bInventoryScanSearch.TextSettings.Font.Size;
+  if isNumSecurity then
+    Label26.Text := 'Режим охрана Да'
+  else Label26.Text := 'Режим охрана Нет';
+  if cbNumSecurity.ItemIndex > FCountSecurity - 1 then cbNumSecurity.ItemIndex := FCountSecurity - 1;
+  for I := cbNumSecurity.Items.Count to FCountSecurity - 1 do
+    cbNumSecurity.Items.Add(IntToStr(I + 1));
+  for I := cbNumSecurity.Items.Count - 1 downto FCountSecurity do
+    cbNumSecurity.Items.Delete(I);
 
   case FScanType of
     0 : begin
@@ -2028,7 +2055,7 @@ begin
     end;
 
     // загрузили конфиг
-    //DM.DownloadConfig;
+    DM.DownloadConfig;
 
     SwitchToForm(tiMain, nil);
   finally
@@ -2119,7 +2146,7 @@ begin
     {$ENDIF}
 
     // загрузили конфиг
-    //DM.DownloadConfig;
+    DM.DownloadConfig;
 
   finally
     if (ErrorMessage <> '') and (tcMain.ActiveTab <> tiStart) then
@@ -2348,7 +2375,7 @@ begin
   FInventoryBarCode := '';
   if Trim(ABarCode) = '' then Exit;
 
-  if DM.DownloadInventoryBarCode(ABarCode) then
+  if DM.DownloadInventoryBarCode(ABarCode, cbNumSecurity.Text) then
   begin
 
     if DM.cdsInventoryEdit.RecordCount = 0 then
