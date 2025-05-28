@@ -17,7 +17,7 @@ $BODY$
 
     DECLARE vbPartionGoodsId_null Integer;
     DECLARE vbPartionGoods TVarChar;
-            vbvbPartionGoods_GV TVarChar;
+            vbPartionGoods_GV TVarChar;
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
@@ -40,10 +40,11 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
      --партия для ЖВ
-     vbvbPartionGoods_GV := CASE WHEN vbPartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (vbPartionGoods::TVarChar FROM 4)
-                                 WHEN vbPartionGoods ::TVarChar LIKE 'об-%' THEN SUBSTRING (vbPartionGoods::TVarChar FROM 4)
-                                 ELSE vbPartionGoods ::TVarChar
-                            END;
+     vbPartionGoods_GV := CASE WHEN vbPartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (vbPartionGoods::TVarChar FROM 4)
+                               WHEN vbPartionGoods ::TVarChar LIKE 'об-%' THEN SUBSTRING (vbPartionGoods::TVarChar FROM 4)
+                               WHEN vbPartionGoods ::TVarChar LIKE 'мо-%' THEN SUBSTRING (vbPartionGoods::TVarChar FROM 4)
+                               ELSE vbPartionGoods ::TVarChar
+                          END;
 
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
@@ -521,7 +522,7 @@ BEGIN
                             , tmpData.PriceFact ::TFloat
                             , tmpData.SummFact ::TFloat
                             , tmpData.Persent_v
-                       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 4261, vbvbPartionGoods_GV, inSession) AS tmpData       --4261  - 'товар код 4134'
+                       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 4261, vbPartionGoods_GV, inSession) AS tmpData       --4261  - 'товар код 4134'
                        )                       
 
      -- Результат
@@ -593,7 +594,7 @@ BEGIN
                             , tmpData.PriceFact ::TFloat
                             , tmpData.SummFact ::TFloat
                             , tmpData.Persent_v
-                       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 4261, vbvbPartionGoods_GV, inSession) AS tmpData   --4261  - 'товар код 4134'
+                       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 4261, vbPartionGoods_GV, inSession) AS tmpData   --4261  - 'товар код 4134'
                        )
    , tmpData AS (
                  SELECT tmpCursor2.*

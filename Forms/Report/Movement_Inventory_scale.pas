@@ -68,10 +68,13 @@ type
     bbsPrint: TdxBarSubItem;
     dxBarSeparator1: TdxBarSeparator;
     bbPrint_MovGroup: TdxBarButton;
-    bb: TdxBarButton;
+    bbPrintGroup: TdxBarButton;
     spSelectPrint_gr: TdsdStoredProc;
     spSelectPrint_Mov_gr: TdsdStoredProc;
     NumSecurity: TcxGridDBColumn;
+    actPrintSecurity: TdsdPrintAction;
+    spSelectPrint_Security: TdsdStoredProc;
+    bbPrintSecurity: TdxBarButton;
   private
     { Private declarations }
   public

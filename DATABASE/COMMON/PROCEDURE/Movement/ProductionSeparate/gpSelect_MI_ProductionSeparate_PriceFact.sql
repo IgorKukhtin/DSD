@@ -33,7 +33,32 @@ RETURNS TABLE (GoodsId Integer
              , TotalSummaPlan_calc TFloat       -- итого сумма по цене план* для расчета факта 
              , SummaPlan_calc   TFloat          -- сумма по цене план* для расчета факта
              , PricePlan_calc   TFloat  -- цена план* для расчета факта
-
+                              --
+             , FromName            TVarChar
+             , PersonalPackerName  TVarChar
+             , GoodsNameMaster  TVarChar
+             , CountMaster      TFloat
+             , HeadCountMaster  TFloat
+             , SummMaster       TFloat
+             , PriceMaster      TFloat
+             , GoodsNameIncome  TVarChar
+             , CountIncome      TFloat
+             , SummIncome       TFloat
+             , SummCostIncome   TFloat--транспорт 
+             , CountDocIncome   TFloat
+             , HeadCountIncome   TFloat
+             , CountPackerIncome TFloat
+             , AmountPartnerIncome TFloat
+             , AmountPartnerSecondIncome TFloat
+             , HeadCount1       TFloat-- цена головы из Income
+             , PriceIncome      TFloat
+             , PriceIncome1     TFloat
+             , PriceIncome2     TFloat -- по кол. поставщика
+             , Count_CountPacker TFloat
+             , PercentCount     TFloat
+             , CountSeparate    TFloat
+             , GoodsNameSeparate  TVarChar
+             , SummHeadCount1   TFloat-- ср вес головы из Separate
                ) 
            
 AS
@@ -293,6 +318,7 @@ BEGIN
                        )
       --затраты из приходе поставщика
      , tmpIncomeCost AS (SELECT SUM (COALESCE (MovementFloat_AmountCost.ValueData,0)) AS AmountCost
+                              , COUNT (DISTINCT Movement.ParentId)                    AS CountDoc --количество документов прихода = кол-во скотовозов
                          FROM Movement
                               LEFT JOIN MovementFloat AS MovementFloat_AmountCost
                                                       ON MovementFloat_AmountCost.MovementId = Movement.Id
@@ -311,10 +337,13 @@ BEGIN
            
            , CASE WHEN tmpMI_group.Amount_count <> 0 THEN tmpMI_group.Amount_summ / tmpMI_group.Amount_count ELSE 0 END AS PriceMaster
 
+           , Object_From.ValueData            AS FromName
+           , Object_PersonalPacker.ValueData  AS PersonalPackerName
            , Object_Goods_income.ValueData    AS GoodsNameIncome
            , tmpIncomeAll.Amount_count        AS CountIncome
            , tmpIncomeAll.Amount_summ         AS SummIncome
-           , tmpIncomeCost.AmountCost   ::TFloat AS SummCostIncome   --транспорт
+           , tmpIncomeCost.AmountCost   ::TFloat  AS SummCostIncome   --транспорт 
+           , tmpIncomeCost.CountDoc     ::Integer AS CountDocIncome
            , tmpIncomeAll.HeadCount           AS HeadCountIncome
            , tmpIncomeAll.CountPacker         AS CountPackerIncome
            , tmpIncomeAll.AmountPartner       AS AmountPartnerIncome
@@ -336,6 +365,8 @@ BEGIN
            LEFT JOIN tmpSeparateH ON 1 = 1
            LEFT JOIN tmpSeparateS ON 1 = 1
            LEFT JOIN (SELECT MAX (tmpIncome.GoodsId)                                               AS GoodsId
+                           , MAX (COALESCE (MovementLinkObject_From.ObjectId, 0))                  AS FromId
+                           , MAX (COALESCE (MovementLinkObject_PersonalPacker.ObjectId, 0))        AS PersonalPackerId
                            , SUM (tmpIncome.Amount_count) AS Amount_count, SUM ( tmpIncome.Amount_summ) AS Amount_summ
                            , SUM (tmpIncome.CountPacker) AS CountPacker, SUM (tmpIncome.HeadCount) AS HeadCount
                            , SUM (tmpIncome.AmountPartner)       AS AmountPartner
@@ -351,7 +382,9 @@ BEGIN
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id =  tmpMI_group.GoodsId
            LEFT JOIN Object AS Object_Goods_separate ON Object_Goods_separate.Id =  tmpSeparateS.GoodsId
            LEFT JOIN Object AS Object_Goods_income ON Object_Goods_income.Id = tmpIncomeAll.GoodsId
-
+           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpIncomeAll.FromId
+           LEFT JOIN Object AS Object_PersonalPacker ON Object_PersonalPacker.Id = tmpIncomeAll.PersonalPackerId
+           
            LEFT JOIN tmpIncomeCost ON 1 = 1
        )     
     
@@ -474,7 +507,40 @@ BEGIN
 
                           -- сколько строк в группе
                           , COUNT (*) OVER (PARTITION BY tmpData.GoodsGroupNameFull) AS Count_gr
-                             
+                          
+
+                          --
+                          , tmpCursor1.GoodsNameMaster
+                          , tmpCursor1.CountMaster
+                          , tmpCursor1.HeadCountMaster
+                          , tmpCursor1.SummMaster
+                          
+                          , tmpCursor1.PriceMaster
+                          , tmpCursor1.FromName
+                          , tmpCursor1.PersonalPackerName
+                          , tmpCursor1.GoodsNameIncome
+                          , tmpCursor1.CountIncome
+                          , tmpCursor1.SummIncome
+                          , tmpCursor1.SummCostIncome   --транспорт
+                          , tmpCursor1.CountDocIncome
+                          , tmpCursor1.HeadCountIncome
+                          , tmpCursor1.CountPackerIncome
+                          , tmpCursor1.AmountPartnerIncome
+                          , tmpCursor1.AmountPartnerSecondIncome
+                          , tmpCursor1.HeadCount1 -- цена головы из Income
+               
+                          , tmpCursor1.PriceIncome
+                          , tmpCursor1.PriceIncome1
+                          , tmpCursor1.PriceIncome2  -- по кол. поставщика
+                          
+               
+                          , tmpCursor1.Count_CountPacker
+                          , tmpCursor1.PercentCount
+               
+                          , tmpCursor1.CountSeparate
+                          , tmpCursor1.GoodsNameSeparate
+                          , tmpCursor1.SummHeadCount1  -- ср вес головы из Separate
+   
                       FROM tmpData
                            LEFT JOIN tmpCursor1 ON 1 = 1 
                       )
@@ -502,7 +568,40 @@ BEGIN
           --для проверки
           , tmpData.TotalSummaPlan ::TFloat  AS TotalSummaPlan_calc        -- итого сумма по цене план* для расчета факта 
           , tmpData.SummaPlan      ::TFloat  AS SummaPlan_calc             -- сумма по цене план* для расчета факта
-          , CASE WHEN COALESCE (tmpData.Amount,0) <>0 THEN tmpData.SummaPlan / tmpData.Amount ELSE 0 END ::TFloat AS PricePlan_calc     -- цена план* для расчета факта
+          , CASE WHEN COALESCE (tmpData.Amount,0) <>0 THEN tmpData.SummaPlan / tmpData.Amount ELSE 0 END ::TFloat AS PricePlan_calc     -- цена план* для расчета факта  
+          
+          --шапка 
+          , tmpData.FromName
+          , tmpData.PersonalPackerName
+          , tmpData.GoodsNameMaster
+          , tmpData.CountMaster      ::TFloat
+          , tmpData.HeadCountMaster  ::TFloat
+          , tmpData.SummMaster       ::TFloat
+          
+          , tmpData.PriceMaster      ::TFloat
+                                     
+          , tmpData.GoodsNameIncome  
+          , tmpData.CountIncome      ::TFloat
+          , tmpData.SummIncome       ::TFloat
+          , tmpData.SummCostIncome   ::TFloat--транспорт
+          , tmpData.CountDocIncome   ::TFloat
+          , tmpData.HeadCountIncome   ::TFloat
+          , tmpData.CountPackerIncome ::TFloat
+          , tmpData.AmountPartnerIncome ::TFloat
+          , tmpData.AmountPartnerSecondIncome  ::TFloat
+          , tmpData.HeadCount1 ::TFloat-- цена головы из Income
+
+          , tmpData.PriceIncome        ::TFloat
+          , tmpData.PriceIncome1       ::TFloat
+          , tmpData.PriceIncome2       ::TFloat-- по кол. поставщика
+          
+
+          , tmpData.Count_CountPacker  ::TFloat
+          , tmpData.PercentCount       ::TFloat
+
+          , tmpData.CountSeparate      ::TFloat
+          , tmpData.GoodsNameSeparate  ::TVarChar
+          , tmpData.SummHeadCount1     ::TFloat-- ср вес головы из Separate
       FROM tmpDataCalc AS tmpData
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                   ON ObjectLink_Goods_GoodsGroupStat.ObjectId = tmpData.GoodsId

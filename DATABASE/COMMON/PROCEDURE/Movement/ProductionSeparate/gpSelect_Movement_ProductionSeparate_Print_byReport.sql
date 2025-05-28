@@ -107,7 +107,7 @@ BEGIN
  CREATE TEMP TABLE tmpCursor1 (MovementId Integer
                              , InvNumber TVarChar
                              , OperDate TDateTime
-                             , PartionGoods TVarChar
+                             , PartionGoods TVarChar, PartionGoods_gv TVarChar
                              , OperDate_partion TDateTime
                              , GoodsNameMaster TVarChar
                              , CountMaster TFloat
@@ -140,7 +140,7 @@ BEGIN
     INSERT INTO tmpCursor1 (MovementId
                              , InvNumber 
                              , OperDate 
-                             , PartionGoods 
+                             , PartionGoods, PartionGoods_gv 
                              , OperDate_partion 
                              , GoodsNameMaster 
                              , CountMaster
@@ -470,7 +470,11 @@ BEGIN
       SELECT tmpMovement.MovementId
            , tmpMovement.InvNumber
            , tmpMovement.OperDate
-           , tmpMovement.PartionGoods
+           , tmpMovement.PartionGoods 
+           ,  CASE WHEN tmpMovement.PartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (tmpMovement.PartionGoods::TVarChar FROM 4)
+                   WHEN tmpMovement.PartionGoods ::TVarChar LIKE 'об-%' THEN SUBSTRING (tmpMovement.PartionGoods::TVarChar FROM 4)
+                   ELSE tmpMovement.PartionGoods ::TVarChar
+              END ::TVarChar AS PartionGoods_gv
            , tmpMovement.OperDate_partion
            , Object_Goods.ValueData   AS GoodsNameMaster
            , SUM (tmpMI_group.Amount_count) OVER (PARTITION BY CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpMovement.MovementId END) AS CountMaster
@@ -862,6 +866,7 @@ BEGIN
            , tmpCursor1.InvNumber
            , tmpCursor1.OperDate
            , tmpCursor1.PartionGoods
+           , tmpCursor1.PartionGoods_gv
            , tmpCursor1.OperDate_partion
            , tmpCursor1.GoodsNameMaster
            , tmpCursor1.CountMaster
@@ -977,6 +982,7 @@ BEGIN
            , tmpCursor1.Separate_info   
            , tmpCursor1.GoodsName_4134
            , CASE WHEN COALESCE (SUM (tmpCursor1.Amount_4134),0) <> 0 THEN SUM (tmpCursor1.summ) /SUM (tmpCursor1.Amount_4134) ELSE 0 END   AS summprice_4134
+           --, CASE WHEN COALESCE (SUM (tmpCursor1.Amount_4134),0) <> 0 THEN SUM (tmpCursor1.summ_4134) /SUM (tmpCursor1.Amount_4134) ELSE 0 END   AS price_4134
            , SUM (tmpCursor1.Amount_4134) AS Amount_4134
            , CASE WHEN COALESCE (SUM (tmpCursor1.CountMaster),0) <> 0 THEN 100  * SUM (tmpCursor1.Amount_4134) / SUM (tmpCursor1.CountMaster) ELSE 0 END :: TFloat AS Persent_4134
            , SUM (tmpCursor1.Amount_4134)  AS amountmaster_4134
@@ -1026,8 +1032,14 @@ BEGIN
            , TRIM (tmpGroup.GoodsGroupName9) AS    GoodsGroupName9 
            , TRIM (tmpGroup.GoodsGroupName10) AS   GoodsGroupName10
 
+           , tmpGoods_4134.ValueData      AS GoodsName_4134
+           , 0  ::TFloat     AS PriceFact_4134
+           
       FROM tmpData AS tmpCursor1
-           LEFT JOIN tmpGroup ON CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpGroup.MovementId END = CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpCursor1.MovementId END      
+           LEFT JOIN tmpGroup ON CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpGroup.MovementId END = CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpCursor1.MovementId END    
+           LEFT JOIN Object AS tmpGoods_4134 ON tmpGoods_4134.Id = 4261
+          -- LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpCursor1.OperDate::TDateTime, tmpCursor1.OperDate::TDateTime, 0::Integer, 4261::Integer, tmpCursor1.PartionGoods_gv::TVarChar, inSession::TVarChar) AS tmp ON 1=0      --4261  - 'товар код 4134'
+                      
       GROUP BY CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.MovementId::TVarChar END
              , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.PartionGoods END
              , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.InvNumber END
@@ -1077,7 +1089,9 @@ BEGIN
              , TRIM (tmpGroup.GoodsGroupName8) 
              , TRIM (tmpGroup.GoodsGroupName9) 
              , TRIM (tmpGroup.GoodsGroupName10)
-   
+ 
+             , tmpGoods_4134.ValueData
+  
  ;
 
     RETURN NEXT Cursor1;
