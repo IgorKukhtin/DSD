@@ -69,11 +69,17 @@ BEGIN
                                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.DescId     = zc_MI_Master()
                                                     AND MovementItem.isErased   = FALSE
-                                   -- Партия - Паспорт, которую надо проверить
+                                   -- Партия - Паспорт, который надо проверить
                                    INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                                 ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                                                AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
                                                                AND MIFloat_MovementItemId.ValueData      = inMovementItemId :: TFloat
+
+                                   -- Номер охранника 
+                                   INNER JOIN MovementFloat AS MovementFloat_NumSecurity
+                                                            ON MovementFloat_NumSecurity.MovementId =  Movement.Id
+                                                           AND MovementFloat_NumSecurity.DescId     = zc_MovementFloat_NumSecurity()
+                                                           AND MovementFloat_NumSecurity.ValueData  = CASE WHEN inIsNumSecurity = TRUE THEN -1 * vbNumSecurity ELSE vbNumSecurity END
 
                               WHERE Movement.DescId = zc_Movement_WeighingProduction()
                                 AND Movement.OperDate >= vbOperDate -- DATE_TRUNC ('MONTH', vbOperDate - INTERVAL '0 DAY')
