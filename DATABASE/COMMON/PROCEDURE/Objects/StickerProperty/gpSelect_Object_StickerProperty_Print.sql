@@ -46,7 +46,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , isFix Boolean
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat, Value8 TFloat, Value9 TFloat, Value10 TFloat, Value11 TFloat
              , BarCode TVarChar
-             , Sticker_Value1 TFloat, Sticker_Value2 TFloat, Sticker_Value3 TFloat, Sticker_Value4 TFloat, Sticker_Value5 TFloat, Sticker_Value6 TFloat, Sticker_Value7 TFloat, Sticker_Value8 TFloat
+             , Sticker_Value1 TFloat, Sticker_Value2 TFloat, Sticker_Value3 TFloat, Sticker_Value4 TFloat, Sticker_Value5 TFloat, Sticker_Value6 TFloat, Sticker_Value7 TFloat, Sticker_Value8 TFloat, Sticker_Value9 TVarChar
 
              , Level1           TVarChar
              , Level2           TVarChar
@@ -547,6 +547,7 @@ BEGIN
             , Sticker_Value6.ValueData           AS Sticker_Value6
             , Sticker_Value7.ValueData           AS Sticker_Value7
             , Sticker_Value8.ValueData           AS Sticker_Value8
+            , Sticker_Value9.ValueData           AS Sticker_Value9
 
 -- [frxDBDHeader."StickerGroupName"] [frxDBDHeader."StickerTypeName"] [frxDBDHeader."StickerTagName"]
 -- [frxDBDHeader."StickerSortName"] [frxDBDHeader."StickerNormName"]
@@ -751,6 +752,14 @@ BEGIN
                                            THEN ' з них цукри' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value7.ValueData, 0)) || tmpLanguageParam.Value12
                                       ELSE ''
                                  END
+
+                              --  
+                              || CASE WHEN Sticker_Value9.ValueData <> ''
+                                           THEN ' в тому числі лактози ' || Sticker_Value9.ValueData
+                                      ELSE ''
+                                 END
+
+
                               -- білки OR білки не менше
                               || CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири)
                                            THEN ', ' || SUBSTRING (tmpLanguageParam.Value9 FROM 1 FOR 5) || ' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10
@@ -970,6 +979,9 @@ BEGIN
              LEFT JOIN ObjectFloat AS Sticker_Value8
                                    ON Sticker_Value8.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
                                   AND Sticker_Value8.DescId = zc_ObjectFloat_Sticker_Value8()
+             LEFT JOIN ObjectString AS Sticker_Value9
+                                    ON Sticker_Value9.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                   AND Sticker_Value9.DescId   = zc_ObjectString_Sticker_Value9()
 
              LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = Object_Goods.Id
                                           AND tmpGoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
