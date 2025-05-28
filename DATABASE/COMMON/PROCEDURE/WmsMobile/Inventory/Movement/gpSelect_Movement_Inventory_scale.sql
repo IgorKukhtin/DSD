@@ -260,13 +260,15 @@ BEGIN
                                                        AND tmpMILO_PartionCell_passport.DescId         = zc_MILinkObject_PartionCell()
                                                        --не нужно
                                                        AND 1=0
-                             LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMILO_PartionCell_passport.ObjectId
-                       -- ОТКЛЮЧИЛИ ящики
-                       WHERE 1=0
+                             LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MIFloat_MovementItemId.ValueData :: Integer
+
+                       -- НЕ ОТКЛЮЧИЛИ ящики
+                       -- WHERE 1=0
                          )
 
                , tmp2 AS (
-                          SELECT tmp.*
+                          -- ОТКЛЮЧИЛИ ПОДДОНЫ
+                        /*SELECT tmp.*
                                , tmpMILO_Box_passport.ObjectId AS BoxId
                                , tmpMIFloat_CountTare_passport.ValueData AS CountTare
                           FROM tmp
@@ -279,7 +281,9 @@ BEGIN
                                      LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_CountTare_passport
                                                                    ON tmpMIFloat_CountTare_passport.MovementItemId = tmp.MovementItemId_pas
                                                                   AND tmpMIFloat_CountTare_passport.DescId         = zc_MIFloat_CountTare1()
-                       /*UNION
+                         UNION*/
+
+                          -- НЕ ОТКЛЮЧИЛИ ящики
                           SELECT tmp.*
                                , tmpMILO_Box_passport.ObjectId AS BoxId
                                , tmpMIFloat_CountTare_passport.ValueData AS CountTare
@@ -334,7 +338,7 @@ BEGIN
                                      -- данные в Партии - Паспорта
                                      LEFT JOIN tmpMIFloat_passport AS tmpMIFloat_CountTare_passport
                                                                    ON tmpMIFloat_CountTare_passport.MovementItemId = tmp.MovementItemId_pas
-                                                                  AND tmpMIFloat_CountTare_passport.DescId         = zc_MIFloat_CountTare5()*/
+                                                                  AND tmpMIFloat_CountTare_passport.DescId         = zc_MIFloat_CountTare5()
                           )
                  SELECT tmp2.*
                       , ObjectLink_Goods.ChildObjectId AS GoodsId
