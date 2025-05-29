@@ -19,6 +19,9 @@ $BODY$
    DECLARE vbMovementDescId   Integer;
    DECLARE vbUnitId           Integer;
    
+   DECLARE vbMovementId_Security      Integer;
+   DECLARE vbMovementItemId_pas_check Integer;
+
    DECLARE vbId_tmp Integer;
    DECLARE vbGoodsId_ReWork Integer;
    DECLARE vbDocumentKindId Integer;
@@ -797,6 +800,136 @@ BEGIN
          END IF;
      END IF;
 
+
+     -- Проверка - Инвентаризация vbIsAuto = TRUE + inBranchCode = 1
+     IF vbMovementDescId = zc_Movement_Inventory() AND inBranchCode = 1 AND vbIsAuto = TRUE
+     THEN
+         -- Проверка
+         IF EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_NumSecurity() AND MF.ValueData < 0)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нет прав сохранять документ Инвентаризация для охранника.%Можно сохранять только документ Кладовщика.', CHR (13);
+         END IF;
+                                                                     
+
+         -- Нашли документ охраны
+         vbMovementId_Security:= (SELECT Movement_find.Id
+         
+                                  FROM Movement 
+                                       INNER JOIN MovementFloat AS MovementFloat_NumSecurity
+                                                                ON MovementFloat_NumSecurity.MovementId = Movement.Id
+                                                               AND MovementFloat_NumSecurity.DescId     = zc_MovementFloat_NumSecurity()
+                                                               AND MovementFloat_NumSecurity.ValueData  > 0
+                                       INNER JOIN Movement AS Movement_find
+                                                           ON Movement_find.OperDate = Movement.OperDate
+                                                          AND Movement_find.DescId   = zc_Movement_WeighingProduction()
+                                                          AND Movement_find.StatusId = zc_Enum_Status_UnComplete()
+                                       INNER JOIN MovementFloat AS MovementFloat_NumSecurity_find
+                                                                ON MovementFloat_NumSecurity_find.MovementId = Movement_find.Id
+                                                               AND MovementFloat_NumSecurity_find.DescId     = zc_MovementFloat_NumSecurity()
+                                                               AND MovementFloat_NumSecurity_find.ValueData  = -1 * ABS (MovementFloat_NumSecurity.ValueData)
+                                  WHERE Movement.Id       = inMovementId
+                                    AND Movement.DescId   = zc_Movement_WeighingProduction()
+                                    -- Не проведен
+                                    AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                 );
+
+         -- Проверка
+         IF COALESCE (vbMovementId_Security, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найден документ Инвентаризация для охранника № = <%> от <%>.'
+                            , (SELECT MovementFloat_NumSecurity.ValueData :: Integer
+                               FROM MovementFloat AS MovementFloat_NumSecurity
+                               WHERE MovementFloat_NumSecurity.MovementId = inMovementId
+                                 AND MovementFloat_NumSecurity.DescId     = zc_MovementFloat_NumSecurity()
+                              )
+                            , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
+                             ;
+         END IF;
+                                                                     
+         -- Нашли партию, по которой несоответствие
+         vbMovementItemId_pas_check:= (WITH 
+                                        -- Док Кладовщика
+                                        tmpMI_member AS (SELECT MovementItem.ObjectId           AS GoodsId
+                                                              , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                                                              , MovementItem.Amount
+                                                                -- данные Партии - Паспорта
+                                                              , MIFloat_MovementItemId.ValueData :: Integer AS MovementItemId_pas
+                                                         FROM MovementItem
+                                                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                                              AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                                              -- Партия - Паспорт
+                                                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                                                          ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                                                         AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+                                                         WHERE MovementItem.MovementId = inMovementId
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                           AND MovementItem.isErased   = FALSE
+                                                        )
+                                      -- Док Охрана
+                                    , tmpMI_security AS (SELECT MovementItem.ObjectId           AS GoodsId
+                                                              , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                                                              , MovementItem.Amount
+                                                                -- данные Партии - Паспорта
+                                                              , MIFloat_MovementItemId.ValueData :: Integer AS MovementItemId_pas
+                                                         FROM MovementItem
+                                                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                                              AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                                              -- Партия - Паспорт
+                                                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                                                          ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                                                         AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+                                                         WHERE MovementItem.MovementId = vbMovementId_Security
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                           AND MovementItem.isErased   = FALSE
+                                                        )
+                                           -- Док объединение
+                                         , tmpMI_res AS (SELECT -- данные Партии - Паспорта
+                                                                COALESCE (tmpMI_member.MovementItemId_pas, tmpMI_security.MovementItemId_pas) AS MovementItemId_pas
+                                                                -- у Кладовщика
+                                                              , tmpMI_member.MovementItemId_pas   AS MovementItemId_find_1
+                                                                -- у Охраны
+                                                              , tmpMI_security.MovementItemId_pas AS MovementItemId_find_2
+                                                         FROM tmpMI_member
+                                                              FULL JOIN tmpMI_security ON tmpMI_security.MovementItemId_pas = tmpMI_member.MovementItemId_pas
+                                                        )
+                                  -- Результат
+                                  SELECT CASE WHEN MovementItemId_find_1 > 0
+                                                  -- если нашли у Кладовщика
+                                                  THEN 1 *  MovementItemId_pas
+                                              -- если нашли у Охраны
+                                              ELSE -1 *  MovementItemId_pas
+                                         END AS MovementItemId_pas
+                                  FROM tmpMI_res
+                                  -- если хоть один не нашли
+                                  WHERE tmpMI_res.MovementItemId_find_1 IS NULL OR tmpMI_res.MovementItemId_find_2 IS NULL
+                                  LIMIT 1
+                                 );
+
+         -- Проверка
+         IF vbMovementItemId_pas_check <> 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Найдены отклонения в Документе %.№ <%> от <%> %для № паспорта = <%>%Товар = <%> + <%> %Кол-во = <%>'
+                           , CASE WHEN vbMovementItemId_pas_check > 0 THEN 'Охраны' ELSE 'Кладовщика' END
+                           , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = CASE WHEN vbMovementItemId_pas_check > 0 THEN vbMovementId_Security ELSE inMovementId END)
+                           , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = CASE WHEN vbMovementItemId_pas_check > 0 THEN vbMovementId_Security ELSE inMovementId END)
+                           , CHR (13)
+                             -- № паспорта
+                           , (SELECT MIF.ValueData :: Integer FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ABS (vbMovementItemId_pas_check) :: Integer AND MIF.DescId = zc_MIFloat_PartionNum())
+                             --
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData (MovementItem.ObjectId) FROM MovementItem WHERE MovementItem.Id = ABS (vbMovementItemId_pas_check) :: Integer)
+                           , (SELECT lfGet_Object_ValueData_sh (MILO.ObjectId) FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ABS (vbMovementItemId_pas_check) :: Integer AND MILO.DescId = zc_MILinkObject_GoodsKind())
+                           , CHR (13)
+                           , (SELECT zfConvert_FloatToString (MovementItem.Amount) FROM MovementItem WHERE MovementItem.Id = ABS (vbMovementItemId_pas_check) :: Integer)
+                            ;
+         END IF;
+
+
+     END IF;
+
+
      -- сохранили <строчная часть>
      SELECT MAX (tmpId) INTO vbId_tmp
      FROM (-- элементы документа (были сохранены раньше)
@@ -1359,8 +1492,11 @@ BEGIN
                                                          ON MIF_MovementItemId.MovementItemId = tmpMI_ScaleCeh.MovementItemId_find
                                                         AND MIF_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
 
-                           INNER JOIN (SELECT zc_MIFloat_CountTare1() AS DescId_MIF, zc_MILinkObject_Box1() AS DescId_MILO
-                                 UNION SELECT zc_MIFloat_CountTare2() AS DescId_MIF, zc_MILinkObject_Box2() AS DescId_MILO
+                           INNER JOIN (-- ОТКЛЮЧИЛИ ПОДДОНЫ
+                                       -- SELECT zc_MIFloat_CountTare1() AS DescId_MIF, zc_MILinkObject_Box1() AS DescId_MILO
+
+                                       -- НЕ ОТКЛЮЧИЛИ ящики
+                                       SELECT zc_MIFloat_CountTare2() AS DescId_MIF, zc_MILinkObject_Box2() AS DescId_MILO
                                  UNION SELECT zc_MIFloat_CountTare3() AS DescId_MIF, zc_MILinkObject_Box3() AS DescId_MILO
                                  UNION SELECT zc_MIFloat_CountTare4() AS DescId_MIF, zc_MILinkObject_Box4() AS DescId_MILO
                                  UNION SELECT zc_MIFloat_CountTare5() AS DescId_MIF, zc_MILinkObject_Box5() AS DescId_MILO
