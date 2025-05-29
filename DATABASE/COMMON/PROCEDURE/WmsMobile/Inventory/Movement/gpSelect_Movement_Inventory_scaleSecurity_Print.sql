@@ -1,13 +1,15 @@
 -- Function: gpSelect_Movement_Inventory_scaleSecurity_Print - Инвентаризация (сканирование паспорта)
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Inventory_scaleSecurity_Print (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_Inventory_scaleSecurity_Print (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Inventory_scaleSecurity_Print (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory_scaleSecurity_Print(
-    IN inStartDate        TDateTime , --
-    IN inEndDate          TDateTime , --
-    IN inMovementId       Integer   , --
-    IN inisTara           Boolean   , -- показывать или не тару - сейчас в группировке
-    IN inSession          TVarChar       -- сессия пользователя
+    IN inStartDate                 TDateTime , --
+    IN inEndDate                   TDateTime , --
+    IN inMovementId                Integer   , --
+    IN inMovementId_Security       Integer   ,
+    IN inisTara                    Boolean   , -- показывать или не тару - сейчас в группировке
+    IN inSession                   TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -54,48 +56,44 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_NumSecurity
                                                      ON MovementFloat_NumSecurity.MovementId = Movement.Id
                                                     AND MovementFloat_NumSecurity.DescId = zc_MovementFloat_NumSecurity()
-                        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                          AND Movement.DescId = zc_Movement_WeighingProduction()
-                          AND (Movement.Id = 31344927  OR 31344927  = 0)
+                        WHERE Movement.DescId = zc_Movement_WeighingProduction()
+                          AND Movement.Id = inMovementId
                           AND COALESCE (MovementFloat_NumSecurity.ValueData, 0) >= 0
                        )
       -- док охраны
       , tmpMovementSecurity AS (SELECT
-                                       Movement_Security.Id               AS Id
-                                     , CASE WHEN Movement_Security.StatusId <> zc_Enum_Status_Complete() THEN '***'||Movement_Security.InvNumber ELSE Movement_Security.InvNumber END AS InvNumber
-                                     , Movement_Security.OperDate         AS OperDate
-                                     , -1 * MovementFloat_NumSecurity.ValueData  AS NumSecurity
-                                  FROM tmpMovement 
-                                       INNER JOIN Movement AS Movement_Security
-                                                           ON Movement_Security.OperDate = tmpMovement.OperDate
-                                                          AND Movement_Security.DescId = zc_Movement_WeighingProduction()
-                                                          AND Movement_Security.StatusId <> zc_Enum_Status_Erased()
-                                                          AND Movement_Security.Id <> tmpMovement.Id
-                                       
-                                       -- Этот склад
-                                       INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement_Security.Id
-                                                                                AND MLO_From.DescId     = zc_MovementLinkObject_From()
-                                                                                AND MLO_From.ObjectId   = zc_Unit_RK()
-                                       -- Этот склад
-                                       INNER JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement_Security.Id
-                                                                              AND MLO_To.DescId     = zc_MovementLinkObject_To()
-                                                                              AND MLO_To.ObjectId   = zc_Unit_RK()
-                                       -- Инвентаризация
-                                       INNER JOIN MovementFloat AS MovementFloat_MovementDesc
-                                                                ON MovementFloat_MovementDesc.MovementId =  Movement_Security.Id
-                                                               AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
-                                                               AND MovementFloat_MovementDesc.ValueData  = zc_Movement_Inventory() :: TFloat
-                                       -- Автоматический
-                                       INNER JOIN MovementBoolean AS MB_isAuto ON MB_isAuto.MovementId = Movement_Security.Id
-                                                                              AND MB_isAuto.DescId     = zc_MovementBoolean_isAuto()
-                                                                              -- Автоматический, значит с КПК
-                                                                              AND MB_isAuto.ValueData  = TRUE
-          
-                                       INNER JOIN MovementFloat AS MovementFloat_NumSecurity
-                                                                ON MovementFloat_NumSecurity.MovementId = Movement_Security.Id
-                                                               AND MovementFloat_NumSecurity.DescId = zc_MovementFloat_NumSecurity()
-                                                                AND COALESCE (MovementFloat_NumSecurity.ValueData, 0) = -1 * tmpMovement.NumSecurity
-                                 )           
+                                     Movement_Security.Id                      AS Id
+                                   , CASE WHEN Movement_Security.StatusId <> zc_Enum_Status_Complete() THEN '***'||Movement_Security.InvNumber ELSE Movement_Security.InvNumber END AS InvNumber
+                                   , Movement_Security.OperDate                AS OperDate
+                                   , -1 * MovementFloat_NumSecurity.ValueData  AS NumSecurity
+                                FROM Movement AS Movement_Security
+                                     -- Этот склад
+                                     INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement_Security.Id
+                                                                              AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                                                                              AND MLO_From.ObjectId   = zc_Unit_RK()
+                                     -- Этот склад
+                                     INNER JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement_Security.Id
+                                                                            AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                                                            AND MLO_To.ObjectId   = zc_Unit_RK()
+                                     -- Инвентаризация
+                                     INNER JOIN MovementFloat AS MovementFloat_MovementDesc
+                                                              ON MovementFloat_MovementDesc.MovementId =  Movement_Security.Id
+                                                             AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
+                                                             AND MovementFloat_MovementDesc.ValueData  = zc_Movement_Inventory() :: TFloat
+                                     -- Автоматический
+                                     INNER JOIN MovementBoolean AS MB_isAuto ON MB_isAuto.MovementId = Movement_Security.Id
+                                                                            AND MB_isAuto.DescId     = zc_MovementBoolean_isAuto()
+                                                                            -- Автоматический, значит с КПК
+                                                                            AND MB_isAuto.ValueData  = TRUE
+        
+                                     INNER JOIN MovementFloat AS MovementFloat_NumSecurity
+                                                              ON MovementFloat_NumSecurity.MovementId = Movement_Security.Id
+                                                             AND MovementFloat_NumSecurity.DescId = zc_MovementFloat_NumSecurity()
+                                                              AND COALESCE (MovementFloat_NumSecurity.ValueData, 0) = -1 * tmpMovement.NumSecurity
+                                WHERE Movement_Security.Id = inMovementId_Security
+                                  AND Movement_Security.DescId = zc_Movement_WeighingProduction()
+                                  AND Movement_Security.StatusId <> zc_Enum_Status_Erased()
+                               )           
 
         -- Элементы zc_Movement_WeighingProduction - здесь данные сканирование Паспорта - КПК
       , tmpMI AS (SELECT MovementItem.*
@@ -307,7 +305,9 @@ BEGIN
                             , Object_Insert.ValueData    AS InsertName
                             , Object_Update.ValueData    AS UpdateName
                             , MIDate_Insert.ValueData    AS InsertDate
-                            , MIDate_Update.ValueData    AS UpdateDate
+                            , MIDate_Update.ValueData    AS UpdateDate  
+                            
+                            , ROW_NUMBER () OVER (PARTITION BY Movement.Id ORDER BY MIDate_Insert.ValueData) AS Ord
                       FROM tmpMovementSecurity AS Movement
                             INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
                 
@@ -375,20 +375,33 @@ BEGIN
                       -- WHERE COALESCE (Movement.NumSecurity,0) < 0
                       )   
     --партии склада
-    , tmp_pas AS (
-                  SELECT tmpMovement.Id           AS MovementId
-                       , tmpMovement.OperDate     AS OperDate
-                       , tmpMovement.NumSecurity  AS NumSecurity
-                       , MovementItem.Id          AS MovementItemId
-                       , MIFloat_MovementItemId.ValueData :: Integer  AS MovementItemId_pas
-                  FROM tmpMovement
-                       INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = tmpMovement.Id 
-                       -- Партия - Паспорт
-                       INNER JOIN tmpMIFloat AS MIFloat_MovementItemId
-                                            ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
-                                           AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
-                  -- WHERE tmpMovement.Id = inMovementId
-                  )
+    , tmpMovement_Data AS (
+                           SELECT tmpMovement.Id
+                                , tmpMovement.OperDate     AS OperDate
+                                , tmpMovement.InvNumber    AS InvNumber
+                                , tmpMovement.NumSecurity  AS NumSecurity
+                                , MovementItem.Id          AS MovementItemId
+                                , MovementItem.Amount      AS Amount
+                                , MovementItem.ObjectId    AS ObjectId
+                                , MIFloat_MovementItemId.ValueData :: Integer  AS MovementItemId_pas   
+                                , MIDate_Insert.ValueData    AS InsertDate
+                                , MIDate_Update.ValueData    AS UpdateDate
+                                , ROW_NUMBER () OVER (PARTITION BY tmpMovement.Id ORDER BY MIDate_Insert.ValueData) AS Ord
+                           FROM tmpMovement
+                                INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = tmpMovement.Id 
+                                -- Партия - Паспорт
+                                INNER JOIN tmpMIFloat AS MIFloat_MovementItemId
+                                                     ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+ 
+                                 -- Протокол
+                                LEFT JOIN tmpMIDate AS MIDate_Insert
+                                                    ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                   AND MIDate_Insert.DescId         = zc_MIDate_Insert()
+                                LEFT JOIN tmpMIDate AS MIDate_Update
+                                                    ON MIDate_Update.MovementItemId = MovementItem.Id
+                                                   AND MIDate_Update.DescId         = zc_MIDate_Update()
+                           )
 
         -- Результат
         SELECT
@@ -396,7 +409,7 @@ BEGIN
            , Movement.InvNumber              AS InvNumber
            , Movement.OperDate               AS OperDate 
            , Movement.NumSecurity            AS NumSecurity
-           , MovementItem.Id                 AS MovementItemId
+           , Movement.MovementItemId                 AS MovementItemId
            , Object_Goods.Id                             AS GoodsId
            , Object_Goods.ObjectCode                     AS GoodsCode
            , Object_Goods.ValueData                      AS GoodsName
@@ -419,9 +432,9 @@ BEGIN
            , Object_PartionCell.ValueData ::TVarChar  AS PartionCellName
 
              -- Вес нетто
-           , MovementItem.Amount   
+           , Movement.Amount   
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() 
-                  THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN ROUND (MovementItem.Amount / ObjectFloat_Weight.ValueData, 0) ELSE 0 END
+                  THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN ROUND (Movement.Amount / ObjectFloat_Weight.ValueData, 0) ELSE 0 END
                   ELSE 0
              END ::TFloat AS Amount_sh
              -- ИТОГО Вес тары - факт
@@ -454,8 +467,8 @@ BEGIN
            , (tmpMIFloat_CountPack.ValueData * tmpMIFloat_WeightPack.ValueData) ::TFloat AS WeightPack_calc
 
               -- Протокол
-           , MIDate_Insert.ValueData    AS InsertDate
-           , MIDate_Update.ValueData    AS UpdateDate
+           , Movement.InsertDate
+           , Movement.UpdateDate
 
            -- документ охраны
            , tmpSecurity.MovementId     AS MovementId_security
@@ -469,39 +482,42 @@ BEGIN
 
            , tmpSecurity.Amount  ::TFloat AS Amount_Security
            , CASE WHEN tmpSecurity.MovementId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSecurity --Есть документ охраны 
-           , CASE WHEN COALESCE (tmpSecurity.Amount,0) <> COALESCE (MovementItem.Amount,0) THEN TRUE ELSE FALSE END ::Boolean AS isDiff     --отклонение да / нет
+           , CASE WHEN COALESCE (tmpSecurity.Amount,0) <> COALESCE (Movement.Amount,0) THEN TRUE ELSE FALSE END ::Boolean AS isDiff     --отклонение да / нет
 
-        FROM tmpMovement AS Movement
-            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+           , Movement.Ord    :: Integer
+           , tmpSecurity.Ord :: Integer AS Ord_security
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+        FROM tmpMovement_Data AS Movement
+            --INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Movement.ObjectId
 
             LEFT JOIN tmpMILO AS MILO_GoodsKind
-                              ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                              ON MILO_GoodsKind.MovementItemId = Movement.MovementItemId
                              AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILO_GoodsKind.ObjectId
 
             -- партия - Дата
             LEFT JOIN tmpMIDate AS MIDate_PartionGoods
-                                ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                ON MIDate_PartionGoods.MovementItemId = Movement.MovementItemId
                                AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
 
-            -- Протокол
+          /*  -- Протокол
             LEFT JOIN tmpMIDate AS MIDate_Insert
-                                ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                ON MIDate_Insert.MovementItemId = Movement.MovementItemId
                                AND MIDate_Insert.DescId         = zc_MIDate_Insert()
             LEFT JOIN tmpMIDate AS MIDate_Update
-                                ON MIDate_Update.MovementItemId = MovementItem.Id
+                                ON MIDate_Update.MovementItemId = Movement.MovementItemId
                                AND MIDate_Update.DescId         = zc_MIDate_Update()
-
+            */
             -- ИТОГО Вес тары - факт
             LEFT JOIN tmpMIFloat AS MIFloat_WeightTare
-                                 ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
+                                 ON MIFloat_WeightTare.MovementItemId = Movement.MovementItemId
                                 AND MIFloat_WeightTare.DescId         = zc_MIFloat_WeightTare()
 
             -- Партия - Паспорт
             LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
-                                 ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                 ON MIFloat_MovementItemId.MovementItemId = Movement.MovementItemId
                                 AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
 
            -- данные в Партии - Паспорта
@@ -597,9 +613,9 @@ BEGIN
                                  AND tmpSecurity.OperDate = Movement.OperDate
                                  AND tmpSecurity.NumSecurity = Movement.NumSecurity
 
-         WHERE COALESCE (tmpSecurity.Amount,0) <> COALESCE (MovementItem.Amount,0)  
+         WHERE COALESCE (tmpSecurity.Amount,0) <> COALESCE (Movement.Amount,0)  
       UNION 
-    SELECT
+         SELECT
              tmpMovement.Id                     AS Id
            , tmpMovement.InvNumber              AS InvNumber
            , tmpMovement.OperDate               AS OperDate 
@@ -676,8 +692,11 @@ BEGIN
            , TRUE ::Boolean AS isSecurity --Есть документ охраны 
            , TRUE ::Boolean AS isDiff     --отклонение да / нет
 
+           , 0                :: Integer AS Ord
+           , tmpSecurity.Ord  :: Integer AS Ord_security
+
         FROM tmpSecurity
-             left join tmp_pas ON tmpSecurity.MovementItemId_pas = tmp_pas.MovementItemId_pas
+             left join tmpMovement_Data ON tmpSecurity.MovementItemId_pas = tmpMovement_Data.MovementItemId_pas
 
          --   INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = tmpSecurity.MovementId
 
@@ -782,12 +801,12 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId =tmpSecurity.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull() 
  
-           -- Док с клада
+           -- Док склада
             INNER JOIN tmpMovement ON tmpMovement.OperDate = tmpSecurity.OperDate
                                  AND tmpMovement.NumSecurity = tmpSecurity.NumSecurity --and 1 = 0
 
-        where tmp_pas.MovementId isnull                           
-     UNION
+        WHERE tmpMovement_Data.Id isnull                           
+ /*    UNION
          SELECT Movement.Id                     AS Id
            , Movement.InvNumber              AS InvNumber
            , Movement.OperDate               AS OperDate
@@ -884,12 +903,10 @@ BEGIN
            LEFT JOIN tmpSecurity ON tmpSecurity.MovementItemId_pas = tmpMI_Tara.MovementItemId_pas ::Integer
                                 AND tmpSecurity.OperDate = Movement.OperDate
                                 AND tmpSecurity.NumSecurity = Movement.NumSecurity 
-
-
-           
+          
         WHERE inisTara = TRUE
           AND COALESCE (tmpSecurity.Amount,0) <> COALESCE (MovementItem.Amount,0)
-
+  */
                    
         --ORDER BY MIDate_Insert.ValueData 
           ;
