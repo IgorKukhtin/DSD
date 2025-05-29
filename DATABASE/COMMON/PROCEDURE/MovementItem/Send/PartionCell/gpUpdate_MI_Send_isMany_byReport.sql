@@ -23,7 +23,7 @@ $BODY$
            vbIsWeighing Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_Send_isMany_byReport());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send()); -- zc_Enum_Process_Update_MI_Send_isMany_byReport
 
     /* IF COALESCE (inMovementItemId,0) = 0
      THEN
