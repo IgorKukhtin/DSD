@@ -473,6 +473,7 @@ BEGIN
            , tmpMovement.PartionGoods 
            ,  CASE WHEN tmpMovement.PartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (tmpMovement.PartionGoods::TVarChar FROM 4)
                    WHEN tmpMovement.PartionGoods ::TVarChar LIKE 'об-%' THEN SUBSTRING (tmpMovement.PartionGoods::TVarChar FROM 4)
+                   WHEN tmpMovement.PartionGoods ::TVarChar LIKE 'мо-%' THEN SUBSTRING (tmpMovement.PartionGoods::TVarChar FROM 4)
                    ELSE tmpMovement.PartionGoods ::TVarChar
               END ::TVarChar AS PartionGoods_gv
            , tmpMovement.OperDate_partion

@@ -598,7 +598,9 @@ BEGIN
               -- 
             , isRePack
 
-       FROM tmpMI;
+       FROM tmpMI
+       WHERE isRePack = FALSE
+       ;
 
      RETURN QUERY 
      WITH
@@ -809,6 +811,7 @@ BEGIN
                    , MILinkObject_PartionCell_22.ObjectId
                
                )
+
      SELECT  Object_PartionCell_1.Id            AS PartionCellId_1
            , Object_PartionCell_1.ObjectCode    AS PartionCellCode_1
            , (Object_PartionCell_1.ValueData ):: TVarChar AS PartionCellName_1
