@@ -48,6 +48,25 @@ BEGIN
                       WHERE ObjectLink_UserRole_User.DescId = zc_ObjectLink_UserRole_User()
                         AND ObjectLink_UserRole_User.ChildObjectId = vbUserId
                      )
+             -- Режим охранника Да/нет
+             AND NOT EXISTS (SELECT 1
+                             FROM ObjectLink AS ObjectLink_User_Member
+                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                       ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                      AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                  INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                           ON ObjectBoolean_Main.ObjectId  = ObjectLink_Personal_Member.ObjectId
+                                                          AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Personal_Main()
+                                                          AND ObjectBoolean_Main.ValueData = TRUE
+                                  INNER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                        ON ObjectLink_Personal_PersonalServiceList.ObjectId      = ObjectLink_Personal_Member.ObjectId
+                                                       AND ObjectLink_Personal_PersonalServiceList.DescId        = zc_ObjectLink_Personal_PersonalServiceList()
+                                                       -- Відомість Охорона
+                                                       AND ObjectLink_Personal_PersonalServiceList.ChildObjectId = 301885
+                             WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                               AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                            )
+
     THEN
         outMessage:= 'Пользователь добавлен некорректно, без роли, обратитесь к администратору';
 

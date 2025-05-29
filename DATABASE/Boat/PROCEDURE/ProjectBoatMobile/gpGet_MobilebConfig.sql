@@ -8,46 +8,46 @@ CREATE OR REPLACE FUNCTION gpGet_MobilebConfig(
 RETURNS TABLE (BarCodePref         TVarChar
              , DocBarCodePref      TVarChar
              , ItemBarCodePref     TVarChar
- 
-             , ArticleSeparators   TVarChar  
-             
+
+             , ArticleSeparators   TVarChar
+
              -- ***** Настройки сканера
              -- Для сканирования использовать True - Сканер штрихкода, False - Камеру устройства
              -- Работает только когда зебра со сканером
-             , isCameraScanerSet Boolean 
-             , isCameraScaner    Boolean 
+             , isCameraScanerSet Boolean
+             , isCameraScaner    Boolean
 
              -- Открывать сканер при изменении режима сканирования
-             , isOpenScanChangingModeSet Boolean 
-             , isOpenScanChangingMode    Boolean 
+             , isOpenScanChangingModeSet Boolean
+             , isOpenScanChangingMode    Boolean
 
              -- Скрывать кнопку сканирования когда есть боковые
-             , isHideScanButtonSet Boolean 
-             , isHideScanButton    Boolean 
+             , isHideScanButtonSet Boolean
+             , isHideScanButton    Boolean
 
              -- Скрывать кнопку подсветки
-             , isHideIlluminationButtonSet Boolean 
-             , isHideIlluminationButton    Boolean 
+             , isHideIlluminationButtonSet Boolean
+             , isHideIlluminationButton    Boolean
 
              -- Поссветка включена при старте сканирования
-             , isilluminationModeSet Boolean 
-             , isilluminationMode    Boolean 
+             , isilluminationModeSet Boolean
+             , isilluminationMode    Boolean
 
              -- ***** Фильтр в справочкике комплектующих
              -- Артикул
-             , isDictGoodsArticleSet Boolean 
-             , isDictGoodsArticle    Boolean 
+             , isDictGoodsArticleSet Boolean
+             , isDictGoodsArticle    Boolean
              -- Interne Nr
-             , isDictGoodsCodeSet    Boolean 
-             , isDictGoodsCode       Boolean 
+             , isDictGoodsCodeSet    Boolean
+             , isDictGoodsCode       Boolean
              -- EAN
-             , isDictGoodsEANSet     Boolean 
-             , isDictGoodsEAN        Boolean 
-             
+             , isDictGoodsEANSet     Boolean
+             , isDictGoodsEAN        Boolean
+
              -- ***** Фильтр в остальных справочкиках
              -- Interne Nr
-             , isDictCodeSet    Boolean 
-             , isDictCode       Boolean 
+             , isDictCodeSet    Boolean
+             , isDictCode       Boolean
 
                -- Режим охранника Да/нет
              , isNumSecurity    Boolean
@@ -60,7 +60,7 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
-     
+
     -- Результат такой
     RETURN QUERY
     SELECT zc_BarCodePref_Object()::TVarChar   AS BarCodePref
@@ -70,46 +70,67 @@ BEGIN
          -- ***** Настройки сканера
          -- Для сканирования использовать True - Сканер штрихкода, False - Камеру устройства
          -- Работает только когда зебра со сканером
-         , FALSE   AS isCameraScanerSet 
-         , FALSE   AS isCameraScaner 
+         , FALSE   AS isCameraScanerSet
+         , FALSE   AS isCameraScaner
 
          -- Открывать сканер при изменении режима сканирования
-         , FALSE   AS isOpenScanChangingModeSet 
-         , FALSE   AS isOpenScanChangingMode 
+         , FALSE   AS isOpenScanChangingModeSet
+         , FALSE   AS isOpenScanChangingMode
 
          -- Скрывать кнопку сканирования когда есть боковые
-         , FALSE   AS isHideScanButtonSet 
-         , FALSE   AS isHideScanButton 
+         , FALSE   AS isHideScanButtonSet
+         , FALSE   AS isHideScanButton
 
          -- Скрывать кнопку подсветки
-         , FALSE   AS isHideIlluminationButtonSet 
-         , FALSE   AS isHideIlluminationButton 
+         , FALSE   AS isHideIlluminationButtonSet
+         , FALSE   AS isHideIlluminationButton
 
          -- Поссветка включена при старте сканирования
-         , FALSE   AS isIlluminationModeSet 
-         , TRUE    AS isIlluminationMode 
+         , FALSE   AS isIlluminationModeSet
+         , TRUE    AS isIlluminationMode
 
          -- ***** Фильтр в справочкике комплектующих
          -- Артикул
-         , FALSE   AS isDictGoodsArticleSet 
-         , TRUE    AS isDictGoodsArticle 
+         , FALSE   AS isDictGoodsArticleSet
+         , TRUE    AS isDictGoodsArticle
          -- Interne Nr
-         , FALSE   AS isDictGoodsCodeSet 
-         , FALSE   AS isDictGoodsCode 
+         , FALSE   AS isDictGoodsCodeSet
+         , FALSE   AS isDictGoodsCode
          -- EAN
-         , FALSE   AS isDictGoodsEANSet 
-         , FALSE    AS isDictGoodsEAN 
-             
+         , FALSE   AS isDictGoodsEANSet
+         , FALSE    AS isDictGoodsEAN
+
          -- ***** Фильтр в остальных справочкиках
          -- Interne Nr
-         , FALSE   AS isDictCodeSet 
-         , FALSE   AS isDictCode 
-         
+         , FALSE   AS isDictCodeSet
+         , FALSE   AS isDictCode
+
            -- Режим охранника Да/нет
-         , CASE WHEN vbUserId = 5 THEN TRUE ELSE FALSE END :: Boolean AS isNumSecurity
+         , CASE WHEN -- vbUserId = 5 OR
+                     EXISTS (SELECT 1
+                             FROM ObjectLink AS ObjectLink_User_Member
+                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                       ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                      AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                  INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                           ON ObjectBoolean_Main.ObjectId  = ObjectLink_Personal_Member.ObjectId
+                                                          AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Personal_Main()
+                                                          AND ObjectBoolean_Main.ValueData = TRUE
+                                  INNER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                        ON ObjectLink_Personal_PersonalServiceList.ObjectId      = ObjectLink_Personal_Member.ObjectId
+                                                       AND ObjectLink_Personal_PersonalServiceList.DescId        = zc_ObjectLink_Personal_PersonalServiceList()
+                                                       -- Відомість Охорона
+                                                       AND ObjectLink_Personal_PersonalServiceList.ChildObjectId = 301885
+                             WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                               AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                            )
+                THEN TRUE
+                ELSE FALSE
+           END :: Boolean AS isNumSecurity
+
            -- Кол-во охранников
          , 3 :: Integer AS CountSecurity
-     ; 
+     ;
 
 END;
 $BODY$
