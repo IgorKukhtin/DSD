@@ -914,11 +914,11 @@ BEGIN
        UNION
         --док. охраны - без склада
         SELECT
-             0    ::Integer                 AS Id
-           , ''   ::TVarChar           AS InvNumber
-           , NULL ::TDateTime               AS OperDate
-           , 0    ::Integer            AS StatusCode
-           , ''   ::TVarChar             AS StatusName
+             tmpMov.MovementId    ::Integer      AS Id
+           , tmpMov.InvNumber     ::TVarChar     AS InvNumber
+           , tmpMov.OperDate      ::TDateTime    AS OperDate
+           , tmpMov.StatusCode    ::Integer      AS StatusCode
+           , tmpMov.StatusName    ::TVarChar     AS StatusName
            , tmpSecurity.NumSecurity  ::TFloat
 
            , tmpSecurity.MovementItemId                             AS MovementItemId
@@ -1023,6 +1023,12 @@ BEGIN
             LEFT JOIN tmpMovement_Data ON tmpMovement_Data.Operdate = tmpSecurity.OperDate
                                       AND tmpMovement_Data.NumSecurity = tmpSecurity.NumSecurity
                                       AND tmpMovement_Data.MovementItemId_pas = tmpSecurity.MovementItemId_pas
+            LEFT JOIN (SELECT DISTINCT tmpMovement_Data.Id AS MovementId, tmpMovement_Data.OperDate, tmpMovement_Data.InvNumber, tmpMovement_Data.NumSecurity 
+                            , tmpMovement_Data.StatusCode , tmpMovement_Data.StatusName
+                       FROM tmpMovement_Data
+                       ) AS tmpMov 
+                         ON tmpMov.OperDate = tmpSecurity.OperDate
+                        AND tmpMov.NumSecurity = tmpSecurity.NumSecurity
         WHERE tmpMovement_Data.Id IS NULL
           ;
 
