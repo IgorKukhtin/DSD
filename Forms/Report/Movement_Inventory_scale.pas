@@ -75,6 +75,10 @@ type
     actPrintSecurity: TdsdPrintAction;
     spSelectPrint_Security: TdsdStoredProc;
     bbPrintSecurity: TdxBarButton;
+    actUpdate_NumSecurity: TdsdOpenForm;
+    bbUpdate_NumSecurity: TdxBarButton;
+    actUpdate_NumSecurity2: TdsdOpenForm;
+    bbUpdate_NumSecurity2: TdxBarButton;
   private
     { Private declarations }
   public
