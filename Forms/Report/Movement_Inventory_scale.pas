@@ -79,6 +79,8 @@ type
     bbUpdate_NumSecurity: TdxBarButton;
     actUpdate_NumSecurity2: TdsdOpenForm;
     bbUpdate_NumSecurity2: TdxBarButton;
+    mactUpdate_NumSecurity: TMultiAction;
+    mactUpdate_NumSecurity2: TMultiAction;
   private
     { Private declarations }
   public

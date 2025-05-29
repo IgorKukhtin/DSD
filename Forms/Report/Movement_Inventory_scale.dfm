@@ -1169,6 +1169,7 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
     object actUpdate_NumSecurity: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'> '#1076#1083#1103' '#1076#1086#1082'.'#1057#1082#1083#1072#1076#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'> '#1076#1083#1103' '#1076#1086#1082'.'#1057#1082#1083#1072#1076#1072
       ImageIndex = 47
@@ -1218,11 +1219,12 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
     end
     object actUpdate_NumSecurity2: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'> '#1076#1083#1103' '#1076#1086#1082'. '#1054#1093#1088#1072#1085#1099
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'> '#1076#1083#1103' '#1076#1086#1082'. '#1054#1093#1088#1072#1085#1099
       ImageIndex = 48
@@ -1272,7 +1274,35 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
+    end
+    object mactUpdate_NumSecurity: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_NumSecurity
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'> '#1076#1083#1103' '#1076#1086#1082'.'#1057#1082#1083#1072#1076#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'> '#1076#1083#1103' '#1076#1086#1082'.'#1057#1082#1083#1072#1076#1072
+      ImageIndex = 47
+    end
+    object mactUpdate_NumSecurity2: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_NumSecurity2
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'> '#1076#1083#1103' '#1076#1086#1082'. '#1054#1093#1088#1072#1085#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'> '#1076#1083#1103' '#1076#1086#1082'. '#1054#1093#1088#1072#1085#1099
+      ImageIndex = 48
     end
   end
   inherited MasterDS: TDataSource
@@ -1470,11 +1500,11 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
       Category = 0
     end
     object bbUpdate_NumSecurity: TdxBarButton
-      Action = actUpdate_NumSecurity
+      Action = mactUpdate_NumSecurity
       Category = 0
     end
     object bbUpdate_NumSecurity2: TdxBarButton
-      Action = actUpdate_NumSecurity2
+      Action = mactUpdate_NumSecurity2
       Category = 0
     end
   end
