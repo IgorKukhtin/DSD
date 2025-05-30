@@ -98,6 +98,12 @@ BEGIN
                             AND MovementItem.Amount     = 0
                         ) AS MI ON MI.Id = MIF_ContainerId.MovementItemId
 
+              -- <Остаток теория>
+              LEFT JOIN MovementItemBoolean AS MIBoolean_NotFact
+                                            ON MIBoolean_NotFact.MovementItemId = MIF_ContainerId.MovementItemId
+                                           AND MIBoolean_NotFact.DescId         = zc_MIBoolean_NotFact()
+                                           AND MIBoolean_NotFact.ValueData      = TRUE
+
          WHERE MovementItem.MovementId = inMovementId
            AND MovementItem.isErased   = FALSE
            AND MovementItem.Amount     = 0
@@ -109,6 +115,8 @@ BEGIN
            AND (COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> COALESCE (CLO_GoodsKind.ObjectId, 0)
              OR MI.Id IS NULL
                )
+           -- <Остаток теория>
+           AND MIBoolean_NotFact.MovementItemId IS NULL
         ;
 
      ELSE
@@ -118,6 +126,8 @@ BEGIN
            AND MovementItem.Amount     = 0
            AND MovementItem.isErased   = FALSE
            AND NOT EXISTS (SELECT 1 FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_Summ() AND MIF.ValueData <> 0)
+           -- <Остаток теория>
+           AND NOT EXISTS (SELECT 1 FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = MovementItem.Id AND MIB.DescId = zc_MIBoolean_NotFact() AND MIB.ValueData = TRUE)
         ;
      END IF;
 
@@ -1541,6 +1551,12 @@ BEGIN
           AND COALESCE (tmpMI_find.isNotFact_value, 0) = 0
      ;
 
+/*
+    RAISE EXCEPTION 'ok - <%>  <%>'
+, (SELECT count(*) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 9598453 ) -- ContainerId_Goods = 9140694
+, (SELECT count(*) FROM _tmpItem WHERE _tmpItem.GoodsId = 9598453)
+;
+*/
     -- !!!Оптимизация!!!
     --ANALYZE _tmpRemainsCount;
 /*    RAISE EXCEPTION 'ok - _tmpRemainsCount - <%>  <%>  <%>  <%> '
