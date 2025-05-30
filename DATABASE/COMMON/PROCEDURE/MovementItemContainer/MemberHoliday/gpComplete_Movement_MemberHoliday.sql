@@ -50,7 +50,7 @@ BEGIN
                                                                  , inisMain                 := gpGet.IsMain
                                                                  , inSession                := inSession
                                                                   )
-         FROM gpGet_Movement_MemberHolidayForPersonalService (inMovementId := inMovementId, inSession:= inSession) AS gpGet;
+         FROM gpGet_Movement_MemberHolidayForPersonalService (inMovementId := inMovementId, inSession:='-'||inSession) AS gpGet;
 
      END IF;
 
