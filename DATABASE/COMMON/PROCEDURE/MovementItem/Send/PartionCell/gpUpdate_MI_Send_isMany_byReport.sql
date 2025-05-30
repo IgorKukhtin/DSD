@@ -291,28 +291,28 @@ BEGIN
      --сохранили свойство
      PERFORM lpInsertUpdate_MovementItemBoolean (_tmpItem_PartionCell.DescId, _tmpItem_PartionCell.MovementItemId, inisMany)
      FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId 
-                          , CASE WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1()  THEN 1 
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2()  THEN 2 
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3()  THEN 3 
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4()  THEN 4 
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5()  THEN 5 
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6()  THEN 6 
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7()  THEN 7 
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8()  THEN 8 
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9()  THEN 9 
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10() THEN 10
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11() THEN 11
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12() THEN 12
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13() THEN 13
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14() THEN 14
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15() THEN 15
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16() THEN 16
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17() THEN 17
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18() THEN 18
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19() THEN 19
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20() THEN 20
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21() THEN 21
-                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22() THEN 22
+                          , CASE WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1()  THEN zc_MIBoolean_PartionCell_Many_1() 
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2()  THEN zc_MIBoolean_PartionCell_Many_2() 
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3()  THEN zc_MIBoolean_PartionCell_Many_3() 
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4()  THEN zc_MIBoolean_PartionCell_Many_4() 
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5()  THEN zc_MIBoolean_PartionCell_Many_5() 
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6()  THEN zc_MIBoolean_PartionCell_Many_6() 
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7()  THEN zc_MIBoolean_PartionCell_Many_7() 
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8()  THEN zc_MIBoolean_PartionCell_Many_8() 
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9()  THEN zc_MIBoolean_PartionCell_Many_9() 
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10() THEN zc_MIBoolean_PartionCell_Many_10()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11() THEN zc_MIBoolean_PartionCell_Many_11()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12() THEN zc_MIBoolean_PartionCell_Many_12()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13() THEN zc_MIBoolean_PartionCell_Many_13()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14() THEN zc_MIBoolean_PartionCell_Many_14()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15() THEN zc_MIBoolean_PartionCell_Many_15()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16() THEN zc_MIBoolean_PartionCell_Many_16()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17() THEN zc_MIBoolean_PartionCell_Many_17()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18() THEN zc_MIBoolean_PartionCell_Many_18()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19() THEN zc_MIBoolean_PartionCell_Many_19()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20() THEN zc_MIBoolean_PartionCell_Many_20()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21() THEN zc_MIBoolean_PartionCell_Many_21()
+                                 WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22() THEN zc_MIBoolean_PartionCell_Many_22()
                             END AS DescId
         
            FROM _tmpItem_PartionCell

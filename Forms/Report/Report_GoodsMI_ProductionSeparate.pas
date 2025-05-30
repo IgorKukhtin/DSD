@@ -103,6 +103,9 @@ type
     bbPrint_4134: TdxBarButton;
     bbPrint_4218: TdxBarButton;
     bbSeparator: TdxBarSeparator;
+    Print_test: TdsdStoredProc;
+    actPrint_4001_test: TdsdPrintAction;
+    bbPrint_test: TdxBarButton;
   private
     { Private declarations }
   public
