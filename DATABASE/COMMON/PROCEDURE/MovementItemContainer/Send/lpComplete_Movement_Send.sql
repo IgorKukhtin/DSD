@@ -1428,7 +1428,7 @@ end if;
      END IF;
 
 
-     -- кроме Админа - для Упак.тушенки
+     -- для Упак.тушенки
      IF vbMovementDescId = zc_Movement_Send() AND 1=1 -- AND inUserId = zfCalc_UserAdmin() :: Integer
         -- ЦЕХ упаковки Тушенки
         AND (8006902 = (SELECT DISTINCT _tmpItem.UnitId_From FROM _tmpItem)
@@ -1443,12 +1443,18 @@ end if;
                                                   , inUnitId     := (SELECT DISTINCT _tmpItem.UnitId_From FROM _tmpItem)
                                                   , inUserId     := inUserId
                                                    );
-     -- кроме Админа - для сырья
+     -- для сырья
      ELSEIF vbMovementDescId = zc_Movement_Send() AND 1=1 -- inUserId <> zfCalc_UserAdmin() :: Integer
      THEN
          -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Перемещения" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
          PERFORM lpComplete_Movement_Send_Recalc_sub (inMovementId := inMovementId
                                                     , inUnitId     := (SELECT DISTINCT _tmpItem.UnitId_From FROM _tmpItem)
+                                                    , inUserId     := inUserId
+                                                     );
+
+         -- !!!Синхронно - пересчитали/провели CEH - Пересортица!!! - на основании "Перемещения" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
+         PERFORM lpComplete_Movement_Send_Recalc_CEH (inMovementId := inMovementId
+                                                    , inUnitId     := (SELECT DISTINCT _tmpItem.UnitId_To FROM _tmpItem)
                                                     , inUserId     := inUserId
                                                      );
      END IF;
