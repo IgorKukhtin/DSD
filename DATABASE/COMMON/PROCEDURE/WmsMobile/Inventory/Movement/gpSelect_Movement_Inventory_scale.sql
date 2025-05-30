@@ -80,12 +80,15 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementId_security  Integer
              , InvNumber_security   TVarChar
              , OperDate_security    TDateTime
+             , NumSecurity_security  TFloat
              , InsertName_security  TVarChar
              , UpdateName_security  TVarChar
              , InsertDate_security  TDateTime
              , UpdateDate_security  TDateTime
              , isSecurity Boolean --Есть документ охраны
              , isDiff Boolean
+             
+             , MovementId_calc Integer
               )
 AS
 $BODY$
@@ -602,6 +605,7 @@ BEGIN
            , tmpSecurity.MovementId     AS MovementId_security
            , tmpSecurity.InvNumber      AS InvNumber_security
            , tmpSecurity.OperDate       AS OperDate_security
+           , (Movement.NumSecurity * (-1)) ::TFloat AS NumSecurity_security
 
            , tmpSecurity.InsertName     AS InsertName_security
            , tmpSecurity.UpdateName     AS UpdateName_security
@@ -611,6 +615,8 @@ BEGIN
            , CASE WHEN tmpSecurity.MovementId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSecurity --Есть документ охраны
            , CASE WHEN tmpSecurity.MovementId IS NULL THEN TRUE ELSE FALSE END ::Boolean AS isDiff     --отклонение
 
+            -- расч.Id для печати по отклонению
+           , COALESCE (Movement.Id, tmpSecurity.MovementId, 0) ::Integer AS MovementId_calc
         FROM tmpMovement_Data AS Movement
             --INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 
@@ -858,6 +864,7 @@ BEGIN
            , tmpSecurity.MovementId     AS MovementId_security
            , tmpSecurity.InvNumber      AS InvNumber_security
            , tmpSecurity.OperDate       AS OperDate_security
+           , (Movement.NumSecurity * (-1)) ::TFloat AS NumSecurity_security
 
            , tmpSecurity.InsertName     AS InsertName_security
            , tmpSecurity.UpdateName     AS UpdateName_security
@@ -867,6 +874,8 @@ BEGIN
            , CASE WHEN tmpSecurity.MovementId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSecurity --Есть документ охраны
            , CASE WHEN tmpSecurity.MovementId IS NULL THEN TRUE ELSE FALSE END ::Boolean AS isDiff     --отклонение
 
+            -- расч.Id для печати по отклонению
+           , COALESCE (Movement.Id, tmpSecurity.MovementId, 0) ::Integer AS MovementId_calc
         FROM tmpMovement_Data AS Movement
             --INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 
@@ -914,11 +923,11 @@ BEGIN
        UNION
         --док. охраны - без склада
         SELECT
-             0    ::Integer                 AS Id
-           , ''   ::TVarChar           AS InvNumber
-           , NULL ::TDateTime               AS OperDate
-           , 0    ::Integer            AS StatusCode
-           , ''   ::TVarChar             AS StatusName
+             tmpMov.MovementId    ::Integer      AS Id
+           , tmpMov.InvNumber     ::TVarChar     AS InvNumber
+           , tmpMov.OperDate      ::TDateTime    AS OperDate
+           , tmpMov.StatusCode    ::Integer      AS StatusCode
+           , tmpMov.StatusName    ::TVarChar     AS StatusName
            , tmpSecurity.NumSecurity  ::TFloat
 
            , tmpSecurity.MovementItemId                             AS MovementItemId
@@ -1010,7 +1019,7 @@ BEGIN
            , tmpSecurity.MovementId     AS MovementId_security
            , tmpSecurity.InvNumber      AS InvNumber_security
            , tmpSecurity.OperDate       AS OperDate_security
-
+           , (tmpSecurity.NumSecurity * (-1)) ::TFloat AS NumSecurity_security
            , tmpSecurity.InsertName     AS InsertName_security
            , tmpSecurity.UpdateName     AS UpdateName_security
            , tmpSecurity.InsertDate     AS InsertDate_security
@@ -1019,10 +1028,18 @@ BEGIN
            , TRUE ::Boolean   AS isSecurity -- документ охраны
            , TRUE ::Boolean   AS isDiff     --отклонение
 
+           -- расч.Id для печати по отклонению
+           , COALESCE (tmpMov.MovementId, tmpSecurity.MovementId, 0) ::Integer AS MovementId_calc
         FROM tmpSecurity
             LEFT JOIN tmpMovement_Data ON tmpMovement_Data.Operdate = tmpSecurity.OperDate
                                       AND tmpMovement_Data.NumSecurity = tmpSecurity.NumSecurity
                                       AND tmpMovement_Data.MovementItemId_pas = tmpSecurity.MovementItemId_pas
+            LEFT JOIN (SELECT DISTINCT tmpMovement_Data.Id AS MovementId, tmpMovement_Data.OperDate, tmpMovement_Data.InvNumber, tmpMovement_Data.NumSecurity 
+                            , tmpMovement_Data.StatusCode , tmpMovement_Data.StatusName
+                       FROM tmpMovement_Data
+                       ) AS tmpMov 
+                         ON tmpMov.OperDate = tmpSecurity.OperDate
+                        AND tmpMov.NumSecurity = tmpSecurity.NumSecurity
         WHERE tmpMovement_Data.Id IS NULL
           ;
 
@@ -1040,5 +1057,5 @@ $BODY$
 -- SELECT * FROM gpSelect_Movement_Inventory_scale (inStartDate:= '01.02.2025', inEndDate:= '28.02.2025', inIsErased := 'True', inSession := zfCalc_UserAdmin())
 
 
---select * from gpSelect_Movement_Inventory_scale (inStartDate := ('25.04.2025')::TDateTime , inEndDate := ('25.04.2025')::TDateTime , inIsErased := 'False' ,  inSession := '9457') as tt
+--select * from gpSelect_Movement_Inventory_scale (inStartDate := ('29.05.2025')::TDateTime , inEndDate := ('29.05.2025')::TDateTime , inIsErased := 'False' ,  inSession := '9457') as tt
 --WHERE tt.GoodsCode = 1716;

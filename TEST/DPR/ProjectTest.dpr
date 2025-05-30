@@ -1584,7 +1584,8 @@ uses
   Report_Send_PartionCell_many in '..\..\Forms\Report\Report_Send_PartionCell_many.pas' {Report_Send_PartionCell_manyForm: TParentForm},
   PartionCellCheckisManyEdit in '..\..\Forms\Guides\PartionCellCheckisManyEdit.pas' {PartionCellCheckisManyEditForm: TParentForm},
   Send_PartionCell_isManyEdit in '..\..\Forms\Document\Send_PartionCell_isManyEdit.pas' {Send_PartionCell_isManyEditForm: TParentForm},
-  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm};
+  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
+  Movement_Inventory_scaleDialog in '..\..\Forms\Document\Movement_Inventory_scaleDialog.pas' {Movement_Inventory_scaleDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

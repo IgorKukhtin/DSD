@@ -2624,6 +2624,9 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleDialogForm');
   exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportForm'));

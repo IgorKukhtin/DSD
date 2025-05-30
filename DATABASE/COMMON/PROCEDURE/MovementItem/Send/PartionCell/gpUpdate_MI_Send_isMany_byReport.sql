@@ -284,6 +284,7 @@ BEGIN
                  , isRePack
             FROM tmpMI
             WHERE tmpMI.PartionCellId = inPartionCellId
+             AND isRePack = FALSE
            ;
             
      --  lpInsertUpdate_MovementItemBoolean (vbDescId, inMovementItemId, inisMany) 
@@ -315,7 +316,6 @@ BEGIN
                             END AS DescId
         
            FROM _tmpItem_PartionCell
-           
            ) AS _tmpItem_PartionCell;
      
   
