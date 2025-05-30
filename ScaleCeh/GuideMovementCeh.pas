@@ -85,6 +85,10 @@ type
     actUpdateStatus: TAction;
     bbUpdateStatus: TSpeedButton;
     cbPrintPackGross: TCheckBox;
+    actPrintSecurity: TdsdPrintAction;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint_Security: TdsdStoredProc;
+    bbPrintSecurity: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
