@@ -366,7 +366,7 @@ BEGIN
                                     AND MovementString_VchasnoId.DescId     = zc_MovementString_VchasnoId()
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-         AND Movement.StatusId <> zc_Enum_Status_Erased()
+         AND (Movement.StatusId <> zc_Enum_Status_Erased() OR vbUserId = 5)
          -- AND MovementString_OKPO.ValueData IN ('36387233', '36387249', '38916588')
          -- *** AND (Movement_TaxCorrective.Id IS NULL OR Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete())
          -- *** AND (Movement_Sale.Id IS NULL OR Movement_Sale.StatusId = zc_Enum_Status_Complete())

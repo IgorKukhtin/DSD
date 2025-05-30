@@ -4,7 +4,6 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
   ClientWidth = 1368
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -474
   ExplicitWidth = 1384
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -87,7 +86,9 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           object clError: TcxGridDBColumn
             Caption = #1054#1096
             DataBinding.FieldName = 'IsError'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 25
           end
           object isVchasno: TcxGridDBColumn

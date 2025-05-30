@@ -802,7 +802,7 @@ BEGIN
 
 
      -- Проверка - Инвентаризация vbIsAuto = TRUE + inBranchCode = 1
-     IF vbMovementDescId = zc_Movement_Inventory() AND inBranchCode = 1 AND vbIsAuto = TRUE
+     IF vbMovementDescId = zc_Movement_Inventory() AND inBranchCode IN (1, 201) AND vbIsAuto = TRUE
      THEN
          -- Проверка
          IF EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_NumSecurity() AND MF.ValueData < 0)
@@ -1758,6 +1758,15 @@ BEGIN
                                 , inDescId     := zc_Movement_WeighingProduction()
                                 , inUserId     := vbUserId
                                  );
+
+     -- финиш - Проводим док Инвентаризация - ОХРАНА
+     IF vbMovementId_Security > 0
+     THEN
+         PERFORM lpComplete_Movement (inMovementId := vbMovementId_Security
+                                    , inDescId     := zc_Movement_WeighingProduction()
+                                    , inUserId     := vbUserId
+                                     );
+     END IF;
 
 
      -- !!!Проверка!!!

@@ -90,7 +90,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
       end
       object bbPrint: TSpeedButton
         Left = 433
-        Top = 4
+        Top = 3
         Width = 31
         Height = 29
         Hint = #1055#1077#1095#1072#1090#1100
@@ -258,6 +258,24 @@ object GuideMovementCehForm: TGuideMovementCehForm
           4444444999990444444444999999044444444899049990444444890444499044
           4444444444499904444444444444990444444444444449904444444444444489
           0444444444444448904444444444444449904444444444444444}
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object bbPrintSecurity: TSpeedButton
+        Left = 482
+        Top = 6
+        Width = 31
+        Height = 29
+        Action = actPrintSecurity
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          888888880000000888888888FFFFFFF888888888000000088888880000FFFFFF
+          88888077770FFFFFF88878888880FFFFFF887888888900000008788888888887
+          77787FFFFFFFFFF7777887F0000000FF7778887FFFFFFF0FF7788887F8888807
+          77888888788888F8888888888F88888088888888877777778888}
         ParentShowHint = False
         ShowHint = True
       end
@@ -526,8 +544,6 @@ object GuideMovementCehForm: TGuideMovementCehForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = -48
-    ExplicitTop = -2
     object gbInvNumber_parent: TGroupBox
       Left = 280
       Top = 0
@@ -750,6 +766,52 @@ object GuideMovementCehForm: TGuideMovementCehForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1077#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
       OnExecute = actUpdateStatusExecute
     end
+    object actPrintSecurity: TdsdPrintAction
+      Category = 'ScaleLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Security
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Security
+        end>
+      Hint = #1056#1072#1079#1085#1080#1094#1072' '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1050#1083#1072#1076#1086#1074#1097#1080#1082'/'#1054#1093#1088#1072#1085#1085#1080#1082#1072
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'NumSecurity;InsertDate'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Inventory_Scale_Security'
+      ReportNameParam.Value = 'PrintMovement_Inventory_Scale_Security'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -761,5 +823,55 @@ object GuideMovementCehForm: TGuideMovementCehForm
       end>
     Left = 112
     Top = 184
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 228
+    Top = 142
+  end
+  object spSelectPrint_Security: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Inventory_scaleSecurity_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 45658d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 45658d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = CDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTara'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 208
   end
 end

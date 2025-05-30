@@ -2,7 +2,6 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' + '#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 460
   ClientWidth = 1000
-  AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1016
   ExplicitHeight = 499

@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdCommon;
+  dxSkinXmas2008Blue, dsdCommon, cxImageComboBox;
 
 type
   TEDIJournalForm = class(TAncestorDBGridForm)
@@ -243,6 +243,7 @@ type
     actVchasnoEDISignComdoc: TdsdVchasnoEDIAction;
     mactVchasnoEDISignComdoc: TMultiAction;
     bbVchasnoEDISignComdoc: TdxBarButton;
+    StatusCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
