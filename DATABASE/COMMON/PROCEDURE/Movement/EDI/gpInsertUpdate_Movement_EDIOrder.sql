@@ -47,10 +47,16 @@ end if;
                                             ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
                                            AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
                                            AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                  -- Проверка Вчасно - есть ли этот DealId
+                  LEFT JOIN MovementString AS MovementString_DealId
+                                           ON MovementString_DealId.MovementId = Movement.Id
+                                          AND MovementString_DealId.DescId     = zc_MovementString_DealId()
              WHERE Movement.DescId = zc_Movement_EDI()
                AND Movement.OperDate = inOrderOperDate
                AND Movement.InvNumber = inOrderInvNumber
                AND Movement.StatusId <> zc_Enum_Status_Erased()
+               -- Проверка Вчасно
+               AND COALESCE (MovementString_DealId.ValueData, '') = COALESCE (TRIM (inDealId), '')
             )
      THEN
          -- попробуем исправить ... закомментил, т.к. не проверил как оно работает
@@ -62,7 +68,7 @@ end if;
                                FROM
                                    (SELECT Movement.*
                                          , Movement_Order.Id AS MovementId_find
-                                         , ROW_NUMBER() OVER (PARTITION BY MovementString_GLNPlaceCode.ValueData, Movement.InvNumber
+                                         , ROW_NUMBER() OVER (PARTITION BY MovementString_GLNPlaceCode.ValueData, Movement.InvNumber, COALESCE (MovementString_DealId.ValueData, '')
                                                               ORDER BY CASE WHEN Movement_Order.Id > 0 THEN 1 ELSE 2 END) AS Ord
                                     FROM Movement
                                          INNER JOIN MovementString AS MovementString_GLNPlaceCode
@@ -74,10 +80,17 @@ end if;
                                                                        AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                                          LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementId
                                                                              -- AND Movement_Order.StatusId = zc_Enum_Status_Complete()
+                                         -- Проверка Вчасно - есть ли этот DealId
+                                         LEFT JOIN MovementString AS MovementString_DealId
+                                                                  ON MovementString_DealId.MovementId = Movement.Id
+                                                                 AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+
                                     WHERE Movement.DescId = zc_Movement_EDI()
                                       AND Movement.OperDate = inOrderOperDate
                                       -- AND Movement.InvNumber = '3369002860' -- '3147002592'
                                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                      -- Проверка Вчасно
+                                      AND COALESCE (MovementString_DealId.ValueData, '')  = COALESCE (TRIM (inDealId), '')
                                     ) AS tmp
                                WHERE tmp.Ord <> 1
                                  AND tmp.MovementId_find IS NULL
@@ -90,10 +103,16 @@ end if;
                                                ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
                                               AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
                                               AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                     -- Проверка Вчасно - есть ли этот DealId
+                     LEFT JOIN MovementString AS MovementString_DealId
+                                              ON MovementString_DealId.MovementId = Movement.Id
+                                             AND MovementString_DealId.DescId     = zc_MovementString_DealId()
                 WHERE Movement.DescId = zc_Movement_EDI()
                   AND Movement.OperDate = inOrderOperDate
                   AND Movement.InvNumber = inOrderInvNumber
                   AND Movement.StatusId <> zc_Enum_Status_Erased()
+                  -- Проверка Вчасно
+                  AND COALESCE (MovementString_DealId.ValueData, '')  = COALESCE (TRIM (inDealId), '')
                )
         THEN
             --
@@ -272,10 +291,17 @@ end if;
                                               ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
                                              AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
                                              AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                    -- Проверка Вчасно - есть ли этот DealId
+                    LEFT JOIN MovementString AS MovementString_DealId
+                                             ON MovementString_DealId.MovementId = Movement.Id
+                                            AND MovementString_DealId.DescId     = zc_MovementString_DealId()
                WHERE Movement.DescId = zc_Movement_EDI()
                  AND Movement.OperDate = inOrderOperDate
                  AND Movement.InvNumber = inOrderInvNumber
-                 AND Movement.StatusId <> zc_Enum_Status_Erased())
+                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                 -- Проверка Вчасно
+                 AND COALESCE (MovementString_DealId.ValueData, '') = COALESCE (TRIM (inDealId), '')
+              )
        THEN
            RAISE EXCEPTION 'Ошибка.Документ EDI № <%> от <%> для точки доставки с GLN = <%> загружен больше 1 раза. Повторите действие через 25 сек.', inOrderInvNumber, DATE (inOrderOperDate), inGLNPlace;
        END IF;
@@ -284,12 +310,14 @@ end if;
        -- Проверка через УНИКАЛЬНОСТЬ
        IF vbIsInsert = TRUE
        THEN
-           PERFORM lpInsert_LockUnique (inKeyData:= 'Movement'
-                                          || ';' || zc_Movement_EDI() :: TVarChar
-                                          || ';' || inOrderInvNumber
-                                          || ';' || zfConvert_DateToString (inOrderOperDate)
-                                          || ';' || inGLNPlace
-                                      , inUserId:= vbUserId);
+           PERFORM lpInsert_LockUnique_log (inKeyData:= 'Movement'
+                                             || ';' || zc_Movement_EDI() :: TVarChar
+                                             || ';' || inOrderInvNumber || CASE WHEN inDealId <> '' THEN '*' || inDealId ELSE '' END
+                                             || ';' || zfConvert_DateToString (inOrderOperDate)
+                                             || ';' || inGLNPlace
+                                         , inUserId:= vbUserId
+                                         , inComment:= 'MovementId = ' || (COALESCE (vbMovementId, 0) :: Integer) :: TVarChar
+                                          );
        END IF;
 
        vbisLoad := False;
