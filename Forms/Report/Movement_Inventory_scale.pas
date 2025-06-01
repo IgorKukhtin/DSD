@@ -81,6 +81,12 @@ type
     bbUpdate_NumSecurity2: TdxBarButton;
     mactUpdate_NumSecurity: TMultiAction;
     mactUpdate_NumSecurity2: TMultiAction;
+    spSelectPrint_Mov_Sec: TdsdStoredProc;
+    spSelectPrint_Mov_gr_Sec: TdsdStoredProc;
+    actPrint_Mov_Sec: TdsdPrintAction;
+    actPrint_MovGroup_Sec: TdsdPrintAction;
+    bbPrint_Mov_Sec: TdxBarButton;
+    bbPrint_MovGroup_Sec: TdxBarButton;
   private
     { Private declarations }
   public
