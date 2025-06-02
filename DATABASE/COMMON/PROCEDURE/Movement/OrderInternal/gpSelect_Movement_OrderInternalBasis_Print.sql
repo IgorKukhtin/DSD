@@ -93,20 +93,34 @@ BEGIN
                                              WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Ñêëàä ÌÈÍÓÑÎÂÊÀ
                                               -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
                                                   THEN 8338 -- ìîðîæ.
+
+--                                             WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+  --                                                THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+
+--  WHEN vbUserId = 5 THEN 8338 -- ìîðîæ.
+--  WHEN vbUserId = 5 and MIContainer.Amount > 0 THEN 5128661
+
                                              WHEN MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_Basis()
                                                   THEN 0
                                              --ELSE 0
                                              ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                         END AS GoodsKindId
+
                                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) AS AmountIn
                                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
-                                      , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MovementBoolean_Peresort.ValueData = TRUE THEN MIContainer.Amount ELSE 0 END) AS AmountP
+
+                                      , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MovementBoolean_Peresort.ValueData = TRUE
+                                                       THEN MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS AmountP
+
                                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                                                    AND MovementBoolean_Peresort.ValueData = FALSE
                                                    AND COALESCE (MIContainer.Amount,0) > 0
                                                    THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS AmountPU_in
+
                                  FROM MovementItemContainer AS MIContainer
                                       INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_Analyzer
                                       LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
@@ -115,8 +129,9 @@ BEGIN
                                  WHERE MIContainer.OperDate   = vbOperDate
                                    AND MIContainer.DescId     = zc_MIContainer_Count()
                                    AND (MIContainer.MovementDescId = zc_Movement_Send()
-                                     OR (MIContainer.MovementDescId = zc_Movement_ProductionUnion())
+                                     OR MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                                        )
+-- AND (COALESCE (MovementBoolean_Peresort.ValueData, FALSE) = FALSE OR vbUserId <> 5)
                                    -- AND MIContainer.isActive = TRUE
 
                                  GROUP BY MIContainer.ObjectId_Analyzer
@@ -124,6 +139,12 @@ BEGIN
                                                WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Ñêëàä ÌÈÍÓÑÎÂÊÀ
                                                 -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
                                                     THEN 8338 -- ìîðîæ.
+
+--  WHEN vbUserId = 5 and MIContainer.Amount > 0 THEN 5128661
+
+    --                                           WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+      --                                              THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+
                                                WHEN MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_Basis()
                                                     THEN 0
                                                --ELSE 0
@@ -131,7 +152,20 @@ BEGIN
                                           END
                                  HAVING SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) <> 0
                                      OR SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) <> 0
-                                     OR SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() THEN MIContainer.Amount ELSE 0 END) <> 0
+--                                     OR SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() THEN MIContainer.Amount ELSE 0 END) <> 0
+
+                                      , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MovementBoolean_Peresort.ValueData = TRUE
+                                                       THEN MIContainer.Amount
+                                                  ELSE 0
+                                             END) <> 0
+
+                                      , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                   AND MovementBoolean_Peresort.ValueData = FALSE
+                                                   AND COALESCE (MIContainer.Amount,0) > 0
+                                                   THEN MIContainer.Amount
+                                                  ELSE 0
+                                             END) <> 0
+
                                 ) AS tmpMI
                             GROUP BY tmpMI.GoodsId
                                    , tmpMI.GoodsKindId
@@ -213,7 +247,9 @@ BEGIN
            , tmpMI.AmountSend           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSend
            , tmpMI.AmountSendOut        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSendOut
            , tmpMI.AmountP              * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountP
+
            , tmpMI.AmountPU_in          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPU_in
+           
            , tmpMI.AmountPartner      /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END*/ AS AmountPartner
            , tmpMI.AmountPartnerPrior /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END*/ AS AmountPartnerPrior
            , tmpMI.AmountPartnerSecond/** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END*/ AS AmountPartnerSecond
@@ -336,9 +372,14 @@ BEGIN
 
             LEFT JOIN Object_GoodsByGoodsKind_View AS View_GoodsByGoodsKind ON View_GoodsByGoodsKind.GoodsId = Object_Goods.Id
                                                                            AND View_GoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
-       WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0 OR tmpMI.AmountSend <> 0 OR tmpMI.AmountPartner <> 0 OR tmpMI.AmountPartnerPrior <> 0 OR tmpMI.AmountPartnerSecond <> 0 -- OR tmpMI.Amount_calc <> 0
+       WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0 OR tmpMI.AmountSend <> 0 OR tmpMI.AmountPartner <> 0 OR tmpMI.AmountPartnerPrior <> 0 OR tmpMI.AmountPartnerSecond <> 0
+       -- OR tmpMI.Amount_calc <> 0
           OR tmpMI.AmountRemains <> 0
           OR tmpMI.AmountSendOut <> 0
+        --OR tmpMI.AmountSend    <> 0
+        --OR tmpMI.AmountSendOut <> 0
+          OR tmpMI.AmountP       <> 0
+        --OR tmpMI.AmountPU_in   <> 0
           --OR vbUserId = 5
        ;
     RETURN NEXT Cursor2;

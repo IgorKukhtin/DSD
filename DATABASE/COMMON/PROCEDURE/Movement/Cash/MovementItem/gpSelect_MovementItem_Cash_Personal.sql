@@ -31,6 +31,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummAvance TFloat
                -- Карта БН (округление) - 2ф
              , AmountService_diff TFloat
+               -- Корректировка ЗП
+             , Amount_LossPersonal TFloat
 
              , Amount_current TFloat
                -- Аванс (выплачено)
@@ -147,6 +149,11 @@ BEGIN
               -- НЕ основная Ведомость
           AND NOT EXISTS (SELECT 1 FROM Object JOIN ObjectLink AS OL ON OL.ObjectId = Object.Id AND OL.DescId = zc_ObjectLink_Personal_PersonalServiceList() AND OL.ChildObjectId = vbPersonalServiceListId WHERE Object.DescId = zc_Object_Personal() AND Object.isErased = FALSE)
           ;
+
+if vbUserId = 5 AND 1=0 then
+    RAISE EXCEPTION 'Ошибка.<%> <%>', lfGet_Object_ValueData_sh (vbPersonalServiceListId), vbIsOnly;
+end if;
+
 
      -- определяем - !!!ведомость Ф2!!!
      vbIsCardSecond:= EXISTS (SELECT 1
@@ -752,16 +759,19 @@ BEGIN
                                 --AND (vbPersonalServiceListId <> 445325 OR vbUserId <> 5)
                              )
           /*tmpCash*/
-         , tmpMIContainer AS (SELECT SUM (CASE WHEN MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
+         , tmpMIContainer AS (SELECT SUM (CASE WHEN vbIsOnly = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
                                      -- Аванс (выплачено)
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) /*AND tmpContainer.isAvance = TRUE*/ AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                   , SUM (CASE WHEN vbIsOnly = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) /*AND tmpContainer.isAvance = TRUE*/ AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
                                      -- Аванс (возврат)
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) /*AND tmpContainer.isAvance = TRUE*/ AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_ret
+                                   , SUM (CASE WHEN vbIsOnly = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) /*AND tmpContainer.isAvance = TRUE*/ AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_ret
 
                                      -- Карта БН - 2ф.  (выплачено)
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalCardSecond()) AND vbPersonalServiceListId = Object_PersonalServiceList.Id AND (COALESCE (Object_PersonalServiceList.ValueData, '') NOT ILIKE '%Аванс%' OR vbUserId = -5) THEN MIContainer.Amount ELSE 0 END) AS AmountCardSecond_avance
+                                   , SUM (CASE WHEN vbIsOnly = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalCardSecond()) AND vbPersonalServiceListId = Object_PersonalServiceList.Id AND (COALESCE (Object_PersonalServiceList.ValueData, '') NOT ILIKE '%Аванс%' OR vbUserId = -5) THEN MIContainer.Amount ELSE 0 END) AS AmountCardSecond_avance
                                      -- Другие (выплачено)
-                                   , SUM (CASE WHEN CLO_PersonalServiceList.ObjectId <> vbPersonalServiceListId and 1=1 then 0 WHEN MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService())THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+                                   , SUM (CASE WHEN vbIsOnly = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND CLO_PersonalServiceList.ObjectId <> vbPersonalServiceListId and 1=1 then 0 WHEN MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService())THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+
+                                       -- Корректировка ЗП
+                                    , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_LossPersonal() THEN MIContainer.Amount ELSE 0 END) AS Amount_LossPersonal
 
                                    , tmpContainer.PersonalId
                                    , tmpContainer.UnitId
@@ -774,7 +784,7 @@ BEGIN
                                    INNER JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.ContainerId    = tmpContainer.ContainerId
                                                                    AND MIContainer.DescId         = zc_MIContainer_Summ()
-                                                                   AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                                                   AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_LossPersonal())
                                    LEFT JOIN ContainerLinkObject AS CLO_PersonalServiceList
                                                                  ON CLO_PersonalServiceList.ContainerId = MIContainer.ContainerId
                                                                 AND CLO_PersonalServiceList.DescId     = zc_ContainerLinkObject_PersonalServiceList()
@@ -897,7 +907,11 @@ BEGIN
                                    , SUM (tmpMIContainer.Amount_avance_ret)       AS Amount_avance_ret
                                    , SUM (tmpMIContainer.AmountCardSecond_avance) AS AmountCardSecond_avance
                                    , SUM (tmpMIContainer.Amount_service)          AS Amount_service
+                                     -- Корректировка ЗП
+                                   , SUM (tmpMIContainer.Amount_LossPersonal)     AS Amount_LossPersonal
+                                     --
                                    , SUM (COALESCE (tmpMIContainer_diff.AmountService_diff, 0)) AS AmountService_diff
+                                     --
                                    , 0 AS PersonalServiceListId
                                    , MAX (tmpMIContainer.MovementId_find)         AS MovementId_find
                                    , MAX (tmpMIContainer.ContainerId_find)        AS ContainerId_find
@@ -959,7 +973,11 @@ BEGIN
                                    , tmpService.Amount_avance_ret
                                    , tmpService.AmountCardSecond_avance
                                    , tmpService.Amount_service
+                                     -- Корректировка ЗП
+                                   , tmpService.Amount_LossPersonal
+                                     --
                                    , tmpService.AmountService_diff
+                                     --
                                    , COALESCE (tmpMI.PersonalId, tmpService.PersonalId)   AS PersonalId
                                    , COALESCE (tmpService.MemberId_Personal, 0)           AS MemberId_Personal
                                    , COALESCE (tmpMI.UnitId, tmpService.UnitId)           AS UnitId
@@ -1036,10 +1054,23 @@ BEGIN
 
                                , tmpData.Amount           :: TFloat AS Amount
                                , tmpData.SummService      :: TFloat AS SummService
-                                 -- К выплате (из кассы) минус Карта БН (округление) - 2ф
-                               , (COALESCE (tmpData.SummToPay_cash, 0)  - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay_cash
+
+                                 -- К выплате (из кассы)
+                               , (COALESCE (tmpData.SummToPay_cash, 0)
+                                            -- минус Карта БН (округление) - 2ф
+                                          - COALESCE (tmpData.AmountService_diff, 0)
+                                            -- Корректировка ЗП
+                                          - COALESCE (tmpData.Amount_LossPersonal, 0)
+                                 ) :: TFloat AS SummToPay_cash
+
                                  -- К выплате (итог)
-                               , (COALESCE (tmpData.SummToPay, 0)       - COALESCE (tmpData.AmountService_diff, 0)) :: TFloat AS SummToPay
+                               , (COALESCE (tmpData.SummToPay, 0)
+                                            -- минус Карта БН (округление) - 2ф
+                                          - COALESCE (tmpData.AmountService_diff, 0)
+                                            -- Корректировка ЗП
+                                          - COALESCE (tmpData.Amount_LossPersonal, 0)
+                                 ) :: TFloat AS SummToPay
+
                                  --
                                , tmpData.SummCard         :: TFloat AS SummCard
                                , tmpData.SummCardSecond   :: TFloat AS SummCardSecond
@@ -1095,8 +1126,10 @@ BEGIN
 
                                  -- Карта БН (округление) - 2ф
                                , tmpData.AmountService_diff   :: TFloat AS AmountService_diff
+                                 -- Корректировка ЗП
+                               , tmpData.Amount_LossPersonal  :: TFloat AS Amount_LossPersonal
 
-                               , tmpData.Amount_current     :: TFloat AS Amount_current
+                               , tmpData.Amount_current       :: TFloat AS Amount_current
 
                                  -- Аванс (выплачено)
                                , (CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END
@@ -1119,6 +1152,8 @@ BEGIN
                                 - COALESCE (tmpAvance_Only.Amount, 0)
                                   -- Карта БН (округление) - 2ф
                                 - COALESCE (tmpData.AmountService_diff, 0)
+                                  -- Корректировка ЗП
+                                - COALESCE (tmpData.Amount_LossPersonal, 0)
                                  ) :: TFloat AS SummRemains_orig
 
                                  -- Факт Выплата по ведомости (округление) - 2ф.
@@ -1159,6 +1194,8 @@ BEGIN
                                                            - COALESCE (tmpAvance_Only.Amount, 0)
                                                              -- Карта БН (округление) - 2ф
                                                            - COALESCE (tmpData.AmountService_diff, 0)
+                                                             -- Корректировка ЗП
+                                                           - COALESCE (tmpData.Amount_LossPersonal, 0)
                                                            DESC
                                                    ) AS Ord
 
@@ -1274,6 +1311,9 @@ BEGIN
 
               -- Карта БН (округление) - 2ф
             , tmpData_res.AmountService_diff
+
+              -- Корректировка ЗП
+            , tmpData_res.Amount_LossPersonal
 
             , tmpData_res.Amount_current
 
