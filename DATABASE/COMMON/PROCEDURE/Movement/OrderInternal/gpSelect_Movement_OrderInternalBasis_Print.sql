@@ -37,7 +37,7 @@ BEGIN
 
 
      -- очень важная проверка
-     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete() AND vbUserId <> 5 -- !!!кроме Админа!!!
      THEN
          IF vbStatusId = zc_Enum_Status_Erased()
          THEN
@@ -118,6 +118,7 @@ BEGIN
                                      OR (MIContainer.MovementDescId = zc_Movement_ProductionUnion())
                                        )
                                    -- AND MIContainer.isActive = TRUE
+
                                  GROUP BY MIContainer.ObjectId_Analyzer
                                         , CASE -- !!!временно захардкодил!!!
                                                WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
