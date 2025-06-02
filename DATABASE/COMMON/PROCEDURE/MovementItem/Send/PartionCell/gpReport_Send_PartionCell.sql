@@ -662,7 +662,7 @@ BEGIN
                                                                                                          END
 
                                     LEFT JOIN tmpMI_Boolean_Many ON tmpMI_Boolean_Many.MovementItemId = MovementItemLinkObject.MovementItemId
-                                                                AND tmpMI_Boolean.DescId              = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
+                                                                AND tmpMI_Boolean_Many.DescId              = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
                                                                                                              THEN zc_MIBoolean_PartionCell_Many_1()
                                                                                                         WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_2()
                                                                                                              THEN zc_MIBoolean_PartionCell_Many_2()
@@ -2295,7 +2295,7 @@ BEGIN
                                                                                                          END
 
                                     LEFT JOIN tmpMI_Boolean_Many ON tmpMI_Boolean_Many.MovementItemId = MovementItemLinkObject.MovementItemId
-                                                                AND tmpMI_Boolean.DescId              = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
+                                                                AND tmpMI_Boolean_Many.DescId              = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
                                                                                                              THEN zc_MIBoolean_PartionCell_Many_1()
                                                                                                         WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_2()
                                                                                                              THEN zc_MIBoolean_PartionCell_Many_2()
