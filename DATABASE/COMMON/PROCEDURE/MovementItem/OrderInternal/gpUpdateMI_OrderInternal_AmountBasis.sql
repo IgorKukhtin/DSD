@@ -125,10 +125,18 @@ BEGIN
                                        ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                       AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                     --AND ObjectFloat_Value.ValueData <> 0 -- !!!
+                 -- Пересортица
+                 LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                           ON MovementBoolean_Peresort.MovementId = Movement.Id
+                                          AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                          AND MovementBoolean_Peresort.ValueData  = TRUE
+
             WHERE Movement.OperDate = inOperDate
               AND Movement.DescId   = zc_Movement_ProductionUnion()
               AND Movement.StatusId = zc_Enum_Status_Complete()
               AND (ObjectFloat_Value.ValueData <> 0 OR tmpGoods.isPF = TRUE)
+              -- без Пересортицы
+              -- AND MovementBoolean_Peresort.MovementId IS NULL
            ) AS tmp
           ;
 

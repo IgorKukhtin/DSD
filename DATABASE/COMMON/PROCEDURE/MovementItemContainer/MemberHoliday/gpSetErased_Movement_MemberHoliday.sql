@@ -32,6 +32,15 @@ BEGIN
     ;
               
 
+
+     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+        -- Брикова В.В.
+        AND vbUserId <> 6561986
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет Прав.';
+     END IF;
+
+
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);

@@ -430,10 +430,19 @@ BEGIN
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                            -- Пересортица
+                                            LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                                      ON MovementBoolean_Peresort.MovementId = Movement.Id
+                                                                     AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                                                     AND MovementBoolean_Peresort.ValueData  = TRUE
+
                                        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                                          AND Movement.DescId = zc_Movement_ProductionUnion()
                                          AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                                          AND vbIsBasis = TRUE
+                                         -- без Пересортицы
+                                         -- AND MovementBoolean_Peresort.MovementId IS NULL
+
                                        GROUP BY MovementItem.ObjectId
                                               , MILinkObject_GoodsKind.ObjectId
                                        HAVING SUM (COALESCE (MovementItem.Amount, 0)) <> 0

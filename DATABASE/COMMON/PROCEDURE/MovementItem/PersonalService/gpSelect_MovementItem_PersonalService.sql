@@ -61,6 +61,9 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummChild TFloat, SummChildRecalc TFloat, SummMinusExt TFloat, SummMinusExtRecalc TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , Amount_avance TFloat, Amount_avance_ps TFloat, Amount_avance_ret TFloat
+               -- Корректировка ЗП
+             , Amount_LossPersonal TFloat
+             
              , SummAvance TFloat, SummAvanceRecalc TFloat  
              
              , Summ_BankSecond_num TFloat
@@ -529,22 +532,25 @@ BEGIN
                                          INNER JOIN MovementItemContainer AS MIContainer
                                                                           ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
                                                                          AND MIContainer.DescId         = zc_MIContainer_Summ()
-                                                                         AND MIContainer.MovementDescId = zc_Movement_Cash()
-                                         LEFT JOIN MovementItem ON MovementItem.MovementId = MIContainer.MovementId
-                                                               AND MovementItem.DescId     = zc_MI_Master()
-                                                               AND MovementItem.isErased   = FALSE
+                                                                         AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_LossPersonal())
+                                         LEFT JOIN MovementItem ON MovementItem.MovementId     = MIContainer.MovementId
+                                                               AND MovementItem.DescId         = zc_MI_Master()
+                                                               AND MovementItem.Id             = MIContainer.MovementItemId
+                                                               AND MovementItem.isErased       = FALSE
                                  )
  
       , MILO_MoneyPlace AS (SELECT *
-                            FROM MovementItemLinkObject
-                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMIContainer_pay_dop.MovementItemId FROM tmpMIContainer_pay_dop)
-                              AND MovementItemLinkObject.DescId = zc_MILinkObject_MoneyPlace()
+                            FROM MovementItemLinkObject AS MLO
+                            WHERE MLO.MovementItemId IN (SELECT DISTINCT tmpMIContainer_pay_dop.MovementItemId FROM tmpMIContainer_pay_dop WHERE tmpMIContainer_pay_dop.MovementDescId = zc_Movement_Cash())
+                              AND MLO.DescId = zc_MILinkObject_MoneyPlace()
                            )
 
-      , tmpMIContainer_pay AS (SELECT SUM (CASE WHEN tmp.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND tmp.Amount > 0 THEN tmp.Amount ELSE 0 END) AS Amount_avance
-                                    , SUM (CASE WHEN tmp.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance())  THEN tmp.Amount ELSE 0 END) AS Amount_avance_all
-                                    , SUM (CASE WHEN tmp.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN tmp.Amount ELSE 0 END) AS Amount_service 
-                                    , SUM (CASE WHEN tmp.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND tmp.Amount < 0 THEN tmp.Amount ELSE 0 END) AS Amount_avance_ret
+      , tmpMIContainer_pay AS (SELECT SUM (CASE WHEN tmp.MovementDescId = zc_Movement_Cash() AND tmp.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND tmp.Amount > 0 THEN tmp.Amount ELSE 0 END) AS Amount_avance
+                                    , SUM (CASE WHEN tmp.MovementDescId = zc_Movement_Cash() AND tmp.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance())  THEN tmp.Amount ELSE 0 END) AS Amount_avance_all
+                                    , SUM (CASE WHEN tmp.MovementDescId = zc_Movement_Cash() AND tmp.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN tmp.Amount ELSE 0 END) AS Amount_service
+                                    , SUM (CASE WHEN tmp.MovementDescId = zc_Movement_Cash() AND tmp.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND tmp.Amount < 0 THEN tmp.Amount ELSE 0 END) AS Amount_avance_ret
+                                       -- Корректировка ЗП
+                                    , SUM (CASE WHEN tmp.MovementDescId = zc_Movement_LossPersonal() THEN tmp.Amount ELSE 0 END) AS Amount_LossPersonal
                                        -- аванс по ведомости
                                     , SUM (CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
                                                  AND tmp.MovementDescId = zc_Movement_Cash()
@@ -845,6 +851,8 @@ BEGIN
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+               -- Корректировка ЗП
+             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
               ) :: TFloat AS AmountToPay
 
               -- К выплате (из кассы)
@@ -858,6 +866,8 @@ BEGIN
                       END
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+               -- Корректировка ЗП
+             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
               ) :: TFloat AS AmountCash
 
               -- Остаток к выдаче (из кассы) грн
@@ -873,9 +883,11 @@ BEGIN
                       END
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+               -- Корректировка ЗП
+             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
               ) :: TFloat AS AmountCash_rem   
 
-            --к выплате из кассы для печати  
+              -- к выплате из кассы для печати  
             , ((COALESCE (MIFloat_SummToPay.ValueData, 0)
              - COALESCE (tmpMIContainer_all.SummNalog, 0)    + COALESCE (MIFloat_SummNalog.ValueData,0)
              + COALESCE (tmpMIContainer_all.SummNalogRet, 0) - COALESCE (MIFloat_SummNalogRet.ValueData,0)
@@ -886,9 +898,13 @@ BEGIN
                                                                + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0))
              - COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)
              - COALESCE (tmpMIContainer_pay.Amount_service, 0)
-             ) - CASE WHEN tmpAll.PersonalId <> Object_PersonalTo.Id THEN -1 * COALESCE (tmpNoNalog_print.SummNalog,0) ELSE COALESCE (tmpNoNalog_print.SummNalog,0) END  --налог за другого сотрудника
+               )
+               -- налог за другого сотрудника
+             - CASE WHEN tmpAll.PersonalId <> Object_PersonalTo.Id THEN -1 * COALESCE (tmpNoNalog_print.SummNalog,0) ELSE COALESCE (tmpNoNalog_print.SummNalog,0) END
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+               -- Корректировка ЗП
+             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
              ) :: TFloat AS AmountCash_print
               
               -- выдадано из кассы
@@ -951,6 +967,9 @@ BEGIN
             , ( 1 * tmpMIContainer_pay.Amount_avance)    :: TFloat AS Amount_avance
             , ( 1 * tmpMIContainer_pay.Amount_avance_ps) :: TFloat AS Amount_avance_ps 
             , COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)    ::TFloat    AS Amount_avance_ret
+
+              -- Корректировка ЗП
+            , COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)    ::TFloat  AS Amount_LossPersonal
 
             , COALESCE (MIFloat_SummAvance.ValueData, 0)                 ::TFloat AS SummAvance
             , COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0)           ::TFloat AS SummAvanceRecalc   
