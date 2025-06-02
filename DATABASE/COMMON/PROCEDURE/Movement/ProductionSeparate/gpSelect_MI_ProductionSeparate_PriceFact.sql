@@ -18,7 +18,8 @@ RETURNS TABLE (GoodsId Integer
              , GoodsGroupName     TVarChar
              , GoodsGroupNameFull TVarChar
              , GroupStatId   Integer
-             , GroupStatName TVarChar
+             , GroupStatName TVarChar 
+             , Separate_info TVarChar
              , isLoss Boolean 
              , Amount TFloat
              , PricePlan TFloat
@@ -442,7 +443,15 @@ BEGIN
                          , (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0)))::TFloat     AS SummaPlan        --kol_F 
                          , SUM (SUM (MovementItem.Amount * COALESCE (tmpPricePlan.ValuePrice, 0))) OVER () AS TotalSummaPlan   --Total_kol_F 
                          -- - НОРМА ВЫХОДОВ обвалка
-                         , COALESCE (tmpPriceNorm.ValuePrice, 0)  AS PriceNorm
+                         , COALESCE (tmpPriceNorm.ValuePrice, 0)  AS PriceNorm 
+                         
+                         , CASE WHEN Object_Goods.ObjectCode = 4218 -- ЖИВОЙ ВЕС СВИНИНА
+                                     THEN 'Убой' -- 1
+                                WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId = 2007 -- СО- ЗАКУП. СВИН. Н\\Ж* зп жил
+                                     THEN 'Разжиловка' -- 3
+                                ELSE 'Обвалка' -- '2-Обвалка'
+                           END :: TVarChar AS Separate_info
+             
                     FROM tmpMI AS MovementItem
                          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
              
@@ -472,6 +481,12 @@ BEGIN
                             , COALESCE (tmpPriceNorm.ValuePrice, 0)
                             , Object_GoodsGroup.ObjectCode
                             , Object_GoodsGroup.ValueData
+                            , CASE WHEN Object_Goods.ObjectCode = 4218 -- ЖИВОЙ ВЕС СВИНИНА
+                                        THEN 'Убой' -- 1
+                                   WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId = 2007 -- СО- ЗАКУП. СВИН. Н\\Ж* зп жил
+                                        THEN 'Разжиловка' -- 3
+                                   ELSE 'Обвалка' -- '2-Обвалка'
+                              END
                      )                
 
    , tmpDataCalc AS (SELECT tmpData.GoodsId
@@ -484,7 +499,7 @@ BEGIN
                           , tmpData.Amount
                           , tmpData.PricePlan
                           , tmpData.PriceNorm
-               
+                          , tmpData.Separate_info
                           --доп расчет для печати 
                           , tmpData.SummaPlan 
                           , tmpData.TotalSummaPlan
@@ -502,6 +517,7 @@ BEGIN
                                       / COALESCE (tmpData.Amount,0) 
                                       ELSE 0 
                             END AS  NUMERIC(16,8)) AS PriceFact
+                            
                           , CASE WHEN COALESCE (tmpCursor1.countmaster,0) <> 0 THEN 100 * (COALESCE (tmpData.Amount,0)/ tmpCursor1.countmaster) ELSE 0 END         :: TFloat AS Persent_v 
                           , CASE WHEN COALESCE (tmpCursor1.countmaster,0) <> 0 THEN 100 * (COALESCE (tmpData.TotalAmount_gr,0)/ tmpCursor1.countmaster) ELSE 0 END :: TFloat AS Persent_gr
 
@@ -540,7 +556,6 @@ BEGIN
                           , tmpCursor1.CountSeparate
                           , tmpCursor1.GoodsNameSeparate
                           , tmpCursor1.SummHeadCount1  -- ср вес головы из Separate
-   
                       FROM tmpData
                            LEFT JOIN tmpCursor1 ON 1 = 1 
                       )
@@ -554,7 +569,9 @@ BEGIN
           , tmpData.GoodsGroupNameFull 
           , Object_GoodsGroupStat.Id        AS GroupStatId
           , Object_GoodsGroupStat.ValueData AS GroupStatName
+          , tmpData.Separate_info ::TVarChar
           , tmpData.isLoss
+          
           , tmpData.Amount    ::TFloat
           , tmpData.PricePlan ::TFloat
           , tmpData.PriceNorm ::TFloat

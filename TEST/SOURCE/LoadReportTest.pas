@@ -139,9 +139,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+{
   LoadReportFromFile('PrintMovement_Inventory_Scale_Security', ReportPath + '\Товарный Учет\PrintMovement_Inventory_Scale_Security.fr3');
   exit;
-{
+
   LoadReportFromFile('PrintMovement_Inventory_Scale_group', ReportPath + '\Товарный Учет\PrintMovement_Inventory_Scale_group.fr3');
   //exit;
 
@@ -539,7 +540,7 @@ begin
   LoadReportFromFile('Акт обвалки (4134) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчет.fr3');
   LoadReportFromFile('Акт обвалки (4218) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (4218) отчет.fr3');
   LoadReportFromFile('Акт обвалки (4001) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (4001) отчет.fr3');
-  //exit;
+  exit;
   LoadReportFromFile('Акт обвалки (its)', ReportPath + '\Производство\Акт обвалки (its).fr3');
   LoadReportFromFile('Акт обвалки (4134)', ReportPath + '\Производство\Акт обвалки (4134).fr3');
 
