@@ -98,6 +98,9 @@ BEGIN
      --IF inId > 0
      --THEN
 
+     -- сохранили
+     PERFORM lpInsertUpdate_Movement (inMovementId, Movement.DescId, Movement.InvNumber, Movement.OperDate, Movement.ParentId) FROM Movement WHERE Movement.Id = inMovementId;
+
          -- определяется признак Создание/Корректировка
          vbIsInsert:= COALESCE (inId, 0) = 0;
 

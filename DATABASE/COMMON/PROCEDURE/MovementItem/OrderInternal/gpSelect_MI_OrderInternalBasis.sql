@@ -127,6 +127,8 @@ BEGIN
                                              WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- ׁךכאה ָּֽ׃ׁ־ֲÊְ
                                               -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
                                                   THEN 8338 -- למנמז.
+                                             --WHEN MIContainer.ObjectIntId_Analyzer = 5133350
+                                             --     THEN 5133350 -- נÿבקטך
                                              ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                         END AS GoodsKindId
                                       , SUM (MIContainer.Amount) AS Amount
@@ -145,6 +147,8 @@ BEGIN
                                                WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- ׁךכאה ָּֽ׃ׁ־ֲÊְ
                                                 -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
                                                     THEN 8338 -- למנמז.
+                                             --WHEN MIContainer.ObjectIntId_Analyzer = 5133350
+                                             --     THEN 5133350 -- נÿבקטך
                                                ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                           END
 
@@ -157,7 +161,8 @@ BEGIN
                                                   THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                              ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                         END AS GoodsKindId
-                                      , SUM (MIContainer.Amount) AS Amount
+                                        --
+                                      , SUM (CASE WHEN MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer THEN MIContainer.Amount ELSE 0 END) AS Amount
 
                                       , 0 AS AmountIn
                                       , 0 AS AmountOut

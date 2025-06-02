@@ -15,6 +15,8 @@ AS
 $BODY$
    DECLARE vbId_connect  Integer;
    DECLARE vbId_process  Integer;
+   DECLARE vbScript      TEXT;
+   DECLARE vb1           TEXT;
 BEGIN
 
      -- !!!для реплики отключили эту проц!!!
@@ -26,7 +28,7 @@ BEGIN
  
 
      -- Если подключился - почти ничего не делаем
-     IF inIsConnect = TRUE
+     IF inIsConnect = TRUE -- AND inUserId <> 10597060 -- Аудитор просмотр
      THEN
          -- Сохранили
          INSERT INTO LoginProtocol (UserId, OperDate, ProtocolData)
@@ -37,8 +39,36 @@ BEGIN
                || '<Field FieldName = "Действие" FieldValue = "Подключение"/>'
                || '</XML>'
                 ;
-     ELSE
+     ELSEIF inIsConnect = TRUE AND inUserId = 10597060 -- Аудитор просмотр
+     THEN
+
+         -- Результат
+         vbScript:= 'INSERT INTO LoginProtocol (UserId, OperDate, ProtocolData)'
+                      ||'SELECT ' || inUserId :: TVarChar || ', CURRENT_TIMESTAMP'
+                             ', ' || CHR (39) || '<XML>'
+                                              || '<Field FieldName = "DB" FieldValue = "srv-b"/>'
+                                              || '<Field FieldName = "IP" FieldValue = "'  || zfStrToXmlStr (inIP) || '"/>'
+                                              || '<Field FieldName = "Логин" FieldValue = "' || zfStrToXmlStr (inUserLogin) || '"/>'
+                                              || '<Field FieldName = "Действие" FieldValue = "Подключение"/>'
+                                              || '</XML>'
+                                  || CHR (39)
+                            ;
+
+         -- Результат
+         vb1:= (SELECT *
+                FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
+                                   -- Результат
+                                , vbScript));
+
+
+         -- !!!ВЫХОД!!!
          RETURN;
+
+     ELSE
+
+         -- !!!ВЫХОД!!!
+         RETURN;
+
          -- Найдем что есть в протоколе подключения
          SELECT MAX (CASE WHEN POSITION (LOWER ('Подключение') IN LOWER (ProtocolData)) > 0 THEN Id ELSE 0 END) AS Id_connect
               , MAX (CASE WHEN POSITION (LOWER ('Работает')    IN LOWER (ProtocolData)) > 0 THEN Id ELSE 0 END) AS Id_process

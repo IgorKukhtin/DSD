@@ -137,18 +137,42 @@ BEGIN
          DELETE FROM _tmpItem_PartionCell;
      ELSE
          -- таблица - элементы
-         CREATE TEMP TABLE _tmpItem_PartionCell (MovementId Integer, MovementItemId Integer, Amount TFloat, DescId_MILO Integer, PartionCellId Integer, isRePack Boolean) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpItem_PartionCell (MovementId Integer, MovementItemId Integer, Amount TFloat, DescId_MILO Integer, PartionCellId Integer, isRePack Boolean, isMany Boolean) ON COMMIT DROP;
      END IF;
 
 
-     INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, isRePack)
-       WITH -- для Партия дата
+     INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, isRePack, isMany)
+       WITH -- 1 раз: для Партия дата в строчной части - если установлена (тогда не смотрим в документ)
             tmpMI_PartionDate AS (SELECT MovementItem.MovementId                  AS MovementId
                                        , MovementItem.Id                          AS MovementItemId
                                        , MovementItem.Amount                      AS Amount
                                          -- текущее значение
                                        , COALESCE (MILO_PartionCell.DescId, 0)    AS DescId_MILO
                                        , COALESCE (MILO_PartionCell.ObjectId, 0)  AS PartionCellId
+                                         -- Несколько партий в Ячейке да/нет)
+                                       , CASE MILO_PartionCell.DescId WHEN zc_MILinkObject_PartionCell_1()  THEN zc_MIBoolean_PartionCell_Many_1()
+                                                                      WHEN zc_MILinkObject_PartionCell_2()  THEN zc_MIBoolean_PartionCell_Many_2()
+                                                                      WHEN zc_MILinkObject_PartionCell_3()  THEN zc_MIBoolean_PartionCell_Many_3()
+                                                                      WHEN zc_MILinkObject_PartionCell_4()  THEN zc_MIBoolean_PartionCell_Many_4()
+                                                                      WHEN zc_MILinkObject_PartionCell_5()  THEN zc_MIBoolean_PartionCell_Many_5()
+                                                                      WHEN zc_MILinkObject_PartionCell_6()  THEN zc_MIBoolean_PartionCell_Many_6()
+                                                                      WHEN zc_MILinkObject_PartionCell_7()  THEN zc_MIBoolean_PartionCell_Many_7()
+                                                                      WHEN zc_MILinkObject_PartionCell_8()  THEN zc_MIBoolean_PartionCell_Many_8()
+                                                                      WHEN zc_MILinkObject_PartionCell_9()  THEN zc_MIBoolean_PartionCell_Many_9()
+                                                                      WHEN zc_MILinkObject_PartionCell_10() THEN zc_MIBoolean_PartionCell_Many_10()
+                                                                      WHEN zc_MILinkObject_PartionCell_11() THEN zc_MIBoolean_PartionCell_Many_11()
+                                                                      WHEN zc_MILinkObject_PartionCell_12() THEN zc_MIBoolean_PartionCell_Many_12()
+                                                                      WHEN zc_MILinkObject_PartionCell_13() THEN zc_MIBoolean_PartionCell_Many_13()
+                                                                      WHEN zc_MILinkObject_PartionCell_14() THEN zc_MIBoolean_PartionCell_Many_14()
+                                                                      WHEN zc_MILinkObject_PartionCell_15() THEN zc_MIBoolean_PartionCell_Many_15()
+                                                                      WHEN zc_MILinkObject_PartionCell_16() THEN zc_MIBoolean_PartionCell_Many_16()
+                                                                      WHEN zc_MILinkObject_PartionCell_17() THEN zc_MIBoolean_PartionCell_Many_17()
+                                                                      WHEN zc_MILinkObject_PartionCell_18() THEN zc_MIBoolean_PartionCell_Many_18()
+                                                                      WHEN zc_MILinkObject_PartionCell_19() THEN zc_MIBoolean_PartionCell_Many_19()
+                                                                      WHEN zc_MILinkObject_PartionCell_20() THEN zc_MIBoolean_PartionCell_Many_20()
+                                                                      WHEN zc_MILinkObject_PartionCell_21() THEN zc_MIBoolean_PartionCell_Many_21()
+                                                                      WHEN zc_MILinkObject_PartionCell_22() THEN zc_MIBoolean_PartionCell_Many_22()
+                                         END AS DescId_isMany
 
                                   FROM MovementItemDate AS MIDate_PartionGoods
                                        INNER JOIN MovementItem ON MovementItem.Id       = MIDate_PartionGoods.MovementItemId
@@ -203,7 +227,7 @@ BEGIN
                                         )
                                  )
 
-            -- или документы за период, дата документа = дата партии
+            -- 2 раз: документы за период, дата документа = дата партии (тогда не смотрим в tmpMI_PartionDate)
           , tmpMovement AS (-- Перемещение
                             SELECT Movement.*
                             FROM Movement
@@ -244,14 +268,39 @@ BEGIN
                               AND MovementFloat_MovementDescNumber.MovementId IS NULL
                            )
 
-          , tmpMI AS (SELECT MovementItem.MovementId        AS MovementId
+          , tmpMI AS (-- Если Дата партия - в документе
+                      SELECT MovementItem.MovementId        AS MovementId
                            , MovementItem.Id                AS MovementItemId
                            , MovementItem.Amount            AS Amount
                              -- текущее значение
                            , COALESCE (MILO_PartionCell.DescId, 0)    AS DescId_MILO
                            , COALESCE (MILO_PartionCell.ObjectId, 0)  AS PartionCellId
-                             --
-                           , COALESCE (MovementBoolean_isRePack.ValueData, FALSE) AS isRePack
+                             -- Перепак
+                          , COALESCE (MovementBoolean_isRePack.ValueData, FALSE) AS isRePack
+                            -- Несколько партий в Ячейке да/нет)
+                          , CASE MILO_PartionCell.DescId WHEN zc_MILinkObject_PartionCell_1()  THEN zc_MIBoolean_PartionCell_Many_1()
+                                                         WHEN zc_MILinkObject_PartionCell_2()  THEN zc_MIBoolean_PartionCell_Many_2()
+                                                         WHEN zc_MILinkObject_PartionCell_3()  THEN zc_MIBoolean_PartionCell_Many_3()
+                                                         WHEN zc_MILinkObject_PartionCell_4()  THEN zc_MIBoolean_PartionCell_Many_4()
+                                                         WHEN zc_MILinkObject_PartionCell_5()  THEN zc_MIBoolean_PartionCell_Many_5()
+                                                         WHEN zc_MILinkObject_PartionCell_6()  THEN zc_MIBoolean_PartionCell_Many_6()
+                                                         WHEN zc_MILinkObject_PartionCell_7()  THEN zc_MIBoolean_PartionCell_Many_7()
+                                                         WHEN zc_MILinkObject_PartionCell_8()  THEN zc_MIBoolean_PartionCell_Many_8()
+                                                         WHEN zc_MILinkObject_PartionCell_9()  THEN zc_MIBoolean_PartionCell_Many_9()
+                                                         WHEN zc_MILinkObject_PartionCell_10() THEN zc_MIBoolean_PartionCell_Many_10()
+                                                         WHEN zc_MILinkObject_PartionCell_11() THEN zc_MIBoolean_PartionCell_Many_11()
+                                                         WHEN zc_MILinkObject_PartionCell_12() THEN zc_MIBoolean_PartionCell_Many_12()
+                                                         WHEN zc_MILinkObject_PartionCell_13() THEN zc_MIBoolean_PartionCell_Many_13()
+                                                         WHEN zc_MILinkObject_PartionCell_14() THEN zc_MIBoolean_PartionCell_Many_14()
+                                                         WHEN zc_MILinkObject_PartionCell_15() THEN zc_MIBoolean_PartionCell_Many_15()
+                                                         WHEN zc_MILinkObject_PartionCell_16() THEN zc_MIBoolean_PartionCell_Many_16()
+                                                         WHEN zc_MILinkObject_PartionCell_17() THEN zc_MIBoolean_PartionCell_Many_17()
+                                                         WHEN zc_MILinkObject_PartionCell_18() THEN zc_MIBoolean_PartionCell_Many_18()
+                                                         WHEN zc_MILinkObject_PartionCell_19() THEN zc_MIBoolean_PartionCell_Many_19()
+                                                         WHEN zc_MILinkObject_PartionCell_20() THEN zc_MIBoolean_PartionCell_Many_20()
+                                                         WHEN zc_MILinkObject_PartionCell_21() THEN zc_MIBoolean_PartionCell_Many_21()
+                                                         WHEN zc_MILinkObject_PartionCell_22() THEN zc_MIBoolean_PartionCell_Many_22()
+                            END AS DescId_isMany
 
                       FROM MovementItem
                            LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
@@ -309,14 +358,17 @@ BEGIN
                         AND tmpMI_PartionDate.MovementItemId IS NULL
 
                      UNION ALL
+                      -- Если Дата партия - в строчной части
                       SELECT tmpMI_PartionDate.MovementId
                            , tmpMI_PartionDate.MovementItemId
                            , tmpMI_PartionDate.Amount
                              -- текущее значение
                            , tmpMI_PartionDate.DescId_MILO
                            , tmpMI_PartionDate.PartionCellId
-                             --
+                             -- Перепак
                            , COALESCE (MovementBoolean_isRePack.ValueData, FALSE) AS isRePack
+                             -- Несколько партий в Ячейке да/нет)
+                           , tmpMI_PartionDate.DescId_isMany
 
                       FROM tmpMI_PartionDate
                            LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
@@ -324,14 +376,19 @@ BEGIN
                                                     AND MovementBoolean_isRePack.DescId     = zc_MovementBoolean_isRePack()
                      )
        -- Результат
-       SELECT MovementId, MovementItemId, Amount
+       SELECT tmpMI.MovementId, tmpMI.MovementItemId, tmpMI.Amount
               -- текущее значение
-            , DescId_MILO
-            , PartionCellId
-              -- 
+            , tmpMI.DescId_MILO
+            , tmpMI.PartionCellId
+              -- Перепак
             , isRePack
+              -- Несколько партий в Ячейке да/нет)
+            , COALESCE (MIBoolean_Many.ValueData, FALSE) AS isMany
 
        FROM tmpMI
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Many
+                                          ON MIBoolean_Many.MovementItemId = tmpMI.MovementItemId
+                                         AND MIBoolean_Many.DescId         = tmpMI.DescId_isMany
       ;
 
 
@@ -812,6 +869,31 @@ BEGIN
      -- 2.1. если выполняется поставить ячейку В ОТБОР - zc_PartionCell_RK
      IF inPartionCellId_1_new = zc_PartionCell_RK()
      THEN
+           -- 0.Проверка
+           IF     -- в этой ячейке-1 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_1()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              AND inUserId = 5
+              -- есть ячейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_1()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+              OR inUserId = 5
+           THEN
+               RAISE EXCEPTION 'Ошибка.Для ячейки №-1 <%> %заполнено несколько партий с разной датой.%Необходимо сначала перенести в отбор ячейку <%>.'
+                                -- в этой ячейке-1 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли ячейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_1()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальная ячейка
              IF COALESCE (inPartionCellId_1, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_1:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);

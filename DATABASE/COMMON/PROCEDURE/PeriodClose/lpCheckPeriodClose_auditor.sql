@@ -69,6 +69,20 @@ BEGIN
                             ;
          END IF;
 
+         IF COALESCE (inStartDate, zc_DateStart()) >= '01.04.2025'
+         THEN
+             RAISE EXCEPTION 'Ошибка.Данные недоступны за <%>.'
+                           , zfConvert_DateToString (COALESCE (inStartDate, CURRENT_DATE))
+                            ;
+         END IF;
+
+         IF COALESCE (inEndDate, zc_DateStart()) >= '01.04.2025'
+         THEN
+             RAISE EXCEPTION 'Ошибка.Данные недоступны за <%>.'
+                           , zfConvert_DateToString (COALESCE (inEndDate, CURRENT_DATE))
+                            ;
+         END IF;
+
      END IF;
 
  
