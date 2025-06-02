@@ -33,7 +33,13 @@ $BODY$
    DECLARE vbPersonalServiceListId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_AccessKey_MemberHoliday());
+     IF zfConvert_StringToNumber (inSession) < 0
+     THEN
+         vbUserId:= lpGetUserBySession (inSession);
+     ELSE
+         vbUserId:= lpCheckRight (inSession, zc_Enum_Process_AccessKey_MemberHoliday());
+     END IF;
+
 
 
      -- Проверка

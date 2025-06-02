@@ -273,10 +273,20 @@ BEGIN
                                             LEFT JOIN tmpContainer_Count ON tmpContainer_Count.GoodsId     = MovementItem.ObjectId
                                                                         AND tmpContainer_Count.GoodsKindId = MILinkObject_GoodsKind.ObjectId
                                                                         AND tmpContainer_Count.ContainerId = 0
+
+                                            -- Пересортица
+                                            LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                                      ON MovementBoolean_Peresort.MovementId = Movement.Id
+                                                                     AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                                                     AND MovementBoolean_Peresort.ValueData  = TRUE
+
                                        WHERE (MLO_From.ObjectId = tmpInventory.UnitId OR MLO_To.ObjectId = tmpInventory.UnitId)
                                          AND (MovementItem.DescId = zc_MI_Master()
                                            OR (MovementItem.DescId = zc_MI_Child() AND MI_Master.Id > 0)
                                              )
+                                         -- без Пересортицы
+                                         -- AND MovementBoolean_Peresort.MovementId IS NULL
+
                                        GROUP BY MovementItem.ObjectId
                                               , CASE WHEN MLO_From.ObjectId = 8445 -- Склад МИНУСОВКА
                                                           THEN 8338 -- морож.
@@ -531,7 +541,7 @@ end if;*/
       ;
 
 
-if vbUserId = 5 AND 1=1
+if vbUserId = 5 AND 1=0
 then
     RAISE EXCEPTION 'Ошибка. end <%>  %   %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 7493 AND tmpAll.MIDescId = zc_MI_Child() AND tmpAll.ContainerId > 0)
     , (select count(*) from tmpAll where tmpAll.GoodsId = 7493 AND tmpAll.MIDescId = zc_MI_Child() AND tmpAll.ContainerId > 0 and tmpAll.Amount_start <> 0)

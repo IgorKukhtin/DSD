@@ -319,9 +319,10 @@ end if;
                                COALESCE (inAmount_Param, 0) + COALESCE (inAmount_ParamOrder, 0) + COALESCE (inAmount_ParamSecond, 0)
                              - (-- Остатки
                                 COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_AmountRemains()), 0)
-                                 -- группируется Перемещение
+                                 -- группируется Перемещение + ProductionUnion
                               + COALESCE ((SELECT SUM (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS Amount
-                                           FROM (SELECT CASE -- !!!временно захардкодил!!!
+                                           FROM (-- Send
+                                                 SELECT CASE -- !!!временно захардкодил!!!
                                                              WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
                                                               -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
                                                                   THEN 8338 -- морож.
@@ -341,26 +342,49 @@ end if;
                                                                     THEN 8338 -- морож.
                                                                ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                                           END
+
                                                 UNION ALL
+                                                 -- ProductionUnion
                                                  SELECT CASE -- !!!временно захардкодил!!!
-                                                             WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
-                                                              -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
-                                                                  THEN 8338 -- морож.
+                                                             WHEN MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_Basis()
+                                                                  THEN 0
+                                                             WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                                  THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                                              ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                                         END AS GoodsKindId
-                                                      , SUM (MIContainer.Amount) AS Amount
+
+                                                      , SUM (-- Внешнее Произ-во
+                                                             CASE WHEN MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer
+                                                                       THEN MIContainer.Amount
+                                                                  ELSE 0
+                                                             END
+                                                             -- ПЛЮС внутренний + Внешний  пересорт
+                                                           + CASE WHEN MovementBoolean_Peresort.ValueData = TRUE
+                                                                       THEN MIContainer.Amount
+                                                                  ELSE 0
+                                                             END
+                                                            ) AS Amount
+
                                                  FROM MovementItemContainer AS MIContainer
+                                                      -- Пересортица
+                                                      LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                                                ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                                               AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                                                               AND MovementBoolean_Peresort.ValueData  = TRUE
+
                                                  WHERE MIContainer.OperDate               = vbOperDate
                                                    AND MIContainer.DescId                 = zc_MIContainer_Count()
                                                    AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
                                                    AND MIContainer.ObjectId_Analyzer      = inGoodsId
                                                    AND MIContainer.WhereObjectId_Analyzer = vbFromId
                                                 -- AND MIContainer.isActive = TRUE
-                                                   AND MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer
+                                                --***AND MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer
+
                                                  GROUP BY CASE -- !!!временно захардкодил!!!
-                                                               WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
-                                                                -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
-                                                                    THEN 8338 -- морож.
+                                                               WHEN MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_Basis()
+                                                                    THEN 0
+                                                               WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                                    THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                                                ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                                           END
                                                 ) AS tmpMI

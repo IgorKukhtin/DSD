@@ -123,6 +123,7 @@ type
     SummRemains_diff_F2: TcxGridDBColumn;
     Summ_diff_F2: TcxGridDBColumn;
     SummRemains_diff_F2_tmp: TcxGridDBColumn;
+    Amount_LossPersonal: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -43,7 +43,7 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
 
-     -- 
+     --
      CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer
                                     , ReceiptId Integer
                                     , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartner TFloat, AmountPartnerPrior TFloat, AmountPartnerSecond TFloat, AmountPartnerNext TFloat
@@ -147,20 +147,38 @@ BEGIN
                                                     THEN 8338 -- морож.
                                                ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                           END
-                                UNION ALL 
+
+                                UNION ALL
                                  SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
                                       , CASE -- !!!временно захардкодил!!!
-                                             WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
-                                              -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
-                                                  THEN 8338 -- морож.
+                                             WHEN MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_Basis()
+                                                  THEN 0
+                                             WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                  THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                              ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                         END AS GoodsKindId
                                       , SUM (MIContainer.Amount) AS Amount
-                                     
+
                                       , 0 AS AmountIn
                                       , 0 AS AmountOut
-                                      , SUM (CASE WHEN MovementBoolean_Peresort.ValueData = TRUE THEN MIContainer.Amount ELSE 0 END) AS AmountP
-                                      , SUM (CASE WHEN MovementBoolean_Peresort.ValueData = FALSE
+                                      , SUM (CASE -- для теста
+                                                  WHEN vbUserId = 5 AND 1=0
+                                                   AND MovementBoolean_Peresort.ValueData = TRUE
+                                                   AND MIContainer.ObjectExtId_Analyzer = MIContainer.WhereObjectId_Analyzer
+                                                       THEN MIContainer.Amount
+                                                  -- внутренний пересорт
+                                                  WHEN MovementBoolean_Peresort.ValueData = TRUE
+                                                   AND MIContainer.ObjectExtId_Analyzer = MIContainer.WhereObjectId_Analyzer
+                                                       THEN MIContainer.Amount
+                                                  -- Внешний пересорт
+                                                  WHEN MovementBoolean_Peresort.ValueData = TRUE
+                                                   AND MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer
+                                                       THEN MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS AmountP
+                                      , SUM (CASE WHEN COALESCE (MovementBoolean_Peresort.ValueData, FALSE) = FALSE
+                                                  -- Внешнее произ-во
+                                                   AND MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer
                                                    AND COALESCE (MIContainer.Amount,0) > 0
                                                    THEN MIContainer.Amount
                                                   ELSE 0
@@ -174,12 +192,13 @@ BEGIN
                                    AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                                    AND MIContainer.WhereObjectId_Analyzer = vbFromId
                                  --AND MIContainer.isActive = TRUE
-                                   AND MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer
+                                 --***AND MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer
                                  GROUP BY MIContainer.ObjectId_Analyzer
                                         , CASE -- !!!временно захардкодил!!!
-                                               WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
-                                                -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
-                                                    THEN 8338 -- морож.
+                                               WHEN MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_Basis()
+                                                    THEN 0
+                                               WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                    THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                                ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                           END
                                 ) AS tmpMI
@@ -237,13 +256,17 @@ BEGIN
 
            , tmpMI.Amount           :: TFloat AS Amount           -- Заказ на склад
            , tmpMI.AmountSecond     :: TFloat AS AmountSecond     -- Дозаказ на склад
-           , tmpMI_Send.Amount      :: TFloat AS AmountSend_old       -- Приход за "сегодня"  
+           , tmpMI_Send.Amount      :: TFloat AS AmountSend_old       -- Приход за "сегодня"
            , tmpMI_Send.AmountIn    :: TFloat AS AmountSend
            , tmpMI_Send.AmountOut   :: TFloat AS AmountSendOut
            , tmpMI_Send.AmountP     :: TFloat AS AmountP
            , tmpMI_Send.AmountPU_in :: TFloat AS AmountPU_in
 
-           , CASE WHEN tmpMI.AmountRemains + COALESCE (tmpMI_Send.Amount, 0) < tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond THEN tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond - tmpMI.AmountRemains - COALESCE (tmpMI_Send.Amount, 0) ELSE 0 END :: TFloat AS Amount_calc  -- Расчетный заказ
+             -- Расчетный заказ
+           , CASE WHEN tmpMI.AmountRemains + COALESCE (tmpMI_Send.Amount, 0) < tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond
+                       THEN tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond - tmpMI.AmountRemains - COALESCE (tmpMI_Send.Amount, 0)
+                  ELSE 0
+             END :: TFloat AS Amount_calc
 
            , tmpMI.AmountRemains       :: TFloat  AS AmountRemains       -- Ост. начальн.
            , tmpMI.AmountPartner       :: TFloat  AS AmountPartner       -- Программа БЕЗ сырья для эмул. - но сами Эмульсии (только которые нужны для ГП) здесь
@@ -270,8 +293,8 @@ BEGIN
            , zc_Color_GreenL() :: Integer AS ColorB_AmountPartner    -- $00B6EAAA
            , zc_Color_Yelow()  :: Integer AS ColorB_AmountPrognoz    -- $008FF8F2 9435378
 
-           , tmpMI.isErased   
-           
+           , tmpMI.isErased
+
            , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.Id) AS IdBarCode
 
            , SUM (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData) AS PrintGroup_Scan
@@ -280,8 +303,8 @@ BEGIN
                                  ELSE 0
                             END
                             ,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData)                                               AS PrintGroup_Scan_Pack
-           , SUM (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) OVER (PARTITION BY Object_Unit.Id)                              AS PrintPage_Scan              
-                    
+           , SUM (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) OVER (PARTITION BY Object_Unit.Id)                              AS PrintPage_Scan
+
        FROM _tmpMI_master AS tmpMI
             LEFT JOIN tmpMI_Send ON tmpMI_Send.GoodsId     = tmpMI.GoodsId
                                 AND COALESCE (tmpMI_Send.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
@@ -342,7 +365,7 @@ BEGIN
            , Object_Goods.ObjectCode              AS GoodsCode
            , Object_Goods.ValueData               AS GoodsName
            , ObjectString_Goods_Scale.ValueData   AS GoodsName_old
-           , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN Object_Goods.ValueData ELSE '' END :: TVarChar AS GoodsName_new 
+           , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN Object_Goods.ValueData ELSE '' END :: TVarChar AS GoodsName_new
            , Object_GoodsGroup.ValueData          AS GoodsGroupName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
@@ -387,7 +410,7 @@ BEGIN
            , zc_Color_GreenL() :: Integer AS ColorB_AmountPartner    -- $00B6EAAA
            , zc_Color_Yelow()  :: Integer AS ColorB_AmountPrognoz    -- $008FF8F2 9435378
 
-           , FALSE :: Boolean AS isErased 
+           , FALSE :: Boolean AS isErased
 
            , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.Id) AS IdBarCode
 
@@ -429,7 +452,7 @@ BEGIN
                                 AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent
                                  ON ObjectLink_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                AND ObjectLink_GoodsGroup_parent.DescId   = zc_ObjectLink_GoodsGroup_Parent() 
+                                AND ObjectLink_GoodsGroup_parent.DescId   = zc_ObjectLink_GoodsGroup_Parent()
            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
       ;

@@ -113,8 +113,9 @@ BEGIN
                               , tmpContainer.PersonalServiceListId
                               , tmpContainer.BranchId
                               , tmpContainer.ContainerId
+                              , CASE WHEN MIContainer.MovementDescId = zc_Movement_LossPersonal() THEN MIContainer.MovementItemId ELSE 0 END AS MovementItemId
                               , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash()            THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount
-                              , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalService(), zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Service
+                              , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalService(), zc_Movement_Income(), zc_Movement_LossPersonal()) THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Service
                               , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_BankAccount()     THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount_Bank
                          FROM tmpContainer
                               INNER JOIN MovementItemContainer AS MIContainer
@@ -142,6 +143,7 @@ BEGIN
                                 , tmpContainer.PersonalServiceListId
                                 , tmpContainer.BranchId
                                 , tmpContainer.ContainerId
+                                , CASE WHEN MIContainer.MovementDescId = zc_Movement_LossPersonal() THEN MIContainer.MovementItemId ELSE 0 END
                         ) AS tmpMovement
                   )
    
@@ -232,6 +234,7 @@ BEGIN
                                 AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
 
          LEFT JOIN tmpMI_begin AS MI_Master ON MI_Master.MovementId = tmpMovement.MovementId_begin
+                                           AND (MI_Master.Id         = tmpMovement.MovementItemId OR tmpMovement.MovementItemId = 0)
 
          LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                           ON MILinkObject_MoneyPlace.MovementItemId = MI_Master.Id

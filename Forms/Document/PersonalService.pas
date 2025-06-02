@@ -409,6 +409,7 @@ type
     bbUpdateCardSecond_num_not4000: TdxBarButton;
     AmountService_diff_start: TcxGridDBColumn;
     AmountService_diff_end: TcxGridDBColumn;
+    Amount_LossPersonal: TcxGridDBColumn;
   private
     { Private declarations }
   public
