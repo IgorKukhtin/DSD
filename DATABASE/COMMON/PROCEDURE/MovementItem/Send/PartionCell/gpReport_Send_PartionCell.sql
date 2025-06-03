@@ -1674,6 +1674,7 @@ BEGIN
         , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many21
         , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many22
 
+/*
         , CASE WHEN tmpResult.isPartionCell_Many_1 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_1
         , CASE WHEN tmpResult.isPartionCell_Many_2 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_2
         , CASE WHEN tmpResult.isPartionCell_Many_3 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_3
@@ -1696,9 +1697,9 @@ BEGIN
         , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_20
         , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_21
         , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_22
+*/
 
-
-/*        , tmpResult.ColorFon_1
+        , tmpResult.ColorFon_1
         , tmpResult.ColorFon_2
         , tmpResult.ColorFon_3
         , tmpResult.ColorFon_4
@@ -1720,8 +1721,8 @@ BEGIN
         , tmpResult.ColorFon_20
         , tmpResult.ColorFon_21
         , tmpResult.ColorFon_22
-*/
-        , tmpResult.Color_1
+
+/*        , tmpResult.Color_1
         , tmpResult.Color_2
         , tmpResult.Color_3
         , tmpResult.Color_4
@@ -1743,6 +1744,29 @@ BEGIN
         , tmpResult.Color_20
         , tmpResult.Color_21
         , tmpResult.Color_22
+*/
+        , CASE WHEN tmpResult.isPartionCell_Many_1 = FALSE THEN tmpResult.Color_1 ELSE zc_Color_Red()  END :: Integer  AS Color_1
+        , CASE WHEN tmpResult.isPartionCell_Many_2 = FALSE THEN tmpResult.Color_2 ELSE zc_Color_Red()  END :: Integer  AS Color_2
+        , CASE WHEN tmpResult.isPartionCell_Many_3 = FALSE THEN tmpResult.Color_3 ELSE zc_Color_Red()  END :: Integer  AS Color_3
+        , CASE WHEN tmpResult.isPartionCell_Many_4 = FALSE THEN tmpResult.Color_4 ELSE zc_Color_Red()  END :: Integer  AS Color_4
+        , CASE WHEN tmpResult.isPartionCell_Many_5 = FALSE THEN tmpResult.Color_5 ELSE zc_Color_Red()  END :: Integer  AS Color_5
+        , CASE WHEN tmpResult.isPartionCell_Many_6 = FALSE THEN tmpResult.Color_6 ELSE zc_Color_Red()  END :: Integer  AS Color_6
+        , CASE WHEN tmpResult.isPartionCell_Many_7 = FALSE THEN tmpResult.Color_7 ELSE zc_Color_Red()  END :: Integer  AS Color_7
+        , CASE WHEN tmpResult.isPartionCell_Many_8 = FALSE THEN tmpResult.Color_8 ELSE zc_Color_Red()  END :: Integer  AS Color_8
+        , CASE WHEN tmpResult.isPartionCell_Many_9 = FALSE THEN tmpResult.Color_9 ELSE zc_Color_Red()  END :: Integer  AS Color_9
+        , CASE WHEN tmpResult.isPartionCell_Many_10 = FALSE THEN tmpResult.Color_10 ELSE zc_Color_Red() END :: Integer  AS Color_10
+        , CASE WHEN tmpResult.isPartionCell_Many_11 = FALSE THEN tmpResult.Color_11 ELSE zc_Color_Red()  END :: Integer AS Color_11
+        , CASE WHEN tmpResult.isPartionCell_Many_12 = FALSE THEN tmpResult.Color_12 ELSE zc_Color_Red()  END :: Integer AS Color_12
+        , CASE WHEN tmpResult.isPartionCell_Many_13 = FALSE THEN tmpResult.Color_13 ELSE zc_Color_Red()  END :: Integer AS Color_13
+        , CASE WHEN tmpResult.isPartionCell_Many_14 = FALSE THEN tmpResult.Color_14 ELSE zc_Color_Red()  END :: Integer AS Color_14
+        , CASE WHEN tmpResult.isPartionCell_Many_15 = FALSE THEN tmpResult.Color_15 ELSE zc_Color_Red()  END :: Integer AS Color_15
+        , CASE WHEN tmpResult.isPartionCell_Many_16 = FALSE THEN tmpResult.Color_16 ELSE zc_Color_Red()  END :: Integer AS Color_16
+        , CASE WHEN tmpResult.isPartionCell_Many_17 = FALSE THEN tmpResult.Color_17 ELSE zc_Color_Red()  END :: Integer AS Color_17
+        , CASE WHEN tmpResult.isPartionCell_Many_18 = FALSE THEN tmpResult.Color_18 ELSE zc_Color_Red()  END :: Integer AS Color_18
+        , CASE WHEN tmpResult.isPartionCell_Many_19 = FALSE THEN tmpResult.Color_19 ELSE zc_Color_Red()  END :: Integer AS Color_19
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.Color_10 ELSE zc_Color_Red()  END :: Integer AS Color_20
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.Color_21 ELSE zc_Color_Red()  END :: Integer AS Color_21
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.Color_22 ELSE zc_Color_Red()  END :: Integer AS Color_22
 
         , tmpResult.isClose_value_min
         , tmpResult.isPartionCell_max AS isPartionCell
@@ -3250,7 +3274,7 @@ BEGIN
         , tmpResult.ColorFon_21
         , tmpResult.ColorFon_22
 
-        , tmpResult.Color_1
+/*        , tmpResult.Color_1
         , tmpResult.Color_2
         , tmpResult.Color_3
         , tmpResult.Color_4
@@ -3272,7 +3296,30 @@ BEGIN
         , tmpResult.Color_20
         , tmpResult.Color_21
         , tmpResult.Color_22
-
+*/
+        , CASE WHEN tmpResult.isPartionCell_Many_1 = FALSE THEN tmpResult.Color_1 ELSE zc_Color_Red()  END :: Integer  AS Color_1
+        , CASE WHEN tmpResult.isPartionCell_Many_2 = FALSE THEN tmpResult.Color_2 ELSE zc_Color_Red()  END :: Integer  AS Color_2
+        , CASE WHEN tmpResult.isPartionCell_Many_3 = FALSE THEN tmpResult.Color_3 ELSE zc_Color_Red()  END :: Integer  AS Color_3
+        , CASE WHEN tmpResult.isPartionCell_Many_4 = FALSE THEN tmpResult.Color_4 ELSE zc_Color_Red()  END :: Integer  AS Color_4
+        , CASE WHEN tmpResult.isPartionCell_Many_5 = FALSE THEN tmpResult.Color_5 ELSE zc_Color_Red()  END :: Integer  AS Color_5
+        , CASE WHEN tmpResult.isPartionCell_Many_6 = FALSE THEN tmpResult.Color_6 ELSE zc_Color_Red()  END :: Integer  AS Color_6
+        , CASE WHEN tmpResult.isPartionCell_Many_7 = FALSE THEN tmpResult.Color_7 ELSE zc_Color_Red()  END :: Integer  AS Color_7
+        , CASE WHEN tmpResult.isPartionCell_Many_8 = FALSE THEN tmpResult.Color_8 ELSE zc_Color_Red()  END :: Integer  AS Color_8
+        , CASE WHEN tmpResult.isPartionCell_Many_9 = FALSE THEN tmpResult.Color_9 ELSE zc_Color_Red()  END :: Integer  AS Color_9
+        , CASE WHEN tmpResult.isPartionCell_Many_10 = FALSE THEN tmpResult.Color_10 ELSE zc_Color_Red() END :: Integer  AS Color_10
+        , CASE WHEN tmpResult.isPartionCell_Many_11 = FALSE THEN tmpResult.Color_11 ELSE zc_Color_Red()  END :: Integer AS Color_11
+        , CASE WHEN tmpResult.isPartionCell_Many_12 = FALSE THEN tmpResult.Color_12 ELSE zc_Color_Red()  END :: Integer AS Color_12
+        , CASE WHEN tmpResult.isPartionCell_Many_13 = FALSE THEN tmpResult.Color_13 ELSE zc_Color_Red()  END :: Integer AS Color_13
+        , CASE WHEN tmpResult.isPartionCell_Many_14 = FALSE THEN tmpResult.Color_14 ELSE zc_Color_Red()  END :: Integer AS Color_14
+        , CASE WHEN tmpResult.isPartionCell_Many_15 = FALSE THEN tmpResult.Color_15 ELSE zc_Color_Red()  END :: Integer AS Color_15
+        , CASE WHEN tmpResult.isPartionCell_Many_16 = FALSE THEN tmpResult.Color_16 ELSE zc_Color_Red()  END :: Integer AS Color_16
+        , CASE WHEN tmpResult.isPartionCell_Many_17 = FALSE THEN tmpResult.Color_17 ELSE zc_Color_Red()  END :: Integer AS Color_17
+        , CASE WHEN tmpResult.isPartionCell_Many_18 = FALSE THEN tmpResult.Color_18 ELSE zc_Color_Red()  END :: Integer AS Color_18
+        , CASE WHEN tmpResult.isPartionCell_Many_19 = FALSE THEN tmpResult.Color_19 ELSE zc_Color_Red()  END :: Integer AS Color_19
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.Color_10 ELSE zc_Color_Red()  END :: Integer AS Color_20
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.Color_21 ELSE zc_Color_Red()  END :: Integer AS Color_21
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.Color_22 ELSE zc_Color_Red()  END :: Integer AS Color_22
+        
         , tmpResult.isClose_value_min
         , tmpResult.isPartionCell_max :: Boolean AS isPartionCell
         , tmpResult.isPartionCell_min :: Boolean AS isPartionCell_min
