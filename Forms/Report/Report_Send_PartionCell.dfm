@@ -358,6 +358,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Options.Editing = False
             Width = 55
           end
+          object isMany_max: TcxGridDBColumn
+            Caption = #1045#1089#1090#1100' '#1085#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'isMany_max'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1045#1089#1090#1100' '#1085#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081
+            Options.Editing = False
+            Width = 55
+          end
           object isPartionCell: TcxGridDBColumn
             Caption = #1055#1086' '#1071#1095#1077#1081#1082#1072#1084
             DataBinding.FieldName = 'isPartionCell'
@@ -3028,6 +3037,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     object actOpenForm_isManyEdit: TdsdOpenForm
       Category = 'isMany'
       MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081'> '#1087#1086' '#1074#1089#1077#1084' '#1103#1095#1077#1081#1082#1072#1084
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1087#1072#1088#1090#1080#1081'> '#1087#1086' '#1074#1089#1077#1084' '#1103#1095#1077#1081#1082#1072#1084
       ImageIndex = 43
@@ -3102,7 +3113,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
     end
     object actContinueAction_isMany: TdsdContinueAction
       Category = 'isMany'

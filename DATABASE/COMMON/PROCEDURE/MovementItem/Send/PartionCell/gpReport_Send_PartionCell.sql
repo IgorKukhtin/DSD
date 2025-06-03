@@ -124,6 +124,9 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , isPartionCell_Many_21 Boolean
              , isPartionCell_Many_22 Boolean
 
+             -- есть хоть одна €чейка с несколькими парти€ми
+             , isMany_max Boolean
+
              --фон дл€ €чейки если несколько партий
              , ColorFon_Many1     Integer
              , ColorFon_Many2     Integer
@@ -830,6 +833,8 @@ BEGIN
                                          , tmpData_list.DescId_milo
                                          , tmpData_list.PartionCellId    
                                          , tmpData_list.isMany
+                                         -- есть хоть одна €чейка с несколькими парти€ми
+                                         , MAX (tmpData_list.isMany)   AS isMany_max 
                                            -- информативно
                                          , (tmpData_list.PartionCellId_real) AS PartionCellId_real
                                            -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты
@@ -959,6 +964,7 @@ BEGIN
                                        , tmpData_PartionCell_All_All.isClose_value_min 
                                        
                                        , tmpData_PartionCell_All_All.isMany
+                                       , tmpData_PartionCell_All_All.isMany_max
 
                                          -- дл€ сортировки - горизонтально
                                        , ROW_NUMBER() OVER (PARTITION BY tmpData_PartionCell_All_All.MovementId        -- ***
@@ -1155,7 +1161,9 @@ BEGIN
                                    , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 22 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_22
 
                                      -- есть хоть одна закрыта€ €чейка
-                                   , MIN (tmpData_PartionCell_All.isClose_value_min) AS isClose_value_min
+                                   , MIN (tmpData_PartionCell_All.isClose_value_min) AS isClose_value_min  
+                                   -- есть хоть одна €чейка с несколькими парти€ми
+                                   , MAX (tmpData_PartionCell_All.isMany_max)        AS isMany_max
 
                                    , STRING_AGG (DISTINCT CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) > 22  THEN tmpData_PartionCell_All.PartionCellName_calc ELSE '' END, ';') AS PartionCellName_ets
 
@@ -1342,11 +1350,15 @@ BEGIN
                          , CASE WHEN COALESCE (tmpData_PartionCell.Color_21, 0) = 0 THEN zc_Color_Black() ELSE tmpData_PartionCell.Color_21 END :: Integer   AS Color_21
                          , CASE WHEN COALESCE (tmpData_PartionCell.Color_22, 0) = 0 THEN zc_Color_Black() ELSE tmpData_PartionCell.Color_22 END :: Integer   AS Color_22
 
+                         -- есть хоть одна €чейка с несколькими парти€ми
+                         , tmpData_PartionCell.isMany_max  AS isMany_max
                            -- есть заполненна€ €чейка + хоть одна закрыта€ €чейка
                          , CASE WHEN tmpData_MI.isPartionCell_max > 0 AND tmpData_PartionCell.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
                            -- —формированы данные по €чейкам (да/нет)
                          , CASE WHEN tmpData_MI.isPartionCell_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isPartionCell_min
-                         , CASE WHEN tmpData_MI.isPartionCell_max > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPartionCell_max
+                         , CASE WHEN tmpData_MI.isPartionCell_max > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPartionCell_max  
+                         
+                         
 
                            --  ол-во - пропорционально
                          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
@@ -1634,6 +1646,9 @@ BEGIN
         , tmpResult.isPartionCell_Many_20
         , tmpResult.isPartionCell_Many_21
         , tmpResult.isPartionCell_Many_22
+
+        -- есть хоть одна €чейка с несколькими парти€ми
+        , CASE WHEN COALESCE (tmpResult.isMany_max,0) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isMany_max
 
         --фон дл€ €чейки если несколько партий
         , CASE WHEN tmpResult.isPartionCell_Many_1 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many1
@@ -2464,7 +2479,9 @@ BEGIN
                                -- є п/п - — ¬ќ«Ќќ… - ¬—≈
                              , ROW_NUMBER() OVER (ORDER BY tmpData_list.GoodsId ASC) AS Ord_all
                              
-                             , tmpData_list.isMany
+                             , tmpData_list.isMany 
+                               -- есть хоть одна €чейка с несколькими парти€ми
+                             , MAX (tmpData_list.isMany) AS isMany_max
 
                         FROM -- –асчет нужной €чейки по которой группировать
                              (SELECT DISTINCT
@@ -2538,6 +2555,8 @@ BEGIN
                            , tmpData_PartionCell_All_All.isClose_value_min 
                            --
                            , tmpData_PartionCell_All_All.isMany
+                           -- есть хоть одна €чейка с несколькими парти€ми
+                           , tmpData_PartionCell_All_All.isMany_max
                              --
                            , ROW_NUMBER() OVER (PARTITION BY tmpData_PartionCell_All_All.MovementId        -- ***
                                                            , tmpData_PartionCell_All_All.ToId              -- ***
@@ -2714,7 +2733,9 @@ BEGIN
                                    , MAX (CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) = 22 THEN tmpData_PartionCell_All.isMany ELSE 0 END) AS isMany_22
 
                                      -- есть хоть одна закрыта€ €чейка
-                                   , MIN (tmpData_PartionCell_All.isClose_value_min) AS isClose_value_min
+                                   , MIN (tmpData_PartionCell_All.isClose_value_min) AS isClose_value_min 
+                                   -- есть хоть одна €чейка с несколькими парти€ми
+                                   , MAX (tmpData_PartionCell_All.isMany_max)  AS isMany_max
 
                                    , STRING_AGG (DISTINCT CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) > 22  THEN tmpData_PartionCell_All.PartionCellName_calc ELSE '' END, ';') AS PartionCellName_ets
 
@@ -2901,7 +2922,8 @@ BEGIN
                     , CASE WHEN COALESCE (tmpData_PartionCell.Color_21, 0) = 0 THEN zc_Color_Black() ELSE tmpData_PartionCell.Color_21 END :: Integer  AS Color_21
                     , CASE WHEN COALESCE (tmpData_PartionCell.Color_22, 0) = 0 THEN zc_Color_Black() ELSE tmpData_PartionCell.Color_22 END :: Integer  AS Color_22
 
-
+                      -- есть хоть одна €чейка с несколькими парти€ми
+                    , tmpData_PartionCell.isMany_max AS isMany_max
                       -- есть хоть одна закрыта€ €чейка
                     , CASE WHEN tmpData_MI.isPartionCell_max > 0 AND tmpData_PartionCell.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
                       -- —формированы данные по €чейкам (да/нет)
@@ -3154,7 +3176,9 @@ BEGIN
         , tmpResult.isPartionCell_Many_19
         , tmpResult.isPartionCell_Many_20
         , tmpResult.isPartionCell_Many_21
-        , tmpResult.isPartionCell_Many_22
+        , tmpResult.isPartionCell_Many_22 
+        -- есть хоть одна €чейка с несколькими парти€ми
+        , CASE WHEN COALESCE (tmpResult.isMany_max,0) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isMany_max
 
         --фон дл€ €чейки если несколько партий
         , CASE WHEN tmpResult.isPartionCell_Many_1 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many1
@@ -3179,31 +3203,31 @@ BEGIN
         , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many20
         , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many21
         , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer AS ColorFon_Many22
- 
+    /*
         , CASE WHEN tmpResult.isPartionCell_Many_1 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_1
-        , CASE WHEN tmpResult.isPartionCell_Many_2 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_2
-        , CASE WHEN tmpResult.isPartionCell_Many_3 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_3
-        , CASE WHEN tmpResult.isPartionCell_Many_4 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_4
-        , CASE WHEN tmpResult.isPartionCell_Many_5 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_5
-        , CASE WHEN tmpResult.isPartionCell_Many_6 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_6
-        , CASE WHEN tmpResult.isPartionCell_Many_7 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_7
-        , CASE WHEN tmpResult.isPartionCell_Many_8 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_8
-        , CASE WHEN tmpResult.isPartionCell_Many_9 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_9
-        , CASE WHEN tmpResult.isPartionCell_Many_10 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red() END :: Integer  AS ColorFon_10
-        , CASE WHEN tmpResult.isPartionCell_Many_11 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_11
-        , CASE WHEN tmpResult.isPartionCell_Many_12 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_12
-        , CASE WHEN tmpResult.isPartionCell_Many_13 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_13
-        , CASE WHEN tmpResult.isPartionCell_Many_14 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_14
-        , CASE WHEN tmpResult.isPartionCell_Many_15 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_15
-        , CASE WHEN tmpResult.isPartionCell_Many_16 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_16
-        , CASE WHEN tmpResult.isPartionCell_Many_17 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_17
-        , CASE WHEN tmpResult.isPartionCell_Many_18 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_18
-        , CASE WHEN tmpResult.isPartionCell_Many_19 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_19
-        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_20
-        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_21
-        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.ColorFon_1 ELSE zc_Color_Red()  END :: Integer AS ColorFon_22
-                                                                                                                                        
- /*       , tmpResult.ColorFon_1                                                                                                   
+        , CASE WHEN tmpResult.isPartionCell_Many_2 = FALSE THEN tmpResult.ColorFon_2 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_2
+        , CASE WHEN tmpResult.isPartionCell_Many_3 = FALSE THEN tmpResult.ColorFon_3 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_3
+        , CASE WHEN tmpResult.isPartionCell_Many_4 = FALSE THEN tmpResult.ColorFon_4 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_4
+        , CASE WHEN tmpResult.isPartionCell_Many_5 = FALSE THEN tmpResult.ColorFon_5 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_5
+        , CASE WHEN tmpResult.isPartionCell_Many_6 = FALSE THEN tmpResult.ColorFon_6 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_6
+        , CASE WHEN tmpResult.isPartionCell_Many_7 = FALSE THEN tmpResult.ColorFon_7 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_7
+        , CASE WHEN tmpResult.isPartionCell_Many_8 = FALSE THEN tmpResult.ColorFon_8 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_8
+        , CASE WHEN tmpResult.isPartionCell_Many_9 = FALSE THEN tmpResult.ColorFon_9 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_9
+        , CASE WHEN tmpResult.isPartionCell_Many_10 = FALSE THEN tmpResult.ColorFon_10 ELSE zc_Color_Red() END :: Integer  AS ColorFon_10
+        , CASE WHEN tmpResult.isPartionCell_Many_11 = FALSE THEN tmpResult.ColorFon_11 ELSE zc_Color_Red()  END :: Integer AS ColorFon_11
+        , CASE WHEN tmpResult.isPartionCell_Many_12 = FALSE THEN tmpResult.ColorFon_12 ELSE zc_Color_Red()  END :: Integer AS ColorFon_12
+        , CASE WHEN tmpResult.isPartionCell_Many_13 = FALSE THEN tmpResult.ColorFon_13 ELSE zc_Color_Red()  END :: Integer AS ColorFon_13
+        , CASE WHEN tmpResult.isPartionCell_Many_14 = FALSE THEN tmpResult.ColorFon_14 ELSE zc_Color_Red()  END :: Integer AS ColorFon_14
+        , CASE WHEN tmpResult.isPartionCell_Many_15 = FALSE THEN tmpResult.ColorFon_15 ELSE zc_Color_Red()  END :: Integer AS ColorFon_15
+        , CASE WHEN tmpResult.isPartionCell_Many_16 = FALSE THEN tmpResult.ColorFon_16 ELSE zc_Color_Red()  END :: Integer AS ColorFon_16
+        , CASE WHEN tmpResult.isPartionCell_Many_17 = FALSE THEN tmpResult.ColorFon_17 ELSE zc_Color_Red()  END :: Integer AS ColorFon_17
+        , CASE WHEN tmpResult.isPartionCell_Many_18 = FALSE THEN tmpResult.ColorFon_18 ELSE zc_Color_Red()  END :: Integer AS ColorFon_18
+        , CASE WHEN tmpResult.isPartionCell_Many_19 = FALSE THEN tmpResult.ColorFon_19 ELSE zc_Color_Red()  END :: Integer AS ColorFon_19
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.ColorFon_10 ELSE zc_Color_Red()  END :: Integer AS ColorFon_20
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.ColorFon_21 ELSE zc_Color_Red()  END :: Integer AS ColorFon_21
+        , CASE WHEN tmpResult.isPartionCell_Many_20 = FALSE THEN tmpResult.ColorFon_22 ELSE zc_Color_Red()  END :: Integer AS ColorFon_22
+  */                                                                                                                                      
+        , tmpResult.ColorFon_1                                                                                                   
         , tmpResult.ColorFon_2                                                                                                   
         , tmpResult.ColorFon_3                                                                                                
         , tmpResult.ColorFon_4                                                                                               
@@ -3225,7 +3249,6 @@ BEGIN
         , tmpResult.ColorFon_20
         , tmpResult.ColorFon_21
         , tmpResult.ColorFon_22
-*/
 
         , tmpResult.Color_1
         , tmpResult.Color_2
@@ -3419,4 +3442,5 @@ zc_ObjectFloat_OrderType_TermProduction
 
 */
 
--- SELECT * FROM gpReport_Send_PartionCell (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inUnitId:= 8459, inIsMovement:= FALSE, inIsCell:= FALSE, inIsShowAll:= FALSE, inSession := '9457') --where GoodsCode = 41;
+--SELECT * FROM gpReport_Send_PartionCell (inStartDate:= '02.06.2025', inEndDate:= '03.06.2025', inUnitId:= 8459, inIsMovement:= FALSE, inIsCell:= FALSE, inIsShowAll:= FALSE, inSession := '9457') 
+--where GoodsCode = 221;
