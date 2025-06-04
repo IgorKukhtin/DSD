@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_isMany_byReport(
     IN inGoodsId               Integer  ,
     IN inGoodsKindId           Integer  ,
     IN inPartionGoodsDate      TDateTime, --
-    IN inisMany                Boolean   , -- Дата партии
+    IN inIsMany                Boolean   , -- Дата партии
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -67,12 +67,15 @@ BEGIN
                      END ::Integer;
 
          -- сохранили
-         PERFORM lpInsertUpdate_MovementItemBoolean (vbDescId, inMovementItemId, inisMany);
+         PERFORM lpInsertUpdate_MovementItemBoolean (vbDescId, inMovementItemId, inIsMany);
 
          -- сохранили протокол
          PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
-     ELSE --для всех строк где есть этот товар и партия
+
+     ELSE 
+          -- для всех строк где есть этот товар и партия
           vbIsWeighing:= TRUE; -- inUserId = 5;
+
           -- !!!замена!!!
           IF COALESCE (inUnitId,0) = 0
           THEN
@@ -288,9 +291,9 @@ BEGIN
              AND isRePack = FALSE
            ;
 
-     --  lpInsertUpdate_MovementItemBoolean (vbDescId, inMovementItemId, inisMany)
+     --  lpInsertUpdate_MovementItemBoolean (vbDescId, inMovementItemId, inIsMany)
      --сохранили свойство
-     PERFORM lpInsertUpdate_MovementItemBoolean (_tmpItem_PartionCell.DescId, _tmpItem_PartionCell.MovementItemId, inisMany)
+     PERFORM lpInsertUpdate_MovementItemBoolean (_tmpItem_PartionCell.DescId, _tmpItem_PartionCell.MovementItemId, inIsMany)
      FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId
                           , CASE WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1()  THEN zc_MIBoolean_PartionCell_Many_1()
                                  WHEN _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2()  THEN zc_MIBoolean_PartionCell_Many_2()
@@ -319,7 +322,13 @@ BEGIN
            FROM _tmpItem_PartionCell
            ) AS _tmpItem_PartionCell;
 
-     END IF;
+  
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (_tmpItem_PartionCell.MovementItemId, vbUserId, FALSE)
+         FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell
+        ;
+
+   END IF;
 
 
      if vbUserId = 9457

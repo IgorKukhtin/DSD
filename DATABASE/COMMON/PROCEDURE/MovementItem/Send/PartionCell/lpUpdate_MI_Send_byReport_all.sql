@@ -874,12 +874,10 @@ BEGIN
                  (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_1()
                             AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
                          )
-              AND inUserId = 5
               -- есть €чейки с одной партией
               AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_1()
                             AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
                          ))
-              OR inUserId = 5
            THEN
                RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-1 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
                                 -- в этой €чейке-1 несколько партий
@@ -890,7 +888,8 @@ BEGIN
                               , CHR (13)
                                 -- нашли €чейку с одной партией
                               , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_1()
-                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())))
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
                                ;
            END IF;
 
@@ -983,6 +982,30 @@ BEGIN
      -- 2.2. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_2_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-2 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_2()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_2()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-2 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-2 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_2()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_2, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_2:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1066,6 +1089,30 @@ BEGIN
      -- 2.3. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_3_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-3 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_3()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_3()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-3 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-3 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_3()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_3, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_3:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1143,6 +1190,30 @@ BEGIN
      -- 2.4. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_4_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-4 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_4()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_4()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-4 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-4 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_4()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_4, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_4:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1220,6 +1291,30 @@ BEGIN
      -- 2.5. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_5_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-5 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_5()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_5()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-5 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-5 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_5()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_5, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_5:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1298,6 +1393,30 @@ BEGIN
      -- 2.6. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_6_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-6 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_6()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_6()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-6 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-6 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_6()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_6, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_6:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1376,6 +1495,30 @@ BEGIN
      -- 2.7. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_7_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-7 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_7()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_7()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-7 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-7 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_7()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_7, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_7:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1454,6 +1597,30 @@ BEGIN
      -- 2.8. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_8_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-8 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_8()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_8()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-8 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-8 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_8()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_8, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_8:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1532,6 +1699,30 @@ BEGIN
      -- 2.9. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_9_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-9 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_9()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_9()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-9 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-9 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_9()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_9, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_9:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1610,6 +1801,30 @@ BEGIN
      -- 2.10. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_10_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-10 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_10()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_10()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-10 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-10 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_10()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_10, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_10:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1688,6 +1903,30 @@ BEGIN
      -- 2.11. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_11_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-11 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_11()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_11()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-11 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-11 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_11()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_11, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_11:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1766,6 +2005,30 @@ BEGIN
      -- 2.12. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_12_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-12 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_12()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_12()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-12 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-12 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_12()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_12, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_12:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1843,6 +2106,30 @@ BEGIN
      -- 2.13. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_13_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-13 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_13()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_13()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-13 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-13 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_13()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_13, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_13:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1920,6 +2207,30 @@ BEGIN
      -- 2.14. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_14_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-14 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_14()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_14()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-14 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-14 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_14()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_14, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_14:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -1997,6 +2308,30 @@ BEGIN
      -- 2.15. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_15_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-15 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_15()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_15()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-15 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-15 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_15()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_15, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_15:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -2074,6 +2409,30 @@ BEGIN
      -- 2.16. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_16_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-16 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_16()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_16()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-16 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-16 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_16()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_16, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_16:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -2151,6 +2510,30 @@ BEGIN
      -- 2.17. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_17_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-17 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_17()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_17()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-17 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-17 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_17()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_17, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_17:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -2228,6 +2611,30 @@ BEGIN
      -- 2.18. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_18_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-18 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_18()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_18()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-18 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-18 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_18()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_18, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_18:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -2305,6 +2712,30 @@ BEGIN
      -- 2.19. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_19_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-19 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_19()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_19()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-19 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-19 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_19()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_19, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_19:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -2382,6 +2813,30 @@ BEGIN
      -- 2.20. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_20_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-20 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_20()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_20()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-20 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-20 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_20()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_20, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_20:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -2459,6 +2914,30 @@ BEGIN
      -- 2.21. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_21_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-21 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_21()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_21()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-21 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-21 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_21()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_21, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_21:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
@@ -2536,6 +3015,30 @@ BEGIN
      -- 2.22. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_22_new = zc_PartionCell_RK()
      THEN
+           -- 0.ѕроверка
+           IF     -- в этой €чейке-22 несколько партий
+                 (EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO =  zc_MILinkObject_PartionCell_22()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                         )
+              -- есть €чейки с одной партией
+              AND EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_22()
+                            AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                         ))
+           THEN
+               RAISE EXCEPTION 'ќшибка.ƒл€ €чейки є-22 <%> %заполнено несколько партий с разной датой.%Ќеобходимо сначала перенести в отбор €чейку <%>.'
+                                -- в этой €чейке-22 несколько партий
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = TRUE  AND _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_Err())
+                                                         LIMIT 1))
+                              , CHR (13)
+                              , CHR (13)
+                                -- нашли €чейку с одной партией
+                              , lfGet_Object_ValueData ((SELECT _tmpItem_PartionCell.PartionCellId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isMany = FALSE AND _tmpItem_PartionCell.DescId_MILO <> zc_MILinkObject_PartionCell_22()
+                                                           AND _tmpItem_PartionCell.PartionCellId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                         LIMIT 1))
+                               ;
+           END IF;
+
              -- 1. вернем айди какой был - реальна€ €чейка
              IF COALESCE (inPartionCellId_22, 0) IN (0, zc_PartionCell_RK())
              THEN outPartionCellId_22:= NULL; --(SELECT PartionCellId FROM _tmpItem_PartionCell);
