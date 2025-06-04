@@ -88,7 +88,6 @@ type
     edPriceListNorm: TcxButtonEdit;
     bbPriceListNorm: TdxBarControlContainerItem;
     bbLabel9: TdxBarControlContainerItem;
-    cbGroupPrint: TcxCheckBox;
     bbGroupPrint: TdxBarControlContainerItem;
     spSelectPrint_its_mov: TdsdStoredProc;
     actPrint_its_mov: TdsdPrintAction;
@@ -112,6 +111,29 @@ type
     bbtPrint_test_4218: TdxBarButton;
     Print_test_its: TdsdStoredProc;
     Print_test_its_mov: TdsdStoredProc;
+    Print_test_4001_mov: TdsdStoredProc;
+    Print_test_4218_mov: TdsdStoredProc;
+    Print_test_4134_mov: TdsdStoredProc;
+    bbsPrintMovement: TdxBarSubItem;
+    actPrint_4001_gov_mov: TdsdPrintAction;
+    actPrint_4218_mov: TdsdPrintAction;
+    actPrint_4134_mov: TdsdPrintAction;
+    bbPrint_4001_gov_mov: TdxBarButton;
+    bbPrint_4134_mov: TdxBarButton;
+    bbPrint_4218_mov: TdxBarButton;
+    bbs: TdxBarSubItem;
+    Print_test_its_gr: TdsdStoredProc;
+    Print_test_4001_gr: TdsdStoredProc;
+    Print_test_4218_gr: TdsdStoredProc;
+    Print_test_4134_gr: TdsdStoredProc;
+    actPrint_4001_gov_gr: TdsdPrintAction;
+    actPrint_4218_gr: TdsdPrintAction;
+    actPrint_4134_gr: TdsdPrintAction;
+    actPrint_its_gr: TdsdPrintAction;
+    bbPrint_4001_gov_gr: TdxBarButton;
+    bbPrint_4134_gr: TdxBarButton;
+    bbPrint_4218_gr: TdxBarButton;
+    bbPrint_its_gr: TdxBarButton;
   private
     { Private declarations }
   public
