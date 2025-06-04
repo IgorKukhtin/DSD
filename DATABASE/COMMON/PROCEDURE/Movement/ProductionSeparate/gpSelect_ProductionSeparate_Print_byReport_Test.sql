@@ -247,6 +247,7 @@ BEGIN
                           , tmpData.HeadCountMaster
                           --, tmpData.PriceMaster 
                           , ((COALESCE (tmpData.SummMaster,0) - COALESCE (tmpData.SummCostIncome,0)) / tmpData.CountMaster ) AS PriceMaster
+                          , ((COALESCE (tmpData.SummMaster,0) - COALESCE (tmpData.SummCostIncome,0)) / tmpData.CountMaster ) * tmpData.CountMaster 
                           , tmpData.FromName
                           , tmpData.PersonalPackerName 
                           , tmpData.Separate_info
@@ -273,8 +274,8 @@ BEGIN
                           , tmpData.SummHeadCount1  -- ср вес головы из Separate
                           --, tmpData.Separate_info   
                           
-                          , CASE WHEN tmpData.GoodsId = 4261 THEN tmpData.SummFact ELSE 0 END     AS summ_4134
-                          , CASE WHEN tmpData.GoodsId = 4261 THEN tmpData.Amount ELSE 0 END       AS AmountMaster_4134
+                          , SUM (CASE WHEN tmpData.GoodsId = 4261 THEN tmpData.SummFact ELSE 0 END) OVER (PARTITION BY tmpData.MovementId)     AS summ_4134
+                          , SUM (CASE WHEN tmpData.GoodsId = 4261 THEN tmpData.Amount ELSE 0 END) OVER (PARTITION BY tmpData.MovementId)       AS AmountMaster_4134
                           --, CASE WHEN COALESCE (tmpCursor1.CountMaster,0) <> 0 THEN 100  * tmpMaster.Amount / tmpCursor1.CountMaster ELSE 0 END :: TFloat AS Persent_4134
                           
                           --
@@ -495,7 +496,7 @@ BEGIN
            , tmpMain_Group.CountMaster_4134
            , tmpMain_Group.SummMaster
            , tmpMain_Group.HeadCountMaster
-           , tmpMain_Group.PriceMaster
+           --, tmpMain_Group.PriceMaster
            , tmpMain_Group.FromName
            , tmpMain_Group.PersonalPackerName
            , tmpMain_Group.GoodsNameIncome
@@ -515,7 +516,7 @@ BEGIN
            , tmpMain_Group.PercentCount
            , tmpMain_Group.GoodsNameSeparate
            , tmpMain_Group.SummHeadCount1
-      
+           , tmpCursor1.PriceMaster
       
           /*CASE WHEN inisPartion = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END AS MovementId
            , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.InvNumber END AS InvNumber
@@ -652,7 +653,7 @@ BEGIN
            , tmpMain_Group.CountMaster_4134
            , tmpMain_Group.SummMaster
            , tmpMain_Group.HeadCountMaster
-           , tmpMain_Group.PriceMaster
+           --, tmpMain_Group.PriceMaster
            , tmpMain_Group.FromName
            , tmpMain_Group.PersonalPackerName
            , tmpMain_Group.GoodsNameIncome
@@ -684,7 +685,8 @@ BEGIN
            , tmpCursor1.GoodsNameSeparate
 
            , tmpCursor1.PriceMaster
-           */ 
+           */      
+           , tmpCursor1.PriceMaster
            , tmpCursor1.Separate_info  
            , tmpCursor1.GoodsName_4134
            , tmpCursor1.PriceFact_4134
