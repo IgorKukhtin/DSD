@@ -3907,24 +3907,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 81
       WithoutNext = True
     end
-    object actAddMask_Personal: TdsdExecStoredProc [30]
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertMaskMIMaster_Personal
-      StoredProcList = <
-        item
-          StoredProc = spInsertMaskMIMaster_Personal
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072
-      ImageIndex = 54
-    end
-    object actExportZPDate: TMultiAction [31]
+    object actExportZPDate: TMultiAction [30]
       Category = 'Export'
       MoveParams = <>
       ActionList = <
@@ -3942,7 +3925,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058#1055'"'
       ImageIndex = 67
     end
-    object actGetImportSetting_SMER: TdsdExecStoredProc [32]
+    object actGetImportSetting_SMER: TdsdExecStoredProc [31]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3953,7 +3936,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actGetImportSetting'
     end
-    object actDoLoad_fine: TExecuteImportSettingsAction [33]
+    object actDoLoad_fine: TExecuteImportSettingsAction [32]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ImportSettingsId.Value = Null
@@ -3970,7 +3953,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actRefreshGet: TdsdDataSetRefresh [34]
+    object actRefreshGet: TdsdDataSetRefresh [33]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -3984,7 +3967,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object macStartLoad_SMER: TMultiAction [35]
+    object macStartLoad_SMER: TMultiAction [34]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -4004,7 +3987,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 82
       WithoutNext = True
     end
-    object macStartLoad: TMultiAction [36]
+    object macStartLoad: TMultiAction [35]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -4024,7 +4007,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 41
       WithoutNext = True
     end
-    object actGetImportSetting: TdsdExecStoredProc [37]
+    object actGetImportSetting: TdsdExecStoredProc [36]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4038,7 +4021,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actGetImportSetting'
     end
-    object macStartLoad_SS: TMultiAction [38]
+    object macStartLoad_SS: TMultiAction [37]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -4058,7 +4041,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 50
       WithoutNext = True
     end
-    object actGridToExcel_Child_all: TdsdGridToExcel [39]
+    object actGridToExcel_Child_all: TdsdGridToExcel [38]
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
@@ -4088,7 +4071,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object actGridToExcel_Child: TdsdGridToExcel [42]
+    object actGridToExcel_Child: TdsdGridToExcel [41]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -4128,7 +4111,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spSelectChild
         end>
     end
-    object macUpdateCardSecond4000: TMultiAction [48]
+    object macUpdateCardSecond4000: TMultiAction [47]
       Category = 'Update'
       MoveParams = <>
       ActionList = <
@@ -4146,7 +4129,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. (>=4000)'
       ImageIndex = 74
     end
-    object actUpdateIsMain: TdsdExecStoredProc [49]
+    object actUpdateIsMain: TdsdExecStoredProc [48]
       Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4165,7 +4148,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
-    object actPrint_Detail: TdsdPrintAction [51]
+    object actPrint_Detail: TdsdPrintAction [50]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintDetail
@@ -4206,7 +4189,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [52]
+    object actPrint_All: TdsdPrintAction [51]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_All
@@ -4274,7 +4257,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ReportNameParam.Value = 'PrintMovement_PersonalService'
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Grid: TdsdPrintAction [54]
+    object actPrint_Grid: TdsdPrintAction [53]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -4365,7 +4348,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object MI_ChildProtocolOpenForm: TdsdOpenForm [60]
+    object MI_ChildProtocolOpenForm: TdsdOpenForm [59]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
@@ -4395,7 +4378,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = False
     end
-    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [62]
+    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [61]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4422,7 +4405,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [65]
+    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [64]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -5811,13 +5794,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
       View = cxGridDBTableView
       Action = actOpenChoiceFormPersonal
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072'>'
-      ShortCut = 45
       ImageIndex = 0
     end
     object actOpenChoiceFormPersonal: TOpenChoiceForm
@@ -5906,6 +5887,20 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
+    object actAddMask_Personal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMaskMIMaster_Personal
+      StoredProcList = <
+        item
+          StoredProc = spInsertMaskMIMaster_Personal
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      ImageIndex = 54
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -5971,14 +5966,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           BeginGroup = True
           Visible = True
           ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bb'
         end
         item
           Visible = True
@@ -6509,6 +6496,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object bb: TdxBarButton
       Action = actAddMask_Personal
       Category = 0
+      UnclickAfterDoing = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -10040,6 +10028,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inInfoMoneyId'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
