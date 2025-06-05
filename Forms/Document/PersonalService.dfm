@@ -5896,6 +5896,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
       StoredProcList = <
         item
           StoredProc = spInsertMaskMIMaster_Personal
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072
@@ -5966,6 +5969,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
           BeginGroup = True
           Visible = True
           ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -9860,7 +9875,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inSummService'
-        Value = 0.000000000000000000
+        Value = -1.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -10029,6 +10044,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'inInfoMoneyId'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

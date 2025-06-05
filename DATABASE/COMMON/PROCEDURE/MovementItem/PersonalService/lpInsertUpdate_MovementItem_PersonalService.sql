@@ -165,8 +165,12 @@ BEGIN
          END IF;
      END IF;
 
-
-
+     --для создания строки по маске чтоб сохр. передаем зн. = -1 , потом возвр.0  -- копировать только  ФИО, подразделение, должность, ведомость, остально пусто
+     IF COALESCE (inSummService,0) = -1 AND COALESCE (ioId,0) = 0
+     THEN
+         inSummService:= 0;
+     END IF;
+     
      -- проверка записываем zc_MILinkObject_FineSubject - но только для ведомости с признаком zc_ObjectBoolean_PersonalServiceList_Detail  = TRUE 
      -- получаем свойство PersonalServiceList
      vbPersonalServiceListId:= (SELECT MovementLinkObject.ObjectId
