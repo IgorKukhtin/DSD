@@ -2633,10 +2633,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPersonalServiceDetailUnit'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item

@@ -2,12 +2,16 @@
 
 --DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_Item(
     IN inStartDate                TDateTime , --
     IN inEndDate                  TDateTime , --
     IN inJuridicalBasisId         Integer , -- гл. юр.лицо  
     IN inPersonalServiceListId    Integer ,
+    IN inUnitId                   Integer ,
+    IN inPositionId               Integer ,
+    IN inPersonalId               Integer ,
     IN inIsServiceDate            Boolean ,
     IN inIsErased                 Boolean ,
     IN inSession                  TVarChar    -- сессия пользователя
@@ -465,31 +469,34 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
                                                           ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
+                    WHERE (MovementItem.ObjectId = inPersonalId OR inPersonalId = 0)
+                      AND (MILinkObject_Position.ObjectId = inPositionId OR inPositionId = 0) 
+                      AND (MILinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
                    )
 
         , tmpMovementItemString AS (SELECT MovementItemString.*
                                     FROM MovementItemString
-                                    WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                    WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                       AND MovementItemString.DescId IN (zc_MIString_Comment()
                                                                       , zc_MIString_Number())
                                    )
 
         , tmpMovementItemBoolean AS (SELECT MovementItemBoolean.*
                                      FROM MovementItemBoolean
-                                     WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                     WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                        AND MovementItemBoolean.DescId IN (zc_MIBoolean_Main()
                                                                         , zc_MIBoolean_isAuto())
                                     )
 
         , tmpMovementItemDate AS (SELECT MovementItemDate.*
                                   FROM MovementItemDate
-                                  WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                  WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                     AND MovementItemDate.DescId IN (zc_MIDate_BankOut())
                                  )
 
         , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
                                    FROM MovementItemFloat
-                                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                      AND MovementItemFloat.DescId IN (zc_MIFloat_SummToPay()
                                                                     , zc_MIFloat_SummService()
                                                                     , zc_MIFloat_SummCard()
@@ -547,7 +554,7 @@ BEGIN
 
         , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
                                         FROM MovementItemLinkObject
-                                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_FineSubject()
                                                                               , zc_MILinkObject_UnitFineSubject())
                                        )
@@ -689,7 +696,7 @@ BEGIN
                                           )
                               , tmpMILO AS (SELECT *
                                             FROM MovementItemLinkObject
-                                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                               AND MovementItemLinkObject.DescId = zc_MILinkObject_MoneyPlace()
                                             )
 
@@ -1084,8 +1091,8 @@ BEGIN
             LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id   
             
             ---строки
-            LEFT JOIN tmpMI AS tmpAll
-                            ON tmpAll.MovementId = Movement.Id
+            INNER JOIN tmpMI AS tmpAll
+                             ON tmpAll.MovementId = Movement.Id
                                    --AND MovementItem.isErased = tmpIsErased.isErased
 
             -- <Карта БН (округление) - 2ф>
@@ -1372,8 +1379,8 @@ BEGIN
 
       WHERE (OB_PersonalServiceList_User.ObjectId IS NULL
           OR vbIsLevelMax01 = TRUE
-            )
-            ;
+            ) 
+      ;
 
 END;
 $BODY$
@@ -1381,7 +1388,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.06.25         * inUnitId inPersonalId inPositionId
  25.06.23         *
  03.04.23         * 
  18.11.21         * TotalSummHouseAdd
@@ -1410,16 +1418,5 @@ $BODY$
  11.09.14         *
 */
 
-/*
-             SELECT Movement.*
-             FROM Movement 
-                  LEFT JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
-             WHERE Movement.DescId = zc_Movement_PersonalService()
-               and Movement.StatusId = zc_Enum_Status_Complete()
-               and Movement.OperDate BETWEEN '01.01.2017' AND '31.05.2017'
-               and MovementItemContainer.MovementId is null
-             order by operDate desc
-*/
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2015', inEndDate:= '01.02.2015', inJuridicalBasisId:= 0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2025')::TDateTime , inEndDate := ('01.12.2025')::TDateTime , inJuridicalBasisId := 9399 , inPersonalServiceListId:= 0, inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
+-- SELECT * FROM gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2025')::TDateTime , inEndDate := ('01.12.2025')::TDateTime , inJuridicalBasisId := 9399 , inPersonalServiceListId:= 0, inUnitId := 0, inPositionId := 0, inPersonalId := 0, inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');

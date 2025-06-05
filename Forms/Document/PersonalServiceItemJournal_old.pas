@@ -1,4 +1,4 @@
-unit PersonalServiceItemJournal_unit;
+unit PersonalServiceItemJournal_old;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dsdInternetAction, dsdCommon;
 
 type
-  TPersonalServiceItemJournal_unitForm = class(TAncestorJournalForm)
+  TPersonalServiceItemJournalForm = class(TAncestorJournalForm)
     ServiceDate: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
@@ -55,7 +55,7 @@ type
     actExportToFileZp: TdsdStoredProcExportToFile;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;
-    GuidesJuridicalBasis: TdsdGuides;
+    JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
@@ -116,15 +116,6 @@ type
     GuidesPersonalServiceList: TdsdGuides;
     AmountService_diff_start: TcxGridDBColumn;
     AmountService_diff_end: TcxGridDBColumn;
-    cxLabel8: TcxLabel;
-    edUnit: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
-    cxLabel5: TcxLabel;
-    cePosition: TcxButtonEdit;
-    GuidesPosition: TdsdGuides;
-    cxLabel3: TcxLabel;
-    edPersonal: TcxButtonEdit;
-    GuidesPersonal: TdsdGuides;
   private
     { Private declarations }
   public
@@ -135,5 +126,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TPersonalServiceItemJournal_unitForm);
+  RegisterClass(TPersonalServiceItemJournalForm);
 end.

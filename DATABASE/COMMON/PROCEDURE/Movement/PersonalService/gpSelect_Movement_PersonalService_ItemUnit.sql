@@ -467,33 +467,34 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
                                                           ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
-                   -- WHERE (MovementItem.ObjectId = inPersonalId OR inPersonalId = 0)
-                   --   AND (MILinkObject_Position.ObjectId = inPositionId OR inPositionId = 0)
+                    WHERE (MovementItem.ObjectId = inPersonalId OR inPersonalId = 0)
+                      AND (MILinkObject_Position.ObjectId = inPositionId OR inPositionId = 0) 
+                      AND (MILinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
                    )
 
         , tmpMovementItemString AS (SELECT MovementItemString.*
                                     FROM MovementItemString
-                                    WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                    WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                       AND MovementItemString.DescId IN (zc_MIString_Comment()
                                                                       , zc_MIString_Number())
                                    )
 
         , tmpMovementItemBoolean AS (SELECT MovementItemBoolean.*
                                      FROM MovementItemBoolean
-                                     WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                     WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                        AND MovementItemBoolean.DescId IN (zc_MIBoolean_Main()
                                                                         , zc_MIBoolean_isAuto())
                                     )
 
         , tmpMovementItemDate AS (SELECT MovementItemDate.*
                                   FROM MovementItemDate
-                                  WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                  WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                     AND MovementItemDate.DescId IN (zc_MIDate_BankOut())
                                  )
 
         , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
                                    FROM MovementItemFloat
-                                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                      AND MovementItemFloat.DescId IN (zc_MIFloat_SummToPay()
                                                                     , zc_MIFloat_SummService()
                                                                     , zc_MIFloat_SummCard()
@@ -551,7 +552,7 @@ BEGIN
 
         , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
                                         FROM MovementItemLinkObject
-                                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_FineSubject()
                                                                               , zc_MILinkObject_UnitFineSubject())
                                        )
@@ -693,7 +694,7 @@ BEGIN
                                           )
                               , tmpMILO AS (SELECT *
                                             FROM MovementItemLinkObject
-                                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                               AND MovementItemLinkObject.DescId = zc_MILinkObject_MoneyPlace()
                                             )
 
@@ -1088,8 +1089,8 @@ BEGIN
             LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id   
             
             ---строки
-            LEFT JOIN tmpMI AS tmpAll
-                            ON tmpAll.MovementId = Movement.Id
+            INNER JOIN tmpMI AS tmpAll
+                             ON tmpAll.MovementId = Movement.Id
                                    --AND MovementItem.isErased = tmpIsErased.isErased
 
             -- <Карта БН (округление) - 2ф>
@@ -1377,10 +1378,10 @@ BEGIN
       WHERE (OB_PersonalServiceList_User.ObjectId IS NULL
           OR vbIsLevelMax01 = TRUE
             ) 
-         AND (tmpAll.UnitId = inUnitId OR inUnitId = 0)
+       /*  AND (tmpAll.UnitId = inUnitId OR inUnitId = 0)
          AND (tmpAll.PersonalId = inPersonalId OR inPersonalId = 0)
          AND (tmpAll.PositionId = inPositionId OR inPositionId = 0)
-            ;
+        */    ;
 
 END;
 $BODY$

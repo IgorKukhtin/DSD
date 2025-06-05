@@ -1,12 +1,12 @@
-inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitForm
-  Caption = 
-    #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'> '#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1087#1086 +
-    #1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'> '#1044#1077#1090#1072#1083#1100#1085#1086
   ClientHeight = 705
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -344
+  ExplicitTop = -217
   ExplicitWidth = 1237
   ExplicitHeight = 744
   PixelsPerInch = 96
@@ -1938,7 +1938,6 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
   inherited Panel: TPanel
     Width = 1221
     Height = 63
-    ExplicitTop = 5
     ExplicitWidth = 1221
     ExplicitHeight = 63
     inherited deStart: TcxDateEdit
@@ -1971,48 +1970,14 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
       TabOrder = 6
       Width = 257
     end
-    object cxLabel8: TcxLabel
-      Left = 417
-      Top = 35
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
-    end
-    object edUnit: TcxButtonEdit
-      Left = 509
-      Top = 34
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 8
-      Width = 210
-    end
-    object cxLabel5: TcxLabel
-      Left = 744
-      Top = 32
-      Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
-    end
-    object cePosition: TcxButtonEdit
-      Left = 815
-      Top = 34
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 10
-      Width = 150
-    end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 737
+    Left = 750
     Top = 6
     Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 815
+    Left = 829
     Top = 5
     Properties.Buttons = <
       item
@@ -2022,23 +1987,6 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 150
-  end
-  object cxLabel3: TcxLabel [4]
-    Left = 976
-    Top = 35
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
-  end
-  object edPersonal: TcxButtonEdit [5]
-    Left = 1046
-    Top = 34
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 9
-    Width = 163
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -2377,8 +2325,8 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       ImageIndex = 35
-      FormName = 'TPersonalService_DetailDialogForm'
-      FormNameParam.Value = 'TPersonalService_DetailDialogForm'
+      FormName = 'TMovement_DateDialog_PersonalServiceForm'
+      FormNameParam.Value = 'TMovement_DateDialog_PersonalServiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2418,57 +2366,6 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
           Name = 'PersonalServiceListName'
           Value = Null
           Component = GuidesPersonalServiceList
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitId'
-          Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PositionId'
-          Value = Null
-          Component = GuidesPosition
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PositionName'
-          Value = Null
-          Component = GuidesPosition
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalId'
-          Value = Null
-          Component = GuidesPersonal
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalName'
-          Value = Null
-          Component = GuidesPersonal
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2780,7 +2677,7 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalService_ItemUnit'
+    StoredProcName = 'gpSelect_Movement_PersonalService_Item'
     Params = <
       item
         Name = 'inStartDate'
@@ -2801,7 +2698,7 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
       item
         Name = 'inJuridicalBasisId'
         Value = Null
-        Component = GuidesJuridicalBasis
+        Component = JuridicalBasisGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2810,30 +2707,6 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
         Name = 'inPersonalServiceListId'
         Value = Null
         Component = GuidesPersonalServiceList
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPositionId'
-        Value = Null
-        Component = GuidesPosition
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersonalId'
-        Value = Null
-        Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3092,19 +2965,10 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
         Component = PeriodChoice
       end
       item
-        Component = GuidesJuridicalBasis
+        Component = JuridicalBasisGuides
       end
       item
         Component = GuidesPersonalServiceList
-      end
-      item
-        Component = GuidesPersonal
-      end
-      item
-        Component = GuidesUnit
-      end
-      item
-        Component = GuidesPosition
       end>
     Left = 392
     Top = 304
@@ -3233,23 +3097,6 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -3363,7 +3210,7 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
     Left = 160
     Top = 408
   end
-  object GuidesJuridicalBasis: TdsdGuides
+  object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalBasis
     Key = '0'
@@ -3376,7 +3223,7 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
       item
         Name = 'Key'
         Value = '0'
-        Component = GuidesJuridicalBasis
+        Component = JuridicalBasisGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3384,14 +3231,14 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesJuridicalBasis
+        Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 895
-    Top = 65528
+    Left = 863
+    Top = 8
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -3401,14 +3248,14 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
       item
         Name = 'JuridicalBasisId'
         Value = '0'
-        Component = GuidesJuridicalBasis
+        Component = JuridicalBasisGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
         Value = ''
-        Component = GuidesJuridicalBasis
+        Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3807,95 +3654,5 @@ inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitF
       end>
     Left = 260
     Top = 16
-  end
-  object GuidesUnit: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 592
-    Top = 16
-  end
-  object GuidesPosition: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = cePosition
-    FormNameParam.Value = 'TPositionForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPositionForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesPosition
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesPosition
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 831
-    Top = 32
-  end
-  object GuidesPersonal: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPersonal
-    FormNameParam.Value = 'TPersonal_ChoiceForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ChoiceForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesPersonal
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesPersonal
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 1071
-    Top = 32
   end
 end

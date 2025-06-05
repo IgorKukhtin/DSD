@@ -983,8 +983,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalService_DetailDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalService_DetailDialogForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceItemJournal_unitForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceItemJournal_unitForm');
+  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceItemJournal_unitForm'));
+  //TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceItemJournal_unitForm');
   //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
@@ -993,7 +993,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
-  exit;
+  //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceItemJournalForm');
