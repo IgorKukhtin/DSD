@@ -2060,8 +2060,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 784
-    Top = 48
+    Left = 744
+    Top = 8
   end
   object ChildGoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -2207,8 +2207,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 927
-    Top = 184
+    Left = 1111
+    Top = 192
   end
   object spSelectPrint_its_mov: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionSeparate_Print_byReport'
@@ -2284,8 +2284,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 767
-    Top = 184
+    Left = 1087
+    Top = 168
   end
   object spSelectPrint_4001: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionSeparate_Print_byReport'
@@ -2359,8 +2359,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 959
-    Top = 192
+    Left = 1079
+    Top = 168
   end
   object spSelectPrint_4218: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionSeparate_Print_byReport'
@@ -2434,8 +2434,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1015
-    Top = 192
+    Left = 1087
+    Top = 168
   end
   object spSelectPrint_4134: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionSeparate_Print_byReport'
@@ -2510,7 +2510,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       end>
     PackSize = 1
     Left = 1087
-    Top = 208
+    Top = 192
   end
   object Print_test_4001: TdsdStoredProc
     StoredProcName = 'gpSelect_ProductionSeparate_Print_byReport_Test'
@@ -2577,9 +2577,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2652,9 +2661,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2727,9 +2745,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2804,9 +2831,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2883,9 +2919,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2962,9 +3007,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -3041,9 +3095,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -3120,9 +3183,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -3185,8 +3257,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       item
         Name = 'inMovementId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3199,9 +3269,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = True
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -3264,8 +3343,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       item
         Name = 'inMovementId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3278,9 +3355,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = True
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -3343,8 +3429,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       item
         Name = 'inMovementId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3357,9 +3441,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = True
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -3422,8 +3515,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       item
         Name = 'inMovementId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3436,9 +3527,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inisGroup'
         Value = True
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -1,29 +1,34 @@
-inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-  ClientHeight = 681
+inherited PersonalServiceItemJournal_unitForm: TPersonalServiceItemJournal_unitForm
+  Caption = 
+    #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'> '#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1087#1086 +
+    #1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+  ClientHeight = 705
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1237
-  ExplicitHeight = 720
+  ExplicitHeight = 744
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 89
     Width = 1221
-    Height = 624
+    Height = 616
     TabOrder = 3
+    ExplicitTop = 89
     ExplicitWidth = 1221
-    ExplicitHeight = 624
-    ClientRectBottom = 624
+    ExplicitHeight = 616
+    ClientRectBottom = 616
     ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1221
-      ExplicitHeight = 624
+      ExplicitHeight = 616
       inherited cxGrid: TcxGrid
         Width = 1221
-        Height = 544
+        Height = 531
         ExplicitWidth = 1221
-        ExplicitHeight = 544
+        ExplicitHeight = 531
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -38,42 +43,427 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummService
+              Column = SummHouseAdd
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummCard
+              Column = SummNalog
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummMinus
+              Column = SummNalogRecalc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummAdd
+              Column = SummTransportAdd
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummCash
+              Column = SummTransportAddLong
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummCardRecalc
+              Column = SummTransport
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummSocialIn
+              Column = SummPhone
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummSocialAdd
+              Column = DayCompensation
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayVacation
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayWork
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayHoliday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayAudit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHoliday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAuditAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummTransportTaxi
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummFine
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummFineOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummFineOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHosp
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHospOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCompensation
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCompensationRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHospOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummChildRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummMinusExt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummMinusExtRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSocialIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSocialAdd
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = TotalSumm
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummFine
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummFineOth
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummFineOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummHosp
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummHospOth
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummCompensation
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummCompensationRecalc
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummHospOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummChildRecalc
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummMinusExt
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummMinusExtRecalc
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummSocialIn
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummSocialAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountToPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCash
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummService
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAddOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAddOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummMinus
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCard
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecondRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecondDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecondCash
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNalogRet
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNalogRetRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummChild
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = AmountToPay
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = AmountCash
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummService
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummAdd
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummAddOth
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummAddOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummMinus
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummCard
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummCardRecalc
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummCardSecond
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummCardSecondRecalc
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummCardSecondDiff
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummCardSecondCash
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummNalogRet
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummNalogRetRecalc
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = SummChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DaySkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayMedicday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummMedicdayAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAvance
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAvanceRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCash_rem
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = AmountCash_rem
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCash_pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAvCardSecondRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WorkTimeHoursOne_child
             end
             item
               Format = ',0.####'
@@ -83,215 +473,37 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummToPay
+              Column = SummDiff
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummTransport
+              Column = Amount_avance
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPhone
+              Column = Amount_avance_ps
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummTransportAdd
+              Column = SummAvCardSecond
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummHoliday
+              Column = SummCardSecond_Avance
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummTransportAddLong
+              Column = AmountService_diff_start
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummTransportTaxi
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummNalog
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummNalogRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummCardSecond
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummCardSecondRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummChildRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummMinusExt
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummMinusExtRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummCardSecondCash
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummNalogRet
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummNalogRetRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAddOth
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAddOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummFine
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummHosp
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummFineOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummHospOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummFineOth
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummHospOth
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummCompensation
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummCompensationRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAuditAdd
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalDayAudit
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummHouseAdd
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAvance
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAvanceRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummMedicdayAdd
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummSkip
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalDayMedicday
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalDaySkip
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAvCardSecond
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAvCardSecondRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSumm_BankSecond_num
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSumm_BankSecondTwo_num
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSumm_BankSecondDiff_num
-            end
-            item
-              Position = spFooter
-              Column = TotalSumm_BankSecond_num
-            end
-            item
-              Position = spFooter
-              Column = TotalSumm_BankSecondTwo_num
+              Column = AmountService_diff_end
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -302,42 +514,276 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummService
+              Column = SummHouseAdd
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummCard
+              Column = SummNalog
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummMinus
+              Column = SummNalogRecalc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummAdd
+              Column = SummTransportAdd
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummCash
+              Column = SummTransportAddLong
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummCardRecalc
+              Column = SummTransport
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummSocialIn
+              Column = SummPhone
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummSocialAdd
+              Column = DayCompensation
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayVacation
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayWork
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayHoliday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayAudit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHoliday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAuditAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummTransportTaxi
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummFine
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummFineOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummFineOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHosp
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHospOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCompensation
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCompensationRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummChildRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummMinusExt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummMinusExtRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSocialIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSocialAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountToPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCash
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummService
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAddOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAddOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummMinus
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCard
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecondRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecondDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecondCash
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNalogRet
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNalogRetRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummChild
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = PersonalName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHospOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DaySkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayMedicday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummMedicdayAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAvance
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAvanceRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCash_rem
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCash_pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAvCardSecondRecalc
+            end
+            item
+              Kind = skSum
+              Column = WorkTimeHoursOne_child
             end
             item
               Format = ',0.####'
@@ -347,207 +793,37 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummToPay
+              Column = SummDiff
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummTransport
+              Column = Amount_avance
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPhone
+              Column = Amount_avance_ps
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummTransportAdd
+              Column = SummAvCardSecond
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummHoliday
+              Column = SummCardSecond_Avance
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummTransportAddLong
+              Column = AmountService_diff_start
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummTransportTaxi
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummNalog
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummNalogRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummCardSecond
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummCardSecondRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummChildRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummMinusExt
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummMinusExtRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummCardSecondCash
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummNalogRet
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummNalogRetRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAddOth
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAddOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummFine
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummHosp
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummFineOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummHospOthRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummFineOth
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummHospOth
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummCompensation
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummCompensationRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAuditAdd
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalDayAudit
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummHouseAdd
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAvance
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAvanceRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummMedicdayAdd
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummSkip
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalDayMedicday
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalDaySkip
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAvCardSecond
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummAvCardSecondRecalc
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSumm_BankSecond_num
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSumm_BankSecondTwo_num
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSumm_BankSecondDiff_num
+              Column = AmountService_diff_end
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -574,7 +850,14 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 69
+          end
+          object PersonalServiceListName: TcxGridDBColumn
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
+            DataBinding.FieldName = 'PersonalServiceListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
           end
           object ServiceDate: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
@@ -587,12 +870,136 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object PersonalServiceListName: TcxGridDBColumn
-            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
-            DataBinding.FieldName = 'PersonalServiceListName'
+          object UnitCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
+            DataBinding.FieldName = 'UnitCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
+          end
+          object INN: TcxGridDBColumn
+            Caption = #1048#1053#1053
+            DataBinding.FieldName = 'INN'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object Code1C: TcxGridDBColumn
+            Caption = #1050#1086#1076' 1'#1057
+            DataBinding.FieldName = 'Code1C'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Card: TcxGridDBColumn
+            Caption = #8470' '#1082#1072#1088#1090'. '#1047#1055' ('#1060'1)'
+            DataBinding.FieldName = 'Card'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 115
+          end
+          object CardSecond: TcxGridDBColumn
+            Caption = #8470' '#1082#1072#1088#1090'. '#1047#1055' ('#1060'2)'
+            DataBinding.FieldName = 'CardSecond'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 115
+          end
+          object PersonalCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'PersonalCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object IsMain: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074'. '#1084#1077#1089#1090#1086' '#1088'.'
+            DataBinding.FieldName = 'isMain'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object IsOfficial: TcxGridDBColumn
+            Caption = #1054#1092#1086#1088#1084#1083'. '#1086#1092#1080#1094'.'
+            DataBinding.FieldName = 'isOfficial'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object DateIn: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
+            DataBinding.FieldName = 'DateIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object DateOut: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'DateOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1079#1072#1090#1088#1072#1090#1099')'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
           end
           object isMail: TcxGridDBColumn
             Caption = #1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
@@ -621,6 +1028,238 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Options.Editing = False
             Width = 100
           end
+          object AmountToPay: TcxGridDBColumn
+            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'AmountToPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountCash: TcxGridDBColumn
+            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
+            DataBinding.FieldName = 'AmountCash'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object AmountCash_rem: TcxGridDBColumn
+            Caption = #1054#1089#1090'.'#1082' '#1074#1099#1076#1072#1095#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
+            DataBinding.FieldName = 'AmountCash_rem'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object AmountService_diff_start: TcxGridDBColumn
+            Caption = #1057#1072#1083#1100#1076#1086' '#1085#1072' '#1087#1086#1095#1072#1090#1086#1082
+            DataBinding.FieldName = 'AmountService_diff_start'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummService: TcxGridDBColumn
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'SummService'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummAdd: TcxGridDBColumn
+            Caption = #1055#1088#1077#1084#1080#1103
+            DataBinding.FieldName = 'SummAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummAddOth: TcxGridDBColumn
+            Caption = #1055#1088#1077#1084#1080#1103' ('#1088#1072#1089#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'SummAddOth'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummAddOthRecalc: TcxGridDBColumn
+            Caption = #1055#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'SummAddOthRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            Width = 70
+          end
+          object SummMinus: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103
+            DataBinding.FieldName = 'SummMinus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummCard: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 1'#1092'.'
+            DataBinding.FieldName = 'SummCard'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummCardRecalc: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 1'#1092'.'
+            DataBinding.FieldName = 'SummCardRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummCardSecond: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'.'
+            DataBinding.FieldName = 'SummCardSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummCardSecondRecalc: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
+            DataBinding.FieldName = 'SummCardSecondRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummCardSecondDiff: TcxGridDBColumn
+            Caption = #1082#1086#1087'. '#1082#1086#1088#1088'. '#1082#1072#1088#1090#1072' '#1041#1053' - 2'#1092'.'
+            DataBinding.FieldName = 'SummCardSecondDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1085#1072' '#1082#1086#1087#1077#1081#1082#1080' '#1076#1083#1103' '#1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'., '#1090'.'#1082'. '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077' '#1076#1086' ' +
+              '10-90 '#1082#1086#1087'.'
+            Width = 70
+          end
+          object AmountService_diff_end: TcxGridDBColumn
+            Caption = #1057#1072#1083#1100#1076#1086' '#1085#1072' '#1082#1110#1085#1077#1094#1100
+            DataBinding.FieldName = 'AmountService_diff_end'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummCardSecondCash: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
+            DataBinding.FieldName = 'SummCardSecondCash'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummNalogRet: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055
+            DataBinding.FieldName = 'SummNalogRet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummNalogRetRecalc: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummNalogRetRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummChild: TcxGridDBColumn
+            Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077
+            DataBinding.FieldName = 'SummChild'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummAvance: TcxGridDBColumn
+            Caption = #1040#1074#1072#1085#1089' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            DataBinding.FieldName = 'SummAvance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummAvanceRecalc: TcxGridDBColumn
+            Caption = #1040#1074#1072#1085#1089' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'SummAvanceRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object DayCount_child: TcxGridDBColumn
+            Caption = #1054#1090#1088#1072#1073'. '#1076#1085'. 1 '#1095#1077#1083' ('#1080#1085#1092'.) ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'DayCount_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -639,522 +1278,472 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object TotalSummToPay: TcxGridDBColumn
-            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
-            DataBinding.FieldName = 'TotalSummToPay'
+          object SummFine: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
+            DataBinding.FieldName = 'SummFine'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object SummFineOth: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1088#1072#1089#1087#1088'.)'
+            DataBinding.FieldName = 'SummFineOth'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            Options.Editing = False
+            Width = 75
+          end
+          object SummFineOthRecalc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummFineOthRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            Width = 75
+          end
+          object SummHosp: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'.'
+            DataBinding.FieldName = 'SummHosp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077
+            Width = 75
+          end
+          object SummHospOth: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1088#1072#1089#1087#1088'.)'
+            DataBinding.FieldName = 'SummHospOth'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            Options.Editing = False
+            Width = 75
+          end
+          object PriceCompensation: TcxGridDBColumn
+            Caption = #1057#1088'. '#1079#1087' '#1076#1083#1103' '#1088#1072#1089#1095'. '#1082#1086#1084#1087#1077#1085#1089'.'
+            DataBinding.FieldName = 'PriceCompensation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1077#1076#1085#1103#1103' '#1079#1087' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1089#1091#1084#1084#1099' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object SummCompensation: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087'.'
+            DataBinding.FieldName = 'SummCompensation'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082
+            Options.Editing = False
+            Width = 75
+          end
+          object SummCompensationRecalc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087'. ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummCompensationRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082' ('#1074#1074#1086#1076')'
+            Width = 75
+          end
+          object SummHospOthRecalc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummHospOthRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            Width = 75
+          end
+          object SummChildRecalc: TcxGridDBColumn
+            Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummChildRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object SummMinusExt: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085'. '#1102#1088'.'#1083'.'
+            DataBinding.FieldName = 'SummMinusExt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummMinusExtRecalc: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085'. '#1102#1088'.'#1083'. ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummMinusExtRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object SummSocialIn: TcxGridDBColumn
+            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1080#1079' '#1079#1087')'
+            DataBinding.FieldName = 'SummSocialIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object TotalSummCash: TcxGridDBColumn
-            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
-            DataBinding.FieldName = 'TotalSummCash'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummService: TcxGridDBColumn
-            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
-            DataBinding.FieldName = 'TotalSummService'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummCard: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 1'#1092'.'
-            DataBinding.FieldName = 'TotalSummCard'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 92
-          end
-          object TotalSummCardRecalc: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 1'#1092'.'
-            DataBinding.FieldName = 'TotalSummCardRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 95
-          end
-          object TotalSummCardSecond: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'.'
-            DataBinding.FieldName = 'TotalSummCardSecond'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 82
-          end
-          object TotalSummCardSecondRecalc: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
-            DataBinding.FieldName = 'TotalSummCardSecondRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 95
-          end
-          object TotalSummAvCardSecond: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'. '#1040#1074#1072#1085#1089
-            DataBinding.FieldName = 'TotalSummAvCardSecond'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 82
-          end
-          object TotalSummAvCardSecondRecalc: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. '#1040#1074#1072#1085#1089
-            DataBinding.FieldName = 'TotalSummAvCardSecondRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 95
-          end
-          object TotalSummCardSecondCash: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
-            DataBinding.FieldName = 'TotalSummCardSecondCash'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 82
-          end
-          object TotalSumm_BankSecond_num: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1042#1086#1089#1090#1086#1082', '#1087#1086' '#1087#1088#1080#1086#1088')'
-            DataBinding.FieldName = 'TotalSumm_BankSecond_num'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1042#1086#1089#1090#1086#1082', '#1087#1086' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1091')'
-            Width = 80
-          end
-          object TotalSumm_BankSecondTwo_num: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1054#1058#1055', '#1087#1086' '#1087#1088#1080#1086#1088')'
-            DataBinding.FieldName = 'TotalSumm_BankSecondTwo_num'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1054#1058#1055', '#1087#1086' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1091')'
-            Width = 80
-          end
-          object TotalSumm_BankSecondDiff_num: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1083#1080#1095#1085#1099#1081', '#1087#1086' '#1087#1088#1080#1086#1088')'
-            DataBinding.FieldName = 'TotalSumm_BankSecondDiff_num'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1083#1080#1095#1085#1099#1081', '#1087#1086' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1091')'
-            Width = 80
-          end
-          object TotalSummNalog: TcxGridDBColumn
-            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
-            DataBinding.FieldName = 'TotalSummNalog'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummNalogRecalc: TcxGridDBColumn
-            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055' ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'TotalSummNalogRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummNalogRet: TcxGridDBColumn
-            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055
-            DataBinding.FieldName = 'TotalSummNalogRet'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 85
-          end
-          object TotalSummNalogRetRecalc: TcxGridDBColumn
-            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055' ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'TotalSummNalogRetRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 85
-          end
-          object TotalSummAddOth: TcxGridDBColumn
-            Caption = #1055#1088#1077#1084#1080#1103' ('#1088#1072#1089#1087#1088#1077#1076'.)'
-            DataBinding.FieldName = 'TotalSummAddOth'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1077#1084#1080#1103' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
-            Width = 85
-          end
-          object TotalSummAddOthRecalc: TcxGridDBColumn
-            Caption = #1055#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.)'
-            DataBinding.FieldName = 'TotalSummAddOthRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
-            Width = 85
-          end
-          object TotalSummChild: TcxGridDBColumn
-            Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077
-            DataBinding.FieldName = 'TotalSummChild'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummChildRecalc: TcxGridDBColumn
-            Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077' ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'TotalSummChildRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummAvance: TcxGridDBColumn
-            Caption = #1040#1074#1072#1085#1089' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
-            DataBinding.FieldName = 'TotalSummAvance'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummAvanceRecalc: TcxGridDBColumn
-            Caption = #1040#1074#1072#1085#1089' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
-            DataBinding.FieldName = 'TotalSummAvanceRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummMinusExt: TcxGridDBColumn
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085'. '#1102#1088'.'#1083'.'
-            DataBinding.FieldName = 'TotalSummMinusExt'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummMinusExtRecalc: TcxGridDBColumn
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085'. '#1102#1088'.'#1083'. ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'TotalSummMinusExtRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 113
-          end
-          object TotalSummMinus: TcxGridDBColumn
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103
-            DataBinding.FieldName = 'TotalSummMinus'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummAdd: TcxGridDBColumn
-            Caption = #1055#1088#1077#1084#1080#1103
-            DataBinding.FieldName = 'TotalSummAdd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummHoliday: TcxGridDBColumn
-            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
-            DataBinding.FieldName = 'TotalSummHoliday'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummTransport: TcxGridDBColumn
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
-            DataBinding.FieldName = 'TotalSummTransport'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummPhone: TcxGridDBColumn
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1052#1086#1073'.'#1089#1074#1103#1079#1100
-            DataBinding.FieldName = 'TotalSummPhone'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummTransportAdd: TcxGridDBColumn
-            Caption = #1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
-            DataBinding.FieldName = 'TotalSummTransportAdd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object TotalSummTransportAddLong: TcxGridDBColumn
-            Caption = #1044#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
-            DataBinding.FieldName = 'TotalSummTransportAddLong'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object TotalSummTransportTaxi: TcxGridDBColumn
-            Caption = #1058#1072#1082#1089#1080' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
-            DataBinding.FieldName = 'TotalSummTransportTaxi'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object TotalSummSocialIn: TcxGridDBColumn
-            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1080#1079' '#1079#1087')'
-            DataBinding.FieldName = 'TotalSummSocialIn'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummSocialAdd: TcxGridDBColumn
+          object SummSocialAdd: TcxGridDBColumn
             Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1076#1086#1087'. '#1082' '#1079#1087')'
-            DataBinding.FieldName = 'TotalSummSocialAdd'
+            DataBinding.FieldName = 'SummSocialAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 85
           end
-          object TotalSummFine: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
-            DataBinding.FieldName = 'TotalSummFine'
+          object SummNalog: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
+            DataBinding.FieldName = 'SummNalog'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
-          object TotalSummFineOth: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1088#1072#1089#1087#1088'.)'
-            DataBinding.FieldName = 'TotalSummFineOth'
+          object SummNalogRecalc: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummNalogRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
-            Width = 87
+            Width = 70
           end
-          object TotalSummFineOthRecalc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'TotalSummFineOthRecalc'
+          object SummTransportAdd: TcxGridDBColumn
+            Caption = #1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
+            DataBinding.FieldName = 'SummTransportAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
-            Width = 80
-          end
-          object TotalSummHosp: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'.'
-            DataBinding.FieldName = 'TotalSummHosp'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077
             Options.Editing = False
-            Width = 87
+            Width = 75
           end
-          object TotalSummHospOth: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1088#1072#1089#1087#1088'.)'
-            DataBinding.FieldName = 'TotalSummHospOth'
+          object SummTransportAddLong: TcxGridDBColumn
+            Caption = #1044#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
+            DataBinding.FieldName = 'SummTransportAddLong'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
-            Width = 87
-          end
-          object TotalSummHospOthRecalc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'TotalSummHospOthRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
-            Width = 87
-          end
-          object TotalSummCompensation: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
-            DataBinding.FieldName = 'TotalSummCompensation'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummCompensationRecalc: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'TotalSummCompensationRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalSummAuditAdd: TcxGridDBColumn
-            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
-            DataBinding.FieldName = 'TotalSummAuditAdd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
-            Width = 80
-          end
-          object TotalSummMedicdayAdd: TcxGridDBColumn
-            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
-            DataBinding.FieldName = 'TotalSummMedicdayAdd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
-            Width = 80
-          end
-          object TotalSummSkip: TcxGridDBColumn
-            Caption = #1059#1076#1077#1088#1078'. '#1079#1072' '#1087#1088#1086#1075#1091#1083
-            DataBinding.FieldName = 'TotalSummSkip'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083
-            Width = 80
-          end
-          object TotalSummHouseAdd: TcxGridDBColumn
-            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1078#1080#1083#1100#1077
-            DataBinding.FieldName = 'TotalSummHouseAdd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1078#1080#1083#1100#1077
             Options.Editing = False
-            Width = 80
+            Width = 75
           end
-          object TotalDayAudit: TcxGridDBColumn
-            Caption = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102', '#1076#1085#1077#1081
-            DataBinding.FieldName = 'TotalDayAudit'
+          object SummTransport: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
+            DataBinding.FieldName = 'SummTransport'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummPhone: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1052#1086#1073'.'#1089#1074#1103#1079#1100
+            DataBinding.FieldName = 'SummPhone'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object DayCompensation: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085'. '#1082#1086#1084#1087#1077#1085#1089'. '#1086#1090#1087#1091#1089#1082#1072
+            DataBinding.FieldName = 'DayCompensation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072
+            Options.Editing = False
+            Width = 83
+          end
+          object DayVacation: TcxGridDBColumn
+            Caption = #1055#1086#1083#1086#1078#1077#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072
+            DataBinding.FieldName = 'DayVacation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object DayWork: TcxGridDBColumn
+            Caption = #1056#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'DayWork'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object DayHoliday: TcxGridDBColumn
+            Caption = #1048#1089#1087'. '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072
+            DataBinding.FieldName = 'DayHoliday'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072
+            Options.Editing = False
+            Width = 83
+          end
+          object DayAudit: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102', '#1076#1085'.'
+            DataBinding.FieldName = 'DayAudit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1085#1077#1081' '#1076#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
-          object TotalDayMedicday: TcxGridDBColumn
-            Caption = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091', '#1076#1085#1077#1081
-            DataBinding.FieldName = 'TotalDayMedicday'
+          object SummHoliday: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
+            DataBinding.FieldName = 'SummHoliday'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
+          end
+          object SummAuditAdd: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
+            DataBinding.FieldName = 'SummAuditAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
+            Width = 70
+          end
+          object SummHouseAdd: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1078#1080#1083#1100#1077
+            DataBinding.FieldName = 'SummHouseAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1078#1080#1083#1100#1077
+            Options.Editing = False
+            Width = 70
+          end
+          object DaySkip: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083', '#1076#1085
+            DataBinding.FieldName = 'DaySkip'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1085#1077#1081' '#1091#1076#1077#1088#1078#1072#1085#1080#1081' '#1079#1072' '#1087#1088#1086#1075#1091#1083
+            Options.Editing = False
+            Width = 77
+          end
+          object SummSkip: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083', '#1075#1088#1085'.'
+            DataBinding.FieldName = 'SummSkip'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1091#1076#1077#1088#1078#1072#1085#1080#1081' '#1079#1072' '#1087#1088#1086#1075#1091#1083
+            Options.Editing = False
+            Width = 80
+          end
+          object DayMedicday: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091', '#1076#1085'.'
+            DataBinding.FieldName = 'DayMedicday'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1085#1077#1081' '#1076#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
-          object TotalDaySkip: TcxGridDBColumn
-            Caption = #1059#1076#1077#1088#1078'. '#1079#1072' '#1087#1088#1086#1075#1091#1083', '#1076#1085#1077#1081
-            DataBinding.FieldName = 'TotalDaySkip'
+          object SummMedicdayAdd: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091', '#1075#1088#1085
+            DataBinding.FieldName = 'SummMedicdayAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object MemberName_mi: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1040#1083#1080#1084#1077#1085#1090#1099')'
+            DataBinding.FieldName = 'MemberName_mi'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object InfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1085#1077#1081' '#1091#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083
+            Options.Editing = False
+            Width = 55
+          end
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
-          object PriceNalog: TcxGridDBColumn
-            Caption = #1057#1090#1072#1074#1082#1072' '#1085#1072#1083#1086#1075#1072
-            DataBinding.FieldName = 'PriceNalog'
+          object isAuto_mi: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1089#1090#1088#1086#1082#1080')'
+            DataBinding.FieldName = 'isAuto_mi'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1087#1088#1080' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
+            Options.Editing = False
+            Width = 59
+          end
+          object Comment_mi: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1089#1090#1088#1086#1082#1080')'
+            DataBinding.FieldName = 'Comment_mi'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 125
+          end
+          object SummTransportTaxi: TcxGridDBColumn
+            Caption = #1058#1072#1082#1089#1080' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
+            DataBinding.FieldName = 'SummTransportTaxi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object PersonalServiceListName_mi: TcxGridDBColumn
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1041#1053')'
+            DataBinding.FieldName = 'PersonalServiceListName_mi'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 140
+          end
+          object BankOutDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
+            DataBinding.FieldName = 'BankOutDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
+            Width = 80
+          end
+          object isBankOut: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082
+            DataBinding.FieldName = 'isBankOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082' ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
+            Options.Editing = False
+            Width = 80
+          end
+          object FineSubjectName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1085#1072#1088#1091#1096#1077#1085#1080#1081
+            DataBinding.FieldName = 'FineSubjectName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object UnitFineSubjectName: TcxGridDBColumn
+            Caption = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
+            DataBinding.FieldName = 'UnitFineSubjectName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
+            Width = 70
+          end
+          object InfoMoneyName_all: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1167,7 +1756,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1087#1088#1080' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
             Options.Editing = False
-            Width = 57
+            Width = 66
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -1192,213 +1781,238 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Options.Editing = False
             Width = 100
           end
-          object StartBeginDate: TcxGridDBColumn
-            Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095'.'
-            DataBinding.FieldName = 'StartBeginDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'dd mm yyyy'
-            Properties.SaveTime = False
-            Properties.ShowTime = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1086
-            Options.Editing = False
-            Width = 80
-          end
-          object EndBeginDate: TcxGridDBColumn
-            Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1082#1086#1085#1095'.'
-            DataBinding.FieldName = 'EndBeginDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'dd mm yyyy'
-            Properties.SaveTime = False
-            Properties.ShowTime = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1082#1086#1085#1095#1072#1085#1080#1077
-            Options.Editing = False
-            Width = 80
-          end
-          object is4000: TcxGridDBColumn
-            Caption = #1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. (>=4000)'
-            DataBinding.FieldName = 'is4000'
+          object ContainerId_min: TcxGridDBColumn
+            Caption = 'ContainerId (min)'
+            DataBinding.FieldName = 'ContainerId_min'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. (>=4000)'
-            Width = 70
+            Options.Editing = False
+            Width = 50
           end
-          object InvNumber_BankSecondNum: TcxGridDBColumn
-            Caption = #1044#1086#1082'. '#1055#1088#1080#1086#1088'. '#1088#1072#1089#1087#1088#1077#1076'. '#1047#1055' - '#1060'2'
-            DataBinding.FieldName = 'InvNumber_BankSecondNum'
+          object ContainerId_max: TcxGridDBColumn
+            Caption = 'ContainerId (max)'
+            DataBinding.FieldName = 'ContainerId_max'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1047#1055' - '#1060'2'
             Options.Editing = False
-            Width = 100
+            Width = 50
+          end
+          object AmountCash_pay: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086' ('#1080#1079' '#1082#1072#1089#1089#1099')'
+            DataBinding.FieldName = 'AmountCash_pay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummAvCardSecondRecalc: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. '#1040#1074#1072#1085#1089
+            DataBinding.FieldName = 'SummAvCardSecondRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object WorkTimeHoursOne_child: TcxGridDBColumn
+            Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074' 1 '#1095#1077#1083' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'WorkTimeHoursOne_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalSummChild: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1053#1040#1063#1048#1057#1051#1045#1053#1048#1071' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'TotalSummChild'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
+            DataBinding.FieldName = 'SummDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1053#1040#1063#1048#1057#1051#1045#1053#1048#1049' ('#1088#1072#1089#1095#1077#1090' '#1080' '#1092#1072#1082#1090')'
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_avance: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083#1072#1090#1072' '#1072#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
+            DataBinding.FieldName = 'Amount_avance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object Amount_avance_ps: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083#1072#1090#1072' '#1074'. '#1072#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
+            DataBinding.FieldName = 'Amount_avance_ps'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1087#1083#1072#1090#1072' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1040#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
+            Options.Editing = False
+            Width = 75
+          end
+          object SummAvCardSecond: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'. '#1040#1074#1072#1085#1089
+            DataBinding.FieldName = 'SummAvCardSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummCardSecond_Avance: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' '#1072#1074#1072#1085#1089' - 2'#1092'.'
+            DataBinding.FieldName = 'SummCardSecond_Avance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086' '#1041#1053' '#1072#1074#1072#1085#1089' - 2'#1092'.'
+            Options.Editing = False
+            Width = 70
           end
         end
       end
-      object Panel1: TPanel
+      object ExportXmlGrid: TcxGrid
         Left = 0
-        Top = 544
+        Top = 531
         Width = 1221
-        Height = 80
+        Height = 85
         Align = alBottom
-        Caption = 'Panel1'
         TabOrder = 1
         Visible = False
-        object ExportXmlGrid: TcxGrid
-          Left = 764
-          Top = 1
-          Width = 456
-          Height = 78
-          Align = alRight
-          TabOrder = 0
-          Visible = False
-          object ExportXmlGridDBTableView: TcxGridDBTableView
-            Navigator.Buttons.CustomButtons = <>
-            DataController.DataSource = ExportDS
-            DataController.Summary.DefaultGroupSummaryItems = <>
-            DataController.Summary.FooterSummaryItems = <>
-            DataController.Summary.SummaryGroups = <>
-            OptionsBehavior.IncSearch = True
-            OptionsData.CancelOnExit = False
-            OptionsData.Deleting = False
-            OptionsData.DeletingConfirmation = False
-            OptionsData.Editing = False
-            OptionsData.Inserting = False
-            OptionsView.CellAutoHeight = True
-            OptionsView.ColumnAutoWidth = True
-            OptionsView.GroupByBox = False
-            OptionsView.Header = False
-            object RowData: TcxGridDBColumn
-              DataBinding.FieldName = 'RowData'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Width = 100
-            end
-          end
-          object ExportXmlGridLevel: TcxGridLevel
-            GridView = ExportXmlGridDBTableView
+        object ExportXmlGridDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ExportDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.IncSearch = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.CellAutoHeight = True
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.GroupByBox = False
+          OptionsView.Header = False
+          object RowData: TcxGridDBColumn
+            DataBinding.FieldName = 'RowData'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
         end
-        object ExportXmlGrid_num: TcxGrid
-          Left = 308
-          Top = 1
-          Width = 456
-          Height = 78
-          Align = alRight
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 1
-          object cxGridDBTableView1: TcxGridDBTableView
-            Navigator.Buttons.CustomButtons = <>
-            DataController.DataSource = ExportDS_num
-            DataController.Summary.DefaultGroupSummaryItems = <>
-            DataController.Summary.FooterSummaryItems = <>
-            DataController.Summary.SummaryGroups = <>
-            OptionsBehavior.IncSearch = True
-            OptionsData.CancelOnExit = False
-            OptionsData.Deleting = False
-            OptionsData.DeletingConfirmation = False
-            OptionsData.Editing = False
-            OptionsData.Inserting = False
-            OptionsView.CellAutoHeight = True
-            OptionsView.ColumnAutoWidth = True
-            OptionsView.GroupByBox = False
-            OptionsView.Header = False
-            object expFIO: TcxGridDBColumn
-              DataBinding.FieldName = 'FIO'
-              MinWidth = 180
-              Width = 180
-            end
-            object expName: TcxGridDBColumn
-              DataBinding.FieldName = 'Name'
-              MinWidth = 180
-              Width = 180
-            end
-            object expName_two: TcxGridDBColumn
-              DataBinding.FieldName = 'Name_two'
-              MinWidth = 180
-              Width = 180
-            end
-            object expINN: TcxGridDBColumn
-              DataBinding.FieldName = 'INN'
-              MinWidth = 120
-            end
-            object expPhone: TcxGridDBColumn
-              DataBinding.FieldName = 'Phone'
-              MinWidth = 150
-              Width = 150
-            end
-            object expCardIBANSecond: TcxGridDBColumn
-              DataBinding.FieldName = 'CardIBANSecond'
-              MinWidth = 320
-              Width = 320
-            end
-            object expCardBankSecond: TcxGridDBColumn
-              DataBinding.FieldName = 'CardBankSecond'
-              MinWidth = 180
-            end
-            object expBankSecond_num: TcxGridDBColumn
-              Caption = #1057#1091#1084#1084#1072
-              DataBinding.FieldName = 'BankSecond_num'
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DisplayFormat = ',0.00'
-              MinWidth = 100
-              Width = 100
-            end
-            object expPersonalName: TcxGridDBColumn
-              DataBinding.FieldName = 'PersonalName'
-              MinWidth = 350
-              Width = 350
-            end
-            object expBankSecondName: TcxGridDBColumn
-              DataBinding.FieldName = 'BankSecondName'
-              MinWidth = 250
-              Width = 250
-            end
-            object expCardSecond: TcxGridDBColumn
-              DataBinding.FieldName = 'CardSecond'
-              MinWidth = 320
-              Width = 320
-            end
-          end
-          object cxGridLevel1: TcxGridLevel
-            GridView = cxGridDBTableView1
-          end
+        object ExportXmlGridLevel: TcxGridLevel
+          GridView = ExportXmlGridDBTableView
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 1221
+    Height = 63
+    ExplicitTop = 5
     ExplicitWidth = 1221
+    ExplicitHeight = 63
     inherited deStart: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 45292d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 45292d
     end
     object cbIsServiceDate: TcxCheckBox
-      Left = 405
+      Left = 401
       Top = 5
       Action = actIsServiceDate
       TabOrder = 4
       Width = 200
     end
+    object cxLabel30: TcxLabel
+      Left = 8
+      Top = 35
+      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
+    end
+    object edInvNumberPersonalServiceList: TcxButtonEdit
+      Left = 138
+      Top = 34
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 257
+    end
+    object cxLabel8: TcxLabel
+      Left = 417
+      Top = 35
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
+    object edUnit: TcxButtonEdit
+      Left = 509
+      Top = 34
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 210
+    end
+    object cxLabel5: TcxLabel
+      Left = 744
+      Top = 32
+      Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
+    end
+    object cePosition: TcxButtonEdit
+      Left = 815
+      Top = 34
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 150
+    end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 722
+    Left = 737
     Top = 6
     Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 800
+    Left = 815
     Top = 5
     Properties.Buttons = <
       item
@@ -1409,6 +2023,23 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     TabOrder = 7
     Width = 150
   end
+  object cxLabel3: TcxLabel [4]
+    Left = 976
+    Top = 35
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
+  end
+  object edPersonal: TcxButtonEdit [5]
+    Left = 1046
+    Top = 34
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 163
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
   end
@@ -1417,9 +2048,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 31
+    Left = 23
     Top = 194
-    object macExportZP: TMultiAction [0]
+    object actExportZP: TMultiAction [0]
       Category = 'Export'
       MoveParams = <>
       ActionList = <
@@ -1437,18 +2068,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         #1055'"'
       ImageIndex = 30
     end
-    object actGet_Export_FileNameZp_dbf: TdsdExecStoredProc [1]
-      Category = 'Export_dbf'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_FileNameZP_dbf
-      StoredProcList = <
-        item
-          StoredProc = spGet_Export_FileNameZP_dbf
-        end>
-      Caption = 'actGet_Export_Email'
-    end
-    object actGet_Export_FileNameZp: TdsdExecStoredProc [2]
+    object actGet_Export_FileNameZp: TdsdExecStoredProc [1]
       Category = 'Export'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1458,144 +2078,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           StoredProc = spGet_Export_FileNameZP
         end>
       Caption = 'actGet_Export_Email'
-    end
-    object actGet_Export_FileNameCSVF2: TdsdExecStoredProc [4]
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_FileNameCSVF2
-      StoredProcList = <
-        item
-          StoredProc = spGet_Export_FileNameCSVF2
-        end>
-      Caption = 'actGet_Export_FileNameCSV'
-    end
-    object actExport_GridF2_proir_xls: TExportGrid [5]
-      Category = 'Export_Email'
-      MoveParams = <>
-      Grid = ExportXmlGrid_num
-      Caption = 'actExport_GridF2_xls'
-      OpenAfterCreate = False
-      DefaultFileName = 'Report_'
-      Separator = ';'
-      DefaultFileExt = 'XLS'
-    end
-    object actGet_Export_EmailCSVF2: TdsdExecStoredProc [6]
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_EmailCSVF2
-      StoredProcList = <
-        item
-          StoredProc = spGet_Export_EmailCSVF2
-        end>
-      Caption = 'actGet_Export_EmailCSV'
-    end
-    object actExport_dbf: TdsdStoredProcExportToFile [7]
-      Category = 'Export_dbf'
-      MoveParams = <>
-      dsdStoredProcName = spSelectExport_dbf
-      FilePathParam.Value = ''
-      FilePathParam.DataType = ftString
-      FilePathParam.MultiSelectSeparator = ','
-      FileNameParam.Value = ''
-      FileNameParam.DataType = ftString
-      FileNameParam.MultiSelectSeparator = ','
-      FileExt = '.dbf'
-      FileExtParam.Value = '.dbf'
-      FileExtParam.DataType = ftString
-      FileExtParam.MultiSelectSeparator = ','
-      FileNamePrefix = 'Raiffeisen_'
-      FileNamePrefixParam.Value = 'Raiffeisen_'
-      FileNamePrefixParam.DataType = ftString
-      FileNamePrefixParam.MultiSelectSeparator = ','
-      ExportType = spefExportToDbf
-      FieldDefs = <
-        item
-          Name = 'ACCT_CARD'
-          DataType = ftString
-          Size = 29
-        end
-        item
-          Name = 'FIO'
-          DataType = ftString
-          Size = 50
-        end
-        item
-          Name = 'ID_CODE'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'SUMA'
-          DataType = ftBCD
-          Precision = 2
-          Size = 10
-        end>
-      Left = 1192
-      Top = 216
-    end
-    object actSelect_ExportCSVF2: TdsdExecStoredProc [8]
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSelect_ExportCSVF2
-      StoredProcList = <
-        item
-          StoredProc = spSelect_ExportCSVF2
-        end>
-      Caption = 'actSelect_ExportCSV'
-    end
-    object mactExportCSV_F2: TMultiAction [9]
-      Category = 'Export_Email'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_Export_EmailCSVF2
-        end
-        item
-          Action = actGet_Export_FileNameCSVF2
-        end
-        item
-          Action = actSelect_ExportCSVF2
-        end
-        item
-          Action = actExport_GridCSV
-        end
-        item
-          Action = actSMTPFileCSV
-        end
-        item
-          Action = actUpdate_isMail
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081'  CSV - '#8470' '#1082#1072#1088#1090#1099' '#1060'2 '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087 +
-        #1086' '#1087#1086#1095#1090#1077'?'
-      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV - '#8470' '#1082#1072#1088#1090#1099' '#1060'2 '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
-      ImageIndex = 53
-    end
-    object macExport_dbf: TMultiAction [10]
-      Category = 'Export_dbf'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_Export_FileNameZp_dbf
-        end
-        item
-          Action = actExport_dbf
-        end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1069#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1076#1083#1103' "'#1056#1072#1081#1092#1092#1072 +
-        #1081#1079#1077#1085'"?'
-      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
-      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1056#1072#1081#1092#1092#1072#1081#1079#1077#1085'"'
-      Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1056#1072#1081#1092#1092#1072#1081#1079#1077#1085'"'
-      ImageIndex = 61
     end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TPersonalServiceForm'
@@ -1637,57 +2119,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           StoredProc = spSelect
         end>
     end
-    object actPrint_Num: TdsdPrintAction [20]
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint_Num
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Num
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-      Hint = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1087#1086' '#1079#1087' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084')>'
-      ImageIndex = 17
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_PersonalServiceNum'
-      ReportNameParam.Name = 'PrintMovement_PersonalServiceNum'
-      ReportNameParam.Value = 'PrintMovement_PersonalServiceNum'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint: TdsdPrintAction [30]
+    object actPrint: TdsdPrintAction [21]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1738,7 +2170,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [31]
+    object actPrint_All: TdsdPrintAction [22]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1788,7 +2220,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Detail: TdsdPrintAction [32]
+    object actPrint_Detail: TdsdPrintAction [23]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1840,60 +2272,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actOpenFormPersonalServiceDetailUnit: TdsdOpenForm [34]
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 
-        #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102' '#1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080 +
-        #1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-      Hint = 
-        #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102' '#1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080 +
-        #1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-      ImageIndex = 26
-      FormName = 'TPersonalServiceItemJournal_unitForm'
-      FormNameParam.Value = 'TPersonalServiceItemJournal_unitForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 42736d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42736d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'IsServiceDate'
-          Value = False
-          Component = cbIsServiceDate
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalServiceListId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PersonalServiceListId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalServiceListName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PersonalServiceListName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actInsertUpdateMISignYes: TdsdExecStoredProc [36]
+    object actInsertUpdateMISignYes: TdsdExecStoredProc [26]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1998,8 +2377,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       ImageIndex = 35
-      FormName = 'TMovement_DateDialogForm'
-      FormNameParam.Value = 'TMovement_DateDialogForm'
+      FormName = 'TPersonalService_DetailDialogForm'
+      FormNameParam.Value = 'TPersonalService_DetailDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2024,6 +2403,74 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Value = False
           Component = cbIsServiceDate
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListId'
+          Value = Null
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListName'
+          Value = Null
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionId'
+          Value = Null
+          Component = GuidesPosition
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionName'
+          Value = Null
+          Component = GuidesPosition
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalId'
+          Value = Null
+          Component = GuidesPersonal
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = GuidesPersonal
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -2205,16 +2652,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       DefaultFileName = 'Report_'
       DefaultFileExt = 'XML'
     end
-    object actExport_GridF2_xls: TExportGrid
-      Category = 'Export_Email'
-      MoveParams = <>
-      Grid = ExportXmlGrid
-      Caption = 'actExport_GridF2_xls'
-      OpenAfterCreate = False
-      DefaultFileName = 'Report_'
-      Separator = ';'
-      DefaultFileExt = 'XLS'
-    end
     object actSMTPFileCSV: TdsdSMTPFileAction
       Category = 'Export_Email'
       MoveParams = <>
@@ -2323,189 +2760,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1087#1086#1095#1090#1077
       ImageIndex = 53
     end
-    object actOpenFormPersonalServiceDetail: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-      ImageIndex = 42
-      FormName = 'TPersonalServiceItemJournalForm'
-      FormNameParam.Value = 'TPersonalServiceItemJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = Null
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = Null
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'IsServiceDate'
-          Value = Null
-          Component = cbIsServiceDate
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalServiceListId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PersonalServiceListId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalServiceListName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PersonalServiceListName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actSelect_ExportF2_xls: TdsdExecStoredProc
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSelect_ExportF2_xls
-      StoredProcList = <
-        item
-          StoredProc = spSelect_ExportF2_xls
-        end>
-      Caption = 'actSelect_ExportF2_xls'
-    end
-    object actGet_Export_FileNameF2_xls: TdsdExecStoredProc
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_FileNameF2_xls
-      StoredProcList = <
-        item
-          StoredProc = spGet_Export_FileNameF2_xls
-        end>
-      Caption = 'actGet_Export_FileNameF2_xls'
-    end
-    object actGet_Export_EmailF2_xls: TdsdExecStoredProc
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_EmailF2_xls
-      StoredProcList = <
-        item
-          StoredProc = spGet_Export_EmailF2_xls
-        end>
-      Caption = 'actGet_Export_EmailF2_xls'
-    end
-    object mactExportF2_xls: TMultiAction
-      Category = 'Export_Email'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_Export_EmailF2_xls
-        end
-        item
-          Action = actGet_Export_FileNameF2_xls
-        end
-        item
-          Action = actSelect_ExportF2_xls
-        end
-        item
-          Action = actExport_GridF2_xls
-        end
-        item
-          Action = actSMTPFileCSV
-        end
-        item
-          Action = actUpdate_isMail
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' XLS - '#8470' '#1082#1072#1088#1090#1099' '#1060'2 '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086 +
-        ' '#1087#1086#1095#1090#1077'?'
-      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#8470' '#1082#1072#1088#1090#1099' '#1060'2 '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
-      ImageIndex = 53
-    end
-    object actGet_Export_EmailF2_prior_xls: TdsdExecStoredProc
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_EmailF2_prior_xls
-      StoredProcList = <
-        item
-          StoredProc = spGet_Export_EmailF2_prior_xls
-        end>
-      Caption = 'actGet_Export_EmailF2_xls'
-    end
-    object actGet_Export_FileNameF2_prior_xls: TdsdExecStoredProc
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_FileNameF2_prior_xls
-      StoredProcList = <
-        item
-          StoredProc = spGet_Export_FileNameF2_prior_xls
-        end>
-      Caption = 'actGet_Export_FileNameF2_xls'
-    end
-    object actSelect_ExportF2_prior_xls: TdsdExecStoredProc
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSelect_ExportF2_prior_xls
-      StoredProcList = <
-        item
-          StoredProc = spSelect_ExportF2_prior_xls
-        end>
-      Caption = 'actSelect_ExportF2_xls'
-    end
-    object mactExportF2_prior_xls: TMultiAction
-      Category = 'Export_Email'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_Export_EmailF2_prior_xls
-        end
-        item
-          Action = actGet_Export_FileNameF2_prior_xls
-        end
-        item
-          Action = actSelect_ExportF2_prior_xls
-        end
-        item
-          Action = actExport_GridF2_proir_xls
-        end
-        item
-          Action = actSMTPFileCSV
-        end
-        item
-          Action = actUpdate_isMail
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077 +
-        ' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1060'2 '#1087#1086' '#1087#1086#1095#1090#1077'?'
-      InfoAfterExecute = 
-        #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1060'2 '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090 +
-        #1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1060'2'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
-      ImageIndex = 89
-    end
     object actUpdate_isMail: TdsdExecStoredProc
       Category = 'Export_Email'
       MoveParams = <>
@@ -2519,14 +2773,14 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 64
-    Top = 139
+    Left = 8
+    Top = 115
   end
   inherited MasterCDS: TClientDataSet
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalService'
+    StoredProcName = 'gpSelect_Movement_PersonalService_ItemUnit'
     Params = <
       item
         Name = 'inStartDate'
@@ -2547,7 +2801,39 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Name = 'inJuridicalBasisId'
         Value = Null
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListId'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2568,8 +2854,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 120
-    Top = 131
+    Left = 112
+    Top = 187
   end
   inherited BarManager: TdxBarManager
     Left = 224
@@ -2625,22 +2911,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormPersonalServiceDetail'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonalServiceDetailUnit'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsertUpdateMISignYesList'
         end
         item
@@ -2660,9 +2930,32 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'bbsPrint'
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_All'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Detail'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsExport'
         end
         item
           Visible = True
@@ -2677,17 +2970,12 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'bbsSend'
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
         end>
     end
     object bbTax: TdxBarButton
@@ -2723,7 +3011,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       ImageIndex = 21
     end
     object bbExportZp: TdxBarButton
-      Action = macExportZP
+      Action = actExportZP
       Category = 0
     end
     object bbPrint_All: TdxBarButton
@@ -2751,42 +3039,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Action = mactExportCSV
       Category = 0
     end
-    object bbOpenFormPersonalServiceDetail: TdxBarButton
-      Action = actOpenFormPersonalServiceDetail
-      Category = 0
-    end
-    object bbExport_dbf: TdxBarButton
-      Action = macExport_dbf
-      Category = 0
-    end
-    object bbExportCSV_F2: TdxBarButton
-      Action = mactExportCSV_F2
-      Category = 0
-    end
-    object bbsPrint: TdxBarSubItem
-      Caption = #1055#1077#1095#1072#1090#1100
-      Category = 0
-      Visible = ivAlways
-      ImageIndex = 3
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_All'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Detail'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Num'
-        end>
-    end
-    object bbsSend: TdxBarSubItem
+    object bbsExport: TdxBarSubItem
       Caption = #1069#1082#1089#1087#1086#1088#1090
       Category = 0
       Visible = ivAlways
@@ -2798,11 +3051,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbExport_dbf'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSeparator1'
+          ItemName = 'bbSeparate'
         end
         item
           Visible = True
@@ -2810,51 +3059,19 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbSeparator1'
+          ItemName = 'bbSeparate'
         end
         item
           Visible = True
           ItemName = 'bbExportCSV'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSeparator1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportCSV_F2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbtExportF2_xls'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportF2_prior_xls'
         end>
     end
-    object bbSeparator1: TdxBarSeparator
-      Caption = 'Separator'
+    object bbSeparate: TdxBarSeparator
+      Caption = 'bbSeparate'
       Category = 0
-      Hint = 'Separator'
+      Hint = 'bbSeparate'
       Visible = ivAlways
       ShowCaption = False
-    end
-    object bbtExportF2_xls: TdxBarButton
-      Action = mactExportF2_xls
-      Category = 0
-    end
-    object bbExportF2_prior_xls: TdxBarButton
-      Action = mactExportF2_prior_xls
-      Category = 0
-    end
-    object bbPrint_Num: TdxBarButton
-      Action = actPrint_Num
-      Category = 0
-    end
-    object bbPersonalServiceDetailUnit: TdxBarButton
-      Action = actOpenFormPersonalServiceDetailUnit
-      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2875,7 +3092,19 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         Component = PeriodChoice
       end
       item
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
+      end
+      item
+        Component = GuidesPersonalServiceList
+      end
+      item
+        Component = GuidesPersonal
+      end
+      item
+        Component = GuidesUnit
+      end
+      item
+        Component = GuidesPosition
       end>
     Left = 392
     Top = 304
@@ -2963,6 +3192,64 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         DataType = ftString
         ParamType = ptUnknown
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsServiceDate'
+        Value = Null
+        Component = cbIsServiceDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalServiceListId'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalServiceListName'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -3019,7 +3306,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 599
+    Left = 535
     Top = 248
   end
   object spSelectExport: TdsdStoredProc
@@ -3073,10 +3360,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 864
-    Top = 632
+    Left = 160
+    Top = 408
   end
-  object JuridicalBasisGuides: TdsdGuides
+  object GuidesJuridicalBasis: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalBasis
     Key = '0'
@@ -3089,7 +3376,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Name = 'Key'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3097,13 +3384,14 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 895
+    Top = 65528
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -3113,21 +3401,21 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Name = 'JuridicalBasisId'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 728
-    Top = 152
+    Left = 760
+    Top = 160
   end
   object spGet_Export_FileNameZP: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Export_FileName'
@@ -3152,7 +3440,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       end
       item
         Name = 'outFileExt'
-        Value = '.txt'
+        Value = Null
+        Component = actExportToFileZp
+        ComponentItem = 'FileExt'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -3340,8 +3630,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   end
   object ExportDS: TDataSource
     DataSet = ExportCDS
-    Left = 808
-    Top = 616
+    Left = 232
+    Top = 520
   end
   object ExportEmailDS: TDataSource
     DataSet = ExportEmailCDS
@@ -3378,8 +3668,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 440
+    Left = 392
+    Top = 512
   end
   object spGet_Export_FileNameCSV: TdsdStoredProc
     StoredProcName = 'gpGet_PersonalService_FileNameCSV'
@@ -3467,451 +3757,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 624
-    Top = 488
-  end
-  object spSelectExport_dbf: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalService_export_dbf'
-    DataSet = ExportCDS
-    DataSets = <
-      item
-        DataSet = ExportCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInvNumber'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'InvNumber'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSummCardRecalc'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 581
-    Top = 413
-  end
-  object spGet_Export_FileNameZP_dbf: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Export_FileName'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileNamePrefix'
-        Value = Null
-        Component = actExport_dbf
-        ComponentItem = 'FileNamePrefix'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileExt'
-        Value = '.dbf'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 738
-    Top = 410
-  end
-  object spGet_Export_EmailCSVF2: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_PersonalService_Email'
-    DataSet = ExportEmailCDS
-    DataSets = <
-      item
-        DataSet = ExportEmailCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '2'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 904
-    Top = 416
-  end
-  object spGet_Export_FileNameCSVF2: TdsdStoredProc
-    StoredProcName = 'gpGet_PersonalService_FileNameCSV'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '2'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileName'
-        Value = Null
-        Component = actExport_GridCSV
-        ComponentItem = 'DefaultFileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outDefaultFileExt'
-        Value = Null
-        Component = actExport_GridCSV
-        ComponentItem = 'DefaultFileExt'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outEncodingANSI'
-        Value = Null
-        Component = actExport_GridCSV
-        ComponentItem = 'EncodingANSI'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileName'
-        Value = Null
-        Component = actSMTPFileCSV
-        ComponentItem = 'FileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outExportType'
-        Value = Null
-        Component = actExport_GridCSV
-        ComponentItem = 'ExportType'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 904
-    Top = 504
-  end
-  object spSelect_ExportCSVF2: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalService_mail'
-    DataSet = ExportCDS
-    DataSets = <
-      item
-        DataSet = ExportCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '2'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 912
-    Top = 464
-  end
-  object spGet_Export_EmailF2_xls: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_PersonalService_Email'
-    DataSet = ExportEmailCDS
-    DataSets = <
-      item
-        DataSet = ExportEmailCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '3'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1032
-    Top = 416
-  end
-  object spSelect_ExportF2_xls: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalService_mail_xls'
-    DataSet = ExportCDS
-    DataSets = <
-      item
-        DataSet = ExportCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '3'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1040
-    Top = 472
-  end
-  object spGet_Export_FileNameF2_xls: TdsdStoredProc
-    StoredProcName = 'gpGet_PersonalService_FileNameCSV'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '3'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileName'
-        Value = Null
-        Component = actExport_GridF2_xls
-        ComponentItem = 'DefaultFileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outDefaultFileExt'
-        Value = Null
-        Component = actExport_GridF2_xls
-        ComponentItem = 'DefaultFileExt'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outEncodingANSI'
-        Value = Null
-        Component = actExport_GridF2_xls
-        ComponentItem = 'EncodingANSI'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileName'
-        Value = Null
-        Component = actSMTPFileCSV
-        ComponentItem = 'FileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1040
-    Top = 520
-  end
-  object spGet_Export_EmailF2_prior_xls: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_PersonalService_Email'
-    DataSet = ExportEmailCDS
-    DataSets = <
-      item
-        DataSet = ExportEmailCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '4'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1144
-    Top = 376
-  end
-  object spSelect_ExportF2_prior_xls: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalServiceNum_mail_xls'
-    DataSet = ExportCDS_num
-    DataSets = <
-      item
-        DataSet = ExportCDS_num
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '4'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1144
-    Top = 432
-  end
-  object spGet_Export_FileNameF2_prior_xls: TdsdStoredProc
-    StoredProcName = 'gpGet_PersonalService_FileNameCSV'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParam'
-        Value = '4'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileName'
-        Value = Null
-        Component = actExport_GridF2_proir_xls
-        ComponentItem = 'DefaultFileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outDefaultFileExt'
-        Value = Null
-        Component = actExport_GridF2_proir_xls
-        ComponentItem = 'DefaultFileExt'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outEncodingANSI'
-        Value = Null
-        Component = actExport_GridF2_proir_xls
-        ComponentItem = 'EncodingANSI'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileName'
-        Value = Null
-        Component = actSMTPFileCSV
-        ComponentItem = 'FileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1144
-    Top = 480
-  end
-  object ExportCDS_num: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 400
-    Top = 624
-  end
-  object ExportDS_num: TDataSource
-    DataSet = ExportCDS_num
-    Left = 344
-    Top = 608
-  end
-  object spSelectPrint_Num: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalServiceNum_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 567
-    Top = 312
+    Left = 600
+    Top = 512
   end
   object spUpdate_isMail: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_isMail'
@@ -3927,7 +3774,128 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 312
-    Top = 432
+    Left = 80
+    Top = 376
+  end
+  object GuidesPersonalServiceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberPersonalServiceList
+    Key = '0'
+    FormNameParam.Value = 'TPersonalServiceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalServiceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 260
+    Top = 16
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 592
+    Top = 16
+  end
+  object GuidesPosition: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 831
+    Top = 32
+  end
+  object GuidesPersonal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1071
+    Top = 32
   end
 end
