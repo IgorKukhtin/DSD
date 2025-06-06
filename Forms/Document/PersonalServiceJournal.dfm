@@ -1840,7 +1840,60 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertUpdateMISignYes: TdsdExecStoredProc [35]
+    object actOpenFormPersonalServiceDetailUnit: TdsdOpenForm [34]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 
+        #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102' '#1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080 +
+        #1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
+      Hint = 
+        #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102' '#1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080 +
+        #1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
+      ImageIndex = 26
+      FormName = 'TPersonalServiceItemJournal_unitForm'
+      FormNameParam.Value = 'TPersonalServiceItemJournal_unitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsServiceDate'
+          Value = False
+          Component = cbIsServiceDate
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalServiceListId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalServiceListName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actInsertUpdateMISignYes: TdsdExecStoredProc [36]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2580,6 +2633,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMISignYesList'
         end
         item
@@ -2789,6 +2846,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     end
     object bbPrint_Num: TdxBarButton
       Action = actPrint_Num
+      Category = 0
+    end
+    object bbPersonalServiceDetailUnit: TdxBarButton
+      Action = actOpenFormPersonalServiceDetailUnit
       Category = 0
     end
   end

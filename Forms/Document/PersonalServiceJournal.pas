@@ -185,6 +185,8 @@ type
     expCardBankSecond: TcxGridDBColumn;
     spUpdate_isMail: TdsdStoredProc;
     actUpdate_isMail: TdsdExecStoredProc;
+    actOpenFormPersonalServiceDetailUnit: TdsdOpenForm;
+    bbPersonalServiceDetailUnit: TdxBarButton;
   private
     { Private declarations }
   public

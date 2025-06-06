@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionSeparate_PriceFact(
     IN inMovementId         Integer  , -- ключ Документа
     IN inGoodsId            Integer  ,
     IN inPartionGoods       TVarChar   ,
-    IN inSession           TVarChar    -- сессия пользователя
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsId Integer
              , GoodsCode Integer

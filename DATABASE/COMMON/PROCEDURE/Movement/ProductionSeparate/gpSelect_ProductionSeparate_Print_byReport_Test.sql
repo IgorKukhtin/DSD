@@ -1,6 +1,7 @@
 -- Function: gpSelect_ProductionSeparate_Print_byReport_Test()
 
 DROP FUNCTION IF EXISTS gpSelect_ProductionSeparate_Print_byReport_Test (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ProductionSeparate_Print_byReport_Test (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ProductionSeparate_Print_byReport_Test(
     IN inStartDate          TDateTime ,  
@@ -8,9 +9,10 @@ CREATE OR REPLACE FUNCTION gpSelect_ProductionSeparate_Print_byReport_Test(
     IN inFromId             Integer   ,    -- от кого 
     IN inToId               Integer   ,    -- кому
     IN inPriceListId_norm   Integer   ,
-    IN inMovementId         Integer  , -- ключ Документа
-    IN inGoodsId            Integer  ,
-    IN inIsPartion          Boolean   ,
+    IN inMovementId         Integer   , -- ключ Документа
+    IN inGoodsId            Integer   ,
+    IN inisGroup            Boolean   , --итоговая накладная по гл. партии
+    IN inPartionGoods_main  TVarChar  , --главная партия
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -22,14 +24,20 @@ $BODY$
     DECLARE vbDescId Integer;
     DECLARE vbOperDate TDateTime;
 
-    DECLARE vbPartionGoodsId_null Integer;
-
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     IF COALESCE (inPartionGoods_main,'') = ''
+     THEN
+          -- нет партии
+          RAISE EXCEPTION 'Ошибка.Партия не определена.';
+     END IF;
+     
 
      IF COALESCE (inMovementId,0) <> 0
      THEN
@@ -57,25 +65,6 @@ BEGIN
        END IF;
 
      END IF;
-
-    -- поиск пустой партии, т.к. ее надо отбросить
-    vbPartionGoodsId_null:= (SELECT Object.Id
-                             FROM Object
-                                  LEFT JOIN ObjectLink AS ObjectLink_Unit
-                                                       ON ObjectLink_Unit.ObjectId = Object.Id
-                                                      AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
-                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
-                                                       ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
-                                                      AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
-                                  LEFT JOIN ObjectLink AS ObjectLink_PartionCell
-                                                       ON ObjectLink_PartionCell.ObjectId      = Object.Id
-                                                      AND ObjectLink_PartionCell.DescId        = zc_ObjectLink_PartionGoods_PartionCell()
-                             WHERE Object.ValueData = ''
-                               AND Object.DescId = zc_Object_PartionGoods()
-                               AND ObjectLink_Unit.ObjectId IS NULL
-                               AND ObjectLink_GoodsKindComplete.ObjectId IS NULL
-                               AND ObjectLink_PartionCell.ObjectId       IS NULL -- т.е. вообще нет этого св-ва
-                            ); -- 80132
 
     CREATE TEMP TABLE _tmpFromGroup (FromId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpToGroup (ToId  Integer) ON COMMIT DROP;
@@ -126,6 +115,7 @@ BEGIN
                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                            WHERE Movement.Id = inMovementId
                              AND COALESCE (inMovementId,0) <> 0
+                             AND inisGroup = FALSE
                           UNION
                            SELECT Movement.Id                           AS MovementId
                                 , Movement.InvNumber                    AS InvNumber
@@ -153,7 +143,8 @@ BEGIN
                             WHERE COALESCE (inMovementId,0) = 0
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_ProductionSeparate()
-                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                              AND Movement.StatusId = zc_Enum_Status_Complete() 
+                              AND ((MovementString_PartionGoods.ValueData ILIKE '%'||inPartionGoods_main||'%'  AND inisGroup = TRUE) OR inisGroup = FALSE)
                        )
     --так быстрее работает 
     , tmpMI_MasterALL AS (
@@ -175,13 +166,13 @@ BEGIN
                                    WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'об-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
                                    WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'мо-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
                                    ELSE tmpMovement_all.PartionGoods ::TVarChar
-                              END AS PartionGoods_GV
+                              END AS PartionGoods_main
                        FROM tmpMovement_all
                        WHERE tmpMovement_all.MovementId IN (SELECT DISTINCT tmpMI_Master.MovementId FROM tmpMI_Master)
                        )
 
        --данные по партии для товара 4134 по партии
-     ,  tmpGoods_4134 AS (SELECT tmpPartionGoods.PartionGoods_GV
+     ,  tmpGoods_4134 AS (SELECT tmpPartionGoods.PartionGoods_main
                                , tmpData.GoodsCode
                                , tmpData.GoodsName
                                , tmpData.Amount
@@ -189,9 +180,9 @@ BEGIN
                                , tmpData.PriceFact ::TFloat
                                , tmpData.SummFact ::TFloat
                                , tmpData.Persent_v 
-                 FROM (SELECT DISTINCT tmpMovement.PartionGoods_GV, MAX (tmpMovement.OperDate) AS OperDate FROM tmpMovement
-                      GROUP BY tmpMovement.PartionGoods_GV) AS tmpPartionGoods
-                  LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpPartionGoods.OperDate::TDateTime, tmpPartionGoods.OperDate::TDateTime, 0, 4261, tmpPartionGoods.PartionGoods_GV, '5') AS tmpData  ON 1=1
+                 FROM (SELECT DISTINCT tmpMovement.PartionGoods_main, MAX (tmpMovement.OperDate) AS OperDate FROM tmpMovement
+                      GROUP BY tmpMovement.PartionGoods_main) AS tmpPartionGoods
+                  LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpPartionGoods.OperDate::TDateTime, tmpPartionGoods.OperDate::TDateTime, 0, 4261, tmpPartionGoods.PartionGoods_main, '5') AS tmpData  ON 1=1
                  )
 
        --данные по документам
@@ -216,8 +207,8 @@ BEGIN
                       , tmpGoods_4134.Persent_v :: TFloat AS Persent_4134
 
                    FROM tmpMovement
-                     LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpMovement.OperDate::TDateTime, tmpMovement.OperDate::TDateTime, tmpMovement.MovementId, 0, tmpMovement.PartionGoods_GV, '5') AS tmpData  ON 1=1
-                     LEFT JOIN tmpGoods_4134 ON tmpGoods_4134.PartionGoods_GV = tmpMovement.PartionGoods_GV
+                     LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpMovement.OperDate::TDateTime, tmpMovement.OperDate::TDateTime, tmpMovement.MovementId, 0, tmpMovement.PartionGoods_main, '5') AS tmpData  ON 1=1
+                     LEFT JOIN tmpGoods_4134 ON tmpGoods_4134.PartionGoods_main = tmpMovement.PartionGoods_main
                    )
 
 
@@ -225,7 +216,7 @@ BEGIN
                           , tmpData.InvNumber
                           , tmpData.OperDate
                           , tmpData.PartionGoods
-                          , tmpData.PartionGoods_GV
+                          , tmpData.PartionGoods_main
                           , tmpData.OperDate_partion
                           , tmpData.GoodsNameMaster
                           , tmpData.CountMaster
@@ -234,6 +225,7 @@ BEGIN
                           , tmpData.HeadCountMaster
                           --, tmpData.PriceMaster 
                           , ((COALESCE (tmpData.SummMaster,0) - COALESCE (tmpData.SummCostIncome,0)) / tmpData.CountMaster ) AS PriceMaster
+                          , ((COALESCE (tmpData.SummMaster,0) - COALESCE (tmpData.SummCostIncome,0)) / tmpData.CountMaster ) * tmpData.CountMaster 
                           , tmpData.FromName
                           , tmpData.PersonalPackerName 
                           , tmpData.Separate_info
@@ -260,8 +252,8 @@ BEGIN
                           , tmpData.SummHeadCount1  -- ср вес головы из Separate
                           --, tmpData.Separate_info   
                           
-                          , CASE WHEN tmpData.GoodsId = 4261 THEN tmpData.SummFact ELSE 0 END     AS summ_4134
-                          , CASE WHEN tmpData.GoodsId = 4261 THEN tmpData.Amount ELSE 0 END       AS AmountMaster_4134
+                          , SUM (CASE WHEN tmpData.GoodsId = 4261 THEN tmpData.SummFact ELSE 0 END) OVER (PARTITION BY tmpData.MovementId)     AS summ_4134
+                          , SUM (CASE WHEN tmpData.GoodsId = 4261 THEN tmpData.Amount ELSE 0 END) OVER (PARTITION BY tmpData.MovementId)       AS AmountMaster_4134
                           --, CASE WHEN COALESCE (tmpCursor1.CountMaster,0) <> 0 THEN 100  * tmpMaster.Amount / tmpCursor1.CountMaster ELSE 0 END :: TFloat AS Persent_4134
                           
                           --
@@ -296,28 +288,28 @@ BEGIN
                           , tmpData.Amount_4134
                           , tmpData.Persent_4134
                           --
-                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN tmpData.Amount ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_GV)      AS Amount_GroupStat
-                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN tmpData.SummFact ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_GV)    AS SummFact_GroupStat
-                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN (tmpData.PriceFact_nk * tmpData.Amount) ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_GV)      AS SummFact_nk_GroupStat     --для свинины НК другой расчет цены факт, поэтому суммы дублирую
-                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN (tmpData.PriceFact_4134 * tmpData.Amount) ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_GV)    AS SummFact_4134_GroupStat 
-                          , SUM (tmpData.Amount) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_GV, tmpData.GoodsGroupNameFull)   ::TFloat AS Amount_Group          --итого количество по группам товаров
-                          , SUM (tmpData.SummFact) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_GV, tmpData.GoodsGroupNameFull) ::TFloat AS SummFact_Group        --итого сумма факт по группам товаров
-                          , SUM ((tmpData.PriceFact_nk * tmpData.Amount)) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_GV, tmpData.GoodsGroupNameFull) ::TFloat AS SummFact_nk_Group        --итого сумма факт по группам товаров
+                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN tmpData.Amount ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main)      AS Amount_GroupStat
+                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN tmpData.SummFact ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main)    AS SummFact_GroupStat
+                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN (tmpData.PriceFact_nk * tmpData.Amount) ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main)      AS SummFact_nk_GroupStat     --для свинины НК другой расчет цены факт, поэтому суммы дублирую
+                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN (tmpData.PriceFact_4134 * tmpData.Amount) ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main)    AS SummFact_4134_GroupStat 
+                          , SUM (tmpData.Amount) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main, tmpData.GoodsGroupNameFull)   ::TFloat AS Amount_Group          --итого количество по группам товаров
+                          , SUM (tmpData.SummFact) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main, tmpData.GoodsGroupNameFull) ::TFloat AS SummFact_Group        --итого сумма факт по группам товаров
+                          , SUM ((tmpData.PriceFact_nk * tmpData.Amount)) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main, tmpData.GoodsGroupNameFull) ::TFloat AS SummFact_nk_Group        --итого сумма факт по группам товаров
                           --, SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN (tmpGoods_4134.PriceFact * tmpData.Amount) ELSE 0 END) OVER ()        ::TFloat AS SummFact_4134_GroupStat    --итого сумма факт по группам статистики    - входит в выход
            
-                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN tmpData.Amount ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_GV)  AS Amount_GroupStat_yes
-                          , SUM (CASE WHEN tmpData.GroupStatId <> 12045233 THEN tmpData.Amount ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_GV) AS Amount_GroupStat_no
-                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN tmpData.SummFact ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_GV)    AS Summ_GroupStat_yes
-                          , SUM (CASE WHEN tmpData.GroupStatId <> 12045233 THEN tmpData.SummFact ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_GV)   AS Summ_GroupStat_no
+                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN tmpData.Amount ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main)  AS Amount_GroupStat_yes
+                          , SUM (CASE WHEN tmpData.GroupStatId <> 12045233 THEN tmpData.Amount ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main) AS Amount_GroupStat_no
+                          , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN tmpData.SummFact ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main)    AS Summ_GroupStat_yes
+                          , SUM (CASE WHEN tmpData.GroupStatId <> 12045233 THEN tmpData.SummFact ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main)   AS Summ_GroupStat_no
 
                      FROM tmpData
                          
                      )
 
      , tmpGroupAll AS (SELECT * 
-                            , ROW_NUMBER () OVER (PARTITION BY tmp.MovementId, tmp.PartionGoods_gv ORDER BY tmp.MovementId, tmp.PartionGoods_gv, tmp.NumStatGroup, tmp.GoodsGroupCode, tmp.GoodsGroupName asc) AS Ord
-                       FROM (SELECT CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpResult.MovementId END AS MovementId
-                                  , tmpResult.PartionGoods_gv
+                            , ROW_NUMBER () OVER (PARTITION BY tmp.MovementId, tmp.PartionGoods_main ORDER BY tmp.MovementId, tmp.PartionGoods_main, tmp.NumStatGroup, tmp.GoodsGroupCode, tmp.GoodsGroupName asc) AS Ord
+                       FROM (SELECT CASE WHEN inisGroup = TRUE THEN 0 ELSE tmpResult.MovementId END AS MovementId
+                                  , tmpResult.PartionGoods_main
                                   , CASE WHEN tmpResult.GroupStatId = 12045233 THEN 0 ELSE 1 END AS NumStatGroup
                                   , tmpResult.GoodsGroupCode
                                   , tmpResult.GoodsGroupName
@@ -326,15 +318,15 @@ BEGIN
                                   , SUM (tmpResult.PriceFact_nk * tmpResult.Amount)   AS Summ_nk
                              FROM tmpResult
                             -- WHERE tmpResult.GroupStatId = 12045233
-                             GROUP BY CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpResult.MovementId END
-                                    , tmpResult.PartionGoods_gv
+                             GROUP BY CASE WHEN inisGroup = TRUE THEN 0 ELSE tmpResult.MovementId END
+                                    , tmpResult.PartionGoods_main
                                     , tmpResult.GoodsGroupName   
                                     , CASE WHEN tmpResult.GroupStatId = 12045233 THEN 0 ELSE 1 END 
                                   , tmpResult.GoodsGroupCode
                              HAVING SUM (tmpResult.Amount) <> 0 AND SUM (tmpResult.SummFact) <> 0
                              ) AS tmp
                       )
-     , tmpGroup AS (SELECT tmp.MovementId, tmp.PartionGoods_gv
+     , tmpGroup AS (SELECT tmp.MovementId, tmp.PartionGoods_main
                       , SUM (CASE WHEN tmp.Ord = 1 THEN CASE WHEN COALESCE (tmp.Amount,0) <> 0 THEN tmp.Summ / tmp.Amount ELSE 0 END ELSE 0 END) AS Price_gr1
                       , SUM (CASE WHEN tmp.Ord = 2 THEN CASE WHEN COALESCE (tmp.Amount,0) <> 0 THEN tmp.Summ / tmp.Amount ELSE 0 END ELSE 0 END) AS Price_gr2
                       , SUM (CASE WHEN tmp.Ord = 3 THEN CASE WHEN COALESCE (tmp.Amount,0) <> 0 THEN tmp.Summ / tmp.Amount ELSE 0 END ELSE 0 END) AS Price_gr3
@@ -368,23 +360,155 @@ BEGIN
                       , MAX (CASE WHEN tmp.Ord = 9 THEN tmp.GoodsGroupName ELSE '' END) AS GoodsGroupName9
                       , MAX (CASE WHEN tmp.Ord = 10 THEN tmp.GoodsGroupName ELSE '' END) AS GoodsGroupName10
                  FROM tmpGroupAll AS tmp
-                 GROUP BY tmp.MovementId, tmp.PartionGoods_gv
+                 GROUP BY tmp.MovementId, tmp.PartionGoods_main
                  )                       
-                          
+                 
+         --группировака данных шапки печати по документам или по гл. партии
+     , tmpMain_Group AS (SELECT tmpCursor1.MovementId
+                              , tmpCursor1.InvNumber
+                              , MIN(tmpCursor1.OperDate) AS OperDate
+                              , tmpCursor1.PartionGoods
+                              , tmpCursor1.PartionGoods_main
+                              , tmpCursor1.OperDate_partion
+                              , tmpCursor1.GoodsNameMaster
+                              , SUM (tmpCursor1.CountMaster ) AS CountMaster
+                              , SUM (tmpCursor1.SummMaster) AS SummMaster
+                              , SUM (tmpCursor1.CountMaster_4134 ) AS CountMaster_4134
+                              , SUM (tmpCursor1.HeadCountMaster) AS HeadCountMaster
+                              , SUM (tmpCursor1.SummMaster) / SUM (tmpCursor1.CountMaster ) AS PriceMaster
+                              , tmpCursor1.FromName
+                              , tmpCursor1.PersonalPackerName
+                              , tmpCursor1.GoodsNameIncome
+                              , tmpCursor1.CountIncome
+                              , tmpCursor1.SummIncome
+                              , tmpCursor1.HeadCountIncome
+                              , tmpCursor1.CountPackerIncome
+                              , tmpCursor1.AmountPartnerIncome
+                              , tmpCursor1.HeadCount1
+                              , tmpCursor1.PriceIncome
+                              , tmpCursor1.PriceIncome1
+                              , tmpCursor1.PriceIncome2
+                              , tmpCursor1.SummCostIncome
+                              , tmpCursor1.CountDocIncome
+                              , tmpCursor1.Count_CountPacker
+                              , tmpCursor1.CountSeparate
+                              , tmpCursor1.PercentCount
+                              , tmpCursor1.GoodsNameSeparate
+                              , tmpCursor1.SummHeadCount1
+                         FROM (
+                           SELECT DISTINCT 
+                                  CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END AS MovementId
+                                , CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.InvNumber END AS InvNumber
+                                ,  (tmpCursor1.OperDate)  AS OperDate
+                                ,  CASE WHEN inisGroup = TRUE THEN '' ELSE tmpCursor1.PartionGoods END AS PartionGoods 
+                                , tmpCursor1.PartionGoods_main
+                                ,  (tmpCursor1.OperDate_partion) AS OperDate_partion
+                                , tmpCursor1.GoodsNameMaster
+                                , (tmpCursor1.CountMaster) 
+                                ,  (COALESCE (tmpCursor1.AmountMaster_4134,0)) AS CountMaster_4134
+                                ,  (tmpCursor1.SummMaster) AS SummMaster
+                                ,  (tmpCursor1.HeadCountMaster) AS HeadCountMaster
+                                , tmpCursor1.PriceMaster
+                               -- , SUM ((tmpMI_group.Amount_summ - COALESCE (tmpIncomeCost.AmountCost,0)) /tmpMI_group.Amount_count ) OVER (PARTITION BY CASE WHEN inisGroup = TRUE THEN 0 ELSE tmpMovement.MovementId END) AS PriceMaster
+                                
+                                , tmpCursor1.FromName 
+                                , tmpCursor1.PersonalPackerName
+                                , tmpCursor1.GoodsNameIncome
+                                ,  (tmpCursor1.CountIncome) AS CountIncome
+                                ,  (tmpCursor1.SummIncome)  AS SummIncome
+                                ,  (tmpCursor1.HeadCountIncome) AS HeadCountIncome
+                                ,  (tmpCursor1.CountPackerIncome)  AS CountPackerIncome
+                                ,  (tmpCursor1.AmountPartnerIncome) AS AmountPartnerIncome
+                                ,  (tmpCursor1.AmountPartnerSecondIncome) AS AmountPartnerSecondIncome
+                                , CASE WHEN  (tmpCursor1.HeadCountIncome) <> 0 THEN  (tmpCursor1.CountIncome) / (tmpCursor1.HeadCountIncome) ELSE 0 END AS HeadCount1 -- цена головы из Income
+                                , ((tmpCursor1.SummIncome) /  (tmpCursor1.CountIncome))                                        AS PriceIncome
+                                , ( (tmpCursor1.SummIncome) / ( (tmpCursor1.CountIncome) -  (tmpCursor1.CountPackerIncome))) AS PriceIncome1
+                                , CASE WHEN (COALESCE (tmpCursor1.AmountPartnerIncome,0)) <> 0 THEN ( (tmpCursor1.SummIncome) / ( (tmpCursor1.AmountPartnerIncome) )) ELSE 0 END ::TFloat AS PriceIncome2
+                                ,  (tmpCursor1.SummCostIncome)   ::TFloat                                                          AS SummCostIncome
+                                ,  (tmpCursor1.CountDocIncome)   ::TFloat                                                          AS CountDocIncome
+                                
+                                ,  (tmpCursor1.Count_CountPacker) AS Count_CountPacker
+                                , 100 * ((tmpCursor1.CountSeparate) / (tmpCursor1.CountIncome)) AS PercentCount
+                                ,  (tmpCursor1.CountSeparate) AS CountSeparate
+                                , tmpCursor1.GoodsNameSeparate
+                                ,  (tmpCursor1.SummHeadCount1) AS SummHeadCount1  -- ср вес головы из Separate
+                        FROM tmpResult AS tmpCursor1
+                        ) AS tmpCursor1
+                         GROUP BY tmpCursor1.MovementId
+                                , tmpCursor1.InvNumber
+                                , tmpCursor1.PartionGoods
+                                , tmpCursor1.PartionGoods_main
+                                , tmpCursor1.OperDate_partion
+                                , tmpCursor1.GoodsNameMaster
+                                , tmpCursor1.FromName
+                                , tmpCursor1.PersonalPackerName
+                                , tmpCursor1.GoodsNameIncome
+                                , tmpCursor1.CountIncome
+                                , tmpCursor1.SummIncome
+                                , tmpCursor1.HeadCountIncome
+                                , tmpCursor1.CountPackerIncome
+                                , tmpCursor1.AmountPartnerIncome
+                                , tmpCursor1.HeadCount1
+                                , tmpCursor1.PriceIncome
+                                , tmpCursor1.PriceIncome1
+                                , tmpCursor1.PriceIncome2
+                                , tmpCursor1.SummCostIncome
+                                , tmpCursor1.CountDocIncome
+                                , tmpCursor1.Count_CountPacker
+                                , tmpCursor1.CountSeparate
+                                , tmpCursor1.PercentCount
+                                , tmpCursor1.GoodsNameSeparate
+                                , tmpCursor1.SummHeadCount1 
+                        )
+
+      
       -- Результат 
-      SELECT CASE WHEN inisPartion = TRUE THEN tmpCursor1.PartionGoods_GV ELSE tmpCursor1.MovementId::TVarChar END AS MovementId
-           , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.InvNumber END AS InvNumber
+      SELECT tmpMain_Group.MovementId
+           , tmpMain_Group.InvNumber
+           , tmpMain_Group.OperDate
+           , tmpMain_Group.PartionGoods
+           , tmpMain_Group.PartionGoods_main
+           , tmpMain_Group.OperDate_partion
+           , tmpMain_Group.GoodsNameMaster
+           , tmpMain_Group.CountMaster
+           , tmpMain_Group.CountMaster_4134
+           , tmpMain_Group.SummMaster
+           , tmpMain_Group.HeadCountMaster
+           --, tmpMain_Group.PriceMaster
+           , tmpMain_Group.FromName
+           , tmpMain_Group.PersonalPackerName
+           , tmpMain_Group.GoodsNameIncome
+           , tmpMain_Group.CountIncome
+           , tmpMain_Group.SummIncome
+           , tmpMain_Group.HeadCountIncome
+           , tmpMain_Group.CountPackerIncome
+           , tmpMain_Group.AmountPartnerIncome
+           , tmpMain_Group.HeadCount1
+           , tmpMain_Group.PriceIncome
+           , tmpMain_Group.PriceIncome1
+           , tmpMain_Group.PriceIncome2
+           , tmpMain_Group.SummCostIncome
+           , tmpMain_Group.CountDocIncome
+           , tmpMain_Group.Count_CountPacker
+           , tmpMain_Group.CountSeparate
+           , tmpMain_Group.PercentCount
+           , tmpMain_Group.GoodsNameSeparate
+           , tmpMain_Group.SummHeadCount1
+           , tmpCursor1.PriceMaster
+      
+          /*CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END AS MovementId
+           , CASE WHEN inisGroup = TRUE THEN '' ELSE tmpCursor1.InvNumber END AS InvNumber
            , MAX (tmpCursor1.OperDate)  AS OperDate
-           , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.PartionGoods END ::TVarChar AS PartionGoods
-           , tmpCursor1.PartionGoods_GV
+           , CASE WHEN inisGroup = TRUE THEN '' ELSE tmpCursor1.PartionGoods END ::TVarChar AS PartionGoods
+           , tmpCursor1.PartionGoods_main
            , MAX (tmpCursor1.OperDate_partion) AS OperDate_partion
            , tmpCursor1.GoodsNameMaster
-           , SUM (tmpCursor1.CountMaster) AS CountMaster
-           , SUM (COALESCE (tmpCursor1.AmountMaster_4134,0)) AS CountMaster_4134
+           , SUM (tmpCursor1.CountMaster) OVER (PARTITION BY CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END) AS CountMaster
+         --  , SUM (COALESCE (tmpCursor1.AmountMaster_4134,0)) AS CountMaster_4134
            , SUM (tmpCursor1.SummMaster) AS SummMaster
            , SUM (tmpCursor1.HeadCountMaster) AS HeadCountMaster
            , tmpCursor1.PriceMaster
-          -- , SUM ((tmpMI_group.Amount_summ - COALESCE (tmpIncomeCost.AmountCost,0)) /tmpMI_group.Amount_count ) OVER (PARTITION BY CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpMovement.MovementId END) AS PriceMaster
+          -- , SUM ((tmpMI_group.Amount_summ - COALESCE (tmpIncomeCost.AmountCost,0)) /tmpMI_group.Amount_count ) OVER (PARTITION BY CASE WHEN inisGroup = TRUE THEN 0 ELSE tmpMovement.MovementId END) AS PriceMaster
            
            , tmpCursor1.FromName 
            , tmpCursor1.PersonalPackerName
@@ -407,7 +531,7 @@ BEGIN
            , SUM (tmpCursor1.CountSeparate) AS CountSeparate
            , tmpCursor1.GoodsNameSeparate
            , AVG (tmpCursor1.SummHeadCount1) AS SummHeadCount1  -- ср вес головы из Separate
-          
+           */
            , tmpCursor1.GoodsName_4134
            , tmpCursor1.PriceFact_4134
            , SUM(tmpCursor1.PriceFact * tmpCursor1.Amount) ::TFloat AS SummFact_4134
@@ -491,23 +615,59 @@ BEGIN
            , CASE WHEN tmpCursor1.GroupStatId = 12045233 THEN TRUE ELSE FALSE END ::Boolean AS isPrintGroupStat
                                       
       FROM tmpResult AS tmpCursor1
-           LEFT JOIN tmpGroup ON CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpGroup.MovementId END = CASE WHEN inisPartion = TRUE THEN 0 ELSE tmpCursor1.MovementId END 
-                             AND tmpGroup.PartionGoods_GV = tmpCursor1.PartionGoods_GV  
-          -- LEFT JOIN Object AS tmpGoods_4134 ON tmpGoods_4134.Id = 4261
+           LEFT JOIN tmpGroup ON CASE WHEN inisGroup = TRUE THEN 0 ELSE tmpGroup.MovementId END = CASE WHEN inisGroup = TRUE THEN 0 ELSE tmpCursor1.MovementId END 
+                             AND tmpGroup.PartionGoods_main = tmpCursor1.PartionGoods_main  
+           -- группировка по док или гл. партии
+           LEFT JOIN tmpMain_Group ON tmpMain_Group.MovementId = CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END 
                                
-      GROUP BY  CASE WHEN inisPartion = TRUE THEN tmpCursor1.PartionGoods_GV ELSE tmpCursor1.MovementId::TVarChar END 
-           , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.InvNumber END 
-           , CASE WHEN inisPartion = TRUE THEN '' ELSE tmpCursor1.PartionGoods END 
-           , tmpCursor1.PartionGoods_GV
+      GROUP BY tmpMain_Group.MovementId
+           , tmpMain_Group.InvNumber
+           , tmpMain_Group.OperDate
+           , tmpMain_Group.PartionGoods
+           , tmpMain_Group.PartionGoods_main
+           , tmpMain_Group.OperDate_partion
+           , tmpMain_Group.GoodsNameMaster
+           , tmpMain_Group.CountMaster
+           , tmpMain_Group.CountMaster_4134
+           , tmpMain_Group.SummMaster
+           , tmpMain_Group.HeadCountMaster
+           --, tmpMain_Group.PriceMaster
+           , tmpMain_Group.FromName
+           , tmpMain_Group.PersonalPackerName
+           , tmpMain_Group.GoodsNameIncome
+           , tmpMain_Group.CountIncome
+           , tmpMain_Group.SummIncome
+           , tmpMain_Group.HeadCountIncome
+           , tmpMain_Group.CountPackerIncome
+           , tmpMain_Group.AmountPartnerIncome
+           , tmpMain_Group.HeadCount1
+           , tmpMain_Group.PriceIncome
+           , tmpMain_Group.PriceIncome1
+           , tmpMain_Group.PriceIncome2
+           , tmpMain_Group.SummCostIncome
+           , tmpMain_Group.CountDocIncome
+           , tmpMain_Group.Count_CountPacker
+           , tmpMain_Group.CountSeparate
+           , tmpMain_Group.PercentCount
+           , tmpMain_Group.GoodsNameSeparate
+           , tmpMain_Group.SummHeadCount1
+           
+           /* CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END 
+           , CASE WHEN inisGroup = TRUE THEN '' ELSE tmpCursor1.InvNumber END 
+           , CASE WHEN inisGroup = TRUE THEN '' ELSE tmpCursor1.PartionGoods END 
+           , tmpCursor1.PartionGoods_main
            , tmpCursor1.GoodsNameMaster
            , tmpCursor1.FromName 
            , tmpCursor1.PersonalPackerName
            , tmpCursor1.GoodsNameIncome
            , tmpCursor1.GoodsNameSeparate
+
+           , tmpCursor1.PriceMaster
+           */      
+           , tmpCursor1.PriceMaster
            , tmpCursor1.Separate_info  
            , tmpCursor1.GoodsName_4134
            , tmpCursor1.PriceFact_4134
-           , tmpCursor1.PriceMaster
            --  
            , tmpCursor1.GoodsId
            , tmpCursor1.GoodsCode
@@ -580,13 +740,13 @@ $BODY$
  03.04.15         *
 */
 
---select * from gpSelect_ProductionSeparate_Print_byReport_Test(inStartDate := ('09.01.2025')::TDateTime , inEndDate := ('10.01.2025')::TDateTime , inFromId := 0 , inToId := 0 , inPriceListId_norm := 0 , inMovementId := 0 , inGoodsId := 4234 , inIsPartion := 'True' ,  inSession := '9457');
+--select * from gpSelect_ProductionSeparate_Print_byReport_Test(inStartDate := ('09.01.2025')::TDateTime , inEndDate := ('10.01.2025')::TDateTime , inFromId := 0 , inToId := 0 , inPriceListId_norm := 0 , inMovementId := 0 , inGoodsId := 4234 , inisGroup := 'True' ,  inSession := '9457');
 --FETCH ALL "<unnamed portal 226>";
 
 
---select * from gpSelect_ProductionSeparate_Print_byReport_Test(inStartDate := ('09.01.2025')::TDateTime , inEndDate := ('09.01.2025')::TDateTime , inFromId := 0 , inToId := 0 , inPriceListId_norm := 0 , inMovementId := 0 , inGoodsId := 5225 , inIsPartion := 'True' ,  inSession := '9457');
+--select * from gpSelect_ProductionSeparate_Print_byReport_Test(inStartDate := ('09.01.2025')::TDateTime , inEndDate := ('09.01.2025')::TDateTime , inFromId := 0 , inToId := 0 , inPriceListId_norm := 0 , inMovementId := 0 , inGoodsId := 5225 , inisGroup := 'True' ,  inSession := '9457');
 --FETCH ALL "<unnamed portal 11>";
 
 
--- select * from gpSelect_ProductionSeparate_Print_byReport_Test(inStartDate := ('25.05.2025')::TDateTime , inEndDate := ('25.05.2025')::TDateTime , inFromId := 0 , inToId := 0 , inPriceListId_norm := 0 , inMovementId := 0 , inGoodsId := 4234 , inIsPartion := 'false' ,  inSession := '9457');
+-- select * from gpSelect_ProductionSeparate_Print_byReport_Test(inStartDate := ('25.05.2025')::TDateTime , inEndDate := ('25.05.2025')::TDateTime , inFromId := 0 , inToId := 0 , inPriceListId_norm := 0 , inMovementId := 0 , inGoodsId := 4234 , inisGroup := 'false' ,  inSession := '9457');
 --FETCH ALL "<unnamed portal 226>";

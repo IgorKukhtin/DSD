@@ -979,13 +979,21 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalService_RecalcForm');
   exit;
   }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalService_DetailDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalService_DetailDialogForm');
+
+  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceItemJournal_unitForm'));
+  //TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceItemJournal_unitForm');
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
-  exit;
+  //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
- // exit;
+  //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceItemJournalForm');
@@ -2683,7 +2691,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellForm');
-  exit;
+ // exit;
 
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellRemainsDialogForm'));
@@ -4823,17 +4831,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReasonOutEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
-  {
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ChoiceForm');
   //exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
   //exit;

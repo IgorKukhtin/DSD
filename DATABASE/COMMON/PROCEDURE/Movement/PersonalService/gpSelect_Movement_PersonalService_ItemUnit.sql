@@ -1,10 +1,8 @@
--- Function: gpSelect_Movement_PersonalService_Item()
+-- Function: gpSelect_Movement_PersonalService_ItemUnit()
 
---DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_ItemUnit (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_Item(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_ItemUnit(
     IN inStartDate                TDateTime , --
     IN inEndDate                  TDateTime , --
     IN inJuridicalBasisId         Integer , -- гл. юр.лицо  
@@ -1380,7 +1378,10 @@ BEGIN
       WHERE (OB_PersonalServiceList_User.ObjectId IS NULL
           OR vbIsLevelMax01 = TRUE
             ) 
-      ;
+       /*  AND (tmpAll.UnitId = inUnitId OR inUnitId = 0)
+         AND (tmpAll.PersonalId = inPersonalId OR inPersonalId = 0)
+         AND (tmpAll.PositionId = inPositionId OR inPositionId = 0)
+        */    ;
 
 END;
 $BODY$
@@ -1419,4 +1420,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2025')::TDateTime , inEndDate := ('01.12.2025')::TDateTime , inJuridicalBasisId := 9399 , inPersonalServiceListId:= 0, inUnitId := 0, inPositionId := 0, inPersonalId := 0, inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
+-- SELECT * FROM gpSelect_Movement_PersonalService_ItemUnit(inStartDate := ('01.12.2025')::TDateTime , inEndDate := ('01.12.2025')::TDateTime , inJuridicalBasisId := 9399 , inPersonalServiceListId:= 0, inUnitId := 0, inPositionId := 0, inPersonalId := 0, inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');

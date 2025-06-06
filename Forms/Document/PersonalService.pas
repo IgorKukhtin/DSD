@@ -410,6 +410,12 @@ type
     AmountService_diff_start: TcxGridDBColumn;
     AmountService_diff_end: TcxGridDBColumn;
     Amount_LossPersonal: TcxGridDBColumn;
+    InsertRecordPersonal: TInsertRecord;
+    actOpenChoiceFormPersonal: TOpenChoiceForm;
+    bbInsertRecordPersonal: TdxBarButton;
+    spInsertMaskMIMaster_Personal: TdsdStoredProc;
+    actAddMask_Personal: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

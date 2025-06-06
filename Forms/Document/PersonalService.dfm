@@ -2,7 +2,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 759
   ClientWidth = 1474
-  ExplicitLeft = -597
   ExplicitWidth = 1490
   ExplicitHeight = 798
   PixelsPerInch = 96
@@ -2725,9 +2724,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2821,9 +2817,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
@@ -5797,6 +5790,120 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'> '#1074#1099#1073#1086#1088#1086#1095#1085#1086
       ImageIndex = 3
     end
+    object InsertRecordPersonal: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actOpenChoiceFormPersonal
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072'>'
+      ImageIndex = 0
+    end
+    object actOpenChoiceFormPersonal: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Personal_ChoiceForm'
+      FormName = 'TPersonal_ChoiceForm'
+      FormNameParam.Value = 'TPersonal_ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId_Personal'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalServiceListId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalServiceListName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actAddMask_Personal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMaskMIMaster_Personal
+      StoredProcList = <
+        item
+          StoredProc = spInsertMaskMIMaster_Personal
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      ImageIndex = 54
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -5866,6 +5973,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordPersonal'
         end
         item
           Visible = True
@@ -6380,6 +6503,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object bbUpdateCardSecond_num_not4000: TdxBarButton
       Action = mactUpdateCardSecond_num_not4000
       Category = 0
+    end
+    object bbInsertRecordPersonal: TdxBarButton
+      Action = InsertRecordPersonal
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actAddMask_Personal
+      Category = 0
+      UnclickAfterDoing = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -7502,7 +7634,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 304
+    Left = 288
+    Top = 264
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = ''
@@ -7652,8 +7785,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 696
-    Top = 24
+    Left = 672
+    Top = 32
   end
   object spUpdateIsMain: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PersonalService_isMain'
@@ -9634,5 +9767,341 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 592
     Top = 304
+  end
+  object spInsertMaskMIMaster_Personal: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_PersonalService'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMain'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMain'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisAuto'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAuto'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountToPay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountToPay'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountCash'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountCash'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummTransportAdd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummTransportAdd'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummTransport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummTransport'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummPhone'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummPhone'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummService'
+        Value = -1.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummCardRecalc'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummCardSecondRecalc'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummCardSecondCash'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummAvCardSecondRecalc'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummNalogRecalc'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummNalogRet'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummMinus'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummAdd'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummAddOthRecalc'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummHoliday'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummSocialIn'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummSocialAdd'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummChildRecalc'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummMinusExtRecalc'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummFine'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummFineOthRecalc'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummHosp'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummHospOthRecalc'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummCompensationRecalc'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummAuditAdd'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummHouseAdd'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummAvanceRecalc'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalServiceListId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFineSubjectId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitFineSubjectId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBankOutDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 312
   end
 end
