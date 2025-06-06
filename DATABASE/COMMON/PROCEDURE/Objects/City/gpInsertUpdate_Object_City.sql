@@ -33,16 +33,24 @@ BEGIN
                    LEFT JOIN ObjectLink AS ObjectLink_City_Region
                                         ON ObjectLink_City_Region.ObjectId = Object_City.Id
                                        AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
+                   LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
+                                        ON ObjectLink_City_CityKind.ObjectId = Object_City.Id
+                                       AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
               WHERE Object_City.ValueData = inName
                 AND Object_City.DescId = zc_Object_City()
                 AND COALESCE (ObjectLink_City_Region.ChildObjectId, 0) = COALESCE (inRegionId, 0)
+                AND COALESCE (ObjectLink_City_CityKind.ChildObjectId, 0) = COALESCE (inCityKindId, 0)
+                
                 AND Object_City.Id <> COALESCE (ioId, 0)
              )
    THEN
-       RAISE EXCEPTION '«начение <%> дл€ области <%> не уникально в справочнике <%>.'
+       RAISE EXCEPTION '«начение <%> <%> дл€ области <%> не уникально в справочнике <%>.(%)'
+                    , lfGet_Object_ValueData (inCityKindId)
                     , inName
                     , lfGet_Object_ValueData (inRegionId)
-                    , (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_City());
+                    , (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_City())
+                    , lfGet_Object_ValueData (ioId)
+                     ;
    END IF; 
 
    -- проверка уникальности дл€ свойства < од>
