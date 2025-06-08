@@ -7,8 +7,8 @@ interface
 uses VCL.ActnList, VCL.Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj, Clipbrd,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid, Math,
   cxGridDBTableView, frxClass, frxExportPDF, frxExportXLS, cxGridCustomView, Dialogs, Controls,
-  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
-  System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, {IdMultipartFormData,}
+  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon, IdCTypes,
+  System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, IdSSLOpenSSLHeaders,
   Winapi.ActiveX, ZConnection, ZDataset, dxBar, DateUtils, dsdCommon
   {$IFDEF DELPHI103RIO}, System.JSON, Actions {$ELSE} , Data.DBXJSON {$ENDIF}, Vcl.Graphics;
 
@@ -1781,9 +1781,10 @@ type
 
     FURL: TdsdParam;
     FData: TdsdParam;
+    FTokenParam: TdsdParam;
 
     FIdHTTP: TIdHTTP;
-    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+    //FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
 
     FStream: TStringStream;
 
@@ -1798,6 +1799,7 @@ type
     // URL
     property URL: String read GetURL;
     property URLParam: TdsdParam read FURL write FURL;
+    property TokenParam: TdsdParam read FTokenParam write FTokenParam;
     // Order - заказа
     property DataParam: TdsdParam read FData write FData;
 
@@ -2075,6 +2077,43 @@ begin
   RegisterActions('DSDLibExport', [TdsdExportToXML], TdsdExportToXML);
 
 end;
+
+type
+  TCustomIdHTTP = class(TIdHTTP)
+  public
+    constructor Create(AOwner: TComponent);
+    destructor Destroy; override;
+  private
+    procedure OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT; const AType, AMsg: String);
+  end;
+
+{ TCustomIdHTTP }
+
+constructor TCustomIdHTTP.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+  with IOHandler as TIdSSLIOHandlerSocketOpenSSL do begin
+    OnStatusInfoEx := Self.OnStatusInfoEx;
+    SSLOptions.Method := sslvSSLv23;
+    {$if CompilerVersion < 30}
+    SSLOptions.SSLVersions := [sslvSSLv2, sslvSSLv23, sslvSSLv3, sslvTLSv1];
+    {$ifend}
+  end;
+end;
+
+destructor TCustomIdHTTP.Destroy;
+begin
+  IOHandler.Free;
+  inherited Destroy;
+end;
+
+procedure TCustomIdHTTP.OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT;
+  const AType, AMsg: String);
+begin
+  SSL_set_tlsext_host_name(AsslSocket, AnsiString(Request.Host));
+end;
+
 
 { TdsdCustomDataSetAction }
 
@@ -8751,11 +8790,11 @@ constructor TdsdLoadFile_https.Create(AOwner: TComponent);
 begin
   inherited;
 
-  FIdHTTP := TIdHTTP.Create;
-  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
-  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
-  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
-  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
+  FIdHTTP := TCustomIdHTTP.Create(Nil);
+//  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+//  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
+//  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
+//  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
 
   FStream := TStringStream.Create;
 
@@ -8767,16 +8806,20 @@ begin
   FData.DataType := ftWideString;
   FData.Value := '';
 
+  FTokenParam := TdsdParam.Create(nil);
+  FTokenParam.DataType := ftWideString;
+  FTokenParam.Value := '';
 end;
 
 destructor TdsdLoadFile_https.Destroy;
 begin
+  FreeAndNil(FTokenParam);
   FreeAndNil(FData);
   FreeAndNil(FURL);
 
   FreeAndNil(FStream);
 
-  FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
+//  FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
   FreeAndNil(FIdHTTP);
   inherited;
 end;
@@ -8826,9 +8869,20 @@ begin
   Result := False;
   FData.Value := '';
 
-//  FIdHTTP.Request.ContentType := 'application/json';
+  FIdHTTP.Request.Clear;
   FIdHTTP.Request.CustomHeaders.Clear;
   FIdHTTP.Request.CustomHeaders.FoldLines := False;
+
+  if FTokenParam.Value <> '' then
+  begin
+    FIdHTTP.Request.ContentType := 'application/json';
+    FIdHTTP.Request.CustomHeaders.AddValue('Authorization', 'Bearer ' + FTokenParam.Value);
+    FIdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+    FIdHTTP.Request.Accept := '*/*';
+    FIdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    FIdHTTP.Request.Connection := 'keep-alive';
+    FIdHTTP.Request.CharSet := 'utf-8';
+  end;
 
   try
     FStream.Clear;
