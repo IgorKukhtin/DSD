@@ -302,6 +302,7 @@ BEGIN
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
                                     AND MovementItem.Amount     <> 0
+-- and (MovementItem.Id = 326440020  or vbUserId <> 5)
 
              LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
                                            ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
@@ -429,8 +430,9 @@ BEGIN
                                WHEN ObjectString_Goods_UKTZED.ValueData <> ''
                                     THEN ObjectString_Goods_UKTZED.ValueData
 
-                               WHEN ObjectString_Goods_UKTZED_new.ValueData <> ''
-                                    THEN ObjectString_Goods_UKTZED_new.ValueData
+                               -- ошибка
+                               -- WHEN ObjectString_Goods_UKTZED_new.ValueData <> ''
+                               --     THEN ObjectString_Goods_UKTZED_new.ValueData
 
                           END AS Goods_UKTZED
 
@@ -489,7 +491,6 @@ BEGIN
     , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDate_Tax_Tax_Tax) AS CodeUKTZED
                        FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
                       )
-
     , tmpTaxImport AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxImport (tmp.GoodsGroupId) AS TaxImport FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpDKPP      AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_DKPP (tmp.GoodsGroupId) AS DKPP FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpTaxAction AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxAction (tmp.GoodsGroupId) AS TaxAction FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
@@ -1226,9 +1227,11 @@ BEGIN
            , CASE WHEN tmpMI.OperDate < '01.01.2017'
                        THEN ''
 
+                  -- у товара или на дату у товара
                   WHEN tmpGoods.Goods_UKTZED <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpGoods.Goods_UKTZED ELSE SUBSTRING (tmpGoods.Goods_UKTZED FROM 1 FOR 4) END
 
+                  -- на дату у группы товара
                   WHEN tmpUKTZED.CodeUKTZED <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
 

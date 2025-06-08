@@ -1,4 +1,4 @@
- -- Function: gpComplete_Movement_Inventory()
+-- Function: gpComplete_Movement_Inventory()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Inventory  (Integer, Boolean, TVarChar);
 
@@ -406,7 +406,8 @@ BEGIN
             SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real, 0 AS InfoMoneyDestinationId, 0 AS InfoMoneyId FROM lfSelect_Object_Goods_byGoodsGroup (5064881) AS lfSelect -- СО-ПОСОЛ
            UNION
             SELECT lfSelect.GoodsId, 0 AS GoodsKindId, 0 AS GoodsKindId_real, 0 AS InfoMoneyDestinationId, 0 AS InfoMoneyId FROM lfSelect_Object_Goods_byGoodsGroup (1938)    AS lfSelect -- С-ПЕРЕРАБОТКА
-            WHERE vbUnitId <> 8447 -- ЦЕХ колбасный
+            -- отключили 06.06.2025
+            -- WHERE vbUnitId <> 8447 -- ЦЕХ колбасный
            ;
 
      ELSE

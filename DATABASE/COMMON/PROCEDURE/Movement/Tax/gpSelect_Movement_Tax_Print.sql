@@ -875,6 +875,7 @@ order by 4*/
           AND MovementItem.DescId     = zc_MI_Master()
           AND MovementItem.isErased   = FALSE
           AND MovementItem.Amount     <> 0
+-- and (MovementItem.Id = 325022676  or vbUserId <> 5)
        )
     , tmpGoods     AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
       -- на дату
@@ -992,6 +993,7 @@ order by 4*/
                   -- у товара
                   WHEN ObjectString_Goods_UKTZED.ValueData <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
+
                   -- на дату у группы товара
                   WHEN tmpUKTZED.CodeUKTZED <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END

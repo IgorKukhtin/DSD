@@ -74,6 +74,9 @@ $BODY$
    DECLARE vbInvNumberPartner_find TVarChar;
    DECLARE vbContractId_find Integer;
    DECLARE vbMovementId_income_find Integer;
+
+   DECLARE vbMessageText Text;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
@@ -2058,10 +2061,15 @@ BEGIN
                  -- создаются временные таблицы - для формирование данных для проводок - <Возврат от покупателя>
                  PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
                  -- Проводим Документ
-                 PERFORM lpComplete_Movement_ReturnIn (inMovementId     := vbMovementId_begin
-                                                     , inStartDateSale  := NULL
-                                                     , inUserId         := vbUserId
-                                                     , inIsLastComplete := NULL);
+                 vbMessageText:= lpComplete_Movement_ReturnIn (inMovementId     := vbMovementId_begin
+                                                             , inStartDateSale  := NULL
+                                                             , inUserId         := vbUserId
+                                                             , inIsLastComplete := NULL
+                                                              );
+                 IF vbMessageText <> ''
+                 THEN
+                     RAISE EXCEPTION 'Ошибка.<%>', outMessageText;
+                 END IF;
 
              ELSE -- <Перемещение по цене>
                   IF vbMovementDescId = zc_Movement_SendOnPrice()
