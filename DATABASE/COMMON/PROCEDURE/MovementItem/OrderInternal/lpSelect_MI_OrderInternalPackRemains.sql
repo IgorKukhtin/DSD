@@ -172,7 +172,8 @@ BEGIN
                                    ELSE 0
                               END AS Remains_err
                               
-                            , COALESCE (MIFloat_AmountRemainsRK.ValueData, 0) AS RemainsRK
+                              -- Остаток РК
+                            , COALESCE (MIFloat_AmountRemainsRK.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS RemainsRK
 
                               -- заказ покупателя БЕЗ акций, неотгруж - вчера
                             , COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0)         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartnerPrior
