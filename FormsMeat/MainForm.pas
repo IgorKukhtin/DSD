@@ -1559,6 +1559,8 @@ type
     N267: TMenuItem;
     actReport_Send_PartionCell_many: TdsdOpenForm;
     miReport_Send_PartionCell_many: TMenuItem;
+    actReport_GoodsMI_ProductionSeparateTotal: TdsdOpenForm;
+    miReport_GoodsMI_ProductionSeparateTotal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
