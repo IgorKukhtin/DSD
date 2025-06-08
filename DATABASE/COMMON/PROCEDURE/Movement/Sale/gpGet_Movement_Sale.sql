@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat, ChangePercentAmount TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat 
+             , CorrSumm TFloat
              , isCurrencyUser Boolean
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -81,6 +82,7 @@ BEGIN
              , CAST (0 as TFloat)                           AS ParValue
              , CAST (0 as TFloat)                           AS CurrencyPartnerValue
              , CAST (0 as TFloat)                           AS ParPartnerValue 
+             , CAST (0 AS TFloat)                           AS CorrSumm
              , CAST (FALSE AS Boolean)                      AS isCurrencyUser
 
              , 0                     		            AS FromId
@@ -202,7 +204,8 @@ BEGIN
                , MovementFloat_CurrencyValue.ValueData          AS CurrencyValue
                , MovementFloat_ParValue.ValueData               AS ParValue
                , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
-               , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue 
+               , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
+               , MovementFloat_CorrSumm.ValueData               AS CorrSumm 
                , COALESCE (MovementBoolean_CurrencyUser.ValueData, FALSE) ::Boolean AS isCurrencyUser
 
                , Object_From.Id                    		    AS FromId
@@ -360,20 +363,24 @@ BEGIN
                 LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                         ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                        AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
-
+ 
+                LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                        ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                       AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm() 
+ 
                 LEFT JOIN tmpMLO AS MovementLinkObject_From
-                                             ON MovementLinkObject_From.MovementId = Movement.Id
-                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                 ON MovementLinkObject_From.MovementId = Movement.Id
+                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                 LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
                 LEFT JOIN tmpMLO AS MovementLinkObject_To
-                                             ON MovementLinkObject_To.MovementId = Movement.Id
-                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                 ON MovementLinkObject_To.MovementId = Movement.Id        
+                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                 LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
                 LEFT JOIN tmpMLO AS MovementLinkObject_PaidKind
-                                             ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                            AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                 ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                 LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
                 LEFT JOIN tmpMLO AS MovementLinkObject_RouteSorting
@@ -475,6 +482,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 06.06.25         * CorrSumm
  16.08.24         *
  15.07.24         *
  21.03.22         * 

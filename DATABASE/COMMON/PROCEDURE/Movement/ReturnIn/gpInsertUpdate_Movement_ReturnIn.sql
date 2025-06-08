@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVa
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
@@ -31,6 +32,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
    OUT outParValue           TFloat    , -- Номинал для перевода в валюту баланса
  INOUT ioCurrencyPartnerValue TFloat   , -- Курс для расчета суммы операции
  INOUT ioParPartnerValue      TFloat   , -- Номинал для расчета суммы операции
+    IN inCorrSumm             TFloat   , -- Корректировка суммы покупателя для выравнивания округлений
     IN inMovementId_OrderReturnTare    Integer   , --
     IN inComment             TVarChar  , -- примечание
     IN inSession             TVarChar    -- сессия пользователя
@@ -39,6 +41,7 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbCorrSumm TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
@@ -57,6 +60,9 @@ BEGIN
      -- рассчет курса для баланса
      outCurrencyValue:= ioCurrencyPartnerValue;
      outParValue     := ioParPartnerValue;
+
+     --смотрим какое было значение, чтоб потом проверить изменилось ли оно
+     vbCorrSumm := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
 
 
      -- сохранили <Документ>
@@ -90,6 +96,15 @@ BEGIN
                                           , inUserId           := vbUserId
                                            ) AS tmp;
 
+    IF COALESCE (vbCorrSumm,0) <> COALESCE (inCorrSumm,0)
+    THEN
+        -- сохранили свойство <Корректировка суммы покупателя для выравнивания округлений>
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrSumm(), ioId, inCorrSumm);
+        -- сохранили протокол
+        PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
+    END IF;
+
+
 
 END;
 $BODY$
@@ -98,6 +113,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.06.25         * CorrSumm
  28.04.22         * inMovementId_OrderReturnTare
  14.05.16         *
  21.08.15         * ADD inIsPartner

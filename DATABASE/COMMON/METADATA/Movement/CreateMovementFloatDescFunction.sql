@@ -854,10 +854,17 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_NumSecurity', 'Номер охранника' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_NumSecurity');  
 
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_CorrSumm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_CorrSumm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_CorrSumm', 'Корректировка суммы покупателя' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_CorrSumm');  
+
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 06.06.25         * zc_MovementFloat_CorrSumm
  22.05.25         * zc_MovementFloat_NumSecurity
  05.05.25         * zc_MovementFloat_TotalPage_1 ... 8
  01.05.25         * zc_MovementFloat_TotalLines

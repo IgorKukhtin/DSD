@@ -261,6 +261,8 @@ type
     bbUpdateMaskSale: TdxBarButton;
     bbUpdateMaskSend: TdxBarButton;
     SubjectDocName: TcxGridDBColumn;
+    cxLabel27: TcxLabel;
+    edCorrSumm: TcxCurrencyEdit;
   private
     { Private declarations }
   public

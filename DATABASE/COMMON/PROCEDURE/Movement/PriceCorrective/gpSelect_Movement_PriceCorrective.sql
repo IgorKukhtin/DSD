@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat, TotalCountSh TFloat, TotalCountKg TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
+             , CorrSumm TFloat
              , InvNumberPartner TVarChar, InvNumberMark TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
@@ -73,6 +74,7 @@ BEGIN
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_CorrSumm.ValueData           AS CorrSumm
            
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementString_InvNumberMark.ValueData     AS InvNumberMark           
@@ -145,6 +147,10 @@ BEGIN
                                     ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
 
+            LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                    ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                   AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
+
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -214,6 +220,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 06.06.25         * CorrSumm
  28.02.20         * add isError
  26.03.19         * add Checked
  02.02.18         *

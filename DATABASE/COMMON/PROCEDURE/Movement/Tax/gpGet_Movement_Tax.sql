@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
+             , CorrSumm TFloat
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , INN_To TVarChar
@@ -74,6 +75,7 @@ BEGIN
              , CAST (0 as TFloat)                   AS TotalCount
              , CAST (0 as TFloat)                   AS TotalSummMVAT
              , CAST (0 as TFloat)                   AS TotalSummPVAT
+             , CAST (0 as TFloat)                   AS CorrSumm
              , lpInsertFind_Object_InvNumberTax (zc_Movement_Tax(), inOperDate, tmpInvNumber.InvNumberBranch) :: TVarChar AS InvNumberPartner
              , Object_Juridical_Basis.Id			AS FromId
              , Object_Juridical_Basis.ValueData		AS FromName
@@ -139,6 +141,7 @@ BEGIN
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_CorrSumm.ValueData           AS CorrSumm
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Object_From.Id                    			AS FromId
            , Object_From.ValueData             			AS FromName--
@@ -236,16 +239,20 @@ BEGIN
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummMVAT
-                                    ON MovementFloat_TotalSummMVAT.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+                                       ON MovementFloat_TotalSummMVAT.MovementId = Movement.Id
+                                      AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
 
             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummPVAT
-                                    ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+                                       ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
+                                      AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+
+            LEFT JOIN tmpMovementFloat AS MovementFloat_CorrSumm
+                                       ON MovementFloat_CorrSumm.MovementId =  Movement.Id
+                                      AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
 
             LEFT JOIN tmpMLO AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                             ON MovementLinkObject_From.MovementId = Movement.Id
+                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
             LEFT JOIN tmpMLO AS MovementLinkObject_To
@@ -308,6 +315,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar) OWNER 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 06.06.25         * CorrSumm
  16.12.21         * BranchId
  07.12.21         *
  17.12.18         * InvNumberRegistered

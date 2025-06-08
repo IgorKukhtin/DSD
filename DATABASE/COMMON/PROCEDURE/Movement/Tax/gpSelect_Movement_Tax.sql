@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , Checked Boolean, Document Boolean, DateRegistered TDateTime, DateRegistered_notNull TDateTime, InvNumberRegistered TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
-             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat 
+             , CorrSumm TFloat
              , InvNumberPartner Integer
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName_inf TVarChar, ToName TVarChar, RetailName_To TVarChar, OKPO_To TVarChar, OKPO_Retail TVarChar
@@ -185,6 +186,7 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , MovementFloat_CorrSumm.ValueData           AS CorrSumm
            , zfConvert_StringToNumber (MovementString_InvNumberPartner.ValueData) AS InvNumberPartner
            , Object_From.Id                    		    AS FromId
            , Object_From.ValueData             		    AS FromName
@@ -305,7 +307,7 @@ BEGIN
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Document
-                                      ON MovementBoolean_Document.MovementId =  Movement.Id
+                                      ON MovementBoolean_Document.MovementId = Movement.Id
                                      AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_DisableNPP_auto
@@ -313,15 +315,15 @@ BEGIN
                                      AND MovementBoolean_DisableNPP_auto.DescId = zc_MovementBoolean_DisableNPP_auto()
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
-                                   ON MovementDate_DateRegistered.MovementId =  Movement.Id
+                                   ON MovementDate_DateRegistered.MovementId = Movement.Id
                                   AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Medoc
-                                      ON MovementBoolean_Medoc.MovementId =  Movement.Id
+                                      ON MovementBoolean_Medoc.MovementId = Movement.Id
                                      AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
@@ -331,12 +333,12 @@ BEGIN
                                       ON MovementBoolean_isUKTZ_new.MovementId = Movement.Id
                                      AND MovementBoolean_isUKTZ_new.DescId = zc_MovementBoolean_UKTZ_new()
 
-	    LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
@@ -344,12 +346,16 @@ BEGIN
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummMVAT.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+
+            LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                    ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                   AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -471,6 +477,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 06.06.25         * CorrSumm
  07.12.21         *
  02.03.18         * add MovementString_ToINN
  01.12.16         * add ReestrKind

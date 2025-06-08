@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxSplitter;
+  dxSkinXmas2008Blue, cxSplitter, dsdCommon;
 
 type
   TPriceCorrectiveForm = class(TAncestorDocumentForm)
@@ -178,6 +178,8 @@ type
     cxLabel14: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
+    cxLabel27: TcxLabel;
+    edCorrSumm: TcxCurrencyEdit;
   private
     { Private declarations }
   public

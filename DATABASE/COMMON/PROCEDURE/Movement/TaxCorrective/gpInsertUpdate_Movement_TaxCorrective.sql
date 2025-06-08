@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_TaxCorrective()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective(
@@ -13,7 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective(
     IN inChecked             Boolean   , -- Проверен
     IN inDocument            Boolean   , -- Есть ли подписанный документ
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
-    IN inVATPercent          TFloat    , -- % НДС
+    IN inVATPercent          TFloat    , -- % НДС     
+    IN inCorrSumm             TFloat   , -- Корректировка суммы покупателя для выравнивания округлений
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inPartnerId           Integer   , -- Контрагент
@@ -25,9 +27,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbCorrSumm TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
+
+     --смотрим какое было значение, чтоб потом проверить изменилось ли оно
+     vbCorrSumm := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
+
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_TaxCorrective(ioId, inInvNumber, inInvNumberPartner, inInvNumberBranch, inOperDate
@@ -54,6 +61,14 @@ BEGIN
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
+     IF COALESCE (vbCorrSumm,0) <> COALESCE (inCorrSumm,0)
+     THEN
+         -- сохранили свойство <Корректировка суммы покупателя для выравнивания округлений>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrSumm(), ioId, inCorrSumm);
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -61,6 +76,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.06.25         * CorrSumm
  10.07.14                                        * add zc_Enum_DocumentTaxKind_Prepay
  24.04.14                                                       * add inInvNumberBranch
  19.03.14                                        * add inPartnerId

@@ -319,6 +319,8 @@ type
     actPrintBoxTotalPartner: TdsdPrintAction;
     actPrintBoxTotal1: TdsdPrintAction;
     bbb: TdxBarButton;
+    cxLabel25: TcxLabel;
+    edCorrSumm: TcxCurrencyEdit;
   private
     { Private declarations }
   public

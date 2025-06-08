@@ -81,6 +81,11 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummChange
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CorrSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -137,6 +142,11 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = FromName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CorrSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -391,6 +401,18 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
+          end
+          object CorrSumm: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'. '#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'CorrSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            Options.Editing = False
+            Width = 80
           end
           object ChangePercent: TcxGridDBColumn
             Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094

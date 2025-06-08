@@ -2190,6 +2190,20 @@ inherited ReturnInForm: TReturnInForm
       Top = 85
       Caption = #1053#1086#1084#1080#1085#1072#1083
     end
+    object cxLabel27: TcxLabel
+      Left = 867
+      Top = 127
+      Caption = #1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+    end
+    object edCorrSumm: TcxCurrencyEdit
+      Left = 867
+      Top = 145
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = False
+      TabOrder = 51
+      Width = 97
+    end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
     Left = 867
@@ -5756,6 +5770,13 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 264
@@ -5932,6 +5953,14 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId_OrderReturnTare'
         Value = Null
         Component = GuidesOrderReturnTare
@@ -5958,7 +5987,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Guides = GuidesTo
       end>
-    Left = 264
+    Left = 280
     Top = 264
   end
   inherited HeaderSaver: THeaderSaver
@@ -6040,6 +6069,9 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Control = edReturnKind
+      end
+      item
+        Control = edCorrSumm
       end>
     Left = 376
     Top = 305
@@ -8406,7 +8438,7 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 988
+    Left = 1020
     Top = 80
   end
   object GuidesSubjectDoc: TdsdGuides

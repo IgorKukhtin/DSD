@@ -1,26 +1,26 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 658
-  ClientWidth = 1360
+  ClientWidth = 1465
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1376
+  ExplicitWidth = 1481
   ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 167
-    Width = 1360
+    Width = 1465
     Height = 491
     ExplicitTop = 167
     ExplicitWidth = 1360
     ExplicitHeight = 491
     ClientRectBottom = 491
-    ClientRectRight = 1360
+    ClientRectRight = 1465
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1360
       ExplicitHeight = 467
       inherited cxGrid: TcxGrid
-        Width = 1360
+        Width = 1465
         Height = 467
         ExplicitWidth = 1360
         ExplicitHeight = 467
@@ -590,7 +590,7 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1360
+    Width = 1465
     Height = 141
     TabOrder = 3
     ExplicitWidth = 1360
@@ -842,8 +842,8 @@ inherited SaleForm: TSaleForm
       Width = 78
     end
     object cbCOMDOC: TcxCheckBox
-      Left = 171
-      Top = 63
+      Left = 175
+      Top = 50
       Caption = 'COMDOC'
       Properties.ReadOnly = True
       TabOrder = 33
@@ -1142,7 +1142,7 @@ inherited SaleForm: TSaleForm
   object cxLabel31: TcxLabel [26]
     Left = 1245
     Top = 85
-    Caption = #1053#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#8470' ('#1074#1086#1079#1074#1088#1072#1090')'
+    Caption = #1053#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#8470' ('#1074#1086#1079#1074'.)'
   end
   object edReturnIn: TcxButtonEdit [27]
     Left = 1245
@@ -1157,8 +1157,8 @@ inherited SaleForm: TSaleForm
     Width = 116
   end
   object cbTotalSumm_GoodsReal: TcxCheckBox [28]
-    Left = 1274
-    Top = 62
+    Left = 1273
+    Top = 61
     Hint = 
       #1055#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1080#1079' '#1055#1088#1072#1081#1089#1072' '#1080#1083#1080' '#1040#1082#1094#1080#1081' '#1087#1088#1080' '#1055#1088#1086#1074#1077#1076#1077#1085#1080#1080', '#1089' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077#1084' ' +
       #1055#1088#1072#1074
@@ -1168,6 +1168,20 @@ inherited SaleForm: TSaleForm
     ShowHint = True
     TabOrder = 32
     Width = 219
+  end
+  object cxLabel25: TcxLabel [29]
+    Left = 1372
+    Top = 85
+    Caption = #1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+  end
+  object edCorrSumm: TcxCurrencyEdit [30]
+    Left = 1372
+    Top = 103
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    Properties.ReadOnly = False
+    TabOrder = 34
+    Width = 101
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -4537,6 +4551,13 @@ inherited SaleForm: TSaleForm
         Component = cbTotalSumm_GoodsReal
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -4750,6 +4771,14 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -4841,6 +4870,9 @@ inherited SaleForm: TSaleForm
       end
       item
         Control = edReturnIn
+      end
+      item
+        Control = edCorrSumm
       end>
     Left = 232
     Top = 193

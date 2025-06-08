@@ -1,25 +1,25 @@
 inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 490
-  ClientWidth = 1370
-  ExplicitWidth = 1386
+  ClientWidth = 1494
+  ExplicitWidth = 1510
   ExplicitHeight = 529
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1370
+    Width = 1494
     Height = 324
     ExplicitTop = 166
     ExplicitWidth = 1370
     ExplicitHeight = 324
     ClientRectBottom = 324
-    ClientRectRight = 1370
+    ClientRectRight = 1494
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1370
       ExplicitHeight = 300
       inherited cxGrid: TcxGrid
-        Width = 1370
+        Width = 1494
         Height = 300
         ExplicitWidth = 1370
         ExplicitHeight = 300
@@ -566,7 +566,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1370
+    Width = 1494
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1370
@@ -1054,7 +1054,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     object cxLabel31: TcxLabel
       Left = 1255
       Top = 85
-      Caption = #1053#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#8470' ('#1074#1086#1079#1074#1088#1072#1090')'
+      Caption = #1053#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#8470' ('#1074#1086#1079#1074'.)'
     end
     object edReturnIn: TcxButtonEdit
       Left = 1255
@@ -1093,6 +1093,20 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Left = 8
       Top = 45
       Caption = '*'#1057#1090#1072#1090#1091#1089
+    end
+    object cxLabel32: TcxLabel
+      Left = 1379
+      Top = 85
+      Caption = #1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+    end
+    object edCorrSumm: TcxCurrencyEdit
+      Left = 1377
+      Top = 103
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = False
+      TabOrder = 67
+      Width = 116
     end
   end
   object cbPromo: TcxCheckBox [2]
@@ -3896,6 +3910,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = cbCurrencyUser
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -4109,6 +4130,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -4200,6 +4229,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Control = edReturnIn
+      end
+      item
+        Control = edCorrSumm
       end>
     Left = 232
     Top = 193

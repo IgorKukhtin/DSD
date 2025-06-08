@@ -24,7 +24,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       inherited cxGrid: TcxGrid
         Width = 1114
         Height = 374
-        ExplicitTop = -6
         ExplicitWidth = 1114
         ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -87,6 +86,11 @@ inherited ReturnInJournalForm: TReturnInJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalLines
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CorrSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -148,6 +152,11 @@ inherited ReturnInJournalForm: TReturnInJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalLines
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CorrSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -272,6 +281,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           object ReasonName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
             DataBinding.FieldName = 'ReasonName'
+            Visible = False
+            GroupIndex = 0
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -465,6 +476,18 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
+          end
+          object CorrSumm: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'. '#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'CorrSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            Options.Editing = False
+            Width = 80
           end
           object ChangePercent: TcxGridDBColumn
             Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094

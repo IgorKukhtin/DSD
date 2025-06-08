@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, tvarch
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, tvarchar, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, tvarchar, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, integer, tvarchar, tvarchar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, integer, tvarchar, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, integer, tvarchar, tdatetime, boolean, tfloat, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, integer, tvarchar, tvarchar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceCorrective(
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceCorrective(
     IN inOperDate            TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
+    IN inCorrSumm             TFloat   , -- Корректировка суммы покупателя для выравнивания округлений
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inInvNumberMark       TVarChar  , -- Номер "перекресленої зеленої марки зi складу"
     IN inFromId              Integer   , -- От кого (в документе)
@@ -41,7 +43,8 @@ BEGIN
                                       , inPriceWithVAT     := inPriceWithVAT
                                       , inVATPercent       := inVATPercent
                                       , inInvNumberPartner := inInvNumberPartner
-                                      , inInvNumberMark    := inInvNumberMark
+                                      , inInvNumberMark    := inInvNumberMark  
+                                      , inCorrSumm         := inCorrSumm
                                       , inFromId           := inFromId
                                       , inToId             := inToId
                                       , inPartnerId        := inPartnerId
@@ -60,6 +63,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.06.25         * CorrSumm
  14.04.22         * inBranchId
  02.02.18         *
  17.06.14         * add inInvNumberPartner 

@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalLines TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+             , CorrSumm TFloat
              , isCurrencyUser Boolean
              , MovementId_Order Integer, InvNumberOrder TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
@@ -380,6 +381,7 @@ end if;
                                                             , zc_MovementFloat_CurrencyPartnerValue()
                                                             , zc_MovementFloat_ParPartnerValue()
                                                             , zc_MovementFloat_TotalLines()
+                                                            , zc_MovementFloat_CorrSumm()
                                                              )
                               )
    /* , tmpMovementFloat_VATPercent AS (SELECT MovementFloat.*
@@ -834,7 +836,8 @@ end if;
            , MovementFloat_CurrencyValue.ValueData          AS CurrencyValue
            , MovementFloat_ParValue.ValueData               AS ParValue
            , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
-           , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
+           , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue  
+           , MovementFloat_CorrSumm.ValueData               AS CorrSumm 
            , COALESCE (MovementBoolean_CurrencyUser.ValueData, FALSE) ::Boolean AS isCurrencyUser
 
            , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
@@ -1096,6 +1099,10 @@ end if;
                                        ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                       AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
+            LEFT JOIN tmpMovementFloat AS MovementFloat_CorrSumm
+                                       ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                      AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
+
             LEFT JOIN tmpFrom AS Object_From ON Object_From.MovementId = Movement.Id
             LEFT JOIN tmpTo AS Object_To ON Object_To.MovementId = Movement.Id
             LEFT JOIN tmpJuridicalTo AS Object_JuridicalTo ON Object_JuridicalTo.ToId = Object_To.Id
@@ -1290,6 +1297,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 06.06.25         *
  01.05.25         * TotalLines
  14.04.25         *
  07.11.24         *

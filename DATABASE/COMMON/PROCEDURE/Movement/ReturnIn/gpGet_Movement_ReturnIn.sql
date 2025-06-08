@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+             , CorrSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -77,7 +78,8 @@ BEGIN
              , CAST (0 as TFloat)                       AS TotalSummPVAT
              , CAST (0 as TFloat)                       AS TotalSumm
              , CAST (0 as TFloat)                       AS CurrencyPartnerValue
-             , CAST (0 as TFloat)                       AS ParPartnerValue
+             , CAST (0 as TFloat)                       AS ParPartnerValue 
+             , CAST (0 as TFloat)                       AS CorrSumm
              , 0                                        AS FromId
              , CAST ('' as TVarChar)                    AS FromName
              , Object_To.Id                             AS ToId
@@ -226,6 +228,7 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData      AS TotalSumm
            , MovementFloat_CurrencyPartnerValue.ValueData  AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue
+           , MovementFloat_CorrSumm.ValueData              AS CorrSumm
            , Object_From.Id                    	    AS FromId
            , Object_From.ValueData             	    AS FromName
            , Object_To.Id                      	    AS ToId
@@ -366,6 +369,10 @@ BEGIN
                                     ON MovementFloat_ParPartnerValue.MovementId =  Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
+            LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                    ON MovementFloat_CorrSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -476,6 +483,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
+ 06.06.25         * CorrSumm
  16.02.23         * TransportGoods
  14.03.22         *
  12.05.18         *

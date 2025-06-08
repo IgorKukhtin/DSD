@@ -1,25 +1,25 @@
 inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 585
-  ClientWidth = 1370
-  ExplicitWidth = 1386
+  ClientWidth = 1436
+  ExplicitWidth = 1452
   ExplicitHeight = 624
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1370
+    Width = 1436
     Height = 419
     ExplicitTop = 166
     ExplicitWidth = 1370
     ExplicitHeight = 419
     ClientRectBottom = 419
-    ClientRectRight = 1370
+    ClientRectRight = 1436
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1370
       ExplicitHeight = 395
       inherited cxGrid: TcxGrid
-        Width = 1370
+        Width = 1436
         Height = 395
         ExplicitWidth = 1370
         ExplicitHeight = 395
@@ -535,7 +535,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1370
+    Width = 1436
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1370
@@ -1053,6 +1053,20 @@ inherited Sale_OrderForm: TSale_OrderForm
       Properties.ReadOnly = True
       TabOrder = 64
       Width = 120
+    end
+    object cxLabel30: TcxLabel
+      Left = 1271
+      Top = 45
+      Caption = #1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+    end
+    object edCorrSumm: TcxCurrencyEdit
+      Left = 1269
+      Top = 63
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = False
+      TabOrder = 66
+      Width = 116
     end
   end
   object edChangePercentAmount: TcxCurrencyEdit [2]
@@ -4096,6 +4110,13 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = cbCurrencyUser
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -4309,6 +4330,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -4403,6 +4432,9 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Control = edReturnIn
+      end
+      item
+        Control = edCorrSumm
       end>
     Left = 232
     Top = 193

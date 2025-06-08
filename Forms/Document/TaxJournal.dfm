@@ -56,6 +56,11 @@ inherited TaxJournalForm: TTaxJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CorrSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -87,6 +92,11 @@ inherited TaxJournalForm: TTaxJournalForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = FromName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CorrSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -340,6 +350,18 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object CorrSumm: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'. '#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'CorrSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            Options.Editing = False
+            Width = 80
           end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'

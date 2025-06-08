@@ -196,6 +196,8 @@ type
     bbSetUnErased_Det: TdxBarButton;
     MIDetailProtocolOpenForm: TdsdOpenForm;
     bbMIDetailProtocolOpenForm: TdxBarButton;
+    cxLabel27: TcxLabel;
+    edCorrSumm: TcxCurrencyEdit;
   private
     { Private declarations }
   public

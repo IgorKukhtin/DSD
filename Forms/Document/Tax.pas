@@ -176,6 +176,8 @@ type
     DBViewAddOnGoodsName: TdsdDBViewAddOn;
     MovementItemProtocolOpenFormName: TdsdOpenForm;
     bbProtocolOpenFormName: TdxBarButton;
+    cxLabel27: TcxLabel;
+    edCorrSumm: TcxCurrencyEdit;
   private
     { Private declarations }
   public

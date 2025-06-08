@@ -2,7 +2,6 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1267
-  ExplicitLeft = -390
   ExplicitWidth = 1283
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -507,6 +506,7 @@ inherited TaxForm: TTaxForm
     Width = 1267
     Height = 137
     TabOrder = 3
+    ExplicitTop = 4
     ExplicitWidth = 1267
     ExplicitHeight = 137
     inherited edInvNumber: TcxTextEdit
@@ -713,7 +713,7 @@ inherited TaxForm: TTaxForm
       Left = 9
       Top = 103
       TabOrder = 29
-      Width = 299
+      Width = 197
     end
     object cxLabel26: TcxLabel
       Left = 317
@@ -757,6 +757,20 @@ inherited TaxForm: TTaxForm
       Properties.ReadOnly = True
       TabOrder = 34
       Width = 143
+    end
+    object cxLabel27: TcxLabel
+      Left = 211
+      Top = 85
+      Caption = #1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+    end
+    object edCorrSumm: TcxCurrencyEdit
+      Left = 211
+      Top = 103
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = False
+      TabOrder = 36
+      Width = 97
     end
   end
   object cxLabel22: TcxLabel [2]
@@ -1974,12 +1988,12 @@ inherited TaxForm: TTaxForm
   end
   inherited StatusGuides: TdsdGuides
     Left = 48
-    Top = 56
+    Top = 16
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Tax'
-    Left = 88
-    Top = 56
+    Left = 96
+    Top = 32
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Tax'
@@ -2266,6 +2280,13 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2341,6 +2362,14 @@ inherited TaxForm: TTaxForm
         Name = 'inVATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCorrSumm'
+        Value = Null
+        Component = edCorrSumm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2447,6 +2476,9 @@ inherited TaxForm: TTaxForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edCorrSumm
       end>
     Top = 329
   end
@@ -2889,6 +2921,8 @@ inherited TaxForm: TTaxForm
       item
       end
       item
+      end
+      item
       end>
     GetStoredProc = spGet
     Left = 280
@@ -3272,8 +3306,8 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1024
-    Top = 56
+    Left = 984
+    Top = 40
   end
   object spUpdate_Branch: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Tax_Branch'

@@ -21,7 +21,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummChange TFloat, TotalSumm TFloat, TotalSummCurrency TFloat
              , TotalLines TFloat
              , CurrencyValue TFloat, ParValue TFloat
-             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat 
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+             , CorrSumm TFloat 
              , isCurrencyUser Boolean
              , MovementId_Order Integer, InvNumberOrder TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
@@ -136,6 +137,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.06.25         * CorrSumm
  01.05.25         * TotalLines
  15.07.24         *
  24.10.17         * add Movement_Transport_Reestr

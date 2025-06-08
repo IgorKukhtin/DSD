@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax(
@@ -16,7 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax(
     IN inChecked             Boolean   , -- Проверен
     IN inDocument            Boolean   , -- Есть ли подписанный документ
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
-    IN inVATPercent          TFloat    , -- % НДС
+    IN inVATPercent          TFloat    , -- % НДС 
+    IN inCorrSumm             TFloat   , -- Корректировка суммы покупателя для выравнивания округлений
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inPartnerId           Integer   , -- Контрагент
@@ -28,9 +30,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbCorrSumm TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
+
+     --смотрим какое было значение, чтоб потом проверить изменилось ли оно
+     vbCorrSumm := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
+
 
      -- сохранили <Документ>
      SELECT tmp.ioId
@@ -59,7 +66,15 @@ BEGIN
      END IF;
 
      -- Комментарий
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment); 
+     
+     IF COALESCE (vbCorrSumm,0) <> COALESCE (inCorrSumm,0)
+     THEN
+         -- сохранили свойство <Корректировка суммы покупателя для выравнивания округлений>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrSumm(), ioId, inCorrSumm);
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
+     END IF;
 
 END;
 $BODY$
@@ -68,6 +83,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.06.25         * CorrSumm
  10.07.14                                        * add zc_Enum_DocumentTaxKind_Prepay
  02.05.14                                        * add io...
  24.04.14                                                       * add ioInvNumberBranch

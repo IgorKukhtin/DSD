@@ -92,6 +92,11 @@ inherited SaleJournalForm: TSaleJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalLines
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CorrSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -158,6 +163,11 @@ inherited SaleJournalForm: TSaleJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalLines
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CorrSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -416,6 +426,18 @@ inherited SaleJournalForm: TSaleJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object CorrSumm: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'. '#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'CorrSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            Options.Editing = False
             Width = 80
           end
           object TotalSummCurrency: TcxGridDBColumn
@@ -958,11 +980,8 @@ inherited SaleJournalForm: TSaleJournalForm
     end
   end
   inherited Panel: TPanel
-    Top = 26
     Width = 1374
     Height = 55
-    ExplicitLeft = 464
-    ExplicitTop = 344
     ExplicitWidth = 1374
     ExplicitHeight = 55
     inherited deStart: TcxDateEdit

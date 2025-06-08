@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Sale()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ Перемещение>
@@ -28,7 +29,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
    OUT outCurrencyValue        TFloat     , -- Курс для перевода в валюту баланса
    OUT outParValue             TFloat     , -- Номинал для перевода в валюту баланса
  INOUT ioCurrencyPartnerValue  TFloat     , -- Курс для расчета суммы операции
- INOUT ioParPartnerValue       TFloat     , -- Номинал для расчета суммы операции
+ INOUT ioParPartnerValue       TFloat     , -- Номинал для расчета суммы операции 
+    IN inCorrSumm              TFloat     , -- Корректировка суммы покупателя для выравнивания округлений
     IN inComment               TVarChar   , -- Примечание
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -36,6 +38,7 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId_Tax Integer;
+   DECLARE vbCorrSumm TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
@@ -50,6 +53,9 @@ BEGIN
                              WHERE MLM.MovementId = ioId AND MLM.DescId = zc_MovementLinkMovement_Master()
                             );
      END IF;
+
+     --смотрим какое было значение, чтоб потом проверить изменилось ли значение
+     vbCorrSumm := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
 
      -- сохранили <Документ>
      SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName, tmp.outPriceWithVAT, tmp.outVATPercent
@@ -86,6 +92,14 @@ BEGIN
     -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
     PERFORM lpUpdate_Movement_Sale_Edi_byOrder (ioId, inMovementId_Order, vbUserId);
 
+    IF COALESCE (vbCorrSumm,0) <> COALESCE (inCorrSumm,0)
+    THEN
+        -- сохранили свойство <Корректировка суммы покупателя для выравнивания округлений>
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrSumm(), ioId, inCorrSumm);
+        -- сохранили протокол
+        PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
+    END IF;
+
 
     -- в этом случае надо восстановить/удалить Налоговую
     IF vbMovementId_Tax <> 0
@@ -119,6 +133,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 06.06.25         * CorrSumm
  21.03.22         * 
  28.06.16         * add ReestrKind
  24.07.14         * add inCurrencyDocumentId

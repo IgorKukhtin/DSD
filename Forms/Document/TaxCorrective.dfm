@@ -294,9 +294,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -577,9 +574,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object tsContract: TcxTabSheet
       Caption = #1044#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -933,7 +927,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Left = 133
       Top = 103
       TabOrder = 33
-      Width = 317
+      Width = 175
     end
     object edINN: TcxTextEdit
       Left = 770
@@ -1004,6 +998,20 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end>
       TabOrder = 42
       Width = 125
+    end
+    object cxLabel27: TcxLabel
+      Left = 314
+      Top = 88
+      Caption = #1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+    end
+    object edCorrSumm: TcxCurrencyEdit
+      Left = 314
+      Top = 103
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = False
+      TabOrder = 44
+      Width = 97
     end
   end
   object cbPartner: TcxCheckBox [2]
@@ -2467,6 +2475,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 328
@@ -2542,6 +2557,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Name = 'inVATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCorrSumm'
+        Value = Null
+        Component = edCorrSumm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2645,6 +2668,9 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edCorrSumm
       end>
     Left = 168
     Top = 265
@@ -2980,8 +3006,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
     ComponentList = <>
-    Left = 392
-    Top = 88
+    Left = 184
+    Top = 96
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

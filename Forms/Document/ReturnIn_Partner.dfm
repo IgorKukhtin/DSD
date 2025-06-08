@@ -1200,6 +1200,20 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Top = 85
       Caption = #1053#1086#1084#1080#1085#1072#1083
     end
+    object cxLabel27: TcxLabel
+      Left = 995
+      Top = 123
+      Caption = #1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+    end
+    object edCorrSumm: TcxCurrencyEdit
+      Left = 995
+      Top = 140
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = False
+      TabOrder = 53
+      Width = 97
+    end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
     Left = 892
@@ -1293,15 +1307,15 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Width = 223
   end
   object cxLabel18: TcxLabel [12]
-    Left = 995
+    Left = 1145
     Top = 124
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [13]
-    Left = 995
+    Left = 1145
     Top = 140
     TabOrder = 17
-    Width = 294
+    Width = 144
   end
   object cxLabel22: TcxLabel [14]
     Left = 788
@@ -4247,6 +4261,13 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Component = cbisWeighing_inf
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 248
@@ -4354,6 +4375,14 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Name = 'inChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCorrSumm'
+        Value = Null
+        Component = edCorrSumm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4523,6 +4552,9 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       end
       item
         Control = cbList
+      end
+      item
+        Control = edCorrSumm
       end>
     Left = 224
     Top = 209

@@ -22,7 +22,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Width = 1042
         Height = 332
         ExplicitWidth = 1042
-        ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -885,6 +884,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Width = 1042
     Height = 140
     TabOrder = 3
+    ExplicitLeft = -72
+    ExplicitTop = 44
     ExplicitWidth = 1042
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
@@ -1104,9 +1105,23 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       TabOrder = 30
       Width = 165
     end
+    object cxLabel27: TcxLabel
+      Left = 843
+      Top = 86
+      Caption = #1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+    end
+    object edCorrSumm: TcxCurrencyEdit
+      Left = 843
+      Top = 103
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = False
+      TabOrder = 32
+      Width = 109
+    end
   end
   object edIsChecked: TcxCheckBox [2]
-    Left = 753
+    Left = 681
     Top = 103
     Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
@@ -2682,6 +2697,13 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2733,6 +2755,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Name = 'inVATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCorrSumm'
+        Value = Null
+        Component = edCorrSumm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2869,6 +2899,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Control = edBranch
+      end
+      item
+        Control = edCorrSumm
       end>
     Left = 216
     Top = 225
@@ -3406,8 +3439,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 856
-    Top = 56
+    Left = 864
+    Top = 24
   end
   object spCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
@@ -3716,6 +3749,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 751
     Top = 332
@@ -3856,6 +3890,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         DataSummaryItemIndex = -1
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 414

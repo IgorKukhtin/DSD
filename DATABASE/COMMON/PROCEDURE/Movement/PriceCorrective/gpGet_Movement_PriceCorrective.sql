@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Checked Boolean
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
+             , CorrSumm TFloat
              , InvNumberPartner TVarChar, InvNumberMark TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
@@ -48,6 +49,7 @@ BEGIN
              , CAST (0 as TFloat)                       AS TotalCount
              , CAST (0 as TFloat)                       AS TotalSummMVAT
              , CAST (0 as TFloat)                       AS TotalSummPVAT
+             , CAST (0 as TFloat)                       AS CorrSumm
 
              , CAST ('' as TVarChar) 	                AS InvNumberPartner
              , CAST ('' as TVarChar) 	                AS InvNumberMark
@@ -104,6 +106,7 @@ BEGIN
            , MovementFloat_TotalCount.ValueData     AS TotalCount
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
+           , MovementFloat_CorrSumm.ValueData       AS CorrSumm
 
            , COALESCE(MovementString_InvNumberPartner.ValueData, CAST ('' as TVarChar)) AS InvNumberPartner
            , COALESCE(MovementString_InvNumberMark.ValueData, CAST ('' as TVarChar))    AS InvNumberMark
@@ -152,6 +155,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+
+            LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                    ON MovementFloat_CorrSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
@@ -218,6 +225,7 @@ ALTER FUNCTION gpGet_Movement_PriceCorrective (Integer, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
+ 06.06.25         * CorrSumm
  26.03.19         * add Checked
  17.06.14         * add inInvNumberPartner
                       , inInvNumberMark
