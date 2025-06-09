@@ -2198,8 +2198,8 @@ inherited ReturnInForm: TReturnInForm
     object edCorrSumm: TcxCurrencyEdit
       Left = 867
       Top = 145
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
       Properties.ReadOnly = False
       TabOrder = 51
       Width = 97

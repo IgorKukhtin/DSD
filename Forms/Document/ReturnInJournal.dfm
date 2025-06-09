@@ -211,7 +211,15 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          inherited colInvNumber: TcxGridDBColumn [3]
+          object ReasonName: TcxGridDBColumn [3]
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'ReasonName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          inherited colInvNumber: TcxGridDBColumn [4]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 70
@@ -221,7 +229,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             DataBinding.FieldName = 'isError'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 64
           end
           object isWeighing_inf: TcxGridDBColumn
             Caption = #1042#1079#1074#1077#1096'-'#1080#1077' '#1076#1072'/'#1085#1077#1090
@@ -229,7 +237,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' '#1076#1072'/'#1085#1077#1090
-            Width = 55
+            Width = 66
           end
           object ReestrKindName: TcxGridDBColumn
             Caption = #1042#1080#1079#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
@@ -277,16 +285,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 109
-          end
-          object ReasonName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
-            DataBinding.FieldName = 'ReasonName'
-            Visible = False
-            GroupIndex = 0
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
           end
           object DocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'

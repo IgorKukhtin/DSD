@@ -2,6 +2,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 585
   ClientWidth = 1436
+  ExplicitLeft = -255
   ExplicitWidth = 1452
   ExplicitHeight = 624
   PixelsPerInch = 96
@@ -11,17 +12,17 @@ inherited Sale_OrderForm: TSale_OrderForm
     Width = 1436
     Height = 419
     ExplicitTop = 166
-    ExplicitWidth = 1370
+    ExplicitWidth = 1436
     ExplicitHeight = 419
     ClientRectBottom = 419
     ClientRectRight = 1436
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1370
+      ExplicitWidth = 1436
       ExplicitHeight = 395
       inherited cxGrid: TcxGrid
         Width = 1436
         Height = 395
-        ExplicitWidth = 1370
+        ExplicitWidth = 1436
         ExplicitHeight = 395
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -538,7 +539,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Width = 1436
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1370
+    ExplicitWidth = 1436
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1030,12 +1031,12 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 140
     end
     object cxLabel31: TcxLabel
-      Left = 1269
+      Left = 1270
       Top = 85
       Caption = #1053#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#8470' ('#1074#1086#1079#1074#1088#1072#1090')'
     end
     object edReturnIn: TcxButtonEdit
-      Left = 1269
+      Left = 1270
       Top = 103
       Properties.Buttons = <
         item
@@ -1060,10 +1061,10 @@ inherited Sale_OrderForm: TSale_OrderForm
       Caption = #1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
     end
     object edCorrSumm: TcxCurrencyEdit
-      Left = 1269
+      Left = 1270
       Top = 63
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
       Properties.ReadOnly = False
       TabOrder = 66
       Width = 116

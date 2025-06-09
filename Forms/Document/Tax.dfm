@@ -506,7 +506,6 @@ inherited TaxForm: TTaxForm
     Width = 1267
     Height = 137
     TabOrder = 3
-    ExplicitTop = 4
     ExplicitWidth = 1267
     ExplicitHeight = 137
     inherited edInvNumber: TcxTextEdit
@@ -766,8 +765,8 @@ inherited TaxForm: TTaxForm
     object edCorrSumm: TcxCurrencyEdit
       Left = 211
       Top = 103
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
       Properties.ReadOnly = False
       TabOrder = 36
       Width = 97
