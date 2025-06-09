@@ -7,7 +7,7 @@ RETURNS Boolean
 AS
 $BODY$
 BEGIN
-     RETURN (EXISTS (SELECT 1 FROM _replica.settings WHERE Name ILIKE 'last_id'));
+     RETURN (FALSE); -- EXISTS (SELECT 1 FROM _replica.settings WHERE Name ILIKE 'last_id'));
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;

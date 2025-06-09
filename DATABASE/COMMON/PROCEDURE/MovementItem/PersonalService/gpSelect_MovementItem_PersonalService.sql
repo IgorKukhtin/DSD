@@ -124,6 +124,13 @@ BEGIN
      END IF;
 
 
+     
+     IF COALESCE (inMovementId, 0) = 0 AND vbUserId = 5
+     THEN
+         RETURN;
+     END IF;
+
+
      -- определяется
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
@@ -853,6 +860,9 @@ BEGIN
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
                -- Корректировка ЗП
              - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
+              -- ПЛЮС Сальдо на початок
+             + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
+
               ) :: TFloat AS AmountToPay
 
               -- К выплате (из кассы)
@@ -868,6 +878,9 @@ BEGIN
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
                -- Корректировка ЗП
              - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
+              -- ПЛЮС Сальдо на початок
+             + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
+
               ) :: TFloat AS AmountCash
 
               -- Остаток к выдаче (из кассы) грн
@@ -885,6 +898,9 @@ BEGIN
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
                -- Корректировка ЗП
              - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
+              -- ПЛЮС Сальдо на початок
+             + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
+
               ) :: TFloat AS AmountCash_rem   
 
               -- к выплате из кассы для печати  
@@ -905,6 +921,9 @@ BEGIN
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
                -- Корректировка ЗП
              - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
+              -- ПЛЮС Сальдо на початок
+             + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
+
              ) :: TFloat AS AmountCash_print
               
               -- выдадано из кассы

@@ -430,11 +430,13 @@ BEGIN
                                WHEN ObjectString_Goods_UKTZED.ValueData <> ''
                                     THEN ObjectString_Goods_UKTZED.ValueData
 
-                               -- ошибка
+                               -- ???ошибка???
                                -- WHEN ObjectString_Goods_UKTZED_new.ValueData <> ''
                                --     THEN ObjectString_Goods_UKTZED_new.ValueData
 
                           END AS Goods_UKTZED
+
+                        , ObjectString_Goods_UKTZED_new.ValueData AS Goods_UKTZED_new
 
                         , ObjectString_Goods_TaxImport.ValueData   AS Goods_TaxImport
                         , ObjectString_Goods_DKPP.ValueData        AS Goods_DKPP
@@ -445,6 +447,7 @@ BEGIN
                         , ObjectLink_Goods_InfoMoney.ChildObjectId AS InfoMoneyId
                    FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI
                        ) AS tmp
+
                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
                         LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                                ON ObjectString_Goods_BUH.ObjectId = tmp.GoodsId
@@ -488,6 +491,7 @@ BEGIN
                                              --AND COALESCE (tmpName_new.GoodsKindId,0) = COALESCE (Object_GoodsKind.Id,0)
                    )
 
+      -- на дату у группы товара
     , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDate_Tax_Tax_Tax) AS CodeUKTZED
                        FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
                       )
@@ -1234,6 +1238,11 @@ BEGIN
                   -- на дату у группы товара
                   WHEN tmpUKTZED.CodeUKTZED <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
+                  
+                  -- всегда новый у товара
+                  WHEN tmpGoods.Goods_UKTZED_new <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpGoods.Goods_UKTZED_new ELSE SUBSTRING (tmpGoods.Goods_UKTZED_new FROM 1 FOR 4) END
+                  
 
                   -- для предоплаты
                   WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
