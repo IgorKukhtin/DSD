@@ -5510,6 +5510,10 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbTax'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
