@@ -2654,7 +2654,7 @@ inherited TaxForm: TTaxForm
         Name = 'inLineNumTax'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'LineNumTax'
+        ComponentItem = 'LineNum'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
