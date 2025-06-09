@@ -1766,9 +1766,16 @@ group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
 -- !!!check goods params
 --
 --      select * from Object where id = 8451
--- update SoldTable set GoodsByGoodsKindId = tmpGoodsByGoodsKind.Id
- select distinct SoldTable .GoodsId FROM SoldTable,
--- FROM
+-- update SoldTable set BusinessId          = tmp.BusinessId          
+                      , GoodsPlatformId     = tmp.GoodsPlatformId     
+                      , TradeMarkId         = tmp.TradeMarkId         
+                      , GoodsGroupAnalystId = tmp.GoodsGroupAnalystId 
+                      , GoodsTagId          = tmp.GoodsTagId          
+                      , GoodsGroupId        = tmp.GoodsGroupId        
+                      , GoodsGroupStatId    = tmp.GoodsGroupStatId    
+                      , MeasureId           = tmp.MeasureId
+-- select distinct SoldTable .GoodsId FROM SoldTable,
+ FROM
     (select Object.Id AS GoodsId
            , ObjectLink_Goods_Business.ChildObjectId               AS BusinessId
            , ObjectLink_Goods_GoodsPlatform.ChildObjectId          AS GoodsPlatformId
@@ -1803,18 +1810,18 @@ group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                 ON ObjectLink_Goods_Measure.ObjectId = Object.Id
                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-
+      WHERE Object.DescId = zc_Object_Goods()
      ) AS tmp
 where tmp.GoodsId  = SoldTable .GoodsId
-  AND SoldTable.OperDate BETWEEN '01.01.2022' AND '31.08.2022'
-  AND (coalesce (tmp.BusinessId, 0) <> tmp.BusinessId
-    OR coalesce (tmp.GoodsPlatformId, 0) <> tmp.GoodsPlatformId
-    OR coalesce (tmp.TradeMarkId, 0) <> tmp.TradeMarkId
-    OR coalesce (tmp.GoodsGroupAnalystId, 0) <> tmp.GoodsGroupAnalystId
-    OR coalesce (tmp.GoodsTagId, 0) <> tmp.GoodsTagId
-    OR coalesce (tmp.GoodsGroupId, 0) <> tmp.GoodsGroupId
-    OR coalesce (tmp.GoodsGroupStatId, 0) <> tmp.GoodsGroupStatId
-    OR coalesce (tmp.MeasureId, 0) <> tmp.MeasureId
+  AND SoldTable.OperDate BETWEEN '01.01.2021' AND '31.12.2021'
+  AND (coalesce (SoldTable.BusinessId, 0) <> tmp.BusinessId
+    OR coalesce (SoldTable.GoodsPlatformId, 0) <> tmp.GoodsPlatformId
+    OR coalesce (SoldTable.TradeMarkId, 0) <> tmp.TradeMarkId
+    OR coalesce (SoldTable.GoodsGroupAnalystId, 0) <> tmp.GoodsGroupAnalystId
+    OR coalesce (SoldTable.GoodsTagId, 0) <> tmp.GoodsTagId
+    OR coalesce (SoldTable.GoodsGroupId, 0) <> tmp.GoodsGroupId
+    OR coalesce (SoldTable.GoodsGroupStatId, 0) <> tmp.GoodsGroupStatId
+    OR coalesce (SoldTable.MeasureId, 0) <> tmp.MeasureId
       )
 */
 -- тест
