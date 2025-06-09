@@ -4380,14 +4380,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCorrSumm'
-        Value = Null
-        Component = edCorrSumm
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
@@ -4449,6 +4441,14 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Component = edParPartnerValue
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCorrSumm'
+        Value = Null
+        Component = edCorrSumm
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
