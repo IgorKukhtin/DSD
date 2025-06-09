@@ -225,7 +225,7 @@ BEGIN
                           , tmpData.HeadCountMaster
                           --, tmpData.PriceMaster 
                           , ((COALESCE (tmpData.SummMaster,0) - COALESCE (tmpData.SummCostIncome,0)) / tmpData.CountMaster ) AS PriceMaster
-                          , ((COALESCE (tmpData.SummMaster,0) - COALESCE (tmpData.SummCostIncome,0)) / tmpData.CountMaster ) * tmpData.CountMaster 
+                          --, ((COALESCE (tmpData.SummMaster,0) - COALESCE (tmpData.SummCostIncome,0)) / tmpData.CountMaster ) * tmpData.CountMaster  
                           , tmpData.FromName
                           , tmpData.PersonalPackerName 
                           , tmpData.Separate_info
@@ -494,8 +494,8 @@ BEGIN
            , tmpMain_Group.PercentCount
            , tmpMain_Group.GoodsNameSeparate
            , tmpMain_Group.SummHeadCount1
-           , tmpCursor1.PriceMaster
-      
+           , AVG (tmpCursor1.PriceMaster) AS PriceMaster
+       
           /*CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END AS MovementId
            , CASE WHEN inisGroup = TRUE THEN '' ELSE tmpCursor1.InvNumber END AS InvNumber
            , MAX (tmpCursor1.OperDate)  AS OperDate
@@ -540,7 +540,8 @@ BEGIN
            --, tmpCursor1.Persent_4134 
            , CASE WHEN COALESCE (SUM (tmpCursor1.CountMaster),0) <> 0 THEN 100  * SUM (tmpCursor1.Amount_4134) / SUM (tmpCursor1.CountMaster) ELSE 0 END :: TFloat AS Persent_4134
            , SUM (tmpCursor1.AmountMaster_4134)  AS AmountMaster_4134    
-           , tmpCursor1.PriceFact_nk
+           --, tmpCursor1.PriceFact_nk  --заменяем на расчет  для варианта итоговой печати
+           , CASE WHEN  SUM (tmpCursor1.Amount) <> 0 THEN (SUM (tmpCursor1.SummFact_nk) / SUM (tmpCursor1.Amount)) ELSE 0 END AS PriceFact_nk
            , SUM(tmpCursor1.PriceFact_nk * tmpCursor1.Amount) ::TFloat AS SummFact_nk
            
            , tmpCursor1.GoodsId
@@ -664,7 +665,7 @@ BEGIN
 
            , tmpCursor1.PriceMaster
            */      
-           , tmpCursor1.PriceMaster
+          -- , tmpCursor1.PriceMaster
            , tmpCursor1.Separate_info  
            , tmpCursor1.GoodsName_4134
            , tmpCursor1.PriceFact_4134
@@ -679,7 +680,7 @@ BEGIN
            , tmpCursor1.GroupStatName
            , tmpCursor1.PricePlan
            , tmpCursor1.PriceNorm
-           , tmpCursor1.PriceFact_nk
+           --, tmpCursor1.PriceFact_nk
            
            , tmpGroup.Price_gr1
            , tmpGroup.Price_gr2
