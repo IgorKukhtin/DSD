@@ -52,7 +52,13 @@ BEGIN
         , tmpResult.PartionGoodsDate
           --
 
-        , (CASE WHEN COALESCE (tmpResult.PartionCellName_1,'') <> ''  AND COALESCE (tmpResult.PartionCellName_1,'')  NOT ILIKE 'ошибка' AND tmpResult.PartionCellName_1  NOT ILIKE '%Отбор%' THEN tmpResult.PartionCellName_1 ELSE '' END
+         , (
+           CASE WHEN vbUserId = 5 AND tmpResult.GoodsCode = 770 THEN 'N-7-4-1' || chr(13) ELSE '' END :: Text
+         ||CASE WHEN vbUserId = 5 AND tmpResult.GoodsCode = 166 THEN 'M-7-4-1' || chr(13) ELSE '' END :: Text
+
+         ||CASE WHEN vbUserId = 5 AND tmpResult.GoodsCode = 770 THEN '<font color=red><sub><b> ***' ELSE '' END :: Text
+         ||CASE WHEN vbUserId = 5 AND tmpResult.GoodsCode = 166 THEN '<font color=red><sup><b> ---' ELSE '' END :: Text
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_1,'') <> ''  AND COALESCE (tmpResult.PartionCellName_1,'')  NOT ILIKE 'ошибка' AND tmpResult.PartionCellName_1  NOT ILIKE '%Отбор%' THEN tmpResult.PartionCellName_1 ELSE '' END
          ||CASE WHEN COALESCE (tmpResult.PartionCellName_2,'') <> ''  AND COALESCE (tmpResult.PartionCellName_2,'')  NOT ILIKE 'ошибка' AND tmpResult.PartionCellName_2  NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_2 ELSE '' END
          ||CASE WHEN COALESCE (tmpResult.PartionCellName_3,'') <> ''  AND COALESCE (tmpResult.PartionCellName_3,'')  NOT ILIKE 'ошибка' AND tmpResult.PartionCellName_3  NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_3 ELSE '' END
          ||CASE WHEN COALESCE (tmpResult.PartionCellName_4,'') <> ''  AND COALESCE (tmpResult.PartionCellName_4,'')  NOT ILIKE 'ошибка' AND tmpResult.PartionCellName_4  NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_4 ELSE '' END
@@ -74,7 +80,21 @@ BEGIN
          ||CASE WHEN COALESCE (tmpResult.PartionCellName_20,'') <> '' AND COALESCE (tmpResult.PartionCellName_20,'') NOT ILIKE 'ошибка' AND tmpResult.PartionCellName_20 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_20 ELSE '' END
          ||CASE WHEN COALESCE (tmpResult.PartionCellName_21,'') <> '' AND COALESCE (tmpResult.PartionCellName_21,'') NOT ILIKE 'ошибка' AND tmpResult.PartionCellName_21 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_21 ELSE '' END
          ||CASE WHEN COALESCE (tmpResult.PartionCellName_22,'') <> '' AND COALESCE (tmpResult.PartionCellName_22,'') NOT ILIKE 'ошибка' AND tmpResult.PartionCellName_22 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_22 ELSE '' END
-          ) ::Text AS PartionCellName
+         ||CASE WHEN vbUserId = 5 AND tmpResult.GoodsCode = 770 THEN '</font></sub></b>' ELSE '' END :: Text
+         ||CASE WHEN vbUserId = 5 AND tmpResult.GoodsCode = 166 THEN '</font></sup></b>' ELSE '' END :: Text
+
+         ||CASE WHEN vbUserId = 5 AND tmpResult.GoodsCode = 770 THEN chr(13) || 'N-7-4-2' ELSE '' END :: Text
+         ||CASE WHEN vbUserId = 5 AND tmpResult.GoodsCode = 166 THEN chr(13) || 'M-7-4-2' ELSE '' END :: Text
+/*
+<b>	bold text
+<i>	italic text
+<u>	underlined text
+<sub>	subscript
+<sup>	superscript
+<font color>	font color
+<nowrap>	text which is not split when WordWrap is enabled, the whole text is shifted to the next line
+*/
+	          ) ::Text AS PartionCellName
 
         , tmpResult.Amount, tmpResult.Amount_Weight
 

@@ -33,6 +33,9 @@ $BODY$
 
   DECLARE vbMovementDescId Integer;
 
+  -- Корректировка суммы покупателя для выравнивания округлений
+  DECLARE vbCorrSumm TFloat;
+  --
   DECLARE vbOperSumm_PriceList_byItem TFloat;
   DECLARE vbOperSumm_PriceList TFloat;
   DECLARE vbOperSumm_PriceListJur_byItem TFloat;
@@ -393,6 +396,9 @@ END IF;*/
           , COALESCE (MovementLinkMovement_ReturnIn.MovementChildId,0)           AS MovementId_ReturnIn
           , COALESCE (ObjectBoolean_Contract_RealEx.ValueData, False) :: Boolean AS isRealEx
 
+            -- Корректировка суммы покупателя для выравнивания округлений
+          , COALESCE (MovementFloat_CorrSumm.ValueData, 0) AS CorrSumm
+
             INTO vbIsHistoryCost, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbIsDiscountPrice
                , vbMovementDescId, vbOperDate, vbOperDatePartner
                , vbUnitId_From, vbMemberId_From, vbBranchId_From, vbIsPartionDoc_Branch, vbAccountDirectionId_From, vbIsPartionDate_Unit
@@ -403,6 +409,8 @@ END IF;*/
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
                , vbPriceListId_Jur
                , vbMovementId_ReturnIn, vbIsRealEx
+               , vbCorrSumm
+
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -419,6 +427,10 @@ END IF;*/
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+          -- Корректировка суммы
+          LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                  ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                 AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -1868,6 +1880,7 @@ end if;
                   , COALESCE (CAST (tmpMI.OperCount_Partner * COALESCE (tmpPL_Basis_kind.PriceListPrice, tmpPL_Basis.PriceListPrice, 0) AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceList
                     -- промежуточная сумма СПЕЦ. прайс-листа по Контрагенту - с округлением до 2-х знаков
                   , COALESCE (CAST (tmpMI.OperCount_Partner * COALESCE (tmpPL_Jur_kind.PriceListPrice, tmpPL_Jur.PriceListPrice, 0)     AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceListJur
+
                     -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков + учтена скидка в цене (!!!если надо!!!)
                   , CASE WHEN tmpMI.CountForPrice <> 0 THEN CAST (tmpMI.OperCount_Partner * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                                                        ELSE CAST (tmpMI.OperCount_Partner * tmpMI.Price AS NUMERIC (16, 2))
@@ -2142,6 +2155,7 @@ end if;
                        OR COALESCE (tmpItem_start.OperCount_Partner_start, 0)        <> COALESCE (tmpItem.OperCount_Partner, 0)
                    )
         AND inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
+        AND inUserId <> 5
         --AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Подбор партий.% % № <%> от <%> %Товар = <%> %Вид = <%> %Кол-во = <%> %Кол-во по партиям = <%> %Кол.Пок = <%> %Кол.Пок по партиям = <%> %Id = <%>'
@@ -2602,7 +2616,12 @@ end if;
                     THEN CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner_original AS NUMERIC (16, 2))
             END   -- так переводится в валюту zc_Enum_Currency_Basis
                 -- !!!убрал, переводится в строчной части!!! * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
-            AS NUMERIC (16, 2)) AS OperSumm_Partner  -- !!!результат!!!
+            AS NUMERIC (16, 2)
+           ) 
+            -- Корректировка суммы покупателя
+          + vbCorrSumm
+            -- !!!результат!!!
+            AS OperSumm_Partner
 
 
             -- Расчет Итоговой суммы по Контрагенту
@@ -2627,7 +2646,12 @@ end if;
                          END
             END   -- так переводится в валюту zc_Enum_Currency_Basis
                 -- !!!убрал, переводится в строчной части!!! * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
-            AS NUMERIC (16, 2)) AS OperSumm_Partner_ChangePercent  -- !!!результат!!!
+            AS NUMERIC (16, 2)
+           )
+           -- Корректировка суммы покупателя
+         + vbCorrSumm
+           -- !!!результат!!!
+           AS OperSumm_Partner_ChangePercent
 
 
             -- Расчет Итоговой суммы по Контрагенту - для кол-во с уч. %ск.вес
@@ -2652,7 +2676,12 @@ end if;
                          END
             END   -- так переводится в валюту zc_Enum_Currency_Basis
                 -- !!!убрал, переводится в строчной части!!! * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
-            AS NUMERIC (16, 2)) AS OperSumm_PartnerVirt_ChangePercent  -- !!!результат!!!
+            AS NUMERIC (16, 2)
+           )
+            -- Корректировка суммы покупателя
+          + vbCorrSumm
+            -- !!!результат!!!
+            AS OperSumm_PartnerVirt_ChangePercent
 
 
             -- Расчет Итоговой суммы в валюте по Контрагенту
@@ -2677,7 +2706,10 @@ end if;
                          END
             END   -- так переводится в валюту CurrencyPartnerId
                 * CASE WHEN vbCurrencyPartnerId <> vbCurrencyDocumentId THEN CASE WHEN vbParPartnerValue = 0 THEN 0 ELSE vbCurrencyPartnerValue /  vbParPartnerValue END ELSE CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE 1 END END
-            AS NUMERIC (16, 2)) AS OperSumm_Currency  -- !!!результат!!!
+            AS NUMERIC (16, 2)
+           )
+             -- !!!результат!!!
+            AS OperSumm_Currency
 
             INTO vbOperSumm_PriceList, vbOperSumm_PriceListJur, vbOperSumm_Partner, vbOperSumm_Partner_ChangePercent, vbOperSumm_PartnerVirt_ChangePercent, vbOperSumm_Currency
      FROM

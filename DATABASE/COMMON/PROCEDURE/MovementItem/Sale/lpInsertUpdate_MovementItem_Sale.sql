@@ -71,6 +71,7 @@ AND NOT EXISTS (SELECT 1
                   AND MLO.DescId = zc_MovementLinkObject_To()
                )
 -- AND inUserId IN (5, 6604558, 8056474)
+   AND inUserId NOT IN (5)
      THEN
          -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка
           IF NOT EXISTS (SELECT 1
