@@ -5254,10 +5254,13 @@ begin
   DESADV.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
   DESADV.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
     ('DELIVERYPLACEGLNCode').asString;
-  DESADV.HEAD.SENDER := HeaderDataSet.FieldByName
-    ('SenderGLNCode').asString;
-  DESADV.HEAD.RECIPIENT := HeaderDataSet.FieldByName
-    ('RecipientGLNCode').asString;
+  DESADV.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
+  DESADV.HEAD.RECIPIENT := HeaderDataSet.FieldByName ('RecipientGLNCode').asString;
+  // Номер договору на поставку
+  DESADV.HEAD.CONTRACTNUMBER:= HeaderDataSet.FieldByName('ContractName').asString;
+  // Дата договору
+  DESADV.HEAD.ContractDate := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
+
   DESADV.HEAD.PACKINGSEQUENCE.HIERARCHICALID := '1';
 
   with ItemsDataSet do
