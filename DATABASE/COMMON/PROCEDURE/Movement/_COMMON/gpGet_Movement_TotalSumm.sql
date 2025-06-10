@@ -14,12 +14,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ZakazInternal());
 
-     RETURN QUERY 
+     RETURN QUERY
        SELECT
-            ('Итого: '||trim (to_char (COALESCE (MovementFloat_TotalSummPVAT.ValueData, MovementFloat_TotalSumm.ValueData) , '999 999 999 999 999D99'))
+            ('Итого: '||trim (to_char (COALESCE (MovementFloat_TotalSummPVAT.ValueData, MovementFloat_TotalSumm.ValueData)  + COALESCE (MovementFloat_CorrSumm.ValueData, 0), '999 999 999 999 999D99'))
                       || CASE WHEN MovementFloat_TotalSummPacker.ValueData <> 0 THEN  ' + '||trim (to_char (COALESCE (MovementFloat_TotalSummPacker.ValueData, MovementFloat_TotalSummPacker.ValueData) , '999 999 999 999 999D99'))
                               ELSE ''
-                         END 
+                         END
             )::TVarChar  AS TotalSumm
        FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
@@ -32,13 +32,14 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPacker
                                     ON MovementFloat_TotalSummPacker.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPacker.DescId = zc_MovementFloat_TotalSummPacker()
+            LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                    ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                   AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
        WHERE Movement.Id = inMovementId;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_TotalSumm (Integer, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -48,4 +49,4 @@ ALTER FUNCTION gpGet_Movement_TotalSumm (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ZakazInternal (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_TotalSumm (inMovementId:= 1, inSession:= '2')

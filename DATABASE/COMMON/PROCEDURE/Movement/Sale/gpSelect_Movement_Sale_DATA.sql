@@ -825,11 +825,17 @@ end if;
            , MovementFloat_TotalCountTare.ValueData         AS TotalCountTare
            , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
            , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
-           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+             --
+           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+             --
            , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
+             --
+           , (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSummPVAT
+             --
            , MovementFloat_TotalSummChange.ValueData        AS TotalSummChange
-           , MovementFloat_TotalSumm.ValueData              AS TotalSumm
+             --
+           , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSumm
+             --
            , MovementFloat_AmountCurrency.ValueData         AS TotalSummCurrency
            , MovementFloat_TotalLines.ValueData  ::TFloat   AS TotalLines
 
@@ -1098,10 +1104,10 @@ end if;
             LEFT JOIN tmpMovementFloat AS MovementFloat_ParPartnerValue
                                        ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                       AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
-
+            -- Корректировка суммы
             LEFT JOIN tmpMovementFloat AS MovementFloat_CorrSumm
                                        ON MovementFloat_CorrSumm.MovementId = Movement.Id
-                                      AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
+                                      AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
 
             LEFT JOIN tmpFrom AS Object_From ON Object_From.MovementId = Movement.Id
             LEFT JOIN tmpTo AS Object_To ON Object_To.MovementId = Movement.Id
