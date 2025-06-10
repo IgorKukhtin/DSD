@@ -223,9 +223,9 @@ BEGIN
                           --, tmpData.CountMaster_4134
                           , tmpData.SummMaster
                           , tmpData.HeadCountMaster
-                          --, tmpData.PriceMaster 
-                          , ((COALESCE (tmpData.SummMaster,0) - COALESCE (tmpData.SummCostIncome,0)) / tmpData.CountMaster ) AS PriceMaster
-                          --, ((COALESCE (tmpData.SummMaster,0) - COALESCE (tmpData.SummCostIncome,0)) / tmpData.CountMaster ) * tmpData.CountMaster  
+                          , tmpData.PriceMaster 
+                          --, ((COALESCE (tmpData.SummMaster,0) - COALESCE (tmpData.SummCostIncome,0)) / tmpData.CountMaster ) AS PriceMaster  
+                          
                           , tmpData.FromName
                           , tmpData.PersonalPackerName 
                           , tmpData.Separate_info
