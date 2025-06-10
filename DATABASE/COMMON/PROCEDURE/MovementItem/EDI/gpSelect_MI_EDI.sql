@@ -39,13 +39,13 @@ BEGIN
                                                               ON MovementLinkObject_GoodsProperty.MovementId = Movement.Id
                                                              AND MovementLinkObject_GoodsProperty.DescId = zc_MovementLinkObject_GoodsProperty()
                                  LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                                                ON MovementLinkMovement_Order.MovementChildId = Movement.Id 
+                                                                ON MovementLinkMovement_Order.MovementChildId = Movement.Id
                                                                AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                                  LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
-                                                                ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
+                                                                ON MovementLinkMovement_Sale.MovementChildId = Movement.Id
                                                                AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
                                  LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
-                                                                ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id 
+                                                                ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id
                                                                AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
                                  LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId)
                                                                     --*** AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
@@ -129,6 +129,14 @@ BEGIN
                             WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI_find.Id FROM tmpMI_find)
                             GROUP BY MovementItemProtocol.MovementItemId
                            )
+       , tmpGPV_group AS (SELECT View_GoodsPropertyValue.GoodsId
+                               , MAX (View_GoodsPropertyValue.ArticleGLN) AS ArticleGLN
+                          FROM Object_GoodsPropertyValue_View AS View_GoodsPropertyValue
+                          WHERE View_GoodsPropertyValue.GoodsPropertyId = vbGoodsPropertyId
+                            AND View_GoodsPropertyValue.ArticleGLN <> ''
+                          GROUP BY View_GoodsPropertyValue.GoodsId
+                         )
+
        -- –≈«”À‹“¿“
        SELECT
              tmpMI.MovementId
@@ -164,7 +172,7 @@ BEGIN
                   THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isCheck
-         
+
            , FALSE AS isErased
 
        FROM (SELECT tmpMI.MovementId
@@ -229,7 +237,7 @@ BEGIN
                         LEFT JOIN tmpMI_OrderPrice_two ON tmpMI_OrderPrice_two.MovementId = inMovementId
                                                       AND tmpMI_OrderPrice_two.GoodsId = MovementItem.ObjectId
                         LEFT JOIN tmpMI_Protocol ON tmpMI_Protocol.MovementItemId = MovementItem.Id
-                                                      
+
                    WHERE MovementItem.MovementId = inMovementId
                      AND MovementItem.DescId =  zc_MI_Master()
                      AND MovementItem.isErased =  FALSE
@@ -245,7 +253,7 @@ BEGIN
                         , tmpMI_Sale_Order.MovementItemId
                         , tmpMI_Sale_Order.GoodsId
                         , tmpMI_Sale_Order.GoodsKindId
-                        , COALESCE (View_GoodsPropertyValue.ArticleGLN, '') AS GLNCode
+                        , COALESCE (tmpGPV_group.ArticleGLN, View_GoodsPropertyValue.ArticleGLN, '') AS GLNCode
                         , tmpMI_Sale_Order.Price
                         , tmpMI_Sale_Order.PriceEDI
                         , 0 AS AmountOrderEDI
@@ -311,10 +319,14 @@ BEGIN
                               , 0 AS AmountPartner
                          FROM tmpMI_Order
                         ) AS tmpMI_Sale_Order
+
                         LEFT JOIN Object_GoodsPropertyValue_View AS View_GoodsPropertyValue
                                                                  ON View_GoodsPropertyValue.GoodsId = tmpMI_Sale_Order.GoodsId
                                                                 AND View_GoodsPropertyValue.GoodsKindId = tmpMI_Sale_Order.GoodsKindId
                                                                 AND View_GoodsPropertyValue.GoodsPropertyId = tmpMI_Sale_Order.GoodsPropertyId
+                                                                AND View_GoodsPropertyValue.ArticleGLN <> ''
+                        LEFT JOIN tmpGPV_group ON tmpGPV_group.GoodsId = tmpMI_Sale_Order.GoodsId
+                                              AND View_GoodsPropertyValue.GoodsId IS NULL
                   ) AS tmpMI
              GROUP BY tmpMI.MovementId
                     , tmpMI.GoodsId
@@ -336,12 +348,11 @@ BEGIN
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
       ;
- 
+
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MI_EDI (Integer, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

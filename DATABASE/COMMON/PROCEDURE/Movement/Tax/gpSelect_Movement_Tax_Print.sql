@@ -36,6 +36,7 @@ $BODY$
 
     -- Корректировка суммы покупателя для выравнивания округлений
     DECLARE vbCorrSumm TFloat;
+    DECLARE vbCorrSummPVAT TFloat;
 
     DECLARE vbNotNDSPayer_INN  TVarChar;
     DECLARE vbCalcNDSPayer_INN TVarChar;
@@ -192,7 +193,9 @@ order by 4*/
           , ObjectFloat_Price.ValueData         :: TFloat   AS Price_DocumentTaxKind
        
             -- Корректировка суммы покупателя для выравнивания округлений
-          , COALESCE (MovementFloat_CorrSumm.ValueData, 0) AS CorrSumm
+          , COALESCE (MovementFloat_CorrSumm.ValueData, 0)      AS CorrSumm
+          , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) AS CorrSummPVAT
+        --, COALESCE (MovementFloat_TotalSumm.ValueData, 0)     AS CorrSummPVAT
 
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
                , vbOperDate_begin, vbOperDate_rus, vbOperDate_Tax_Tax, vbIsLongUKTZED
@@ -203,7 +206,7 @@ order by 4*/
                , vbMeasureCode_DocumentTaxKind
                , vbPrice_DocumentTaxKind
 
-               , vbCorrSumm
+               , vbCorrSumm, vbCorrSummPVAT
 
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
                             THEN inMovementId
@@ -221,6 +224,12 @@ order by 4*/
           LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
                                   ON MovementFloat_CorrSumm.MovementId = tmpMovement.MovementId_Tax
                                  AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                  ON MovementFloat_TotalSummPVAT.MovementId = tmpMovement.MovementId_Tax
+                                 AND MovementFloat_TotalSummPVAT.DescId     = zc_MovementFloat_TotalSummPVAT()
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                  ON MovementFloat_TotalSumm.MovementId = tmpMovement.MovementId_Tax
+                                 AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
 
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                          ON MovementLinkMovement_Master.MovementChildId = tmpMovement.MovementId_Tax
@@ -437,10 +446,14 @@ order by 4*/
             + vbCorrSumm
              ) ::TFloat AS TotalSummPVAT
 
-           , (CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, FALSE) = FALSE 
+           , (CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() AND vbCorrSumm <> 0 AND 1=1
+                        THEN CAST ((MovementFloat_TotalSummPVAT.ValueData + vbCorrSumm) / 6 AS NUMERIC (16,2))
+
+                   WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, FALSE) = FALSE 
                         THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)
                            - CASE WHEN inMovementId = 25962252 THEN 0.01 ELSE 0 END -- № 5647 от 17.08.2023 - Військова частина Т0920 м. Дніпро вул. Стартова буд.15
-                           + vbCorrSumm
+                           --
+                           -- + vbCorrSumm
                         ELSE 0
               END
              ) :: TFloat AS SummVAT
@@ -908,6 +921,8 @@ order by 4*/
                              FROM tmpMI
                                   CROSS JOIN (SELECT SUM (tmpMI.Summ_mi) AS Summ_mi FROM tmpMI) AS tmpMI_total
                              WHERE tmpMI.Summ_mi > 0
+                               AND vbCorrSumm <> 0
+                               AND 1=0
                             )
         , tmpMI_CorrSumm AS (SELECT tmpMI.Id
                                     -- добавили разницу
@@ -919,6 +934,47 @@ order by 4*/
                                     END AS CorrSumm_mi
                              FROM tmpMI_CorrSumm_all AS tmpMI
                                   CROSS JOIN (SELECT SUM (tmpMI_CorrSumm_all.CorrSumm_mi) AS CorrSumm_mi FROM tmpMI_CorrSumm_all) AS tmpMI_total
+                            )
+
+      -- Сумма с НДС - Корректировка суммы покупателя для выравнивания округлений
+    , tmpMI_CorrSumm_all_2 AS (SELECT tmpMI.Id
+                                    -- распределили
+                                  , CAST ((vbCorrSumm + vbCorrSummPVAT) * tmpMI.Summ_mi / tmpMI_total.Summ_mi AS NUMERIC (16,2)) AS CorrSumm_mi
+                                    -- № п/п
+                                  , ROW_NUMBER() OVER (ORDER BY tmpMI.Summ_mi DESC, tmpMI.Id) AS Ord
+                             FROM tmpMI
+                                  CROSS JOIN (SELECT SUM (tmpMI.Summ_mi) AS Summ_mi FROM tmpMI) AS tmpMI_total
+                             WHERE tmpMI.Summ_mi > 0
+                               AND vbCorrSumm <> 0
+                               AND 1=0
+                            )
+        , tmpMI_CorrSumm_2 AS (SELECT tmpMI.Id
+                                    -- Сумма с НДС - добавили разницу
+                                  , CASE WHEN tmpMI.Ord = 1 
+                                              -- добавили
+                                              THEN tmpMI.CorrSumm_mi + (vbCorrSumm + vbCorrSummPVAT - tmpMI_total.CorrSumm_mi)
+                                         -- без изменений
+                                         ELSE tmpMI.CorrSumm_mi
+                                    END AS CorrSumm_mi_PVAT
+
+                                    -- НДС - 3 ЗНАКОВ
+                                  , CAST (CASE WHEN tmpMI.Ord = 1 
+                                                     -- добавили
+                                                     THEN tmpMI.CorrSumm_mi + (vbCorrSumm + vbCorrSummPVAT - tmpMI_total.CorrSumm_mi)
+                                                -- без изменений
+                                                ELSE tmpMI.CorrSumm_mi
+                                           END / 6 AS NUMERIC (16,3)) AS CorrSumm_mi_VAT
+
+                                    -- Сумма без НДС - 2 ЗНАКОВ
+                                  , CAST (CASE WHEN tmpMI.Ord = 1 
+                                                     -- добавили
+                                                     THEN tmpMI.CorrSumm_mi + (vbCorrSumm + vbCorrSummPVAT - tmpMI_total.CorrSumm_mi)
+                                                -- без изменений
+                                                ELSE tmpMI.CorrSumm_mi
+                                           END / 1.2 AS NUMERIC (16,2)) AS CorrSumm_mi_MVAT
+
+                             FROM tmpMI_CorrSumm_all_2 AS tmpMI
+                                  CROSS JOIN (SELECT SUM (tmpMI_CorrSumm_all_2.CorrSumm_mi) AS CorrSumm_mi FROM tmpMI_CorrSumm_all_2) AS tmpMI_total
                             )
 
     , tmpGoods     AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
@@ -1196,7 +1252,7 @@ order by 4*/
                                   THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4))
                                   ELSE tmpMI.Price
                              END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                             AS NUMERIC (16,2))
+                       AS NUMERIC (16,2))
              END AS PriceNoVAT
 
            , CASE WHEN vbPriceWithVAT = FALSE
@@ -1205,51 +1261,84 @@ order by 4*/
              END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
              AS PriceWVAT
 
-           , CAST (CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis()
-                             THEN tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                                                  THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
-                                                                  ELSE tmpMI.Price
-                                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                             ELSE 0
-                   END AS NUMERIC (16, 2)) AS AmountSummNoVAT
+
+             -- без НДС
+           , CASE WHEN tmpMI_CorrSumm_2.CorrSumm_mi_PVAT > 0 AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()
+                       -- !!!сразу без НДС
+                       THEN tmpMI_CorrSumm_2.CorrSumm_mi_MVAT
+
+                  -- Округление до 2-х
+                  WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis()
+                       THEN CAST (tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                                           THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
+                                                           ELSE tmpMI.Price
+                                                 END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                            AS NUMERIC (16, 2))
+                       ELSE 0
+             END :: TFloat AS AmountSummNoVAT
                    
+             -- без НДС - VAT_12 - в печатной форме
+           , CASE WHEN tmpMI_CorrSumm_2.CorrSumm_mi_PVAT > 0
+                       -- !!!сразу без НДС
+                       THEN tmpMI_CorrSumm_2.CorrSumm_mi_MVAT
+
+                  -- Округление до 2-х
+                  ELSE CAST (tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                                THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
+                                                ELSE tmpMI.Price
+                                            END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                       AS NUMERIC (16, 2))
+             END AS AmountSummNoVAT_12
+
+             -- без НДС - в Валюте
            , CAST (CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                              THEN tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
                                                           THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
                                                           ELSE tmpMI.Price
                                                  END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                              ELSE 0
-                   END AS NUMERIC (16, 2)) AS AmountSummNoVAT_11
+                   END
+             AS NUMERIC (16, 2)) AS AmountSummNoVAT_11
 
-           , CAST (tmpMI.Amount * CASE WHEN vbPriceWithVAT = FALSE
-                                              THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
-                                              ELSE tmpMI.Price
-                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   -- Корректировка суммы покупателя
-                 + CAST (tmpMI_CorrSumm.CorrSumm_mi AS NUMERIC (16, 2))
+             -- с НДС
+           , CASE WHEN tmpMI_CorrSumm_2.CorrSumm_mi_PVAT > 0
+                       -- !!!сразу с НДС
+                       THEN tmpMI_CorrSumm_2.CorrSumm_mi_PVAT
 
-                   AS NUMERIC (16, 3)) AS AmountSummWVAT
+                  -- Округление до 3-х
+                  ELSE CAST (tmpMI.Amount * CASE WHEN vbPriceWithVAT = FALSE
+                                                 THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
+                                                 ELSE tmpMI.Price
+                                            END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                             -- Корректировка суммы покупателя - Округление до 2-х
+                           + CAST (COALESCE (tmpMI_CorrSumm.CorrSumm_mi, 0) AS NUMERIC (16, 2))
+                       AS NUMERIC (16, 3))
 
-           , CAST (tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                              THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
-                                              ELSE tmpMI.Price
-                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 2)) AS AmountSummNoVAT_12
+             END AS AmountSummWVAT
 
-             -- Сума податку на додану вартість
-           , CAST (CAST(tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                           THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
-                                           ELSE (tmpMI.Price)
-                                       END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                    AS NUMERIC (16, 2))  / 100 * vbVATPercent
-                   -- Корректировка суммы покупателя
-                 + tmpMI_CorrSumm.CorrSumm_mi
+             -- НДС - Сума податку на додану вартість
+           , CASE WHEN tmpMI_CorrSumm_2.CorrSumm_mi_PVAT > 0
+                       -- !!!сразу НДС
+                       THEN tmpMI_CorrSumm_2.CorrSumm_mi_VAT
 
-                   AS NUMERIC (16, 6)) AS SummVAT
+                  -- Округление до 6-х
+                  ELSE CAST (-- Сумма без НДС до 2-х
+                             CAST(tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                                      THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
+                                                      ELSE (tmpMI.Price)
+                                                 END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                             AS NUMERIC (16, 2))  / 100 * vbVATPercent
+                            -- Корректировка суммы покупателя
+                           + COALESCE (tmpMI_CorrSumm.CorrSumm_mi, 0)
+                       AS NUMERIC (16, 6))
+             END AS SummVAT
+
        FROM tmpMI
 
             -- Корректировка суммы покупателя
             LEFT JOIN tmpMI_CorrSumm ON tmpMI_CorrSumm.Id = tmpMI.Id
+            -- Корректировка суммы покупателя
+            LEFT JOIN tmpMI_CorrSumm_2 ON tmpMI_CorrSumm_2.Id = tmpMI.Id
 
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isUKTZ_new
