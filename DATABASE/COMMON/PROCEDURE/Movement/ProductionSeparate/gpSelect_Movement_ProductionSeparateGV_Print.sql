@@ -364,7 +364,8 @@ BEGIN
            , tmpMI_group.Amount_count AS CountMaster
            , tmpMI_group.Amount_summ  AS SummMaster
            , tmpMI_group.HeadCount    AS HeadCountMaster
-           , CASE WHEN tmpMI_group.Amount_count <> 0 THEN (COALESCE (tmpMI_group.Amount_summ,0) - COALESCE (tmpIncomeCost.AmountCost,0)) / tmpMI_group.Amount_count ELSE 0 END AS PriceMaster
+           --, CASE WHEN tmpMI_group.Amount_count <> 0 THEN (COALESCE (tmpMI_group.Amount_summ,0) - COALESCE (tmpIncomeCost.AmountCost,0)) / tmpMI_group.Amount_count ELSE 0 END AS PriceMaster 
+           , CASE WHEN COALESCE (tmpIncomeAll.Amount_count,0) <> 0 THEN tmpIncomeAll.Amount_summ / tmpIncomeAll.Amount_count ELSE 0 END AS PriceMaster 
 
            , Object_From.ValueData            AS FromName
            , Object_PersonalPacker.ValueData  AS PersonalPackerName
