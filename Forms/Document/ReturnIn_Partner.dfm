@@ -1208,8 +1208,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object edCorrSumm: TcxCurrencyEdit
       Left = 995
       Top = 140
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
       Properties.ReadOnly = False
       TabOrder = 53
       Width = 97

@@ -884,8 +884,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Width = 1042
     Height = 140
     TabOrder = 3
-    ExplicitLeft = -72
-    ExplicitTop = 44
     ExplicitWidth = 1042
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
@@ -1113,8 +1111,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     object edCorrSumm: TcxCurrencyEdit
       Left = 843
       Top = 103
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
       Properties.ReadOnly = False
       TabOrder = 32
       Width = 109

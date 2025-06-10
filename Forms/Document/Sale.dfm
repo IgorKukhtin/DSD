@@ -3,6 +3,7 @@ inherited SaleForm: TSaleForm
   ClientHeight = 658
   ClientWidth = 1465
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitLeft = -301
   ExplicitWidth = 1481
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -12,17 +13,17 @@ inherited SaleForm: TSaleForm
     Width = 1465
     Height = 491
     ExplicitTop = 167
-    ExplicitWidth = 1360
+    ExplicitWidth = 1465
     ExplicitHeight = 491
     ClientRectBottom = 491
     ClientRectRight = 1465
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1360
+      ExplicitWidth = 1465
       ExplicitHeight = 467
       inherited cxGrid: TcxGrid
         Width = 1465
         Height = 467
-        ExplicitWidth = 1360
+        ExplicitWidth = 1465
         ExplicitHeight = 467
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -593,7 +594,7 @@ inherited SaleForm: TSaleForm
     Width = 1465
     Height = 141
     TabOrder = 3
-    ExplicitWidth = 1360
+    ExplicitWidth = 1465
     ExplicitHeight = 141
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1177,8 +1178,8 @@ inherited SaleForm: TSaleForm
   object edCorrSumm: TcxCurrencyEdit [30]
     Left = 1372
     Top = 103
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = False
     TabOrder = 34
     Width = 101

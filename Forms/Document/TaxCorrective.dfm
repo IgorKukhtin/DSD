@@ -1007,8 +1007,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object edCorrSumm: TcxCurrencyEdit
       Left = 314
       Top = 103
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
       Properties.ReadOnly = False
       TabOrder = 44
       Width = 97
