@@ -54,8 +54,6 @@ BEGIN
                             );
      END IF;
 
-     --смотрим какое было значение, чтоб потом проверить изменилось ли значение
-     vbCorrSumm := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
 
      -- сохранили <Документ>
      SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName, tmp.outPriceWithVAT, tmp.outVATPercent
@@ -92,12 +90,58 @@ BEGIN
     -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
     PERFORM lpUpdate_Movement_Sale_Edi_byOrder (ioId, inMovementId_Order, vbUserId);
 
+
+    -- какое было значение, чтоб потом проверить изменилось ли значение
+    vbCorrSumm := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
+
+    -- если надо сохранить + протокол
     IF COALESCE (vbCorrSumm,0) <> COALESCE (inCorrSumm,0)
     THEN
+        -- Проверка
+        IF ABS (inCorrSumm) > 10
+        THEN
+            RAISE EXCEPTION 'Ошибка.В Налоговом документе сумма корректировки не может быть больше 10 грн.';
+        END IF;
+
         -- сохранили свойство <Корректировка суммы покупателя для выравнивания округлений>
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrSumm(), ioId, inCorrSumm);
         -- сохранили протокол
         PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
+        
+    END IF;
+
+    -- Для Налоговой - всегда
+    IF EXISTS (SELECT 1
+               FROM MovementLinkMovement AS MLM
+                    -- Док.Налоговая
+                    INNER JOIN Movement ON Movement.Id       = MLM.MovementChildId
+                                       -- Не удалена
+                                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                    INNER JOIN MovementLinkObject AS MLO
+                                                  ON MLO.MovementId = MLM.MovementChildId
+                                                 AND MLO.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+                                                 AND MLO.ObjectId   = zc_Enum_DocumentTaxKind_Tax()
+               WHERE MLM.MovementId = ioId
+                 AND MLM.DescId     = zc_MovementLinkMovement_Master()
+              )
+    THEN
+        -- сохранили свойство <Корректировка суммы покупателя для выравнивания округлений>
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrSumm(), MovementId_tax, CASE WHEN tmp.Ord = 1 THEN inCorrSumm ELSE 0 END)
+        FROM (SELECT MLM.MovementChildId AS MovementId_tax
+                     -- № п/п - на всякий случай
+                   , ROW_NUMBER() OVER (PARTITION BY MLM.MovementChildId ORDER BY Movement.Id DESC) AS Ord
+              FROM MovementLinkMovement AS MLM
+                    -- Док.Налоговая
+                    INNER JOIN Movement ON Movement.Id       = MLM.MovementChildId
+                                       -- Не удален
+                                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                    INNER JOIN MovementLinkObject AS MLO
+                                                  ON MLO.MovementId = MLM.MovementChildId
+                                                 AND MLO.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+                                                 AND MLO.ObjectId   = zc_Enum_DocumentTaxKind_Tax()
+               WHERE MLM.MovementId = ioId
+                 AND MLM.DescId     = zc_MovementLinkMovement_Master()
+             ) AS tmp;
     END IF;
 
 

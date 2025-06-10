@@ -182,11 +182,16 @@ BEGIN
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+
+           , (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+
+           , (MovementFloat_TotalSummPVAT.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSummPVAT
+
+           , (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSumm
+
            , MovementFloat_CorrSumm.ValueData           AS CorrSumm
+
            , zfConvert_StringToNumber (MovementString_InvNumberPartner.ValueData) AS InvNumberPartner
            , Object_From.Id                    		    AS FromId
            , Object_From.ValueData             		    AS FromName

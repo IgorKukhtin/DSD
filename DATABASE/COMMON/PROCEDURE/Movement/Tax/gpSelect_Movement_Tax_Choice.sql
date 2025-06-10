@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , CorrSumm TFloat
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar
              , UnitCode Integer, UnitName TVarChar
@@ -87,10 +88,15 @@ BEGIN
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+
+           , (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+
+           , (MovementFloat_TotalSummPVAT.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat  AS TotalSummPVAT
+           , (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0))     :: TFloat  AS TotalSumm
+
+           , MovementFloat_CorrSumm.ValueData           AS CorrSumm
+
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Object_From.Id                    		AS FromId
            , Object_From.ValueData             		AS FromName
@@ -163,6 +169,10 @@ BEGIN
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
 
+            LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                    ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                   AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -200,7 +210,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Tax_Choice (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

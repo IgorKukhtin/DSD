@@ -932,6 +932,23 @@ end if;
       FROM _tmpMovement
       WHERE _tmpMovement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut());
 
+
+      -- свойство <Корректировка суммы покупателя для выравнивания округлений> - ?Всегда?
+      IF inDocumentTaxKindId= zc_Enum_DocumentTaxKind_Tax() -- AND vbMovementId_Sale <> 0
+      THEN
+          -- сохранили свойство
+          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrSumm(), vbMovementId_Tax
+                                                -- 
+                                             ,  COALESCE ((SELECT SUM (COALESCE (MF.ValueData, 0))
+                                                           FROM _tmpMovement
+                                                                INNER JOIN MovementFloat AS MF
+                                                                                         ON MF.MovementId = _tmpMovement.MovementId
+                                                                                        AND MF.DescId     = zc_MovementFloat_CorrSumm()
+                                                           WHERE _tmpMovement.DescId = zc_Movement_Sale()
+                                                          )
+                                                        , 0));
+      END IF;
+
       -- если есть
       IF inDocumentTaxKindId= zc_Enum_DocumentTaxKind_Tax() AND vbMovementId_Sale <> 0 AND EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = vbMovementId_Sale AND DescId = zc_MovementLinkMovement_Sale() AND MovementChildId <> 0)
       THEN

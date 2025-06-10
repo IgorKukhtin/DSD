@@ -104,6 +104,8 @@ BEGIN
                           AND Movement.StatusId = zc_Enum_Status_Complete()
                           AND Movement.Id       <> inMovementId
                        )
+            -- Отключил проверку - 09.06.2025
+            AND 1=0
          THEN
              RAISE EXCEPTION 'Ошибка.Для ведомость <%> %№ <%> от <%>.%Найдена выплата № <%> от <%>.'
                            , lfGet_Object_ValueData_sh ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = vbMovementId_parent AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
@@ -140,6 +142,7 @@ BEGIN
                       AND Movement.StatusId = zc_Enum_Status_Complete()
                       AND Movement.Id       <> inMovementId
                    )
+            --AND 1=0
          THEN
              -- Проверка по аналогичным суммам
              IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpPersonalServiceList_debt')
@@ -166,7 +169,7 @@ BEGIN
                                                  CLO_PersonalServiceList.ContainerId AS ContainerId
                                                , CLO_Unit.ObjectId                   AS UnitId
                                                , CLO_Personal.ObjectId               AS PersonalId
-                                               , Container.Amount                    AS Amount
+                                               , -1 * Container.Amount               AS Amount
                                           FROM ContainerLinkObject AS CLO_PersonalServiceList
                                                -- за один Месяц
                                                INNER JOIN ContainerLinkObject AS CLO_ServiceDate

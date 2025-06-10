@@ -35,9 +35,6 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
 
-     --смотрим какое было значение, чтоб потом проверить изменилось ли оно
-     vbCorrSumm := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
-
 
      -- сохранили <Документ>
      SELECT tmp.ioId
@@ -68,8 +65,57 @@ BEGIN
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment); 
      
+
+     -- какое было значение, чтоб потом проверить изменилось ли значение
+     vbCorrSumm:= (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
+
+     -- проверка
+     IF inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
+    AND COALESCE (inCorrSumm, 0) <> COALESCE ((SELECT SUM (COALESCE (MF.ValueData, 0))
+                                               FROM MovementLinkMovement AS MLM
+                                                    -- Док. Продажа
+                                                    INNER JOIN Movement ON Movement.Id       = MLM.MovementId
+                                                                       -- Не удален
+                                                                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                    INNER JOIN MovementFloat AS MF 
+                                                                             ON MF.MovementId = MLM.MovementId
+                                                                            AND MF.DescId     = zc_MovementFloat_CorrSumm()
+                                               WHERE MLM.MovementChildId = ioId
+                                                 AND MLM.DescId          = zc_MovementLinkMovement_Master()
+                                             ), 0)
+
+     THEN
+         RAISE EXCEPTION 'Ошибка.В Налоговом документе № <%> от <%>%сумма корректировки = <%>%не может отличаться от суммы корректировки = <%>%в документе Продажа.'
+                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId)
+                       , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = ioId)
+                       , CHR (13)
+                       , zfConvert_FloatToString (inCorrSumm)
+                       , CHR (13)
+                       , zfConvert_FloatToString ((SELECT SUM (COALESCE (MF.ValueData, 0))
+                                                   FROM MovementLinkMovement AS MLM
+                                                        -- Док Продажа
+                                                        INNER JOIN Movement ON Movement.Id       = MLM.MovementId
+                                                                           -- Не удален
+                                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                        INNER JOIN MovementFloat AS MF 
+                                                                                 ON MF.MovementId = MLM.MovementId
+                                                                                AND MF.DescId     = zc_MovementFloat_CorrSumm()
+                                                   WHERE MLM.MovementChildId = ioId
+                                                     AND MLM.DescId          = zc_MovementLinkMovement_Master()
+                                                 ))
+                       , CHR (13)
+                        ;
+     END IF;
+
+     -- если надо сохранить + протокол
      IF COALESCE (vbCorrSumm,0) <> COALESCE (inCorrSumm,0)
      THEN
+         -- Проверка
+         IF ABS (inCorrSumm) > 10
+         THEN
+             RAISE EXCEPTION 'Ошибка.В Налоговом документе сумма корректировки не может быть больше 10 грн.';
+         END IF;
+
          -- сохранили свойство <Корректировка суммы покупателя для выравнивания округлений>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrSumm(), ioId, inCorrSumm);
          -- сохранили протокол
