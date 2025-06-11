@@ -59,17 +59,25 @@ type
     function Get_SENDER: UnicodeString;
     function Get_RECIPIENT: UnicodeString;
     function Get_PACKINGSEQUENCE: IXMLPACKINGSEQUENCEType;
+    function Get_CONTRACTNUMBER: UnicodeString;
+    function Get_ContractDate: UnicodeString;
+
     procedure Set_SUPPLIER(Value: UnicodeString);
     procedure Set_BUYER(Value: UnicodeString);
     procedure Set_DELIVERYPLACE(Value: UnicodeString);
     procedure Set_SENDER(Value: UnicodeString);
     procedure Set_RECIPIENT(Value: UnicodeString);
+    procedure Set_CONTRACTNUMBER(Value: UnicodeString);
+    procedure Set_ContractDate(Value: UnicodeString);
+
     { Methods & Properties }
     property SUPPLIER: UnicodeString read Get_SUPPLIER write Set_SUPPLIER;
     property BUYER: UnicodeString read Get_BUYER write Set_BUYER;
     property DELIVERYPLACE: UnicodeString read Get_DELIVERYPLACE write Set_DELIVERYPLACE;
     property SENDER: UnicodeString read Get_SENDER write Set_SENDER;
     property RECIPIENT: UnicodeString read Get_RECIPIENT write Set_RECIPIENT;
+    property CONTRACTNUMBER: UnicodeString read Get_CONTRACTNUMBER write Set_CONTRACTNUMBER;
+    property ContractDate: UnicodeString read Get_ContractDate write Set_ContractDate;
     property PACKINGSEQUENCE: IXMLPACKINGSEQUENCEType read Get_PACKINGSEQUENCE;
   end;
 
@@ -192,11 +200,16 @@ type
     function Get_SENDER: UnicodeString;
     function Get_RECIPIENT: UnicodeString;
     function Get_PACKINGSEQUENCE: IXMLPACKINGSEQUENCEType;
+    function Get_CONTRACTNUMBER: UnicodeString;
+    function Get_ContractDate: UnicodeString;
+
     procedure Set_SUPPLIER(Value: UnicodeString);
     procedure Set_BUYER(Value: UnicodeString);
     procedure Set_DELIVERYPLACE(Value: UnicodeString);
     procedure Set_SENDER(Value: UnicodeString);
     procedure Set_RECIPIENT(Value: UnicodeString);
+    procedure Set_ContractNumber(Value: UnicodeString);
+    procedure Set_ContractDate(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
   end;
@@ -389,6 +402,26 @@ procedure TXMLHEADType.AfterConstruction;
 begin
   RegisterChildNode('PACKINGSEQUENCE', TXMLPACKINGSEQUENCEType);
   inherited;
+end;
+
+function TXMLHEADType.Get_CONTRACTNUMBER: UnicodeString;
+begin
+  Result := ChildNodes['ContractNumber'].Text;
+end;
+
+procedure TXMLHEADType.Set_CONTRACTNUMBER(Value: UnicodeString);
+begin
+  ChildNodes['ContractNumber'].NodeValue := Value;
+end;
+
+function TXMLHEADType.Get_ContractDate: UnicodeString;
+begin
+  Result := ChildNodes['ContractDate'].Text;
+end;
+
+procedure TXMLHEADType.Set_ContractDate(Value: UnicodeString);
+begin
+  ChildNodes['ContractDate'].NodeValue := Value;
 end;
 
 function TXMLHEADType.Get_SUPPLIER: UnicodeString;
