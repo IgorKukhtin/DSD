@@ -90,7 +90,7 @@ BEGIN
     END IF;
 
     --если не выбран прайс норма 
-    --inPriceListId_norm := CASE WHEN COALESCE (inPriceListId_norm,0) = 0 THEN 12048635 ELSE inPriceListId_norm END;
+    inPriceListId_norm := CASE WHEN COALESCE (inPriceListId_norm,0) = 0 THEN 12048635 ELSE inPriceListId_norm END;
 
    OPEN Cursor1 FOR
    WITH 
@@ -182,7 +182,7 @@ BEGIN
                                , tmpData.Persent_v 
                  FROM (SELECT DISTINCT tmpMovement.PartionGoods_main, MAX (tmpMovement.OperDate) AS OperDate FROM tmpMovement
                       GROUP BY tmpMovement.PartionGoods_main) AS tmpPartionGoods
-                  LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpPartionGoods.OperDate::TDateTime, tmpPartionGoods.OperDate::TDateTime, 0, 4261, tmpPartionGoods.PartionGoods_main, '5') AS tmpData  ON 1=1
+                  LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpPartionGoods.OperDate::TDateTime, tmpPartionGoods.OperDate::TDateTime, 0, inPriceListId_norm, 4261, tmpPartionGoods.PartionGoods_main, '5') AS tmpData  ON 1=1
                  )
 
        --данные по документам
@@ -207,7 +207,7 @@ BEGIN
                       , tmpGoods_4134.Persent_v :: TFloat AS Persent_4134
 
                    FROM tmpMovement
-                     LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpMovement.OperDate::TDateTime, tmpMovement.OperDate::TDateTime, tmpMovement.MovementId, 0, tmpMovement.PartionGoods_main, '5') AS tmpData  ON 1=1
+                     LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpMovement.OperDate::TDateTime, tmpMovement.OperDate::TDateTime, tmpMovement.MovementId, inPriceListId_norm, 0, tmpMovement.PartionGoods_main, '5') AS tmpData  ON 1=1
                      LEFT JOIN tmpGoods_4134 ON tmpGoods_4134.PartionGoods_main = tmpMovement.PartionGoods_main
                    )
 

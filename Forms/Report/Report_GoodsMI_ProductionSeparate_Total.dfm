@@ -3,29 +3,30 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     #1054#1090#1095#1077#1090' <'#1056#1072#1089#1093#1086#1076'/'#1055#1088#1080#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')> '#1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' '#1048#1090#1086#1075 +
     #1086#1074#1099#1081
   ClientHeight = 427
-  ClientWidth = 1343
+  ClientWidth = 1359
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1359
+  ExplicitLeft = -170
+  ExplicitWidth = 1375
   ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1343
+    Width = 1359
     Height = 344
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1343
     ExplicitHeight = 344
     ClientRectBottom = 344
-    ClientRectRight = 1343
+    ClientRectRight = 1359
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1343
       ExplicitHeight = 344
       inherited cxGrid: TcxGrid
-        Width = 1343
+        Width = 1359
         Height = 344
         ExplicitWidth = 1343
         ExplicitHeight = 344
@@ -292,7 +293,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     end
   end
   inherited Panel: TPanel
-    Width = 1343
+    Width = 1359
     Height = 57
     ExplicitWidth = 1343
     ExplicitHeight = 57
@@ -1944,6 +1945,23 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         Name = 'inGroupMovement'
         Value = Null
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId_norm'
+        Value = '12048635'
+        Component = GuidesPriceListNorm
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName_norm'
+        Value = #1053#1054#1056#1052#1040' '#1042#1067#1061#1054#1044#1054#1042' '#1086#1073#1074#1072#1083#1082#1072
+        Component = GuidesPriceListNorm
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

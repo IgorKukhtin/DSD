@@ -953,10 +953,10 @@ BEGIN
              + COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
               ) ::TFloat AS SummCardSecondDiff
 
-            , COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)    ::TFloat    AS SummCardSecondCash
-            , COALESCE (tmpMI_SummCardSecondRecalc.SummCardSecondRecalc, 0)    ::TFloat AS SummCardSecond_Avance    
-            , COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)    ::TFloat       AS SummAvCardSecond
-            , COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)    ::TFloat AS SummAvCardSecondRecalc
+            , COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)       ::TFloat AS SummCardSecondCash
+            , COALESCE (tmpMI_SummCardSecondRecalc.SummCardSecondRecalc, 0) ::TFloat AS SummCardSecond_Avance    
+            , COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)         ::TFloat AS SummAvCardSecond
+            , COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)   ::TFloat AS SummAvCardSecondRecalc
             , COALESCE (MIFloat_SummNalog.ValueData, 0)    ::TFloat             AS SummNalog
             , COALESCE (MIFloat_SummNalogRecalc.ValueData, 0)    ::TFloat       AS SummNalogRecalc
             , COALESCE (MIFloat_SummNalogRet.ValueData, 0)    ::TFloat          AS SummNalogRet
@@ -981,11 +981,11 @@ BEGIN
             , COALESCE (MIFloat_SummTransport.ValueData, 0)    ::TFloat         AS SummTransport
             , COALESCE (MIFloat_SummTransportAdd.ValueData, 0)    ::TFloat      AS SummTransportAdd
             , COALESCE (MIFloat_SummTransportAddLong.ValueData, 0)    ::TFloat  AS SummTransportAddLong
-            , COALESCE (MIFloat_SummTransportTaxi.ValueData, 0)    ::TFloat     AS SummTransportTaxi
-            , COALESCE (MIFloat_SummPhone.ValueData, 0)    ::TFloat             AS SummPhone
-            , ( 1 * tmpMIContainer_pay.Amount_avance)    :: TFloat AS Amount_avance
-            , ( 1 * tmpMIContainer_pay.Amount_avance_ps) :: TFloat AS Amount_avance_ps 
-            , COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)    ::TFloat    AS Amount_avance_ret
+            , COALESCE (MIFloat_SummTransportTaxi.ValueData, 0)       ::TFloat  AS SummTransportTaxi
+            , COALESCE (MIFloat_SummPhone.ValueData, 0)               ::TFloat  AS SummPhone
+            , ( 1 * tmpMIContainer_pay.Amount_avance)                 ::TFloat  AS Amount_avance
+            , ( 1 * tmpMIContainer_pay.Amount_avance_ps)              ::TFloat  AS Amount_avance_ps 
+            , COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)      ::TFloat  AS Amount_avance_ret
 
               -- Корректировка ЗП
             , COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)    ::TFloat  AS Amount_LossPersonal
