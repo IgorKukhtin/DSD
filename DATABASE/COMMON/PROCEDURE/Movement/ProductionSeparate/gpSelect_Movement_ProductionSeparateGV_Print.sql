@@ -510,7 +510,7 @@ BEGIN
           , tmpData.SummaPlan_calc
           , tmpData.TotalSummaPlan_calc
 
-      FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate, vbOperDate, inMovementId, 0, vbPartionGoods, inSession) AS tmpData;
+      FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate, vbOperDate, inMovementId, 12048635, 0, vbPartionGoods, inSession) AS tmpData;
        
 
     OPEN Cursor1 FOR
@@ -523,7 +523,7 @@ BEGIN
                             , tmpData.PriceFact ::TFloat
                             , tmpData.SummFact ::TFloat
                             , tmpData.Persent_v
-                       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 4261, vbPartionGoods_GV, inSession) AS tmpData       --4261  - 'товар код 4134'
+                       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 12048635, 4261, vbPartionGoods_GV, inSession) AS tmpData       --4261  - 'товар код 4134'
                        )                       
 
      -- Результат
@@ -595,7 +595,7 @@ BEGIN
                             , tmpData.PriceFact ::TFloat
                             , tmpData.SummFact ::TFloat
                             , tmpData.Persent_v
-                       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 4261, vbPartionGoods_GV, inSession) AS tmpData   --4261  - 'товар код 4134'
+                       FROM gpSelect_MI_ProductionSeparate_PriceFact(vbOperDate::TDateTime, vbOperDate::TDateTime, 0, 12048635, 4261, vbPartionGoods_GV, inSession) AS tmpData   --4261  - 'товар код 4134'
                        )
    , tmpData AS (
                  SELECT tmpCursor2.*

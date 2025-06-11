@@ -1,12 +1,14 @@
 -- Function: gpSelect_MI_ProductionSeparate_PriceFact()
 
 --DROP FUNCTION IF EXISTS gpSelect_MI_ProductionSeparate_PriceFact (TDateTime, TDateTime, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MI_ProductionSeparate_PriceFact (TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_MI_ProductionSeparate_PriceFact (TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_ProductionSeparate_PriceFact (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionSeparate_PriceFact(
     IN inStartDate          TDateTime ,  
     IN inEndDate            TDateTime ,
-    IN inMovementId         Integer  , -- ключ Документа
+    IN inMovementId         Integer  , -- ключ Документа 
+    IN inPriceListId_norm   Integer   ,--
     IN inGoodsId            Integer  ,
     IN inPartionGoods       TVarChar   ,
     IN inSession            TVarChar    -- сессия пользователя
@@ -24,17 +26,17 @@ RETURNS TABLE (GoodsId Integer
              , Amount TFloat
              , PricePlan TFloat
              , PriceNorm TFloat
-             , PriceFact TFloat       --расчет по файлу 
+             , PriceFact TFloat                --расчет по файлу 
              , SummFact TFloat
              , Count_gr TFloat                 -- кол.товаров в группе
-             , Str_print TFloat     --для вывода значения % выхода по группе 
+             , Str_print TFloat                --для вывода значения % выхода по группе 
              , Persent_v TFloat                --% выхода 
              , Persent_gr TFloat               --% выхода по группе 
  
              , TotalSummaPlan_calc TFloat       -- итого сумма по цене план* для расчета факта 
              , SummaPlan_calc   TFloat          -- сумма по цене план* для расчета факта
-             , PricePlan_calc   TFloat  -- цена план* для расчета факта
-                              --
+             , PricePlan_calc   TFloat          -- цена план* для расчета факта
+
              , FromName            TVarChar
              , PersonalPackerName  TVarChar
              , GoodsNameMaster  TVarChar
@@ -74,8 +76,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
-
-
+     
+     --если не выбран прайс норма 
+     inPriceListId_norm := CASE WHEN COALESCE (inPriceListId_norm,0) = 0 THEN 12048635 ELSE inPriceListId_norm END;
+    
    RETURN QUERY 
 
     WITH
@@ -408,7 +412,7 @@ BEGIN
       , tmpPriceNorm AS (SELECT lfSelect.GoodsId     AS GoodsId
                               , lfSelect.GoodsKindId AS GoodsKindId
                               , lfSelect.ValuePrice
-                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= 12048635, inOperDate:= inEndDate) AS lfSelect
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId_norm, inOperDate:= inEndDate) AS lfSelect
                         )                              
       , tmpMI AS (SELECT *
                   FROM MovementItem
@@ -641,6 +645,6 @@ $BODY$
 -- тест
 -- 
 --SELECT * FROM gpSelect_MI_ProductionSeparate_PriceFact (inStartDate := ('24.04.2025')::TDateTime , inEndDate := ('28.04.2025')::TDateTime , inMovementId:=31194601 , inGoodsId := 4261, inPartionGoods := '4218-242592-24.04.2025' ::TVarChar , inSession:= zfCalc_UserAdmin());  --5225 живой вес
- --SELECT * FROM gpSelect_MI_ProductionSeparate_PriceFact (inStartDate := ('05.05.2025')::TDateTime , inEndDate := ('05.05.2025')::TDateTime , inMovementId:=31194601 , inGoodsId := 0, inPartionGoods := '4218-11956-05.05.2025' ::TVarChar , inSession:= zfCalc_UserAdmin());  --5225 живой вес
+ --SELECT * FROM gpSelect_MI_ProductionSeparate_PriceFact (inStartDate := ('05.05.2025')::TDateTime , inEndDate := ('05.05.2025')::TDateTime , inMovementId:=31194601, inPriceListId_norm:= 0, inGoodsId := 0, inPartionGoods := '4218-11956-05.05.2025' ::TVarChar , inSession:= zfCalc_UserAdmin());  --5225 живой вес
 
 

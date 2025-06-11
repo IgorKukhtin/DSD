@@ -459,6 +459,17 @@ inherited MainForm: TMainForm
           DataType = ftString
           ParamType = ptUnknown
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListId_norm'
+          Value = '12048635'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListName_norm'
+          Value = #1053#1054#1056#1052#1040' '#1042#1067#1061#1054#1044#1054#1042' '#1086#1073#1074#1072#1083#1082#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end

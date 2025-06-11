@@ -439,6 +439,14 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       TabOrder = 18
       Width = 178
     end
+    object cbMonth: TcxCheckBox
+      Left = 1263
+      Top = 5
+      Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
+      Properties.ReadOnly = False
+      TabOrder = 19
+      Width = 84
+    end
   end
   object cxLabel7: TcxLabel [2]
     Left = 747
@@ -1540,6 +1548,14 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisMonth'
+        Value = Null
+        Component = cbMonth
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
@@ -1585,11 +1601,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         Component = ToGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 112

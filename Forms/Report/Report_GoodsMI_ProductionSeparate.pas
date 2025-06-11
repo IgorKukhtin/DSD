@@ -134,6 +134,7 @@ type
     bbPrint_4134_gr: TdxBarButton;
     bbPrint_4218_gr: TdxBarButton;
     bbPrint_its_gr: TdxBarButton;
+    cbMonth: TcxCheckBox;
   private
     { Private declarations }
   public
