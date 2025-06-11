@@ -134,6 +134,18 @@ type
     bbPrint_4134_gr: TdxBarButton;
     bbPrint_4218_gr: TdxBarButton;
     bbPrint_its_gr: TdxBarButton;
+    cbisDetail: TcxCheckBox;
+    PartionGoods_Date: TcxGridDBColumn;
+    FromCode_partion: TcxGridDBColumn;
+    FromName_partion: TcxGridDBColumn;
+    PanelSearch: TPanel;
+    lbSearchCode: TcxLabel;
+    edSearchFromPartion: TcxTextEdit;
+    lbSearchName: TcxLabel;
+    edSearchCodeIn: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    edSearchCodeOut: TcxTextEdit;
+    FieldFilter_Search: TdsdFieldFilter;
   private
     { Private declarations }
   public

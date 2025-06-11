@@ -187,6 +187,14 @@ object Report_GoodsMI_ProductionSeparate_TotalDialogForm: TReport_GoodsMI_Produc
     TabOrder = 20
     Width = 156
   end
+  object cbisDetail: TcxCheckBox
+    Left = 99
+    Top = 54
+    Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1072#1089#1093#1086#1076
+    Properties.ReadOnly = False
+    TabOrder = 21
+    Width = 112
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -350,6 +358,14 @@ object Report_GoodsMI_ProductionSeparate_TotalDialogForm: TReport_GoodsMI_Produc
         Name = 'isGroupInfoMoney'
         Value = Null
         Component = cbGroupInfoMoney
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDetail'
+        Value = Null
+        Component = cbisDetail
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -9,6 +9,7 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTim
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
     IN inStartDate          TDateTime ,  
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
     IN inIsPartion          Boolean   ,
     IN inIsStorageLine      Boolean   ,
     IN inisCalculated       Boolean   ,   -- "показать Calculated" + добавить в грид
+    IN inisMonth            Boolean   ,
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
     IN inChildGoodsGroupId  Integer   ,
@@ -118,7 +120,7 @@ BEGIN
     WITH tmpMovement AS 
                         (SELECT Movement.Id        AS MovementId
                               , Movement.InvNumber AS InvNumber
-                              , Movement.OperDate  AS OperDate
+                              , Movement.OperDate  AS OperDate 
                               , MovementString_PartionGoods.ValueData AS PartionGoods 
                               , MovementLinkObject_From.ObjectId AS FromId
                               , MovementLinkObject_To.ObjectId   AS ToId   
@@ -353,15 +355,17 @@ BEGIN
       SELECT CAST (tmpOperationGroup.MovementId AS Integer)    AS MovementId
            , CAST (tmpOperationGroup.InvNumber AS TVarChar)    AS InvNumber
            , CAST (tmpOperationGroup.OperDate AS TDateTime)    AS OperDate
+           , CAST (tmpOperationGroup.OperDate_Month AS TDateTime)    AS OperDate_Month
            , Object_From.ValueData            ::TVarChar       AS FromName
            , Object_To.ValueData              ::TVarChar       AS ToName
 
            , CAST (tmpOperationGroup.PartionGoods AS TVarChar) AS PartionGoods
-           , CASE WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (tmpOperationGroup.PartionGoods::TVarChar FROM 4)
+           , CAST (tmpOperationGroup.PartionGoods_main AS TVarChar) AS PartionGoods_main
+           /*, CASE WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (tmpOperationGroup.PartionGoods::TVarChar FROM 4)
                   WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'об-%' THEN SUBSTRING (tmpOperationGroup.PartionGoods::TVarChar FROM 4)
                   WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'мо-%' THEN SUBSTRING (tmpOperationGroup.PartionGoods::TVarChar FROM 4)
                   ELSE tmpOperationGroup.PartionGoods ::TVarChar
-             END ::TVarChar AS PartionGoods_main
+             END ::TVarChar AS PartionGoods_main */
 
            , Object_GoodsGroup.Id                              AS GoodsGroupId
            , Object_GoodsGroup.ValueData                       AS GoodsGroupName
@@ -396,11 +400,12 @@ BEGIN
            
       FROM (SELECT CASE WHEN inIsMovement = True THEN tmpMI.MovementId ELSE 0 END                      AS MovementId
                  , CASE WHEN inIsMovement = True THEN tmpMI.InvNumber ELSE '' END                      AS InvNumber
-                 , CASE WHEN inIsMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END AS OperDate
+                 , CASE WHEN inIsMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END AS OperDate 
+                 , CASE WHEN inIsMovement = True OR inIsMonth = TRUE THEN DATE_TRUNC ('MONTH', tmpMI.OperDate) ELSE CAST (Null AS TDateTime) END AS OperDate_Month 
                  , CASE WHEN inIsMovement = True THEN tmpMI.FromId ELSE 0 END                          AS FromId
                  , CASE WHEN inIsMovement = True THEN tmpMI.ToId ELSE 0 END                            AS ToId
                  , CASE WHEN inIsPartion = True THEN tmpMI.PartionGoods ELSE '' END                    AS PartionGoods
-                 , CASE WHEN inIsPartion = True THEN tmpMI.tmpMI_out.PartionGoods_main ELSE '' END AS PartionGoods_main
+                 , CASE WHEN inIsPartion = True THEN tmpMI.PartionGoods_main ELSE '' END AS PartionGoods_main
                  , tmpMI.GoodsId  
                  , tmpMI.GoodsKindId
                  , tmpMI.StorageLineId_in
@@ -472,9 +477,11 @@ BEGIN
                  GROUP BY CASE WHEN inIsMovement = True THEN tmpMI.MovementId ELSE 0 END
                         , CASE WHEN inIsMovement = True THEN tmpMI.InvNumber ELSE '' END
                         , CASE WHEN inIsMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END
+                        , CASE WHEN inIsMovement = True OR inIsMonth = TRUE THEN DATE_TRUNC ('MONTH', tmpMI.OperDate) ELSE CAST (Null AS TDateTime) END
                         , CASE WHEN inIsMovement = True THEN tmpMI.FromId ELSE 0 END
                         , CASE WHEN inIsMovement = True THEN tmpMI.ToId ELSE 0 END
-                        , CASE WHEN inIsPartion = True THEN tmpMI.PartionGoods ELSE '' END 
+                        , CASE WHEN inIsPartion = True THEN tmpMI.PartionGoods ELSE '' END
+                        , CASE WHEN inIsPartion = True THEN tmpMI.PartionGoods_main ELSE '' END 
                         , tmpMI.GoodsId 
                         , tmpMI.GoodsKindId     
                         , tmpMI.ChildGoodsId
@@ -517,6 +524,7 @@ BEGIN
 
       ORDER BY tmpOperationGroup.InvNumber
              , tmpOperationGroup.OperDate
+             , tmpOperationGroup.OperDate_Month
              , tmpOperationGroup.PartionGoods 
              , Object_GoodsGroup.ValueData 
              , Object_Goods.ObjectCode     
