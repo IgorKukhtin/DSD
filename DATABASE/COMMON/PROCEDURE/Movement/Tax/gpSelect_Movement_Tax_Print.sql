@@ -446,14 +446,14 @@ order by 4*/
             + vbCorrSumm
              ) ::TFloat AS TotalSummPVAT
 
-           , (CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() AND vbCorrSumm <> 0 AND 1=1
+           , (CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() AND vbCorrSumm <> 0 AND 1=0
                         THEN CAST ((MovementFloat_TotalSummPVAT.ValueData + vbCorrSumm) / 6 AS NUMERIC (16,2))
 
                    WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, FALSE) = FALSE 
                         THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)
                            - CASE WHEN inMovementId = 25962252 THEN 0.01 ELSE 0 END -- № 5647 от 17.08.2023 - Військова частина Т0920 м. Дніпро вул. Стартова буд.15
                            --
-                           -- + vbCorrSumm
+                           + vbCorrSumm
                         ELSE 0
               END
              ) :: TFloat AS SummVAT
