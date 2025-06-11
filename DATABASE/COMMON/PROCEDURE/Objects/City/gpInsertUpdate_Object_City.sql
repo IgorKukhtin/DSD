@@ -45,7 +45,7 @@ BEGIN
              )
    THEN
        RAISE EXCEPTION '«начение <%> <%> дл€ области <%> не уникально в справочнике <%>.(%)'
-                    , lfGet_Object_ValueData (inCityKindId)
+                    , lfGet_Object_ValueData_sh (inCityKindId)
                     , inName
                     , lfGet_Object_ValueData (inRegionId)
                     , (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_City())
