@@ -5244,6 +5244,11 @@ begin
   DESADV.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
   DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
     HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+  // Номер договору на поставку
+  DESADV.CAMPAIGNNUMBER:= HeaderDataSet.FieldByName('ContractName').asString;
+  // Дата договору
+  DESADV.CAMPAIGNNUMBERDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
+
   //
   if HeaderDataSet.FieldByName('INFO_RoomNumber').asString <> ''
   then DESADV.INFO := HeaderDataSet.FieldByName('INFO_RoomNumber').asString;
@@ -5256,10 +5261,6 @@ begin
     ('DELIVERYPLACEGLNCode').asString;
   DESADV.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
   DESADV.HEAD.RECIPIENT := HeaderDataSet.FieldByName ('RecipientGLNCode').asString;
-  // Номер договору на поставку
-  DESADV.HEAD.CONTRACTNUMBER:= HeaderDataSet.FieldByName('ContractName').asString;
-  // Дата договору
-  DESADV.HEAD.ContractDate := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
 
   DESADV.HEAD.PACKINGSEQUENCE.HIERARCHICALID := '1';
 

@@ -26,8 +26,11 @@ type
     function Get_ORDERDATE: UnicodeString;
     function Get_DELIVERYNOTENUMBER: UnicodeString;
     function Get_DELIVERYNOTEDATE: UnicodeString;
+    function Get_CAMPAIGNNUMBER: UnicodeString;
+    function Get_CAMPAIGNNUMBERDATE: UnicodeString;
     function Get_INFO: UnicodeString;
     function Get_HEAD: IXMLHEADType;
+
     procedure Set_NUMBER(Value: UnicodeString);
     procedure Set_DATE(Value: UnicodeString);
     procedure Set_DELIVERYDATE(Value: UnicodeString);
@@ -35,6 +38,8 @@ type
     procedure Set_ORDERDATE(Value: UnicodeString);
     procedure Set_DELIVERYNOTENUMBER(Value: UnicodeString);
     procedure Set_DELIVERYNOTEDATE(Value: UnicodeString);
+    procedure Set_CAMPAIGNNUMBER(Value: UnicodeString);
+    procedure Set_CAMPAIGNNUMBERDate(Value: UnicodeString);
     procedure Set_INFO(Value: UnicodeString);
    { Methods & Properties }
     property NUMBER: UnicodeString read Get_NUMBER write Set_NUMBER;
@@ -44,6 +49,8 @@ type
     property ORDERDATE: UnicodeString read Get_ORDERDATE write Set_ORDERDATE;
     property DELIVERYNOTENUMBER: UnicodeString read Get_DELIVERYNOTENUMBER write Set_DELIVERYNOTENUMBER;
     property DELIVERYNOTEDATE: UnicodeString read Get_DELIVERYNOTEDATE write Set_DELIVERYNOTEDATE;
+    property CAMPAIGNNUMBER: UnicodeString read Get_CAMPAIGNNUMBER write Set_CAMPAIGNNUMBER;
+    property CAMPAIGNNUMBERDate: UnicodeString read Get_CAMPAIGNNUMBER write Set_CAMPAIGNNUMBERDate;
     property INFO: UnicodeString read Get_INFO write Set_INFO;
     property HEAD: IXMLHEADType read Get_HEAD;
   end;
@@ -59,16 +66,12 @@ type
     function Get_SENDER: UnicodeString;
     function Get_RECIPIENT: UnicodeString;
     function Get_PACKINGSEQUENCE: IXMLPACKINGSEQUENCEType;
-    function Get_CONTRACTNUMBER: UnicodeString;
-    function Get_ContractDate: UnicodeString;
 
     procedure Set_SUPPLIER(Value: UnicodeString);
     procedure Set_BUYER(Value: UnicodeString);
     procedure Set_DELIVERYPLACE(Value: UnicodeString);
     procedure Set_SENDER(Value: UnicodeString);
     procedure Set_RECIPIENT(Value: UnicodeString);
-    procedure Set_CONTRACTNUMBER(Value: UnicodeString);
-    procedure Set_ContractDate(Value: UnicodeString);
 
     { Methods & Properties }
     property SUPPLIER: UnicodeString read Get_SUPPLIER write Set_SUPPLIER;
@@ -76,8 +79,6 @@ type
     property DELIVERYPLACE: UnicodeString read Get_DELIVERYPLACE write Set_DELIVERYPLACE;
     property SENDER: UnicodeString read Get_SENDER write Set_SENDER;
     property RECIPIENT: UnicodeString read Get_RECIPIENT write Set_RECIPIENT;
-    property CONTRACTNUMBER: UnicodeString read Get_CONTRACTNUMBER write Set_CONTRACTNUMBER;
-    property ContractDate: UnicodeString read Get_ContractDate write Set_ContractDate;
     property PACKINGSEQUENCE: IXMLPACKINGSEQUENCEType read Get_PACKINGSEQUENCE;
   end;
 
@@ -175,8 +176,11 @@ type
     function Get_ORDERDATE: UnicodeString;
     function Get_DELIVERYNOTENUMBER: UnicodeString;
     function Get_DELIVERYNOTEDATE: UnicodeString;
+    function Get_CAMPAIGNNUMBER: UnicodeString;
+    function Get_CAMPAIGNNUMBERDate: UnicodeString;
     function Get_INFO: UnicodeString;
     function Get_HEAD: IXMLHEADType;
+
     procedure Set_NUMBER(Value: UnicodeString);
     procedure Set_DATE(Value: UnicodeString);
     procedure Set_DELIVERYDATE(Value: UnicodeString);
@@ -184,6 +188,8 @@ type
     procedure Set_ORDERDATE(Value: UnicodeString);
     procedure Set_DELIVERYNOTENUMBER(Value: UnicodeString);
     procedure Set_DELIVERYNOTEDATE(Value: UnicodeString);
+    procedure Set_CAMPAIGNNUMBER(Value: UnicodeString);
+    procedure Set_CAMPAIGNNUMBERDate(Value: UnicodeString);
     procedure Set_INFO(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
@@ -200,16 +206,12 @@ type
     function Get_SENDER: UnicodeString;
     function Get_RECIPIENT: UnicodeString;
     function Get_PACKINGSEQUENCE: IXMLPACKINGSEQUENCEType;
-    function Get_CONTRACTNUMBER: UnicodeString;
-    function Get_ContractDate: UnicodeString;
 
     procedure Set_SUPPLIER(Value: UnicodeString);
     procedure Set_BUYER(Value: UnicodeString);
     procedure Set_DELIVERYPLACE(Value: UnicodeString);
     procedure Set_SENDER(Value: UnicodeString);
     procedure Set_RECIPIENT(Value: UnicodeString);
-    procedure Set_ContractNumber(Value: UnicodeString);
-    procedure Set_ContractDate(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
   end;
@@ -381,6 +383,26 @@ begin
   ChildNodes['DELIVERYNOTEDATE'].NodeValue := Value;
 end;
 
+function TXMLDESADVType.Get_CAMPAIGNNUMBER: UnicodeString;
+begin
+  Result := ChildNodes['CAMPAIGNNUMBER'].Text;
+end;
+
+procedure TXMLDESADVType.Set_CAMPAIGNNUMBER(Value: UnicodeString);
+begin
+  ChildNodes['CAMPAIGNNUMBER'].NodeValue := Value;
+end;
+
+function TXMLDESADVType.Get_CAMPAIGNNUMBERDate: UnicodeString;
+begin
+  Result := ChildNodes['CAMPAIGNNUMBERDATE'].Text;
+end;
+
+procedure TXMLDESADVType.Set_CAMPAIGNNUMBERDate(Value: UnicodeString);
+begin
+  ChildNodes['CAMPAIGNNUMBERDATE'].NodeValue := Value;
+end;
+
 function TXMLDESADVType.Get_INFO: UnicodeString;
 begin
   Result := ChildNodes['INFO'].Text;
@@ -404,25 +426,6 @@ begin
   inherited;
 end;
 
-function TXMLHEADType.Get_CONTRACTNUMBER: UnicodeString;
-begin
-  Result := ChildNodes['ContractNumber'].Text;
-end;
-
-procedure TXMLHEADType.Set_CONTRACTNUMBER(Value: UnicodeString);
-begin
-  ChildNodes['ContractNumber'].NodeValue := Value;
-end;
-
-function TXMLHEADType.Get_ContractDate: UnicodeString;
-begin
-  Result := ChildNodes['ContractDate'].Text;
-end;
-
-procedure TXMLHEADType.Set_ContractDate(Value: UnicodeString);
-begin
-  ChildNodes['ContractDate'].NodeValue := Value;
-end;
 
 function TXMLHEADType.Get_SUPPLIER: UnicodeString;
 begin
