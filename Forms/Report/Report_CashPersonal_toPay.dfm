@@ -172,6 +172,14 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
             Options.Editing = False
             Width = 96
           end
+          object PositionLevelName: TcxGridDBColumn
+            Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'PositionLevelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
           object Amount_Service: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
             DataBinding.FieldName = 'Amount_Service'
