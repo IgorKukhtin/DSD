@@ -27,7 +27,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
     IN inToId               Integer   ,    -- кому
     IN inSession            TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDate_Month TDateTime
              , FromName TVarChar, ToName TVarChar
              , PartionGoods  TVarChar, PartionGoods_main  TVarChar 
              , GoodsGroupId Integer, GoodsGroupName TVarChar
@@ -525,6 +525,7 @@ BEGIN
       ORDER BY tmpOperationGroup.InvNumber
              , tmpOperationGroup.OperDate
              , tmpOperationGroup.OperDate_Month
+             , tmpOperationGroup.PartionGoods_main
              , tmpOperationGroup.PartionGoods 
              , Object_GoodsGroup.ValueData 
              , Object_Goods.ObjectCode     
