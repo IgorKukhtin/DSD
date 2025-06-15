@@ -1,22 +1,15 @@
- -- Function: gpReport_GoodsMI_ProductionSeparate ()
+ -- Function: gpReport_GoodsMI_ProductionSeparate_Total ()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate_Total (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
+CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate_Total (
     IN inStartDate          TDateTime ,  
     IN inEndDate            TDateTime ,
     IN inIsMovement         Boolean   ,
     IN inIsPartion          Boolean   ,
     IN inIsStorageLine      Boolean   ,
     IN inisCalculated       Boolean   ,   -- "показать Calculated" + добавить в грид
+    IN inisDetail           Boolean   ,   -- "показать расходную часть"  да/нет
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
     IN inChildGoodsGroupId  Integer   ,
@@ -28,6 +21,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , FromName TVarChar, ToName TVarChar
              , PartionGoods  TVarChar, PartionGoods_main  TVarChar 
+             , PartionGoods_Date TDateTime 
+             , FromCode_partion Integer, FromName_partion TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar
@@ -201,7 +196,7 @@ BEGIN
                            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                                          ON MIBoolean_Calculated.MovementItemId = MIContainer.MovementItemId
                                                         AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
-
+                      --WHERE MIContainer.isActive = inisDetail OR inisDetail = TRUE
                       GROUP BY tmpMovement.MovementId
                              , tmpMovement.InvNumber
                              , tmpMovement.OperDate
@@ -356,13 +351,20 @@ BEGIN
            , Object_From.ValueData            ::TVarChar       AS FromName
            , Object_To.ValueData              ::TVarChar       AS ToName
 
-           , CAST (tmpOperationGroup.PartionGoods AS TVarChar) AS PartionGoods
-           , CASE WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (tmpOperationGroup.PartionGoods::TVarChar FROM 4)
+           , CAST (tmpOperationGroup.PartionGoods AS TVarChar)::TVarChar  AS PartionGoods
+         /*  , CASE WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (tmpOperationGroup.PartionGoods::TVarChar FROM 4)
                   WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'об-%' THEN SUBSTRING (tmpOperationGroup.PartionGoods::TVarChar FROM 4)
                   WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'мо-%' THEN SUBSTRING (tmpOperationGroup.PartionGoods::TVarChar FROM 4)
                   ELSE tmpOperationGroup.PartionGoods ::TVarChar
              END ::TVarChar AS PartionGoods_main
-
+          */
+           , tmpOperationGroup.PartionGoods_main ::TVarChar
+          -- , Right (tmpOperationGroup.PartionGoods_main ,10) ::TDateTime AS  PartionGoods_Date 
+           , Object_From_partion.ObjectCode::Integer    AS FromCode_partion
+           , Object_From_partion.ValueData ::TVarChar   AS FromName_partion
+           
+           
+           
            , Object_GoodsGroup.Id                              AS GoodsGroupId
            , Object_GoodsGroup.ValueData                       AS GoodsGroupName
            , Object_Goods.Id                                   AS GoodsId
@@ -400,7 +402,7 @@ BEGIN
                  , CASE WHEN inIsMovement = True THEN tmpMI.FromId ELSE 0 END                          AS FromId
                  , CASE WHEN inIsMovement = True THEN tmpMI.ToId ELSE 0 END                            AS ToId
                  , CASE WHEN inIsPartion = True THEN tmpMI.PartionGoods ELSE '' END                    AS PartionGoods
-                 , CASE WHEN inIsPartion = True THEN tmpMI.tmpMI_out.PartionGoods_main ELSE '' END AS PartionGoods_main
+                 , CASE WHEN inIsPartion = True THEN tmpMI.PartionGoods_main ELSE '' END               AS PartionGoods_main
                  , tmpMI.GoodsId  
                  , tmpMI.GoodsKindId
                  , tmpMI.StorageLineId_in
@@ -436,8 +438,9 @@ BEGIN
                   FROM tmpMI_Count AS tmpMI_out
                        JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out.GoodsId
                        LEFT JOIN tmpMI_Count AS tmpMI_in on tmpMI_in.MovementId = tmpMI_out.MovementId
-                                                        AND tmpMI_in.isActive = TRUE
-                       JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMI_in.GoodsId
+                                                        AND tmpMI_in.isActive = TRUE 
+                                                        AND inisDetail = TRUE
+                       JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMI_in.GoodsId OR inisDetail = False
                   Where tmpMI_out.isActive = FALSE
                    AND COALESCE (tmpMI_in.Amount, -1 ) <> 0
                  UNION ALL
@@ -464,8 +467,9 @@ BEGIN
                   FROM tmpMI_sum AS tmpMI_out_Sum
                        JOIN tmpMI_sum AS tmpMI_in_Sum on tmpMI_out_Sum.MovementId = tmpMI_in_Sum.MovementId
                                                        AND tmpMI_in_Sum.isActive = TRUE
+                                                       AND inisDetail = TRUE
                        JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out_Sum.GoodsId
-                       JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMI_in_Sum.GoodsId
+                       JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMI_in_Sum.GoodsId OR inisDetail = False
                   Where tmpMI_out_Sum.isActive = FALSE
                          
                  ) AS tmpMI 
@@ -474,7 +478,8 @@ BEGIN
                         , CASE WHEN inIsMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END
                         , CASE WHEN inIsMovement = True THEN tmpMI.FromId ELSE 0 END
                         , CASE WHEN inIsMovement = True THEN tmpMI.ToId ELSE 0 END
-                        , CASE WHEN inIsPartion = True THEN tmpMI.PartionGoods ELSE '' END 
+                        , CASE WHEN inIsPartion  = True THEN tmpMI.PartionGoods ELSE '' END 
+                        , CASE WHEN inIsPartion  = True THEN tmpMI.PartionGoods_main ELSE '' END
                         , tmpMI.GoodsId 
                         , tmpMI.GoodsKindId     
                         , tmpMI.ChildGoodsId
@@ -513,7 +518,10 @@ BEGIN
              LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparate(), inOperDate:= inEndDate)
                     AS lfObjectHistory_PriceListItem 
                     ON lfObjectHistory_PriceListItem.GoodsId = Object_GoodsChild.Id
-                   AND lfObjectHistory_PriceListItem.GoodsKindId IS NULL
+                   AND lfObjectHistory_PriceListItem.GoodsKindId IS NULL  
+                   
+             LEFT JOIN Object AS Object_From_partion ON Object_From_partion.ObjectCode = LEFT (SUBstring (tmpOperationGroup.PartionGoods_main, Position ('-' in tmpOperationGroup.PartionGoods_main ) + 1),  Position ('-' in SUBSTRING (tmpOperationGroup.PartionGoods_main, Position ('-' in tmpOperationGroup.PartionGoods_main ) + 1)) -1 ) ::Integer
+
 
       ORDER BY tmpOperationGroup.InvNumber
              , tmpOperationGroup.OperDate
@@ -530,6 +538,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.06.25         * gpReport_GoodsMI_ProductionSeparate_Total
  31.01.22         *
  30.11.16         *
  27.11.14         *
@@ -538,5 +547,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_ProductionSeparate (inStartDate:= '03.06.2016', inEndDate:= '03.06.2016', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_GoodsMI_ProductionSeparate (inStartDate:= '17.12.2024' , inEndDate:= '17.12.2024', inIsMovement:= False, inIsPartion:= 'False', inIsStorageLine:= False, inisCalculated:= False, inGoodsGroupId:= 0, inGoodsId:= 5225, inChildGoodsGroupId:= 0, inChildGoodsId:= 0, inFromId:= 0, inToId:= 0, inSession:= '9457');
+-- SELECT * FROM gpReport_GoodsMI_ProductionSeparate_Total (inStartDate:= '17.12.2024' , inEndDate:= '17.12.2024', inIsMovement:= False, inIsPartion:= 'False', inIsStorageLine:= False, inisCalculated:= False, inisDetail:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 5225, inChildGoodsGroupId:= 0, inChildGoodsId:= 0, inFromId:= 0, inToId:= 0, inSession:= '9457');
+
+--select * from gpReport_GoodsMI_ProductionSeparate_Total(inStartDate := ('06.06.2025')::TDateTime , inEndDate := ('06.06.2025')::TDateTime , inIsMovement := 'True' , inIsPartion := 'True' , inIsStorageLine := 'False' , inisCalculated := 'False',inisDetail:= True, inGoodsGroupId := 0 , inGoodsId := 4234 , inChildGoodsGroupId := 0 , inChildGoodsId := 0 , inFromId := 0 , inToId := 0 ,  inSession := '9457');

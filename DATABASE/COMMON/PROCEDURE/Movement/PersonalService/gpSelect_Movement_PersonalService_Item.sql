@@ -26,7 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isMail Boolean
              , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
-             , MemberName     TVarChar  
+             , MemberName     TVarChar
 
              , MovementItemId Integer
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
@@ -476,27 +476,27 @@ BEGIN
 
         , tmpMovementItemString AS (SELECT MovementItemString.*
                                     FROM MovementItemString
-                                    WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
+                                    WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                                       AND MovementItemString.DescId IN (zc_MIString_Comment()
                                                                       , zc_MIString_Number())
                                    )
 
         , tmpMovementItemBoolean AS (SELECT MovementItemBoolean.*
                                      FROM MovementItemBoolean
-                                     WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
+                                     WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                                        AND MovementItemBoolean.DescId IN (zc_MIBoolean_Main()
                                                                         , zc_MIBoolean_isAuto())
                                     )
 
         , tmpMovementItemDate AS (SELECT MovementItemDate.*
                                   FROM MovementItemDate
-                                  WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
+                                  WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                                     AND MovementItemDate.DescId IN (zc_MIDate_BankOut())
                                  )
 
         , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
                                    FROM MovementItemFloat
-                                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
+                                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                                      AND MovementItemFloat.DescId IN (zc_MIFloat_SummToPay()
                                                                     , zc_MIFloat_SummService()
                                                                     , zc_MIFloat_SummCard()
@@ -554,7 +554,7 @@ BEGIN
 
         , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
                                         FROM MovementItemLinkObject
-                                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
+                                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_FineSubject()
                                                                               , zc_MILinkObject_UnitFineSubject())
                                        )
@@ -696,7 +696,7 @@ BEGIN
                                           )
                               , tmpMILO AS (SELECT *
                                             FROM MovementItemLinkObject
-                                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
+                                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                               AND MovementItemLinkObject.DescId = zc_MILinkObject_MoneyPlace()
                                             )
 

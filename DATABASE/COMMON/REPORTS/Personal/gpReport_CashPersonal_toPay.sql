@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_CashPersonal_toPay(
 RETURNS TABLE (MovementId Integer, ContainerId Integer, ParentId Integer, OperDate TDateTime, InvNumber TVarChar, ItemName TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
+             , PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , BranchCode Integer, BranchName TVarChar
              , PersonalServiceListCode Integer, PersonalServiceListName TVarChar
@@ -167,6 +168,9 @@ BEGIN
          , Object_Position.Id         AS PositionId
          , Object_Position.ObjectCode AS PositionCode
          , Object_Position.ValueData  AS PositionName
+         , Object_PositionLevel.Id         AS PositionLevelId
+         , Object_PositionLevel.ObjectCode AS PositionLevelCode
+         , Object_PositionLevel.ValueData  AS PositionLevelName
          , Object_Unit.Id             AS UnitId
          , Object_Unit.ObjectCode     AS UnitCode
          , Object_Unit.ValueData      AS UnitName
@@ -232,6 +236,11 @@ BEGIN
          LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
                                  ON ObjectBoolean_Official.ObjectId = vbMemberId
                                 AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                              ON ObjectLink_Personal_PositionLevel.ObjectId = tmpMovement.PersonalId
+                             AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
+         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
 
          LEFT JOIN tmpMI_begin AS MI_Master ON MI_Master.MovementId = tmpMovement.MovementId_begin
                                            AND (MI_Master.Id         = tmpMovement.MovementItemId OR tmpMovement.MovementItemId = 0)

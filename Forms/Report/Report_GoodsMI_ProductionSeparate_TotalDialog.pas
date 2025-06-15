@@ -54,6 +54,7 @@ type
     GoodsGuides: TdsdGuides;
     ChildGoodsGuides: TdsdGuides;
     cbGroupInfoMoney: TcxCheckBox;
+    cbisDetail: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -3,32 +3,31 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     #1054#1090#1095#1077#1090' <'#1056#1072#1089#1093#1086#1076'/'#1055#1088#1080#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')> '#1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' '#1048#1090#1086#1075 +
     #1086#1074#1099#1081
   ClientHeight = 427
-  ClientWidth = 1359
+  ClientWidth = 1374
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -170
-  ExplicitWidth = 1375
+  ExplicitWidth = 1390
   ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
-    Width = 1359
-    Height = 344
+    Top = 124
+    Width = 1374
+    Height = 303
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1343
+    ExplicitWidth = 1374
     ExplicitHeight = 344
-    ClientRectBottom = 344
-    ClientRectRight = 1359
+    ClientRectBottom = 303
+    ClientRectRight = 1374
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1343
+      ExplicitWidth = 1374
       ExplicitHeight = 344
       inherited cxGrid: TcxGrid
-        Width = 1359
-        Height = 344
-        ExplicitWidth = 1343
+        Width = 1374
+        Height = 303
+        ExplicitWidth = 1374
         ExplicitHeight = 344
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -139,6 +138,31 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object PartionGoods_Date: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'PartionGoods_Date'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object FromCode_partion: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'FromCode_partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object FromName_partion: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'FromName_partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object HeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
@@ -293,9 +317,9 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     end
   end
   inherited Panel: TPanel
-    Width = 1359
+    Width = 1374
     Height = 57
-    ExplicitWidth = 1343
+    ExplicitWidth = 1374
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 108
@@ -442,16 +466,98 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     end
     object cbCalculated: TcxCheckBox
       Left = 1113
-      Top = 29
+      Top = 30
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' "'#1056#1072#1089#1095#1080#1090#1099#1074#1072#1102#1090#1089#1103'"'
       TabOrder = 18
       Width = 178
+    end
+    object cbisDetail: TcxCheckBox
+      Left = 1263
+      Top = 5
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1072#1089#1093#1086#1076
+      Properties.ReadOnly = False
+      TabOrder = 19
+      Width = 112
     end
   end
   object cxLabel7: TcxLabel [2]
     Left = 747
     Top = 30
     Caption = #1058#1086#1074#1072#1088' '#1087#1088#1080#1093':'
+  end
+  object PanelSearch: TPanel [3]
+    Left = 0
+    Top = 57
+    Width = 1374
+    Height = 41
+    Align = alTop
+    TabOrder = 7
+    ExplicitLeft = -166
+    ExplicitTop = 30
+    ExplicitWidth = 1540
+    object lbSearchCode: TcxLabel
+      Left = 0
+      Top = 10
+      Caption = #1055#1086#1080#1089#1082' '#1055#1086#1089#1090#1072#1074#1097#1080#1082': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchFromPartion: TcxTextEdit
+      Left = 138
+      Top = 10
+      TabOrder = 1
+      DesignSize = (
+        195
+        21)
+      Width = 195
+    end
+    object lbSearchName: TcxLabel
+      Left = 342
+      Top = 10
+      Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080#1093#1086#1076':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchCodeIn: TcxTextEdit
+      Left = 484
+      Top = 10
+      TabOrder = 3
+      DesignSize = (
+        140
+        21)
+      Width = 140
+    end
+    object cxLabel10: TcxLabel
+      Left = 645
+      Top = 10
+      Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1088#1072#1089#1093#1086#1076':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchCodeOut: TcxTextEdit
+      Left = 787
+      Top = 10
+      TabOrder = 5
+      DesignSize = (
+        144
+        21)
+      Width = 144
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1261,6 +1367,14 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = Null
+          Component = cbisDetail
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1497,7 +1611,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_GoodsMI_ProductionSeparate'
+    StoredProcName = 'gpReport_GoodsMI_ProductionSeparate_Total'
     Params = <
       item
         Name = 'inStartDate'
@@ -1548,6 +1662,14 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisDetail'
+        Value = Null
+        Component = cbisDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
@@ -1593,11 +1715,6 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         Component = ToGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -1899,6 +2016,9 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         Component = GoodsGroupGuides
       end
       item
+      end
+      item
+        Component = cbisDetail
       end>
     Left = 232
     Top = 200
@@ -3570,5 +3690,25 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     PackSize = 1
     Left = 1023
     Top = 352
+  end
+  object FieldFilter_Search: TdsdFieldFilter
+    TextEdit = edSearchFromPartion
+    DataSet = MasterCDS
+    Column = FromName_partion
+    ColumnList = <
+      item
+        Column = FromName_partion
+      end
+      item
+        Column = GoodsCode
+        TextEdit = edSearchCodeOut
+      end
+      item
+        Column = ChildGoodsCode
+        TextEdit = edSearchCodeIn
+      end>
+    CheckBoxList = <>
+    Left = 576
+    Top = 96
   end
 end
