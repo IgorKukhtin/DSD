@@ -10,19 +10,19 @@ CREATE OR REPLACE FUNCTION gpGet_Object_EmailSettings(
    OUT outTokenValue   TVarChar  ,
     IN inSession       TVarChar       -- сессия пользователя
 )
+RETURNS RECORD
 AS
 $BODY$
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_EmailSettings());
 
-   RETURN QUERY 
     WITH tmpEmailSettings AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= CASE WHEN inOrderNumber <> '' THEN zc_Enum_EmailKind_HTTP_OrderClient() ELSE inEmailKindId END, inSession:= inSession)
                              )
        --
        SELECT (CASE WHEN tmpEmailSettings_Host.Value <> '' THEN tmpEmailSettings_Host.Value ELSE tmpEmailSettings_Mail.Value     END || inOrderNumber) :: TVarChar AS HostName
-            , CASE WHEN tmpEmailSettings_User.Value <> '' THEN tmpEmailSettings_User.Value ELSE tmpEmailSettings_Password.Value END :: TVarChar AS TokenValue
+             , CASE WHEN tmpEmailSettings_User.Value <> '' THEN tmpEmailSettings_User.Value ELSE tmpEmailSettings_Password.Value END :: TVarChar AS TokenValue
+               INTO outHostName, outTokenValue
              
        FROM (SELECT 1) AS tmp
             LEFT JOIN tmpEmailSettings AS tmpEmailSettings_Host     ON tmpEmailSettings_Host.EmailToolsId     = zc_Enum_EmailTools_Host()
