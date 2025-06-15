@@ -1718,6 +1718,7 @@ type
 
     FURL: TdsdParam;
     FOrder: TdsdParam;
+    FTokenParam: TdsdParam;
 
     FDataSet: TClientDataSet;
 
@@ -1728,7 +1729,6 @@ type
     FCreateFileTitle : TdsdParam;
 
     FIdHTTP: TIdHTTP;
-    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
 
   protected
     function GetURL : String;
@@ -1747,6 +1747,7 @@ type
     // URL
     property URL: String read GetURL;
     property URLParam: TdsdParam read FURL write FURL;
+    property TokenParam: TdsdParam read FTokenParam write FTokenParam;
     // Order - заказа
     property Order: String read GetOrder;
     property OrderParam: TdsdParam read FOrder write FOrder;
@@ -1784,7 +1785,6 @@ type
     FTokenParam: TdsdParam;
 
     FIdHTTP: TIdHTTP;
-    //FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
 
     FStream: TStringStream;
 
@@ -8580,11 +8580,7 @@ constructor TdsdLoadAgilis.Create(AOwner: TComponent);
 begin
   inherited;
 
-  FIdHTTP := TIdHTTP.Create;
-  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
-  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
-  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
-  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
+  FIdHTTP := TCustomIdHTTP.Create(Nil);
 
   FURL := TdsdParam.Create(nil);
   FURL.DataType := ftString;
@@ -8610,10 +8606,14 @@ begin
   FCreateFileTitle.DataType := ftBoolean;
   FCreateFileTitle.Value := False;
 
+  FTokenParam := TdsdParam.Create(nil);
+  FTokenParam.DataType := ftWideString;
+  FTokenParam.Value := '';
 end;
 
 destructor TdsdLoadAgilis.Destroy;
 begin
+  FreeAndNil(FTokenParam);
   FreeAndNil(FCreateFileTitle);
   FreeAndNil(FValueName);
   FreeAndNil(FTitleName);
@@ -8621,7 +8621,6 @@ begin
   FreeAndNil(FOrder);
   FreeAndNil(FURL);
 
-  FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
   FreeAndNil(FIdHTTP);
   inherited;
 end;
@@ -8682,12 +8681,21 @@ var jsonObject, jsonItem : TJSONObject; jsonArray : TJSONArray;
 begin
   Result := False;
 
+  FIdHTTP.Request.Clear;
   FIdHTTP.Request.ContentType := 'application/json';
   FIdHTTP.Request.CustomHeaders.Clear;
   FIdHTTP.Request.CustomHeaders.FoldLines := False;
 
-  //FIdHTTP.Request.Connection := 'keep-alive';
-  //FIdHTTP.Request.BasicAuthentication := True;
+  if FTokenParam.Value <> '' then
+  begin
+    FIdHTTP.Request.ContentType := 'application/json';
+    FIdHTTP.Request.CustomHeaders.AddValue('Authorization', 'Bearer ' + FTokenParam.Value);
+    FIdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+    FIdHTTP.Request.Accept := '*/*';
+    FIdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    FIdHTTP.Request.Connection := 'keep-alive';
+    FIdHTTP.Request.CharSet := 'utf-8';
+  end;
 
   try
     S := FIdHTTP.Get(TIdURI.URLEncode(FURL.Value + FOrder.Value));
@@ -8791,10 +8799,6 @@ begin
   inherited;
 
   FIdHTTP := TCustomIdHTTP.Create(Nil);
-//  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
-//  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
-//  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
-//  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
 
   FStream := TStringStream.Create;
 
