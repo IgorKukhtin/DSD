@@ -318,6 +318,9 @@ type
     HeaderChangerVAT: THeaderChanger;
     edBasis_summ1_orig: TcxCurrencyEdit;
     edBasis_summ2_orig: TcxCurrencyEdit;
+    actGetToken: TdsdExecStoredProc;
+    spGetToken: TdsdStoredProc;
+    actLoadFile_https: TdsdLoadFile_https;
   private
     { Private declarations }
   public

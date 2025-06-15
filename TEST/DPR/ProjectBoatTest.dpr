@@ -398,7 +398,9 @@ uses
   MailSendEdit in '..\..\FormsBoat\Guides\MailSendEdit.pas' {MailSendEditForm: TParentForm},
   MailSend in '..\..\FormsBoat\Guides\MailSend.pas' {MailSendForm: TParentForm},
   ProdOptions_Translate in '..\..\FormsBoat\Guides\ProdOptions_Translate.pas' {ProdOptions_TranslateForm: TParentForm},
-  dsdCommon in '..\..\SOURCE\COMPONENT\dsdCommon.pas';
+  dsdCommon in '..\..\SOURCE\COMPONENT\dsdCommon.pas',
+  invoice_comdoc_vchasno in '..\..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
+  invoice_delnote_base in '..\..\SOURCE\EDI\invoice_delnote_base.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

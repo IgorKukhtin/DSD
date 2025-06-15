@@ -2025,6 +2025,12 @@ object ProductEditForm: TProductEditForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actGetToken
+        end
+        item
+          Action = actLoadFile_https
+        end
+        item
           Action = actLoadAgilis
         end
         item
@@ -2170,6 +2176,9 @@ object ProductEditForm: TProductEditForm
       URLParam.ComponentItem = 'inUrl_Doc'
       URLParam.DataType = ftString
       URLParam.MultiSelectSeparator = ','
+      TokenParam.Value = ''
+      TokenParam.DataType = ftWideString
+      TokenParam.MultiSelectSeparator = ','
       DataParam.Value = ''
       DataParam.Component = FormParams
       DataParam.ComponentItem = 'inDocument'
@@ -2213,6 +2222,9 @@ object ProductEditForm: TProductEditForm
       URLParam.ComponentItem = 'inUrl_Photo'
       URLParam.DataType = ftString
       URLParam.MultiSelectSeparator = ','
+      TokenParam.Value = ''
+      TokenParam.DataType = ftWideString
+      TokenParam.MultiSelectSeparator = ','
       DataParam.Value = Null
       DataParam.Component = FormParams
       DataParam.ComponentItem = 'inPhoto'
@@ -2686,6 +2698,44 @@ object ProductEditForm: TProductEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actGetToken: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetToken
+      StoredProcList = <
+        item
+          StoredProc = spGetToken
+        end
+        item
+          StoredProc = spSelectInvoice
+        end>
+      Caption = 'actGetToken'
+    end
+    object actLoadFile_https: TdsdLoadFile_https
+      Category = 'DSDLib'
+      MoveParams = <>
+      URLParam.Name = 'HostName'
+      URLParam.Value = 
+        'https://agilis-jettenders.com/wp-json/agilis/v1/order/png/?id=10' +
+        '715'
+      URLParam.Component = FormParams
+      URLParam.ComponentItem = 'HostName'
+      URLParam.DataType = ftString
+      URLParam.ParamType = ptInput
+      URLParam.MultiSelectSeparator = ','
+      TokenParam.Name = 'TokenValue'
+      TokenParam.Value = 'JYuovuBem5MTy5kduZNzkcUoqTh$w3RtIEgPtGLUYjKGRt3S1o0pXE9mu'
+      TokenParam.Component = FormParams
+      TokenParam.ComponentItem = 'TokenValue'
+      TokenParam.DataType = ftWideString
+      TokenParam.ParamType = ptInput
+      TokenParam.MultiSelectSeparator = ','
+      DataParam.Value = ''
+      DataParam.DataType = ftWideString
+      DataParam.MultiSelectSeparator = ','
+      Caption = 'actLoadFile_https'
+    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Product'
@@ -3005,6 +3055,18 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'ReportNameInvoice'
         Value = 'PrintMovement_Invoice'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HostName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TokenValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5374,5 +5436,42 @@ object ProductEditForm: TProductEditForm
     Action = actUpdate_summ_before
     Left = 640
     Top = 48
+  end
+  object spGetToken: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_EmailSettings'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inEmailKindId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderNumber'
+        Value = Null
+        Component = edInvNumberOrderClient_load
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outHostName'
+        Component = FormParams
+        ComponentItem = 'HostName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTokenValue'
+        Component = FormParams
+        ComponentItem = 'TokenValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 264
+    Top = 160
   end
 end
