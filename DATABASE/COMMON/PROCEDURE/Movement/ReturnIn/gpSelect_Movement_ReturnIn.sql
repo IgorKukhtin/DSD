@@ -357,11 +357,16 @@ BEGIN
            , MovementFloat_TotalCountTare.ValueData     AS TotalCountTare
            , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
            , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
-           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+
+           , (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) :: TFloat AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+
+           , (MovementFloat_TotalSummPVAT.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSummPVAT
+
            , MovementFloat_TotalSummChange.ValueData    AS TotalSummChange
-           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+
+           , (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSumm
+
            , MovementFloat_TotalLines.ValueData  ::TFloat   AS TotalLines
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
            , MovementFloat_CorrSumm.ValueData           AS CorrSumm
