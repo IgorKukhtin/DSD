@@ -2068,7 +2068,7 @@ BEGIN
                                                               );
                  IF vbMessageText <> ''
                  THEN
-                     RAISE EXCEPTION 'Ошибка.<%>', outMessageText;
+                     RAISE EXCEPTION 'Ошибка.<%>', vbMessageText;
                  END IF;
 
              ELSE -- <Перемещение по цене>
