@@ -190,8 +190,13 @@ return;
                                   LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS JuridicalFrom
                                                                                       ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
                                                                                      AND Movement.OperDate >= JuridicalFrom.StartDate AND Movement.OperDate < JuridicalFrom.EndDate
+
+                                  LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                                          ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                                         AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
+
                              WHERE TRIM (JuridicalFrom.INN) = TRIM (inFromINN) AND TRIM (JuridicalTo.INN) = TRIM (inToINN)
-                               AND ABS (inTotalSumm) = ABS (MovementFloat_TotalSumm.ValueData)
+                               AND ABS (inTotalSumm) = ABS (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0))
                                AND COALESCE (MovementString_InvNumberBranch.ValueData, '') = COALESCE (inInvNumberBranch, '')
 --                             AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '')
                              LIMIT 1
@@ -238,8 +243,12 @@ return;
                                                                                       ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
                                                                                      AND COALESCE (Movement_child.OperDate, Movement.OperDate) >= JuridicalFrom.StartDate AND COALESCE (Movement_child.OperDate, Movement.OperDate) < JuridicalFrom.EndDate
 
+                                  LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                                          ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                                         AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
+
                              WHERE TRIM (JuridicalFrom.INN) = TRIM (inToINN) AND TRIM (JuridicalTo.INN) = TRIM (inFromINN)
-                               AND ABS (inTotalSumm) = ABS (MovementFloat_TotalSumm.ValueData)
+                               AND ABS (inTotalSumm) = ABS (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0))
                                AND COALESCE (MovementString_InvNumberBranch.ValueData, '') = COALESCE (inInvNumberBranch, '')
 --                             AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '')
                              LIMIT 1
