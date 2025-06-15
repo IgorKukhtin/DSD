@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective(
     IN inDocument            Boolean   , -- Есть ли подписанный документ
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС     
-    IN inCorrSumm             TFloat   , -- Корректировка суммы покупателя для выравнивания округлений
+    IN inCorrSumm            TFloat   , -- Корректировка суммы покупателя для выравнивания округлений
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inPartnerId           Integer   , -- Контрагент
@@ -31,9 +31,6 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
-
-     --смотрим какое было значение, чтоб потом проверить изменилось ли оно
-     vbCorrSumm := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
 
 
      -- сохранили <Документ>
@@ -61,8 +58,19 @@ BEGIN
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
+
+     -- какое было значение, чтоб потом проверить изменилось ли значение
+     vbCorrSumm := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
+
+     -- если надо сохранить + протокол
      IF COALESCE (vbCorrSumm,0) <> COALESCE (inCorrSumm,0)
      THEN
+         -- Проверка
+         IF ABS (inCorrSumm) > 10
+         THEN
+             RAISE EXCEPTION 'Ошибка.В Налоговом документе сумма корректировки не может быть больше 10 грн.';
+         END IF;
+
          -- сохранили свойство <Корректировка суммы покупателя для выравнивания округлений>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrSumm(), ioId, inCorrSumm);
          -- сохранили протокол

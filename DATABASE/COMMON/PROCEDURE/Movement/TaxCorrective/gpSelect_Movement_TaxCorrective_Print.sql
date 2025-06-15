@@ -1042,10 +1042,13 @@ BEGIN
            , CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
            , CAST (REPEAT ('0', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner_ifin
 
-           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+           , (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData                          AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData                          AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
+
+           , (MovementFloat_TotalSummPVAT.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSummPVAT
+
+           , (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSumm
+           , COALESCE (MovementFloat_CorrSumm.ValueData, 0) :: TFloat AS CorrSumm
 
            , tmpContract.ContractName         		                    AS ContractName
            , tmpContract.ContractSigningDate                                AS ContractSigningDate
@@ -1452,6 +1455,9 @@ BEGIN
             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummPVAT
                                        ON MovementFloat_TotalSummPVAT.MovementId =  tmpMI.MovementId
                                       AND MovementFloat_TotalSummPVAT.DescId     = zc_MovementFloat_TotalSummPVAT()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_CorrSumm
+                                    ON MovementFloat_CorrSumm.MovementId = tmpMI.MovementId
+                                   AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
 
             LEFT JOIN tmpContract ON tmpContract.MovementId = tmpMI.MovementId
             LEFT JOIN tmpPersonalSigning ON tmpPersonalSigning.ContractId = tmpContract.ContractId
@@ -1593,6 +1599,7 @@ BEGIN
                        , tmpData_all.TotalSummVAT
                        , tmpData_all.TotalSummMVAT
                        , tmpData_all.TotalSummPVAT
+                       , tmpData_all.CorrSumm
                        , tmpData_all.TotalSumm
 
                        , tmpData_all.ContractName
@@ -1884,6 +1891,7 @@ BEGIN
                        , tmpData_all.TotalSummVAT
                        , tmpData_all.TotalSummMVAT
                        , tmpData_all.TotalSummPVAT
+                       , tmpData_all.CorrSumm
                        , tmpData_all.TotalSumm
 
                        , tmpData_all.ContractName
@@ -2131,6 +2139,7 @@ BEGIN
                        , tmpData_all.TotalSummVAT
                        , tmpData_all.TotalSummMVAT
                        , tmpData_all.TotalSummPVAT
+                       , tmpData_all.CorrSumm
                        , tmpData_all.TotalSumm
 
                        , tmpData_all.ContractName
@@ -2341,6 +2350,7 @@ BEGIN
            , tmpData_all.TotalSummMVAT
            , tmpData_all.TotalSummPVAT
            , tmpData_all.TotalSumm
+           , tmpData_all.CorrSumm
 
            , tmpData_all.ContractName
            , tmpData_all.ContractSigningDate
