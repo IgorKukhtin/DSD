@@ -15,10 +15,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     outHttps:= 'https://agilis-jettenders.com/constructor-images/order-constructor'
-      || '-'  || COALESCE ((SELECT Movement.InvNumber FROM MovementLinkObject AS MLO JOIN Movement ON Movement.Id = MLO.MovementId WHERE MLO.ObjectId = inProductId AND MLO.DescId = zc_MovementLinkObject_Product()
+     outHttps:= --'https://agilis-jettenders.com/constructor-images/order-constructor'
+                  'https://agilis-jettenders.com/wp-json/agilis/v1/order/png/?id'
+      || '='  || COALESCE ((SELECT Movement.InvNumber FROM MovementLinkObject AS MLO JOIN Movement ON Movement.Id = MLO.MovementId WHERE MLO.ObjectId = inProductId AND MLO.DescId = zc_MovementLinkObject_Product()
                            ), '000')
-              || '.png'
+              --|| '.png'
              ;
 
 END;
