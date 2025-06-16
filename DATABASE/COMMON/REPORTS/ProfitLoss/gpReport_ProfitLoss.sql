@@ -169,7 +169,9 @@ BEGIN
                                    END AS ObjectId_inf
 
                                    -- Направление (ОПиУ)
-                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(),  zc_Movement_TransportService())
+                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Loss())
+                                             THEN MovementLinkObject_ArticleLoss.ObjectId
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(),  zc_Movement_TransportService())
                                          AND MIContainer.ContainerIntId_analyzer > 0
                                              THEN MLO_To.ObjectId
                                         ELSE MIContainer.ObjectExtId_Analyzer
@@ -183,7 +185,7 @@ BEGIN
                                    -- Вид Товара
                                  , MILO_GoodsKind.ObjectId AS GoodsKindId_inf
                                  
-                                 --место учето для статьи , док списания
+                                   -- место учета для статьи, док списания
                                  , MovementLinkObject_From.ObjectId AS FromId
 
                             FROM MovementItemContainer AS MIContainer
@@ -225,10 +227,14 @@ BEGIN
                                                                        ON MILO_GoodsKind.MovementItemId = MovementItem_2.Id
                                                                       AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                                                                       AND 1=0*/
-                                 --для статьи определяем место учета по документу (от кого)
+                                 -- место учета для статьи, док списания
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                               ON MovementLinkObject_From.MovementId = MIContainer.MovementId
                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                                              ON MovementLinkObject_ArticleLoss.MovementId = MIContainer.MovementId
+                                                             AND MovementLinkObject_ArticleLoss.DescId     = zc_MovementLinkObject_ArticleLoss()
+
 
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.AccountId = zc_Enum_Account_100301()
@@ -265,7 +271,9 @@ BEGIN
                                      END
 
                                      -- Направление (ОПиУ)
-                                   , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(),  zc_Movement_TransportService())
+                                   , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Loss())
+                                               THEN MovementLinkObject_ArticleLoss.ObjectId
+                                          WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(),  zc_Movement_TransportService())
                                            AND MIContainer.ContainerIntId_analyzer > 0
                                                THEN MLO_To.ObjectId
                                           ELSE MIContainer.ObjectExtId_Analyzer
@@ -462,11 +470,15 @@ BEGIN
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Львов%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Lv
            , CASE WHEN COALESCE (Object_Branch_ProfitLoss.ValueData,'') =''  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_0
 
-           -- доп.группа для промежуточного итога   "итого сумма у покупателя"
+              -- доп.группа для промежуточного итога   "итого сумма у покупателя"
            ,  CASE WHEN ProfitLossDirectionId IN (9221, 9222, 565318, 9223) THEN 1 ELSE 2 END ProfitLossGroup_dop
-           --место учета
-           , CASE WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Member() THEN Object_Unit_member.ValueData
-                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_InfoMoney() THEN Object_From.ValueData              ---- если "Элемент Подразделения" = "Статьи списания", тогда тянем "От кого" из документа "Списание"
+
+             -- место учета
+           , CASE WHEN tmpReport.MovementDescId = zc_Movement_Loss() THEN Object_From.ValueData
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Member() THEN Object_Unit_member.ValueData
+                  -- если "Элемент Подразделения" = "Статьи списания", тогда тянем "От кого" из документа "Списание"
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_InfoMoney() THEN Object_From.ValueData
+                  --
                   WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Founder() THEN 'Административный'
                   WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Partner() THEN 'Павильоны'
                   WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Unit() THEN Object_Unit_ProfitLoss.ValueData
@@ -561,9 +573,11 @@ BEGIN
 
            -- доп.группа для промежуточного итога   "итого сумма у покупателя"
            ,  CASE WHEN ProfitLossDirectionId IN (9221, 9222, 565318, 9223) THEN 1 ELSE 2 END ProfitLossGroup_dop
-           --место учета
-           , CASE WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Member() THEN Object_Unit_member.ValueData
-                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_InfoMoney() THEN Object_From.ValueData              ---- если "Элемент Подразделения" = "Статьи списания", тогда тянем "От кого" из документа "Списание"
+             -- место учета
+           , CASE WHEN tmpReport.MovementDescId = zc_Movement_Loss() THEN Object_From.ValueData
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Member() THEN Object_Unit_member.ValueData
+                  -- если "Элемент Подразделения" = "Статьи списания", тогда тянем "От кого" из документа "Списание"
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_InfoMoney() THEN Object_From.ValueData
                   WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Founder() THEN 'Административный'
                   WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Partner() THEN 'Павильоны'
                   WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Unit() THEN Object_Unit_ProfitLoss.ValueData
@@ -616,4 +630,4 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 -- тест
--- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '04.05.2024', inEndDate:= '04.05.2024', inSession:= '5') WHERE Amount <> 0 ORDER BY 5
+-- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '04.05.2025', inEndDate:= '04.05.2025', inSession:= '5') WHERE Amount <> 0 ORDER BY 5
