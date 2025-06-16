@@ -8845,17 +8845,31 @@ var i, ii: integer;
 begin
   Result := '';
   ii:=0;
-  // нашли последний символ /
+  // нашли последний символ / or =
   i:=1;
   while i <= Length(Src) do begin
-    if Src[i] = '/' then ii:= i;
+    if Src[i] = '/'
+    then ii:= i;
+    //
+    if i-3 > 0
+    then // строчка ?id=
+         if (Src[i] = '=')and(Src[i-3] = '?')and(Src[i-2] = 'i')and(Src[i-1] = 'd')
+         then ii:= i;
+    //
     i := i + 1;
   end;
   // если нашли
   if (ii > 0) and (ii < Length(Src))
-  then
+  then begin
+     //добавим
+     if System.Pos('/pdf/', Src) > 0 then Result:= 'agilis-config-';
+     if System.Pos('/png/', Src) > 0 then Result:= 'order-png-';
      // переносим
-     for i:= ii+1 to Length(Src) do Result:= Result + Src[i]
+     for i:= ii+1 to Length(Src) do Result:= Result + Src[i];
+     //добавим
+     if System.Pos('/pdf/', Src) > 0 then Result:= Result + '.pdf';
+     if System.Pos('/png/', Src) > 0 then Result:= Result + '.png';
+  end
   else begin
     Result := src;
     ShowMessage ('—охранитс€ с таким названием <'+Result+'>. ј потом откроетс€?');
@@ -8897,6 +8911,9 @@ begin
       begin
         FStream.Position := 0;
         FData.Value := ConvertConvert(PADR(GETS(FURL.Value), 255) + FStream.DataString);
+
+        //FStream.SaveToFile('test_https_start_'+IntToStr(Length(FStream.DataString))+'.pdf');
+        //FStream.SaveToFile('test_https_'+IntToStr(Length(FData.Value))+'.pdf');
 
         //FData.Value := FStream.DataString;
         Result := True;

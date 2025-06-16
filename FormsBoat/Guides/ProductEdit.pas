@@ -320,7 +320,6 @@ type
     edBasis_summ2_orig: TcxCurrencyEdit;
     actGetToken: TdsdExecStoredProc;
     spGetToken: TdsdStoredProc;
-    actLoadFile_https: TdsdLoadFile_https;
   private
     { Private declarations }
   public

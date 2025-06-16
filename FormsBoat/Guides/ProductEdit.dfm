@@ -2021,7 +2021,7 @@ object ProductEditForm: TProductEditForm
       ImageIndex = 0
     end
     object mactLoadAgilis_all: TMultiAction
-      Category = 'http'
+      Category = 'https'
       MoveParams = <>
       ActionList = <
         item
@@ -2080,15 +2080,18 @@ object ProductEditForm: TProductEditForm
       isShowModal = False
     end
     object actLoadAgilis: TdsdLoadAgilis
-      Category = 'http'
+      Category = 'https'
       MoveParams = <>
-      URLParam.Value = 
-        'https://agilis-jettenders.com/wp-admin/admin-ajax.php?action=cat' +
-        'alog_csv3&order='
+      URLParam.Value = 'test'
       URLParam.Component = FormParams
-      URLParam.ComponentItem = 'HostName'
+      URLParam.ComponentItem = 'inHttps_order'
       URLParam.DataType = ftString
       URLParam.MultiSelectSeparator = ','
+      TokenParam.Value = 'test'
+      TokenParam.Component = FormParams
+      TokenParam.ComponentItem = 'inTokenValue'
+      TokenParam.DataType = ftString
+      TokenParam.MultiSelectSeparator = ','
       OrderParam.Value = ''
       OrderParam.Component = edInvNumberOrderClient_load
       OrderParam.DataType = ftString
@@ -2108,7 +2111,7 @@ object ProductEditForm: TProductEditForm
       Caption = 'actLoadAgilis'
     end
     object mactInsertUpdate_load: TMultiAction
-      Category = 'http'
+      Category = 'https'
       MoveParams = <>
       ActionList = <
         item
@@ -2118,7 +2121,7 @@ object ProductEditForm: TProductEditForm
       Caption = 'mactInsertUpdate_load'
     end
     object actInsertUpdate_load: TdsdExecStoredProc
-      Category = 'http'
+      Category = 'https'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate_load
@@ -2129,13 +2132,9 @@ object ProductEditForm: TProductEditForm
       Caption = 'actInsertUpdate_load'
     end
     object mactLoad_Doc: TMultiAction
-      Category = 'http'
+      Category = 'https'
       MoveParams = <>
-      Enabled = False
       ActionList = <
-        item
-          Action = actGet_ProductDocument
-        end
         item
           Action = actLoadFile_Doc
         end
@@ -2167,18 +2166,16 @@ object ProductEditForm: TProductEditForm
       Caption = 'actGet_ProductDocument'
     end
     object actLoadFile_Doc: TdsdLoadFile_https
-      Category = 'http'
+      Category = 'https'
       MoveParams = <>
-      URLParam.Value = 
-        'https://agilis-jettenders.com/constructor-pdf/agilis-configurati' +
-        'on-'
+      URLParam.Value = 'test'
       URLParam.Component = FormParams
-      URLParam.ComponentItem = 'inUrl_Doc'
+      URLParam.ComponentItem = 'inHttps_pdf'
       URLParam.DataType = ftString
       URLParam.MultiSelectSeparator = ','
-      TokenParam.Value = ''
+      TokenParam.Value = 'test'
       TokenParam.Component = FormParams
-      TokenParam.ComponentItem = 'TokenValue'
+      TokenParam.ComponentItem = 'inTokenValue'
       TokenParam.DataType = ftString
       TokenParam.MultiSelectSeparator = ','
       DataParam.Value = ''
@@ -2189,7 +2186,7 @@ object ProductEditForm: TProductEditForm
       Caption = 'actLoadFile_Doc'
     end
     object actInsertUpdate_Doc: TdsdExecStoredProc
-      Category = 'http'
+      Category = 'https'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate_ProductDocument
@@ -2200,13 +2197,9 @@ object ProductEditForm: TProductEditForm
       Caption = 'actInsertUpdate_Doc'
     end
     object mactLoad_Photo: TMultiAction
-      Category = 'http'
+      Category = 'https'
       MoveParams = <>
-      Enabled = False
       ActionList = <
-        item
-          Action = actGet_ProductPhoto
-        end
         item
           Action = actLoadFile_Photo
         end
@@ -2216,18 +2209,16 @@ object ProductEditForm: TProductEditForm
       Caption = 'mactLoad_Photo'
     end
     object actLoadFile_Photo: TdsdLoadFile_https
-      Category = 'http'
+      Category = 'https'
       MoveParams = <>
-      URLParam.Value = 
-        'https://agilis-jettenders.com/constructor-images/order-construct' +
-        'or-'
+      URLParam.Value = 'test'
       URLParam.Component = FormParams
-      URLParam.ComponentItem = 'inUrl_Photo'
+      URLParam.ComponentItem = 'inHttps_png'
       URLParam.DataType = ftString
       URLParam.MultiSelectSeparator = ','
-      TokenParam.Value = ''
+      TokenParam.Value = 'test'
       TokenParam.Component = FormParams
-      TokenParam.ComponentItem = 'TokenValue'
+      TokenParam.ComponentItem = 'inTokenValue'
       TokenParam.DataType = ftString
       TokenParam.MultiSelectSeparator = ','
       DataParam.Value = Null
@@ -2238,7 +2229,7 @@ object ProductEditForm: TProductEditForm
       Caption = 'actLoadFile_Photo'
     end
     object actInsertUpdate_Photo: TdsdExecStoredProc
-      Category = 'http'
+      Category = 'https'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate_ProductPhoto
@@ -2704,37 +2695,15 @@ object ProductEditForm: TProductEditForm
       RefreshOnTabSetChanges = False
     end
     object actGetToken: TdsdExecStoredProc
-      Category = 'http'
+      Category = 'https'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spGetToken
       StoredProcList = <
         item
           StoredProc = spGetToken
-        end
-        item
-          StoredProc = spSelectInvoice
         end>
       Caption = 'actGetToken'
-    end
-    object actLoadFile_https: TdsdLoadFile_https
-      Category = 'http'
-      MoveParams = <>
-      Enabled = False
-      URLParam.Value = ''
-      URLParam.Component = FormParams
-      URLParam.ComponentItem = 'HostName'
-      URLParam.DataType = ftString
-      URLParam.MultiSelectSeparator = ','
-      TokenParam.Value = ''
-      TokenParam.Component = FormParams
-      TokenParam.ComponentItem = 'TokenValue'
-      TokenParam.DataType = ftString
-      TokenParam.MultiSelectSeparator = ','
-      DataParam.Value = ''
-      DataParam.DataType = ftWideString
-      DataParam.MultiSelectSeparator = ','
-      Caption = 'actLoadFile_https'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -3038,37 +3007,38 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'inPhoto'
         Value = Null
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUrl_Doc'
+        Name = 'inHttps_order'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHttps_pdf'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUrl_Photo'
+        Name = 'inHttps_png'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTokenValue'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameInvoice'
         Value = 'PrintMovement_Invoice'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'HostName'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TokenValue'
-        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5459,10 +5429,26 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outHostName'
+        Name = 'outHttps_order'
         Value = Null
         Component = FormParams
-        ComponentItem = 'HostName'
+        ComponentItem = 'inHttps_order'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outHttps_pdf'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inHttps_pdf'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outHttps_png'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inHttps_png'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -5470,7 +5456,7 @@ object ProductEditForm: TProductEditForm
         Name = 'outTokenValue'
         Value = Null
         Component = FormParams
-        ComponentItem = 'TokenValue'
+        ComponentItem = 'inTokenValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
