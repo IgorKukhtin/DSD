@@ -108,6 +108,7 @@ BEGIN
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Personal() AND _tmpItem.MovementDescId <> zc_Movement_SendDebtMember()
                                                            THEN zc_Enum_AccountDirection_70500() -- Заработная плата
 
+
                                                       WHEN COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = TRUE
                                                            THEN zc_Enum_AccountDirection_30200() -- наши компании
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
@@ -116,13 +117,19 @@ BEGIN
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                            THEN zc_Enum_AccountDirection_30300() -- Дебиторы по услугам
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Лиол
-                                                           THEN zc_Enum_AccountDirection_30400() -- Прочие дебиторы
+                                                           THEN zc_Enum_AccountDirection_30400() -- Прочие 	
 
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                                                        AND COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
                                                            THEN zc_Enum_AccountDirection_30150() -- покупатели ВЭД
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                                                            THEN zc_Enum_AccountDirection_30100() -- покупатели
+
+
+                                                      -- Маркетинг - Поставщики
+                                                      WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_21513() -- Маркетинг - Сувениры
+                                                           AND (_tmpItem.OperSumm > 0 OR inMovementId <> 31476080)
+                                                           THEN zc_Enum_AccountDirection_70100() -- поставщики
 
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                                                        AND (_tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные

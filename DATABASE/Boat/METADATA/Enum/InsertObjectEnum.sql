@@ -53,6 +53,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_DropBox_InvoiceKredit(),inDescId:= zc_Object_EmailKind(), inCode:= 1, inName:= 'Исходящая, отправка входящих счетов в DropBox',  inEnumName:= 'zc_Enum_EmailKind_DropBox_InvoiceKredit');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_DropBox_InvoiceDebet(), inDescId:= zc_Object_EmailKind(), inCode:= 2, inName:= 'Исходящая, отправка исходящих счетов в DropBox', inEnumName:= 'zc_Enum_EmailKind_DropBox_InvoiceDebet');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_Mail_InvoiceKredit(),   inDescId:= zc_Object_EmailKind(), inCode:= 3, inName:= 'Входящая, загрузка входящих счетов из GetMail' , inEnumName:= 'zc_Enum_EmailKind_Mail_InvoiceKredit');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_HTTP_OrderClient(),     inDescId:= zc_Object_EmailKind(), inCode:= 4, inName:= 'Входящая, загрузка Заказ Клиента',               inEnumName:= 'zc_Enum_EmailKind_HTTP_OrderClient');
      
      -- !!! Параметры подключения к внешнему Импорту/Экспорту
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Host(),     inDescId:= zc_Object_EmailTools(), inCode:= 1, inName:= 'Host',     inEnumName:= 'zc_Enum_EmailTools_Host');

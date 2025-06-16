@@ -28,6 +28,9 @@ $BODY$
     DECLARE vbIsChangePrice Boolean;
     DECLARE vbIsDiscountPrice Boolean;
 
+    -- Корректировка суммы покупателя для выравнивания округлений
+    DECLARE vbCorrSumm TFloat;
+
     DECLARE vbOperSumm_MVAT TFloat;
     DECLARE vbOperSumm_PVAT TFloat;
 
@@ -87,9 +90,13 @@ BEGIN
           , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId) AS FromId_calc
           , COALESCE (ObjectLink_Contract_JuridicalDoc_Next.ChildObjectId, ObjectLink_Contract_JuridicalDocument.ChildObjectId, ObjectLink_Contract_JuridicalBasis.ChildObjectId, MovementLinkObject_To.ObjectId) AS ToId_calc
 
+            -- Корректировка суммы покупателя для выравнивания округлений
+          , COALESCE (MovementFloat_CorrSumm.ValueData, 0) AS CorrSumm
+
             INTO vbDescId, vbStatusId, vbOperDate, vbOperDatePartner, vbOperDate_cacl, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
                , vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbJuridicalDocumentId, vbIsDiscountPrice
                , vbFromId, vbToId, vbFromId_calc, vbToId_calc
+               , vbCorrSumm
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId = Movement.Id
@@ -103,6 +110,11 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+          -- Корректировка суммы
+          LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                  ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                 AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
+
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
                                       AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractFrom())
@@ -364,14 +376,14 @@ BEGIN
                  , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
 
                  , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN 1 ELSE 1 END * MovementFloat_TotalSummMVAT.ValueData AS TotalSummMVAT
-                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN 1 ELSE 1 END * MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT
-                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN 1 ELSE 1 END * (MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData) AS SummVAT
-                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN 1 ELSE 1 END * MovementFloat_TotalSumm.ValueData AS TotalSumm
+                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN 1 ELSE 1 END * (MovementFloat_TotalSummPVAT.ValueData + vbCorrSumm) AS TotalSummPVAT
+                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN 1 ELSE 1 END * (MovementFloat_TotalSummPVAT.ValueData + vbCorrSumm - MovementFloat_TotalSummMVAT.ValueData) AS SummVAT
+                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN 1 ELSE 1 END * (MovementFloat_TotalSumm.ValueData + vbCorrSumm) AS TotalSumm
 
                  , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * MovementFloat_TotalSummMVAT.ValueData AS TotalSummMVAT_sign
-                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT_sign
-                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * (MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData) AS SummVAT_sign
-                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * MovementFloat_TotalSumm.ValueData AS TotalSumm_sign
+                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * (MovementFloat_TotalSummPVAT.ValueData + vbCorrSumm) AS TotalSummPVAT_sign
+                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * (MovementFloat_TotalSummPVAT.ValueData + vbCorrSumm - MovementFloat_TotalSummMVAT.ValueData) AS SummVAT_sign
+                 , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * (MovementFloat_TotalSumm.ValueData + vbCorrSumm) AS TotalSumm_sign
 
                  , COALESCE (Object_Partner.ValueData, Object_From.ValueData) AS FromName
                  , Object_To.ValueData               		    AS ToName

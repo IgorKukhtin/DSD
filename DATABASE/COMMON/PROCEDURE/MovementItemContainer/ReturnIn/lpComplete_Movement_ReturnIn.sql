@@ -21,6 +21,9 @@ $BODY$
   DECLARE vbObjectExtId_Analyzer Integer;
   DECLARE vbAccountId_GoodsTransit Integer;
 
+  -- Корректировка суммы покупателя для выравнивания округлений
+  DECLARE vbCorrSumm TFloat;
+
   DECLARE vbMovementDescId Integer;
   DECLARE vbMovementId_parent Integer;
 
@@ -228,6 +231,9 @@ BEGIN
           , COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0)                        AS CurrencyPartnerValue
           , COALESCE (MovementFloat_ParPartnerValue.ValueData, 0)                             AS ParPartnerValue
 
+            -- Корректировка суммы покупателя для выравнивания округлений
+          , COALESCE (MovementFloat_CorrSumm.ValueData, 0) AS CorrSumm
+
             INTO vbIsHistoryCost, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbIsDiscountPrice
                , vbMovementDescId, vbMovementId_parent, vbOperDate, vbOperDatePartner
                , vbJuridicalId_From, vbIsCorporate_From, vbInfoMoneyId_CorporateFrom, vbPartnerId_From, vbIsNotRealGoods, vbMemberId_From, vbInfoMoneyId_From
@@ -236,19 +242,24 @@ BEGIN
                , vbPaidKindId, vbContractId
                , vbJuridicalId_Basis_To, vbBusinessId_To
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
+               , vbCorrSumm
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId =  Movement.Id
-                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                   ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
-                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                   AND MovementBoolean_PriceWithVAT.DescId     = zc_MovementBoolean_PriceWithVAT()
           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                   ON MovementFloat_VATPercent.MovementId = Movement.Id
-                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                                  ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                 AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                 ON MovementFloat_ChangePercent.MovementId = Movement.Id
-                AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                  ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                 AND MovementFloat_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
+          -- Корректировка суммы
+          LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                  ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                 AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -966,7 +977,7 @@ BEGIN
         -- !!!для ВСЕХ кладовщиков - выход!!! + zc_Enum_Process_Auto_PrimeCost
         AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View
                         WHERE UserId = inUserId
-                          AND RoleId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Role() AND Object.ObjectCode IN (3004, 3104, 4004, 5004, 6004, 7004, 8004, 8014, 9004, 9014, 9024, 9102))
+                          AND RoleId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Role() AND Object.ObjectCode IN (3004, 3104, 4004, 5004, 6004, 7004, 8004, 8014, 9004, 9014, 9024, 9102, 10328))
                        )
         AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
         AND inUserId <> zc_Enum_Process_Auto_ReturnIn()
@@ -1071,7 +1082,11 @@ BEGIN
                  WHEN vbVATPercent > 0
                     -- если цены без НДС, тогда получаем сумму с НДС
                     THEN CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner_original AS NUMERIC (16, 2))
-            END AS OperSumm_Partner
+            END
+            -- Корректировка суммы покупателя
+          + vbCorrSumm
+
+            AS OperSumm_Partner
 
             -- Расчет Итоговой суммы по Контрагенту
           , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
@@ -1093,6 +1108,10 @@ BEGIN
                               ELSE CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
                          END
             END
+           -- Корректировка суммы покупателя
+         + vbCorrSumm
+
+            AS OperSumm_Partner_ChangePercent
 
             -- Расчет Итоговой суммы в валюте по Контрагенту
           , CAST
@@ -1116,9 +1135,13 @@ BEGIN
                          END
             END   -- так переводится в валюту CurrencyPartnerId
                 * CASE WHEN vbCurrencyPartnerId <> vbCurrencyDocumentId THEN CASE WHEN vbParPartnerValue = 0 THEN 0 ELSE vbCurrencyPartnerValue /  vbParPartnerValue END ELSE CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE 1 END END
-            AS NUMERIC (16, 2)) AS OperSumm_Currency  -- !!!результат!!!
+            AS NUMERIC (16, 2)
+           )
+            
+            AS OperSumm_Currency  -- !!!результат!!!
 
             INTO vbOperSumm_PriceList, vbOperSumm_PriceList_real, vbOperSumm_Partner, vbOperSumm_Partner_ChangePercent, vbOperSumm_Currency
+
      FROM (SELECT SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_PriceList ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.PriceListPrice AS NUMERIC (16, 2)) END) AS tmpOperSumm_PriceList
                 , SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_PriceList ELSE CAST (_tmpItem.OperCount         * _tmpItem.PriceListPrice AS NUMERIC (16, 2)) END) AS tmpOperSumm_PriceList_real
                 , SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_Partner -- так получаем по каждому товару отдельно (даже если он повторяется)

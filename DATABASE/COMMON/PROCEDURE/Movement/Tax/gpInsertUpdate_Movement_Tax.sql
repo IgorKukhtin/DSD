@@ -66,9 +66,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment); 
      
 
-     -- какое было значение, чтоб потом проверить изменилось ли значение
-     vbCorrSumm:= (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
-
      -- проверка
      IF inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
     AND COALESCE (inCorrSumm, 0) <> COALESCE ((SELECT SUM (COALESCE (MF.ValueData, 0))
@@ -106,6 +103,10 @@ BEGIN
                        , CHR (13)
                         ;
      END IF;
+
+
+     -- какое было значение, чтоб потом проверить изменилось ли значение
+     vbCorrSumm:= (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CorrSumm());
 
      -- если надо сохранить + протокол
      IF COALESCE (vbCorrSumm,0) <> COALESCE (inCorrSumm,0)

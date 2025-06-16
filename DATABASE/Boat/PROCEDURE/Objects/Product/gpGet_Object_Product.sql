@@ -57,11 +57,12 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , t1 integer, t2 integer, t3 integer, t4 integer, t5 integer, t6 integer, t7 integer, t8 Integer
               ) AS
 $BODY$
-    DECLARE vbNPP TFloat;
+   DECLARE vbUserId  Integer;
+   DECLARE vbNPP     TFloat;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Product());
+   vbUserId:= lpGetUserBySession (inSession);
 
 
    IF COALESCE (inId, 0) = 0

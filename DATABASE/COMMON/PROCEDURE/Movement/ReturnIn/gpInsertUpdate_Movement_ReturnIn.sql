@@ -104,6 +104,43 @@ BEGIN
         PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
     END IF;
 
+    -- Для Корректировки - всегда
+    IF EXISTS (SELECT 1
+               FROM MovementLinkMovement AS MLM
+                    -- Док.Корректировка
+                    INNER JOIN Movement ON Movement.Id       = MLM.MovementId
+                                       -- Не удалена
+                                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                    INNER JOIN MovementLinkObject AS MLO
+                                                  ON MLO.MovementId = MLM.MovementId
+                                                 AND MLO.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+                                                 AND MLO.ObjectId   = zc_Enum_DocumentTaxKind_Corrective()
+               WHERE MLM.MovementChildId = ioId
+                 AND MLM.DescId          = zc_MovementLinkMovement_Master()
+              )
+    THEN
+        -- сохранили свойство <Корректировка суммы покупателя для выравнивания округлений>
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrSumm(), MovementId_corr, CASE WHEN tmp.Ord = 1 THEN inCorrSumm ELSE 0 END)
+        FROM (SELECT MLM.MovementChildId AS MovementId_corr
+                     -- № п/п - на всякий случай
+                   , ROW_NUMBER() OVER (PARTITION BY MLM.MovementChildId ORDER BY ABS (MovementFloat_TotalSummPVAT.ValueData) DESC, Movement.Id DESC) AS Ord
+              FROM MovementLinkMovement AS MLM
+                    -- Док.Корректировка
+                    INNER JOIN Movement ON Movement.Id       = MLM.MovementId
+                                       -- Не удален
+                                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                    INNER JOIN MovementLinkObject AS MLO
+                                                  ON MLO.MovementId = MLM.MovementId
+                                                 AND MLO.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+                                                 AND MLO.ObjectId   = zc_Enum_DocumentTaxKind_Corrective()
+                    LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                            ON MovementFloat_TotalSummPVAT.MovementId = MLM.MovementId
+                                           AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+
+               WHERE MLM.MovementChildId = ioId
+                 AND MLM.DescId     = zc_MovementLinkMovement_Master()
+             ) AS tmp;
+    END IF;
 
 
 END;

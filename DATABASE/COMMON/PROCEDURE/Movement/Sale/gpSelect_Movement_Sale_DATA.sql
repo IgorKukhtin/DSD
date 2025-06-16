@@ -826,7 +826,7 @@ end if;
            , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
            , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
              --
-           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+           , (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) :: TFloat AS TotalSummVAT
              --
            , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
              --

@@ -12,10 +12,13 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Product_CIN(
 RETURNS TVarChar
 AS
 $BODY$
+   DECLARE vbUserId    Integer;
    DECLARE vbDateStart TDateTime;
-   DECLARE vbModelId Integer;
-   DECLARE vbModelNom TVarChar;
+   DECLARE vbModelId   Integer;
+   DECLARE vbModelNom  TVarChar;
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Проверка
    IF COALESCE (inModelId, 0) = 0
