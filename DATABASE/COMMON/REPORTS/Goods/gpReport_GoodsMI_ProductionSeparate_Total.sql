@@ -20,9 +20,11 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate_Total (
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , FromName TVarChar, ToName TVarChar
+             
              , PartionGoods  TVarChar, PartionGoods_main  TVarChar 
-             , PartionGoods_Date TDateTime 
+             , PartionGoods_Date TVarChar --TDateTime 
              , FromCode_partion Integer, FromName_partion TVarChar
+             
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar
@@ -110,47 +112,49 @@ BEGIN
     RETURN QUERY
     
     -- ограничиваем по виду документа  , по от кого / кому
-    WITH tmpMovement AS 
-                        (SELECT Movement.Id        AS MovementId
-                              , Movement.InvNumber AS InvNumber
-                              , Movement.OperDate  AS OperDate
-                              , MovementString_PartionGoods.ValueData AS PartionGoods 
-                              , MovementLinkObject_From.ObjectId AS FromId
-                              , MovementLinkObject_To.ObjectId   AS ToId   
-                              , CASE WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'пр-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
-                                     WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'об-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
-                                     WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'мо-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
-                                     ELSE MovementString_PartionGoods.ValueData ::TVarChar
-                                END ::TVarChar AS PartionGoods_main
-                         FROM Movement 
-                              LEFT JOIN MovementString AS MovementString_PartionGoods
-                                                       ON MovementString_PartionGoods.MovementId = Movement.Id
-                                                      AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                           ON MovementLinkObject_From.MovementId = Movement.Id
-                                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                              JOIN _tmpFromGroup on _tmpFromGroup.FromId = MovementLinkObject_From.ObjectId
-                              
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                           ON MovementLinkObject_To.MovementId = Movement.Id
-                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                              JOIN _tmpToGroup on _tmpToGroup.ToId = MovementLinkObject_To.ObjectId
-  
-                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                           AND Movement.DescId  = zc_Movement_ProductionSeparate()
-                            
-                         GROUP BY Movement.Id
-                                , Movement.InvNumber 
-                                , Movement.OperDate  
-                                , MovementString_PartionGoods.ValueData
-                                , MovementLinkObject_From.ObjectId
-                                , MovementLinkObject_To.ObjectId
-                                , CASE WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'пр-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
-                                       WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'об-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
-                                       WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'мо-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
-                                       ELSE MovementString_PartionGoods.ValueData ::TVarChar
-                                  END
+    WITH tmpMovement AS (SELECT tmp.*
+                              , zfConvert_StringToNumber (REPLACE ( SUBSTR (tmp.PartionGoods_main, Position ('-' in tmp.PartionGoods_main)  +1 , length (tmp.PartionGoods_main)-11 - Position ('-' in tmp.PartionGoods_main) +1), '-', '')) ::Integer AS FromCode_partion
+                         FROM (SELECT Movement.Id        AS MovementId
+                                    , Movement.InvNumber AS InvNumber
+                                    , Movement.OperDate  AS OperDate
+                                    , MovementString_PartionGoods.ValueData AS PartionGoods 
+                                    , MovementLinkObject_From.ObjectId AS FromId
+                                    , MovementLinkObject_To.ObjectId   AS ToId   
+                                    , CASE WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'пр-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
+                                           WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'об-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
+                                           WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'мо-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
+                                           ELSE MovementString_PartionGoods.ValueData ::TVarChar
+                                      END ::TVarChar AS PartionGoods_main
+                               FROM Movement 
+                                    LEFT JOIN MovementString AS MovementString_PartionGoods
+                                                             ON MovementString_PartionGoods.MovementId = Movement.Id
+                                                            AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+      
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                 ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                    JOIN _tmpFromGroup on _tmpFromGroup.FromId = MovementLinkObject_From.ObjectId
+                                    
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                 ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                    JOIN _tmpToGroup on _tmpToGroup.ToId = MovementLinkObject_To.ObjectId
+        
+                               WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                                 AND Movement.DescId  = zc_Movement_ProductionSeparate()
+                                  
+                               GROUP BY Movement.Id
+                                      , Movement.InvNumber 
+                                      , Movement.OperDate  
+                                      , MovementString_PartionGoods.ValueData
+                                      , MovementLinkObject_From.ObjectId
+                                      , MovementLinkObject_To.ObjectId
+                                      , CASE WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'пр-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
+                                             WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'об-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
+                                             WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'мо-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
+                                             ELSE MovementString_PartionGoods.ValueData ::TVarChar
+                                        END 
+                               )AS tmp
                          )
 
 , tmpMI_Container AS (SELECT tmpMovement.MovementId                          AS MovementId
@@ -159,7 +163,8 @@ BEGIN
                            , tmpMovement.FromId
                            , tmpMovement.ToId
                            , tmpMovement.PartionGoods                        AS PartionGoods
-                           , tmpMovement.PartionGoods_main
+                           , tmpMovement.PartionGoods_main 
+                           , tmpMovement.FromCode_partion
                            , MIContainer.ObjectId_Analyzer                   AS GoodsId
                           -- , 0 AS Summ
                            , SUM (MIContainer.Amount)                        AS Amount
@@ -202,6 +207,7 @@ BEGIN
                              , tmpMovement.OperDate
                              , tmpMovement.PartionGoods
                              , tmpMovement.PartionGoods_main
+                             , tmpMovement.FromCode_partion
                              , MIContainer.ObjectId_Analyzer
                              , MIContainer.DescId
                              , MIContainer.isActive
@@ -220,6 +226,7 @@ BEGIN
                              , tmpMI_Container.OperDate
                              , tmpMI_Container.PartionGoods
                              , tmpMI_Container.PartionGoods_main
+                             , tmpMI_Container.FromCode_partion
                              , tmpMI_Container.GoodsId 
                              , tmpMI_Container.StorageLineId_in
                              , tmpMI_Container.StorageLineId_out
@@ -236,6 +243,7 @@ BEGIN
                              , tmpMI_Container.OperDate
                              , tmpMI_Container.PartionGoods
                              , tmpMI_Container.PartionGoods_main
+                             , tmpMI_Container.FromCode_partion
                              , tmpMI_Container.GoodsId 
                              , tmpMI_Container.StorageLineId_in
                              , tmpMI_Container.StorageLineId_out
@@ -253,6 +261,7 @@ BEGIN
                        , tmpMI_Container.ToId
                        , tmpMI_Container.PartionGoods
                        , tmpMI_Container.PartionGoods_main
+                       , tmpMI_Container.FromCode_partion
                        , tmpMI_Container.GoodsId 
                        , tmpMI_Container.StorageLineId_in
                        , tmpMI_Container.StorageLineId_out
@@ -270,6 +279,7 @@ BEGIN
                          , tmpMI_Container.OperDate
                          , tmpMI_Container.PartionGoods
                          , tmpMI_Container.PartionGoods_main
+                         , tmpMI_Container.FromCode_partion
                          , tmpMI_Container.GoodsId
                          , tmpMI_Container.StorageLineId_in
                          , tmpMI_Container.StorageLineId_out
@@ -343,7 +353,39 @@ BEGIN
                    , tmpMI.PartionGoods
                    , tmpMI.PartionGoods_main
            )
-           
+ 
+   , tmpMI_totalMovement AS
+           (SELECT tmpMI.GoodsId 
+                 , tmpMI.MovementId
+                 , -1* SUM (tmpMI.Summ) AS Summ
+                 , -1* SUM (tmpMI.Amount) AS Amount
+                 ,  SUM (tmpMI.HeadCount) AS HeadCount
+            FROM (SELECT  tmpMI_out.GoodsId
+                        , tmpMI_out.MovementId
+                        , tmpMI_out.Summ
+                        , tmpMI_out.Amount
+                        , tmpMI_out.HeadCount
+                  FROM tmpMI_Count AS tmpMI_out
+                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out.GoodsId
+                  Where tmpMI_out.isActive = FALSE
+                    AND inIsMovement       = TRUE
+                    AND inIsPartion        = TRUE
+                 UNION ALL
+                  SELECT  tmpMI_out_Sum.GoodsId       
+                        , tmpMI_out_Sum.MovementId
+                        , tmpMI_out_Sum.Summ
+                        , tmpMI_out_Sum.Amount
+                        , 0 AS HeadCount
+                  FROM tmpMI_sum AS tmpMI_out_Sum
+                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out_Sum.GoodsId
+                  Where tmpMI_out_Sum.isActive = FALSE
+                    AND inIsMovement           = TRUE
+                    AND inIsPartion            = TRUE
+                 ) AS tmpMI 
+            GROUP BY tmpMI.GoodsId
+                   , tmpMI.MovementId
+           )
+                     
       -- –≈«”Ћ№“ј“
       SELECT CAST (tmpOperationGroup.MovementId AS Integer)    AS MovementId
            , CAST (tmpOperationGroup.InvNumber AS TVarChar)    AS InvNumber
@@ -359,11 +401,9 @@ BEGIN
              END ::TVarChar AS PartionGoods_main
           */
            , tmpOperationGroup.PartionGoods_main ::TVarChar
-          -- , Right (tmpOperationGroup.PartionGoods_main ,10) ::TDateTime AS  PartionGoods_Date 
+           , Right (tmpOperationGroup.PartionGoods_main ,10) ::TVarChar  AS  PartionGoods_Date 
            , Object_From_partion.ObjectCode::Integer    AS FromCode_partion
            , Object_From_partion.ValueData ::TVarChar   AS FromName_partion
-           
-           
            
            , Object_GoodsGroup.Id                              AS GoodsGroupId
            , Object_GoodsGroup.ValueData                       AS GoodsGroupName
@@ -375,10 +415,10 @@ BEGIN
            , Object_StorageLine_out.ValueData                  AS StorageLineName
            , Object_StorageLine_in.ValueData                   AS StorageLineName_in
 
-           , COALESCE (tmpMI_total.Amount,    COALESCE (tmpMI_totalPartion.Amount,    tmpOperationGroup.Amount))    :: TFloat AS Amount
-           , COALESCE (tmpMI_total.HeadCount, COALESCE (tmpMI_totalPartion.HeadCount, tmpOperationGroup.HeadCount)) :: TFloat AS HeadCount
+           , COALESCE (tmpMI_total.Amount,    tmpMI_totalPartion.Amount,    tmpMI_totalMovement.Amount,    tmpOperationGroup.Amount)    :: TFloat AS Amount
+           , COALESCE (tmpMI_total.HeadCount, tmpMI_totalPartion.HeadCount, tmpMI_totalMovement.HeadCount, tmpOperationGroup.HeadCount) :: TFloat AS HeadCount
 
-           , COALESCE (tmpMI_total.Summ, COALESCE (tmpMI_totalPartion.Summ, tmpOperationGroup.Summ))                :: TFloat AS Summ
+           , COALESCE (tmpMI_total.Summ, tmpMI_totalPartion.Summ, tmpMI_totalMovement.Summ, tmpOperationGroup.Summ)                     :: TFloat AS Summ
 
            , Object_GoodsGroupChild.ValueData AS ChildGoodsGroupName 
            , Object_GoodsChild.ObjectCode     AS ChildGoodsCode
@@ -403,6 +443,7 @@ BEGIN
                  , CASE WHEN inIsMovement = True THEN tmpMI.ToId ELSE 0 END                            AS ToId
                  , CASE WHEN inIsPartion = True THEN tmpMI.PartionGoods ELSE '' END                    AS PartionGoods
                  , CASE WHEN inIsPartion = True THEN tmpMI.PartionGoods_main ELSE '' END               AS PartionGoods_main
+                 , CASE WHEN inIsPartion = True THEN tmpMI.FromCode_partion ELSE 0 END                 AS FromCode_partion
                  , tmpMI.GoodsId  
                  , tmpMI.GoodsKindId
                  , tmpMI.StorageLineId_in
@@ -422,7 +463,8 @@ BEGIN
                         , tmpMI_out.FromId
                         , tmpMI_out.ToId
                         , tmpMI_out.PartionGoods
-                        , tmpMI_out.PartionGoods_main 
+                        , tmpMI_out.PartionGoods_main
+                        , tmpMI_out.FromCode_partion
                         , tmpMI_out.GoodsId
                         , tmpMI_out.GoodsKindId
                         , tmpMI_out.StorageLineId_out
@@ -450,7 +492,8 @@ BEGIN
                         , tmpMI_out_Sum.FromId
                         , tmpMI_out_Sum.ToId
                         , tmpMI_out_Sum.PartionGoods
-                        , tmpMI_out_Sum.PartionGoods_main 
+                        , tmpMI_out_Sum.PartionGoods_main
+                        , tmpMI_out_Sum.FromCode_partion 
                         , tmpMI_out_Sum.GoodsId
                         , tmpMI_out_Sum.GoodsKindId
                         , tmpMI_out_Sum.StorageLineId_out
@@ -471,7 +514,7 @@ BEGIN
                        JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out_Sum.GoodsId
                        JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMI_in_Sum.GoodsId OR inisDetail = False
                   Where tmpMI_out_Sum.isActive = FALSE
-                         
+ 
                  ) AS tmpMI 
                  GROUP BY CASE WHEN inIsMovement = True THEN tmpMI.MovementId ELSE 0 END
                         , CASE WHEN inIsMovement = True THEN tmpMI.InvNumber ELSE '' END
@@ -480,6 +523,7 @@ BEGIN
                         , CASE WHEN inIsMovement = True THEN tmpMI.ToId ELSE 0 END
                         , CASE WHEN inIsPartion  = True THEN tmpMI.PartionGoods ELSE '' END 
                         , CASE WHEN inIsPartion  = True THEN tmpMI.PartionGoods_main ELSE '' END
+                        , CASE WHEN inIsPartion  = True THEN tmpMI.FromCode_partion ELSE 0 END
                         , tmpMI.GoodsId 
                         , tmpMI.GoodsKindId     
                         , tmpMI.ChildGoodsId
@@ -492,6 +536,9 @@ BEGIN
              LEFT JOIN tmpMI_total        ON tmpMI_total.GoodsId             = tmpOperationGroup.GoodsId
              LEFT JOIN tmpMI_totalPartion ON tmpMI_totalPartion.GoodsId      = tmpOperationGroup.GoodsId
                                          AND tmpMI_totalPartion.PartionGoods = tmpOperationGroup.PartionGoods
+             LEFT JOIN tmpMI_totalMovement ON tmpMI_totalMovement.GoodsId    = tmpOperationGroup.GoodsId
+                                          AND tmpMI_totalMovement.MovementId = tmpOperationGroup.MovementId
+
 
              LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
              LEFT JOIN Object AS Object_GoodsChild on Object_GoodsChild.Id = tmpOperationGroup.ChildGoodsId
@@ -520,7 +567,9 @@ BEGIN
                     ON lfObjectHistory_PriceListItem.GoodsId = Object_GoodsChild.Id
                    AND lfObjectHistory_PriceListItem.GoodsKindId IS NULL  
                    
-             LEFT JOIN Object AS Object_From_partion ON Object_From_partion.ObjectCode = LEFT (SUBstring (tmpOperationGroup.PartionGoods_main, Position ('-' in tmpOperationGroup.PartionGoods_main ) + 1),  Position ('-' in SUBSTRING (tmpOperationGroup.PartionGoods_main, Position ('-' in tmpOperationGroup.PartionGoods_main ) + 1)) -1 ) ::Integer
+             LEFT JOIN Object AS Object_From_partion ON Object_From_partion.ObjectCode = tmpOperationGroup.FromCode_partion
+                                                    AND Object_From_partion.DescId = zc_Object_Partner()
+                                                    AND COALESCE (tmpOperationGroup.FromCode_partion,0) <> 0
 
 
       ORDER BY tmpOperationGroup.InvNumber
