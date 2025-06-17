@@ -5148,13 +5148,14 @@ begin
   ORDRSP := ORDRSPXML.NewORDRSP;
   //
   ORDRSP.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-  ORDRSP.Date := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
-  ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  ORDRSP.Date := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+  ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
   ORDRSP.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
-  ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+  // Номер договору на поставку
+  ORDRSP.CAMPAIGNNUMBER:= HeaderDataSet.FieldByName('ContractName').asString;
+  // Дата договору
+  ORDRSP.CAMPAIGNNUMBERDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
 
   if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
   then
@@ -5234,16 +5235,12 @@ begin
   DESADV := DesadvXML.NewDESADV;
   //
   DESADV.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-  DESADV.Date := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DESADV.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  DESADV.Date := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+  DESADV.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
   DESADV.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
-  DESADV.ORDERDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+  DESADV.ORDERDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
   DESADV.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-  DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+  DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
   // Номер договору на поставку
   DESADV.CAMPAIGNNUMBER:= HeaderDataSet.FieldByName('ContractName').asString;
   // Дата договору

@@ -25,8 +25,11 @@ type
     function Get_ORDERDATE: UnicodeString;
     function Get_DELIVERYDATE: UnicodeString;
     function Get_DELIVERYTIME: UnicodeString;
+    function Get_CAMPAIGNNUMBER: UnicodeString;
+    function Get_CAMPAIGNNUMBERDATE: UnicodeString;
     function Get_ACTION: UnicodeString;
     function Get_HEAD: IXMLHEADType;
+
     procedure Set_NUMBER(Value: UnicodeString);
     procedure Set_DATE(Value: UnicodeString);
     procedure Set_TIME(Value: UnicodeString);
@@ -34,6 +37,8 @@ type
     procedure Set_ORDERDATE(Value: UnicodeString);
     procedure Set_DELIVERYDATE(Value: UnicodeString);
     procedure Set_DELIVERYTIME(Value: UnicodeString);
+    procedure Set_CAMPAIGNNUMBER(Value: UnicodeString);
+    procedure Set_CAMPAIGNNUMBERDate(Value: UnicodeString);
     procedure Set_ACTION(Value: UnicodeString);
     { Methods & Properties }
     property NUMBER: UnicodeString read Get_NUMBER write Set_NUMBER;
@@ -43,6 +48,8 @@ type
     property ORDERDATE: UnicodeString read Get_ORDERDATE write Set_ORDERDATE;
     property DELIVERYDATE: UnicodeString read Get_DELIVERYDATE write Set_DELIVERYDATE;
     property DELIVERYTIME: UnicodeString read Get_DELIVERYTIME write Set_DELIVERYTIME;
+    property CAMPAIGNNUMBER: UnicodeString read Get_CAMPAIGNNUMBER write Set_CAMPAIGNNUMBER;
+    property CAMPAIGNNUMBERDate: UnicodeString read Get_CAMPAIGNNUMBER write Set_CAMPAIGNNUMBERDate;
     property ACTION: UnicodeString read Get_ACTION write Set_ACTION;
     property HEAD: IXMLHEADType read Get_HEAD;
   end;
@@ -156,8 +163,11 @@ type
     function Get_ORDERDATE: UnicodeString;
     function Get_DELIVERYDATE: UnicodeString;
     function Get_DELIVERYTIME: UnicodeString;
+    function Get_CAMPAIGNNUMBER: UnicodeString;
+    function Get_CAMPAIGNNUMBERDate: UnicodeString;
     function Get_ACTION: UnicodeString;
     function Get_HEAD: IXMLHEADType;
+
     procedure Set_NUMBER(Value: UnicodeString);
     procedure Set_DATE(Value: UnicodeString);
     procedure Set_TIME(Value: UnicodeString);
@@ -165,6 +175,8 @@ type
     procedure Set_ORDERDATE(Value: UnicodeString);
     procedure Set_DELIVERYDATE(Value: UnicodeString);
     procedure Set_DELIVERYTIME(Value: UnicodeString);
+    procedure Set_CAMPAIGNNUMBER(Value: UnicodeString);
+    procedure Set_CAMPAIGNNUMBERDate(Value: UnicodeString);
     procedure Set_ACTION(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
@@ -344,6 +356,26 @@ end;
 procedure TXMLORDRSPType.Set_DELIVERYTIME(Value: UnicodeString);
 begin
   ChildNodes['DELIVERYTIME'].NodeValue := Value;
+end;
+
+function TXMLORDRSPType.Get_CAMPAIGNNUMBER: UnicodeString;
+begin
+  Result := ChildNodes['CAMPAIGNNUMBER'].Text;
+end;
+
+procedure TXMLORDRSPType.Set_CAMPAIGNNUMBER(Value: UnicodeString);
+begin
+  ChildNodes['CAMPAIGNNUMBER'].NodeValue := Value;
+end;
+
+function TXMLORDRSPType.Get_CAMPAIGNNUMBERDate: UnicodeString;
+begin
+  Result := ChildNodes['CAMPAIGNNUMBERDATE'].Text;
+end;
+
+procedure TXMLORDRSPType.Set_CAMPAIGNNUMBERDate(Value: UnicodeString);
+begin
+  ChildNodes['CAMPAIGNNUMBERDATE'].NodeValue := Value;
 end;
 
 function TXMLORDRSPType.Get_ACTION: UnicodeString;
