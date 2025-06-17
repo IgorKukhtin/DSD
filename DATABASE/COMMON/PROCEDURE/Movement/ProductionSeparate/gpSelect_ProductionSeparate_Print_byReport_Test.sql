@@ -536,8 +536,8 @@ BEGIN
            , tmpCursor1.PriceFact_4134
            , SUM(tmpCursor1.PriceFact * tmpCursor1.Amount) ::TFloat AS SummFact_4134
            --, CASE WHEN COALESCE (SUM (tmpCursor1.Amount_4134),0) <> 0 THEN SUM (tmpCursor1.summ_4134) /SUM (tmpCursor1.Amount_4134) ELSE 0 END   AS price_4134
-           --, SUM (tmpCursor1.Amount_4134) AS Amount_4134
-           , tmpMain_Group.CountMaster AS Amount_4134
+           , MAX (tmpCursor1.Amount_4134) AS Amount_4134
+           --, tmpMain_Group.CountMaster AS Amount_4134
            --, tmpCursor1.Persent_4134 
            , CASE WHEN COALESCE (SUM (tmpCursor1.CountMaster),0) <> 0 THEN 100  * SUM (tmpCursor1.Amount_4134) / SUM (tmpCursor1.CountMaster) ELSE 0 END :: TFloat AS Persent_4134
            , SUM (tmpCursor1.AmountMaster_4134)  AS AmountMaster_4134    
