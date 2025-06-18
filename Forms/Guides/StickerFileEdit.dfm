@@ -1364,6 +1364,6 @@
         MultiSelectSeparator = ','
       end>
     Left = 416
-    Top = 11
+    Top = 19
   end
 end

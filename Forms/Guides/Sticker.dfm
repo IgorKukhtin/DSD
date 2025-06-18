@@ -88,6 +88,24 @@ object StickerForm: TStickerForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object InfoTop_StickerFile: TcxGridDBColumn
+        Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091' ('#1064#1040#1041#1051#1054#1053' '#1080#1085#1076#1080#1074#1080#1076'.)'
+        DataBinding.FieldName = 'InfoTop_StickerFile'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091' ('#1064#1040#1041#1051#1054#1053' '#1080#1085#1076#1080#1074#1080#1076'.)'
+        Options.Editing = False
+        Width = 153
+      end
+      object InfoTop_StickerFile_inf: TcxGridDBColumn
+        Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091' ('#1064#1040#1041#1051#1054#1053' '#1076#1083#1103' '#1042#1057#1045#1061' '#1101#1090#1086#1081' '#1058#1052')'
+        DataBinding.FieldName = 'InfoTop_StickerFile_inf'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091' ('#1064#1040#1041#1051#1054#1053' '#1076#1083#1103' '#1042#1057#1045#1061' '#1101#1090#1086#1081' '#1058#1052')'
+        Options.Editing = False
+        Width = 153
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1101#1090#1080#1082#1077#1090#1082#1080
         DataBinding.FieldName = 'Code'
@@ -954,14 +972,14 @@ object StickerForm: TStickerForm
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
-    Top = 160
+    Top = 184
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     MasterFields = 'Id'
     Params = <>
-    Left = 80
-    Top = 160
+    Left = 72
+    Top = 184
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1025,8 +1043,8 @@ object StickerForm: TStickerForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 120
+    Left = 280
+    Top = 208
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1321,8 +1339,8 @@ object StickerForm: TStickerForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 248
-    Top = 136
+    Left = 224
+    Top = 216
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -2675,6 +2693,15 @@ object StickerForm: TStickerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inInfoTop'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'InfoTop'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inValue1'
         Value = Null
         Component = ClientDataSet
@@ -2760,8 +2787,8 @@ object StickerForm: TStickerForm
     Top = 216
   end
   object PeriodChoice: TPeriodChoice
-    Left = 480
-    Top = 120
+    Left = 456
+    Top = 200
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -2772,7 +2799,7 @@ object StickerForm: TStickerForm
         Component = PeriodChoice
       end>
     Left = 536
-    Top = 160
+    Top = 200
   end
   object CDSProperty: TClientDataSet
     Aggregates = <>
@@ -3129,8 +3156,8 @@ object StickerForm: TStickerForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 836
-    Top = 137
+    Left = 828
+    Top = 217
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_StickerProperty_Print'
@@ -3455,8 +3482,8 @@ object StickerForm: TStickerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 623
-    Top = 120
+    Left = 671
+    Top = 224
   end
   object spSelectPrintJPGLen: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_StickerProperty_Print'

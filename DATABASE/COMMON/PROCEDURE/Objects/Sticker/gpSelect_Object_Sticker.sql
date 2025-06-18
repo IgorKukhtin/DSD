@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar -- , StickerName TVarC
              , StickerSortId Integer, StickerSortName TVarChar
              , StickerNormId Integer, StickerNormName TVarChar
              , StickerFileId Integer, StickerFileName TVarChar, StickerFileName_inf TVarChar, TradeMarkName_StickerFile TVarChar
+             , InfoTop_StickerFile TBlob, InfoTop_StickerFile_inf TBlob
              , StickerFileId_70_70 Integer, StickerFileName_70_70 TVarChar, TradeMarkName_StickerFile_70_70 TVarChar
              , Info TBlob, InfoTop TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
@@ -41,6 +42,7 @@ BEGIN
             -- Шаблоны "по умолчанию" - для конкретной ТМ
           , tmpStickerFile AS (SELECT Object_StickerFile.ValueData                    AS Name
                                     , ObjectLink_StickerFile_TradeMark.ChildObjectId  AS TradeMarkId
+                                    , ObjectBlob_StickerFile_InfoTop.ValueData        AS InfoTop
                                FROM Object AS Object_StickerFile
                                     LEFT JOIN ObjectLink AS ObjectLink_StickerFile_Juridical
                                                          ON ObjectLink_StickerFile_Juridical.ObjectId = Object_StickerFile.Id
@@ -53,7 +55,10 @@ BEGIN
                                                              ON ObjectBoolean_Default.ObjectId  = Object_StickerFile.Id
                                                             AND ObjectBoolean_Default.DescId    = zc_ObjectBoolean_StickerFile_Default()
                                                             AND ObjectBoolean_Default.ValueData = TRUE
-                         
+
+                                    LEFT JOIN ObjectBlob AS ObjectBlob_StickerFile_InfoTop
+                                                         ON ObjectBlob_StickerFile_InfoTop.ObjectId = Object_StickerFile.Id 
+                                                        AND ObjectBlob_StickerFile_InfoTop.DescId = zc_ObjectBlob_StickerFile_InfoTop()                         
                                WHERE Object_StickerFile.DescId   = zc_Object_StickerFile()
                                  AND Object_StickerFile.isErased = FALSE
                                  AND ObjectLink_StickerFile_Juridical.ChildObjectId IS NULL -- !!!обязательно БЕЗ Покупателя!!!
@@ -93,7 +98,8 @@ BEGIN
                                 
                                 , Object_StickerFile.Id             AS StickerFileId
                                 , Object_StickerFile.ValueData      AS StickerFileName
-                                , Object_TradeMark_StickerFile.ValueData  AS TradeMarkName_StickerFile
+                                , Object_TradeMark_StickerFile.ValueData   AS TradeMarkName_StickerFile
+                                , ObjectBlob_StickerFile_InfoTop.ValueData AS InfoTop_StickerFile
 
                                 , Object_StickerFile_70_70.Id        AS StickerFileId_70_70
                                 , Object_StickerFile_70_70.ValueData AS StickerFileName_70_70 
@@ -215,6 +221,10 @@ BEGIN
                                                      AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
                                  LEFT JOIN Object AS Object_TradeMark_StickerFile ON Object_TradeMark_StickerFile.Id = ObjectLink_StickerFile_TradeMark.ChildObjectId
 
+                                 LEFT JOIN ObjectBlob AS ObjectBlob_StickerFile_InfoTop
+                                                      ON ObjectBlob_StickerFile_InfoTop.ObjectId = Object_StickerFile.Id 
+                                                     AND ObjectBlob_StickerFile_InfoTop.DescId = zc_ObjectBlob_StickerFile_InfoTop()
+
                                  LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark_70_70
                                                       ON ObjectLink_StickerFile_TradeMark_70_70.ObjectId = Object_StickerFile_70_70.Id
                                                      AND ObjectLink_StickerFile_TradeMark_70_70.DescId = zc_ObjectLink_StickerFile_TradeMark()
@@ -256,6 +266,8 @@ BEGIN
             , COALESCE (Object_Sticker.StickerFileName, '')  :: TVarChar  AS StickerFileName
             , tmpStickerFile.Name                            :: TVarChar  AS StickerFileName_inf
             , COALESCE (Object_Sticker.TradeMarkName_StickerFile, '')  :: TVarChar  AS TradeMarkName_StickerFile
+            , Object_Sticker.InfoTop_StickerFile                       ::TBlob      AS InfoTop_StickerFile 
+            , tmpStickerFile.InfoTop                                   ::TBlob      AS InfoTop_StickerFile_inf
 
             , COALESCE (Object_Sticker.StickerFileId_70_70, 0)     :: Integer   AS StickerFileId_70_70
             , COALESCE (Object_Sticker.StickerFileName_70_70, '')  :: TVarChar  AS StickerFileName_70_70
@@ -297,6 +309,7 @@ BEGIN
             -- Шаблоны "по умолчанию" - для конкретной ТМ
           , tmpStickerFile AS (SELECT Object_StickerFile.ValueData                    AS Name
                                     , ObjectLink_StickerFile_TradeMark.ChildObjectId  AS TradeMarkId
+                                    , ObjectBlob_StickerFile_InfoTop.ValueData        AS InfoTop
                                FROM Object AS Object_StickerFile
                                     LEFT JOIN ObjectLink AS ObjectLink_StickerFile_Juridical
                                                          ON ObjectLink_StickerFile_Juridical.ObjectId = Object_StickerFile.Id
@@ -309,7 +322,10 @@ BEGIN
                                                              ON ObjectBoolean_Default.ObjectId  = Object_StickerFile.Id
                                                             AND ObjectBoolean_Default.DescId    = zc_ObjectBoolean_StickerFile_Default()
                                                             AND ObjectBoolean_Default.ValueData = TRUE
-                         
+
+                                    LEFT JOIN ObjectBlob AS ObjectBlob_StickerFile_InfoTop
+                                                         ON ObjectBlob_StickerFile_InfoTop.ObjectId = Object_StickerFile.Id 
+                                                        AND ObjectBlob_StickerFile_InfoTop.DescId = zc_ObjectBlob_StickerFile_InfoTop()                         
                                WHERE Object_StickerFile.DescId   = zc_Object_StickerFile()
                                  AND Object_StickerFile.isErased = FALSE
                                  AND ObjectLink_StickerFile_Juridical.ChildObjectId IS NULL -- !!!обязательно БЕЗ Покупателя!!!
@@ -350,7 +366,9 @@ BEGIN
             , Object_StickerFile.Id             AS StickerFileId
             , Object_StickerFile.ValueData      AS StickerFileName
             , tmpStickerFile.Name               AS StickerFileName_inf
-            , Object_TradeMark_StickerFile.ValueData  AS TradeMarkName_StickerFile
+            , Object_TradeMark_StickerFile.ValueData   AS TradeMarkName_StickerFile
+            , ObjectBlob_StickerFile_InfoTop.ValueData AS InfoTop_StickerFile
+            , tmpStickerFile.InfoTop                   AS InfoTop_StickerFile_inf
 
             , Object_StickerFile_70_70.Id                                   AS StickerFileId_70_70
             , (Object_StickerFile_70_70.ValueData  || '_70_70') :: TVarChar AS StickerFileName_70_70 
@@ -480,6 +498,11 @@ BEGIN
                                   ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
                                  AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
              LEFT JOIN Object AS Object_TradeMark_StickerFile ON Object_TradeMark_StickerFile.Id = ObjectLink_StickerFile_TradeMark.ChildObjectId
+
+             LEFT JOIN ObjectBlob AS ObjectBlob_StickerFile_InfoTop
+                                  ON ObjectBlob_StickerFile_InfoTop.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectBlob_StickerFile_InfoTop.DescId = zc_ObjectBlob_StickerFile_InfoTop()
+
 
              LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark_70_70
                                   ON ObjectLink_StickerFile_TradeMark_70_70.ObjectId = Object_StickerFile_70_70.Id

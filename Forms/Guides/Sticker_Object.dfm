@@ -867,6 +867,15 @@ object Sticker_ObjectForm: TSticker_ObjectForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inInfoTop'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'InfoTop'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inValue1'
         Value = Null
         Component = ClientDataSet
