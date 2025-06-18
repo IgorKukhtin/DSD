@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1040#1041#1051#1054#1053'>'
-  ClientHeight = 401
-  ClientWidth = 652
+  ClientHeight = 395
+  ClientWidth = 911
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -602,6 +602,18 @@
     TabOrder = 80
     Width = 97
   end
+  object cxLabel30: TcxLabel
+    Left = 662
+    Top = 8
+    Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
+  end
+  object ceInfoTop: TcxMemo
+    Left = 662
+    Top = 26
+    TabOrder = 82
+    Height = 116
+    Width = 241
+  end
   object ActionList: TActionList
     Top = 100
     object dsdDataSetRefresh: TdsdDataSetRefresh
@@ -683,6 +695,14 @@
         Value = ''
         Component = ceComment
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoTop'
+        Value = Null
+        Component = ceInfoTop
+        DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1227,6 +1247,13 @@
         Value = Null
         Component = cbisSize70
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoTop'
+        Value = Null
+        Component = ceInfoTop
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

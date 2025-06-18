@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  cxCurrencyEdit;
+  cxCurrencyEdit, dsdCommon;
 
 type
   TStickerFileForm = class(TParentForm)

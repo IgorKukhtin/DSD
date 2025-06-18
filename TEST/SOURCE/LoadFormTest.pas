@@ -4275,19 +4275,21 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');
-  exit;
-  {//
+  //exit;
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ObjectForm');
-  }
+  //exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerProperty_ValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerProperty_ValueForm');
   exit;
+
   //Property
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerPropertyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerPropertyEditForm');
-  {
+
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerGroupForm');

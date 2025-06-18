@@ -130,6 +130,13 @@ object StickerFileForm: TStickerFileForm
         HeaderAlignmentVert = vaCenter
         Width = 69
       end
+      object InfoTop: TcxGridDBColumn
+        Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
+        DataBinding.FieldName = 'InfoTop'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 92
+      end
       object Width1: TcxGridDBColumn
         Caption = '1-'#1072#1103
         DataBinding.FieldName = 'Width1'
@@ -842,6 +849,7 @@ object StickerFileForm: TStickerFileForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 368
     Top = 128

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1090#1080#1082#1077#1090#1082#1091'>'
-  ClientHeight = 430
+  ClientHeight = 514
   ClientWidth = 687
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,8 +22,8 @@
     Caption = #1059#1075#1083#1077#1074#1086#1076#1080' <='
   end
   object cxButton1: TcxButton
-    Left = 403
-    Top = 397
+    Left = 419
+    Top = 479
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -32,8 +32,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 544
-    Top = 397
+    Left = 560
+    Top = 479
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -77,13 +77,13 @@
     Width = 312
   end
   object cxLabel7: TcxLabel
-    Left = 346
-    Top = 261
+    Left = 19
+    Top = 425
     Caption = #1064#1040#1041#1051#1054#1053' ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
   end
   object edStickerFile: TcxButtonEdit
-    Left = 346
-    Top = 276
+    Left = 19
+    Top = 440
     Properties.Buttons = <
       item
         Default = True
@@ -94,14 +94,14 @@
     Width = 148
   end
   object edComment: TcxTextEdit
-    Left = 346
-    Top = 316
+    Left = 19
+    Top = 480
     TabOrder = 9
     Width = 327
   end
   object cxLabel8: TcxLabel
-    Left = 346
-    Top = 301
+    Left = 19
+    Top = 465
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceValue1: TcxCurrencyEdit
@@ -270,14 +270,14 @@
   end
   object ceInfo: TcxMemo
     Left = 352
-    Top = 17
+    Top = 20
     TabOrder = 32
-    Height = 239
+    Height = 234
     Width = 327
   end
   object cxLabel15: TcxLabel
-    Left = 346
-    Top = 0
+    Left = 352
+    Top = 4
     Caption = #1057#1086#1089#1090#1072#1074' '#1087#1088#1086#1076#1091#1082#1090#1072
   end
   object cxLabel16: TcxLabel
@@ -329,13 +329,13 @@
     Width = 87
   end
   object cxLabel19: TcxLabel
-    Left = 502
-    Top = 261
+    Left = 175
+    Top = 425
     Caption = #1064#1040#1041#1051#1054#1053' 70_70 ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
   end
   object edStickerFile_70_70: TcxButtonEdit
-    Left = 502
-    Top = 276
+    Left = 175
+    Top = 440
     Properties.Buttons = <
       item
         Default = True
@@ -355,6 +355,18 @@
     Top = 399
     TabOrder = 43
     Width = 312
+  end
+  object ceInfoTop: TcxMemo
+    Left = 352
+    Top = 276
+    TabOrder = 44
+    Height = 185
+    Width = 327
+  end
+  object cxLabel21: TcxLabel
+    Left = 352
+    Top = 260
+    Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
   end
   object ActionList: TActionList
     Left = 305
@@ -492,6 +504,14 @@
         Name = 'inInfo'
         Value = Null
         Component = ceInfo
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoTop'
+        Value = Null
+        Component = ceInfoTop
         DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -814,6 +834,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'InfoTop'
+        Value = Null
+        Component = ceInfoTop
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'StickerFileId_70_70'
         Value = Null
         Component = GuidesStickerFile_70_70
@@ -938,8 +965,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 407
-    Top = 267
+    Left = 80
+    Top = 431
   end
   object GuidesStickerGroup: TdsdGuides
     KeyField = 'Id'
@@ -1118,7 +1145,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 579
-    Top = 259
+    Left = 252
+    Top = 423
   end
 end

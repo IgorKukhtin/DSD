@@ -283,7 +283,7 @@ BEGIN
 
             LEFT JOIN ObjectBlob AS ObjectBlob_InfoTop
                                  ON ObjectBlob_InfoTop.ObjectId = Object_StickerFile.Id 
-                                AND ObjectBlob_InfoTop.DescId = zc_ObjectBlob_Sticker_InfoTop()
+                                AND ObjectBlob_InfoTop.DescId = zc_ObjectBlob_StickerFile_InfoTop()
        WHERE Object_StickerFile.Id = inId;
       
    END IF;
