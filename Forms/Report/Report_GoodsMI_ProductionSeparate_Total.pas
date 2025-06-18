@@ -146,6 +146,10 @@ type
     cxLabel10: TcxLabel;
     edSearchCodeOut: TcxTextEdit;
     FieldFilter_Search: TdsdFieldFilter;
+    edSerchPartionGoods: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    actOpenFormProductionSeparate: TdsdOpenForm;
+    bOpenFormProductionSeparate: TdxBarButton;
   private
     { Private declarations }
   public

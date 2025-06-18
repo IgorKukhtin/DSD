@@ -1325,11 +1325,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournal_byReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournal_byReportForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
  // exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
   exit;
@@ -2582,14 +2582,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossService_ContractChildForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossService_ContractChildForm');
- }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossServiceDialogForm');
   exit;
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_IncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_IncomeForm');
   exit;
@@ -2736,11 +2736,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentMovementDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentMovementDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashPersonal_toPayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashPersonal_toPayForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_PartionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Remains_PartionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_PartionDialogForm'));

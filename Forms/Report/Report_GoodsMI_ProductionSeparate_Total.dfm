@@ -16,19 +16,19 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     Width = 1374
     Height = 303
     TabOrder = 3
-    ExplicitTop = 83
+    ExplicitTop = 124
     ExplicitWidth = 1374
-    ExplicitHeight = 344
+    ExplicitHeight = 303
     ClientRectBottom = 303
     ClientRectRight = 1374
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1374
-      ExplicitHeight = 344
+      ExplicitHeight = 303
       inherited cxGrid: TcxGrid
         Width = 1374
         Height = 303
         ExplicitWidth = 1374
-        ExplicitHeight = 344
+        ExplicitHeight = 303
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -487,14 +487,12 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
   end
   object PanelSearch: TPanel [3]
     Left = 0
-    Top = 57
+    Top = 83
     Width = 1374
     Height = 41
     Align = alTop
     TabOrder = 7
-    ExplicitLeft = -166
-    ExplicitTop = 30
-    ExplicitWidth = 1540
+    ExplicitTop = 77
     object lbSearchCode: TcxLabel
       Left = 0
       Top = 10
@@ -557,6 +555,27 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         144
         21)
       Width = 144
+    end
+    object edSerchPartionGoods: TcxTextEdit
+      Left = 1011
+      Top = 10
+      TabOrder = 6
+      DesignSize = (
+        147
+        21)
+      Width = 147
+    end
+    object cxLabel11: TcxLabel
+      Left = 949
+      Top = 10
+      Caption = #1055#1072#1088#1090#1080#1103':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1601,6 +1620,42 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actOpenFormProductionSeparate: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      ImageIndex = 28
+      FormName = 'TProductionSeparateForm'
+      FormNameParam.Value = 'TProductionSeparateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1753,6 +1808,14 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         item
           Visible = True
           ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bOpenFormProductionSeparate'
         end
         item
           Visible = True
@@ -1975,6 +2038,10 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     end
     object bbPrint_its_gr: TdxBarButton
       Action = actPrint_its_gr
+      Category = 0
+    end
+    object bOpenFormProductionSeparate: TdxBarButton
+      Action = actOpenFormProductionSeparate
       Category = 0
     end
   end
@@ -3706,6 +3773,10 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       item
         Column = ChildGoodsCode
         TextEdit = edSearchCodeIn
+      end
+      item
+        Column = PartionGoods
+        TextEdit = edSerchPartionGoods
       end>
     CheckBoxList = <>
     Left = 576

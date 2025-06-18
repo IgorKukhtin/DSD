@@ -7349,6 +7349,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'isAuto'
         DataType = ftBoolean
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -7357,6 +7358,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -7365,6 +7367,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'AmountToPay'
         DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -7373,6 +7376,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'AmountCash'
         DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -7381,6 +7385,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'SummTransportAdd'
         DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -7389,6 +7394,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'SummTransport'
         DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -7397,6 +7403,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'SummPhone'
         DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -7631,7 +7638,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'BankOutDate'
         DataType = ftDateTime
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 288
@@ -9782,8 +9789,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'ioId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -9817,6 +9823,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'isAuto'
         DataType = ftBoolean
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -10097,7 +10104,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Name = 'ioBankOutDate'
         Value = Null
         DataType = ftDateTime
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
