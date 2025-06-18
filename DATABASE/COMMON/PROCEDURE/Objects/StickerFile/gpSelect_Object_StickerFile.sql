@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_70_70 TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar, ItemName TVarChar
              , Comment TVarChar
+             , InfoTop TBlob
              , Width1 TFloat, Width2 TFloat, Width3 TFloat, Width4 TFloat, Width5 TFloat
              , Width6 TFloat, Width7 TFloat, Width8 TFloat, Width9 TFloat, Width10 TFloat
              , Level1 TFloat, Level2 TFloat
@@ -54,6 +55,7 @@ BEGIN
            , ObjectDesc.ItemName             AS ItemName
 
            , ObjectString_Comment.ValueData  AS Comment
+           , ObjectBlob_InfoTop.ValueData    AS InfoTop
 
            , ObjectFloat_Width1.ValueData    AS Width1
            , ObjectFloat_Width2.ValueData    AS Width2
@@ -245,6 +247,9 @@ BEGIN
                              ON ObjectForm_70_70.ValueData = (Object_StickerFile.ValueData || '_70_70.Sticker') :: TVarChar
                             AND ObjectForm_70_70.DescId    = zc_Object_Form()
 
+            LEFT JOIN ObjectBlob AS ObjectBlob_InfoTop
+                                 ON ObjectBlob_InfoTop.ObjectId = Object_StickerFile.Id 
+                                AND ObjectBlob_InfoTop.DescId = zc_ObjectBlob_Sticker_InfoTop()
       UNION ALL
        SELECT
              0    :: Integer  AS Id
@@ -262,7 +267,8 @@ BEGIN
            , ''   :: TVarChar AS JuridicalName
            , ''   :: TVarChar AS ItemName
 
-           , ''   :: TVarChar AS Comment
+           , ''   :: TVarChar   AS Comment
+           , CAST ('' as TBlob) AS isInfoTop
 
            , CAST (0 as TFloat)  AS Width1
            , CAST (0 as TFloat)  AS Width2
@@ -308,6 +314,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.06.25         *
  02.09.23         *
  19.12.17         *
  23.10.17         *

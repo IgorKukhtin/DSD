@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerNormId Integer, StickerNormName TVarChar
              , StickerFileId Integer, StickerFileName TVarChar
              , StickerFileId_70_70 Integer, StickerFileName_70_70 TVarChar
-             , isInfo TBlob
+             , isInfo TBlob, InfoTop TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
              , Value6 TFloat, Value7 TFloat, Value8 TFloat
               )
@@ -66,6 +66,7 @@ BEGIN
             , CAST ('' as TVarChar)   AS StickerFileName_70_70
                               
             , CAST ('' as TBlob)      AS isInfo
+            , CAST ('' as TBlob)      AS isInfoTop
                                     
             , CAST (0 as TFloat)      AS Value1
             , CAST (0 as TFloat)      AS Value2
@@ -111,6 +112,7 @@ BEGIN
 
               --
             , ObjectBlob_Info.ValueData         AS isInfo
+            , ObjectBlob_InfoTop.ValueData      AS InfoTop
                                     
             , ObjectFloat_Value1.ValueData      AS Value1
             , ObjectFloat_Value2.ValueData      AS Value2
@@ -202,6 +204,9 @@ BEGIN
              LEFT JOIN ObjectBlob AS ObjectBlob_Info
                                   ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
                                  AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
+             LEFT JOIN ObjectBlob AS ObjectBlob_InfoTop
+                                  ON ObjectBlob_InfoTop.ObjectId = Object_Sticker.Id 
+                                 AND ObjectBlob_InfoTop.DescId = zc_ObjectBlob_Sticker_InfoTop()
 
        WHERE Object_Sticker.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
 
@@ -215,6 +220,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.06.25         *
  01.09.23         *
  14.02.20         *
  23.10.17         *

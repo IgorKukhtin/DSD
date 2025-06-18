@@ -15,13 +15,19 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, In
                                                           , TFloat, TFloat, TFloat, TFloat
                                                           , Boolean, TVarChar);*/
 
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar
+/*DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , TFloat, TFloat, TFloat, TFloat
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , TFloat, TFloat, TFloat, TFloat
+                                                          , Boolean, Boolean, TVarChar);*/
+
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TBlob
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , TFloat, TFloat, TFloat, TFloat
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , TFloat, TFloat, TFloat, TFloat
                                                           , Boolean, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
    INOUT ioId                       Integer,     -- ид
@@ -30,6 +36,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
       IN inTradeMarkId              Integer,     --
       IN inLanguageName             TVarChar,    --
       IN inComment                  TVarChar,    -- Примечание
+      IN inInfoTop                  TBlob   , --
       IN inWidth1                   TFloat, 
       IN inWidth2                   TFloat,
       IN inWidth3                   TFloat,
@@ -187,6 +194,9 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerFile_Language(), ioId, vbLanguageId);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBlob (zc_ObjectBlob_StickerFile_InfoTop(), ioId, inInfoTop);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -197,6 +207,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.06.25         *
  02.09.23         *
  11.04.23         *
  08.05.18         *

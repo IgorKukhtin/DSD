@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , Comment TVarChar
+             , InfoTop TBlob
              , Width1 TFloat, Width2 TFloat, Width3 TFloat, Width4 TFloat, Width5 TFloat
              , Width6 TFloat, Width7 TFloat, Width8 TFloat, Width9 TFloat, Width10 TFloat
              , Level1 TFloat, Level2 TFloat
@@ -47,7 +48,8 @@ BEGIN
            , CAST (0 as Integer)       AS JuridicalId
            , CAST ('' as TVarChar)     AS JuridicalName
            
-           , CAST ('' as TVarChar)     AS Comment
+           , CAST ('' as TVarChar)     AS Comment 
+           , CAST ('' as TBlob)        AS isInfoTop
 
            , CAST (0 as TFloat)        AS Width1
            , CAST (0 as TFloat)        AS Width2
@@ -101,6 +103,7 @@ BEGIN
            , Object_Juridical.ValueData     AS JuridicalName
            
            , ObjectString_Comment.ValueData AS Comment
+           , ObjectBlob_InfoTop.ValueData   AS InfoTop
 
            , ObjectFloat_Width1.ValueData      AS Width1
            , ObjectFloat_Width2.ValueData      AS Width2
@@ -278,6 +281,9 @@ BEGIN
                                   ON ObjectFloat_Left2_70_70.ObjectId = Object_StickerFile.Id 
                                  AND ObjectFloat_Left2_70_70.DescId = zc_ObjectFloat_StickerFile_Left2_70_70()
 
+            LEFT JOIN ObjectBlob AS ObjectBlob_InfoTop
+                                 ON ObjectBlob_InfoTop.ObjectId = Object_StickerFile.Id 
+                                AND ObjectBlob_InfoTop.DescId = zc_ObjectBlob_Sticker_InfoTop()
        WHERE Object_StickerFile.Id = inId;
       
    END IF;
@@ -289,6 +295,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.06.25         *
  11.04.23         *
  08.05.18         *
  19.12.17         *

@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer,Code Integer, Comment TVarChar
              , StickerNormId Integer, StickerNormName TVarChar
              , StickerFileId Integer, StickerFileName TVarChar, StickerFileName_inf TVarChar, TradeMarkName_StickerFile TVarChar
              , StickerFileId_70_70 Integer, StickerFileName_70_70 TVarChar, TradeMarkName_StickerFile_70_70 TVarChar
-             , Info TBlob
+             , Info TBlob, InfoTop TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
              , Value6 TFloat, Value7 TFloat, Value8 TFloat 
              , Value9 TVarChar
@@ -138,6 +138,7 @@ BEGIN
                                 , Object_TradeMark_StickerFile_70_70.ValueData  AS TradeMarkName_StickerFile_70_70
                                                   
                                 , ObjectBlob_Info.ValueData         AS Info
+                                , ObjectBlob_InfoTop.ValueData      AS InfoTop
                                                         
                                 , ObjectFloat_Value1.ValueData      AS Value1
                                 , ObjectFloat_Value2.ValueData      AS Value2
@@ -241,6 +242,9 @@ BEGIN
                                  LEFT JOIN ObjectBlob AS ObjectBlob_Info
                                                       ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
                                                      AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
+                                 LEFT JOIN ObjectBlob AS ObjectBlob_InfoTop
+                                                      ON ObjectBlob_InfoTop.ObjectId = Object_Sticker.Id 
+                                                     AND ObjectBlob_InfoTop.DescId = zc_ObjectBlob_Sticker_InfoTop()
                     
                                  LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
                                                       ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
@@ -463,6 +467,7 @@ BEGIN
             , COALESCE (Object_Sticker.TradeMarkName_StickerFile_70_70, '')  :: TVarChar  AS TradeMarkName_StickerFile_70_70
                               
             , COALESCE (Object_Sticker.Info, '')             :: TBlob     AS Info
+            , COALESCE (Object_Sticker.InfoTop, '')          :: TBlob     AS InfoTop
                                     
             , COALESCE (Object_Sticker.Value1, 0)            :: TFloat    AS Value1
             , COALESCE (Object_Sticker.Value2, 0)            :: TFloat    AS Value2
@@ -600,6 +605,7 @@ BEGIN
                                 , Object_TradeMark_StickerFile_70_70.ValueData AS TradeMarkName_StickerFile_70_70
 
                                 , ObjectBlob_Info.ValueData         AS Info
+                                , ObjectBlob_InfoTop.ValueData      AS InfoTop
                                                         
                                 , ObjectFloat_Value1.ValueData      AS Value1
                                 , ObjectFloat_Value2.ValueData      AS Value2
@@ -702,6 +708,10 @@ BEGIN
                                  LEFT JOIN ObjectBlob AS ObjectBlob_Info
                                                       ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
                                                      AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
+
+                                 LEFT JOIN ObjectBlob AS ObjectBlob_InfoTop
+                                                      ON ObjectBlob_InfoTop.ObjectId = Object_Sticker.Id 
+                                                     AND ObjectBlob_InfoTop.DescId = zc_ObjectBlob_Sticker_InfoTop()
                     
                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                                       ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
@@ -922,6 +932,7 @@ BEGIN
             , Object_Sticker.TradeMarkName_StickerFile_70_70
             
             , Object_Sticker.Info
+            , Object_Sticker.InfoTop
             , Object_Sticker.Value1
             , Object_Sticker.Value2
             , Object_Sticker.Value3
@@ -990,6 +1001,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.06.25         *
  27.05.25         * Value9
  13.06.24         * isNormInDays_not
  01.09.23         *

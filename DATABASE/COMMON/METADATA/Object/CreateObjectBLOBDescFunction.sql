@@ -51,6 +51,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectBlob_Sticker_Info() RETURNS integer AS $BODY
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
    SELECT zc_object_Sticker(), 'zc_ObjectBlob_Sticker_Info','Состав продукта' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_Sticker_Info');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBlob_Sticker_InfoTop() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_Sticker_InfoTop'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
+   SELECT zc_object_Sticker(), 'zc_ObjectBlob_Sticker_InfoTop','Инфо - Оператор ринку' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_Sticker_InfoTop');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBlob_StickerFile_InfoTop() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_StickerFile_InfoTop'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
+   SELECT zc_object_StickerFile(), 'zc_ObjectBlob_StickerFile_InfoTop','Инфо - Оператор ринку' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_StickerFile_InfoTop');
+
+
+ 
+
 CREATE OR REPLACE FUNCTION zc_ObjectBlob_User_Helsi_Key() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_User_Helsi_Key'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
    SELECT zc_Object_User(), 'zc_ObjectBlob_User_Helsi_Key','Файловый ключь' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_User_Helsi_Key');
