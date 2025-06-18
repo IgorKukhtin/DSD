@@ -125,7 +125,7 @@ BEGIN
 
 
      
-     IF COALESCE (inMovementId, 0) = 0 AND vbUserId = 5
+     IF COALESCE (inMovementId, 0) = 0 -- AND vbUserId = 5
      THEN
          RETURN;
      END IF;
@@ -525,6 +525,8 @@ BEGIN
                                                                    AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                  WHERE CLO_PersonalServiceList.ObjectId = vbPersonalServiceListId
                                    AND CLO_PersonalServiceList.DescId   = zc_ContainerLinkObject_PersonalServiceList()
+                                   AND inMovementId > 0
+
                                 )
 
        , tmpMIContainer_pay_dop AS (SELECT tmpContainer_pay.MemberId
@@ -631,12 +633,12 @@ BEGIN
                       AND MovementItemString.DescId IN (zc_MIString_Comment()
                                                       , zc_MIString_Number()
                                                        )
-                      AND inMovementId <> 0
+                      AND inMovementId > 0
                   )
      , MIFloat AS (SELECT *
                    FROM MovementItemFloat
                    WHERE MovementItemFloat.MovementItemId IN (SELECT tmpAll.MovementItemId FROM tmpAll) 
-                   AND inMovementId <> 0
+                   AND inMovementId > 0
                   )
 
      , MIBoolean AS (SELECT *
@@ -646,7 +648,7 @@ BEGIN
                                                         , zc_MIBoolean_PriceNalog()
                                                         , zc_MIBoolean_isAuto()
                                                         ) 
-                       AND inMovementId <> 0
+                       AND inMovementId > 0
                     )
 
      , MIDate AS (SELECT *
@@ -654,7 +656,7 @@ BEGIN
                   WHERE MovementItemDate.MovementItemId IN (SELECT tmpAll.MovementItemId FROM tmpAll)
                     AND MovementItemDate.DescId IN (zc_MIDate_BankOut()
                                                      )  
-                    AND inMovementId <> 0
+                    AND inMovementId > 0
                  )
      , MILO AS (SELECT *
                 FROM MovementItemLinkObject
@@ -662,7 +664,7 @@ BEGIN
                   AND MovementItemLinkObject.DescId IN (zc_MILinkObject_FineSubject()
                                                       , zc_MILinkObject_UnitFineSubject() 
                                                    )
-                  AND inMovementId <> 0
+                  AND inMovementId > 0
                )
 
      , MILO_num AS (SELECT *
@@ -672,7 +674,7 @@ BEGIN
                                                           , zc_MILinkObject_BankSecondTwo_num() 
                                                           , zc_MILinkObject_BankSecondDiff_num()
                                                        )
-                      AND inMovementId <> 0
+                      AND inMovementId > 0
                    )
 
      , tmpMI_card_b2 AS (SELECT tmpMI.MemberId_Personal
@@ -685,7 +687,7 @@ BEGIN
                               LEFT JOIN MIFloat AS MIFloat_SummAvCardSecondRecalc
                                                           ON MIFloat_SummAvCardSecondRecalc.MovementItemId = tmpMI.MovementItemId
                                                          AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
-                         WHERE inMovementId <> 0
+                         WHERE inMovementId > 0
                          GROUP BY tmpMI.MemberId_Personal
                         )
      , tmpObjectString_Member AS (SELECT *
