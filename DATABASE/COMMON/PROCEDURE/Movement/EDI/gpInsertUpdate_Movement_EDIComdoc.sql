@@ -1,6 +1,9 @@
 -- Function: gpInsertUpdate_Movement_EDI()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
+-- !!!не удалять!!!
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
+--
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inOrderInvNumber      TVarChar  , -- Номер заявки контрагента
@@ -16,6 +19,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inDesc                TVarChar  , -- тип документа
     IN inGLNPlace            TVarChar  , -- Код GLN - место доставки
     IN inComDocDate          TDateTime , -- Дата заявки контрагента
+    IN inDealId              TVarChar  , -- внутрішній ІД замовлення у системі ВЧАСНО
+    IN inVchasnoId           TVarChar  , -- ІД замовлення у системі ВЧАСНО
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, GoodsPropertyId Integer) -- Классификатор товаров
@@ -343,11 +348,44 @@ BEGIN
 
 
 
+     -- DealId - внутрішній ІД замовлення у системі ВЧАСНО
+     IF TRIM (COALESCE (inDealId, '')) <> ''
+     THEN
+         -- Проверка
+         IF NOT EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.DescId = zc_MovementString_DealId() AND MS.MovementId = vbMovementId AND MS.ValueData = inDealId)
+         THEN
+             RAISE EXCEPTION 'Системная Ошибка.Не найден DealId = <%> %для vbMovementId = <%> %не сохранится inVchasnoId = <%>'
+                           , inDealId
+                           , CHR (13)
+                           , vbMovementId
+                           , CHR (13)
+                           , inVchasnoId
+                            ;
+         END IF;
+
+         -- НЕ надо сохранять
+         -- PERFORM lpInsertUpdate_MovementString (zc_MovementString_DealId(), vbMovementId, inDealId);
+
+     END IF;
+     -- VchasnoId - ІД замовлення у системі ВЧАСНО
+     IF TRIM (COALESCE (inVchasnoId, '')) <> ''
+     THEN
+         -- надо сохранять
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_VchasnoId(), vbMovementId, inVchasnoId);
+     END IF;
+
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
-     -- сохранили протокол
-     PERFORM lpInsert_Movement_EDIEvents (vbMovementId, 'Загрузка COMDOC из EDI', vbUserId);
+     IF TRIM (COALESCE (inDealId, '')) <> ''
+     THEN
+         -- сохранили протокол
+         PERFORM lpInsert_Movement_EDIEvents (vbMovementId, 'Загрузка Comdoc из Вчасно EDI', vbUserId);
+     ELSE
+         -- сохранили протокол
+         PERFORM lpInsert_Movement_EDIEvents (vbMovementId, 'Загрузка COMDOC из EDI', vbUserId);
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, vbIsInsert);
