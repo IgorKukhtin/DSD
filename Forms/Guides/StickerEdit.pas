@@ -85,6 +85,8 @@ type
     edStickerFile_70_70: TcxButtonEdit;
     cxLabel20: TcxLabel;
     edValue9: TcxTextEdit;
+    ceInfoTop: TcxMemo;
+    cxLabel21: TcxLabel;
 
   private
     { Private declarations }

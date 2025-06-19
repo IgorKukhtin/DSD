@@ -136,6 +136,16 @@ type
     mactPrint_Order3: TMultiAction;
     actPrint_3: TdsdPrintAction;
     bbPrint_Order3: TdxBarButton;
+    actPrintCell_pak_copy2: TdsdPrintAction;
+    actPrintCell_pak_copy3: TdsdPrintAction;
+    mactPrint_OrderCell_pac_copy2: TMultiAction;
+    mactPrint_OrderCell_pac_copy3: TMultiAction;
+    mactPrint_OrderCellPak_list2: TMultiAction;
+    mactPrint_OrderCellPak_list3: TMultiAction;
+    mactPrint_OrderCell_Pak_copy2: TMultiAction;
+    mactPrint_OrderCell_Pak_copy3: TMultiAction;
+    bbPrint_OrderCell_Pak_copy2: TdxBarButton;
+    bbPrint_OrderCell_Pak_copy3: TdxBarButton;
   private
     { Private declarations }
   public

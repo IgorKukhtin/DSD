@@ -261,6 +261,13 @@ object Sticker_ListForm: TSticker_ListForm
         HeaderAlignmentVert = vaCenter
         Width = 63
       end
+      object InfoTop: TcxGridDBColumn
+        Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
+        DataBinding.FieldName = 'InfoTop'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 63
+      end
       object Value1: TcxGridDBColumn
         Caption = #1059#1075#1083#1077#1074#1086#1076#1080' '#1085#1077' '#1073#1086#1083#1100#1096#1077
         DataBinding.FieldName = 'Value1'
@@ -2462,6 +2469,15 @@ object Sticker_ListForm: TSticker_ListForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Info'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoTop'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'InfoTop'
         DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','

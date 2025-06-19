@@ -20,7 +20,8 @@ uses
   Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
-  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar, cxCheckBox;
+  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar, cxCheckBox,
+  cxMemo, dsdCommon;
 
 type
   TStickerFileEditForm = class(TParentForm)
@@ -90,6 +91,8 @@ type
     cxLabel28: TcxLabel;
     cxLabel29: TcxLabel;
     cbisSize70: TcxCheckBox;
+    cxLabel30: TcxLabel;
+    ceInfoTop: TcxMemo;
   private
     { Private declarations }
   public
