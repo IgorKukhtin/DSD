@@ -2265,6 +2265,58 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
+    object mactVchasnoEDIComDocLoad: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actVchasnoEDIComDocLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' p'#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' ComDoc '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' test-ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' test-ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDIComDocLoad: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 45658d
+      DateFrom.Component = deStart
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 45658d
+      DateTo.Component = deEnd
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediComDoc
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      spHeader = spHeaderComDoc
+      spList = spListComDoc
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -2605,6 +2657,10 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         end
         item
           Visible = True
+          ItemName = 'bbVchasnoEDIComDocLoad'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton3'
         end>
     end
@@ -2643,6 +2699,10 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     end
     object bbVchasnoEDIComdoc: TdxBarButton
       Action = mactVchasnoEDIComdoc
+      Category = 0
+    end
+    object bbVchasnoEDIComDocLoad: TdxBarButton
+      Action = mactVchasnoEDIComDocLoad
       Category = 0
     end
   end

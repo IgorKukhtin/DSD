@@ -239,6 +239,9 @@ type
     actUpdateVchasnoEdiDelnotTrue: TdsdExecStoredProc;
     actUpdateVchasnoEdiComdocTrue: TdsdExecStoredProc;
     RetailName: TcxGridDBColumn;
+    actVchasnoEDIComDocLoad: TdsdVchasnoEDIAction;
+    mactVchasnoEDIComDocLoad: TMultiAction;
+    bbVchasnoEDIComDocLoad: TdxBarButton;
   private
     { Private declarations }
   public
