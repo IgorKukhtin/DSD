@@ -3,7 +3,7 @@
 -- !!!не удалять!!!
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
 --
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inOrderInvNumber      TVarChar  , -- Номер заявки контрагента
@@ -21,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inComDocDate          TDateTime , -- Дата заявки контрагента
     IN inDealId              TVarChar  , -- внутрішній ІД замовлення у системі ВЧАСНО
     IN inVchasnoId           TVarChar  , -- ІД замовлення у системі ВЧАСНО
+    IN inDocumentId_vch      TVarChar  , -- DocumentId у системі ВЧАСНО
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, GoodsPropertyId Integer) -- Классификатор товаров
@@ -367,12 +368,23 @@ BEGIN
          -- PERFORM lpInsertUpdate_MovementString (zc_MovementString_DealId(), vbMovementId, inDealId);
 
      END IF;
-     -- VchasnoId - ІД замовлення у системі ВЧАСНО
+     -- VchasnoId - ІД у системі ВЧАСНО
      IF TRIM (COALESCE (inVchasnoId, '')) <> ''
      THEN
          -- надо сохранять
          PERFORM lpInsertUpdate_MovementString (zc_MovementString_VchasnoId(), vbMovementId, inVchasnoId);
      END IF;
+     -- DocumentId - ІД у системі ВЧАСНО
+     IF TRIM (COALESCE (inDocumentId_vch, '')) <> ''
+     THEN
+         -- надо сохранять
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_DocumentId_vch(), vbMovementId, inDocumentId_vch);
+
+         -- сохранить - Вчасно-EDI - Comdoc
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_EdiComdoc(), vbMovementId, TRUE);
+
+     END IF;
+     
 
 
      -- пересчитали Итоговые суммы по накладной
