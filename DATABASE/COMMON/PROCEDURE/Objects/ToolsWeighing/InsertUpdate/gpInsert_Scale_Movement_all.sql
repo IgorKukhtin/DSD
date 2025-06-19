@@ -82,6 +82,8 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
+-- test
+-- if inMovementId= 31430956  then update Movement set StatusId = zc_Enum_Status_Complete() where Id= 31430956; end if;
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
@@ -2632,4 +2634,4 @@ order by OperDate
 
 -- тест
 -- SELECT * FROM gpInsert_Scale_Movement_all (inBranchCode:= 2, inMovementId:= 8351040, inOperDate:= CURRENT_DATE, inSession:= '992376') -- Калугин С.В.
--- SELECT * FROM gpInsert_Scale_Movement_all (inBranchCode:= 2, inMovementId:= 8351040, inOperDate:= CURRENT_DATE, inSession:= '539736') -- Чёрный А.А.
+-- SELECT * FROM gpInsert_Scale_Movement_all (inBranchCode:= 18, inMovementId:= 31430956 , inMovementDescId_next:= 0,  inOperDate:= CURRENT_DATE, inOperDatePartner:= CURRENT_DATE, inIsDocInsert         := TRUE ,    inIsOldPeriod         := FALSE ,     inIsDocPartner        := FALSE ,     inIP  :='', inSession:= '539736') -- Чёрный А.А.
