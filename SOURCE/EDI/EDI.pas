@@ -6106,7 +6106,6 @@ begin
           then FResultParam.Value := StringStream.DataString
           else begin
                     // ***уже работает
-
                     FileData := Utf8ToAnsi(StringStream.DataString);
 
                     // Если нет <?xml то берем по <ЕлектроннийДокумент>
@@ -6118,6 +6117,12 @@ begin
 
                     // test
                     //ShowMessage(FileData);
+
+                    // test
+                    AddToLog('');
+                    AddToLog('start ЕлектроннийДокумент FOrderParam.Value : ' + FOrderParam.Value);
+                    AddToLog(FileData);
+                    AddToLog('');
 
                     FResultParam.Value := FileData;
                end;
