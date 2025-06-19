@@ -242,6 +242,10 @@ type
     actVchasnoEDIComDocLoad: TdsdVchasnoEDIAction;
     mactVchasnoEDIComDocLoad: TMultiAction;
     bbVchasnoEDIComDocLoad: TdxBarButton;
+    actVchasnoEDISignComdoc: TdsdVchasnoEDIAction;
+    mactVchasnoEDISignComdoc: TMultiAction;
+    dxBarButton1: TdxBarButton;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public
