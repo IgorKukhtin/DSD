@@ -3032,6 +3032,20 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDealId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVchasnoId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementId'
         Value = Null
         MultiSelectSeparator = ','
