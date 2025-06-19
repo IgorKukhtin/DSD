@@ -52,7 +52,7 @@ type
       spHeader, spList: TdsdStoredProc; lFileName : String);
     function fIsExistsOrder(lFileName : String) : Boolean;
     function InsertUpdateComDoc(ЕлектроннийДокумент
-      : IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
+      : IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc; ADealId, AVchasno_id : String): Integer;
     procedure FTPSetConnection;
     procedure InitializeComSigner(DebugMode: boolean; UserSign, UserSeal, UserKey : string);
     procedure SignFile(FileName: string; SignType: TSignType; DebugMode: boolean; UserSign, UserSeal, UserKey, NameExite, NameFiscal : string );
@@ -116,7 +116,7 @@ type
     // заказ VchasnoEDI
     procedure OrderLoadVchasnoEDI(AOrder, AFileName, ADealId : string; spHeader, spList: TdsdStoredProc);
     // Comdoc VchasnoEDI
-    procedure ComdocLoadVchasnoEDI(FileData, AFileName, ADealId : string; spHeader, spList: TdsdStoredProc);
+    procedure ComdocLoadVchasnoEDI(FileData, AFileName, ADealId, AVchasno_id : string; spHeader, spList: TdsdStoredProc);
     // отправка подтверждения заказа
     procedure ORDERSPSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
     // отправка повідомлення про відвантаження
@@ -668,7 +668,7 @@ begin
                   // загружаем в базенку
                   try
                     MovementId := InsertUpdateComDoc(ЕлектроннийДокумент,
-                      spHeader, spList);
+                      spHeader, spList, '', '');
                   Except ON E: Exception DO
                     Begin
                       MovementId := -1;
@@ -4027,7 +4027,7 @@ begin
 end;
 
 function TEDI.InsertUpdateComDoc(ЕлектроннийДокумент
-  : ComDocXML.IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
+  : ComDocXML.IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc; ADealId, AVchasno_id : String): integer;
 var
   MovementId, GoodsPropertyId: integer;
   i: integer;
@@ -4097,6 +4097,10 @@ begin
         ParamByName('inJuridicalName').Value := Сторони.Контрагент[i]
           .НазваКонтрагента;
       end;
+    //
+    ParamByName('inDealId').Value := ADealId;
+    ParamByName('inVchasnoId').Value := AVchasno_id;
+    //
     Execute;
     MovementId := ParamByName('MovementId').Value;
     GoodsPropertyId := StrToInt(ParamByName('GoodsPropertyId').asString);
@@ -5142,7 +5146,7 @@ begin
   end;
 end;
 
-procedure TEDI.ComdocLoadVchasnoEDI(FileData, AFileName, ADealId: String; spHeader, spList: TdsdStoredProc);
+procedure TEDI.ComdocLoadVchasnoEDI(FileData, AFileName, ADealId, AVchasno_id: String; spHeader, spList: TdsdStoredProc);
 var
   ЕлектроннийДокумент: ComDocXML.IXMLЕлектроннийДокументType;
   MovementId: Integer;
@@ -5170,7 +5174,7 @@ begin
                   // загружаем в базенку
                   try
                     MovementId := InsertUpdateComDoc(ЕлектроннийДокумент,
-                      spHeader, spList);
+                      spHeader, spList, ADealId, AVchasno_id);
                   Except ON E: Exception DO
                     Begin
                       MovementId := -1;
@@ -5746,6 +5750,13 @@ begin
     FieldName := 'deal_id';
     PairName := 'deal_id';
   end;
+  with TdsdPairParamsItem(FPairParams.Add) do
+  begin
+    DataType := ftString;
+    FieldName := 'vchasno_id';
+    PairName := 'vchasno_id';
+  end;
+
 
   FHostParam := TdsdParam.Create;
   FHostParam.DataType := ftString;
@@ -6615,7 +6626,10 @@ begin
                 // создание документ
                 case EDIDocType of
                   ediComDoc: EDI.ComDocLoadVchasnoEDI(FResultParam.Value
-                                                     ,FFileNameParam.Value, DataSetCDS.FieldByName('deal_id').AsString, FspHeader, FspList
+                                                     ,FFileNameParam.Value
+                                                     ,DataSetCDS.FieldByName('deal_id').AsString
+                                                     ,DataSetCDS.FieldByName('vchasno_id').AsString
+                                                     ,FspHeader, FspList
                                                     );
                 end;
               end;
