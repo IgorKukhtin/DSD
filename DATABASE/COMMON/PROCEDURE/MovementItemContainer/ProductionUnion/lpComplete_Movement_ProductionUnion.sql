@@ -1004,6 +1004,7 @@ BEGIN
                                         , tmpMI.GoodsKindId          AS GoodsKindId
                                         , CLO_PartionGoods.ObjectId  AS PartionGoodsId
                                         , COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
+                                        , COALESCE (Object_PartionGoods.ValueData, '')          AS PartionGoods
                                         , Container.Amount           AS Amount
                           FROM tmpMI_summ AS tmpMI
                                INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
@@ -1021,6 +1022,9 @@ BEGIN
                                                             AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                LEFT JOIN ObjectDate AS ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                        AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                               LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+                                                                      AND Object_PartionGoods.ValueData <> '0'
+ 
                                LEFT JOIN ContainerLinkObject AS CLO_AssetTo
                                                              ON CLO_AssetTo.ContainerId = Container.Id
                                                             AND CLO_AssetTo.DescId      = zc_ContainerLinkObject_AssetTo()
@@ -1132,6 +1136,7 @@ BEGIN
                                , tmp_01.GoodsKindId
                                , tmp_01.PartionGoodsId
                                , tmp_01.PartionGoodsDate
+                               , tmp_01.PartionGoods
                                , tmp_01.Amount
                           FROM tmp_01
                          UNION ALL
@@ -1141,6 +1146,7 @@ BEGIN
                                , tmp_02.GoodsKindId
                                , tmp_02.PartionGoodsId
                                , tmp_02.PartionGoodsDate
+                               , '' AS PartionGoods
                                , tmp_02.Amount
                           FROM tmp_02
 
@@ -1151,6 +1157,7 @@ BEGIN
                                , tmp_03.GoodsKindId
                                , tmp_03.PartionGoodsId
                                , tmp_03.PartionGoodsDate
+                               , '' AS PartionGoods
                                  -- подставили как будто есть остаток
                                , 0.01 AS Amount
                           FROM tmp_03
@@ -1348,7 +1355,16 @@ BEGIN
                                                            --AND tmpMI_group.AmountSUM > tmpContainer_group.Amount_min AND tmpMI_group.AmountSUM <= tmpContainer_group.Amount_max
                                  LEFT JOIN tmpMI_summ ON tmpMI_summ.GoodsId     = tmpMI_group.GoodsId
                                                      AND tmpMI_summ.GoodsKindId = tmpMI_group.GoodsKindId
+                                 -- только если партию НЕ нашли
+                                 /*LEFT JOIN tmpContainer_list ON tmpContainer_list.GoodsId      = tmpMI_summ.GoodsId
+                                                            AND tmpContainer_list.PartionGoods = tmpMI_summ.PartionGoods
+                                                            AND tmpContainer_list.Amount       > 0
+                                                            -- партия установлена
+                                                            AND tmpContainer_list.PartionGoods <> ''*/
+
                             WHERE tmpMI_summ.OperCount > 0
+                              -- только если партию НЕ нашли
+                              --AND tmpContainer_list.ContainerId IS NULL
                            )
       -- корректируем на разницу
     , tmpContainer_res_2 AS (SELECT tmpContainer_res_1.MovementItemId

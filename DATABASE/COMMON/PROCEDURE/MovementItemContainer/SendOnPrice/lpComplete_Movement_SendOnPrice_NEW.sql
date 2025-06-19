@@ -699,7 +699,17 @@ BEGIN
                                                            --AND tmpMI_group.AmountSUM > tmpContainer_group.Amount_min AND tmpMI_group.AmountSUM <= tmpContainer_group.Amount_max
                                  LEFT JOIN tmpMI_summ ON tmpMI_summ.GoodsId     = tmpMI_group.GoodsId
                                                      AND tmpMI_summ.GoodsKindId = tmpMI_group.GoodsKindId
+
+                                 -- только если партию НЕ нашли
+                                 --LEFT JOIN tmpContainer_list ON tmpContainer_list.GoodsId      = tmpMI_summ.GoodsId
+                                 --                           AND tmpContainer_list.PartionGoods = tmpMI_summ.PartionGoods
+                                 --                           AND tmpContainer_list.Amount       > 0
+                                 --                           -- партия установлена
+                                 --                           AND tmpContainer_list.PartionGoods <> ''
+
                             WHERE tmpMI_summ.OperCount > 0
+                              -- только если партию НЕ нашли
+                              -- AND tmpContainer_list.ContainerId IS NULL
                            )
       -- корректируем на разницу
     , tmpContainer_res_2 AS (SELECT tmpContainer_res_1.MovementItemId

@@ -1191,6 +1191,7 @@ end if;
                          , Container.Amount                                      AS Amount
                          , COALESCE (CLO_PartionGoods.ObjectId, 0)               AS PartionGoodsId
                          , COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
+                         , COALESCE (Object_PartionGoods.ValueData, '')          AS PartionGoods
                     FROM tmpMI_summ AS tmpMI
                          INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
                                              AND Container.DescId   = zc_Container_Count()
@@ -1208,6 +1209,8 @@ end if;
                                                       AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                          LEFT JOIN ObjectDate AS ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                  AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+                                                                AND Object_PartionGoods.ValueData <> '0'
                     -- учет - по партиям
                     WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                          , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
@@ -1328,6 +1331,7 @@ end if;
                                , tmp_01.Amount
                                , tmp_01.PartionGoodsId
                                , tmp_01.PartionGoodsDate
+                               , tmp_01.PartionGoods
                           FROM tmp_01
 
                          UNION ALL
@@ -1338,6 +1342,7 @@ end if;
                                , tmp_02.Amount
                                , tmp_02.PartionGoodsId
                                , tmp_02.PartionGoodsDate
+                               , '' AS PartionGoods
                           FROM tmp_02
 
                          UNION ALL
@@ -1348,6 +1353,7 @@ end if;
                                , 0.01 AS Amount
                                , tmp_03.PartionGoodsId
                                , tmp_03.PartionGoodsDate
+                               , '' AS PartionGoods
                           FROM tmp_03
                           -- только одна партия с остатком <=0
                           WHERE tmp_03.Ord = 1
@@ -1506,7 +1512,17 @@ end if;
                                                            --AND tmpMI_group.AmountSUM > tmpContainer_group.Amount_min AND tmpMI_group.AmountSUM <= tmpContainer_group.Amount_max
                                  LEFT JOIN tmpMI_summ ON tmpMI_summ.GoodsId     = tmpMI_group.GoodsId
                                                      AND tmpMI_summ.GoodsKindId = tmpMI_group.GoodsKindId
+
+                                 -- только если партию НЕ нашли
+                                 /*LEFT JOIN tmpContainer_list ON tmpContainer_list.GoodsId      = tmpMI_summ.GoodsId
+                                                            AND tmpContainer_list.PartionGoods = tmpMI_summ.PartionGoods
+                                                            AND tmpContainer_list.Amount       > 0
+                                                            -- партия установлена
+                                                            AND tmpContainer_list.PartionGoods <> ''*/
+
                             WHERE tmpMI_summ.OperCount > 0
+                              -- только если партию НЕ нашли
+                              -- AND tmpContainer_list.ContainerId IS NULL
                            )
       -- корректируем на разницу
     , tmpContainer_res_2 AS (SELECT tmpContainer_res_1.MovementItemId
