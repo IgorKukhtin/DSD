@@ -764,6 +764,46 @@ BEGIN
                                                   AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog() 
                             GROUP BY tmpMIContainer_all.PersonalId 
                             )
+     --попытка немного оптимизировать, на этих линках зависает в общем запросе
+     , tmpAll_MILO AS (SELECT tmpAll.*
+                            , COALESCE (Object_FineSubject.Id, 0)         :: Integer  AS FineSubjectId
+                            , COALESCE (Object_FineSubject.ValueData, '') :: TVarChar AS FineSubjectName
+                
+                            , COALESCE (Object_UnitFineSubject.Id, 0)         :: Integer  AS UnitFineSubjectId
+                            , COALESCE (Object_UnitFineSubject.ValueData, '') :: TVarChar AS UnitFineSubjectName
+                            , Object_BankSecond_num.Id             AS BankSecondId_num
+                            , Object_BankSecond_num.ValueData      AS BankSecondName_num
+                            , Object_BankSecondTwo_num.Id          AS BankSecondTwoId_num
+                            , Object_BankSecondTwo_num.ValueData   AS BankSecondTwoName_num
+                            , Object_BankSecondDiff_num.Id         AS BankSecondDiffId_num
+                            , Object_BankSecondDiff_num.ValueData  AS BankSecondDiffName_num
+                       FROM tmpAll
+                            LEFT JOIN MILO AS MILinkObject_FineSubject
+                                           ON MILinkObject_FineSubject.MovementItemId = tmpAll.MovementItemId
+                                          AND MILinkObject_FineSubject.DescId = zc_MILinkObject_FineSubject()
+                            LEFT JOIN Object AS Object_FineSubject ON Object_FineSubject.Id = MILinkObject_FineSubject.ObjectId
+
+                            LEFT JOIN MILO AS MILinkObject_UnitFineSubject
+                                           ON MILinkObject_UnitFineSubject.MovementItemId = tmpAll.MovementItemId
+                                          AND MILinkObject_UnitFineSubject.DescId = zc_MILinkObject_UnitFineSubject()
+                            LEFT JOIN Object AS Object_UnitFineSubject ON Object_UnitFineSubject.Id = MILinkObject_UnitFineSubject.ObjectId
+                            --
+                            LEFT JOIN MILO_num AS MILinkObject_BankSecond_num
+                                               ON MILinkObject_BankSecond_num.MovementItemId = tmpAll.MovementItemId
+                                              AND MILinkObject_BankSecond_num.DescId = zc_MILinkObject_BankSecond_num()
+                            LEFT JOIN tmpBank AS Object_BankSecond_num ON Object_BankSecond_num.Id = MILinkObject_BankSecond_num.ObjectId
+
+                            LEFT JOIN MILO_num AS MILinkObject_BankSecondTwo_num
+                                               ON MILinkObject_BankSecondTwo_num.MovementItemId = tmpAll.MovementItemId
+                                              AND MILinkObject_BankSecondTwo_num.DescId = zc_MILinkObject_BankSecondTwo_num()
+                            LEFT JOIN tmpBank AS Object_BankSecondTwo_num ON Object_BankSecondTwo_num.Id = MILinkObject_BankSecondTwo_num.ObjectId
+
+                            LEFT JOIN MILO_num AS MILinkObject_BankSecondDiff_num
+                                               ON MILinkObject_BankSecondDiff_num.MovementItemId = tmpAll.MovementItemId
+                                              AND MILinkObject_BankSecondDiff_num.DescId = zc_MILinkObject_BankSecondDiff_num()
+                            LEFT JOIN tmpBank AS Object_BankSecondDiff_num ON Object_BankSecondDiff_num.Id = MILinkObject_BankSecondDiff_num.ObjectId 
+                           )
+
        -- Результат
        SELECT tmpAll.MovementItemId                         AS Id
             , Object_Personal.Id                            AS PersonalId
@@ -808,14 +848,13 @@ BEGIN
             , Object_BankSecondTwo.MFO  ::TVarChar AS MFO_BankSecondTwo
             , Object_BankSecondDiff.MFO ::TVarChar AS MFO_BankSecondDiff
 
-            , Object_BankSecond_num.Id             AS BankSecondId_num
-            , Object_BankSecond_num.ValueData      AS BankSecondName_num
-            , Object_BankSecondTwo_num.Id          AS BankSecondTwoId_num
-            , Object_BankSecondTwo_num.ValueData   AS BankSecondTwoName_num
-            , Object_BankSecondDiff_num.Id         AS BankSecondDiffId_num
-            , Object_BankSecondDiff_num.ValueData  AS BankSecondDiffName_num            
-            
-            
+            , tmpAll.BankSecondId_num
+            , tmpAll.BankSecondName_num
+            , tmpAll.BankSecondTwoId_num
+            , tmpAll.BankSecondTwoName_num
+            , tmpAll.BankSecondDiffId_num
+            , tmpAll.BankSecondDiffName_num            
+
             , CASE WHEN tmpAll.MovementItemId > 0 AND 1=0 /*vbUserId <> 5*/ THEN COALESCE (MIBoolean_Main.ValueData, FALSE) ELSE COALESCE (Object_Personal.isMain, FALSE) END :: Boolean AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
               -- дата увольнения
@@ -841,11 +880,11 @@ BEGIN
             , COALESCE (Object_PersonalServiceList.Id, 0)                   AS PersonalServiceListId
             , COALESCE (Object_PersonalServiceList.ValueData, ''::TVarChar) AS PersonalServiceListName
 
-            , COALESCE (Object_FineSubject.Id, 0)         :: Integer  AS FineSubjectId
-            , COALESCE (Object_FineSubject.ValueData, '') :: TVarChar AS FineSubjectName
+            , tmpAll.FineSubjectId   :: Integer  AS FineSubjectId
+            , tmpAll.FineSubjectName :: TVarChar AS FineSubjectName
 
-            , COALESCE (Object_UnitFineSubject.Id, 0)         :: Integer  AS UnitFineSubjectId
-            , COALESCE (Object_UnitFineSubject.ValueData, '') :: TVarChar AS UnitFineSubjectName
+            , tmpAll.UnitFineSubjectId      :: Integer  AS UnitFineSubjectId
+            , tmpAll.UnitFineSubjectName    :: TVarChar AS UnitFineSubjectName
 
             , COALESCE (tmpMIChild.StaffListSummKindName,'') ::TVarChar AS StaffListSummKindName
 
@@ -1039,7 +1078,7 @@ BEGIN
             --, tmpAll.Ord :: Integer    
             , tmpNalog_print.SummNalog ::TFloat AS SummNalog_print
 
-       FROM tmpAll
+       FROM tmpAll_MILO AS tmpAll
             LEFT JOIN tmpMI_card_b2 ON tmpMI_card_b2.MemberId_Personal = tmpAll.MemberId_Personal
                                    AND tmpAll.Ord = 1
 
@@ -1346,7 +1385,7 @@ BEGIN
                                   ON ObjectBoolean_BankOut.ObjectId = Object_PersonalServiceList.Id
                                  AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut()
 
-          LEFT JOIN MILO AS MILinkObject_FineSubject
+          /*LEFT JOIN MILO AS MILinkObject_FineSubject
                          ON MILinkObject_FineSubject.MovementItemId = tmpAll.MovementItemId
                         AND MILinkObject_FineSubject.DescId = zc_MILinkObject_FineSubject()
           LEFT JOIN Object AS Object_FineSubject ON Object_FineSubject.Id = MILinkObject_FineSubject.ObjectId
@@ -1369,7 +1408,8 @@ BEGIN
           LEFT JOIN MILO_num AS MILinkObject_BankSecondDiff_num
                              ON MILinkObject_BankSecondDiff_num.MovementItemId = tmpAll.MovementItemId
                             AND MILinkObject_BankSecondDiff_num.DescId = zc_MILinkObject_BankSecondDiff_num()
-          LEFT JOIN tmpBank AS Object_BankSecondDiff_num ON Object_BankSecondDiff_num.Id = MILinkObject_BankSecondDiff_num.ObjectId
+          LEFT JOIN tmpBank AS Object_BankSecondDiff_num ON Object_BankSecondDiff_num.Id = MILinkObject_BankSecondDiff_num.ObjectId 
+          */
           --
           LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
           LEFT JOIN tmpMIChild_Hours ON tmpMIChild_Hours.ParentId = tmpAll.MovementItemId
