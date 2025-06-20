@@ -244,6 +244,13 @@ type
     mactVchasnoEDISignComdoc: TMultiAction;
     bbVchasnoEDISignComdoc: TdxBarButton;
     StatusCode: TcxGridDBColumn;
+    mactVchasnoEDISignDelnot_grid: TMultiAction;
+    mactVchasnoEDISignDelnot_andRefresh: TMultiAction;
+    mactVchasnoEDISignComdoc_grid: TMultiAction;
+    mactVchasnoEDISignComdoc_andRefresh: TMultiAction;
+    bbVchasnoEDISignDelnot_andRefresh: TdxBarButton;
+    bbVchasnoEDISignComdoc_andRefresh: TdxBarButton;
+    isEdiComdoc: TcxGridDBColumn;
   private
     { Private declarations }
   public

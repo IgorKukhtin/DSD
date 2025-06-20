@@ -4,6 +4,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
   ClientWidth = 1368
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -474
   ExplicitWidth = 1384
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -530,6 +531,15 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1085#1091#1090#1088#1110#1096#1085#1110#1081' VchasnoId '#1042#1095#1072#1089#1085#1086'-EDI'
             Width = 107
+          end
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
+            Caption = 'ComDoc '#1042#1095#1072#1089#1085#1086'-EDI'
+            DataBinding.FieldName = 'isEdiComdoc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1075#1088#1091#1078#1077#1085' ComDoc '#1042#1095#1072#1089#1085#1086'-EDI'
+            Options.Editing = False
+            Width = 55
           end
         end
       end
@@ -2154,6 +2164,61 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       Hint = #1047#1074#1075#1088#1091#1079#1082#1072' "'#1053#1072#1082#1083#1072#1076#1085#1080#1093' '#1085#1072' '#1087#1086#1074#1077#1088#1085#1077#1085#1085#1103'"'
       ImageIndex = 85
     end
+    object mactVchasnoEDIComdoc: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actVchasnoEDIComdoc
+        end
+        item
+          Action = actUpdateVchasnoEdiComdocTrue
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1042#1095#1072#1089#1085#1086' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDIComdoc: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = 'actVchasnoEDIComdoc'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediComDocSave
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
     object mactVchasnoEDISignDelnot: TMultiAction
       Category = 'VchasnoEDI'
       MoveParams = <>
@@ -2210,7 +2275,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object mactVchasnoEDIComdoc: TMultiAction
+    object mactVchasnoEDISignComdoc: TMultiAction
       Category = 'VchasnoEDI'
       MoveParams = <>
       ActionList = <
@@ -2218,24 +2283,21 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Action = actExecPrintStoredProc
         end
         item
-          Action = actVchasnoEDIComdoc
-        end
-        item
-          Action = actUpdateVchasnoEdiComdocTrue
+          Action = actVchasnoEDISignComdoc
         end
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1042#1095#1072#1089#1085#1086' EDI?'
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1042#1095#1072#1089#1085#1086' EDI'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1086#1076#1087#1080#1089#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1042#1095#1072#1089#1085#1086' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1087#1086#1076#1087#1080#1089#1072#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1055#1086#1076#1087#1080#1089#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      Hint = #1055#1086#1076#1087#1080#1089#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <Comdoc '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1042#1095#1072#1089#1085#1086' EDI'
       ImageIndex = 84
     end
-    object actVchasnoEDIComdoc: TdsdVchasnoEDIAction
+    object actVchasnoEDISignComdoc: TdsdVchasnoEDIAction
       Category = 'VchasnoEDI'
       MoveParams = <>
-      Caption = 'actVchasnoEDIDelnot'
+      Caption = 'actVchasnoEDISignComdoc'
       Host.Value = 'https://edi.vchasno.ua/api/documents'
       Host.DataType = ftString
       Host.MultiSelectSeparator = ','
@@ -2249,7 +2311,63 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       DateTo.DataType = ftDateTime
       DateTo.MultiSelectSeparator = ','
       EDI = EDI
-      EDIDocType = ediComDocSave
+      EDIDocType = ediComDocSign
+      KeyFileName.Value = ''
+      KeyFileName.Component = FormParams
+      KeyFileName.ComponentItem = 'FileNameKey'
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.Component = FormParams
+      KeyUserName.ComponentItem = 'UserNameKey'
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object mactVchasnoEDIComDocLoad: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actVchasnoEDIComDocLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' p'#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' ComDoc '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDIComDocLoad: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 45658d
+      DateFrom.Component = deStart
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 45658d
+      DateTo.Component = deEnd
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediComDoc
       KeyFileName.Value = ''
       KeyFileName.DataType = ftString
       KeyFileName.MultiSelectSeparator = ','
@@ -2262,8 +2380,8 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       ErrorText.Value = ''
       ErrorText.DataType = ftString
       ErrorText.MultiSelectSeparator = ','
-      HeaderDataSet = PrintHeaderCDS
-      ListDataSet = PrintItemsCDS
+      spHeader = spHeaderComDoc
+      spList = spListComDoc
     end
   end
   inherited MasterDS: TDataSource
@@ -2601,7 +2719,15 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbVchasnoEDIComDocLoad'
         end
         item
           Visible = True
@@ -2643,6 +2769,14 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     end
     object bbVchasnoEDIComdoc: TdxBarButton
       Action = mactVchasnoEDIComdoc
+      Category = 0
+    end
+    object bbVchasnoEDIComDocLoad: TdxBarButton
+      Action = mactVchasnoEDIComDocLoad
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactVchasnoEDISignComdoc
       Category = 0
     end
   end
@@ -2968,6 +3102,27 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         Name = 'inComDocDate'
         Value = Null
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDealId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVchasnoId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentId_vch'
+        Value = Null
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

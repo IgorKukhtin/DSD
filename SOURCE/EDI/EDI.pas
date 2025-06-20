@@ -52,7 +52,7 @@ type
       spHeader, spList: TdsdStoredProc; lFileName : String);
     function fIsExistsOrder(lFileName : String) : Boolean;
     function InsertUpdateComDoc(ЕлектроннийДокумент
-      : IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
+      : IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc; ADealId, AVchasno_id, ADocumentId_vch : String): Integer;
     procedure FTPSetConnection;
     procedure InitializeComSigner(DebugMode: boolean; UserSign, UserSeal, UserKey : string);
     procedure SignFile(FileName: string; SignType: TSignType; DebugMode: boolean; UserSign, UserSeal, UserKey, NameExite, NameFiscal : string );
@@ -115,6 +115,8 @@ type
     procedure ErrorLoad(Directory: string);
     // заказ VchasnoEDI
     procedure OrderLoadVchasnoEDI(AOrder, AFileName, ADealId : string; spHeader, spList: TdsdStoredProc);
+    // Comdoc VchasnoEDI
+    procedure ComdocLoadVchasnoEDI(FileData, AFileName, ADealId, AVchasno_id, ADocumentId_vch : string; spHeader, spList: TdsdStoredProc);
     // отправка подтверждения заказа
     procedure ORDERSPSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
     // отправка повідомлення про відвантаження
@@ -200,6 +202,7 @@ type
     function POSTSignVchasnoEDI: Boolean;
     function SignData(UserSign : String): Boolean;
     function OrderLoad : Boolean;
+    function ComDoc007Load : Boolean;
     function OrdrspSave : Boolean;
     function DESADVSave : Boolean;
     function DelnotSave : Boolean;
@@ -665,7 +668,7 @@ begin
                   // загружаем в базенку
                   try
                     MovementId := InsertUpdateComDoc(ЕлектроннийДокумент,
-                      spHeader, spList);
+                      spHeader, spList, '', '', '');
                   Except ON E: Exception DO
                     Begin
                       MovementId := -1;
@@ -4024,7 +4027,7 @@ begin
 end;
 
 function TEDI.InsertUpdateComDoc(ЕлектроннийДокумент
-  : ComDocXML.IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
+  : ComDocXML.IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc; ADealId, AVchasno_id, ADocumentId_vch : String): integer;
 var
   MovementId, GoodsPropertyId: integer;
   i: integer;
@@ -4094,6 +4097,11 @@ begin
         ParamByName('inJuridicalName').Value := Сторони.Контрагент[i]
           .НазваКонтрагента;
       end;
+    //
+    ParamByName('inDealId').Value := ADealId;
+    ParamByName('inVchasnoId').Value := AVchasno_id;
+    ParamByName('inDocumentId_vch').Value := ADocumentId_vch;
+    //
     Execute;
     MovementId := ParamByName('MovementId').Value;
     GoodsPropertyId := StrToInt(ParamByName('GoodsPropertyId').asString);
@@ -5139,6 +5147,45 @@ begin
   end;
 end;
 
+procedure TEDI.ComdocLoadVchasnoEDI(FileData, AFileName, ADealId, AVchasno_id, ADocumentId_vch: String; spHeader, spList: TdsdStoredProc);
+var
+  ЕлектроннийДокумент: ComDocXML.IXMLЕлектроннийДокументType;
+  MovementId: Integer;
+begin
+                MovementId:= 0;
+                try
+                   ЕлектроннийДокумент := ComDocXML.LoadЕлектроннийДокумент(FileData);
+                except ON E: Exception DO
+                      Begin
+                         ShowMessage(E.Message +#10  +#13 + 'LoadЕлектроннийДокумент ADealId = ' + ADealId);
+                         MovementId:= -1;
+                      End;
+                end;
+
+                if MovementId <> -1
+                then
+
+                if (ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '007')
+                 or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004')
+                 or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012')
+                 //13.07.2022
+                 or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '005')
+               then
+                begin
+                  // загружаем в базенку
+                  try
+                    MovementId := InsertUpdateComDoc(ЕлектроннийДокумент,
+                      spHeader, spList, ADealId, AVchasno_id, ADocumentId_vch);
+                  Except ON E: Exception DO
+                    Begin
+                      MovementId := -1;
+                      ShowMessage(E.Message +#10  +#13 + 'InsertUpdateComDoc ADealId = ' + ADealId);
+                    End;
+                  end;
+                end;
+end;
+
+
 procedure TEDI.ORDERSPSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
 var ORDRSP: ORDRSPXML.IXMLORDRSPType;
     i: integer;
@@ -5704,6 +5751,13 @@ begin
     FieldName := 'deal_id';
     PairName := 'deal_id';
   end;
+  with TdsdPairParamsItem(FPairParams.Add) do
+  begin
+    DataType := ftString;
+    FieldName := 'vchasno_id';
+    PairName := 'vchasno_id';
+  end;
+
 
   FHostParam := TdsdParam.Create;
   FHostParam.DataType := ftString;
@@ -5818,6 +5872,7 @@ function TdsdVchasnoEDIAction.GetVchasnoEDI(ATypeExchange : Integer; ADataSet: T
       Res: TArray<string>;
       JsonArray: TJSONArray;
       jsonItem : TJSONObject;
+      FileData: string;
 begin
   inherited;
   Result := False;
@@ -5859,12 +5914,14 @@ begin
     IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
 
     Params := '';
-    if ATypeExchange in [2, 3] then
+    if ATypeExchange in [2, 3, 22] then
     begin
       Params := '/' + FOrderParam.Value + '/original';
+
     end else if ATypeExchange in [4, 5] then
     begin
       Params := '/' + FDocumentIdParam.Value + '/original';
+
     end else
     begin
       Params := 'type=' + FDocTypeParam.AsString;
@@ -5876,13 +5933,27 @@ begin
         Params := Params + '&date_to=' + FormatDateTime('YYYY-MM-DD', StrToDateTime(FDateToParam.Value));
 
       if FDocStatusParam.Value <> '' then
-        Params := Params + '&deal_status=' + FDocStatusParam.Value;
+       if ATypeExchange = 11
+       then
+           // получить ComDoc
+           Params := Params + '&vchasno_status=signed_and_sent'
+       else
+            // получить Order
+            Params := Params + '&deal_status=' + FDocStatusParam.Value;
 
       if Params <> '' then Params := '?' + Params;
     end;
 
     Stream := TMemoryStream.Create;
-    StringStream:= TStringStream.Create('', TEncoding.UTF8);
+
+    if ATypeExchange = 22
+    then //ComDoc - так уже работает
+         StringStream:= TStringStream.Create('') // , TEncoding.Ansi
+
+    else //Order
+         StringStream:= TStringStream.Create('', TEncoding.UTF8);
+
+    //
     try
       try
         IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
@@ -5966,7 +6037,10 @@ begin
            // сохраним файл
            StringStream.SaveToFile(FFileNameParam.Value);
            Result := True;
-        end else if ATypeExchange = 1 then
+        end
+        else
+        // Order + ComDoc
+        if ATypeExchange in [1, 11] then
         begin
 
           ADataSet.Close;
@@ -5985,6 +6059,9 @@ begin
           end;
 
           ADataSet.CreateDataSet;
+
+          // для теста - сохранить список документов который надо будет обработать
+          StringStream.SaveToFile('test_TJSONArray.txt');
 
           jsonArray := TJSONObject.ParseJSONValue(StringStream.DataString) as TJSONArray;
 
@@ -6008,7 +6085,8 @@ begin
         end else
         begin
 
-           if ATypeExchange = 2 then
+           // Order + ComDoc - здесь уже ОДИН документ
+           if ATypeExchange in [2, 22] then
            begin
              FFileNameParam.Value := '';
              if Pos('filename', IdHTTP.Response.ContentDisposition) > 0 then
@@ -6019,7 +6097,36 @@ begin
              end;
            end;
 
-          FResultParam.Value := StringStream.DataString;
+          // для теста - сохранили содержиомое документа
+          //StringStream.SaveToFile('test_TJSON_data.txt');
+
+
+          // вернули содержиомое документа
+          if ATypeExchange = 2
+          then FResultParam.Value := StringStream.DataString
+          else begin
+                    // ***уже работает
+                    FileData := Utf8ToAnsi(StringStream.DataString);
+
+                    // Если нет <?xml то берем по <ЕлектроннийДокумент>
+                    FileData := '<?xml version="1.0" encoding="utf-8"?>'#13#10 +
+                                copy(FileData, pos('<ЕлектроннийДокумент>', FileData), MaxInt);
+                    //???
+                    FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>',
+                      FileData) + 21);
+
+                    // test
+                    //ShowMessage(FileData);
+
+                    // test
+                    AddToLog('');
+                    AddToLog('start ЕлектроннийДокумент FOrderParam.Value : ' + FOrderParam.Value);
+                    AddToLog(FileData);
+                    AddToLog('');
+
+                    FResultParam.Value := FileData;
+               end;
+
           Result := True;
         end;
       end;
@@ -6494,6 +6601,68 @@ begin
 
 end;
 
+function TdsdVchasnoEDIAction.ComDoc007Load : Boolean;
+  var DataSetCDS: TClientDataSet;
+begin
+  Result := False;
+
+  FDocTypeParam.Value := 9;
+  FDocStatusParam.Value := 'new';
+//  FDocStatusParam.Value := 'rejected';
+
+  // Загрузим список ComDoc-007 с Вчасно EDI - new
+  DataSetCDS := TClientDataSet.Create(Nil);
+  try
+
+    if not GetVchasnoEDI(11, DataSetCDS) then
+      raise Exception.Create('Ошибка загрузки списка ComDoc-документов-new.');
+
+    if DataSetCDS.RecordCount > 0 then
+    begin
+        with TGaugeFactory.GetGauge(Caption, 0, DataSetCDS.RecordCount) do
+        begin
+          Start;
+          try
+            DataSetCDS.First;
+            while not DataSetCDS.Eof do
+            begin
+              FOrderParam.Value := DataSetCDS.FieldByName('Id').AsString;
+              if GetVchasnoEDI(22) then
+              begin
+                // создание документ
+                case EDIDocType of
+                  ediComDoc: EDI.ComDocLoadVchasnoEDI(FResultParam.Value
+                                                     ,FFileNameParam.Value
+                                                     ,DataSetCDS.FieldByName('deal_id').AsString
+                                                     ,DataSetCDS.FieldByName('vchasno_id').AsString
+                                                     ,DataSetCDS.FieldByName('id').AsString
+                                                     ,FspHeader, FspList
+                                                    );
+                end;
+              end;
+              IncProgress(1);
+              DataSetCDS.Next;
+            end;
+            Result := true;
+          finally
+            Finish;
+          end;
+        end;
+    end
+    else
+    begin
+      //ShowMessages('Нет накладных-new для загрузки.');
+      Result := true;
+      Exit;
+    end;
+
+  finally
+    DataSetCDS.Free;
+  end;
+
+end;
+
+
 function TdsdVchasnoEDIAction.OrderLoad : Boolean;
   var DataSetCDS: TClientDataSet;
 begin
@@ -6508,7 +6677,7 @@ begin
   try
 
     if not GetVchasnoEDI(1, DataSetCDS) then
-      raise Exception.Create('Ошибка загрузки списка документов-new.');
+      raise Exception.Create('Ошибка загрузки списка Order-документов-new.');
 
     if DataSetCDS.RecordCount > 0 then
     begin
@@ -6712,6 +6881,7 @@ function TdsdVchasnoEDIAction.DoSignComDoc: Boolean;
 begin
   Result := False;
   if HeaderDataSet.FieldByName('DocumentId_vch').AsString = '' then Exit;
+//  if HeaderDataSet.FieldByName('VchasnoId').AsString = '' then Exit;
 
   FOrderParam.Value := HeaderDataSet.FieldByName('DealId').AsString;
   FDocumentIdParam.Value := HeaderDataSet.FieldByName('DocumentId_vch').AsString;
@@ -6789,6 +6959,7 @@ begin
   FErrorTextParam.Value := '';
   case FEDIDocType of
     ediOrder : Result := OrderLoad;
+    ediComDoc : Result := ComDoc007Load;
     ediOrdrsp : Result := OrdrspSave;
     ediDesadv : Result := DESADVSave;
     ediComDocSave : Result := ComDocSave;
