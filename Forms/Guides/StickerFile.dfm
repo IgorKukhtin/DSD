@@ -44,6 +44,7 @@ object StickerFileForm: TStickerFileForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.CellAutoHeight = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True

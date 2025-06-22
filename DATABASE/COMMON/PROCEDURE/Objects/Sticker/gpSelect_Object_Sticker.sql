@@ -266,7 +266,7 @@ BEGIN
             , COALESCE (Object_Sticker.StickerFileName, '')  :: TVarChar  AS StickerFileName
             , tmpStickerFile.Name                            :: TVarChar  AS StickerFileName_inf
             , COALESCE (Object_Sticker.TradeMarkName_StickerFile, '')  :: TVarChar  AS TradeMarkName_StickerFile
-            , Object_Sticker.InfoTop_StickerFile                       ::TBlob      AS InfoTop_StickerFile 
+            , COALESCE (Object_Sticker.InfoTop_StickerFile, tmpStickerFile.InfoTop) ::TBlob AS InfoTop_StickerFile 
             , tmpStickerFile.InfoTop                                   ::TBlob      AS InfoTop_StickerFile_inf
 
             , COALESCE (Object_Sticker.StickerFileId_70_70, 0)     :: Integer   AS StickerFileId_70_70
@@ -367,8 +367,8 @@ BEGIN
             , Object_StickerFile.ValueData      AS StickerFileName
             , tmpStickerFile.Name               AS StickerFileName_inf
             , Object_TradeMark_StickerFile.ValueData   AS TradeMarkName_StickerFile
-            , ObjectBlob_StickerFile_InfoTop.ValueData AS InfoTop_StickerFile
-            , tmpStickerFile.InfoTop                   AS InfoTop_StickerFile_inf
+            , COALESCE (ObjectBlob_StickerFile_InfoTop.ValueData, tmpStickerFile.InfoTop) ::TBlob AS InfoTop_StickerFile
+            , tmpStickerFile.InfoTop            AS InfoTop_StickerFile_inf
 
             , Object_StickerFile_70_70.Id                                   AS StickerFileId_70_70
             , (Object_StickerFile_70_70.ValueData  || '_70_70') :: TVarChar AS StickerFileName_70_70 
