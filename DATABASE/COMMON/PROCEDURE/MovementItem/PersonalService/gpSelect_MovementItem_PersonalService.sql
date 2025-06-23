@@ -713,22 +713,22 @@ BEGIN
                                   , ObjectString_Member_Code1C.ValueData                           AS Code1C
                                   , COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0)  AS PositionLevelId
                              FROM (SELECT DISTINCT tmpAll.PersonalId FROM tmpAll) AS tmpAll
-                             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId 
-                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
-                                                     ON ObjectBoolean_Personal_Main.ObjectId = tmpAll.PersonalId
-                                                    AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
-                             LEFT JOIN ObjectDate AS ObjectDate_Personal_DateOut
-                                                  ON ObjectDate_Personal_DateOut.ObjectId = tmpAll.PersonalId
-                                                 AND ObjectDate_Personal_DateOut.DescId = zc_ObjectDate_Personal_Out()
-                             LEFT JOIN ObjectDate AS ObjectDate_DateIn
-                                                  ON ObjectDate_DateIn.ObjectId = tmpAll.PersonalId
-                                                 AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
-                             LEFT JOIN ObjectString AS ObjectString_Member_Code1C
-                                                    ON ObjectString_Member_Code1C.ObjectId = tmpAll.PersonalId
-                                                   AND ObjectString_Member_Code1C.DescId    = zc_ObjectString_Personal_Code1C()
-                             LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
-                                                  ON ObjectLink_Personal_PositionLevel.ObjectId = tmpAll.PersonalId
-                                                 AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
+                                  LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId 
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
+                                                          ON ObjectBoolean_Personal_Main.ObjectId = tmpAll.PersonalId
+                                                         AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
+                                  LEFT JOIN ObjectDate AS ObjectDate_Personal_DateOut
+                                                       ON ObjectDate_Personal_DateOut.ObjectId = tmpAll.PersonalId
+                                                      AND ObjectDate_Personal_DateOut.DescId = zc_ObjectDate_Personal_Out()
+                                  LEFT JOIN ObjectDate AS ObjectDate_DateIn
+                                                       ON ObjectDate_DateIn.ObjectId = tmpAll.PersonalId
+                                                      AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
+                                  LEFT JOIN ObjectString AS ObjectString_Member_Code1C
+                                                         ON ObjectString_Member_Code1C.ObjectId = tmpAll.PersonalId
+                                                        AND ObjectString_Member_Code1C.DescId    = zc_ObjectString_Personal_Code1C()
+                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                                       ON ObjectLink_Personal_PositionLevel.ObjectId = tmpAll.PersonalId
+                                                      AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
                              )     
 
      , tmpObject_Unit AS       (SELECT * FROM Object WHERE Object.Id IN (SELECT DISTINCT tmpAll.UnitId FROM tmpAll))
@@ -777,7 +777,13 @@ BEGIN
                             , Object_BankSecondTwo_num.ValueData   AS BankSecondTwoName_num
                             , Object_BankSecondDiff_num.Id         AS BankSecondDiffId_num
                             , Object_BankSecondDiff_num.ValueData  AS BankSecondDiffName_num
+                              -- ¹ ï/ï
+                            , ROW_NUMBER() OVER (PARTITION BY tmpAll.UnitId, tmpAll.MemberId_Personal, tmpAll.PositionId, COALESCE (Object_Personal.PositionLevelId, 0)
+                                                 ORDER BY tmpAll.Amount ASC
+                                                ) AS Ord_pay
                        FROM tmpAll
+                            LEFT JOIN tmpPersonal_param AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
+
                             LEFT JOIN MILO AS MILinkObject_FineSubject
                                            ON MILinkObject_FineSubject.MovementItemId = tmpAll.MovementItemId
                                           AND MILinkObject_FineSubject.DescId = zc_MILinkObject_FineSubject()
@@ -1418,6 +1424,8 @@ BEGIN
                                       AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
                                       AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
                                       AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = COALESCE (Object_Personal.PositionLevelId, 0)     
+                                      --
+                                      AND tmpAll.Ord_pay = 1
 
           LEFT JOIN tmpMI_SummCardSecondRecalc ON tmpMI_SummCardSecondRecalc.PersonalId = tmpAll.PersonalId
                                               AND tmpMI_SummCardSecondRecalc.PositionId = tmpAll.PositionId 
