@@ -48,6 +48,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , BarCode TVarChar
              , Sticker_Value1 TFloat, Sticker_Value2 TFloat, Sticker_Value3 TFloat, Sticker_Value4 TFloat, Sticker_Value5 TFloat, Sticker_Value6 TFloat, Sticker_Value7 TFloat, Sticker_Value8 TFloat, Sticker_Value9 TVarChar
 
+             , Info_Top         Text
              , Level1           TVarChar
              , Level2           TVarChar
              , StickerGroupName TVarChar
@@ -559,6 +560,14 @@ BEGIN
 -- [frxDBDHeader."Level2"]
 -- [frxDBDHeader."Info"]
 
+              -- Info_Top
+            , CASE WHEN ObjectBlob_Sticker_InfoTop.ValueData     <> '' AND 1=1 THEN ObjectBlob_Sticker_InfoTop.ValueData
+                   WHEN ObjectBlob_StickerFile_InfoTop.ValueData <> '' AND 1=1 THEN ObjectBlob_StickerFile_InfoTop.ValueData
+                   ELSE 'Œœ≈–¿“Œ– –»Õ ” (¬»–Œ¡Õ» ): “Œ¬ "¿À¿Õ".'
+         || CHR (13) || 'Ã≤—÷≈«Õ¿’Œƒ∆≈ÕÕﬂ Œœ≈–¿“Œ–¿ –»Õ ” “¿ œŒ“”∆ÕŒ—“≈… ¬»–Œ¡Õ»÷“¬¿: ¬”À. —“¿–“Œ¬¿, 26, Ã. ƒÕ≤œ–Œ, 49041, ” –¿ØÕ¿,'
+         || CHR (13) || '“≈À.: +38 (056) 777-18-45. ≈ —œÀ”¿“¿÷≤…Õ»… ƒŒ«¬≤À π 04-23-213 –Ã'
+              END :: Text AS Info_Top
+
               -- Level1
             , (CASE WHEN inIsLength = TRUE
                     THEN LENGTH (REPEAT (' ', vbAddLeft1)
@@ -915,6 +924,16 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_BarCode
                                     ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id
                                    AND ObjectString_BarCode.DescId   = zc_ObjectString_StickerProperty_BarCode()
+
+
+             -- InfoTop
+             LEFT JOIN ObjectBlob AS ObjectBlob_StickerFile_InfoTop
+                                  ON ObjectBlob_StickerFile_InfoTop.ObjectId = Object_StickerFile.Id
+                                 AND ObjectBlob_StickerFile_InfoTop.DescId   = zc_ObjectBlob_StickerFile_InfoTop()
+             -- InfoTop
+             LEFT JOIN ObjectBlob AS ObjectBlob_Sticker_InfoTop
+                                  ON ObjectBlob_Sticker_InfoTop.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                 AND ObjectBlob_Sticker_InfoTop.DescId   = zc_ObjectBlob_Sticker_InfoTop()
 
              LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
                                   ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id

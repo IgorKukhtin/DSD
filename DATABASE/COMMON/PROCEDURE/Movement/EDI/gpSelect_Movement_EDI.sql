@@ -51,6 +51,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DocumentId_vch TVarChar
              , VchasnoId      TVarChar
              , isVchasno      Boolean
+             , isEdiComdoc    Boolean
               )
 AS
 $BODY$
@@ -178,6 +179,8 @@ BEGIN
            , MovementString_DocumentId_vch.ValueData ::TVarChar AS DocumentId_vch
            , MovementString_VchasnoId.ValueData      ::TVarChar AS VchasnoId
            , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '') <> '' THEN TRUE ELSE FALSE END ::Boolean AS isVchasno
+             -- Загрузка ComDoc Вчасно-EDI
+           , COALESCE(MovementBoolean_EdiComdoc.ValueData, FALSE) AS isEdiComdoc
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -364,6 +367,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_VchasnoId
                                      ON MovementString_VchasnoId.MovementId = Movement.Id
                                     AND MovementString_VchasnoId.DescId     = zc_MovementString_VchasnoId()
+            -- Загрузка ComDoc Вчасно-EDI
+            LEFT JOIN MovementBoolean AS MovementBoolean_EdiComdoc
+                                      ON MovementBoolean_EdiComdoc.MovementId =  Movement.Id
+                                     AND MovementBoolean_EdiComdoc.DescId     = zc_MovementBoolean_EdiComdoc()
+
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND (Movement.StatusId <> zc_Enum_Status_Erased() OR vbUserId = 5)

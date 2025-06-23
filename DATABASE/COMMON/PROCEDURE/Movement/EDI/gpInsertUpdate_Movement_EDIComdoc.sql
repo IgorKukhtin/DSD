@@ -353,7 +353,7 @@ BEGIN
      IF TRIM (COALESCE (inDealId, '')) <> ''
      THEN
          -- Проверка
-         IF NOT EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.DescId = zc_MovementString_DealId() AND MS.MovementId = vbMovementId AND MS.ValueData = inDealId)
+         /*IF NOT EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.DescId = zc_MovementString_DealId() AND MS.MovementId = vbMovementId AND MS.ValueData = inDealId)
          THEN
              RAISE EXCEPTION 'Системная Ошибка.Не найден DealId = <%> %для vbMovementId = <%> %не сохранится inVchasnoId = <%>'
                            , inDealId
@@ -362,10 +362,10 @@ BEGIN
                            , CHR (13)
                            , inVchasnoId
                             ;
-         END IF;
+         END IF;*/
 
-         -- НЕ надо сохранять
-         -- PERFORM lpInsertUpdate_MovementString (zc_MovementString_DealId(), vbMovementId, inDealId);
+         -- надо сохранять
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_DealId(), vbMovementId, inDealId || '-not find');
 
      END IF;
      -- VchasnoId - ІД у системі ВЧАСНО
