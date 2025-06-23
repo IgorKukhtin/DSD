@@ -1117,7 +1117,7 @@ BEGIN
             -- эл.подписи
             LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id   
             
-         /*   ---строки
+           /* ---строки
             INNER JOIN tmpMI AS tmpAll
                              ON tmpAll.MovementId = Movement.Id
                                    --AND MovementItem.isErased = tmpIsErased.isErased
@@ -1130,22 +1130,22 @@ BEGIN
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
 
             LEFT JOIN tmpMovementItemString AS MIString_Number
-                                         ON MIString_Number.MovementItemId = tmpAll.MovementItemId
-                                        AND MIString_Number.DescId = zc_MIString_Number()
+                                            ON MIString_Number.MovementItemId = tmpAll.MovementItemId
+                                           AND MIString_Number.DescId = zc_MIString_Number()
 
             LEFT JOIN tmpMovementItemFloat AS MIFloat_SummToPay
-                                        ON MIFloat_SummToPay.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
+                                           ON MIFloat_SummToPay.MovementItemId = tmpAll.MovementItemId
+                                          AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
             LEFT JOIN tmpMovementItemFloat AS MIFloat_SummService
-                                        ON MIFloat_SummService.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+                                           ON MIFloat_SummService.MovementItemId = tmpAll.MovementItemId
+                                          AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
 
             LEFT JOIN tmpMovementItemFloat AS MIFloat_SummCard
-                                        ON MIFloat_SummCard.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+                                           ON MIFloat_SummCard.MovementItemId = tmpAll.MovementItemId
+                                          AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
             LEFT JOIN tmpMovementItemFloat AS MIFloat_SummCardRecalc
-                                        ON MIFloat_SummCardRecalc.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
+                                           ON MIFloat_SummCardRecalc.MovementItemId = tmpAll.MovementItemId
+                                          AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
 
             LEFT JOIN tmpMovementItemFloat AS MIFloat_SummCardSecond
                                            ON MIFloat_SummCardSecond.MovementItemId = tmpAll.MovementItemId
