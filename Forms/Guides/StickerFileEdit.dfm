@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1040#1041#1051#1054#1053'>'
-  ClientHeight = 395
-  ClientWidth = 911
+  ClientHeight = 375
+  ClientWidth = 1157
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -30,7 +30,7 @@
   end
   object cxButton1: TcxButton
     Left = 75
-    Top = 359
+    Top = 344
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -40,7 +40,7 @@
   end
   object cxButton2: TcxButton
     Left = 211
-    Top = 359
+    Top = 344
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -603,16 +603,16 @@
     Width = 97
   end
   object cxLabel30: TcxLabel
-    Left = 662
+    Left = 658
     Top = 8
     Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
   end
   object ceInfoTop: TcxMemo
-    Left = 662
-    Top = 26
+    Left = 654
+    Top = 31
     TabOrder = 82
-    Height = 116
-    Width = 241
+    Height = 304
+    Width = 467
   end
   object ActionList: TActionList
     Top = 100
@@ -947,8 +947,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 384
-    Top = 349
+    Left = 328
+    Top = 325
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -1257,8 +1257,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 488
-    Top = 344
+    Left = 440
+    Top = 328
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 216

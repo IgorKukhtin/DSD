@@ -4284,7 +4284,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerProperty_ValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerProperty_ValueForm');
   exit;
-
   //Property
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerPropertyEditForm'));

@@ -25,6 +25,7 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 104
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -46,6 +47,7 @@ object StickerForm: TStickerForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsView.CellAutoHeight = True
       OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -89,20 +91,11 @@ object StickerForm: TStickerForm
         Width = 120
       end
       object InfoTop_StickerFile: TcxGridDBColumn
-        Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091' ('#1064#1040#1041#1051#1054#1053' '#1080#1085#1076#1080#1074#1080#1076'.)'
+        Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091' ('#1064#1040#1041#1051#1054#1053')'
         DataBinding.FieldName = 'InfoTop_StickerFile'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091' ('#1064#1040#1041#1051#1054#1053' '#1080#1085#1076#1080#1074#1080#1076'.)'
-        Options.Editing = False
-        Width = 153
-      end
-      object InfoTop_StickerFile_inf: TcxGridDBColumn
-        Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091' ('#1064#1040#1041#1051#1054#1053' '#1076#1083#1103' '#1042#1057#1045#1061' '#1101#1090#1086#1081' '#1058#1052')'
-        DataBinding.FieldName = 'InfoTop_StickerFile_inf'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091' ('#1064#1040#1041#1051#1054#1053' '#1076#1083#1103' '#1042#1057#1045#1061' '#1101#1090#1086#1081' '#1058#1052')'
+        HeaderHint = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091' ('#1064#1040#1041#1051#1054#1053')'
         Options.Editing = False
         Width = 153
       end
