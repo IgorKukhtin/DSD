@@ -142,19 +142,19 @@ BEGIN
         , _tmpPartnerBranch AS (
                                      -- Только Контрагенты
                                      SELECT DISTINCT
-                                            ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
+                                            ObjectLink_Partner_Personal.ObjectId AS PartnerId
                                      FROM _tmpMemberBranch
                                           -- Сотрудник для MemberId
                                           INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                                 ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
                                                                AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
-                                          -- Сотрудник (супервайзер)
-                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Member.ObjectId
-                                                               AND ObjectLink_Partner_PersonalTrade.DescId        = zc_ObjectLink_Partner_Personal()
+                                          -- Сотрудник (супервайзер) - здесь выбор
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                                                ON ObjectLink_Partner_Personal.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                               AND ObjectLink_Partner_Personal.DescId        = zc_ObjectLink_Partner_Personal()
                                           -- нашли Юр.лицо
                                           INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_Personal.ObjectId
                                                                AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                                      -- нашли последнюю Дату перевода
                                      WHERE _tmpMemberBranch.Ord = 1
@@ -170,7 +170,7 @@ BEGIN
                                           INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                                 ON ObjectLink_Personal_Member.ChildObjectId = _tmpMemberBranch.MemberId
                                                                AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
-                                          -- Сотрудник (торговый)
+                                          -- Сотрудник (торговый) - здесь выбор
                                           INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                                                                 ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Member.ObjectId
                                                                AND ObjectLink_Partner_PersonalTrade.DescId        = zc_ObjectLink_Partner_PersonalTrade()
