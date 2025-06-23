@@ -140,7 +140,37 @@ BEGIN
    -- сохранили свойство <Дата увольнения>
    IF inIsDateOut = TRUE
    THEN
-       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, inDateOut);
+       -- ЕСЛИ Дата увольнения меняется
+       IF NOT EXISTS (SELECT 1 FROM ObjectDate AS OD WHERE OD.ObjectId = ioId AND OD.DescId = zc_ObjectDate_Personal_Out() AND OD.ValueData = inDateOut)
+       THEN
+           -- 1. Якщо співробітник офіційно оформлений (стоїть галочка у колонці "Оформлен офіціально")
+           IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = ioId AND OB.DescId = zc_ObjectBoolean_Personal_Main() AND OB.ValueData = TRUE)
+           THEN
+                -- то галочку "уволен" та "дату звільнення" можуть = 
+                IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12367417) -- Устанавливать <Дата увольнения> - офіційно оформлений
+                THEN 
+                    -- можуть
+                    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, inDateOut);
+                ELSE
+                    RAISE EXCEPTION 'Ошибка.Сотрудник официально оформлен.%Нет прав устанавливать <Дата увольнения>.', CHR (13);
+                END IF;
+           END IF;
+    
+           -- 2. Якщо співробітник НЕ оформлен офіційно
+           IF NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = ioId AND OB.DescId = zc_ObjectBoolean_Personal_Main() AND OB.ValueData = TRUE)
+           THEN
+                -- то галочку "уволен" та "дату звільнення" можуть = 
+                IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12367418) -- Устанавливать <Дата увольнения> - НЕ оформлений офіційно
+                THEN 
+                    -- можуть
+                    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, inDateOut);
+                ELSE
+                    RAISE EXCEPTION 'Ошибка.Сотрудник НЕ оформлен официально.%Нет прав устанавливать <Дата увольнения>.', CHR (13);
+                END IF;
+           END IF;
+
+       END IF;
+
    ELSE
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, zc_DateEnd());
    END IF;  
