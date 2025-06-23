@@ -4,6 +4,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
+
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_Item(
     IN inStartDate                TDateTime , --
     IN inEndDate                  TDateTime , --
@@ -444,6 +445,7 @@ BEGIN
                          , MovementItem.ObjectId                    AS PersonalId
                          , MILinkObject_Unit.ObjectId               AS UnitId
                          , MILinkObject_Position.ObjectId           AS PositionId
+                         , COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId
                          , MILinkObject_InfoMoney.ObjectId          AS InfoMoneyId
                          , MILinkObject_Member.ObjectId             AS MemberId
                          , ObjectLink_Personal_Member.ChildObjectId AS MemberId_Personal
@@ -469,6 +471,10 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
                                                           ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
+
+                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                              ON ObjectLink_Personal_PositionLevel.ObjectId = MovementItem.ObjectId
+                                             AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
                     WHERE (MovementItem.ObjectId = inPersonalId OR inPersonalId = 0)
                       AND (MILinkObject_Position.ObjectId = inPositionId OR inPositionId = 0) 
                       AND (MILinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
@@ -847,7 +853,39 @@ BEGIN
                                           , Movement.ServiceDate                                     
                                      )
 
-          
+     , tmpData AS (SELECT tmpMovement.PersonalServiceListId
+                        , tmpMovement.ServiceDate
+                        , tmpMovement.ServiceDateId
+                        --    
+                        , tmpAll.MovementId
+                        , tmpAll.MovementItemId
+                        , tmpAll.Amount
+                        , tmpAll.PersonalId
+                        , tmpAll.UnitId
+                        , tmpAll.PositionId
+                        , tmpAll.PositionLevelId
+                        , tmpAll.InfoMoneyId
+                        , tmpAll.MemberId
+                        , tmpAll.MemberId_Personal
+                        , tmpAll.PersonalServiceListId AS PersonalServiceListId_mi
+                        , tmpAll.isErased   
+                        , ROW_NUMBER () OVER (PARTITION BY tmpMovement.PersonalServiceListId, tmpMovement.ServiceDate, tmpAll.UnitId, tmpAll.MemberId_Personal, tmpAll.PositionId, tmpAll.PositionLevelId) AS Ord_pay
+                   FROM tmpMovement
+                       ---строки
+                        INNER JOIN tmpMI AS tmpAll
+                                         ON tmpAll.MovementId = tmpMovement.Id
+                   )     
+
+
+             /*
+            LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId_Personal
+                                        AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
+                                        AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
+                                        AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = tmpAll.PositionLevelId
+                                        AND tmpMIContainer_pay.PersonalServiceListId = tmpMovement.PersonalServiceListId
+                                        AND tmpMIContainer_pay.ServiceDate = tmpMovement.ServiceDate 
+             */
+
 
        -- Результат
        SELECT
@@ -1051,8 +1089,8 @@ BEGIN
             , tmpMIContainer_pay.ContainerId_min   ::Integer
             , tmpMIContainer_pay.ContainerId_max   ::Integer
 
-       FROM tmpMovement
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
+       FROM tmpData AS tmpAll
+            LEFT JOIN Movement ON Movement.id = tmpAll.MovementId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -1064,8 +1102,8 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpMovement.PersonalServiceListId
-            LEFT JOIN tmpMember ON tmpMember.PersonalServiceListId = tmpMovement.PersonalServiceListId
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpAll.PersonalServiceListId
+            LEFT JOIN tmpMember ON tmpMember.PersonalServiceListId = tmpAll.PersonalServiceListId
 
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMember.MemberId
 
@@ -1090,11 +1128,11 @@ BEGIN
             -- эл.подписи
             LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id   
             
-            ---строки
+         /*   ---строки
             INNER JOIN tmpMI AS tmpAll
                              ON tmpAll.MovementId = Movement.Id
                                    --AND MovementItem.isErased = tmpIsErased.isErased
-
+           */
             -- <Карта БН (округление) - 2ф>
             LEFT JOIN tmpMIContainer_diff ON tmpMIContainer_diff.MovementItemId = tmpAll.MovementItemId
 
@@ -1307,7 +1345,7 @@ BEGIN
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpAll.PositionId
             LEFT JOIN Object AS Object_Member_mi ON Object_Member_mi.Id = tmpAll.MemberId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpAll.InfoMoneyId
-            LEFT JOIN Object AS Object_PersonalServiceList_mi ON Object_PersonalServiceList_mi.Id = tmpAll.PersonalServiceListId
+            LEFT JOIN Object AS Object_PersonalServiceList_mi ON Object_PersonalServiceList_mi.Id = tmpAll.PersonalServiceListId_mi
 
             LEFT JOIN ObjectString AS ObjectString_Member_INN
                                    ON ObjectString_Member_INN.ObjectId = tmpAll.MemberId_Personal
@@ -1348,28 +1386,30 @@ BEGIN
                                             AND MILinkObject_UnitFineSubject.DescId = zc_MILinkObject_UnitFineSubject()
             LEFT JOIN Object AS Object_UnitFineSubject ON Object_UnitFineSubject.Id = MILinkObject_UnitFineSubject.ObjectId
             
-            LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId
+            LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId_mi
 
             --LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId     
 
+            /*
             LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
                                  ON ObjectLink_Personal_PositionLevel.ObjectId = tmpAll.PersonalId
                                 AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
-            
+            */
             LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId_Personal
                                         AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
                                         AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
-                                        AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0)
-                                        AND tmpMIContainer_pay.PersonalServiceListId = tmpMovement.PersonalServiceListId
-                                        AND tmpMIContainer_pay.ServiceDate = tmpMovement.ServiceDate 
+                                        AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = tmpAll.PositionLevelId
+                                        AND tmpMIContainer_pay.PersonalServiceListId = tmpAll.PersonalServiceListId
+                                        AND tmpMIContainer_pay.ServiceDate = tmpAll.ServiceDate
+                                        AND tmpAll.Ord_pay = 1 
  
             LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
             LEFT JOIN tmpMIChild_Hours ON tmpMIChild_Hours.ParentId = tmpAll.MovementItemId 
-                                      -- AND tmpMovement.PersonalServiceListId = 8265914 -- Ведомость ЦЕХ упаковки
+                                      -- AND tmpAll.PersonalServiceListId = 8265914 -- Ведомость ЦЕХ упаковки
          
             LEFT JOIN tmpMI_SummCardSecondRecalc ON tmpMI_SummCardSecondRecalc.PersonalId = tmpAll.PersonalId
                                                 AND tmpMI_SummCardSecondRecalc.PositionId = tmpAll.PositionId
-                                                AND tmpMI_SummCardSecondRecalc.ServiceDate = tmpMovement.ServiceDate
+                                                AND tmpMI_SummCardSecondRecalc.ServiceDate = tmpAll.ServiceDate
 
             -- Ограничить доступ к этим ведомостям
             LEFT JOIN ObjectBoolean AS OB_PersonalServiceList_User
@@ -1419,4 +1459,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2025')::TDateTime , inEndDate := ('01.12.2025')::TDateTime , inJuridicalBasisId := 9399 , inPersonalServiceListId:= 0, inUnitId := 0, inPositionId := 0, inPersonalId := 0, inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
+-- SELECT * FROM gpSelect_Movement_PersonalService_Item22(inStartDate := ('01.12.2025')::TDateTime , inEndDate := ('01.12.2025')::TDateTime , inJuridicalBasisId := 9399 , inPersonalServiceListId:= 0, inUnitId := 0, inPositionId := 0, inPersonalId := 0, inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
+--select * from gpSelect_Movement_PersonalService_Item(inStartDate := ('31.05.2025')::TDateTime , inEndDate := ('31.05.2025')::TDateTime , inJuridicalBasisId := 9399 , inPersonalServiceListId := 298665 , inUnitId := 0 , inPositionId := 0 , inPersonalId := 0 , inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457')
+--where MemberId_Personal = 9926634 --AmountCash_pay = 3600

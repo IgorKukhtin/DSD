@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1040#1041#1051#1054#1053'>'
   ClientHeight = 375
-  ClientWidth = 975
+  ClientWidth = 1157
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -608,11 +608,11 @@
     Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
   end
   object ceInfoTop: TcxMemo
-    Left = 658
-    Top = 26
+    Left = 654
+    Top = 31
     TabOrder = 82
     Height = 304
-    Width = 308
+    Width = 467
   end
   object ActionList: TActionList
     Top = 100
