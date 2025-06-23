@@ -876,17 +876,6 @@ BEGIN
                                          ON tmpAll.MovementId = tmpMovement.Id
                    )     
 
-
-             /*
-            LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId_Personal
-                                        AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
-                                        AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
-                                        AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = tmpAll.PositionLevelId
-                                        AND tmpMIContainer_pay.PersonalServiceListId = tmpMovement.PersonalServiceListId
-                                        AND tmpMIContainer_pay.ServiceDate = tmpMovement.ServiceDate 
-             */
-
-
        -- Результат
        SELECT
              Movement.Id                                AS Id
@@ -1390,11 +1379,6 @@ BEGIN
 
             --LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId     
 
-            /*
-            LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
-                                 ON ObjectLink_Personal_PositionLevel.ObjectId = tmpAll.PersonalId
-                                AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
-            */
             LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId_Personal
                                         AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
                                         AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
