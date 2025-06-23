@@ -1947,7 +1947,8 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
     object cbIsServiceDate: TcxCheckBox
       Left = 401
       Top = 5
-      Action = actIsServiceDate
+      Hint = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
+      Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
       TabOrder = 4
       Width = 200
     end
@@ -2293,7 +2294,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         end>
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
       Hint = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actExportTXTVostok: TMultiAction
