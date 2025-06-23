@@ -4037,12 +4037,16 @@ begin
   begin
     ParamByName('inOrderInvNumber').Value := Заголовок.НомерЗамовлення;
     ParamByName('inComDocDate').Value := ConvertEDIDate(Заголовок.ДатаДокументу);
-    if Заголовок.ДатаЗамовлення <> '' then
-      ParamByName('inOrderOperDate').Value :=
-        ConvertEDIDate(Заголовок.ДатаЗамовлення)
+
+    if Заголовок.ДатаЗамовлення <> ''
+    then
+      try ParamByName('inOrderOperDate').Value := ConvertEDIDate(Заголовок.ДатаЗамовлення)
+      except
+         ParamByName('inOrderOperDate').Value:= ConvertEDIDate(Заголовок.ДатаДокументу);
+      end
     else
-      ParamByName('inOrderOperDate').Value :=
-        ConvertEDIDate(Заголовок.ДатаДокументу);
+      ParamByName('inOrderOperDate').Value :=ConvertEDIDate(Заголовок.ДатаДокументу);
+
     ParamByName('inPartnerInvNumber').Value := Заголовок.НомерДокументу;
     if Заголовок.КодТипуДокументу = '007' then begin
        if Заголовок.ДокПідстава.ДатаДокументу <> '' then
@@ -6115,12 +6119,17 @@ begin
                     FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>',
                       FileData) + 21);
 
+
+                    //FileData:= ReplaceStr(FileData,'<ДатаЗамовлення>--</ДатаЗамовлення>','<ДатаЗамовлення></ДатаЗамовлення>');
+
                     // test
                     //ShowMessage(FileData);
 
                     // test
                     AddToLog('');
-                    AddToLog('start ЕлектроннийДокумент FOrderParam.Value : ' + FOrderParam.Value);
+                    AddToLog('start ЕлектроннийДокумент Id : ' + FOrderParam.Value);
+                    AddToLog('deal_id : ' + ADataSet.FieldByName('deal_id').AsString);
+                    AddToLog('vchasno_id  :' + ADataSet.FieldByName('vchasno_id').AsString);
                     AddToLog(FileData);
                     AddToLog('');
 
@@ -6627,7 +6636,7 @@ begin
             while not DataSetCDS.Eof do
             begin
               FOrderParam.Value := DataSetCDS.FieldByName('Id').AsString;
-              if GetVchasnoEDI(22) then
+              if GetVchasnoEDI(22, DataSetCDS) then
               begin
                 // создание документ
                 case EDIDocType of
