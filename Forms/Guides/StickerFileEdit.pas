@@ -21,7 +21,7 @@ uses
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar, cxCheckBox,
-  cxMemo, dsdCommon;
+  cxMemo, dsdCommon, Vcl.ExtCtrls;
 
 type
   TStickerFileEditForm = class(TParentForm)
@@ -91,8 +91,11 @@ type
     cxLabel28: TcxLabel;
     cxLabel29: TcxLabel;
     cbisSize70: TcxCheckBox;
-    cxLabel30: TcxLabel;
     ceInfoTop: TcxMemo;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    cxLabel30: TcxLabel;
   private
     { Private declarations }
   public
