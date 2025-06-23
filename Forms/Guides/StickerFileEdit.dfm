@@ -641,22 +641,20 @@
       Align = alClient
       ImeName = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
       Properties.ImeName = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
-      Properties.ReadOnly = True
       Style.LookAndFeel.SkinName = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
       StyleDisabled.LookAndFeel.SkinName = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
       StyleFocused.LookAndFeel.SkinName = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
       StyleHot.LookAndFeel.SkinName = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
       TabOrder = 0
-      ExplicitLeft = 113
-      ExplicitTop = 224
-      ExplicitWidth = 291
-      ExplicitHeight = 299
+      ExplicitLeft = 6
+      ExplicitTop = 28
       Height = 352
       Width = 353
     end
   end
   object ActionList: TActionList
-    Top = 100
+    Left = 16
+    Top = 116
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
