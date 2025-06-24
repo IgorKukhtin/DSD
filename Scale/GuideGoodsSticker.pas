@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TGuideGoodsStickerForm = class(TForm)
@@ -301,6 +301,8 @@ begin
        ParamByName('inNumPack').Value        := ParamsMI.ParamByName('NumPack_Sticker').AsFloat;
        //№ смены технологов, по умолчанию = 1 (для режим 3)
        ParamByName('inNumTech').Value        := ParamsMI.ParamByName('NumTech_Sticker').AsFloat;
+       //
+       ParamByName('inWeight').Value         := 0;
        //
        Execute;
     end;

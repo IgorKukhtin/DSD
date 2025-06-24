@@ -848,6 +848,13 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 191
