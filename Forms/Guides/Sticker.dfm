@@ -25,7 +25,6 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 104
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -47,7 +46,6 @@ object StickerForm: TStickerForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.CellAutoHeight = True
       OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
