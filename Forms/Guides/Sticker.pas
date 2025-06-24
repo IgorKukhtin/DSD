@@ -202,6 +202,8 @@ type
     actUpdate_SP_NormInDays_not: TdsdExecStoredProc;
     bbUpdate_SP_NormInDays_not: TdxBarButton;
     Value9: TcxGridDBColumn;
+    isDatStart: TcxGridDBColumn;
+    isDatEnd: TcxGridDBColumn;
 
   private
     { Private declarations }

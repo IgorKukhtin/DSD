@@ -23,8 +23,6 @@
     Height = 378
     Align = alLeft
     TabOrder = 1
-    ExplicitLeft = 8
-    ExplicitTop = 25
     object edName: TcxTextEdit
       Left = 40
       Top = 71
@@ -133,7 +131,7 @@
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100': '#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' / '#1070#1088'. '#1083#1080#1094#1086' / '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
     object cbisDefault: TcxCheckBox
-      Left = 130
+      Left = 136
       Top = 26
       Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
       TabOrder = 14
@@ -619,7 +617,6 @@
     Height = 378
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 673
     object Panel3: TPanel
       Left = 1
       Top = 1
@@ -627,7 +624,6 @@
       Height = 24
       Align = alTop
       TabOrder = 1
-      ExplicitWidth = 851
       object cxLabel30: TcxLabel
         Left = 2
         Top = 4
@@ -646,8 +642,6 @@
       StyleFocused.LookAndFeel.SkinName = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
       StyleHot.LookAndFeel.SkinName = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
       TabOrder = 0
-      ExplicitLeft = 6
-      ExplicitTop = 28
       Height = 352
       Width = 353
     end

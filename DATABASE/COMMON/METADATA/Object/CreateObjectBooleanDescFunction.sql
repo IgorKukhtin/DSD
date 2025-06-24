@@ -1535,11 +1535,22 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Cash_notCurrencyDiff() RETURNS Integ
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Cash(), 'zc_ObjectBoolean_Cash_notCurrencyDiff', 'Отключить формирование курсовой разницы' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Cash_notCurrencyDiff');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Sticker_DatStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Sticker_DatStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Cash(), 'zc_ObjectBoolean_Sticker_DatStart', 'Показать только дата пр-во' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Sticker_DatStart');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Sticker_DatEnd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Sticker_DatEnd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Cash(), 'zc_ObjectBoolean_Sticker_DatEnd', 'Показать только вжити до' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Sticker_DatEnd');
+
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 24.06.25         * zc_ObjectBoolean_Sticker_DatStart
+                    zc_ObjectBoolean_Sticker_DatEnd              
  21.03.25         * zc_ObjectBoolean_PersonalServiceList_NotAuto
  20.08.24         * zc_ObjectBoolean_ReceiptChild_Etiketka
  13.06.24         * zc_ObjectBoolean_StickerProperty_NormInDays_not

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1090#1080#1082#1077#1090#1082#1091'>'
-  ClientHeight = 514
+  ClientHeight = 546
   ClientWidth = 687
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,8 +22,8 @@
     Caption = #1059#1075#1083#1077#1074#1086#1076#1080' <='
   end
   object cxButton1: TcxButton
-    Left = 419
-    Top = 479
+    Left = 75
+    Top = 514
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -32,8 +32,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 560
-    Top = 479
+    Left = 216
+    Top = 514
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -368,6 +368,20 @@
     Top = 260
     Caption = #1048#1085#1092#1086' - '#1054#1087#1077#1088#1072#1090#1086#1088' '#1088#1080#1085#1082#1091
   end
+  object cbDatStart: TcxCheckBox
+    Left = 368
+    Top = 467
+    Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1076#1072#1090#1072' '#1087#1088'-'#1074#1086
+    TabOrder = 46
+    Width = 169
+  end
+  object cbDatEnd: TcxCheckBox
+    Left = 368
+    Top = 494
+    Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1074#1078#1080#1090#1080' '#1076#1086
+    TabOrder = 47
+    Width = 169
+  end
   object ActionList: TActionList
     Left = 305
     Top = 40
@@ -587,6 +601,22 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDatStart'
+        Value = Null
+        Component = cbDatStart
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDatEnd'
+        Value = Null
+        Component = cbDatEnd
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -615,7 +645,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
@@ -853,6 +883,20 @@
         Component = GuidesStickerFile_70_70
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDatStart'
+        Value = Null
+        Component = cbDatStart
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDatEnd'
+        Value = Null
+        Component = cbDatEnd
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

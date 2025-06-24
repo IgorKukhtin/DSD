@@ -87,6 +87,8 @@ type
     edValue9: TcxTextEdit;
     ceInfoTop: TcxMemo;
     cxLabel21: TcxLabel;
+    cbDatStart: TcxCheckBox;
+    cbDatEnd: TcxCheckBox;
 
   private
     { Private declarations }

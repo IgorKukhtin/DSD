@@ -4,7 +4,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar,Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker(
  INOUT ioId                  Integer   , -- ключ объекта <Товар>
@@ -29,7 +30,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker(
     IN inValue6              TFloat    , --
     IN inValue7              TFloat    , --
     IN inValue8              TFloat    , --
-    IN inValue9              TVarChar  , --
+    IN inValue9              TVarChar  , -- 
+    IN inisDatStart          Boolean   ,
+    IN inisDatEnd            Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -94,7 +97,7 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Sticker_Value9(), ioId, inValue9);
-      
+
    -- проверка "Вид продукта (Группа)"
    IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_StickerGroup() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inStickerGroupName)) AND TRIM (inStickerGroupName) <> '')
    THEN
@@ -195,6 +198,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Sticker_StickerSort(), ioId, vbStickerSortId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Sticker_StickerNorm(), ioId, vbStickerNormId);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Sticker_DatStart(), ioId, inisDatStart);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Sticker_DatEnd(), ioId, inisDatEnd);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
