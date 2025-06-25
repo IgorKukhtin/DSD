@@ -775,7 +775,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 55
           end
           object Card: TcxGridDBColumn [3]
-            Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
+            Caption = '1.2. '#8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
             DataBinding.FieldName = 'Card'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -784,7 +784,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 115
           end
           object CardIBAN: TcxGridDBColumn [4]
-            Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
+            Caption = '1.1. '#8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
             DataBinding.FieldName = 'CardIBAN'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -793,7 +793,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 115
           end
           object CardBank: TcxGridDBColumn [5]
-            Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'1)'
+            Caption = '1.3. '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'1)'
             DataBinding.FieldName = 'CardBank'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -802,7 +802,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 70
           end
           object CardSecond: TcxGridDBColumn [6]
-            Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
+            Caption = '2.2. '#8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
             DataBinding.FieldName = 'CardSecond'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -811,7 +811,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 115
           end
           object CardIBANSecond: TcxGridDBColumn [7]
-            Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
+            Caption = '2.1. '#8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
             DataBinding.FieldName = 'CardIBANSecond'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -820,7 +820,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 115
           end
           object CardBankSecond: TcxGridDBColumn [8]
-            Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
+            Caption = '2.3. '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
             DataBinding.FieldName = 'CardBankSecond'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -828,7 +828,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 88
           end
           object CardSecondTwo: TcxGridDBColumn [9]
-            Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2) ('#1054#1058#1055')'
+            Caption = '3.2. '#8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2) ('#1054#1058#1055')'
             DataBinding.FieldName = 'CardSecondTwo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -836,7 +836,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 115
           end
           object CardIBANSecondTwo: TcxGridDBColumn [10]
-            Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2) ('#1054#1058#1055')'
+            Caption = '3.1. '#8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2) ('#1054#1058#1055')'
             DataBinding.FieldName = 'CardIBANSecondTwo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -844,7 +844,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 115
           end
           object CardBankSecondTwo: TcxGridDBColumn [11]
-            Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2)('#1054#1058#1055')'
+            Caption = '3.3. '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2)('#1054#1058#1055')'
             DataBinding.FieldName = 'CardBankSecondTwo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -852,7 +852,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 115
           end
           object CardSecondDiff: TcxGridDBColumn [12]
-            Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2) ('#1083#1080#1095#1085'.)'
+            Caption = '4.2. '#8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2) ('#1083#1080#1095#1085'.)'
             DataBinding.FieldName = 'CardSecondDiff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -860,7 +860,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 115
           end
           object CardIBANSecondDiff: TcxGridDBColumn [13]
-            Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2) ('#1083#1080#1095#1085'.)'
+            Caption = '4.1. '#8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2) ('#1083#1080#1095#1085'.)'
             DataBinding.FieldName = 'CardIBANSecondDiff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -868,7 +868,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 115
           end
           object CardBankSecondDiff: TcxGridDBColumn [14]
-            Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2)('#1083#1080#1095#1085'.)'
+            Caption = '4.3. '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2)('#1083#1080#1095#1085'.)'
             DataBinding.FieldName = 'CardBankSecondDiff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -886,7 +886,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 94
           end
           object BankName: TcxGridDBColumn [16]
-            Caption = #1041#1072#1085#1082' - '#1060'1 ('#1089#1087#1088'.)'
+            Caption = '1.0. '#1041#1072#1085#1082' - '#1060'1 ('#1089#1087#1088'.)'
             DataBinding.FieldName = 'BankName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -905,7 +905,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 94
           end
           object BankSecondName: TcxGridDBColumn [18]
-            Caption = #1041#1072#1085#1082' - '#1060'2 ('#1042#1086#1089#1090#1086#1082') ('#1089#1087#1088'.)'
+            Caption = '2.0. '#1041#1072#1085#1082' - '#1060'2 ('#1042#1086#1089#1090#1086#1082') ('#1089#1087#1088'.)'
             DataBinding.FieldName = 'BankSecondName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -924,7 +924,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 94
           end
           object BankSecondTwoName: TcxGridDBColumn [20]
-            Caption = #1041#1072#1085#1082' - '#1060'2 ('#1054#1058#1055') ('#1089#1087#1088'.)'
+            Caption = '3.0. '#1041#1072#1085#1082' - '#1060'2 ('#1054#1058#1055') ('#1089#1087#1088'.)'
             DataBinding.FieldName = 'BankSecondTwoName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -943,7 +943,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 94
           end
           object BankSecondDiffName: TcxGridDBColumn [22]
-            Caption = #1041#1072#1085#1082' - '#1060'2 ('#1083#1080#1095#1085#1099#1081') ('#1089#1087#1088'.)'
+            Caption = '4.0. '#1041#1072#1085#1082' - '#1060'2 ('#1083#1080#1095#1085#1099#1081') ('#1089#1087#1088'.)'
             DataBinding.FieldName = 'BankSecondDiffName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -2724,6 +2724,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2817,6 +2820,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0

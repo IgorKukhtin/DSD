@@ -978,18 +978,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalService_RecalcForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalService_RecalcForm');
   exit;
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalService_DetailDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalService_DetailDialogForm');
-
+  }
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceItemJournal_unitForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceItemJournal_unitForm');
   //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
-  //exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
@@ -1779,10 +1779,12 @@ end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInChildDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnInChildDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
   //exit;

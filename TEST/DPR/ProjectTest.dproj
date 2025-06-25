@@ -5582,6 +5582,10 @@
 				<Form>Report_GoodsMI_ProductionSeparate_TotalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReturnInChildDialog.pas">
+				<Form>ReturnInChildDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
