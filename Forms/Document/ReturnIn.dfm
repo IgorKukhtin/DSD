@@ -2,7 +2,6 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 645
   ClientWidth = 1304
-  ExplicitLeft = -254
   ExplicitWidth = 1320
   ExplicitHeight = 684
   PixelsPerInch = 96
@@ -2437,7 +2436,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 31
     Top = 248
     object actRefreshChild: TdsdDataSetRefresh [0]
-      Category = 'DSDLib'
+      Category = 'Child'
       MoveParams = <>
       StoredProc = spSelect_MI_Child
       StoredProcList = <
@@ -2450,7 +2449,7 @@ inherited ReturnInForm: TReturnInForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object spErasedMIChild2: TdsdUpdateErased [1]
+    object actErasedMIChild: TdsdUpdateErased [1]
       Category = 'Child'
       TabSheet = tsMain
       MoveParams = <>
@@ -2465,7 +2464,6 @@ inherited ReturnInForm: TReturnInForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DetailDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
@@ -2495,7 +2493,7 @@ inherited ReturnInForm: TReturnInForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object spUnErasedMIChild2: TdsdUpdateErased [3]
+    object actUnErasedMIChild: TdsdUpdateErased [3]
       Category = 'Child'
       TabSheet = tsMain
       MoveParams = <>
@@ -2510,7 +2508,6 @@ inherited ReturnInForm: TReturnInForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -5290,7 +5287,7 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
-          ItemName = 'bbUnErasedMIChild2'
+          ItemName = 'bbUnErasedMIChild'
         end>
     end
     object bbInsertMIChild: TdxBarButton
@@ -5398,11 +5395,12 @@ inherited ReturnInForm: TReturnInForm
         end>
     end
     object dxBarButton2: TdxBarButton
-      Action = spErasedMIChild2
+      Action = actErasedMIChild
       Category = 0
     end
-    object bbUnErasedMIChild2: TdxBarButton
-      Action = spUnErasedMIChild2
+    object bbUnErasedMIChild: TdxBarButton
+      Action = actUnErasedMIChild
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
       Category = 0
     end
     object Separator: TdxBarSeparator

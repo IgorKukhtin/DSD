@@ -333,10 +333,10 @@ type
     actRefreshChild: TdsdDataSetRefresh;
     spErasedMIChild: TdsdStoredProc;
     spUnErasedMIChild: TdsdStoredProc;
-    spErasedMIChild2: TdsdUpdateErased;
-    spUnErasedMIChild2: TdsdUpdateErased;
+    actErasedMIChild: TdsdUpdateErased;
+    actUnErasedMIChild: TdsdUpdateErased;
     dxBarButton2: TdxBarButton;
-    bbUnErasedMIChild2: TdxBarButton;
+    bbUnErasedMIChild: TdxBarButton;
     Separator: TdxBarSeparator;
     actUpdateMIChildDialog: TdsdInsertUpdateAction;
     actInsertMIChildDialog: TdsdInsertUpdateAction;
