@@ -125,8 +125,12 @@ end if;
                         , View_PersonalDriver.PersonalId
                         , View_PersonalDriver.MemberId
                    FROM ObjectLink AS ObjectLink_Car_PersonalDriver
+                       INNER JOIN Object AS Object_Car 
+                                         ON Object_Car.Id = ObjectLink_Car_PersonalDriver.ObjectId
+                                        AND Object_Car.IsErased = FALSE 
                        Inner JOIN Object_Personal_View AS View_PersonalDriver
-                                                       ON View_PersonalDriver.PersonalId = ObjectLink_Car_PersonalDriver.ChildObjectId
+                                                       ON View_PersonalDriver.PersonalId = ObjectLink_Car_PersonalDriver.ChildObjectId 
+                                
                    WHERE  ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
                    GROUP BY View_PersonalDriver.PersonalId
                           , View_PersonalDriver.MemberId
