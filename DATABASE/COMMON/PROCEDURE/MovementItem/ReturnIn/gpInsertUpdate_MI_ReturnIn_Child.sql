@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReturnIn_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ReturnIn_Child(
- INOUT inId                  Integer   , -- Ключ объекта <Элемент документа>   
+ INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>   
     IN inParentId            Integer   , -- Ключ
     IN inMovementId          Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inGoodsId             Integer   , -- Товар
@@ -19,6 +19,7 @@ $BODY$
            vbUserId Integer;
            vbMovementItemId_sale Integer;
            vbGoodsKindId Integer;
+           vbPrice TFloat;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -38,14 +39,19 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-
-
      --вид товара, по inParentId
      vbGoodsKindId := (SELECT MILO.ObjectId
                        FROM MovementItemLinkObject AS MILO
                        WHERE MILO.MovementItemId= inParentId
                          AND MILO.DescId = zc_MILinkObject_GoodsKind()
                       );
+                      
+     vbPrice := (SELECT COALESCE (MIFloat_Price.ValueData, 0)
+                 FROM MovementItemFloat AS MIFloat_Price
+                 WHERE MIFloat_Price.MovementItemId = inParentId
+                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                 );
+
      --определить строку док. продажи
      vbMovementItemId_sale := (SELECT tmp.Id 
                                FROM (SELECT MI.Id
@@ -54,7 +60,11 @@ BEGIN
                                           INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                             ON MILinkObject_GoodsKind.MovementItemId = MI.Id
                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                                                           AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (vbGoodsKindId,0)
+                                                                           AND COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) = COALESCE (vbGoodsKindId, zc_GoodsKind_Basis()) 
+                                          INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                                       ON MIFloat_Price.MovementItemId = MI.Id
+                                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                                      AND COALESCE (MIFloat_Price.ValueData, 0) = vbPrice                                 
                                      WHERE MI.MovementId = inMovementId_sale
                                        AND MI.DescId = zc_MI_Master()
                                        AND MI.isErased = FALSE
@@ -62,9 +72,30 @@ BEGIN
                                     ) AS tmp
                                WHERE tmp.Ord = 1                               
                                );
+     --если не нашли товар + вид + цена, пробуемнайти без вида
      IF COALESCE (vbMovementItemId_sale,0) = 0 
      THEN
-          RAISE EXCEPTION 'Ошибка.В выбранном док.Продажи не найден <%> <%>.', lfGet_Object_ValueData_sh (inGoodsId), lfGet_Object_ValueData_sh (vbGoodsKindId);
+          --определить строку док. продажи
+          vbMovementItemId_sale := (SELECT tmp.Id 
+                                    FROM (SELECT MI.Id
+                                               , ROW_NUMBER () OVER (PARTITION BY MI.Amount, MI.Id) AS Ord  
+                                          FROM MovementItem AS MI
+                                               INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                                            ON MIFloat_Price.MovementItemId = MI.Id
+                                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                                           AND COALESCE (MIFloat_Price.ValueData, 0) = vbPrice                                 
+                                          WHERE MI.MovementId = inMovementId_sale
+                                            AND MI.DescId = zc_MI_Master()
+                                            AND MI.isErased = FALSE
+                                            AND MI.ObjectId = inGoodsId
+                                         ) AS tmp
+                                    WHERE tmp.Ord = 1                               
+                                    );
+     END IF;
+
+     IF COALESCE (vbMovementItemId_sale,0) = 0 
+     THEN
+          RAISE EXCEPTION 'Ошибка.В выбранном док.Продажи не найден <%> <%> цена <%>.', lfGet_Object_ValueData_sh (inGoodsId), lfGet_Object_ValueData_sh (vbGoodsKindId), vbPrice;
      END IF;
      
      ioId := lpInsertUpdate_MovementItem_ReturnIn_Child (ioId                  := ioId
