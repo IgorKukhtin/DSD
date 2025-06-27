@@ -2120,6 +2120,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macContractOpenForm: TMultiAction [10]
@@ -3350,6 +3351,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DetailDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
@@ -3366,9 +3368,10 @@
         item
           StoredProc = spSelect_MI_Child
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -3551,7 +3554,23 @@
         end
         item
           Visible = True
-          ItemName = 'bbsChild'
+          ItemName = 'bbUpdateAuto'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCorrective'
         end
         item
           Visible = True
@@ -3560,10 +3579,6 @@
         item
           Visible = True
           ItemName = 'bbsUpdate'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateAmountPartner'
         end
         item
           Visible = True
@@ -3595,7 +3610,27 @@
         end
         item
           Visible = True
-          ItemName = 'bbsOpernForm'
+          ItemName = 'bbOpenSale_child'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenTax_child'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportCheckAmount'
         end
         item
           Visible = True
@@ -3631,7 +3666,31 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPriceCorr'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbsPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsChild'
         end
         item
           Visible = True
@@ -3662,9 +3721,17 @@
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = '    '
+      Hint = '    '
+    end
     inherited bbPrint: TdxBarButton
       Action = mactPrint
       Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+    end
+    inherited bbStatic: TdxBarStatic
+      Caption = '    '
+      Hint = '    '
     end
     object bbTaxCorrective: TdxBarButton
       Action = actTaxCorrective
@@ -3828,26 +3895,6 @@
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbUpdateAuto'
-        end
-        item
-          Visible = True
-          ItemName = 'Separator1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTaxCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'Separator1'
-        end
-        item
-          Visible = True
           ItemName = 'bbUpdatePrice'
         end
         item
@@ -3865,6 +3912,14 @@
         item
           Visible = True
           ItemName = 'bbUpdateMovementSubjectDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateAmountPartner'
         end>
     end
     object bbsOpernForm: TdxBarSubItem
@@ -3874,27 +3929,7 @@
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbOpenSale_child'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenTax_child'
-        end
-        item
-          Visible = True
           ItemName = 'Separator1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReportForm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReportCheck'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReportCheckAmount'
         end>
     end
     object bbsPrint: TdxBarSubItem
@@ -3904,15 +3939,7 @@
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
           ItemName = 'Separator1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintPriceCorr'
         end
         item
           Visible = True

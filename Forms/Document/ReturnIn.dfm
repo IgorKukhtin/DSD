@@ -2,6 +2,7 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 645
   ClientWidth = 1304
+  ExplicitLeft = -140
   ExplicitWidth = 1320
   ExplicitHeight = 684
   PixelsPerInch = 96
@@ -5009,11 +5010,27 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
-          ItemName = 'bbsChild'
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -5049,7 +5066,31 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
-          ItemName = 'bbsOpernForm'
+          ItemName = 'bbGet_checkopen_Sale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGet_checkopen_Tax'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportCheckAmount'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -5081,7 +5122,31 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPriceCorr'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbsPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsChild'
         end
         item
           Visible = True
@@ -5112,9 +5177,17 @@ inherited ReturnInForm: TReturnInForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = '    '
+      Hint = '    '
+    end
     inherited bbPrint: TdxBarButton
       Action = mactPrint
       Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+    end
+    inherited bbStatic: TdxBarStatic
+      Caption = '    '
+      Hint = '    '
     end
     object bbTaxCorrective: TdxBarButton
       Action = actTaxCorrective
@@ -5236,27 +5309,7 @@ inherited ReturnInForm: TReturnInForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbGet_checkopen_Sale'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGet_checkopen_Tax'
-        end
-        item
-          Visible = True
           ItemName = 'bbSeparator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReportForm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReportCheck'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReportCheckAmount'
         end>
     end
     object bbSeparator: TdxBarSeparator
@@ -5307,26 +5360,6 @@ inherited ReturnInForm: TReturnInForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSeparator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTaxCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSeparator'
-        end
-        item
-          Visible = True
           ItemName = 'bbUpdatePrice'
         end
         item
@@ -5359,18 +5392,6 @@ inherited ReturnInForm: TReturnInForm
       Category = 0
       Visible = ivAlways
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSeparator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintPriceCorr'
-        end
         item
           Visible = True
           ItemName = 'bbPrint_Return_By_TaxCorrective'
