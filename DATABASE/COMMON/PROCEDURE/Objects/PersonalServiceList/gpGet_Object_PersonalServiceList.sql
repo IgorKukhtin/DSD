@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isDetail Boolean
              , isAvanceNot Boolean
              , isBankNot Boolean   
-             , isCompensationNot Boolean 
+             , isCompensationNot Boolean, isCompensation Boolean 
              , isNotAuto Boolean
              , isNotRound Boolean
              , isErased Boolean
@@ -95,6 +95,7 @@ BEGIN
            , CAST(FALSE AS Boolean) AS isAvanceNot 
            , CAST(FALSE AS Boolean) AS isBankNot
            , CAST(FALSE AS Boolean) AS isCompensationNot
+           , CAST(FALSE AS Boolean) AS isCompensation
            , CAST(FALSE AS Boolean) AS isNotAuto
            , CAST(FALSE AS Boolean) AS isNotRound
 
@@ -155,6 +156,7 @@ BEGIN
            , COALESCE (ObjectBoolean_AvanceNot.ValueData, FALSE) ::Boolean AS isAvanceNot
            , COALESCE (ObjectBoolean_BankNot.ValueData, FALSE)   ::Boolean AS isBankNot
            , COALESCE (ObjectBoolean_CompensationNot.ValueData, FALSE) ::Boolean AS isCompensationNot
+           , COALESCE (ObjectBoolean_Compensation.ValueData, FALSE)    ::Boolean AS isCompensation
            , COALESCE (ObjectBoolean_NotAuto.ValueData, FALSE)   ::Boolean AS isNotAuto
            , COALESCE (ObjectBoolean_NotRound.ValueData, FALSE)  ::Boolean AS isNotRound
            , Object_PersonalServiceList.isErased   AS isErased
@@ -163,6 +165,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_CompensationNot
                                    ON ObjectBoolean_CompensationNot.ObjectId  = Object_PersonalServiceList.Id
                                   AND ObjectBoolean_CompensationNot.DescId    = zc_ObjectBoolean_PersonalServiceList_CompensationNot()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Compensation
+                                   ON ObjectBoolean_Compensation.ObjectId  = Object_PersonalServiceList.Id
+                                  AND ObjectBoolean_Compensation.DescId    = zc_ObjectBoolean_PersonalServiceList_Compensation()
 
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Second 
                                    ON ObjectBoolean_Second.ObjectId = Object_PersonalServiceList.Id 
@@ -294,6 +300,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.06.25         *
  02.03.25         * isNotRound
  21.03.25         * isNotAuto
  12.02.24         * isBankNot

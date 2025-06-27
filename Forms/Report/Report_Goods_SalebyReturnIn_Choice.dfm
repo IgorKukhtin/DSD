@@ -5,7 +5,6 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -431
   ExplicitWidth = 1101
   ExplicitHeight = 421
   PixelsPerInch = 96
@@ -731,7 +730,7 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -790,7 +789,7 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
         end
         item
           Name = 'OperDatePartner'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDatePartner'
           DataType = ftDateTime
@@ -812,7 +811,7 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
         end
         item
           Name = 'OperDate_Master'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate_Master'
           DataType = ftDateTime
@@ -1087,7 +1086,7 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
       end
       item
         Name = 'inPrice'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = cePrice
         DataType = ftFloat
         ParamType = ptInput
@@ -1288,7 +1287,7 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1296,7 +1295,7 @@ inherited Report_Goods_SalebyReturnIn_ChoiceForm: TReport_Goods_SalebyReturnIn_C
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

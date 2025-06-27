@@ -219,6 +219,15 @@ inherited Report_PersonalService_RecalcForm: TReport_PersonalService_RecalcForm
             HeaderAlignmentVert = vaCenter
             Width = 140
           end
+          object isCompensation: TcxGridDBColumn
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
+            DataBinding.FieldName = 'isCompensation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1079#1085#1072#1082' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
+            Options.Editing = False
+            Width = 87
+          end
           object PersonalServiceListName_mi: TcxGridDBColumn
             Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1041#1053')'
             DataBinding.FieldName = 'PersonalServiceListName_mi'

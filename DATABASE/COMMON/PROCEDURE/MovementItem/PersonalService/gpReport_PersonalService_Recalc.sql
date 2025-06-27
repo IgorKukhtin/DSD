@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_PersonalService_Recalc(
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
+             , isCompensation Boolean
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , MemberId_Personal Integer
              , INN TVarChar, Code1C TVarChar
@@ -306,7 +307,8 @@ BEGIN
             , Movement.InvNumber
             , Movement.OperDate
             , Object_PersonalServiceList.Id           AS PersonalServiceListId
-            , Object_PersonalServiceList.ValueData    AS PersonalServiceListName       
+            , Object_PersonalServiceList.ValueData    AS PersonalServiceListName
+            , COALESCE (ObjectBoolean_Compensation.ValueData, FALSE) ::Boolean AS isCompensation       
 
             , Object_Personal.Id                      AS PersonalId
             , Object_Personal.ObjectCode              AS PersonalCode
@@ -436,6 +438,9 @@ BEGIN
                                  ON ObjectLink_Personal_PositionLevel.ObjectId = tmpMI_Data.PersonalId
                                 AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Compensation
+                                    ON ObjectBoolean_Compensation.ObjectId = tmpMI_Data.PersonalServiceListId
+                                   AND ObjectBoolean_Compensation.DescId = zc_ObjectBoolean_PersonalServiceList_Compensation()
       ;
 
 END;

@@ -2,7 +2,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
-  ClientHeight = 443
+  ClientHeight = 441
   ClientWidth = 623
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -127,7 +127,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object ceisSecond: TcxCheckBox
     Left = 85
-    Top = 30
+    Top = 37
     Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
     TabOrder = 14
     Width = 95
@@ -274,7 +274,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cbDetail: TcxCheckBox
     Left = 194
-    Top = 30
+    Top = 37
     Hint = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' '#1076#1072#1085#1085#1099#1093
     Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
     ParentShowHint = False
@@ -391,7 +391,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 274
   end
   object cbCompensationNot: TcxCheckBox
-    Left = 458
+    Left = 461
     Top = 10
     Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1076#1083#1103' '#1086#1090#1087#1091#1089#1082#1072
     Caption = #1048#1089#1082#1083'. '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
@@ -429,6 +429,16 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     ShowHint = True
     TabOrder = 50
     Width = 170
+  end
+  object cbCompensation: TcxCheckBox
+    Left = 85
+    Top = 10
+    Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
+    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 51
+    Width = 156
   end
   object ActionList: TActionList
     Left = 88
@@ -675,6 +685,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisCompensation'
+        Value = Null
+        Component = cbCompensation
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisNotAuto'
         Value = Null
         Component = cbisNotAuto
@@ -707,8 +725,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
-    Top = 56
+    Left = 256
+    Top = 40
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -1021,6 +1039,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'isNotRound'
         Value = Null
         Component = cbisNotRound
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCompensation'
+        Value = Null
+        Component = cbCompensation
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

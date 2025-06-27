@@ -203,6 +203,15 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Options.Editing = False
         Width = 100
       end
+      object isCompensation: TcxGridDBColumn
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
+        DataBinding.FieldName = 'isCompensation'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1080#1079#1085#1072#1082' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
+        Options.Editing = False
+        Width = 100
+      end
       object isSecond: TcxGridDBColumn
         Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
         DataBinding.FieldName = 'isSecond'

@@ -974,7 +974,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceNalogDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceNalogDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalService_RecalcForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalService_RecalcForm');
   exit;
@@ -982,7 +982,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalService_DetailDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalService_DetailDialogForm');
-  }
+
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceItemJournal_unitForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceItemJournal_unitForm');
   //exit;

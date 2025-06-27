@@ -108,7 +108,7 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
     Top = 68
     Caption = #8470' '#1076#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080
   end
-  object edInvNumberOrderReturnTare: TcxButtonEdit
+  object edInvNumberSale: TcxButtonEdit
     Left = 8
     Top = 87
     Properties.Buttons = <
@@ -186,37 +186,9 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterJuridicalId'
-        Value = ''
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterJuridicalName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 52
+    Left = 288
+    Top = 20
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -244,102 +216,9 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsKindId'
-        Value = ''
-        Component = GuidesGooodsKind
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsKindName'
-        Value = ''
-        Component = GuidesGooodsKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReceiptId'
-        Value = ''
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReceiptName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsKindCompleteId'
-        Value = ''
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsKindCompleteName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReceiptCode_user'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 25
-  end
-  object GuidesSale: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edInvNumberOrderReturnTare
-    Key = '0'
-    FormNameParam.Value = 'TSaleJournalChoiceForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TSaleJournalChoiceForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = GuidesSale
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Full'
-        Value = ''
-        Component = GuidesSale
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartnerId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'FromId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartnerName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'FromName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 84
-    Top = 88
   end
   object ActionList: TActionList
     Left = 351
@@ -444,15 +323,11 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
       item
         Name = 'MovementId_Sale'
         Value = ''
-        Component = GuidesSale
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Sale'
         Value = ''
-        Component = GuidesSale
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -476,6 +351,66 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
         Component = FormParams
         ComponentItem = 'FromName'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PaidKindId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PaidKindName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContractId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId_From'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalId_From'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName_From'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalName_From'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDateTax'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'StartDateTax'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -528,6 +463,14 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementItemId_sale'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementItemId_sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = Null
         Component = edAmount
@@ -538,5 +481,168 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
     PackSize = 1
     Left = 48
     Top = 136
+  end
+  object GuidesSale: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberSale
+    FormNameParam.Value = 'TReport_Goods_SalebyReturnIn_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReport_Goods_SalebyReturnIn_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSale
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSale
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementItemId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementItemId_sale'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'StartDateTax'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperDatePartner'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FromId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FromName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PaidKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PaidKindName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = edPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContractName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = GuidesGooodsKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindName'
+        Value = Null
+        Component = GuidesGooodsKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalId_From'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalName_From'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 104
+    Top = 81
   end
 end

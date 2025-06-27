@@ -40,14 +40,14 @@ type
     cxLabel1: TcxLabel;
     edPrice: TcxCurrencyEdit;
     cxLabel31: TcxLabel;
-    edInvNumberOrderReturnTare: TcxButtonEdit;
-    GuidesSale: TdsdGuides;
+    edInvNumberSale: TcxButtonEdit;
     ActionList: TActionList;
     InsertUpdateGuides: TdsdInsertUpdateGuides;
     actRefresh: TdsdDataSetRefresh;
     FormClose: TdsdFormClose;
     spGet: TdsdStoredProc;
     spInser_MI_Child: TdsdStoredProc;
+    GuidesSale: TdsdGuides;
   private
     { Private declarations }
   public
