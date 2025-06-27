@@ -179,6 +179,7 @@ BEGIN
      --выбираем все документы дл€ тек.мес€ца начислений
      , tmpMovement_PS AS (SELECT MovementDate_ServiceDate.MovementId             AS Id
                                , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
+                               , COALESCE (ObjectBoolean_Compensation.ValueData, FALSE) ::Boolean AS isCompensation
                           FROM MovementDate AS MovementDate_ServiceDate
                                JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
                                             AND Movement.DescId = zc_Movement_PersonalService()
@@ -186,12 +187,16 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                             ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                                            AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Compensation
+                                                       ON ObjectBoolean_Compensation.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                                      AND ObjectBoolean_Compensation.DescId = zc_ObjectBoolean_PersonalServiceList_Compensation()
                           WHERE MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', vbServiceDate) AND (DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
                             AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
                           )
      -- все строки выбр. док
      , tmpMI_PS AS (SELECT Movement.Id                              AS MovementId
                          , Movement.PersonalServiceListId           AS PersonalServiceListId
+                         , Movement.isCompensation                  AS isCompensation
                          , MovementItem.Id                          AS MovementItemId
                          , MovementItem.ObjectId                    AS PersonalId
                          , MILinkObject_Unit.ObjectId               AS UnitId
@@ -238,6 +243,7 @@ BEGIN
                                                           , zc_MIFloat_SummNalogRet()
                                                           , zc_MIFloat_SummNalog()
                                                           , zc_MIFloat_SummCardSecond()
+                                                          , zc_MIFloat_SummService()
                                                           ) 
                         )
      
@@ -251,8 +257,8 @@ BEGIN
                            , COALESCE (MIFloat_SummChild.ValueData,0)        AS SummChild
                            , COALESCE (MIFloat_SummMinusExt.ValueData,0)     AS SummMinusExt
                            , COALESCE (MIFloat_SummAddOth.ValueData,0)       AS SummAddOth 
-                           , COALESCE (MIFloat_SummCompensation.ValueData,0) AS SummCompensation
-                           , COALESCE (MIFloat_SummAvance.ValueData,0)       AS SummAvance                           
+                           , (COALESCE (MIFloat_SummCompensation.ValueData,0) + COALESCE (MIFloat_SummService.ValueData,0)) AS SummCompensation
+                           , COALESCE (MIFloat_SummAvance.ValueData,0)       AS SummAvance
                       FROM tmpMI_PS AS tmpMI
                       LEFT JOIN tmpMIFloat_PS AS MIFloat_SummCard
                                               ON MIFloat_SummCard.MovementItemId = tmpMI.MovementItemId
@@ -287,6 +293,10 @@ BEGIN
                       LEFT JOIN tmpMIFloat_PS AS MIFloat_SummAvance
                                               ON MIFloat_SummAvance.MovementItemId = tmpMI.MovementItemId
                                              AND MIFloat_SummAvance.DescId = zc_MIFloat_SummAvance()
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummService
+                                              ON MIFloat_SummService.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+                                             AND tmpMI.isCompensation = True
                       WHERE COALESCE (MIFloat_SummCard.ValueData,0)        <> 0
                          OR COALESCE (MIFloat_SummCardSecond.ValueData,0)  <> 0
                          OR COALESCE (MIFloat_SummNalog.ValueData,0)       <> 0
@@ -296,11 +306,9 @@ BEGIN
                          OR COALESCE (MIFloat_SummChild.ValueData,0)       <> 0
                          OR COALESCE (MIFloat_SummMinusExt.ValueData,0)    <> 0
                          OR COALESCE (MIFloat_SummAddOth.ValueData,0)      <> 0
-                         OR COALESCE (MIFloat_SummCompensation.ValueData,0)<> 0
-                         OR COALESCE (MIFloat_SummAvance.ValueData,0)      <> 0                           
+                         OR (COALESCE (MIFloat_SummCompensation.ValueData,0) + COALESCE (MIFloat_SummService.ValueData,0)) <> 0
+                         OR COALESCE (MIFloat_SummAvance.ValueData,0)      <> 0
                       )
-
-
 
        -- –езультат
        SELECT Movement.Id AS MovementId
@@ -308,7 +316,7 @@ BEGIN
             , Movement.OperDate
             , Object_PersonalServiceList.Id           AS PersonalServiceListId
             , Object_PersonalServiceList.ValueData    AS PersonalServiceListName
-            , COALESCE (ObjectBoolean_Compensation.ValueData, FALSE) ::Boolean AS isCompensation       
+            , COALESCE (tmpMI_Data.isCompensation, FALSE) ::Boolean AS isCompensation       
 
             , Object_Personal.Id                      AS PersonalId
             , Object_Personal.ObjectCode              AS PersonalCode
@@ -438,9 +446,6 @@ BEGIN
                                  ON ObjectLink_Personal_PositionLevel.ObjectId = tmpMI_Data.PersonalId
                                 AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
 
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Compensation
-                                    ON ObjectBoolean_Compensation.ObjectId = tmpMI_Data.PersonalServiceListId
-                                   AND ObjectBoolean_Compensation.DescId = zc_ObjectBoolean_PersonalServiceList_Compensation()
       ;
 
 END;
