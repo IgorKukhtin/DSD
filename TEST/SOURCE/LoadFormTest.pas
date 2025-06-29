@@ -974,11 +974,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceNalogDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceNalogDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalService_RecalcForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalService_RecalcForm');
   exit;
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalService_DetailDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalService_DetailDialogForm');
@@ -989,7 +989,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
-  //exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
@@ -1779,16 +1779,20 @@ end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInChildDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnInChildDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
   //exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
 
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
   exit;

@@ -247,6 +247,24 @@ object Sticker_ObjectForm: TSticker_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 63
       end
+      object isDatStart: TcxGridDBColumn
+        Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1090#1072' '#1087#1088'-'#1074#1086
+        DataBinding.FieldName = 'isDatStart'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1076#1072#1090#1072' '#1087#1088'-'#1074#1086
+        Options.Editing = False
+        Width = 102
+      end
+      object isDatEnd: TcxGridDBColumn
+        Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1078#1080#1090#1080' '#1076#1086
+        DataBinding.FieldName = 'isDatEnd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1074#1078#1080#1090#1080' '#1076#1086
+        Options.Editing = False
+        Width = 80
+      end
       object Value1: TcxGridDBColumn
         Caption = #1059#1075#1083#1077#1074#1086#1076#1080' '#1085#1077' '#1073#1086#1083#1100#1096#1077
         DataBinding.FieldName = 'Value1'

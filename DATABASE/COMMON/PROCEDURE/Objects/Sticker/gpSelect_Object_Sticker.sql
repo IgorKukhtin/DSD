@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar -- , StickerName TVarC
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
              , Value6 TFloat, Value7 TFloat, Value8 TFloat
              , Value9 TVarChar
+             , isDatStart Boolean, isDatEnd Boolean
              , isErased Boolean
               )
 AS
@@ -119,6 +120,9 @@ BEGIN
                                 , ObjectFloat_Value8.ValueData      AS Value8
                                 
                                 , ObjectString_Value9.ValueData ::TVarChar AS Value9
+                                
+                                , ObjectBoolean_DatStart.ValueData ::Boolean AS isDatStart
+                                , ObjectBoolean_DatEnd.ValueData   ::Boolean AS isDatEnd
 
                                 , Object_Sticker.isErased           AS isErased
                     
@@ -230,6 +234,12 @@ BEGIN
                                                      AND ObjectLink_StickerFile_TradeMark_70_70.DescId = zc_ObjectLink_StickerFile_TradeMark()
                                  LEFT JOIN Object AS Object_TradeMark_StickerFile_70_70 ON Object_TradeMark_StickerFile_70_70.Id = ObjectLink_StickerFile_TradeMark_70_70.ChildObjectId
 
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_DatStart
+                                                         ON ObjectBoolean_DatStart.ObjectId = Object_Sticker.Id 
+                                                        AND ObjectBoolean_DatStart.DescId = zc_ObjectBoolean_Sticker_DatStart()
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_DatEnd
+                                                         ON ObjectBoolean_DatEnd.ObjectId = Object_Sticker.Id 
+                                                        AND ObjectBoolean_DatEnd.DescId = zc_ObjectBoolean_Sticker_DatEnd()
                           )
 
        -- –ÂÁÛÎ¸Ú‡Ú
@@ -287,6 +297,10 @@ BEGIN
             , COALESCE (Object_Sticker.Value8, 0)            :: TFloat    AS Value8
             
             , COALESCE (Object_Sticker.Value9, '')           :: TVarChar  AS Value9
+
+            
+            , COALESCE (Object_Sticker.isDatStart, FALSE) ::Boolean AS isDatStart
+            , COALESCE (Object_Sticker.isDatEnd, FALSE)   ::Boolean AS isDatEnd
 
             , COALESCE (Object_Sticker.isErased, FALSE) :: Boolean           AS isErased
 
@@ -389,6 +403,9 @@ BEGIN
 
             , ObjectString_Value9.ValueData ::TVarChar AS Value9
 
+            , ObjectBoolean_DatStart.ValueData ::Boolean AS isDatStart
+            , ObjectBoolean_DatEnd.ValueData   ::Boolean AS isDatEnd
+
             , Object_Sticker.isErased           AS isErased
 
        FROM (SELECT Object_Sticker.* 
@@ -489,6 +506,13 @@ BEGIN
                                   ON ObjectBlob_InfoTop.ObjectId = Object_Sticker.Id 
                                  AND ObjectBlob_InfoTop.DescId = zc_ObjectBlob_Sticker_InfoTop()
 
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_DatStart
+                                     ON ObjectBoolean_DatStart.ObjectId = Object_Sticker.Id 
+                                    AND ObjectBoolean_DatStart.DescId = zc_ObjectBoolean_Sticker_DatStart()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_DatEnd
+                                     ON ObjectBoolean_DatEnd.ObjectId = Object_Sticker.Id 
+                                    AND ObjectBoolean_DatEnd.DescId = zc_ObjectBoolean_Sticker_DatEnd()
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                   ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
                                  AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
@@ -510,6 +534,8 @@ BEGIN
              LEFT JOIN Object AS Object_TradeMark_StickerFile_70_70 ON Object_TradeMark_StickerFile_70_70.Id = ObjectLink_StickerFile_TradeMark_70_70.ChildObjectId
             
              LEFT JOIN tmpStickerFile ON tmpStickerFile.TradeMarkId = ObjectLink_Goods_TradeMark.ChildObjectId
+
+
       ;
     END IF;
   
@@ -521,6 +547,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.06.25         *
  18.06.25         *
  27.05.25         *
  01.09.23         *

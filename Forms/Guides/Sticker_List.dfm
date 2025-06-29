@@ -579,9 +579,11 @@ object Sticker_ListForm: TSticker_ListForm
         Width = 70
       end
       object Value5_SP_orig: TcxGridDBColumn
+        Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' ('#1089#1074'-'#1074#1072' '#1101#1090'.)'
         DataBinding.FieldName = 'Value5_SP_orig'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' ('#1089#1074'-'#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080')'
         Options.Editing = False
         Width = 55
       end

@@ -322,6 +322,24 @@ type
     SubjectDocName: TcxGridDBColumn;
     cxLabel27: TcxLabel;
     edCorrSumm: TcxCurrencyEdit;
+    bbsOpernForm: TdxBarSubItem;
+    bbSeparator: TdxBarSeparator;
+    bbsChild: TdxBarSubItem;
+    bbInsertMIChild: TdxBarButton;
+    bbUpdateMIChild: TdxBarButton;
+    bbsUpdate: TdxBarSubItem;
+    bbsPrint: TdxBarSubItem;
+    isCalculated: TcxGridDBColumn;
+    actRefreshChild: TdsdDataSetRefresh;
+    spErasedMIChild: TdsdStoredProc;
+    spUnErasedMIChild: TdsdStoredProc;
+    actErasedMIChild: TdsdUpdateErased;
+    actUnErasedMIChild: TdsdUpdateErased;
+    dxBarButton2: TdxBarButton;
+    bbUnErasedMIChild: TdxBarButton;
+    Separator: TdxBarSeparator;
+    actUpdateMIChildDialog: TdsdInsertUpdateAction;
+    actInsertMIChildDialog: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public

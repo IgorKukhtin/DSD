@@ -20,9 +20,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integ
                                                                 , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar
                                                                 , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar
+                                                                , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);*/
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar
-                                                                , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
-
+                                                                , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
  INOUT ioId                    Integer   ,     -- ключ объекта <> 
     IN inCode                  Integer   ,     -- Код объекта  
@@ -50,6 +51,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
     IN inisAvanceNot           Boolean   ,     --
     IN inisBankNot             Boolean   ,     -- Исключить из расчета Выплата банк 2ф
     IN inisCompensationNot     Boolean   ,     -- Исключить из расчета компенсации для отпуска
+    IN inisCompensation        Boolean   ,     -- Признак Ведомость компенсация
     IN inisNotAuto             Boolean   ,     -- Исключить из авто-начисления ЗП
     IN inisNotRound            Boolean   ,     -- Исключить из округлений по кассе
     IN inContentType           TVarChar   ,     --
@@ -139,6 +141,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PersonalServiceList_CompensationNot(), ioId, inisCompensationNot);
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PersonalServiceList_Compensation(), ioId, inisCompensation);
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PersonalServiceList_NotAuto(), ioId, inisNotAuto);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PersonalServiceList_NotRound(), ioId, inisNotRound);
@@ -165,6 +169,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.06.25         *
  02.04.25         * inisNotRound
  21.03.25         * inisNotAuto
  12.02.24         * inisBankNot

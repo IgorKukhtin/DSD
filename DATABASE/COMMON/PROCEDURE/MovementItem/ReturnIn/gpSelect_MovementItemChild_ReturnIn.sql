@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, ParentId Integer, Amount TFloat
              , JuridicalName TVarChar
              , DescName_Sale TVarChar
              , ChangePercent_Sale TFloat, MovementPromo_Sale TVarChar
+             , isCalculated Boolean
              , isError  Boolean
              , isErased Boolean
               )
@@ -53,7 +54,8 @@ BEGIN
                            , MovementItem.Amount                          AS Amount
                            , MIFloat_MovementId.ValueData      :: Integer AS MovementId_sale
                            , MIFloat_MovementItemId.ValueData  :: Integer AS MovementItemId_sale
-                           , CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN TRUE ELSE MovementItem.isErased END :: Boolean AS isErased
+                           , CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN TRUE ELSE MovementItem.isErased END :: Boolean AS isErased 
+                           , COALESCE (MIBoolean_Calculated.ValueData, FALSE ) ::Boolean AS isCalculated
                       FROM MovementItem  
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
@@ -61,6 +63,11 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                        ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                                       AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
+
+                           LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                         ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                        AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+                                                      
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Child()
                       )
@@ -125,6 +132,8 @@ BEGIN
             , MIFloat_ChangePercent.ValueData                AS ChangePercent_Sale
             , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo_Sale
 
+            , tmpMI.isCalculated ::Boolean
+            
             , CASE WHEN MISale.Id > 0
                    AND (MISale.isErased = TRUE
                      OR tmpMI.Amount                                  > COALESCE (MIFloat_AmountPartner.ValueData, 0)
@@ -237,6 +246,7 @@ ALTER FUNCTION gpSelect_MovementItemChild_ReturnIn (Integer, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 25.06.25         * isCalculated
  15.05.16                                        *
 */
 

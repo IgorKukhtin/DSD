@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , isInfo TBlob, InfoTop TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
              , Value6 TFloat, Value7 TFloat, Value8 TFloat
+             , isDatStart Boolean, isDatEnd Boolean
               )
 AS
 $BODY$
@@ -75,7 +76,9 @@ BEGIN
             , CAST (0 as TFloat)      AS Value5
             , CAST (0 as TFloat)      AS Value6
             , CAST (0 as TFloat)      AS Value7
-            , CAST (0 as TFloat)      AS Value8
+            , CAST (0 as TFloat)      AS Value8 
+            , CAST (FALSE AS Boolean) AS isDatStart
+            , CAST (FALSE AS Boolean) AS isDatEnd
             ;
    ELSE
        RETURN QUERY 
@@ -124,6 +127,8 @@ BEGIN
             , ObjectFloat_Value7.ValueData      AS Value7
             , ObjectFloat_Value8.ValueData      AS Value8
 
+            , COALESCE (ObjectBoolean_DatStart.ValueData, FALSE) ::Boolean AS isDatStart
+            , COALESCE (ObjectBoolean_DatEnd.ValueData, FALSE)   ::Boolean AS isDatEnd
        FROM Object AS Object_Sticker
             
              LEFT JOIN ObjectLink AS ObjectLink_Sticker_Juridical
@@ -207,6 +212,13 @@ BEGIN
              LEFT JOIN ObjectBlob AS ObjectBlob_InfoTop
                                   ON ObjectBlob_InfoTop.ObjectId = Object_Sticker.Id 
                                  AND ObjectBlob_InfoTop.DescId = zc_ObjectBlob_Sticker_InfoTop()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_DatStart
+                                     ON ObjectBoolean_DatStart.ObjectId = Object_Sticker.Id 
+                                    AND ObjectBoolean_DatStart.DescId = zc_ObjectBoolean_Sticker_DatStart()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_DatEnd
+                                     ON ObjectBoolean_DatEnd.ObjectId = Object_Sticker.Id 
+                                    AND ObjectBoolean_DatEnd.DescId = zc_ObjectBoolean_Sticker_DatEnd()
 
        WHERE Object_Sticker.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
 
