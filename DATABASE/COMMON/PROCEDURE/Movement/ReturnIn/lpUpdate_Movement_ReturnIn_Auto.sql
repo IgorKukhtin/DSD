@@ -907,10 +907,13 @@ BEGIN
 
 if inUserId = 5 AND 1=1
 then
-    RAISE EXCEPTION 'Admin - Errr _end   % % % %', outMessageText
+    RAISE EXCEPTION 'Admin - Errr _end   % % % % <%> <%>', outMessageText
     , (SELECT MAX (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar || ' _ ' || MIN (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar FROM _tmpResult_ReturnIn_Auto)
     , (select Movement.InvNumber from _tmpResult_ReturnIn_Auto join Movement on Movement.Id = MovementId_sale LIMIT 1)
     , (select count(*) from _tmpResult_ReturnIn_Auto)
+    , zfConvert_DateToString (EndDate)
+    , zfConvert_DateToString (inEndDateSale)
+
      ;
     -- 'Повторите действие через 3 мин.'
 end if;
