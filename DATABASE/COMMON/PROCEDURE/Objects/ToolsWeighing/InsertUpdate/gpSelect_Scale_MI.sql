@@ -37,7 +37,10 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , ReasonName  TVarChar, AssetId  Integer, AssetName  TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isBarCode   Boolean
+               --
              , isPromo     Boolean
+             , OrderExternalName_1001 TVarChar
+               --
              , Color_calc  Integer
              , TaxDoc      TFloat
              , TaxDoc_calc TFloat
@@ -129,7 +132,7 @@ BEGIN
                            , MIDate_Insert.ValueData AS InsertDate
                            , MIDate_Update.ValueData AS UpdateDate
 
-                           , MIFloat_PromoMovement.ValueData AS MovementId_Promo
+                           , MIFloat_PromoMovement.ValueData :: Integer AS MovementId_Promo
 
                            , MIBoolean_BarCode.ValueData AS isBarCode
 
@@ -433,6 +436,14 @@ BEGIN
            , COALESCE (tmpMI.isBarCode, FALSE) :: Boolean AS isBarCode
            , CASE WHEN tmpMI.MovementId_Promo > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
 
+             -- только для zc_Movement_OrderExternal - 1001...
+           , (COALESCE (Object_Retail.ValueData, Object_GoodsProperty_alan.ValueData)
+           || CASE WHEN tmpMI.MovementId_Promo > 0
+                        THEN ' № <' || Movement_Promo_1001.InvNumber || '>' || ' от <' || zfConvert_DateToString (Movement_Promo_1001.OperDate) :: TVarChar || '>'
+                        ELSE '' 
+              END
+             ) :: TVarChar AS OrderExternalName_1001
+
            , CASE WHEN tmpAmountDoc.AmountStart > 0 AND tmpMI.isErased = FALSE AND NOT (tmpMI.AmountPartner BETWEEN tmpAmountDoc.AmountStart AND tmpAmountDoc.AmountEnd)
                        THEN 16711680 -- clBlue
                   ELSE 0 -- clBlack
@@ -479,6 +490,20 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            -- только для zc_Movement_OrderExternal - 1001...
+            LEFT JOIN Movement AS Movement_Promo_1001 ON Movement_Promo_1001.Id = tmpMI.MovementId_Promo
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = tmpMI.MovementId_Promo
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+            LEFT JOIN Object AS Object_GoodsProperty_alan ON Object_GoodsProperty_alan.Id = 83955 -- Алан
 
        ORDER BY tmpMI.MovementItemId DESC
      ;

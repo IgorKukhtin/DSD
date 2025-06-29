@@ -71,7 +71,12 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
 
              , DateStart         TDateTime
              , DateEnd           TDateTime
-             -- вложенность
+
+             , DateStartEnd_str  TVarChar
+             , isDateStart       Boolean
+             , isDateEnd         Boolean
+
+               -- вложенность
              , StickerProperty_Value11 TVarChar
 
              , DateTare          TDateTime
@@ -148,6 +153,24 @@ BEGIN
                                      , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)
                                       );
 
+     ELSEIF inIs70_70 = TRUE
+     THEN
+         vbGoodsPropertyId:= COALESCE ((SELECT MAX (OL_Juridical_GoodsProperty.ChildObjectId)
+                                        FROM ObjectLink AS OL_Juridical_Retail
+                                             INNER JOIN ObjectLink AS OL_Juridical_GoodsProperty
+                                                                   ON OL_Juridical_GoodsProperty.ObjectId      = OL_Juridical_Retail.ObjectId
+                                                                  AND OL_Juridical_GoodsProperty.DescId        = zc_ObjectLink_Juridical_GoodsProperty()
+                                                                  AND OL_Juridical_GoodsProperty.ChildObjectId > 0
+                                        WHERE OL_Juridical_Retail.ChildObjectId = inRetailId
+                                          AND OL_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
+                                       )
+                                     , (SELECT OL_Retail_GoodsProperty.ChildObjectId
+                                        FROM ObjectLink AS OL_Retail_GoodsProperty
+                                        WHERE OL_Retail_GoodsProperty.ObjectId = inRetailId
+                                          AND OL_Retail_GoodsProperty.DescId   = zc_ObjectLink_Retail_GoodsProperty()
+                                       )
+                                     , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)
+                                      );
      ELSE
          vbGoodsPropertyId:= 0;
      END IF;
@@ -274,7 +297,42 @@ BEGIN
      -- Результат
      RETURN QUERY
        WITH
-          tmpObject_GoodsPropertyValue AS
+         -- Вес одной упаковки
+         tmpGoodsByGoodsKind_gk AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS GoodsByGoodsKindId
+                                         , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
+                                         , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
+                                         , ObjectLink_Goods_Measure.ChildObjectId              AS MeasureId
+                                         , ObjectFloat_WeightPackage.ValueData                 AS WeightPackage
+                                    FROM Object AS Object_StickerProperty
+                                         INNER JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
+                                                               ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
+                                                              AND ObjectLink_StickerProperty_Sticker.DescId   = zc_ObjectLink_StickerProperty_Sticker()
+                                         INNER JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                                               ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                              AND ObjectLink_Sticker_Goods.DescId   = zc_ObjectLink_Sticker_Goods()
+
+                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                              ON ObjectLink_Goods_Measure.ObjectId = ObjectLink_Sticker_Goods.ChildObjectId
+                                                             AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+
+                                         JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                         ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = ObjectLink_Sticker_Goods.ChildObjectId
+                                                        AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+
+                                         JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                         ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                         -- Вес одной упаковки
+                                         INNER JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                                                ON ObjectFloat_WeightPackage.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                               AND ObjectFloat_WeightPackage.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+
+                                    WHERE Object_StickerProperty.Id      = inObjectId
+                                      AND Object_StickerProperty.DescId  = zc_Object_StickerProperty()
+                                      -- только для Kg
+                                      AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
+                                   )
+       , tmpObject_GoodsPropertyValue AS
                             (SELECT ObjectLink_GoodsPropertyValue_Goods.ObjectId      AS ObjectId
                                   , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
                                   , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
@@ -292,21 +350,21 @@ BEGIN
                                                                , ((ObjectFloat_EndPosInt.ValueData - ObjectFloat_StartPosInt.ValueData + 1)
                                                                   -- МИНУС сколько символов в целой части веса
                                                                 - LENGTH (-- первая часть
-                                                                          SPLIT_PART (inWeight :: TVarChar, '.', 1))
+                                                                          SPLIT_PART ((inWeight - COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0)) :: TVarChar, '.', 1))
                                                                  ) :: Integer
                                                                 )
                                                          -- целая часть веса - первая часть
-                                                      || SPLIT_PART (inWeight :: TVarChar, '.', 1)
+                                                      || SPLIT_PART ((inWeight - COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0)) :: TVarChar, '.', 1)
 
                                                          -- дробная часть веса - вторая часть
-                                                      || SPLIT_PART (inWeight :: TVarChar, '.', 2)
+                                                      || SPLIT_PART ((inWeight - COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0)) :: TVarChar, '.', 2)
                                                          -- добавили нули справа
                                                       || REPEAT ('0'
                                                                  -- сколько надо символов
                                                                , ((ObjectFloat_EndPosFrac.ValueData - ObjectFloat_StartPosFrac.ValueData + 1)
                                                                   -- МИНУС сколько символов в дробной части веса
                                                                 - LENGTH (-- вторая часть
-                                                                          SPLIT_PART (inWeight :: TVarChar, '.', 2))
+                                                                          SPLIT_PART ((inWeight - COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0)) :: TVarChar, '.', 2))
                                                                  ) :: Integer
                                                                 )
                                     END AS BarCode_calc
@@ -346,6 +404,9 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                        ON ObjectLink_Goods_Measure.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
                                                       AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+
+                                  LEFT JOIN tmpGoodsByGoodsKind_gk ON tmpGoodsByGoodsKind_gk.GoodsId     = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+                                                                  AND tmpGoodsByGoodsKind_gk.GoodsKindId = ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId
                             )
           -- расчет контрольной суммы
         , tmpObject_GoodsPropertyValue_calc AS
@@ -471,7 +532,7 @@ BEGIN
                                     WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                                       AND 1=0
                                    )
-
+       -- Результат
        SELECT Object_StickerProperty.Id          AS Id
             , Object_StickerProperty.ObjectCode  AS Code
             , Object_StickerProperty.ValueData   AS Comment
@@ -499,7 +560,7 @@ BEGIN
             , Object_StickerSkin.Id              AS StickerSkinId
             , Object_StickerSkin.ValueData       AS StickerSkinName
 
-            , CASE WHEN inIs70_70 = TRUE AND tmpObject_GoodsPropertyValue_calc.MeasureId <> zc_Measure_Sh()
+            , CASE WHEN inIs70_70 = TRUE AND COALESCE (Object_Measure.Id, 0) <> zc_Measure_Sh()
                         THEN TRUE
                    ELSE ObjectBoolean_Fix.ValueData
               END :: Boolean AS isFix
@@ -512,8 +573,9 @@ BEGIN
               -- Кількість діб -> ***срок в днях
             , CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE COALESCE (ObjectFloat_Value5.ValueData, 0) END ::TFloat AS Value5
               -- вес
-            , CASE WHEN inIs70_70 = TRUE AND tmpObject_GoodsPropertyValue_calc.MeasureId <> zc_Measure_Sh()
-                        THEN inWeight
+          --, CASE WHEN inIs70_70 = TRUE AND tmpObject_GoodsPropertyValue_calc.MeasureId <> zc_Measure_Sh()
+            , CASE WHEN inIs70_70 = TRUE AND COALESCE (Object_Measure.Id, 0) <> zc_Measure_Sh()
+                        THEN inWeight - COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0)
                    ELSE ObjectFloat_Value6.ValueData
               END :: TFloat AS Value6
 
@@ -815,6 +877,34 @@ BEGIN
             , inDateStart                                                          :: TDateTime AS DateStart
             , (inDateStart + (CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE COALESCE (ObjectFloat_Value5.ValueData, 0) END :: TVarChar
                            ||' DAY') :: INTERVAL)  :: TDateTime AS DateEnd
+
+            , CASE WHEN ObjectBoolean_Sticker_DatStart.ValueData = TRUE
+                    AND ObjectBoolean_Sticker_DatEnd.ValueData   = TRUE
+                        -- обе даты
+                        THEN zfConvert_DateShortToString (inDateStart)
+                          || '   '
+                          || zfConvert_DateShortToString ((inDateStart + (CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE COALESCE (ObjectFloat_Value5.ValueData, 0) END :: TVarChar
+                                                                       ||' DAY') :: INTERVAL)  :: TDateTime)
+
+                   WHEN ObjectBoolean_Sticker_DatStart.ValueData = TRUE
+                        -- только начальная дата
+                        THEN zfConvert_DateShortToString (inDateStart)
+
+                   WHEN ObjectBoolean_Sticker_DatEnd.ValueData = TRUE
+                        -- только конечная дата
+                        THEN zfConvert_DateShortToString ((inDateStart + (CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE COALESCE (ObjectFloat_Value5.ValueData, 0) END :: TVarChar
+                                                                       ||' DAY') :: INTERVAL)  :: TDateTime)
+
+                   -- обе даты
+                   ELSE zfConvert_DateShortToString (inDateStart)
+                     || '   '
+                     || zfConvert_DateShortToString ((inDateStart + (CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE COALESCE (ObjectFloat_Value5.ValueData, 0) END :: TVarChar
+                                                                  ||' DAY') :: INTERVAL)  :: TDateTime)
+              END :: TVarChar AS DateStartEnd_str
+
+            , COALESCE (ObjectBoolean_Sticker_DatStart.ValueData, FALSE) :: Boolean AS isDateStart
+            , COALESCE (ObjectBoolean_Sticker_DatEnd.ValueData, FALSE)   :: Boolean AS isDateEnd
+
              -- вложенность
             , CASE WHEN ObjectFloat_Value11.ValueData <> 0 THEN 'Кількість в упаковці ' || zfConvert_FloatToString (ObjectFloat_Value11.ValueData) || ' штук' ELSE '' END :: TVarChar AS StickerProperty_Value11
 
@@ -851,6 +941,13 @@ BEGIN
                                   ON ObjectLink_StickerProperty_GoodsKind.ObjectId = Object_StickerProperty.Id
                                  AND ObjectLink_StickerProperty_GoodsKind.DescId = zc_ObjectLink_StickerProperty_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_StickerProperty_GoodsKind.ChildObjectId
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Sticker_DatStart
+                                     ON ObjectBoolean_Sticker_DatStart.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                    AND ObjectBoolean_Sticker_DatStart.DescId   = zc_ObjectBoolean_Sticker_DatStart()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Sticker_DatEnd
+                                     ON ObjectBoolean_Sticker_DatEnd.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                    AND ObjectBoolean_Sticker_DatEnd.DescId   = zc_ObjectBoolean_Sticker_DatEnd()
 
              LEFT JOIN tmpObject_GoodsPropertyValue_calc ON tmpObject_GoodsPropertyValue_calc.GoodsId     = Object_Goods.Id
                                                         AND tmpObject_GoodsPropertyValue_calc.GoodsKindId = Object_GoodsKind.Id
@@ -1004,10 +1101,14 @@ BEGIN
 
              LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = Object_Goods.Id
                                           AND tmpGoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
+             LEFT JOIN tmpGoodsByGoodsKind_gk ON tmpGoodsByGoodsKind_gk.GoodsId     = Object_Goods.Id
+                                             AND tmpGoodsByGoodsKind_gk.GoodsKindId = Object_GoodsKind.Id
+
 
           WHERE Object_StickerProperty.Id = inObjectId
             AND Object_StickerProperty.DescId = zc_Object_StickerProperty()
          ;
+
 
 END;
 $BODY$

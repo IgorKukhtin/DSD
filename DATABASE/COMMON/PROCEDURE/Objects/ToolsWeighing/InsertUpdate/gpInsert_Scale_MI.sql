@@ -116,10 +116,12 @@ $BODY$
    DECLARE vbContactId Integer;
    DECLARE vbUnitId    Integer;
    DECLARE vbGoodsPropertyId Integer;
+   DECLARE vbMeasureId Integer;
 
-   DECLARE vbWeightTotal   TFloat;
-   DECLARE vbWeightPack    TFloat;
-   DECLARE vbAmount_byPack TFloat;
+   DECLARE vbWeightTotal    TFloat;
+   DECLARE vbWeightPack     TFloat;
+   DECLARE vbAmount_byPack  TFloat;
+   DECLARE vbRealWeight_get TFloat;
 
    DECLARE vbPriceListId_Dnepr Integer;
    DECLARE vbOperDate_Dnepr    TDateTime;
@@ -173,6 +175,17 @@ BEGIN
                        );
      END IF;*/
 
+
+      -- проверка, т.к. несколько записей
+      IF 1 < (SELECT COUNT(*) FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure())
+      THEN
+         RAISE EXCEPTION 'Ошибка.Записей у <%> для Ед.измерения = <%>.'
+                       , lfGet_Object_ValueData (inGoodsId)
+                       , (SELECT COUNT(*) FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure())
+                        ;
+      END IF;
+      -- определили
+      vbMeasureId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure());
 
      -- определили
      SELECT Movement.OperDate, MovementFloat.ValueData :: Integer, COALESCE (MLM_Order.MovementChildId, 0)
@@ -256,9 +269,8 @@ BEGIN
              -- если все-таки втулки нет
              IF inCount < 0 THEN inCount:= 0; END IF;
 
-             IF (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure())
-                IN (zc_Measure_Sht() -- шт.
-                   )
+             IF vbMeasureId IN (zc_Measure_Sht() -- шт.
+                               )
              THEN
                  -- меняем Значение - перевод из веса в метры или что-то еще ... и вычитаем втулки
                  vbAmount_byWeightTare_goods:= ROUND (vbCountForWeight_goods * (inRealWeight - vbWeightTare_goods * inCount) / vbWeight_goods);
@@ -282,6 +294,7 @@ BEGIN
 
      -- если Тара - меняем Значение на 0
      IF inChangePercentAmount <> 0
+        AND inBranchCode < 1000
         AND EXISTS (SELECT 1
                     FROM ObjectLink AS ObjectLink_Goods_InfoMoney
                          JOIN Object_InfoMoney_View AS View_InfoMoney
@@ -296,6 +309,7 @@ BEGIN
          inChangePercentAmount:= 0;
      -- если надо - меняем Значение                 \
      ELSEIF inChangePercentAmount = 0
+        AND inBranchCode < 1000
         AND vbMovementDescId = zc_Movement_Sale()
         AND EXISTS (SELECT 1
                     FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -569,29 +583,80 @@ BEGIN
 
 
      -- определили Вес 1 ед. продукции + упаковка AND Вес упаковки для 1-ой ед. продукции
-     SELECT ObjectFloat_WeightPackage.ValueData, ObjectFloat_WeightTotal.ValueData
-          , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0 AND ObjectFloat_WeightPackage.ValueData <> 0 AND ObjectFloat_WeightTotal.ValueData > ObjectFloat_WeightPackage.ValueData
-                      THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
-                         / (1 - ObjectFloat_WeightPackage.ValueData / ObjectFloat_WeightTotal.ValueData)
-                 ELSE (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
+     SELECT ObjectFloat_WeightPackage.ValueData
+
+          , CASE WHEN inBranchCode > 1000
+                      -- не нужно значение
+                      THEN 0
+                 ELSE ObjectFloat_WeightTotal.ValueData
             END
+
+          , CASE WHEN ObjectFloat_WeightTotal.ValueData   <> 0
+                  AND ObjectFloat_WeightPackage.ValueData <> 0
+                  AND ObjectFloat_WeightTotal.ValueData   > ObjectFloat_WeightPackage.ValueData
+
+                      THEN CASE WHEN inBranchCode > 1000
+                                      -- не нужно значение
+                                      THEN 0
+                                 ELSE (inRealWeight
+                                     - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
+                                      ) 
+                                    / (1 - ObjectFloat_WeightPackage.ValueData / ObjectFloat_WeightTotal.ValueData)
+                            END
+                                    
+
+                 ELSE CASE WHEN inBranchCode > 1000
+                                -- не нужно значение
+                                THEN 0
+                           ELSE (inRealWeight
+                               - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
+                                )
+                      END
+            END AS Amount_byPack
+
             INTO vbWeightPack, vbWeightTotal, vbAmount_byPack
+
      FROM Object_GoodsByGoodsKind_View
+          -- Вес одной упаковки
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
                                 ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
-                               AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+                               AND ObjectFloat_WeightPackage.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+          --
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
-                               AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
-     WHERE Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
-       AND Object_GoodsByGoodsKind_View.GoodsKindId = inGoodsKindId;
+                               AND ObjectFloat_WeightTotal.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+     WHERE Object_GoodsByGoodsKind_View.GoodsId     = inGoodsId
+       AND Object_GoodsByGoodsKind_View.GoodsKindId = CASE WHEN inBranchCode > 1000
+                                                            AND vbMeasureId = zc_Measure_Kg()
+                                                                -- !!!Замена для Этикетка + Kg
+                                                                THEN inPriceListId 
+                                                           ELSE inGoodsKindId
+                                                      END
+    ;
 
+     -- Замена для Этикетки
+     IF inBranchCode > 1000 AND vbMeasureId = zc_Measure_Kg()
+     THEN
+         inCountTare := 1;
+          -- Вес одной упаковки
+         inWeightTare:= vbWeightPack;
+         -- замена, т.к. здесь вес
+         vbRealWeight_get:= inChangePercentAmount;
+         -- замена
+         inChangePercentAmount:= 0;
 
-     -- проверка, т.к. несколько записей
-     IF 1 < (SELECT COUNT(*) FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure()) THEN
-        RAISE EXCEPTION 'Ошибка.Записей у <%> для Ед.измерения = <%>.', lfGet_Object_ValueData (inGoodsId)
-          , (SELECT COUNT(*) FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure());
+     ELSEIF inBranchCode > 1000
+     THEN
+         -- замена - для ШТ. не нужен вес
+         inChangePercentAmount:= 0;
      END IF;
+     
+     IF vbUserId = 5 AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка.%  %   %   %   %', vbWeightPack, vbWeightTotal, vbAmount_byPack, inGoodsId, inGoodsKindId;
+     END IF;
+
+
      -- проверка, т.к. несколько записей
      IF 1 < (SELECT COUNT(*) FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
                                                                    , inPriceListId:= vbPriceListId_Dnepr
@@ -623,21 +688,44 @@ BEGIN
      -- проверка кол-во
      IF (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                    THEN vbAmount_byWeightTare_goods
-              WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+
+              -- Для Этикетка + Kg
+              WHEN inBranchCode > 1000 AND vbMeasureId = zc_Measure_Kg()
+                   THEN vbRealWeight_get - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
+
+              -- Для Этикетка
+              WHEN inBranchCode > 1000 
+                   THEN inRealWeight
+
+              WHEN inIsBarCode = TRUE AND vbMeasureId = zc_Measure_Kg()
                AND vbAmount_byPack <> 0
                    THEN vbAmount_byPack
+
               ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
+
          END) < 0
      OR (CASE -- !!!только Для Сканирования Метро!!!
               WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                    THEN vbAmount_byWeightTare_goods
+
+              -- Для Этикетка + Kg
+              WHEN inBranchCode > 1000 AND vbMeasureId = zc_Measure_Kg()
+                   THEN vbRealWeight_get - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
+
+              -- Для Этикетка
+              WHEN inBranchCode > 1000 
+                   THEN inRealWeight
+
               WHEN inIsBarCode = TRUE
                    THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
+
               WHEN inChangePercentAmount = 0
                    THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
+
               WHEN vbRetailId IN (341640, 310854, 310855) -- Фоззі + Фозі + Варус
                    THEN CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
                             * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
+
               ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
                        * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
          END) < 0
@@ -645,21 +733,43 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.С учетом минуса тары, получился отицательный вес <%> <%>'
                         , CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                     THEN vbAmount_byWeightTare_goods
-                               WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+
+                               -- Для Этикетка + Kg
+                               WHEN inBranchCode > 1000 AND vbMeasureId = zc_Measure_Kg()
+                                    THEN vbRealWeight_get - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
+
+                               -- Для Этикетка
+                               WHEN inBranchCode > 1000 
+                                    THEN inRealWeight
+
+                               WHEN inIsBarCode = TRUE AND vbMeasureId = zc_Measure_Kg()
                                 AND vbAmount_byPack <> 0
                                     THEN vbAmount_byPack
+
                                ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
                           END
                         , CASE -- !!!только Для Сканирования Метро!!!
                                WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                     THEN vbAmount_byWeightTare_goods
+
+                               -- Для Этикетка + Kg
+                               WHEN inBranchCode > 1000 AND vbMeasureId = zc_Measure_Kg()
+                                    THEN vbRealWeight_get - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
+                 
+                               -- Для Этикетка
+                               WHEN inBranchCode > 1000 
+                                    THEN inRealWeight
+
                                WHEN inIsBarCode = TRUE
                                     THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
+
                                WHEN inChangePercentAmount = 0
                                     THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
+
                                WHEN vbRetailId IN (341640, 310854, 310855) -- Фоззі + Фозі + Варус
                                     THEN CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
                                              * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
+
                                ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
                                         * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
                           END
@@ -695,7 +805,7 @@ BEGIN
 
          IF vbRemainsCount_check < (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                               THEN vbAmount_byWeightTare_goods
-                                         WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+                                         WHEN inIsBarCode = TRUE AND vbMeasureId = zc_Measure_Kg()
                                           AND vbAmount_byPack <> 0
                                               THEN vbAmount_byPack
                                          ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
@@ -706,7 +816,7 @@ BEGIN
              vbMessageText:=       'Ошибка.Нельзя провести кол-во = '
                            ||'<' || zfConvert_FloatToString (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                                                        THEN vbAmount_byWeightTare_goods
-                                                                  WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+                                                                  WHEN inIsBarCode = TRUE AND vbMeasureId = zc_Measure_Kg()
                                                                    AND vbAmount_byPack <> 0
                                                                        THEN vbAmount_byPack
                                                                   ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
@@ -715,7 +825,7 @@ BEGIN
                                  || CHR (13)
                                  || 'Остаток'
                                  || ' = ' || zfConvert_FloatToString (CASE WHEN vbRemainsCount_check < 0 THEN 0 ELSE vbRemainsCount_check END)
-                                          || lfGet_Object_ValueData_sh ((SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure()))
+                                          || lfGet_Object_ValueData_sh (vbMeasureId)
                                  || CHR (13)
                                  || 'на подразделении <'  || lfGet_Object_ValueData_sh (vbUnitId) || '>'
                                   ;
@@ -830,9 +940,15 @@ BEGIN
                                                            , inGoodsId             := inGoodsId
                                                            , inAmount              := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                                                                                 THEN vbAmount_byWeightTare_goods
-                                                                                           WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+
+                                                                                           -- Для Этикетка
+                                                                                           WHEN inBranchCode > 1000
+                                                                                                THEN inRealWeight
+
+                                                                                           WHEN inIsBarCode = TRUE AND vbMeasureId = zc_Measure_Kg()
                                                                                             AND vbAmount_byPack <> 0
                                                                                                 THEN vbAmount_byPack
+
                                                                                            ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
                                                                                       END
                                                            , inAmountPartner       := CASE -- !!!только Для Сканирования Метро!!!
@@ -841,6 +957,11 @@ BEGIN
                                                                                            */
                                                                                            WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                                                                                 THEN vbAmount_byWeightTare_goods
+
+                                                                                           -- Для Этикетка
+                                                                                           WHEN inBranchCode > 1000
+                                                                                                THEN inRealWeight
+
                                                                                            -- на филиалах при сканировании, на приход ставим расчетное значение
                                                                                            WHEN inIsBarCode = TRUE AND vbMovementDescId = zc_Movement_SendOnPrice()
                                                                                             AND vbAmount_byPack <> 0
@@ -856,7 +977,11 @@ BEGIN
 	                                                                                           ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
                                                                                                     * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
                                                                                       END
-                                                           , inRealWeight          := inRealWeight
+                                                           , inRealWeight          := CASE WHEN inBranchCode > 1000 AND vbMeasureId = zc_Measure_Kg()
+                                                                                                -- Для Этикетка + Kg
+                                                                                                THEN vbRealWeight_get
+                                                                                           ELSE inRealWeight
+                                                                                      END
                                                            , inChangePercentAmount := CASE WHEN inIsBarCode = TRUE
                                                                                                 THEN 0
                                                                                            ELSE inChangePercentAmount

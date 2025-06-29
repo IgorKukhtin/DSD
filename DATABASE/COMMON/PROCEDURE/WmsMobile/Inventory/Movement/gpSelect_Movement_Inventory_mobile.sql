@@ -34,6 +34,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , Amount            TFloat
                -- Шт                
              , Amount_sh         TFloat
+             , Amount_sh_str     TVarChar
 
                -- ИТОГО Вес тары - факт
              , WeightTare    TFloat
@@ -89,7 +90,7 @@ BEGIN
      RETURN QUERY
         WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                     --UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                     UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                           )
 
         -- Документы zc_Movement_WeighingProduction - здесь данные сканирование Паспорта - КПК
@@ -253,6 +254,14 @@ BEGIN
                        THEN MovementItem.Amount
                   ELSE 0
              END :: TFloat AS Amount_sh
+
+             -- Шт
+           , CASE WHEN OL_Measure.ChildObjectId = zc_Measure_Sh()
+                       THEN zfConvert_FloatToString (MovementItem.Amount) || ' шт.'
+                  ELSE ''
+             END :: TVarChar AS Amount_sh_str
+
+             
 
              -- ИТОГО Вес тары - факт
            , MIFloat_WeightTare.ValueData AS WeightTare
@@ -445,7 +454,7 @@ BEGIN
                                            -- № паспорта
                                            OR (tmpMIFloat_PartionNum_passport.ValueData :: Integer) ::TVarChar ILIKE '%'||COALESCE(inFilter, '')||'%'
               )
-          AND Movement.OperDate >= CURRENT_DATE
+          AND (Movement.OperDate >= CURRENT_DATE - INTERVAL '1 DAY' OR vbUserId = 5)
 
           AND (MILO_Insert.ObjectId = vbUserId OR inLimit > 10 OR vbUserId = 5)
           

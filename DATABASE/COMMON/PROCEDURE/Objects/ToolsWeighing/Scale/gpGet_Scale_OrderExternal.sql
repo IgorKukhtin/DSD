@@ -34,6 +34,8 @@ RETURNS TABLE (MovementId            Integer
              , PartnerId_calc   Integer
              , PartnerCode_calc Integer
              , PartnerName_calc TVarChar
+             , RetailId         Integer
+             , RetailName       TVarChar
              , ChangePercent    TFloat
              , ChangePercentAmount TFloat
 
@@ -687,6 +689,9 @@ BEGIN
                         THEN tmpMovement.ToName
               END :: TVarChar AS PartnerName_calc
 
+            , Object_Retail.Id        AS RetailId
+            , Object_Retail.ValueData AS RetailName
+
             , MovementFloat_ChangePercent.ValueData AS ChangePercent
             , (SELECT tmp.ChangePercentAmount FROM gpGet_Scale_Partner (inOperDate       := inOperDate
                                                                       , inMovementDescId := CASE WHEN tmpMovement.DescId_From = zc_Object_ArticleLoss()
@@ -725,7 +730,7 @@ BEGIN
                       WHERE tmpMovement_ContractGoods.ContractId   = View_Contract_InvNumber.ContractId
                      ) :: Boolean AS isContractGoods
 
-            , ('№ <' || tmpMovement.InvNumber || '>' || ' от <' || DATE (tmpMovement.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
+            , ('№ <' || tmpMovement.InvNumber || '>' || ' от <' || zfConvert_DateToString (tmpMovement.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
 
        FROM tmpMovement
             LEFT JOIN tmpMovement_find ON tmpMovement_find.Id = tmpMovement.Id
@@ -751,6 +756,15 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                  ON ObjectLink_Juridical_PriceList.ObjectId = MovementLinkObject_Juridical.ObjectId
                                 AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
+
+            -- только для zc_Movement_OrderExternal
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = tmpMovement.FromId
+                                AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
             -- LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
             LEFT JOIN tmpMLO_PriceList AS MovementLinkObject_PriceList
@@ -844,4 +858,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_OrderExternal (inIsCeh:= TRUE, inOperDate:= CURRENT_DATE, inFromId:= 1, inToId:= 1, inBranchCode:= 301, inBarCode:= '135', inSession := '5');
+-- SELECT * FROM gpGet_Scale_OrderExternal (inIsCeh:= TRUE, inOperDate:= CURRENT_DATE, inFromId:= 1, inToId:= 1, inBranchCode:= 301, inBarCode:= '1711195', inSession := '5');
