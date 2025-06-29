@@ -292,6 +292,7 @@ type
     bbPrintReestr: TSpeedButton;
     cbPartionDate_save: TCheckBox;
     bbPrint_MIPassport: TSpeedButton;
+    OrderExternalName_1001: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -2170,8 +2171,13 @@ begin
      // Кол-во в печати
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount').Index].Caption           := 'Печать';
 
+     //Вес на Табло
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight').Index].Visible             := TRUE;
+     //Заказ (печать этикетки)
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('OrderExternalName_1001').Index].Visible := TRUE;
+     //
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Width      := 150;
-
+     //
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PriceListName').Index].Visible       := TRUE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Visible               := TRUE;
      //
@@ -2180,7 +2186,7 @@ begin
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('ChangePercentAmount').Index].Visible := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountPartner').Index].Visible       := FALSE;
      //DataBinding.FieldName = 'Amount'
-     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight').Index].Visible          := FALSE;
+     //
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTareTotal').Index].Visible      := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTareTotal').Index].Visible     := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].Visible          := FALSE;
@@ -2199,6 +2205,7 @@ begin
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare6').Index].Visible          := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('UpdateDate').Index].Visible          := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isErased').Index].Visible            := FALSE;
+
   end;
 
   //local visible

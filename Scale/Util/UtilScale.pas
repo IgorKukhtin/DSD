@@ -665,7 +665,16 @@ begin
          ParamAdd(Params,'isPartionDate_save',ftBoolean); // выбрали сохранять Дату партия да/нет
 
          ParamAdd(Params,'isBarCode',ftBoolean);         //
-         ParamAdd(Params,'MovementId_Promo',ftInteger);  //
+         ParamAdd(Params,'MovementId_Promo',ftInteger);  // Акция
+         // для печати этикетки - Заказ клиента + ....
+         ParamAdd(Params,'MovementId_1001',ftInteger);
+         ParamAdd(Params,'InvNumber_1001',ftString);
+         ParamAdd(Params,'OrderExternalName_1001',ftString);
+         ParamAdd(Params,'GoodsPropertyName_1001',ftString);
+         ParamAdd(Params,'PartnerName_1001',ftString);
+         ParamAdd(Params,'RetailId_1001',ftInteger);
+         ParamAdd(Params,'RetailName_1001',ftString);
+
 
          ParamAdd(Params,'CountTare1',ftFloat);          // Количество тары вида1
          ParamAdd(Params,'CountTare2',ftFloat);          // Количество тары вида2
@@ -1133,6 +1142,16 @@ begin
    with execParams do
     for i:=0 to Count-1 do
     begin
+         if (Items[i].Name = 'MovementId_1001')
+          or(Items[i].Name = 'InvNumber_1001')
+          or(Items[i].Name = 'OrderExternalName_1001')
+          or(Items[i].Name = 'GoodsPropertyName_1001')
+          or(Items[i].Name = 'PartnerName_1001')
+          or(Items[i].Name = 'RetailId_1001')
+          or(Items[i].Name = 'RetailName_1001')
+         then
+         else
+
          if execParams[i].DataType=ftBoolean
          then execParams.ParamByName(Items[i].Name).AsBoolean:=false
          else

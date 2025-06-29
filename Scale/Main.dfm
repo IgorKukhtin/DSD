@@ -1320,6 +1320,15 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 55
         end
+        object OrderExternalName_1001: TcxGridDBColumn
+          Caption = #1047#1072#1082#1072#1079' ('#1087#1077#1095#1072#1090#1100' '#1101#1090#1080#1082#1077#1090#1082#1080')'
+          DataBinding.FieldName = 'OrderExternalName_1001'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
+        end
         object AssetName: TcxGridDBColumn
           Caption = #1054#1057
           DataBinding.FieldName = 'AssetName'

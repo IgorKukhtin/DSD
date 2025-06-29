@@ -100,6 +100,11 @@ type
     PanelIs_70_70: TPanel;
     cb_70_70: TcxCheckBox;
     StickerFileName_70_70: TcxGridDBColumn;
+    infoPanelOrderExternal: TPanel;
+    LabelOrderExternal: TLabel;
+    PanelOrderExternal: TPanel;
+    PanelBtnOrderExternal: TPanel;
+    btnOrderExternal: TButton;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -142,6 +147,7 @@ type
     procedure btnDialogStickerTareClick(Sender: TObject);
     procedure cbStartEndEnter(Sender: TObject);
     procedure cb_70_70Click(Sender: TObject);
+    procedure btnOrderExternalClick(Sender: TObject);
   private
     //FReport : TfrxReport;
     fCloseOK : Boolean;
@@ -178,7 +184,7 @@ var
 implementation
 {$R *.dfm}
 uses dmMainScale, Main, DialogWeight, DialogStickerTare,FormStorage,
-  DialogStringValue;
+  DialogStringValue, DialogOrderExternal;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.pShowReport;
 begin
@@ -272,7 +278,7 @@ begin
     with spSelectPrintForm do
     begin
        ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger;
-       ParamByName('inRetailId').Value:=0;
+       ParamByName('inRetailId').Value:=ParamsMI.ParamByName('RetailId_1001').asInteger;
 
        //ParamByName('inIsJPG').Value   := FALSE;
        ParamByName('inIsJPG').Value   := TRUE;
@@ -302,7 +308,7 @@ begin
        //№ смены технологов, по умолчанию = 1 (для режим 3)
        ParamByName('inNumTech').Value        := ParamsMI.ParamByName('NumTech_Sticker').AsFloat;
        //
-       ParamByName('inWeight').Value         := 0;
+       ParamByName('inWeight').Value         := ParamsMI.ParamByName('RealWeight_Get').AsFloat;
        //
        Execute;
     end;
@@ -320,7 +326,7 @@ begin
     with spSelectPrint do
     begin
        ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger;
-       ParamByName('inRetailId').Value:=0;
+       ParamByName('inRetailId').Value:=ParamsMI.ParamByName('RetailId_1001').asInteger;
 
        ParamByName('inIsJPG').Value   := FALSE;
        //ParamByName('inIsJPG').Value   := TRUE;
@@ -350,6 +356,8 @@ begin
        //№ смены технологов, по умолчанию = 1 (для режим 3)
        ParamByName('inNumTech').Value        := ParamsMI.ParamByName('NumTech_Sticker').AsFloat;
        //
+       ParamByName('inWeight').Value         := ParamsMI.ParamByName('RealWeight_Get').AsFloat;
+       //
        //Execute;
     end;
     //
@@ -359,6 +367,7 @@ begin
     actPrint.Printer:=System.Copy(rgPriceList.Items[rgPriceList.ItemIndex], 5, Length(rgPriceList.Items[rgPriceList.ItemIndex]) - 4);
     actPrint.WithOutPreview:= not cbPreviewPrint.Checked;
     //actPrint.WithOutPreview:= TRUE;
+    //Здесь кол-во печать Этикеток
     actPrint.CopiesCount:=ParamsMI.ParamByName('RealWeight').AsInteger;
     actPrint.Execute;
 
@@ -423,6 +432,26 @@ begin
            //
            cbStartEndEnter(Self);
        end;
+     end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsStickerForm.btnOrderExternalClick(Sender: TObject);
+begin
+     with DialogOrderExternalForm do
+     begin
+          EditBarCode.Text          := ParamsMI.ParamByName('InvNumber_1001').asString;
+          PanelOrderExternal.Caption:= ParamsMI.ParamByName('OrderExternalName_1001').asString;
+          PanelPartner.Caption      := ParamsMI.ParamByName('PartnerName_1001').asString;
+          PanelGoodsProperty.Caption:= ParamsMI.ParamByName('GoodsPropertyName_1001').asString;
+          PanelRetail.Caption       := ParamsMI.ParamByName('RetailName_1001').asString;
+          //
+          ActiveControl:=EditBarCode;
+          if Execute then
+          begin
+             Self.PanelOrderExternal.Caption:= ParamsMI.ParamByName('OrderExternalName_1001').asString;
+             //
+             pSelectPrintForm;
+          end;
      end;
 end;
 {------------------------------------------------------------------------------}
@@ -718,7 +747,9 @@ begin
      Result:=(CDS.RecordCount=1)
           and(rgGoodsKind.ItemIndex>=0)
           and(rgPriceList.ItemIndex>=0)
+          // Здесь кол-во печать Этикеток
           and(ParamsMI.ParamByName('RealWeight').AsFloat>=1)
+          //
           and (((CDS.FieldByName('StickerFileName').asString <> '') and (cb_70_70.Checked = FALSE))
             or ((CDS.FieldByName('StickerFileName_70_70').asString <> '') and (cb_70_70.Checked = TRUE))
               );
@@ -769,6 +800,7 @@ begin
         // % скидки для кол-ва
         ParamByName('ChangePercentAmount').AsFloat:=0;
 
+       //Здесь кол-во печать Этикеток
        //ПРОВЕРКА - Количество (склад) с учетом тары
        Result:=(ParamByName('RealWeight').AsFloat-ParamByName('CountTare').AsFloat*ParamByName('WeightTare').AsFloat)>0;
        if not Result then
@@ -944,10 +976,12 @@ begin
      //if (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg) and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310))
      //then exit;
 
+     //Здесь кол-во печать Этикеток
      try StrToFloat(EditWeightValue.Text)
      except ActiveControl:=EditWeightValue;
             exit;
      end;
+     //Здесь кол-во печать Этикеток
      if StrToFloat(EditWeightValue.Text)<=0
      then ActiveControl:=EditWeightValue
      else try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text);
@@ -1007,6 +1041,7 @@ begin
                   end
         else if ParamsMI.ParamByName('RealWeight').AsFloat<=1
              then
+                  //Здесь кол-во печать Этикеток
                   if 1=1//(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
                   then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');ActiveControl:=EditWeightValue;end
                   else begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end;
@@ -1149,6 +1184,7 @@ begin
      with ParamsMI do begin
         if CDS.RecordCount=1 then
          if 1=1//(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+         //Здесь кол-во печать Этикеток
          then try ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text); except ParamByName('RealWeight').AsFloat:=0;end
          else ParamByName('RealWeight').AsFloat:=ParamByName('RealWeight_Get').AsFloat
         else
@@ -1257,7 +1293,7 @@ begin
   //Принтеры
   InitializePrinterSticker;
   //
-  gbGoodsWieghtValue.Visible:= SettingMain.isSticker_Weight;
+  gbGoodsWieghtValue.Visible:= (SettingMain.isSticker_Weight) or (1=1);
   //
 
   //вес тары (ручной режим)
