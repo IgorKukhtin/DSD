@@ -144,7 +144,18 @@ BEGIN
        IF NOT EXISTS (SELECT 1 FROM ObjectDate AS OD WHERE OD.ObjectId = ioId AND OD.DescId = zc_ObjectDate_Personal_Out() AND OD.ValueData = inDateOut)
        THEN
            -- 1. Якщо співробітник офіційно оформлений (стоїть галочка у колонці "Оформлен офіціально")
-           IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = ioId AND OB.DescId = zc_ObjectBoolean_Personal_Main() AND OB.ValueData = TRUE)
+           IF EXISTS (SELECT 1
+                      FROM ObjectLink AS OL_Personal_Member
+                           INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = OL_Personal_Member.ObjectId
+                                                               -- !!!Не удален!!!
+                                                               AND Object_Personal.isErased = FALSE
+                           INNER JOIN ObjectBoolean AS OB
+                                                    ON OB.ObjectId  = OL_Personal_Member.ObjectId
+                                                   AND OB.DescId    = zc_ObjectBoolean_Personal_Main()
+                                                   AND OB.ValueData = TRUE
+                      WHERE OL_Personal_Member.ChildObjectId = ioId
+                        AND OL_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                     )
            THEN
                 -- то галочку "уволен" та "дату звільнення" можуть = 
                 IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12367417) -- Устанавливать <Дата увольнения> - офіційно оформлений
@@ -157,7 +168,18 @@ BEGIN
            END IF;
     
            -- 2. Якщо співробітник НЕ оформлен офіційно
-           IF NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = ioId AND OB.DescId = zc_ObjectBoolean_Personal_Main() AND OB.ValueData = TRUE)
+           IF NOT EXISTS (SELECT 1
+                          FROM ObjectLink AS OL_Personal_Member
+                               INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = OL_Personal_Member.ObjectId
+                                                                   -- !!!Не удален!!!
+                                                                   AND Object_Personal.isErased = FALSE
+                               INNER JOIN ObjectBoolean AS OB
+                                                        ON OB.ObjectId  = OL_Personal_Member.ObjectId
+                                                       AND OB.DescId    = zc_ObjectBoolean_Personal_Main()
+                                                       AND OB.ValueData = TRUE
+                          WHERE OL_Personal_Member.ChildObjectId = ioId
+                            AND OL_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                         )
            THEN
                 -- то галочку "уволен" та "дату звільнення" можуть = 
                 IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12367418) -- Устанавливать <Дата увольнения> - НЕ оформлений офіційно

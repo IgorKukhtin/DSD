@@ -4038,7 +4038,7 @@ begin
     ParamByName('inOrderInvNumber').Value := Заголовок.НомерЗамовлення;
     ParamByName('inComDocDate').Value := ConvertEDIDate(Заголовок.ДатаДокументу);
 
-    if Заголовок.ДатаЗамовлення <> ''
+    if (Заголовок.ДатаЗамовлення <> '')and(Заголовок.ДатаЗамовлення <> '--')
     then
       try ParamByName('inOrderOperDate').Value := ConvertEDIDate(Заголовок.ДатаЗамовлення)
       except

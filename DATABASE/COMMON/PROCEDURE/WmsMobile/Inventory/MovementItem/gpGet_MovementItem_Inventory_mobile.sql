@@ -30,6 +30,8 @@ RETURNS TABLE (MovementItemId       Integer
              , Amount               TFloat
                -- Шт                
              , Amount_sh            TFloat
+             , Amount_sh_str        TVarChar
+
                -- Ячейка хранения
              , PartionCellId        Integer
              , PartionCellName      TVarChar
@@ -258,6 +260,24 @@ BEGIN
       
                      END AS NUMERIC (16, 0)
                     ) :: TFloat AS Amount_sh
+
+               -- Шт
+             , CASE WHEN vbMovementDescId = zc_Movement_WeighingProduction() AND OL_Measure.ChildObjectId = zc_Measure_Sh()
+                         -- если Перемещение с Упак -> РК = здесь всегда ШТ
+                         THEN zfConvert_FloatToString (MovementItem.Amount :: Integer) || ' шт.'
+      
+                    WHEN vbMovementDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND MIFloat_HeadCount.ValueData > 0
+                         -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
+                         THEN zfConvert_FloatToString (MIFloat_HeadCount.ValueData :: Integer) || ' шт.'
+      
+                    WHEN vbMovementDescId = zc_Movement_WeighingPartner() AND OL_Measure.ChildObjectId = zc_Measure_Sh() AND OF_Weight.ValueData > 0
+                         -- если Инвентаризация - Подготовка = переводим из ВЕС в ШТ
+                         THEN zfConvert_FloatToString ((MovementItem.Amount / (COALESCE (OF_Weight.ValueData, 0) + COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0))) :: Integer) || ' шт.'
+      
+                    ELSE ''
+      
+               END :: TVarChar AS Amount_sh_str
+
 
                -- Ячейка хранения
              , Object_PartionCell.Id                     AS PartionCellId

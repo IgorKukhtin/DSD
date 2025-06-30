@@ -15,6 +15,9 @@ RETURNS TABLE (MovementItemId    Integer
              , GoodsKindName     TVarChar
                -- Вес нетто
              , Amount            TFloat
+               -- Шт                
+             , Amount_sh         TFloat
+             , Amount_sh_str     TVarChar
                -- Ячейка хранения
              , PartionCellId     Integer
              , PartionCellName   TVarChar
@@ -73,6 +76,8 @@ BEGIN
              , gpGet.GoodsKindName
                -- Вес нетто
              , gpGet.Amount
+             , gpGet.Amount_sh
+             , gpGet.Amount_sh_str
                -- Ячейка хранения
              , gpGet.PartionCellId
              , gpGet.PartionCellName

@@ -48,6 +48,7 @@ type
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
     function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String; inFromId_calc, inToId_calc:Integer): Boolean;
+    function gpGet_Scale_OrderExternal_1001(var execParamsMI:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_Transport(var execParams:TParams;inBarCode:String): Boolean;
     // Scale
     function gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
@@ -849,8 +850,13 @@ begin
                      , (execParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE)
                     and(execParamsMI.ParamByName('isPartionDate_save').AsBoolean       = TRUE)
                       );
+       //
        Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
-       Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('ChangePercentAmount').AsFloat);
+       //для печати этикетки - Заказ клиента
+       if SettingMain.BranchCode > 1000
+       then Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight_Get').AsFloat)
+       else Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('ChangePercentAmount').AsFloat);
+       //
        Params.AddParam('inCountTare', ftFloat, ptInput, execParamsMI.ParamByName('CountTare').AsFloat);
        Params.AddParam('inWeightTare', ftFloat, ptInput, execParamsMI.ParamByName('WeightTare').AsFloat);
 
@@ -902,7 +908,11 @@ begin
        Params.AddParam('inPartionGoods', ftString, ptInput, execParamsMI.ParamByName('PartionGoods').AsString);
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
-       Params.AddParam('inMovementId_Promo', ftInteger, ptInput, execParamsMI.ParamByName('MovementId_Promo').AsInteger);
+       //для печати этикетки - Заказ клиента
+       if SettingMain.BranchCode > 1000
+       then Params.AddParam('inMovementId_Promo', ftInteger, ptInput, execParamsMI.ParamByName('MovementId_1001').asInteger)
+       else Params.AddParam('inMovementId_Promo', ftInteger, ptInput, execParamsMI.ParamByName('MovementId_Promo').AsInteger);
+       //
        Params.AddParam('inReasonId', ftInteger, ptInput, ParamsReason.ParamByName('ReasonId').AsInteger);
        Params.AddParam('inAssetId', ftInteger, ptInput, execParamsMovement.ParamByName('AssetId').AsInteger);
        Params.AddParam('inIsReason', ftBoolean, ptInput, SettingMain.isReason);
@@ -1525,6 +1535,39 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_OrderExternal_1001(var execParamsMI:TParams;inBarCode:String): Boolean;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_OrderExternal';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
+       Params.AddParam('inOperDate', ftDateTime, ptInput, Date);
+       Params.AddParam('inFromId',ftInteger, ptInput, 0);
+       Params.AddParam('inToId',ftInteger, ptInput, 0);
+       Params.AddParam('inBranchCode',ftInteger, ptInput, SettingMain.BranchCode);
+       Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
+       //try
+       Execute;
+       //
+       Result:=DataSet.RecordCount=1;
+
+       with execParamsMI do
+       begin
+         //
+         ParamByName('MovementId_1001').asInteger      := DataSet.FieldByName('MovementId').asInteger;
+         ParamByName('InvNumber_1001').asString        := DataSet.FieldByName('InvNumber').asString;
+         ParamByName('OrderExternalName_1001').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
+         ParamByName('PartnerName_1001').asString      := DataSet.FieldByName('PartnerName_calc').asString;
+         ParamByName('GoodsPropertyName_1001').asString:= DataSet.FieldByName('GoodsPropertyName').asString;
+         ParamByName('RetailId_1001').asInteger        := DataSet.FieldByName('RetailId').asInteger;
+         ParamByName('RetailName_1001').asString       := DataSet.FieldByName('RetailName').asString;
+
+       end;
+    end;
+end;
+{------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode: String; inFromId_calc , inToId_calc: Integer): Boolean;
 var MovementDescId_old:Integer;
 begin
@@ -2032,7 +2075,10 @@ begin
        SettingMain.WeightSkewer2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer2'));
   end
   else begin
-       SettingMain.Exception_WeightDiff:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'Exception_WeightDiff'));
+       try SettingMain.Exception_WeightDiff:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'Exception_WeightDiff'));
+       except
+           SettingMain.Exception_WeightDiff:=0;
+       end;
        //
        try SettingMain.Limit_Second_save_MI:=StrToInt(GetArrayList_Value_byName(Default_Array,'Limit_Second_save_MI'))
        except

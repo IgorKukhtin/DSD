@@ -505,6 +505,25 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             Width = 71
           end
         end
+        object PanelBtnOrderExternal: TPanel
+          Left = 0
+          Top = 286
+          Width = 95
+          Height = 41
+          Align = alBottom
+          Alignment = taLeftJustify
+          BevelOuter = bvNone
+          TabOrder = 4
+          object btnOrderExternal: TButton
+            Left = 6
+            Top = 4
+            Width = 75
+            Height = 33
+            Caption = #1047#1072#1082#1072#1079' '#8470
+            TabOrder = 0
+            OnClick = btnOrderExternalClick
+          end
+        end
       end
       object infoPanelGoodsKind: TPanel
         Left = 95
@@ -518,7 +537,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Left = 0
           Top = 41
           Width = 243
-          Height = 307
+          Height = 223
           Align = alClient
           Caption = #1055#1072#1082#1091#1074#1072#1085#1085#1103
           Color = clBtnFace
@@ -552,6 +571,49 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             OnEnter = EditTareCountEnter
             OnExit = EditGoodsKindCodeExit
             OnKeyPress = EditGoodsKindCodeKeyPress
+          end
+        end
+        object infoPanelOrderExternal: TPanel
+          Left = 0
+          Top = 264
+          Width = 243
+          Height = 84
+          Align = alBottom
+          BevelInner = bvRaised
+          BevelOuter = bvNone
+          TabOrder = 2
+          object LabelOrderExternal: TLabel
+            Left = 1
+            Top = 1
+            Width = 241
+            Height = 13
+            Align = alTop
+            Alignment = taCenter
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'MS Sans Serif'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ExplicitWidth = 66
+          end
+          object PanelOrderExternal: TPanel
+            Left = 1
+            Top = 14
+            Width = 241
+            Height = 69
+            Align = alClient
+            Alignment = taLeftJustify
+            BevelOuter = bvNone
+            Caption = 'PanelOrderExternal'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clNavy
+            Font.Height = -11
+            Font.Name = 'MS Sans Serif'
+            Font.Style = [fsBold]
+            ParentFont = False
+            TabOrder = 0
           end
         end
       end
@@ -609,7 +671,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Width = 140
         end
         object btnDialogStickerTare: TButton
-          Left = 339
+          Left = 337
           Top = 14
           Width = 124
           Height = 33
@@ -1006,6 +1068,13 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       item
         Name = 'inNumTech'
         Value = 1.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -136,7 +136,8 @@ uses
   DialogChangePercentAmount in '..\Scale\DialogChangePercentAmount.pas' {DialogChangePercentAmountForm},
   GuidePartionCell in '..\ScaleCeh\GuidePartionCell.pas' {GuidePartionCellForm},
   invoice_comdoc_vchasno in '..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
-  invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas';
+  invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas',
+  DialogOrderExternal in '..\Scale\DialogOrderExternal.pas' {DialogOrderExternalForm};
 
 {$R *.res}
 
@@ -161,7 +162,7 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-         //
+  //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
          //
@@ -199,6 +200,7 @@ begin
          Application.CreateForm(TGuideRetailForm, GuideRetailForm);
          Application.CreateForm(TDialogChangePercentAmountForm, DialogChangePercentAmountForm);
          Application.CreateForm(TGuidePartionCellForm, GuidePartionCellForm);
+         Application.CreateForm(TDialogOrderExternalForm, DialogOrderExternalForm);
   end
   else
 
@@ -253,6 +255,7 @@ begin
          Application.CreateForm(TGuideRetailForm, GuideRetailForm);
          Application.CreateForm(TDialogChangePercentAmountForm, DialogChangePercentAmountForm);
          Application.CreateForm(TGuidePartionCellForm, GuidePartionCellForm);
+         Application.CreateForm(TDialogOrderExternalForm, DialogOrderExternalForm);
   end;
   //
   Application.Run;

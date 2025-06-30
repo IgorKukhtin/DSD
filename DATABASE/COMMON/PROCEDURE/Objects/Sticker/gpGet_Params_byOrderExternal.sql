@@ -9,24 +9,25 @@ CREATE OR REPLACE FUNCTION gpGet_Params_byOrderExternal(
     IN inSession       TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (GoodsPropertyId Integer, GoodsPropertyName TVarChar
-             , RetailId Integer, RetailName TVarChar 
+             , RetailId Integer, RetailName TVarChar
              , MovementId Integer, InvNumber TVarChar
+             , OrderExternalName TVarChar
               )
-AS     
+AS
 $BODY$
    DECLARE vbUserId        Integer;
    DECLARE vbGoodsPropertyId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
-    
- 
+
+
  --Если выбран заказ по нему опраделяем Сеть и классификатор
    IF COALESCE (inMovementId,0) <> 0
    THEN
-       --сеть из документа заказа
+       -- сеть из документа заказа
        SELECT COALESCE (MovementLinkObject_Retail.ObjectId, ObjectLink_Juridical_Retail.ChildObjectId) AS RetailId
-      INTO inRetailId
+              INTO inRetailId
        FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -37,7 +38,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-          
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
                                          ON MovementLinkObject_Retail.MovementId = Movement.Id
                                         AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
@@ -66,32 +67,38 @@ BEGIN
                                   );
 
 
-       RETURN QUERY 
+       RETURN QUERY
        SELECT Object_GoodsProperty.Id         AS GoodsPropertyId
             , Object_GoodsProperty.ValueData  AS GoodsPropertyName
-            
+
             , Object_Retail.Id                AS RetailId
-            , Object_Retail.ValueData         AS RetailName  
-            
-            , Movement.Id                     AS MovementId
-            , CASE WHEN MovementString_InvNumberPartner.ValueData <> '' THEN MovementString_InvNumberPartner.ValueData ELSE '***' || Movement.InvNumber END :: TVarChar AS InvNumber
+            , Object_Retail.ValueData         AS RetailName
+
+            , Movement_Order.Id               AS MovementId
+            , CASE WHEN MovementString_InvNumberPartner.ValueData <> '' THEN MovementString_InvNumberPartner.ValueData ELSE '***' || Movement_Order.InvNumber END :: TVarChar AS InvNumber
+
+            , (CASE WHEN Movement_Order.Id > 0
+                         THEN Object_GoodsProperty.ValueData
+                    ELSE 'з. № <' || Movement_Order.InvNumber || '>' || ' от <' || DATE (Movement_Order.OperDate) :: TVarChar || '>'
+                           || ' ' || COALESCE (Object_Retail.ValueData, '')
+               END) :: TVarChar AS OrderExternalName
 
        FROM Object AS Object_GoodsProperty
              LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = inRetailId
 
-             LEFT JOIN Movement ON Movement.Id = inMovementId
+             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = inMovementId
 
-             LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
-                                         ON MovementString_InvNumberPartner.MovementId = Movement.Id
-                                        AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+             LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                      ON MovementString_InvNumberPartner.MovementId = Movement_Order.Id
+                                     AND MovementString_InvNumberPartner.DescId    = zc_MovementString_InvNumberPartner()
+
        WHERE Object_GoodsProperty.Id = vbGoodsPropertyId
        ;
 
-  
+
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -100,4 +107,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Params_byOrderExternal (26348745,  '5')
+-- SELECT * FROM gpGet_Params_byOrderExternal (26348745, 1, '5')
