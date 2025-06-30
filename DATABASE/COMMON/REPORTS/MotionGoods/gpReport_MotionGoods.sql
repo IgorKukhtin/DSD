@@ -499,7 +499,7 @@ BEGIN
                                        , CASE WHEN Object_PartionCell.DescId = zc_Object_PartionCell() AND inisPartionCell = TRUE
                                                    THEN CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData || ' ' ELSE '' END
                                                      || Object_PartionCell.ValueData || ' '
-                                                     || CASE WHEN Object_GoodsKind.ValueData <> '' THEN Object_GoodsKind.ValueData || ' '
+                                                     || CASE WHEN Object_GoodsKind.ValueData <> '' AND 1=0 THEN Object_GoodsKind.ValueData || ' '
                                                              WHEN Object_GoodsKind_complete.ValueData <> '' THEN Object_GoodsKind_complete.ValueData || ' '
                                                              ELSE ''
                                                         END
@@ -881,7 +881,7 @@ BEGIN
                                         , CASE WHEN Object_PartionCell.DescId = zc_Object_PartionCell() AND inisPartionCell = TRUE
                                                     THEN CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData || ' ' ELSE '' END
                                                       || Object_PartionCell.ValueData || ' '
-                                                      || CASE WHEN Object_GoodsKind.ValueData <> '' THEN Object_GoodsKind.ValueData || ' '
+                                                      || CASE WHEN Object_GoodsKind.ValueData <> ''  AND 1=0 THEN Object_GoodsKind.ValueData || ' '
                                                               WHEN Object_GoodsKind_complete.ValueData <> '' THEN Object_GoodsKind_complete.ValueData || ' '
                                                               ELSE ''
                                                          END
