@@ -46,6 +46,13 @@ BEGIN
               UNION SELECT  7 ::Integer  AS Ord  , 'Логистический бонус:'   ::TVarChar AS Name
               UNION SELECT  8 ::Integer  AS Ord  , 'Отчеты:'                ::TVarChar AS Name
               UNION SELECT  9 ::Integer  AS Ord  , 'Маркетинг:'             ::TVarChar AS Name
+              --
+              UNION SELECT  10 ::Integer  AS Ord, 'Ретро бонус (новое значение):'             ::TVarChar AS Name
+              UNION SELECT  11 ::Integer  AS Ord  , 'Маркетинговый бюджет (новое значение):'  ::TVarChar AS Name
+              UNION SELECT  12 ::Integer  AS Ord  , 'Компенсация возвратов (новое значение):' ::TVarChar AS Name
+              UNION SELECT  13 ::Integer  AS Ord  , 'Логистический бонус (новое значение):'   ::TVarChar AS Name
+              UNION SELECT  14 ::Integer  AS Ord  , 'Отчеты (новое значение):'                ::TVarChar AS Name
+              UNION SELECT  15 ::Integer  AS Ord  , 'Маркетинг (новое значение):'             ::TVarChar AS Name
                  )
 
     SELECT  tmpText.Ord             ::Integer
@@ -143,7 +150,67 @@ BEGIN
                                  ON MovementFloat_Report.MovementId = vbMovementId_PromoTradeCondition
                                 AND MovementFloat_Report.DescId = zc_MovementFloat_MarketSumm()
     WHERE tmpText.Ord = 9
-        
+  -- новое значение
+  UNION
+    SELECT  tmpText.Ord             ::Integer
+          , tmpText.Name            ::TVarChar
+          , zfConvert_FloatToString (MovementFloat_RetroBonus.ValueData) ::TVarChar AS Value
+    FROM tmpText
+         LEFT JOIN MovementFloat AS MovementFloat_RetroBonus 
+                                 ON MovementFloat_RetroBonus.MovementId = vbMovementId_PromoTradeCondition
+                                AND MovementFloat_RetroBonus.DescId = zc_MovementFloat_RetroBonus_new()
+    WHERE tmpText.Ord = 10
+    
+ UNION
+    SELECT  tmpText.Ord             ::Integer
+          , tmpText.Name            ::TVarChar
+          , zfConvert_FloatToString (MovementFloat_Market.ValueData) ::TVarChar AS Value
+    FROM tmpText
+         LEFT JOIN MovementFloat AS MovementFloat_Market 
+                                 ON MovementFloat_Market.MovementId = vbMovementId_PromoTradeCondition
+                                AND MovementFloat_Market.DescId = zc_MovementFloat_Market_new()
+    WHERE tmpText.Ord = 11
+    
+ UNION
+    SELECT  tmpText.Ord             ::Integer
+          , tmpText.Name            ::TVarChar
+          , zfConvert_FloatToString (MovementFloat_ReturnIn.ValueData) ::TVarChar AS Value
+    FROM tmpText
+         LEFT JOIN MovementFloat AS MovementFloat_ReturnIn
+                                 ON MovementFloat_ReturnIn.MovementId = vbMovementId_PromoTradeCondition
+                                AND MovementFloat_ReturnIn.DescId = zc_MovementFloat_ReturnIn_new()
+    WHERE tmpText.Ord = 12
+     
+ UNION
+    SELECT  tmpText.Ord             ::Integer
+          , tmpText.Name            ::TVarChar
+          , zfConvert_FloatToString (MovementFloat_Logist.ValueData) ::TVarChar AS Value
+    FROM tmpText
+         LEFT JOIN MovementFloat AS MovementFloat_Logist
+                                 ON MovementFloat_Logist.MovementId = vbMovementId_PromoTradeCondition
+                                AND MovementFloat_Logist.DescId = zc_MovementFloat_Logist_new()
+    WHERE tmpText.Ord = 13
+    
+ UNION
+    SELECT  tmpText.Ord             ::Integer
+          , tmpText.Name            ::TVarChar
+          , zfConvert_FloatToString (MovementFloat_Report.ValueData) ::TVarChar AS Value
+    FROM tmpText
+         LEFT JOIN MovementFloat AS MovementFloat_Report
+                                 ON MovementFloat_Report.MovementId = vbMovementId_PromoTradeCondition
+                                AND MovementFloat_Report.DescId = zc_MovementFloat_Report_new()
+    WHERE tmpText.Ord = 14     
+
+ UNION
+    SELECT  tmpText.Ord             ::Integer
+          , tmpText.Name            ::TVarChar
+          , zfConvert_FloatToString (MovementFloat_Report.ValueData) ::TVarChar AS Value
+    FROM tmpText
+         LEFT JOIN MovementFloat AS MovementFloat_Report
+                                 ON MovementFloat_Report.MovementId = vbMovementId_PromoTradeCondition
+                                AND MovementFloat_Report.DescId = zc_MovementFloat_MarketSumm_new()
+    WHERE tmpText.Ord = 15
+
 ORDER by 1  
     ;
 
@@ -154,6 +221,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.06.25         *
  16.09.24         *
 */
 

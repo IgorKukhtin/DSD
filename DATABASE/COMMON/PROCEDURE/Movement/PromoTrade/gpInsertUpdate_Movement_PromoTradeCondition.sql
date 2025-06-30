@@ -87,6 +87,56 @@ BEGIN
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MarketSumm(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
     END IF;
 
+    --
+    IF inOrd = 10
+    THEN 
+        --замена
+        inValue:= REPLACE (TRIM (inValue), ',', '.');
+        --RetroBonus
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_RetroBonus_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+    END IF;
+
+    IF inOrd = 11
+    THEN 
+        --замена
+        inValue:= REPLACE (TRIM (inValue), ',', '.');
+        --Market
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Market_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+    END IF;
+    
+    IF inOrd = 12
+    THEN 
+        --замена
+        inValue:= REPLACE (TRIM (inValue), ',', '.');
+        --ReturnIn
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ReturnIn_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+    END IF;
+    
+    IF inOrd = 13
+    THEN 
+        --замена
+        inValue:= REPLACE (TRIM (inValue), ',', '.');
+        --Logist
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Logist_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+    END IF;
+
+    IF inOrd = 14
+    THEN 
+        --замена
+        inValue:= REPLACE (TRIM (inValue), ',', '.');
+        --Logist
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Report_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+    END IF;   
+
+    IF inOrd = 15
+    THEN 
+        --замена
+        inValue:= REPLACE (TRIM (inValue), ',', '.');
+        --Logist
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MarketSumm_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+    END IF;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -94,5 +144,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.06.25         *
  29.08.24         *
 */
