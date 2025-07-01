@@ -291,6 +291,8 @@ type
     Label25: TLabel;
     LinkControlToField17: TLinkControlToField;
     Label26: TLabel;
+    Label27: TLabel;
+    LinkPropertyToFieldText: TLinkPropertyToField;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);

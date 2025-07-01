@@ -336,6 +336,10 @@ object DM: TDM
       Size = 255
       Calculated = True
     end
+    object cdsInventoryListTopAmount_sh_str: TStringField
+      FieldName = 'Amount_sh_str'
+      Size = 255
+    end
   end
   object cdsInventoryList: TClientDataSet
     Aggregates = <>
@@ -487,6 +491,10 @@ object DM: TDM
       Size = 255
       Calculated = True
     end
+    object cdsInventoryListAmount_sh_str: TStringField
+      FieldName = 'Amount_sh_str'
+      Size = 255
+    end
   end
   object cdsInventoryEdit: TClientDataSet
     Aggregates = <>
@@ -600,6 +608,10 @@ object DM: TDM
     end
     object cdsInventoryEditWeightTare_calc: TFloatField
       FieldName = 'WeightTare_calc'
+    end
+    object cdsInventoryEditAmount_sh_str: TStringField
+      FieldName = 'Amount_sh_str'
+      Size = 255
     end
   end
 end
