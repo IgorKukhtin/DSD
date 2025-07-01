@@ -207,6 +207,9 @@ type
     cdsInventoryEditNumSecurity_str: TStringField;
     cdsInventoryListNumSecurity_strCaption: TStringField;
     cdsInventoryListTopNumSecurity_strCaption: TStringField;
+    cdsInventoryEditAmount_sh_str: TStringField;
+    cdsInventoryListAmount_sh_str: TStringField;
+    cdsInventoryListTopAmount_sh_str: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure cdsChoiceCelListCalcFields(DataSet: TDataSet);
     procedure cdsChoiceCelListTopCalcFields(DataSet: TDataSet);
