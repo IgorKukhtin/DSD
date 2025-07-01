@@ -133,6 +133,16 @@ inherited PromoTradeForm: TPromoTradeForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_weight_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -246,6 +256,16 @@ inherited PromoTradeForm: TPromoTradeForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_weight_calc
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -456,6 +476,26 @@ inherited PromoTradeForm: TPromoTradeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1087#1083#1072#1085' ('#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081')'
+            Options.Editing = False
+          end
+          object AmountPlan_calc: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1040#1082#1094#1080#1103' ('#1084#1077#1089'.)'
+            DataBinding.FieldName = 'AmountPlan_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1040#1082#1094#1080#1103' ('#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081')'
+            Width = 70
+          end
+          object AmountPlan_weight_calc: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087#1083#1072#1085' '#1040#1082#1094#1080#1103' ('#1084#1077#1089'.)'
+            DataBinding.FieldName = 'AmountPlan_weight_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1087#1083#1072#1085' '#1040#1082#1094#1080#1103' ('#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081')'
             Options.Editing = False
           end
           object PriceWithVAT: TcxGridDBColumn
@@ -906,6 +946,9 @@ inherited PromoTradeForm: TPromoTradeForm
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -3726,7 +3769,7 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 60
+    Left = 76
     Top = 88
   end
   object GuidesPromoItem: TdsdGuides
