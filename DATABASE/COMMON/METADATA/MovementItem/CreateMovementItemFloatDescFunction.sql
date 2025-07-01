@@ -1909,7 +1909,13 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_PromoTax() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_PromoTax', 'Доля Акции' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PromoTax');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_PricePromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PricePromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PricePromo', 'Спец цена' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PricePromo');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_PricePromo_new() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PricePromo_new'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PricePromo_new', 'Спец цена (новое значение)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PricePromo_new');
 
 
 
@@ -1917,6 +1923,8 @@ INSERT INTO MovementItemFloatDesc(Code, ItemName)
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
  30.06.25         * zc_MIFloat_PromoTax
+                    zc_MIFloat_PricePromo
+                    zc_MIFloat_PricePromo_new
  27.03.25         * zc_MIFloat_AmountForm_two
  08.10.24         * zc_MIFloat_PricePartner
  29.05.24         * zc_MIFloat_PartionCell_Amount_6...12

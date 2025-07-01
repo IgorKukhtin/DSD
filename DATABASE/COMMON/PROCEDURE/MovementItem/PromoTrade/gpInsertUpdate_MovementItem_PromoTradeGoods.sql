@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
  INOUT ioId                             Integer   , -- Ключ объекта <Элемент документа>
@@ -18,6 +19,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
    OUT outPriceWithOutVAT               TFloat    ,
    OUT outSummWithOutVATPlan            TFloat    ,
    OUT outSummWithVATPlan               TFloat    ,
+    IN inPromoTax                       TFloat    , --
+    IN inChangePercent                  TFloat    , --
+    IN inPricePromo                     TFloat    , --
+    IN inPricePromo_new                 TFloat    , --
     IN inGoodsKindId                    Integer   , -- ИД обьекта <Вид товара>
     IN inTradeMarkId                    Integer   ,  --Торговая марка
     IN inGoodsGroupPropertyId           Integer,
@@ -52,15 +57,20 @@ BEGIN
                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                                     ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
+             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MILinkObject_Partner.ObjectId
                WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.ObjectId = inGoodsId
                    AND MovementItem.IsErased = FALSE
                    AND MovementItem.DescId = zc_MI_Master()
                    AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
+                   AND COALESCE (MILinkObject_Partner.ObjectId,0) = COALESCE (inPartnerId,0)
                    AND MovementItem.Id <> ioId
                )
     THEN
-        RAISE EXCEPTION 'Ошибка. В документе уже указана есть товар = <%> и вид = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
+        RAISE EXCEPTION 'Ошибка. В документе уже есть товар = <%> и вид = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
     END IF;
 
     -- переопределяем  если inGoodsGroupPropertyId заполнено берем его , если нет то группу
@@ -78,6 +88,10 @@ BEGIN
                                                     , inPartnerCount         := inPartnerCount
                                                     , inAmountPlan           := inAmountPlan
                                                     , inPriceWithVAT         := inPriceWithVAT
+                                                    , inPromoTax             := inPromoTax
+                                                    , inChangePercent        := inChangePercent
+                                                    , inPricePromo           := inPricePromo
+                                                    , inPricePromo_new       := inPricePromo_new                                                    
                                                     , inGoodsKindId          := inGoodsKindId
                                                     , inTradeMarkId          := inTradeMarkId
                                                     , inGoodsGroupPropertyId := inGoodsGroupPropertyId
@@ -85,6 +99,7 @@ BEGIN
                                                     , inComment              := inComment
                                                     , inUserId               := vbUserId
                                                      ) AS tmp;
+
 
     SELECT Object_TradeMark.ValueData                AS TradeMark
          , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName

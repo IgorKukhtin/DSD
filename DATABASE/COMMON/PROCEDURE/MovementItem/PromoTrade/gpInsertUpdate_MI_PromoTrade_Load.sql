@@ -217,7 +217,11 @@ BEGIN
                                                         , inSumm                 := inSumm       ::TFloat
                                                         , inPartnerCount         := inPartnerCount ::TFloat
                                                         , inAmountPlan           := inAmountPlan
-                                                        , inPriceWithVAT         := inPricePlan
+                                                        , inPriceWithVAT         := inPricePlan 
+                                                        , inPromoTax             := 0    ::TFloat
+                                                        , inChangePercent        := 0    ::TFloat
+                                                        , inPricePromo           := 0    ::TFloat
+                                                        , inPricePromo_new       := 0    ::TFloat
                                                         , inGoodsKindId          := vbGoodsKindId  ::Integer
                                                         , inTradeMarkId          := 0  ::Integer
                                                         , inGoodsGroupPropertyId := 0  ::Integer
@@ -241,7 +245,7 @@ BEGIN
      END IF;
 
 
-     IF vbUserId = 5 AND 1=0
+     IF vbUserId IN (5, 9457) --AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.ok.';
      END IF;

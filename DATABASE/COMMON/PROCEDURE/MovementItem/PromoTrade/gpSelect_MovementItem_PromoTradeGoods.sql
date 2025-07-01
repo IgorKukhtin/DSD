@@ -33,7 +33,12 @@ RETURNS TABLE (
       , PriceWithOutVAT    TFloat
       , PriceWithVAT       TFloat
       , SummWithOutVATPlan TFloat
-      , SummWithVATPlan    TFloat
+      , SummWithVATPlan    TFloat 
+      
+      , PromoTax           TFloat
+      , ChangePercent      TFloat
+      , PricePromo         TFloat
+      , PricePromo_new     TFloat
       
       , Comment            TVarChar --Комментарий       
       , isErased           Boolean  --удален
@@ -80,6 +85,11 @@ BEGIN
              , MIFloat_PriceWithVAT.ValueData    ::TFloat AS PriceWithVAT 
              , (MIFloat_AmountPlan.ValueData * MIFloat_PriceWithOutVAT.ValueData)  ::TFloat AS SummWithOutVATPlan
              , (MIFloat_AmountPlan.ValueData * MIFloat_PriceWithVAT.ValueData)     ::TFloat AS SummWithVATPlan
+             
+             , MIFloat_PromoTax.ValueData       ::TFloat AS PromoTax
+             , MIFloat_ChangePercent.ValueData  ::TFloat AS ChangePercent
+             , MIFloat_PricePromo.ValueData     ::TFloat AS PricePromo
+             , MIFloat_PricePromo_new.ValueData ::TFloat AS PricePromo_new
 
              , MIString_Comment.ValueData              AS Comment                     -- Примечание
              , MovementItem.isErased                   AS isErased                    -- Удален
@@ -100,6 +110,19 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                          ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                         AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_PromoTax
+                                         ON MIFloat_PromoTax.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PromoTax.DescId = zc_MIFloat_PromoTax()
+             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+             LEFT JOIN MovementItemFloat AS MIFloat_PricePromo
+                                         ON MIFloat_PricePromo.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PricePromo.DescId = zc_MIFloat_PricePromo()
+             LEFT JOIN MovementItemFloat AS MIFloat_PricePromo_new
+                                         ON MIFloat_PricePromo_new.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PricePromo_new.DescId = zc_MIFloat_PricePromo_new()
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
