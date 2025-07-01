@@ -764,6 +764,10 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_MarketSumm_new() RETURNS Integer AS 
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_MarketSumm_new', 'Маркетинговый бюджет (новое значение)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_MarketSumm_new');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_ChangePercent_new() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ChangePercent_new'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc (Code, ItemName)
+  SELECT 'zc_MovementFloat_ChangePercent_new', '(-)% Скидки (+)% Наценки (новое значение)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ChangePercent_new');
+
 
 CREATE OR REPLACE FUNCTION zc_MovementFloat_RetroBonus() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_RetroBonus'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)

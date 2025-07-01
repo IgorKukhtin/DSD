@@ -1905,9 +1905,18 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_Summ_diff_F2() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_Summ_diff_F2', 'Выплата по ведомости (округление) - 2ф.' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Summ_diff_F2');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_PromoTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PromoTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PromoTax', 'Доля Акции' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PromoTax');
+
+
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 30.06.25         * zc_MIFloat_PromoTax
  27.03.25         * zc_MIFloat_AmountForm_two
  08.10.24         * zc_MIFloat_PricePartner
  29.05.24         * zc_MIFloat_PartionCell_Amount_6...12

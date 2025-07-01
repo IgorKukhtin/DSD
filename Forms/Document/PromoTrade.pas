@@ -232,6 +232,7 @@ type
     dxBarSeparator1: TdxBarSeparator;
     spErasedMIMaster_all: TdsdStoredProc;
     actSetErasedMIMaster_all: TdsdExecStoredProc;
+    Value_new_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public

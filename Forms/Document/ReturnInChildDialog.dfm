@@ -323,11 +323,15 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
       item
         Name = 'MovementId_Sale'
         Value = ''
+        Component = GuidesSale
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Sale'
         Value = ''
+        Component = GuidesSale
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end

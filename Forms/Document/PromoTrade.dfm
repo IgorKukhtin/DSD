@@ -3,7 +3,6 @@ inherited PromoTradeForm: TPromoTradeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 715
   ClientWidth = 1164
-  ExplicitLeft = -287
   ExplicitWidth = 1180
   ExplicitHeight = 754
   PixelsPerInch = 96
@@ -729,11 +728,18 @@ inherited PromoTradeForm: TPromoTradeForm
                   Width = 176
                 end
                 object Value_ch1: TcxGridDBColumn
-                  Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+                  Caption = #1058#1077#1082#1091#1097#1077#1077' '#1079#1085#1072#1095'.'
                   DataBinding.FieldName = 'Value'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
-                  Width = 82
+                  HeaderHint = #1058#1077#1082#1091#1097#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077
+                  Width = 65
+                end
+                object Value_new_ch1: TcxGridDBColumn
+                  Caption = #1053#1086#1074#1086#1077' '#1079#1085#1072#1095'.'
+                  DataBinding.FieldName = 'Value_new'
+                  HeaderHint = #1053#1086#1074#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077
+                  Width = 65
                 end
               end
               object cxGridLeveMov1: TcxGridLevel
@@ -3808,8 +3814,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
-    Top = 536
+    Left = 144
+    Top = 544
   end
   object Mov1CDS: TClientDataSet
     Aggregates = <>
@@ -4407,6 +4413,15 @@ inherited PromoTradeForm: TPromoTradeForm
         Value = Null
         Component = Mov1CDS
         ComponentItem = 'Value'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue_new'
+        Value = Null
+        Component = Mov1CDS
+        ComponentItem = 'Value_new'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
