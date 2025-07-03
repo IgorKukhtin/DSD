@@ -146,14 +146,11 @@ BEGIN
            -- 1. Якщо співробітник офіційно оформлений (стоїть галочка у колонці "Оформлен офіціально")
            IF EXISTS (SELECT 1
                       FROM ObjectLink AS OL_Personal_Member
-                           INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = OL_Personal_Member.ObjectId
-                                                               -- !!!Не удален!!!
-                                                               AND Object_Personal.isErased = FALSE
                            INNER JOIN ObjectBoolean AS OB
-                                                    ON OB.ObjectId  = OL_Personal_Member.ObjectId
-                                                   AND OB.DescId    = zc_ObjectBoolean_Personal_Main()
+                                                    ON OB.ObjectId  = OL_Personal_Member.ChildObjectId
+                                                   AND OB.DescId    = zc_ObjectBoolean_Member_Official()
                                                    AND OB.ValueData = TRUE
-                      WHERE OL_Personal_Member.ChildObjectId = ioId
+                      WHERE OL_Personal_Member.ObjectId = ioId
                         AND OL_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
                      )
            THEN
@@ -170,14 +167,11 @@ BEGIN
            -- 2. Якщо співробітник НЕ оформлен офіційно
            IF NOT EXISTS (SELECT 1
                           FROM ObjectLink AS OL_Personal_Member
-                               INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = OL_Personal_Member.ObjectId
-                                                                   -- !!!Не удален!!!
-                                                                   AND Object_Personal.isErased = FALSE
                                INNER JOIN ObjectBoolean AS OB
-                                                        ON OB.ObjectId  = OL_Personal_Member.ObjectId
-                                                       AND OB.DescId    = zc_ObjectBoolean_Personal_Main()
+                                                        ON OB.ObjectId  = OL_Personal_Member.ChildObjectId
+                                                       AND OB.DescId    = zc_ObjectBoolean_Member_Official()
                                                        AND OB.ValueData = TRUE
-                          WHERE OL_Personal_Member.ChildObjectId = ioId
+                          WHERE OL_Personal_Member.ObjectId = ioId
                             AND OL_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
                          )
            THEN
