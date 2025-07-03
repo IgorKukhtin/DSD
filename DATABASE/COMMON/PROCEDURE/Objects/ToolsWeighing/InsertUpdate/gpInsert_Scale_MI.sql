@@ -639,7 +639,7 @@ BEGIN
      THEN
          inCountTare := 1;
           -- Вес одной упаковки
-         inWeightTare:= vbWeightPack;
+         inWeightTare:= COALESCE (vbWeightPack, 0);
          -- замена, т.к. здесь вес
          vbRealWeight_get:= inChangePercentAmount;
          -- замена
@@ -686,11 +686,11 @@ BEGIN
 
 
      -- проверка кол-во
-     IF (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+      IF (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                    THEN vbAmount_byWeightTare_goods
 
               -- Для Этикетка + Kg
-              WHEN inBranchCode > 1000 AND vbMeasureId = zc_Measure_Kg()
+              WHEN inBranchCode > 1000 AND vbMeasureId = zc_Measure_Kg() AND vbRealWeight_get > 0
                    THEN vbRealWeight_get - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
 
               -- Для Этикетка
@@ -709,7 +709,7 @@ BEGIN
                    THEN vbAmount_byWeightTare_goods
 
               -- Для Этикетка + Kg
-              WHEN inBranchCode > 1000 AND vbMeasureId = zc_Measure_Kg()
+              WHEN inBranchCode > 1000 AND vbMeasureId = zc_Measure_Kg() AND vbRealWeight_get > 0
                    THEN vbRealWeight_get - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
 
               -- Для Этикетка
@@ -731,7 +731,8 @@ BEGIN
          END) < 0
      THEN
          RAISE EXCEPTION 'Ошибка.С учетом минуса тары, получился отицательный вес <%> <%>'
-                        , CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                        , zfConvert_FloatToString 
+                         (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                     THEN vbAmount_byWeightTare_goods
 
                                -- Для Этикетка + Kg
@@ -747,8 +748,9 @@ BEGIN
                                     THEN vbAmount_byPack
 
                                ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
-                          END
-                        , CASE -- !!!только Для Сканирования Метро!!!
+                          END)
+                        , zfConvert_FloatToString 
+                         (CASE -- !!!только Для Сканирования Метро!!!
                                WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                     THEN vbAmount_byWeightTare_goods
 
@@ -772,7 +774,7 @@ BEGIN
 
                                ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10)
                                         * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
-                          END
+                          END)
                          ;
      END IF;
 
@@ -1304,7 +1306,8 @@ BEGIN
 
 
          -- !!! ВРЕМЕННО !!!
-         IF vbUserId = 5 AND 1=0 AND inBranchCode < 1000 THEN
+         IF vbUserId = 5 AND 1=0 -- AND inBranchCode < 1000
+         THEN
              RAISE EXCEPTION 'Admin - Test = OK  Amount = <%> Price = <%> HeadCount = <%>'
                            , (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = vbId)
                            , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_Price())
@@ -1313,7 +1316,7 @@ BEGIN
              -- RAISE EXCEPTION 'Повторите действие через 3 мин.';
          END IF;
 
-     END IF;
+     END IF; -- if vbMessageText = ''
 
      -- Результат
      RETURN QUERY

@@ -54,6 +54,7 @@ RETURNS TABLE (MovementId            Integer
              , isContractGoods Boolean
 
              , OrderExternalName_master TVarChar
+             , OrderExternalName_master_1001 TVarChar
               )
 AS
 $BODY$
@@ -424,15 +425,20 @@ BEGIN
 
                                                                                      END
                            )
+       , tmpMLM_Order AS (SELECT MLM.*
+                          FROM MovementLinkMovement AS MLM
+                          WHERE MLM.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                             AND MLM.DescId = zc_MovementLinkMovement_Order()
+                         )
        , tmpMovement_find_all AS (SELECT tmpMovement.Id
                                        , MovementLinkMovement_Order.MovementId AS MovementId_get
                                        , MovementLinkObject_User.ObjectId      AS UserId
                                   FROM tmpMovement
-                                       INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                                                       ON MovementLinkMovement_Order.MovementChildId = tmpMovement.Id
-                                                                      AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-                                       INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
-                                                          AND Movement.DescId = zc_Movement_WeighingPartner()
+                                       INNER JOIN tmpMLM_Order AS MovementLinkMovement_Order
+                                                               ON MovementLinkMovement_Order.MovementChildId = tmpMovement.Id
+                                                              AND MovementLinkMovement_Order.DescId          = zc_MovementLinkMovement_Order()
+                                       INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Order.MovementId
+                                                          AND Movement.DescId   = zc_Movement_WeighingPartner()
                                                           AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                        LEFT JOIN MovementLinkObject
                                               AS MovementLinkObject_User
@@ -731,6 +737,7 @@ BEGIN
                      ) :: Boolean AS isContractGoods
 
             , ('№ <' || tmpMovement.InvNumber || '>' || ' от <' || zfConvert_DateToString (tmpMovement.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
+            , (Object_GoodsProperty.ValueData || ' № <' || tmpMovement.InvNumber || '>' || ' от <' || zfConvert_DateToString (tmpMovement.OperDate) :: TVarChar || '>') :: TVarChar AS OrderExternalName_master_1001
 
        FROM tmpMovement
             LEFT JOIN tmpMovement_find ON tmpMovement_find.Id = tmpMovement.Id
@@ -859,3 +866,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_Scale_OrderExternal (inIsCeh:= TRUE, inOperDate:= CURRENT_DATE, inFromId:= 1, inToId:= 1, inBranchCode:= 301, inBarCode:= '1711195', inSession := '5');
+-- SELECT * FROM gpGet_Scale_OrderExternal (inIsCeh:= TRUE, inOperDate:= CURRENT_DATE, inFromId:= 1, inToId:= 1, inBranchCode:= 301, inBarCode:= '2020315579549', inSession := '5');

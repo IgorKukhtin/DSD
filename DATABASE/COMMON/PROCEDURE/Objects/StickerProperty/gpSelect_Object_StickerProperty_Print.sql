@@ -350,21 +350,21 @@ BEGIN
                                                                , ((ObjectFloat_EndPosInt.ValueData - ObjectFloat_StartPosInt.ValueData + 1)
                                                                   -- МИНУС сколько символов в целой части веса
                                                                 - LENGTH (-- первая часть
-                                                                          SPLIT_PART ((inWeight - COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0)) :: TVarChar, '.', 1))
+                                                                          SPLIT_PART ((inWeight - CASE WHEN inWeight > 0 THEN COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0) ELSE 0 END) :: TVarChar, '.', 1))
                                                                  ) :: Integer
                                                                 )
                                                          -- целая часть веса - первая часть
-                                                      || SPLIT_PART ((inWeight - COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0)) :: TVarChar, '.', 1)
+                                                      || SPLIT_PART ((inWeight - CASE WHEN inWeight > 0 THEN COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0) ELSE 0 END) :: TVarChar, '.', 1)
 
                                                          -- дробная часть веса - вторая часть
-                                                      || SPLIT_PART ((inWeight - COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0)) :: TVarChar, '.', 2)
+                                                      || SPLIT_PART ((inWeight - CASE WHEN inWeight > 0 THEN COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0) ELSE 0 END) :: TVarChar, '.', 2)
                                                          -- добавили нули справа
                                                       || REPEAT ('0'
                                                                  -- сколько надо символов
                                                                , ((ObjectFloat_EndPosFrac.ValueData - ObjectFloat_StartPosFrac.ValueData + 1)
                                                                   -- МИНУС сколько символов в дробной части веса
                                                                 - LENGTH (-- вторая часть
-                                                                          SPLIT_PART ((inWeight - COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0)) :: TVarChar, '.', 2))
+                                                                          SPLIT_PART ((inWeight - CASE WHEN inWeight > 0 THEN COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0) ELSE 0 END) :: TVarChar, '.', 2))
                                                                  ) :: Integer
                                                                 )
                                     END AS BarCode_calc
@@ -575,7 +575,7 @@ BEGIN
               -- вес
           --, CASE WHEN inIs70_70 = TRUE AND tmpObject_GoodsPropertyValue_calc.MeasureId <> zc_Measure_Sh()
             , CASE WHEN inIs70_70 = TRUE AND COALESCE (Object_Measure.Id, 0) <> zc_Measure_Sh()
-                        THEN inWeight - COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0)
+                        THEN CASE WHEN inWeight > 0 THEN inWeight - COALESCE (tmpGoodsByGoodsKind_gk.WeightPackage, 0) ELSE 0 END
                    ELSE ObjectFloat_Value6.ValueData
               END :: TFloat AS Value6
 
