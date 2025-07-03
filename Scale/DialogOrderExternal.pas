@@ -36,9 +36,12 @@ type
     PanelGoodsProperty: TPanel;
     procedure EditBarCodeKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure EditBarCodeChange(Sender: TObject);
   private
+    fEdit:Boolean;
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
+    function Execute: boolean; override;
   end;
 
 var
@@ -48,8 +51,14 @@ implementation
 uses DMMainScale, UtilScale;
 {$R *.dfm}
 {------------------------------------------------------------------------------}
+function TDialogOrderExternalForm.Execute: boolean;
+begin
+     fEdit:= false;
+     Result:= inherited Execute;
+end;
+{------------------------------------------------------------------------------}
 function TDialogOrderExternalForm.Checked: boolean; //Проверка корректного ввода в Edit
-var AmountPartner, PricePartner : Double;
+var Key: Word;
 begin
      Result:= true;
      //
@@ -71,13 +80,23 @@ begin
           ActiveControl:=bbOk;
     end;
     //
-     //Заказ клиента
-     if ParamsMI.ParamByName('MovementId_1001').asInteger = -1 then
-     begin
-          ShowMessage('Ошибка.Документ не может быть 0.');
-          Result:=false;
-          exit;
-     end;
+    //
+    Key:= 13;
+    if fEdit = false then EditBarCodeKeyDown(Self, Key, []);
+    //
+    //Заказ клиента
+    if (ParamsMI.ParamByName('MovementId_1001').asInteger = 0) and(EditBarCode.Text <> '')  then
+    begin
+         ShowMessage('Ошибка.Документ Заказ покупателя № <' + EditBarCode.Text + '> не найден.');
+         Result:=false;
+         exit;
+    end;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogOrderExternalForm.EditBarCodeChange(Sender: TObject);
+begin
+  inherited;
+  fEdit:= false;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogOrderExternalForm.EditBarCodeKeyDown(Sender: TObject;
@@ -104,7 +123,9 @@ begin
     else
     if DMMainScaleForm.gpGet_Scale_OrderExternal_1001(ParamsMI,EditBarCode.Text) then
     begin
-          EditBarCode.Text          := ParamsMI.ParamByName('InvNumber_1001').asString;
+          fEdit:= true;
+
+          //EditBarCode.Text          := ParamsMI.ParamByName('InvNumber_1001').asString;
           PanelOrderExternal.Caption:= ParamsMI.ParamByName('OrderExternalName_1001').asString;
           PanelPartner.Caption      := ParamsMI.ParamByName('PartnerName_1001').asString;
           PanelGoodsProperty.Caption:= ParamsMI.ParamByName('GoodsPropertyName_1001').asString;

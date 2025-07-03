@@ -505,51 +505,87 @@ end;
 {------------------------------------------------------------------------------}
 function TGuideGoodsStickerForm.Execute (execParamsMovement : TParams; isModeSave : Boolean) : Boolean;
 begin
-     fStickerPropertyId:=-1;
-     fStickerFileName:='';
      cbPreviewPrint.Checked:= false;
      //
-     //1 - печатать дату нач/конечн произв-ва на этикетке
-     cbStartEnd.Checked := TRUE;
-     //2 - печатать для ТАРЫ
-     cbTare.Checked     := FALSE;
-     //3 - печатать ПАРТИЮ для тары
-     ParamsMI.ParamByName('isPartion_Sticker').AsBoolean:= FALSE;
-     //печатать название тов. (для режим 2,3)
-     cbGoodsName.Checked:= TRUE;
+     if (ParamsMI.ParamByName('isAuto_1001').AsBoolean = true) and (ParamsMI.ParamByName('GoodsCode_1001').AsInteger > 0)
+     then begin
 
-     //нач. дата (для режим 1)
-     deDateStart.Date   := NOW;
-     //дата для тары  (для режим 2)
-     ParamsMI.ParamByName('DateTare_Sticker').AsDateTime:= NOW;
+            // CancelCxFilter;
+            fStartWrite:=true;
 
-     //дата упаковки  (для режим 3)
-     ParamsMI.ParamByName('DatePack_Sticker').AsDateTime:= NOW;
-     //дата произв-ва (для режим 3)
-     ParamsMI.ParamByName('DateProduction_Sticker').AsDateTime:= NOW;
-     //№ партии  упаковки, по умолчанию = 1 (для режим 3)
-     ParamsMI.ParamByName('NumPack_Sticker').AsFloat:= 1;
-     //№ смены технологов, по умолчанию = 1 (для режим 3)
-     ParamsMI.ParamByName('NumTech_Sticker').AsFloat:= 1;
+            EditWeightValue.Text:= '1';
 
-     //обновили
-     cbStartEndClick(Self);
-     //обновили
-     deDateStartPropertiesChange(Self);
+            EditGoodsCode.Text:= IntToStr(ParamsMI.ParamByName('GoodsCode_1001').AsInteger);
+            EditGoodsKindCode.Text:=IntToStr(ParamsMI.ParamByName('GoodsKindCode_1001').AsInteger);
 
-     //
-     //
-     fModeSave:= isModeSave;
-     fCloseOK:=false;
+            fStartWrite:=false;
 
-     Id_FilterValue:='';
-     fEnterId:=false;
-     fEnterGoodsCode:=false;
-     fEnterGoodsName:=false;
-     fEnterGoodsKindCode:=false;
+            //CDS.Filter:='';
+            // CDS.Filtered:=false;
+             CDS.Filtered:=true;
 
-     CancelCxFilter;
-     fStartWrite:=true;
+            if cb_70_70.Checked = TRUE
+            then pShowReport
+            else cb_70_70.Checked:= TRUE;
+
+            if (ParamsMI.ParamByName('isPreviewPrint_1001').AsBoolean = true)
+            then result:=ShowModal=mrOk
+            else begin
+                      result:=Checked;
+                      if result then begin fCloseOK:=true; end;
+                 end;
+
+            exit;
+     end
+     else begin
+         ParamsMI.ParamByName('GoodsCode_1001').AsInteger:=0;
+         ParamsMI.ParamByName('GoodsKindCode_1001').AsFloat:=0;
+
+         fStickerPropertyId:=-1;
+         fStickerFileName:='';
+         //
+         //1 - печатать дату нач/конечн произв-ва на этикетке
+         cbStartEnd.Checked := TRUE;
+         //2 - печатать для ТАРЫ
+         cbTare.Checked     := FALSE;
+         //3 - печатать ПАРТИЮ для тары
+         ParamsMI.ParamByName('isPartion_Sticker').AsBoolean:= FALSE;
+         //печатать название тов. (для режим 2,3)
+         cbGoodsName.Checked:= TRUE;
+
+         //нач. дата (для режим 1)
+         deDateStart.Date   := NOW;
+         //дата для тары  (для режим 2)
+         ParamsMI.ParamByName('DateTare_Sticker').AsDateTime:= NOW;
+
+         //дата упаковки  (для режим 3)
+         ParamsMI.ParamByName('DatePack_Sticker').AsDateTime:= NOW;
+         //дата произв-ва (для режим 3)
+         ParamsMI.ParamByName('DateProduction_Sticker').AsDateTime:= NOW;
+         //№ партии  упаковки, по умолчанию = 1 (для режим 3)
+         ParamsMI.ParamByName('NumPack_Sticker').AsFloat:= 1;
+         //№ смены технологов, по умолчанию = 1 (для режим 3)
+         ParamsMI.ParamByName('NumTech_Sticker').AsFloat:= 1;
+
+         //обновили
+         cbStartEndClick(Self);
+         //обновили
+         deDateStartPropertiesChange(Self);
+
+         //
+         //
+         fModeSave:= isModeSave;
+         fCloseOK:=false;
+
+         Id_FilterValue:='';
+         fEnterId:=false;
+         fEnterGoodsCode:=false;
+         fEnterGoodsName:=false;
+         fEnterGoodsKindCode:=false;
+
+         CancelCxFilter;
+         fStartWrite:=true;
+     end;
 
      if execParamsMovement.ParamByName('OrderExternalId').AsInteger<>0 then
      with spSelect do
@@ -807,6 +843,12 @@ begin
        begin
             ShowMessage('Ошибка.Количество за минусом тары не может быть меньше 0.');
             exit;
+       end;
+
+       if Result = TRUE then
+       begin
+           ParamByName('GoodsCode_1001').AsInteger:=CDS.FieldByName('GoodsCode').AsInteger;
+           ParamByName('GoodsKindCode_1001').AsFloat:=CDS.FieldByName('GoodsKindCode').AsInteger;
        end;
 
      end;

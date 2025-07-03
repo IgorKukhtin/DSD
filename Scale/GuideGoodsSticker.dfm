@@ -73,7 +73,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       end
       object bbSave: TSpeedButton
         Left = 67
-        Top = 3
+        Top = 6
         Width = 31
         Height = 29
         Action = actSave
@@ -322,7 +322,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           TabOrder = 3
           object EditWeightValue: TcxCurrencyEdit
             Left = 5
-            Top = 17
+            Top = 15
             EditValue = 2.000000000000000000
             Properties.Alignment.Horz = taRightJustify
             Properties.Alignment.Vert = taVCenter
@@ -404,7 +404,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           TabOrder = 4
           object cbPreviewPrint: TcxCheckBox
             Left = 20
-            Top = 0
+            Top = 1
             Caption = #1055#1088#1086#1089#1084#1086#1090#1088
             TabOrder = 0
             Width = 91
@@ -606,7 +606,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             Align = alClient
             Alignment = taLeftJustify
             BevelOuter = bvNone
-            Caption = 'PanelOrderExternal'
+            Caption = ' '#1047#1072#1082#1072#1079' '#8470' ... '#1086#1090' ...'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clNavy
             Font.Height = -11

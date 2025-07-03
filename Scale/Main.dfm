@@ -3186,6 +3186,22 @@ object MainForm: TMainForm
           ParentFont = False
           TabOrder = 0
           OnDblClick = PanelOrderExternalDblClick
+          ExplicitLeft = 5
+          ExplicitTop = 11
+          object cbAuto_1001: TcxCheckBox
+            Left = 13
+            Top = 0
+            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' 70*70'
+            TabOrder = 0
+            Width = 165
+          end
+          object cbPreviewPrint_1001: TcxCheckBox
+            Left = 180
+            Top = 0
+            Caption = #1055#1088#1086#1089#1084#1086#1090#1088' 70*70'
+            TabOrder = 1
+            Width = 165
+          end
         end
       end
       object infoPanelContract: TPanel

@@ -52,6 +52,7 @@ inherited DialogOrderExternalForm: TDialogOrderExternalForm
         ShowHint = False
         TabOrder = 0
         Text = 'EditBarCode'
+        OnChange = EditBarCodeChange
         OnKeyDown = EditBarCodeKeyDown
       end
     end

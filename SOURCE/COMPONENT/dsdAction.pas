@@ -8692,7 +8692,8 @@ begin
     FIdHTTP.Request.CustomHeaders.AddValue('Authorization', 'Bearer ' + FTokenParam.Value);
     FIdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
     FIdHTTP.Request.Accept := '*/*';
-    FIdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    //FIdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    FIdHTTP.Request.AcceptEncoding := 'identity';
     FIdHTTP.Request.Connection := 'keep-alive';
     FIdHTTP.Request.CharSet := 'utf-8';
   end;

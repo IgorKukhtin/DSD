@@ -1558,7 +1558,7 @@ begin
          //
          ParamByName('MovementId_1001').asInteger      := DataSet.FieldByName('MovementId').asInteger;
          ParamByName('InvNumber_1001').asString        := DataSet.FieldByName('InvNumber').asString;
-         ParamByName('OrderExternalName_1001').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
+         ParamByName('OrderExternalName_1001').asString:= DataSet.FieldByName('OrderExternalName_master_1001').asString;
          ParamByName('PartnerName_1001').asString      := DataSet.FieldByName('PartnerName_calc').asString;
          ParamByName('GoodsPropertyName_1001').asString:= DataSet.FieldByName('GoodsPropertyName').asString;
          ParamByName('RetailId_1001').asInteger        := DataSet.FieldByName('RetailId').asInteger;

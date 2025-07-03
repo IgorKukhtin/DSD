@@ -4,7 +4,6 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
   ClientWidth = 1368
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -474
   ExplicitWidth = 1384
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -2848,6 +2847,13 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'inGLNPlace'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDealId'
         Value = Null
         DataType = ftString
         ParamType = ptInput

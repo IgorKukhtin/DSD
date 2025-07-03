@@ -293,6 +293,7 @@ object GuideGoodsRemainsForm: TGuideGoodsRemainsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 80
     Top = 144

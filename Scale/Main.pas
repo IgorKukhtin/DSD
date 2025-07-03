@@ -26,7 +26,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  cxCheckBox;
 
 type
   TMainForm = class(TForm)
@@ -293,6 +294,8 @@ type
     cbPartionDate_save: TCheckBox;
     bbPrint_MIPassport: TSpeedButton;
     OrderExternalName_1001: TcxGridDBColumn;
+    cbAuto_1001: TcxCheckBox;
+    cbPreviewPrint_1001: TcxCheckBox;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -1222,6 +1225,10 @@ begin
          else
             ParamsMovement.ParamByName('PriceListId').AsInteger:= 0;
 
+         //
+         ParamsMI.ParamByName('isAuto_1001').AsBoolean:= cbAuto_1001.Checked;
+         ParamsMI.ParamByName('isPreviewPrint_1001').AsBoolean:= cbPreviewPrint_1001.Checked;
+
          // Диалог для параметров товара - Sticker
          if GuideGoodsStickerForm.Execute (ParamsMovement, isModeSave) = TRUE
          then begin
@@ -2065,6 +2072,8 @@ var i : Integer;
 begin
   fStartBarCode:= false;
   //
+  cbAuto_1001.Visible:= SettingMain.BranchCode >1000;
+  //
   // надо отловить сохранение 2 раза
   DMMainScaleForm.time_exec_Insert_Scale_MI:=now;
   DMMainScaleForm.GoodsId_exec_Insert_Scale_MI:=0;
@@ -2697,7 +2706,7 @@ begin
      then
      begin Key := 0;
            Key2:= VK_SPACE;
-           if (GetParams_Goods (FALSE, '', TRUE)) and (SettingMain.isSticker = TRUE)
+           if (GetParams_Goods (FALSE, '', TRUE)) and (SettingMain.isSticker = TRUE) and (cbAuto_1001.Checked = FALSE)
            then FormKeyDown(Sender,Key2, []);
      end;//isRetail=FALSE
      //
