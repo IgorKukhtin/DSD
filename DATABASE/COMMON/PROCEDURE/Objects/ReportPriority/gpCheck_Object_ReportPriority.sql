@@ -41,30 +41,35 @@ BEGIN
             , tmpCount AS (SELECT SUM (COALESCE (tmpCount_all.Res, 0)) :: Integer AS Res FROM tmpCount_all
                           )
             , tmpSecond AS (SELECT CASE WHEN vbUserId = 6561986 -- Брикова В.В.
-                                          OR vbUserId = 5
+                                        --OR vbUserId = 5
                                              THEN 0
 
+                                        -- если много процессов
                                         WHEN 25 < (SELECT COUNT(*) FROM tmpProcess)
                                              THEN 60
 
-                                        WHEN CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) BETWEEN 1 AND 10 THEN 0 ELSE 2 END
+                                        -- разрешено 2 или 3
+                                        WHEN CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) BETWEEN 1 AND 10 THEN 1 ELSE 2 END
                                                < (SELECT tmpCount.Res FROM tmpCount)
                                              AND (inProcName ILIKE 'gpReport_JuridicalCollation'
                                                  )
                                              THEN 25
 
+                                        -- разрешено 1
                                         WHEN 0 < (SELECT tmpCount.Res FROM tmpCount)
                                              AND (inProcName ILIKE 'gpReport_MotionGoods'
                                                OR inProcName ILIKE 'gpUpdate_Movement_ReturnIn_Auto'
                                                  )
                                              THEN 25
 
+                                        -- разрешено 2
                                         WHEN 1 < (SELECT tmpCount.Res FROM tmpCount)
                                              AND (inProcName ILIKE 'gpReport_GoodsBalance'
                                                OR inProcName ILIKE 'gpReport_GoodsBalance_Server'
                                                  )
                                              THEN 25
 
+                                        -- для этих правила вверху
                                         WHEN inProcName ILIKE 'gpReport_MotionGoods'
                                           OR inProcName ILIKE 'gpUpdate_Movement_ReturnIn_Auto'
                                           --
@@ -75,9 +80,11 @@ BEGIN
                                           
                                              THEN 0
 
+                                        -- разрешено 1
                                         WHEN 0 < (SELECT tmpCount.Res FROM tmpCount)
                                              THEN 25
                                         ELSE 0
+
                                    END :: Integer AS Value
                            )
         -- Результат
