@@ -18,7 +18,7 @@ $BODY$
    DECLARE vbPartionGoods_max TVarChar;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProductionSeparate());
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Mov_ProductionSep_union());
 
 
     -- документы для объединения
@@ -277,7 +277,7 @@ BEGIN
 
 
    -- помечаем "предыдущие" док. на удаление
-   PERFORM gpSetErased_Movement_ProductionSeparate (tmpListDoc.MovementId, inSession)
+   PERFORM gpSetErased_Movement_ProductionSeparate (tmpListDoc.MovementId, (-1 * vbUserId) :: TVarChar)
    FROM tmpListDoc;
 
    -- проводим новый док ProductionSeparate
@@ -294,7 +294,7 @@ BEGIN
    END IF;
 
    -- проводим новые док ProductionSeparate и Send
-   PERFORM gpComplete_Movement_Send (tmp.MovementId, FALSE, inSession)
+   PERFORM gpComplete_Movement_Send (tmp.MovementId, FALSE, (-1 * vbUserId) :: TVarChar)
    FROM tmpListDocSend AS tmp
    WHERE COALESCE (tmp.MovementId, 0) <> 0 ;
 
