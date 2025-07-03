@@ -37,17 +37,24 @@ BEGIN
    -- записываем строки PromoTradeGoods документа
    PERFORM lpInsertUpdate_MovementItem_PromoTradeGoods (ioId                 := 0
                                                       , inMovementId         := vbMovementId
+                                                      , inPartnerId          := tmp.PartnerId ::Integer
                                                       , inGoodsId            := tmp.GoodsId
-                                                      , inAmount             := COALESCE (tmp.Amount, 0)        ::  TFloat
-                                                      , inSumm               := COALESCE (tmp.Summ, 0)        ::  TFloat
-                                                      , inPartnerCount       := COALESCE (tmp.PartnerCount, 0)  ::  TFloat
-                                                      , inGoodsKindId        := COALESCE (tmp.GoodsKindId,0)    ::  Integer
-                                                      , inTradeMarkId        := COALESCE (tmp.TradeMarkId,0)    ::  Integer
+                                                      , inAmount             := COALESCE (tmp.Amount, 0)                 ::  TFloat
+                                                      , inSumm               := COALESCE (tmp.Summ, 0)                   ::  TFloat
+                                                      , inPartnerCount       := COALESCE (tmp.PartnerCount, 0)           ::  TFloat
+                                                      , inAmountPlan         := COALESCE (tmp.AmountPlan, 0)             ::  TFloat
+                                                      , inPriceWithVAT       := COALESCE (tmp.PriceWithVAT, 0)           ::  TFloat
+                                                      , inPromoTax           := COALESCE (tmp.PromoTax, 0)               ::  TFloat
+                                                      , inChangePercent      := COALESCE (tmp.ChangePercent, 0)          ::  TFloat
+                                                      , inPricePromo         := COALESCE (tmp.PricePromo, 0)             ::  TFloat
+                                                      , inPricePromo_new     := COALESCE (tmp.PricePromo_new, 0)         ::  TFloat
+                                                      , inGoodsKindId        := COALESCE (tmp.GoodsKindId,0)             ::  Integer
+                                                      , inTradeMarkId        := COALESCE (tmp.TradeMarkId,0)             ::  Integer
                                                       , inGoodsGroupPropertyId := COALESCE (tmp.GoodsGroupPropertyId,0)  ::  Integer
                                                       , inGoodsGroupDirectionId:= COALESCE (tmp.GoodsGroupDirectionId,0) ::  Integer
-                                                      , inComment            := ''                              ::  TVarChar
+                                                      , inComment            := ''                                       ::  TVarChar
                                                       , inUserId             := vbUserId
-                                                       ) 
+                                                       )
    FROM gpSelect_MovementItem_PromoTradeGoods (ioId, 'False', inSession)  AS tmp;
 
  /*  PERFORM gpInsertUpdate_Movement_PromoPartner(ioId              := 0                  ::Integer     -- Ключ объекта <партнер для документа акции>
@@ -74,7 +81,12 @@ BEGIN
         ;
    */
    -- записываем строки документа
-   ioid := vbMovementId;
+   ioid := vbMovementId;    
+   
+    IF vbUserId = 9457
+    THEN
+        RAISE EXCEPTION 'Test.Ok';
+    END IF;
 
 END;
 $BODY$

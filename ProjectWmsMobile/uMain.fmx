@@ -20901,6 +20901,7 @@ object frmMain: TfrmMain
                 AppearanceObjectName = 'PartionCellName'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
+                Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 100.000000000000000000
@@ -20998,11 +20999,11 @@ object frmMain: TfrmMain
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #1055#1072#1088#1090#1080#1103
-              TabOrder = 14
+              TabOrder = 15
             end
             object Edit2: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 20
+              TabOrder = 21
               ReadOnly = True
               Position.X = 60.000000000000000000
               Position.Y = 137.000000000000000000
@@ -21013,7 +21014,7 @@ object frmMain: TfrmMain
             end
             object Edit3: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 15
+              TabOrder = 16
               ReadOnly = True
               Position.X = 60.000000000000000000
               Position.Y = 112.000000000000000000
@@ -21032,11 +21033,11 @@ object frmMain: TfrmMain
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #1042#1077#1089' '#1085#1077#1090#1090#1086
-              TabOrder = 4
+              TabOrder = 5
             end
             object Edit4: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 7
+              TabOrder = 8
               ReadOnly = True
               Position.X = 60.000000000000000000
               Position.Y = 7.000000000000000000
@@ -21068,12 +21069,12 @@ object frmMain: TfrmMain
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #1048#1058#1054#1043#1054' '#1042#1077#1089' '#1074#1089#1077#1093' '#1071#1097#1080#1082#1086#1074
-              TabOrder = 9
+              TabOrder = 10
             end
             object Edit5: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Anchors = [akRight, akBottom]
-              TabOrder = 17
+              TabOrder = 18
               ReadOnly = True
               Position.X = 199.000000000000000000
               Position.Y = 395.000000000000000000
@@ -21096,7 +21097,7 @@ object frmMain: TfrmMain
               Size.Width = 268.000000000000000000
               Size.Height = 53.000000000000000000
               Size.PlatformDefault = False
-              TabOrder = 30
+              TabOrder = 31
               Viewport.Width = 260.000000000000000000
               Viewport.Height = 45.000000000000000000
             end
@@ -21110,15 +21111,15 @@ object frmMain: TfrmMain
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #1058#1086#1074#1072#1088
-              TabOrder = 18
+              TabOrder = 19
             end
             object Edit6: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Anchors = [akLeft, akTop, akRight]
-              TabOrder = 10
+              TabOrder = 11
               ReadOnly = True
               Position.X = 212.000000000000000000
-              Position.Y = 112.000000000000000000
+              Position.Y = 87.000000000000000000
               Size.Width = 116.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
@@ -21127,14 +21128,14 @@ object frmMain: TfrmMain
             object Label14: TLabel
               StyledSettings = [Style]
               Position.X = 165.000000000000000000
-              Position.Y = 112.000000000000000000
+              Position.Y = 87.000000000000000000
               Size.Width = 45.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #1071#1095#1077#1081#1082#1072
-              TabOrder = 5
+              TabOrder = 6
             end
             object Edit7: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -21143,7 +21144,7 @@ object frmMain: TfrmMain
               ReadOnly = True
               Position.X = 60.000000000000000000
               Position.Y = 87.000000000000000000
-              Size.Width = 268.000000000000000000
+              Size.Width = 97.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Style]
@@ -21170,7 +21171,7 @@ object frmMain: TfrmMain
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
-              TabOrder = 27
+              TabOrder = 28
               Text = #1054#1090#1084#1077#1085#1080#1090#1100
               TextSettings.Trimming = None
               OnClick = bpInventoryCancelClick
@@ -21185,7 +21186,7 @@ object frmMain: TfrmMain
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
-              TabOrder = 26
+              TabOrder = 27
               Text = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100
               TextSettings.Trimming = None
               OnClick = bpInventoryClick
@@ -21193,7 +21194,7 @@ object frmMain: TfrmMain
             object Edit1: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Anchors = [akLeft, akTop, akRight]
-              TabOrder = 19
+              TabOrder = 20
               ReadOnly = True
               Position.X = 240.000000000000000000
               Position.Y = 137.000000000000000000
@@ -21212,12 +21213,12 @@ object frmMain: TfrmMain
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #8470' '#1087#1072#1089#1087#1086#1088#1090#1072
-              TabOrder = 11
+              TabOrder = 12
             end
             object Edit8: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Anchors = [akLeft, akBottom]
-              TabOrder = 16
+              TabOrder = 17
               ReadOnly = True
               Position.X = 8.000000000000000000
               Position.Y = 395.000000000000000000
@@ -21237,7 +21238,7 @@ object frmMain: TfrmMain
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1071#1097#1080#1082#1086#1074
-              TabOrder = 8
+              TabOrder = 9
             end
             object lvBox: TListView
               ItemAppearanceClassName = 'TDynamicAppearance'
@@ -21250,7 +21251,7 @@ object frmMain: TfrmMain
               Size.Width = 320.000000000000000000
               Size.Height = 191.000000000000000000
               Size.PlatformDefault = False
-              TabOrder = 31
+              TabOrder = 32
               ItemAppearance.ItemHeight = 21
               ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
                 item
@@ -21290,7 +21291,7 @@ object frmMain: TfrmMain
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #1055#1086#1076#1076#1086#1085' / '#1071#1096#1080#1082'. '#1053#1072#1079#1074#1072#1085#1080#1077
-              TabOrder = 13
+              TabOrder = 14
             end
             object Label23: TLabel
               StyledSettings = [Style]
@@ -21303,11 +21304,11 @@ object frmMain: TfrmMain
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #1050#1086#1083'-'#1074#1086
-              TabOrder = 12
+              TabOrder = 13
             end
             object Edit9: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 6
+              TabOrder = 7
               ReadOnly = True
               Position.X = 280.000000000000000000
               Position.Y = 8.000000000000000000
@@ -21327,6 +21328,19 @@ object frmMain: TfrmMain
               TextSettings.Trimming = None
               Text = #8470' '#1086#1093#1088'.'
               TabOrder = 1
+            end
+            object Label27: TLabel
+              StyledSettings = []
+              Position.X = 163.000000000000000000
+              Position.Y = 112.000000000000000000
+              Size.Width = 165.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 13.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.Trimming = None
+              Text = 'i'
+              TabOrder = 4
             end
           end
         end
@@ -21493,6 +21507,7 @@ object frmMain: TfrmMain
                 AppearanceObjectName = 'PartionCellName'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
+                Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 100.000000000000000000
@@ -23994,10 +24009,6 @@ object frmMain: TfrmMain
           ControlMemberName = 'GoodsKindName'
         end
         item
-          SourceMemberName = 'PartionCellName'
-          ControlMemberName = 'PartionCellName'
-        end
-        item
           SourceMemberName = 'StatusCode'
           ControlMemberName = 'StatusCode'
         end
@@ -24028,6 +24039,10 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'NumSecurity_strCaption'
           ControlMemberName = 'NumSecurity_strCaption'
+        end
+        item
+          SourceMemberName = 'Amount_sh_str'
+          ControlMemberName = 'PartionCellName'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -24050,10 +24065,6 @@ object frmMain: TfrmMain
           ControlMemberName = 'GoodsKindName'
         end
         item
-          SourceMemberName = 'PartionCellName'
-          ControlMemberName = 'PartionCellName'
-        end
-        item
           SourceMemberName = 'StatusCode'
           ControlMemberName = 'StatusCode'
         end
@@ -24084,6 +24095,10 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'NumSecurity_strCaption'
           ControlMemberName = 'NumSecurity_strCaption'
+        end
+        item
+          SourceMemberName = 'Amount_sh_str'
+          ControlMemberName = 'PartionCellName'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -24157,6 +24172,13 @@ object frmMain: TfrmMain
       FieldName = 'NumSecurity_str'
       Control = Edit9
       Track = False
+    end
+    object LinkPropertyToFieldText: TLinkPropertyToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB4
+      FieldName = 'Amount_sh_str'
+      Component = Label27
+      ComponentProperty = 'Text'
     end
   end
   object BindSourceDB1: TBindSourceDB

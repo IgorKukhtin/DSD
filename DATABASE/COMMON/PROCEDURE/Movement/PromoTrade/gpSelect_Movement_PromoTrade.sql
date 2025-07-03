@@ -81,6 +81,53 @@ BEGIN
                          FROM tmpMovement
                               LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id
                         )
+           , tmpMLO AS (SELECT *
+                        FROM MovementLinkObject
+                        WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                          AND MovementLinkObject.DescId IN (zc_MovementLinkObject_Contract()
+                                                          , zc_MovementLinkObject_PromoKind()
+                                                          , zc_MovementLinkObject_PromoTradeStateKind()
+                                                          , zc_MovementLinkObject_PriceList()
+                                                          , zc_MovementLinkObject_PersonalTrade()
+                                                          , zc_MovementLinkObject_PromoItem()
+                                                          , zc_MovementLinkObject_PaidKind()
+                                                          , zc_MovementLinkObject_SignInternal()
+                                                          , zc_MovementLinkObject_Insert()
+                                                          )
+                        )
+           , tmpMovementDate AS (SELECT *
+                                 FROM MovementDate
+                                 WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementDate.DescId IN (zc_MovementDate_StartPromo()
+                                                             , zc_MovementDate_EndPromo()
+                                                             , zc_MovementDate_OperDateStart()
+                                                             , zc_MovementDate_OperDateEnd()
+                                                             , zc_MovementDate_Check()
+                                                             , zc_MovementDate_Insert()
+                                                             )
+                                 )        
+           , tmpMovementBoolean AS (SELECT *
+                                    FROM MovementBoolean
+                                    WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                      AND MovementBoolean.DescId IN (zc_MovementBoolean_Checked()
+                                                                     )
+                                    )
+           , tmpMovementFloat AS (SELECT *
+                                  FROM MovementFloat
+                                  WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                    AND MovementFloat.DescId IN (zc_MovementFloat_CostPromo()
+                                                               , zc_MovementFloat_ChangePercent()
+                                                               )
+                                  )
+           , tmpMovementString AS (SELECT *
+                                   FROM MovementString
+                                   WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                     AND MovementString.DescId IN (zc_MovementString_Comment()
+                                                                    )
+                                   )
+
+
+
         -- Результат
         SELECT Movement_PromoTrade.Id                                                 --Идентификатор
              , Movement_PromoTrade.InvNumber :: Integer         AS InvNumber          --Номер документа
@@ -130,73 +177,73 @@ BEGIN
         FROM tmpMovement AS Movement_PromoTrade
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_PromoTrade.StatusId
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                          ON MovementLinkObject_Contract.MovementId = Movement_PromoTrade.Id
-                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+             LEFT JOIN tmpMLO AS MovementLinkObject_Contract
+                              ON MovementLinkObject_Contract.MovementId = Movement_PromoTrade.Id
+                             AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
              LEFT JOIN Object AS Object_Contract
                               ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoKind
+             LEFT JOIN tmpMLO AS MovementLinkObject_PromoKind
                                           ON MovementLinkObject_PromoKind.MovementId = Movement_PromoTrade.Id
                                          AND MovementLinkObject_PromoKind.DescId = zc_MovementLinkObject_PromoKind()
              LEFT JOIN Object AS Object_PromoKind
                               ON Object_PromoKind.Id = MovementLinkObject_PromoKind.ObjectId
 
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
-                                          ON MovementLinkObject_PriceList.MovementId = Movement_PromoTrade.Id
-                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+             LEFT JOIN tmpMLO AS MovementLinkObject_PriceList
+                              ON MovementLinkObject_PriceList.MovementId = Movement_PromoTrade.Id
+                             AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
              LEFT JOIN Object AS Object_PriceList
                               ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
-             LEFT JOIN MovementDate AS MovementDate_StartPromo
+             LEFT JOIN tmpMovementDate AS MovementDate_StartPromo
                                      ON MovementDate_StartPromo.MovementId = Movement_PromoTrade.Id
                                     AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
-             LEFT JOIN MovementDate AS MovementDate_EndPromo
+             LEFT JOIN tmpMovementDate AS MovementDate_EndPromo
                                      ON MovementDate_EndPromo.MovementId =  Movement_PromoTrade.Id
                                     AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
 
-             LEFT JOIN MovementDate AS MovementDate_OperDateStart
+             LEFT JOIN tmpMovementDate AS MovementDate_OperDateStart
                                     ON MovementDate_OperDateStart.MovementId = Movement_PromoTrade.Id
                                    AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
-             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+             LEFT JOIN tmpMovementDate AS MovementDate_OperDateEnd
                                     ON MovementDate_OperDateEnd.MovementId = Movement_PromoTrade.Id
                                    AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
-             LEFT JOIN MovementFloat AS MovementFloat_CostPromo
-                                     ON MovementFloat_CostPromo.MovementId = Movement_PromoTrade.Id
-                                    AND MovementFloat_CostPromo.DescId = zc_MovementFloat_CostPromo()
+             LEFT JOIN tmpMovementFloat AS MovementFloat_CostPromo
+                                        ON MovementFloat_CostPromo.MovementId = Movement_PromoTrade.Id
+                                       AND MovementFloat_CostPromo.DescId = zc_MovementFloat_CostPromo()
 
-             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                     ON MovementFloat_ChangePercent.MovementId = Movement_PromoTrade.Id
-                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+             LEFT JOIN tmpMovementFloat AS MovementFloat_ChangePercent
+                                        ON MovementFloat_ChangePercent.MovementId = Movement_PromoTrade.Id
+                                       AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
-             LEFT JOIN MovementString AS MovementString_Comment
-                                      ON MovementString_Comment.MovementId = Movement_PromoTrade.Id
-                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+             LEFT JOIN tmpMovementString AS MovementString_Comment
+                                         ON MovementString_Comment.MovementId = Movement_PromoTrade.Id
+                                        AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalTrade
-                                          ON MovementLinkObject_PersonalTrade.MovementId = Movement_PromoTrade.Id
-                                         AND MovementLinkObject_PersonalTrade.DescId = zc_MovementLinkObject_PersonalTrade()
+             LEFT JOIN tmpMLO AS MovementLinkObject_PersonalTrade
+                              ON MovementLinkObject_PersonalTrade.MovementId = Movement_PromoTrade.Id
+                             AND MovementLinkObject_PersonalTrade.DescId = zc_MovementLinkObject_PersonalTrade()
              LEFT JOIN Object AS Object_PersonalTrade
                               ON Object_PersonalTrade.Id = MovementLinkObject_PersonalTrade.ObjectId
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoItem
-                                          ON MovementLinkObject_PromoItem.MovementId = Movement_PromoTrade.Id
-                                         AND MovementLinkObject_PromoItem.DescId = zc_MovementLinkObject_PromoItem()
+             LEFT JOIN tmpMLO AS MovementLinkObject_PromoItem
+                              ON MovementLinkObject_PromoItem.MovementId = Movement_PromoTrade.Id
+                             AND MovementLinkObject_PromoItem.DescId = zc_MovementLinkObject_PromoItem()
              LEFT JOIN Object AS Object_PromoItem ON Object_PromoItem.Id = MovementLinkObject_PromoItem.ObjectId
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                          ON MovementLinkObject_PaidKind.MovementId = Movement_PromoTrade.Id
-                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+             LEFT JOIN tmpMLO AS MovementLinkObject_PaidKind
+                              ON MovementLinkObject_PaidKind.MovementId = Movement_PromoTrade.Id
+                             AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-             LEFT JOIN MovementDate AS MovementDate_Insert
+             LEFT JOIN tmpMovementDate AS MovementDate_Insert
                                     ON MovementDate_Insert.MovementId = Movement_PromoTrade.Id
                                    AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
-                                          ON MovementLinkObject_Insert.MovementId = Movement_PromoTrade.Id
-                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+             LEFT JOIN tmpMLO AS MovementLinkObject_Insert
+                              ON MovementLinkObject_Insert.MovementId = Movement_PromoTrade.Id
+                             AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
@@ -214,20 +261,20 @@ BEGIN
                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
              LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_SignInternal
-                                          ON MovementLinkObject_SignInternal.MovementId = Movement_PromoTrade.Id
-                                         AND MovementLinkObject_SignInternal.DescId = zc_MovementLinkObject_SignInternal()
+             LEFT JOIN tmpMLO AS MovementLinkObject_SignInternal
+                              ON MovementLinkObject_SignInternal.MovementId = Movement_PromoTrade.Id
+                             AND MovementLinkObject_SignInternal.DescId = zc_MovementLinkObject_SignInternal()
              LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = MovementLinkObject_SignInternal.ObjectId
 
-             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
-                                       ON MovementBoolean_Checked.MovementId = Movement_PromoTrade.Id
-                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
-             LEFT JOIN MovementDate AS MovementDate_CheckDate
+             LEFT JOIN tmpMovementBoolean AS MovementBoolean_Checked
+                                          ON MovementBoolean_Checked.MovementId = Movement_PromoTrade.Id
+                                         AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+             LEFT JOIN tmpMovementDate AS MovementDate_CheckDate
                                     ON MovementDate_CheckDate.MovementId = Movement_PromoTrade.Id
                                    AND MovementDate_CheckDate.DescId = zc_MovementDate_Check()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoTradeStateKind
-                                          ON MovementLinkObject_PromoTradeStateKind.MovementId = Movement_PromoTrade.Id
-                                         AND MovementLinkObject_PromoTradeStateKind.DescId = zc_MovementLinkObject_PromoTradeStateKind()
+             LEFT JOIN tmpMLO AS MovementLinkObject_PromoTradeStateKind
+                              ON MovementLinkObject_PromoTradeStateKind.MovementId = Movement_PromoTrade.Id
+                             AND MovementLinkObject_PromoTradeStateKind.DescId = zc_MovementLinkObject_PromoTradeStateKind()
              LEFT JOIN Object AS Object_PromoTradeStateKind ON Object_PromoTradeStateKind.Id = MovementLinkObject_PromoTradeStateKind.ObjectId
 
              -- эл.подписи

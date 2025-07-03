@@ -30,10 +30,18 @@ RETURNS TABLE (
       , PartnerCount       TFloat --Количество ТТ  
       , AmountPlan         TFloat -- 
       , AmountPlan_weight  TFloat
+      , AmountPlan_calc         TFloat -- 
+      , AmountPlan_weight_calc  TFloat
+
       , PriceWithOutVAT    TFloat
       , PriceWithVAT       TFloat
       , SummWithOutVATPlan TFloat
-      , SummWithVATPlan    TFloat
+      , SummWithVATPlan    TFloat 
+      
+      , PromoTax           TFloat
+      , ChangePercent      TFloat
+      , PricePromo         TFloat
+      , PricePromo_new     TFloat
       
       , Comment            TVarChar --Комментарий       
       , isErased           Boolean  --удален
@@ -41,14 +49,70 @@ RETURNS TABLE (
 AS
 $BODY$
     DECLARE vbUserId Integer;
+            vbPriceListId Integer;
+            vbPriceWithVAT Boolean;
+            vbVATPercent   TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoTradeGoods());
     vbUserId:= lpGetUserBySession (inSession);
 
+    vbPriceListId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PriceList());
+
+    SELECT ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
+         , ObjectFloat_VATPercent.ValueData     AS VATPercent
+  INTO vbPriceWithVAT, vbVATPercent
+    FROM Object AS Object_PriceList
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                                 ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
+                                AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+         LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                               ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
+                              AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
+    WHERE Object_PriceList.DescId = zc_Object_PriceList()
+      AND Object_PriceList.Id = vbPriceListId;
 
     RETURN QUERY
+    WITH
+    tmpPrice AS (SELECT tmp.GoodsId
+                      , tmp.GoodsKindId
+                      , tmp.ValuePrice
+                 FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId
+                                                          , inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                            ) AS tmp
+                 )
 
+
+  , tmpMI AS (SELECT MovementItem.*
+                   , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+
+                   -- расчет цены без НДС, до 4 знаков
+                   , CASE WHEN vbPriceWithVAT = TRUE
+                          THEN CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) - COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
+                          ELSE COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
+                     END    ::TFloat    AS PriceWithOutVAT
+                   -- расчет цены с НДС, до 4 знаков
+                   , CASE WHEN vbPriceWithVAT = TRUE
+                          THEN COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
+                          ELSE CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * ( (vbVATPercent + 100)/100) AS NUMERIC (16, 2))
+                     END    ::TFloat    AS PriceWithVAT
+              FROM MovementItem 
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                   -- привязываем 2 раза по виду товара и без
+                   LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
+                                     AND tmpPrice.GoodsKindId IS NULL
+                   LEFT JOIN tmpPrice AS tmpPrice_Kind
+                                      ON tmpPrice_Kind.GoodsId = MovementItem.ObjectId
+                                     AND COALESCE (tmpPrice_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+
+              WHERE MovementItem.DescId = zc_MI_Master()
+                AND MovementItem.MovementId = inMovementId
+                AND (MovementItem.isErased = FALSE OR inIsErased = TRUE) 
+              )
+          
+          
         SELECT ROW_NUMBER() OVER (ORDER BY MovementItem.Id) ::Integer AS Ord
              , MovementItem.Id                        AS Id                  --идентификатор
              , MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
@@ -58,7 +122,7 @@ BEGIN
              , Object_Goods.ObjectCode::Integer       AS GoodsCode           --код объекта  <товар>
              , Object_Goods.ValueData                 AS GoodsName           --наименование объекта <товар>
              , Object_Measure.ValueData               AS Measure             --Единица измерения   
-             , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId                 --ИД обьекта <Вид товара>
+             , Object_GoodsKind.Id                    AS GoodsKindId                 --ИД обьекта <Вид товара>
              , Object_GoodsKind.ValueData             AS GoodsKindName               --Наименование обьекта <Вид товара>
              , Object_TradeMark.Id                       AS TradeMarkId
              , Object_TradeMark.ValueData                AS TradeMark           --Торговая марка   
@@ -76,14 +140,29 @@ BEGIN
              
              , MIFloat_AmountPlan.ValueData      ::TFloat AS AmountPlan
              , (MIFloat_AmountPlan.ValueData * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS AmountPlan_weight
-             , MIFloat_PriceWithOutVAT.ValueData ::TFloat AS PriceWithOutVAT
+             , (MIFloat_AmountPlan.ValueData * COALESCE (MIFloat_PromoTax.ValueData,1))    ::TFloat AS AmountPlan_calc
+             , (MIFloat_AmountPlan.ValueData * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END * COALESCE (MIFloat_PromoTax.ValueData,1)) ::TFloat AS AmountPlan_weight_calc
+             
+             -- расчет цены без НДС, до 4 знаков
+             , (MovementItem.PriceWithOutVAT - (1- COALESCE (MIFloat_ChangePercent.ValueData,100) / 100))   ::TFloat    AS PriceWithOutVAT
+             -- расчет цены с НДС, до 4 знаков
+             , (MovementItem.PriceWithVAT - (1- COALESCE (MIFloat_ChangePercent.ValueData,100) / 100))    ::TFloat    AS PriceWithVAT
+             , (MIFloat_AmountPlan.ValueData * (MovementItem.PriceWithOutVAT - (1- COALESCE (MIFloat_ChangePercent.ValueData,100) / 100)))  ::TFloat AS SummWithOutVATPlan
+             , (MIFloat_AmountPlan.ValueData * (MovementItem.PriceWithVAT - (1- COALESCE (MIFloat_ChangePercent.ValueData,100) / 100)))     ::TFloat AS SummWithVATPlan
+             
+             /*, MIFloat_PriceWithOutVAT.ValueData ::TFloat AS PriceWithOutVAT
              , MIFloat_PriceWithVAT.ValueData    ::TFloat AS PriceWithVAT 
              , (MIFloat_AmountPlan.ValueData * MIFloat_PriceWithOutVAT.ValueData)  ::TFloat AS SummWithOutVATPlan
              , (MIFloat_AmountPlan.ValueData * MIFloat_PriceWithVAT.ValueData)     ::TFloat AS SummWithVATPlan
+             */
+             , MIFloat_PromoTax.ValueData       ::TFloat AS PromoTax
+             , MIFloat_ChangePercent.ValueData  ::TFloat AS ChangePercent
+             , MIFloat_PricePromo.ValueData     ::TFloat AS PricePromo
+             , MIFloat_PricePromo_new.ValueData ::TFloat AS PricePromo_new
 
              , MIString_Comment.ValueData              AS Comment                     -- Примечание
              , MovementItem.isErased                   AS isErased                    -- Удален
-        FROM MovementItem
+        FROM tmpMI AS MovementItem
              LEFT JOIN MovementItemFloat AS MIFloat_PartnerCount
                                          ON MIFloat_PartnerCount.MovementItemId = MovementItem.Id
                                         AND MIFloat_PartnerCount.DescId = zc_MIFloat_PartnerCount()
@@ -101,12 +180,25 @@ BEGIN
                                          ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                         AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
 
+             LEFT JOIN MovementItemFloat AS MIFloat_PromoTax
+                                         ON MIFloat_PromoTax.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PromoTax.DescId = zc_MIFloat_PromoTax()
+             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+             LEFT JOIN MovementItemFloat AS MIFloat_PricePromo
+                                         ON MIFloat_PricePromo.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PricePromo.DescId = zc_MIFloat_PricePromo()
+             LEFT JOIN MovementItemFloat AS MIFloat_PricePromo_new
+                                         ON MIFloat_PricePromo_new.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PricePromo_new.DescId = zc_MIFloat_PricePromo_new()
+
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+             /*LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() */
+             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MovementItem.GoodsKindId
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
                                               ON MILinkObject_Partner.MovementItemId = MovementItem.Id
@@ -159,9 +251,8 @@ BEGIN
                                  AND ObjectLink_Goods_GoodsGroupDirection.DescId = zc_ObjectLink_Goods_GoodsGroupDirection()
              LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = COALESCE (MILinkObject_GoodsGroupDirection.ObjectId, ObjectLink_Goods_GoodsGroupDirection.ChildObjectId)
 
-        WHERE MovementItem.DescId = zc_MI_Master()
-          AND MovementItem.MovementId = inMovementId
-          AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
+
+        ;
 
 END;
 $BODY$
@@ -174,3 +265,4 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_PromoTradeGoods (5083159 , FALSE, zfCalc_UserAdmin());
+-- select * from gpSelect_MovementItem_PromoTradeGoods(inMovementId := 30320049 , inIsErased := 'True' ,  inSession := '9457');

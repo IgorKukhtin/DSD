@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoTradeGoods(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -15,6 +16,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoTradeGoods(
     IN inAmountPlan            TFloat    , --
     IN inPriceWithVAT          TFloat    , --   
    OUT outPriceWithOutVAT      TFloat    ,
+    IN inPromoTax              TFloat    , --
+    IN inChangePercent         TFloat    , --
+    IN inPricePromo            TFloat    , --
+    IN inPricePromo_new        TFloat    , --
     IN inGoodsKindId           Integer   , --ИД обьекта <Вид товара>
     IN inTradeMarkId           Integer   , --Торговая марка 
     IN inGoodsGroupPropertyId  Integer,
@@ -49,6 +54,15 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan(), ioId, inAmountPlan);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithVAT(), ioId, inPriceWithVAT);
+
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoTax(), ioId, inPromoTax);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePromo(), ioId, inPricePromo);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePromo_new(), ioId, inPricePromo_new);
     
    --НДС из прайса договора 
     vbVat := COALESCE( (SELECT ObjectFloat_VATPercent.ValueData
@@ -110,7 +124,7 @@ BEGIN
          -- сохранили <В работе Автор документа>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoTradeStateKind(), inMovementId, zc_Enum_PromoTradeStateKind_Start());
          -- сохранили <В работе Автор документа>
-         PERFORM gpInsertUpdate_MI_Message_PromoTradeStateKind (ioId                    := 0
+         PERFORM gpInsertUpdate_MI_Message_PromoTradeStateKind 11(ioId                    := 0
                                                               , inMovementId            := inMovementId
                                                               , inPromoTradeStateKindId := zc_Enum_PromoTradeStateKind_Start()
                                                               , inIsQuickly             := FALSE
@@ -120,6 +134,10 @@ BEGIN
 
      END IF;
 
+    IF inUserId = 9457
+    THEN
+        RAISE EXCEPTION 'Test.Ok';
+    END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -127,6 +145,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.07.25         *
  18.09.24         *
  03.09.24         *
  */

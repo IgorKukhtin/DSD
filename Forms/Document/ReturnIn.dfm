@@ -2,7 +2,6 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 645
   ClientWidth = 1304
-  ExplicitLeft = -140
   ExplicitWidth = 1320
   ExplicitHeight = 684
   PixelsPerInch = 96
@@ -2462,8 +2461,8 @@ inherited ReturnInForm: TReturnInForm
         item
           StoredProc = spSelect_MI_Child
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2510,13 +2509,13 @@ inherited ReturnInForm: TReturnInForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
     end
     object actInsertMIChildDialog: TdsdInsertUpdateAction [4]
       Category = 'Child'
+      TabSheet = tsMain
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091
@@ -2548,7 +2547,6 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = False
       ActionType = acUpdate
-      DataSource = DetailDS
       DataSetRefresh = actRefreshChild
       IdFieldName = 'Id'
     end
@@ -4869,6 +4867,7 @@ inherited ReturnInForm: TReturnInForm
     end
     object actUpdateMIChildDialog: TdsdInsertUpdateAction
       Category = 'Child'
+      TabSheet = tsMain
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091
@@ -4902,7 +4901,6 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = False
       ActionType = acUpdate
-      DataSource = DetailDS
       DataSetRefresh = actRefreshChild
       IdFieldName = 'Id'
     end
