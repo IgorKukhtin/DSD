@@ -45,7 +45,7 @@ BEGIN
 
 
    --
-   LOCK TABLE ObjectBLOB IN SHARE UPDATE EXCLUSIVE MODE;
+   -- LOCK TABLE ObjectBLOB IN SHARE UPDATE EXCLUSIVE MODE;
    --
    PERFORM lpInsertUpdate_ObjectBLOB (zc_ObjectBlob_UserFormSettings_Data(), vbId, inUserFormSettingsData);
    
