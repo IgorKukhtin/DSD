@@ -126,6 +126,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
 
              -- есть хоть одна €чейка с несколькими парти€ми
              , isMany_max Boolean
+             , PartionCellId_isMany_no  Integer
+             , PartionCellId_isMany_yes Integer
 
              --фон дл€ €чейки если несколько партий
              , ColorFon_Many1     Integer
@@ -239,6 +241,7 @@ $BODY$
  DECLARE vbPartionCellId Integer;
  DECLARE vbIsWeighing Boolean;
 BEGIN
+     -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
 
@@ -562,8 +565,14 @@ BEGIN
                                     , CASE WHEN MIF_PartionCell_real.ValueData > 0 THEN MIF_PartionCell_real.ValueData ELSE NULL END :: Integer AS PartionCellId_real
                                       -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты, дл€ этого потом MAX
                                     , CASE WHEN tmpMI_Boolean.ValueData = TRUE THEN 0 ELSE 1 END AS isClose_value
-                                    ---
+                                      --
                                     , CASE WHEN COALESCE (tmpMI_Boolean_Many.ValueData, FALSE) = FALSE THEN 0 ELSE 1 END  AS isMany
+
+                                      -- есть ячейка хранени€ с одной партией
+                                    , CASE WHEN MovementItemLinkObject.ObjectId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err()) AND COALESCE (tmpMI_Boolean_Many.ValueData, FALSE) = FALSE THEN MovementItemLinkObject.ObjectId ELSE 0 END AS PartionCellId_isMany_no
+                                      -- есть ячейка хранени€ с одной партией
+                                    , CASE WHEN MovementItemLinkObject.ObjectId NOT IN (0, zc_PartionCell_RK(), zc_PartionCell_Err()) AND COALESCE (tmpMI_Boolean_Many.ValueData, FALSE) = TRUE  THEN MovementItemLinkObject.ObjectId ELSE 0 END AS PartionCellId_isMany_yes
+
                                FROM tmpMILO_PC AS MovementItemLinkObject
                                     LEFT JOIN tmpMI_Boolean ON tmpMI_Boolean.MovementItemId = MovementItemLinkObject.MovementItemId
                                                            AND tmpMI_Boolean.DescId         = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
@@ -834,7 +843,9 @@ BEGIN
                                          , tmpData_list.PartionCellId    
                                          , tmpData_list.isMany
                                          -- есть хоть одна €чейка с несколькими парти€ми
-                                         , MAX (tmpData_list.isMany)   AS isMany_max 
+                                         , MAX (tmpData_list.isMany)                   AS isMany_max 
+                                         , MAX (tmpData_list.PartionCellId_isMany_no)  AS PartionCellId_isMany_no
+                                         , MAX (tmpData_list.PartionCellId_isMany_yes) AS PartionCellId_isMany_yes
                                            -- информативно
                                          , (tmpData_list.PartionCellId_real) AS PartionCellId_real
                                            -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты
@@ -879,6 +890,8 @@ BEGIN
                                                , MILinkObject_PartionCell.isClose_value
                                                
                                                , MILinkObject_PartionCell.isMany
+                                               , MILinkObject_PartionCell.PartionCellId_isMany_no
+                                               , MILinkObject_PartionCell.PartionCellId_isMany_yes
 
                                           FROM tmpMovement AS Movement
                                                INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
@@ -965,6 +978,8 @@ BEGIN
                                        
                                        , tmpData_PartionCell_All_All.isMany
                                        , tmpData_PartionCell_All_All.isMany_max
+                                       , tmpData_PartionCell_All_All.PartionCellId_isMany_no
+                                       , tmpData_PartionCell_All_All.PartionCellId_isMany_yes
 
                                          -- дл€ сортировки - горизонтально
                                        , ROW_NUMBER() OVER (PARTITION BY tmpData_PartionCell_All_All.MovementId        -- ***
@@ -1163,7 +1178,9 @@ BEGIN
                                      -- есть хоть одна закрыта€ €чейка
                                    , MIN (tmpData_PartionCell_All.isClose_value_min) AS isClose_value_min  
                                    -- есть хоть одна €чейка с несколькими парти€ми
-                                   , MAX (tmpData_PartionCell_All.isMany_max)        AS isMany_max
+                                   , MAX (tmpData_PartionCell_All.isMany_max)               AS isMany_max
+                                   , MAX (tmpData_PartionCell_All.PartionCellId_isMany_no)  AS PartionCellId_isMany_no
+                                   , MAX (tmpData_PartionCell_All.PartionCellId_isMany_yes) AS PartionCellId_isMany_yes
 
                                    , STRING_AGG (DISTINCT CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) > 22  THEN tmpData_PartionCell_All.PartionCellName_calc ELSE '' END, ';') AS PartionCellName_ets
 
@@ -1351,7 +1368,10 @@ BEGIN
                          , CASE WHEN COALESCE (tmpData_PartionCell.Color_22, 0) = 0 THEN zc_Color_Black() ELSE tmpData_PartionCell.Color_22 END :: Integer   AS Color_22
 
                          -- есть хоть одна €чейка с несколькими парти€ми
-                         , tmpData_PartionCell.isMany_max  AS isMany_max
+                         , tmpData_PartionCell.isMany_max
+                         , tmpData_PartionCell.PartionCellId_isMany_no
+                         , tmpData_PartionCell.PartionCellId_isMany_yes
+
                            -- есть заполненна€ €чейка + хоть одна закрыта€ €чейка
                          , CASE WHEN tmpData_MI.isPartionCell_max > 0 AND tmpData_PartionCell.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
                            -- —формированы данные по €чейкам (да/нет)
@@ -1649,6 +1669,8 @@ BEGIN
 
         -- есть хоть одна €чейка с несколькими парти€ми
         , CASE WHEN COALESCE (tmpResult.isMany_max,0) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isMany_max
+        , tmpResult.PartionCellId_isMany_no  :: Integer AS PartionCellId_isMany_no
+        , tmpResult.PartionCellId_isMany_yes :: Integer AS PartionCellId_isMany_yes
 
         --фон дл€ €чейки если несколько партий
         , CASE WHEN tmpResult.isPartionCell_Many_1 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many1
@@ -3203,6 +3225,8 @@ BEGIN
         , tmpResult.isPartionCell_Many_22 
         -- есть хоть одна €чейка с несколькими парти€ми
         , CASE WHEN COALESCE (tmpResult.isMany_max,0) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isMany_max
+        , 0 :: Integer AS PartionCellId_isMany_no
+        , 0 :: Integer AS PartionCellId_isMany_yes
 
         --фон дл€ €чейки если несколько партий
         , CASE WHEN tmpResult.isPartionCell_Many_1 = FALSE THEN zc_Color_White() ELSE zc_Color_Red()  END :: Integer  AS ColorFon_Many1

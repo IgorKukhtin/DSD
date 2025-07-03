@@ -23,7 +23,29 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionSeparate());
+   vbUserId:= lpGetUserBySession (inSession);
+
+   
+   -- Доп проверка
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 12396331) -- Права - потери обвалка
+   THEN
+       IF NOT EXISTS (SELECT 1
+                      FROM ObjectLink AS OL
+                      WHERE OL.ObjectId      = inGoodsId
+                        AND OL.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                        AND OL.ChildObjectId = 1967 -- СО-ПОТЕРИ
+                     )
+       THEN
+           RAISE EXCEPTION 'Ошибка.Нет прав для группы товаров <%>.'
+                         , lfGet_Object_ValueData_sh ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_GoodsGroup()))
+                          ;
+       END IF;
+
+   ELSE
+       -- проверка прав пользователя на вызов процедуры
+       vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionSeparate());
+   END IF;
+
 
    -- сохранили <Элемент документа>
    ioId :=lpInsertUpdate_MI_ProductionSeparate_Child (ioId               := ioId

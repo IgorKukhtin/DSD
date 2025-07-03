@@ -805,7 +805,9 @@ BEGIN
                                      , tmpContainer_list.GoodsKindId
                                      , tmpContainer_list.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_rem
                                 FROM tmpContainer_list
+                                     -- только если партию НЕ нашли
                                      LEFT JOIN tmpContainer_find ON tmpContainer_find.ContainerId = tmpContainer_list.ContainerId
+                                     --
                                      LEFT JOIN MovementItemContainer AS MIContainer
                                                                      ON MIContainer.ContainerId = tmpContainer_list.ContainerId
                                                                     -- !!!на конец дня
