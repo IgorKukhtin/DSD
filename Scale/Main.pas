@@ -625,9 +625,9 @@ begin
           then Print_Income_diff (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           //
           //EDI
-          if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then SendEDI_Invoice (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
-          if ParamsMovement.ParamByName('isEdiOrdspr').asBoolean=TRUE then SendEDI_OrdSpr (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
-          if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then SendEDI_Desadv (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+          if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then SendEDI_Invoice (-1*ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+          if ParamsMovement.ParamByName('isEdiOrdspr').asBoolean=TRUE then SendEDI_OrdSpr (-1*ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+          if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then SendEDI_Desadv (-1*ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           //OBV - разница цен
           if ParamsMovement.ParamByName('isPrice_diff_inf').AsBoolean = true
           then Print_Income_Price_diff (ParamsMovement.ParamByName('MovementId').AsInteger);
@@ -2073,6 +2073,7 @@ begin
   fStartBarCode:= false;
   //
   cbAuto_1001.Visible:= SettingMain.BranchCode >1000;
+  cbPreviewPrint_1001.Visible:= SettingMain.BranchCode >1000;
   //
   // надо отловить сохранение 2 раза
   DMMainScaleForm.time_exec_Insert_Scale_MI:=now;

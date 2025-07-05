@@ -137,7 +137,9 @@ uses
   GuidePartionCell in '..\ScaleCeh\GuidePartionCell.pas' {GuidePartionCellForm},
   invoice_comdoc_vchasno in '..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
   invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas',
-  DialogOrderExternal in '..\Scale\DialogOrderExternal.pas' {DialogOrderExternalForm};
+  DialogOrderExternal in '..\Scale\DialogOrderExternal.pas' {DialogOrderExternalForm},
+  GuideGoodsPeresort in '..\Scale\GuideGoodsPeresort.pas' {GuideGoodsPeresortForm},
+  DialogPeresort in '..\Scale\DialogPeresort.pas' {DialogPeresortForm};
 
 {$R *.res}
 
@@ -162,7 +164,7 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  //
+         //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
          //
@@ -201,6 +203,9 @@ begin
          Application.CreateForm(TDialogChangePercentAmountForm, DialogChangePercentAmountForm);
          Application.CreateForm(TGuidePartionCellForm, GuidePartionCellForm);
          Application.CreateForm(TDialogOrderExternalForm, DialogOrderExternalForm);
+         //
+         Application.CreateForm(TDialogPeresortForm, DialogPeresortForm);
+         Application.CreateForm(TGuideGoodsPeresortForm, GuideGoodsPeresortForm);
   end
   else
 
@@ -256,6 +261,9 @@ begin
          Application.CreateForm(TDialogChangePercentAmountForm, DialogChangePercentAmountForm);
          Application.CreateForm(TGuidePartionCellForm, GuidePartionCellForm);
          Application.CreateForm(TDialogOrderExternalForm, DialogOrderExternalForm);
+         //
+         Application.CreateForm(TDialogPeresortForm, DialogPeresortForm);
+         Application.CreateForm(TGuideGoodsPeresortForm, GuideGoodsPeresortForm);
   end;
   //
   Application.Run;

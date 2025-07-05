@@ -3186,8 +3186,6 @@ object MainForm: TMainForm
           ParentFont = False
           TabOrder = 0
           OnDblClick = PanelOrderExternalDblClick
-          ExplicitLeft = 5
-          ExplicitTop = 11
           object cbAuto_1001: TcxCheckBox
             Left = 13
             Top = 0

@@ -853,7 +853,7 @@ begin
        //
        Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
        //для печати этикетки - Заказ клиента
-       if SettingMain.BranchCode > 1000
+       if (SettingMain.BranchCode > 1000) and (1=0) //***
        then Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight_Get').AsFloat)
        else Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('ChangePercentAmount').AsFloat);
        //
@@ -909,7 +909,7 @@ begin
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //для печати этикетки - Заказ клиента
-       if SettingMain.BranchCode > 1000
+       if (SettingMain.BranchCode > 1000) and (1=0) //***
        then Params.AddParam('inMovementId_Promo', ftInteger, ptInput, execParamsMI.ParamByName('MovementId_1001').asInteger)
        else Params.AddParam('inMovementId_Promo', ftInteger, ptInput, execParamsMI.ParamByName('MovementId_Promo').AsInteger);
        //

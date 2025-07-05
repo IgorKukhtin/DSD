@@ -79,6 +79,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , SummAddOth TFloat, SummAddOthRecalc TFloat
              , SummHouseAdd TFloat 
              
+               -- Корректировка ЗП
+             , Amount_LossPersonal TFloat
+
              , SummAvance TFloat, SummAvanceRecalc TFloat
 
              , SummCompensation TFloat, SummCompensationRecalc TFloat
@@ -421,8 +424,8 @@ BEGIN
 	                          )
       -- <Карта БН (округление) - 2ф>
     , tmpMIContainer_diff AS (SELECT SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff
-                                   , -1 * SUM (CASE WHEN MIContainer.OperDate < MD_ServiceDate.ValueData + INTERVAL '1 MONTH' AND MIContainer.MovementDescId = zc_Movement_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_start
-                                   , 1 * SUM (CASE WHEN MIContainer.OperDate >= MD_ServiceDate.ValueData + INTERVAL '1 MONTH' OR MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_end
+                                   , -1 * SUM (CASE WHEN MIContainer.OperDate < MD_ServiceDate.ValueData + INTERVAL '1 MONTH' AND MIContainer.MovementDescId IN (zc_Movement_PersonalService(), zc_Movement_Cash()) THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_start
+                                   , 1 * SUM (CASE WHEN MIContainer.OperDate >= MD_ServiceDate.ValueData + INTERVAL '1 MONTH' THEN MIContainer.Amount ELSE 0 END) AS AmountService_diff_end
                                    , tmpMIContainer_find_diff.MovementItemId
                               FROM tmpMIContainer_find_diff
                                    LEFT JOIN MovementDate AS MD_ServiceDate
@@ -709,6 +712,8 @@ BEGIN
                                 SELECT SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
                                      , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance())  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_all
                                      , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+                                        -- Корректировка ЗП
+                                     , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_LossPersonal() THEN MIContainer.Amount ELSE 0 END) AS Amount_LossPersonal
                                        -- аванс по ведомости
                                      , SUM (CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
                                                   AND MIContainer.MovementDescId = zc_Movement_Cash()
@@ -957,6 +962,11 @@ BEGIN
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+              -- ПЛЮС Сальдо на початок
+             + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
+               -- Корректировка ЗП
+             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
+
               ) :: TFloat AS AmountToPay
 
               -- К выплате (из кассы)
@@ -970,6 +980,11 @@ BEGIN
                       END 
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+              -- ПЛЮС Сальдо на початок
+             + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
+               -- Корректировка ЗП
+             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
+
               ) :: TFloat AS AmountCash    
               
               -- Остаток к выдаче (из кассы) грн
@@ -985,6 +1000,11 @@ BEGIN
                       END
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
+              -- ПЛЮС Сальдо на початок
+             + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
+               -- Корректировка ЗП
+             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
+
               ) :: TFloat AS AmountCash_rem
 
               -- выдадано из кассы
@@ -1053,6 +1073,9 @@ BEGIN
             , MIFloat_SummAddOth.ValueData              AS SummAddOth
             , MIFloat_SummAddOthRecalc.ValueData        AS SummAddOthRecalc
             , MIFloat_SummHouseAdd.ValueData  ::TFloat  AS SummHouseAdd
+
+              -- Корректировка ЗП
+            , COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)    ::TFloat  AS Amount_LossPersonal
 
             , MIFloat_SummAvance.ValueData        ::TFloat AS SummAvance
             , MIFloat_SummAvanceRecalc.ValueData  ::TFloat AS SummAvanceRecalc

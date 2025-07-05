@@ -89,7 +89,7 @@ BEGIN
   UNION
    SELECT -1 AS Id
            , Object_PersonalServiceList.Id               AS PersonalServiceListId
-           , Object_PersonalServiceList.ObjectCode       AS PersonalServiceListCode
+           , (-1 * Object_PersonalServiceList.ObjectCode) :: Integer AS PersonalServiceListCode
            , Object_PersonalServiceList.ValueData        AS PersonalServiceListName
            , Object_Member.Id                            AS MemberId
            , Object_Member.ObjectCode                    AS MemberCode

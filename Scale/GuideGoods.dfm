@@ -2099,8 +2099,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = -4
-          ExplicitTop = 11
         end
       end
       object Panel3: TPanel

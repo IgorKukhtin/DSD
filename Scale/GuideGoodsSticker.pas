@@ -308,7 +308,7 @@ begin
        //є смены технологов, по умолчанию = 1 (дл€ режим 3)
        ParamByName('inNumTech').Value        := ParamsMI.ParamByName('NumTech_Sticker').AsFloat;
        //
-       ParamByName('inWeight').Value         := ParamsMI.ParamByName('RealWeight_Get').AsFloat;
+       ParamByName('inWeight').Value         := 0;//***ParamsMI.ParamByName('RealWeight_Get').AsFloat;
        //
        Execute;
     end;
@@ -356,7 +356,7 @@ begin
        //є смены технологов, по умолчанию = 1 (дл€ режим 3)
        ParamByName('inNumTech').Value        := ParamsMI.ParamByName('NumTech_Sticker').AsFloat;
        //
-       ParamByName('inWeight').Value         := ParamsMI.ParamByName('RealWeight_Get').AsFloat;
+       ParamByName('inWeight').Value         := 0;//***ParamsMI.ParamByName('RealWeight_Get').AsFloat;
        //
        //Execute;
     end;
@@ -1334,8 +1334,8 @@ begin
   InitializeStickerPack(lStickerPackGroupId);
   //ѕринтеры
   InitializePrinterSticker;
-  //
-  gbGoodsWieghtValue.Visible:= (SettingMain.isSticker_Weight) or (1=1);
+  //***
+  gbGoodsWieghtValue.Visible:= (SettingMain.isSticker_Weight); // or (1=1);
   //
 
   //вес тары (ручной режим)

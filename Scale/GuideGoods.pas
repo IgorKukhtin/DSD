@@ -342,7 +342,9 @@ var
 
 implementation
 {$R *.dfm}
-uses dmMainScale, Main, DialogWeight, DialogStringValue, GuideGoodsRemains, CommonData, DialogMsg, GuidePartionCell,UtilPrint;
+uses dmMainScale, Main, DialogWeight, DialogStringValue, GuideGoodsRemains, CommonData
+   , DialogMsg, GuidePartionCell,UtilPrint,DialogPeresort
+    ;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.CancelCxFilter;
 begin
@@ -1531,6 +1533,13 @@ begin
                 ActiveControl:= PartionDateEdit;
                 exit;
           end;
+     //***
+     if not DialogPeresortForm.Execute(ParamsMovement,ParamsMI)
+     then begin
+              Result:= false;
+              ActiveControl:= EditGoodsCode;
+              exit;
+      end;
 
      //
      //Save MI

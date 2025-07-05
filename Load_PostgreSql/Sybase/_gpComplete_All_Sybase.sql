@@ -29,9 +29,10 @@ THEN RETURN; END IF;
      -- !!!выход!!!
      IF vbStatusId_next = zc_Enum_Status_UnComplete() THEN RETURN; END IF;
      
-if CURRENT_TIMESTAMP between '10.07.2025 7:33' and '10.07.2025 7:35' AND 1=0
+
+if CURRENT_TIMESTAMP between '04.07.2025 8:15' and '04.07.2025 22:00' AND 1=0
 then
-select * from gpComplete_All_Sybase( -1  ,False,'444873');
+    RAISE EXCEPTION 'Ошибка.ok-pause';
 end if;
 
      -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки

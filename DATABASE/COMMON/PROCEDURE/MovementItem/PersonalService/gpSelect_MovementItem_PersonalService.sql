@@ -905,10 +905,10 @@ BEGIN
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
-               -- Корректировка ЗП
-             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
               -- ПЛЮС Сальдо на початок
              + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
+               -- Корректировка ЗП
+             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
 
               ) :: TFloat AS AmountToPay
 
@@ -923,10 +923,10 @@ BEGIN
                       END
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
-               -- Корректировка ЗП
-             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
               -- ПЛЮС Сальдо на початок
              + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
+               -- Корректировка ЗП
+             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
 
               ) :: TFloat AS AmountCash
 
@@ -943,10 +943,10 @@ BEGIN
                       END
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
-               -- Корректировка ЗП
-             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
               -- ПЛЮС Сальдо на початок
              + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
+               -- Корректировка ЗП
+             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
 
               ) :: TFloat AS AmountCash_rem   
 
@@ -966,10 +966,10 @@ BEGIN
              - CASE WHEN tmpAll.PersonalId <> Object_PersonalTo.Id THEN -1 * COALESCE (tmpNoNalog_print.SummNalog,0) ELSE COALESCE (tmpNoNalog_print.SummNalog,0) END
                -- <Карта БН (округление) - 2ф>
              - COALESCE (tmpMIContainer_diff.AmountService_diff, 0)
-               -- Корректировка ЗП
-             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
               -- ПЛЮС Сальдо на початок
              + COALESCE (tmpMIContainer_diff.AmountService_diff_start, 0)
+               -- Корректировка ЗП
+             - COALESCE (tmpMIContainer_pay.Amount_LossPersonal, 0)
 
              ) :: TFloat AS AmountCash_print
               
