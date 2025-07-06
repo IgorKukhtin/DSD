@@ -124,7 +124,7 @@ BEGIN
          -- сохранили <В работе Автор документа>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoTradeStateKind(), inMovementId, zc_Enum_PromoTradeStateKind_Start());
          -- сохранили <В работе Автор документа>
-         PERFORM gpInsertUpdate_MI_Message_PromoTradeStateKind 11(ioId                    := 0
+         PERFORM gpInsertUpdate_MI_Message_PromoTradeStateKind (ioId                    := 0
                                                               , inMovementId            := inMovementId
                                                               , inPromoTradeStateKindId := zc_Enum_PromoTradeStateKind_Start()
                                                               , inIsQuickly             := FALSE
@@ -134,10 +134,11 @@ BEGIN
 
      END IF;
 
-    IF inUserId = 9457
+    /*IF inUserId = 9457
     THEN
         RAISE EXCEPTION 'Test.Ok';
     END IF;
+    */
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

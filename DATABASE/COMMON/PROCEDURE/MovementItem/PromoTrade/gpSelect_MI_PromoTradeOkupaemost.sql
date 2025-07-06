@@ -17,6 +17,10 @@ RETURNS TABLE (
       , GoodsKindName       TVarChar --Ќаименование обьекта <¬ид товара> 
       , MeasureName         TVarChar --≈диница измерени€      
       
+      , PromoTax          TFloat
+      , PricePromo        TFloat
+      , PricePromo_new    TFloat
+      , ChangePercent     TFloat
       , PriceWithVAT      TFloat     --÷ена план (мес.), с учетом Ќƒ—
       , AmountPlan        TFloat     --ќжидаемый среднемес€чный объем продаж в ≈д. »зм.
       , AmountPlan_weight TFloat     --ќжидаемый среднемес€чный объем продаж, кг
@@ -29,6 +33,10 @@ $BODY$
             vbPriceListId Integer;
             vbPriceWithVAT Boolean;
             vbVATPercent   TFloat;
+    DECLARE vbMovementId_PromoTradeCondition Integer;
+            vbChangePercent TFloat;
+            vbChangePercent_new  TFloat;
+            
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoTradeGoods());
@@ -48,6 +56,22 @@ BEGIN
                               AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
     WHERE Object_PriceList.DescId = zc_Object_PriceList()
       AND Object_PriceList.Id = vbPriceListId;
+
+    vbMovementId_PromoTradeCondition := (SELECT Movement.Id
+                                         FROM Movement
+                                         WHERE Movement.DescId = zc_Movement_PromoTradeCondition()
+                                           AND Movement.ParentId =  inMovementId
+                                         );
+
+    SELECT MovementFloat_ChangePercent.ValueData     ::TVarChar AS ChangePercent
+         , MovementFloat_ChangePercent_new.ValueData ::TVarChar AS ChangePercent_new
+  INTO vbChangePercent, vbChangePercent_new
+    FROM MovementFloat AS MovementFloat_ChangePercent 
+         LEFT JOIN MovementFloat AS MovementFloat_ChangePercent_new 
+                                 ON MovementFloat_ChangePercent_new.MovementId = vbMovementId_PromoTradeCondition
+                                AND MovementFloat_ChangePercent_new.DescId = zc_MovementFloat_ChangePercent_new()
+    WHERE MovementFloat_ChangePercent.MovementId = inMovementId
+      AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent();
 
     RETURN QUERY
     WITH
@@ -95,6 +119,9 @@ BEGIN
                      AND MovementItemFloat.DescId IN (zc_MIFloat_PromoTax()
                                                     , zc_MIFloat_AmountPlan()
                                                     , zc_MIFloat_Summ()
+                                                    , zc_MIFloat_ChangePercent()
+                                                    , zc_MIFloat_PricePromo()
+                                                    , zc_MIFloat_PricePromo_new()
                                                      )
                    )       
   , tmpData AS (
@@ -107,14 +134,19 @@ BEGIN
                      , Object_GoodsKind.Id              AS GoodsKindId     
                      , Object_GoodsKind.ValueData       AS GoodsKindName
                      
-                     , MovementItem.PriceWithVAT
                      , MIFloat_AmountPlan.ValueData      ::TFloat AS AmountPlan
                      , (MIFloat_AmountPlan.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS AmountPlan_weight
                      , (MIFloat_AmountPlan.ValueData * COALESCE (MIFloat_PromoTax.ValueData,0))                                                                                       ::TFloat AS AmountPlan_calc
                      , (MIFloat_AmountPlan.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END * COALESCE (MIFloat_PromoTax.ValueData,0)) ::TFloat AS AmountPlan_weight_calc
                      , MIFloat_Summ.ValueData            ::TFloat AS Summ
                      , MIFloat_PromoTax.ValueData        ::TFloat AS PromoTax
-                     
+                                         
+                     -- расчет цены с Ќƒ— со скидкой
+                     , (MovementItem.PriceWithVAT - (1- COALESCE (MIFloat_ChangePercent.ValueData,100) / 100)) ::TFloat AS PriceWithVAT
+                     , MIFloat_ChangePercent.ValueData AS ChangePercent
+                     , MIFloat_PricePromo.ValueData     ::TFloat AS PricePromo
+                     , MIFloat_PricePromo_new.ValueData ::TFloat AS PricePromo_new
+             
                 FROM tmpMI AS MovementItem
                      LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                           ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -135,6 +167,17 @@ BEGIN
                                           ON MIFloat_PromoTax.MovementItemId = MovementItem.Id
                                          AND MIFloat_PromoTax.DescId = zc_MIFloat_PromoTax()
 
+                     LEFT JOIN tmpMIFloat AS MIFloat_PricePromo
+                                          ON MIFloat_PricePromo.MovementItemId = MovementItem.Id
+                                         AND MIFloat_PricePromo.DescId = zc_MIFloat_PricePromo()
+                     LEFT JOIN tmpMIFloat AS MIFloat_PricePromo_new
+                                          ON MIFloat_PricePromo_new.MovementItemId = MovementItem.Id
+                                         AND MIFloat_PricePromo_new.DescId = zc_MIFloat_PricePromo_new()
+                                        
+                     LEFT JOIN tmpMIFloat AS MIFloat_ChangePercent
+                                          ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                         AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
                      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
                      LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MovementItem.GoodsKindId
                      
@@ -152,7 +195,11 @@ BEGIN
                     , tmpData.GoodsKindName
                     , tmpData.MeasureId
                     , tmpData.MeasureName
-                    , tmpData.PriceWithVAT                                                                             --÷ена план (мес.), с учетом Ќƒ—
+                    , tmpData.PromoTax
+                    , tmpData.PricePromo
+                    , tmpData.PricePromo_new
+                    , tmpData.ChangePercent                                                                             
+                    , tmpData.PriceWithVAT
                     , (COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0)) ::TFloat AS AmountPlan  --ќжидаемый среднемес€чный объем продаж в ≈д. »зм.
                     , tmpData.AmountPlan_weight                                                                        --ќжидаемый среднемес€чный объем продаж, кг
                     , ((COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0))                        
@@ -173,9 +220,13 @@ BEGIN
                     , tmpData.GoodsKindName
                     , tmpData.MeasureId
                     , tmpData.MeasureName
+                    , tmpData.PromoTax 
+                    , tmpData.PricePromo
+                    , tmpData.PricePromo_new
+                    , tmpData.ChangePercent
                     , tmpData.PriceWithVAT                                                                             --÷ена план (мес.), с учетом Ќƒ—
                     , COALESCE (tmpData.AmountPlan_calc,0) ::TFloat AS AmountPlan                                      --ќжидаемый среднемес€чный объем продаж в ≈д. »зм.
-                    , tmpData.AmountPlan_weight_calc                                                                   --ќжидаемый среднемес€чный объем продаж, кг
+                    , tmpData.AmountPlan_weight_calc       ::TFloat AS AmountPlan_weight                               --ќжидаемый среднемес€чный объем продаж, кг
                     , (COALESCE (tmpData.AmountPlan_calc,0)                        
                        * tmpData.PriceWithVAT)  ::TFloat AS SummWithVATPlan                                            --ќжидаемый среднемес€чный объем продаж, грн
                     , CASE WHEN COALESCE (tmpData.AmountPlan,0) <> 0 
@@ -186,6 +237,7 @@ BEGIN
                WHERE COALESCE (tmpData.PromoTax,0) <> 0
                --Ќовые услови€
                --Ќовые услови€ (јкци€) 
+
                )
 
         SELECT tmpData.NUM AS NUM
@@ -201,6 +253,10 @@ BEGIN
              , tmpData.GoodsKindId
              , tmpData.GoodsKindName
              , tmpData.MeasureName
+             , tmpData.PromoTax          ::TFloat
+             , tmpData.PricePromo        ::TFloat
+             , tmpData.PricePromo_new    ::TFloat
+             , tmpData.ChangePercent     ::TFloat
              , tmpData.PriceWithVAT      ::TFloat                              --÷ена план (мес.), с учетом Ќƒ—
              , tmpData.AmountPlan        ::TFloat                              --ќжидаемый среднемес€чный объем продаж в ≈д. »зм.
              , tmpData.AmountPlan_weight ::TFloat                              --ќжидаемый среднемес€чный объем продаж, кг
@@ -222,4 +278,4 @@ $BODY$
 */
 -- тест
 --SELECT * FROM gpSelect_MI_PromoTradeOkupaemost (5083159 , zfCalc_UserAdmin());
--- select * from gpSelect_MI_PromoTradeOkupaemost(inMovementId := 30320049 , inSession := '9457');
+-- select * from gpSelect_MI_PromoTradeOkupaemost(inMovementId := 31603021  , inSession := '9457');
