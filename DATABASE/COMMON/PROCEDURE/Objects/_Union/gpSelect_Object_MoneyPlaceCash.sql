@@ -1,8 +1,9 @@
 -- Function: gpSelect_Object_MoneyPlaceCash()
-
-DROP FUNCTION IF EXISTS gpSelect_Object_MoneyPlaceCash (TVarChar);
+  --DROP FUNCTION IF EXISTS gpSelect_Object_MoneyPlaceCash (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MoneyPlaceCash (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MoneyPlaceCash(
+    IN inIsShowAll         Boolean,     --показать или все договора (как сейчас) или если статус не завешен
     IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isErased Boolean
@@ -55,20 +56,21 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH View_InfoMoney_40801 AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyCode = 40801) -- Внутренний оборот
+        , tmpObject_Personal_View AS (SELECT * FROM Object_Personal_View)
         , tmpPersonal_Branch AS (SELECT DISTINCT View_Personal.MemberId
                                  FROM ObjectLink AS ObjectLink_Unit_Branch
-                                      INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = ObjectLink_Unit_Branch.ObjectId
+                                      INNER JOIN tmpObject_Personal_View AS View_Personal ON View_Personal.UnitId = ObjectLink_Unit_Branch.ObjectId
                                  WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
                                    AND ObjectLink_Unit_Branch.DescId        = zc_ObjectLink_Unit_Branch()
 
                                 UNION
                                  SELECT DISTINCT View_Personal.MemberId
-                                 FROM Object_Personal_View AS View_Personal
+                                 FROM tmpObject_Personal_View AS View_Personal
                                  WHERE View_Personal.UnitId = 413386 -- Наши
 
                                 UNION
                                  SELECT DISTINCT View_Personal.MemberId
-                                 FROM Object_Personal_View AS View_Personal
+                                 FROM tmpObject_Personal_View AS View_Personal
                                  WHERE View_Personal.PositionId = 81178 -- экспедитор
                                     OR View_Personal.UnitId     = 8409  -- Отдел экспедиторов
                                 )
@@ -104,7 +106,10 @@ BEGIN
         , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
         -- , tmpObject_InfoMoney_View AS (SELECT * FROM gpSelect_Object_InfoMoney_Desc ('zc_Object_Juridical', inSession))
 
-        , tmpContract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.isErased = FALSE)
+        , tmpContract_View AS (SELECT * FROM Object_Contract_View 
+                               WHERE Object_Contract_View.isErased = FALSE
+                                 AND (Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close() OR inIsShowAll = TRUE) 
+                               )
         , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
         , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
 
@@ -273,6 +278,7 @@ BEGIN
             --
             OR vbIsConstraint = FALSE
            )
+       AND (COALESCE (View_Contract.ContractStateKindId,0) <> zc_Enum_ContractStateKind_Close() OR inIsShowAll = TRUE)
 -- AND vbUserId <> 5
 
     UNION ALL
@@ -368,7 +374,7 @@ BEGIN
        -- !!! есть долг, но статья не такая как в договоре!!!
        AND View_Contract_check.ContractId IS NULL
        AND (Container_Partner_View.AmountDebet <> 0 OR Container_Partner_View.AmountKredit <> 0)
-
+       AND (COALESCE (View_Contract.ContractStateKindId,0) <> zc_Enum_ContractStateKind_Close() OR inIsShowAll = TRUE)
     )
 
      -- Результат
@@ -602,6 +608,7 @@ BEGIN
        -- AND View_Contract.isErased = FALSE
        AND Object_Juridical.isErased = FALSE
        AND vbIsConstraint = FALSE
+        AND (COALESCE (View_Contract.ContractStateKindId,0) <> zc_Enum_ContractStateKind_Close() OR inIsShowAll = TRUE)
     UNION ALL
      SELECT Object_Founder.Id
           , Object_Founder.ObjectCode     
@@ -653,7 +660,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_MoneyPlaceCash (TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_MoneyPlaceCash (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -666,3 +673,5 @@ ALTER FUNCTION gpSelect_Object_MoneyPlaceCash (TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_MoneyPlaceCash (inSession:= '300547') AS tmp WHERE CarName <> ''
+-- SELECT * FROM gpSelect_Object_MoneyPlaceCash (inIsShowAll:= FALSE, inSession:= '300547') AS tmp --WHERE CarName <> ''
+

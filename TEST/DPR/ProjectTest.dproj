@@ -662,10 +662,6 @@
 				<Form>ContractConditionByContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MoneyPlac_Object.pas">
-				<Form>MoneyPlaceCash_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProfitLossService.pas">
 				<Form>ProfitLossServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5584,6 +5580,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReturnInChildDialog.pas">
 				<Form>ReturnInChildDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MoneyPlac_Object.pas">
+				<Form>MoneyPlaceCash_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

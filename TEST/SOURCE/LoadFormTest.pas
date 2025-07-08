@@ -3778,10 +3778,11 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromo_ServiceGoodsJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromo_ServiceGoodsJournalChoiceForm');
   exit;
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroup_GoodsGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGroup_GoodsGroupForm');
   exit;
@@ -3802,13 +3803,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStoragePlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStoragePlace_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlaceCash_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlaceCash_ObjectForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsFuel_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsFuel_ObjectForm');
 
