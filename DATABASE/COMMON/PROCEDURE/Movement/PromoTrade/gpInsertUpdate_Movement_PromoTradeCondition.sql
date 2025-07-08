@@ -107,11 +107,11 @@ BEGIN
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MarketSumm_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue_new)::TFloat);
     END IF;
     
-    IF vbUserId = 9457
+   /* IF vbUserId = 9457
     THEN
         RAISE EXCEPTION 'Test.Ok';
     END IF;
-
+    */
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

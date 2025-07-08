@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_PromoTradeOkupaemost(
 RETURNS TABLE (
         NUM      Integer 
       , GroupNum Integer
+      , Num_text TVarChar
       , Id                  Integer  --идентификатор
       , GoodsId             Integer  --»ƒ объекта <товар>
       , GoodsCode           Integer  --код объекта  <товар>
@@ -19,12 +20,12 @@ RETURNS TABLE (
       
       , PromoTax          TFloat
       , PricePromo        TFloat
-      , PricePromo_new    TFloat
+      --, PricePromo_new    TFloat
       , ChangePercent     TFloat
-      , PriceWithVAT      TFloat     --÷ена план (мес.), с учетом Ќƒ—
+      --, PriceWithVAT      TFloat     --÷ена план (мес.), с учетом Ќƒ—
       , AmountPlan        TFloat     --ќжидаемый среднемес€чный объем продаж в ≈д. »зм.
       , AmountPlan_weight TFloat     --ќжидаемый среднемес€чный объем продаж, кг
-      , SummWithVATPlan   TFloat     --ќжидаемый среднемес€чный объем продаж, грн
+      , SummPromo         TFloat     --ќжидаемый среднемес€чный объем продаж, грн
       , Summ_pos          TFloat     --—тоимость ввода позиции, грн
 )
 AS
@@ -63,19 +64,21 @@ BEGIN
                                            AND Movement.ParentId =  inMovementId
                                          );
 
-    SELECT MovementFloat_ChangePercent.ValueData     ::TVarChar AS ChangePercent
-         , MovementFloat_ChangePercent_new.ValueData ::TVarChar AS ChangePercent_new
-  INTO vbChangePercent, vbChangePercent_new
-    FROM MovementFloat AS MovementFloat_ChangePercent 
-         LEFT JOIN MovementFloat AS MovementFloat_ChangePercent_new 
-                                 ON MovementFloat_ChangePercent_new.MovementId = vbMovementId_PromoTradeCondition
-                                AND MovementFloat_ChangePercent_new.DescId = zc_MovementFloat_ChangePercent_new()
-    WHERE MovementFloat_ChangePercent.MovementId = inMovementId
-      AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent();
+    vbChangePercent := (SELECT MovementFloat.ValueData
+                        FROM MovementFloat 
+                        WHERE MovementFloat.MovementId = inMovementId
+                          AND MovementFloat.DescId = zc_MovementFloat_ChangePercent()
+                        );
+
+    vbChangePercent_new := (SELECT MovementFloat.ValueData
+                            FROM MovementFloat
+                            WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
+                              AND MovementFloat.DescId = zc_MovementFloat_ChangePercent_new()
+                            );
 
     RETURN QUERY
     WITH
-    tmpPrice AS (SELECT tmp.GoodsId
+   /* tmpPrice AS (SELECT tmp.GoodsId
                       , tmp.GoodsKindId
                       , tmp.ValuePrice
                  FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId
@@ -84,10 +87,11 @@ BEGIN
                  )
 
 
-  , tmpMI AS (SELECT MovementItem.*
+  , */
+  tmpMI AS (SELECT MovementItem.*
                    , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
 
-                   -- расчет цены без Ќƒ—, до 4 знаков
+                 /*  -- расчет цены без Ќƒ—, до 4 знаков
                    , CASE WHEN vbPriceWithVAT = TRUE
                           THEN CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) - COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
                           ELSE COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
@@ -97,17 +101,18 @@ BEGIN
                           THEN COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
                           ELSE CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * ( (vbVATPercent + 100)/100) AS NUMERIC (16, 2))
                      END    ::TFloat    AS PriceWithVAT
+                     */
               FROM MovementItem 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                   -- прив€зываем 2 раза по виду товара и без
+                 /*  -- прив€зываем 2 раза по виду товара и без
                    LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
                                      AND tmpPrice.GoodsKindId IS NULL
                    LEFT JOIN tmpPrice AS tmpPrice_Kind
                                       ON tmpPrice_Kind.GoodsId = MovementItem.ObjectId
                                      AND COALESCE (tmpPrice_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
-
+                */
               WHERE MovementItem.DescId = zc_MI_Master()
                 AND MovementItem.MovementId = inMovementId
                 AND MovementItem.isErased = FALSE
@@ -142,10 +147,10 @@ BEGIN
                      , MIFloat_PromoTax.ValueData        ::TFloat AS PromoTax
                                          
                      -- расчет цены с Ќƒ— со скидкой
-                     , (MovementItem.PriceWithVAT - (1- COALESCE (MIFloat_ChangePercent.ValueData,100) / 100)) ::TFloat AS PriceWithVAT
+                     --, (MovementItem.PriceWithVAT - (1- COALESCE (MIFloat_ChangePercent.ValueData,100) / 100)) ::TFloat AS PriceWithVAT
                      , MIFloat_ChangePercent.ValueData AS ChangePercent
-                     , MIFloat_PricePromo.ValueData     ::TFloat AS PricePromo
-                     , MIFloat_PricePromo_new.ValueData ::TFloat AS PricePromo_new
+                     , MIFloat_PricePromo.ValueData      ::TFloat AS PricePromo
+                     , MIFloat_PricePromo_new.ValueData  ::TFloat AS PricePromo_new
              
                 FROM tmpMI AS MovementItem
                      LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -184,9 +189,9 @@ BEGIN
                      
                )
 
-  , tmpRes AS (
-               --“екущие услови€
+  , tmpRes AS (--“екущие услови€
                SELECT 1 AS Num
+                    , '' ::TVarChar AS Num_text
                     , tmpData.Id
                     , tmpData.GoodsId
                     , tmpData.GoodsCode
@@ -197,13 +202,11 @@ BEGIN
                     , tmpData.MeasureName
                     , tmpData.PromoTax
                     , tmpData.PricePromo
-                    , tmpData.PricePromo_new
                     , tmpData.ChangePercent                                                                             
-                    , tmpData.PriceWithVAT
-                    , (COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0)) ::TFloat AS AmountPlan  --ќжидаемый среднемес€чный объем продаж в ≈д. »зм.
-                    , tmpData.AmountPlan_weight                                                                        --ќжидаемый среднемес€чный объем продаж, кг
+                    , (COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0))      ::TFloat AS AmountPlan  --ќжидаемый среднемес€чный объем продаж в ≈д. »зм.
+                    , (COALESCE (tmpData.AmountPlan_weight,0) - COALESCE (tmpData.AmountPlan_weight_calc,0)) AS AmountPlan_weight          --ќжидаемый среднемес€чный объем продаж, кг
                     , ((COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0))                        
-                       * tmpData.PriceWithVAT)  ::TFloat AS SummWithVATPlan                                            --ќжидаемый среднемес€чный объем продаж, грн
+                       * tmpData.PricePromo)  ::TFloat AS SummPromo                                                    --ќжидаемый среднемес€чный объем продаж, грн
                     , CASE WHEN COALESCE (tmpData.AmountPlan,0) <> 0 
                            THEN (tmpData.Summ /tmpData.AmountPlan * (COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0)))
                            ELSE 0
@@ -212,6 +215,7 @@ BEGIN
              UNION ALL     
                --“екущие услови€ (јкци€)
                SELECT 2 AS Num
+                    , 'Aкци€' ::TVarChar AS Num_text
                     , tmpData.Id
                     , tmpData.GoodsId
                     , tmpData.GoodsCode
@@ -222,22 +226,66 @@ BEGIN
                     , tmpData.MeasureName
                     , tmpData.PromoTax 
                     , tmpData.PricePromo
-                    , tmpData.PricePromo_new
                     , tmpData.ChangePercent
-                    , tmpData.PriceWithVAT                                                                             --÷ена план (мес.), с учетом Ќƒ—
                     , COALESCE (tmpData.AmountPlan_calc,0) ::TFloat AS AmountPlan                                      --ќжидаемый среднемес€чный объем продаж в ≈д. »зм.
                     , tmpData.AmountPlan_weight_calc       ::TFloat AS AmountPlan_weight                               --ќжидаемый среднемес€чный объем продаж, кг
                     , (COALESCE (tmpData.AmountPlan_calc,0)                        
-                       * tmpData.PriceWithVAT)  ::TFloat AS SummWithVATPlan                                            --ќжидаемый среднемес€чный объем продаж, грн
+                       * tmpData.PricePromo)  ::TFloat AS SummPromo                                                    --ќжидаемый среднемес€чный объем продаж, грн
                     , CASE WHEN COALESCE (tmpData.AmountPlan,0) <> 0 
                            THEN tmpData.Summ /tmpData.AmountPlan * COALESCE (tmpData.AmountPlan_calc,0)
                            ELSE 0
                       END ::TFloat AS Summ_pos                                                                         --—тоимость ввода позиции, грн
                FROM tmpData
                WHERE COALESCE (tmpData.PromoTax,0) <> 0
+            UNION ALL
                --Ќовые услови€
+               SELECT 3 AS Num
+                    , '' ::TVarChar AS Num_text
+                    , tmpData.Id
+                    , tmpData.GoodsId
+                    , tmpData.GoodsCode
+                    , tmpData.GoodsName
+                    , tmpData.GoodsKindId
+                    , tmpData.GoodsKindName
+                    , tmpData.MeasureId
+                    , tmpData.MeasureName
+                    , tmpData.PromoTax
+                    , tmpData.PricePromo_new
+                    , tmpData.ChangePercent                                                                             
+                    , (COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0))      ::TFloat AS AmountPlan  --ќжидаемый среднемес€чный объем продаж в ≈д. »зм.
+                    , (COALESCE (tmpData.AmountPlan_weight,0) - COALESCE (tmpData.AmountPlan_weight_calc,0)) AS AmountPlan_weight          --ќжидаемый среднемес€чный объем продаж, кг
+                    , ((COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0))                        
+                       * tmpData.PricePromo_new)  ::TFloat AS SummPromo                                                --ќжидаемый среднемес€чный объем продаж, грн
+                    , CASE WHEN COALESCE (tmpData.AmountPlan,0) <> 0 
+                           THEN (tmpData.Summ /tmpData.AmountPlan * (COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0)))
+                           ELSE 0
+                      END ::TFloat AS Summ_pos                                                                         --—тоимость ввода позиции, грн
+               FROM tmpData
+            UNION ALL
                --Ќовые услови€ (јкци€) 
-
+               SELECT 4 AS Num
+                    , 'Aкци€' ::TVarChar AS Num_text
+                    , tmpData.Id
+                    , tmpData.GoodsId
+                    , tmpData.GoodsCode
+                    , tmpData.GoodsName
+                    , tmpData.GoodsKindId
+                    , tmpData.GoodsKindName
+                    , tmpData.MeasureId
+                    , tmpData.MeasureName
+                    , tmpData.PromoTax 
+                    , tmpData.PricePromo_new
+                    , tmpData.ChangePercent
+                    , COALESCE (tmpData.AmountPlan_calc,0) ::TFloat AS AmountPlan                                      --ќжидаемый среднемес€чный объем продаж в ≈д. »зм.
+                    , tmpData.AmountPlan_weight_calc       ::TFloat AS AmountPlan_weight                               --ќжидаемый среднемес€чный объем продаж, кг
+                    , (COALESCE (tmpData.AmountPlan_calc,0)                        
+                       * tmpData.PricePromo_new)  ::TFloat AS SummPromo                                                --ќжидаемый среднемес€чный объем продаж, грн
+                    , CASE WHEN COALESCE (tmpData.AmountPlan,0) <> 0 
+                           THEN tmpData.Summ /tmpData.AmountPlan * COALESCE (tmpData.AmountPlan_calc,0)
+                           ELSE 0
+                      END ::TFloat AS Summ_pos                                                                         --—тоимость ввода позиции, грн
+               FROM tmpData
+               WHERE COALESCE (tmpData.PromoTax,0) <> 0
                )
 
         SELECT tmpData.NUM AS NUM
@@ -245,7 +293,7 @@ BEGIN
                     WHEN tmpData.NUM IN (3, 4) THEN 2 
                     ELSE 3 
                END AS GroupNum
-             
+             , tmpData.Num_text
              , tmpData.Id
              , tmpData.GoodsId
              , tmpData.GoodsCode
@@ -255,12 +303,12 @@ BEGIN
              , tmpData.MeasureName
              , tmpData.PromoTax          ::TFloat
              , tmpData.PricePromo        ::TFloat
-             , tmpData.PricePromo_new    ::TFloat
+             --, tmpData.PricePromo_new    ::TFloat
              , tmpData.ChangePercent     ::TFloat
-             , tmpData.PriceWithVAT      ::TFloat                              --÷ена план (мес.), с учетом Ќƒ—
+             --, tmpData.PriceWithVAT      ::TFloat                              --÷ена план (мес.), с учетом Ќƒ—
              , tmpData.AmountPlan        ::TFloat                              --ќжидаемый среднемес€чный объем продаж в ≈д. »зм.
              , tmpData.AmountPlan_weight ::TFloat                              --ќжидаемый среднемес€чный объем продаж, кг
-             , tmpData.SummWithVATPlan   ::TFloat                              --ќжидаемый среднемес€чный объем продаж, грн
+             , tmpData.SummPromo         ::TFloat                              --ќжидаемый среднемес€чный объем продаж, грн
              , tmpData.Summ_pos          ::TFloat                              --—тоимость ввода позиции, грн
         FROM tmpRes AS tmpData
         ORDER BY tmpData.Id

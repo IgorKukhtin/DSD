@@ -5,6 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, In
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
  INOUT ioId                             Integer   , -- Ключ объекта <Элемент документа>
@@ -16,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
     IN inPartnerCount                   TFloat    , --
     IN inAmountPlan                     TFloat    , --
     IN inPriceWithVAT                   TFloat    , --
+    IN inPriceWithVAT_new               TFloat    , -- Цена Прайс с новой скидкой из  PromoTradeCondition 
    OUT outPriceWithOutVAT               TFloat    ,
    OUT outSummWithOutVATPlan            TFloat    ,
    OUT outSummWithVATPlan               TFloat    ,
@@ -39,6 +42,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPriceList Integer;
+           vbChangePercent TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PromoTrade());
@@ -75,6 +79,17 @@ BEGIN
 
     -- переопределяем  если inGoodsGroupPropertyId заполнено берем его , если нет то группу
     inGoodsGroupPropertyId := CASE WHEN COALESCE (inGoodsGroupPropertyId,0) <> 0 THEN inGoodsGroupPropertyId ELSE inGoodsGroupPropertyId_Parent END;
+
+    --cохраненное значение скидки
+    vbChangePercent := (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_ChangePercent());
+    
+    --если изменили знач. скидки пересчитываем значения для inPricePromo и inPricePromo_new   
+    IF COALESCE (vbChangePercent,0) <> COALESCE (inChangePercent,0)
+    THEN
+        inPricePromo := CAST ( CASE WHEN COALESCE (inChangePercent,0) <> 0 THEN (inPriceWithVAT - inPriceWithVAT * inChangePercent / 100) ELSE inPriceWithVAT END AS NUMERIC (16,4)); 
+        inPricePromo_new := CAST ( CASE WHEN COALESCE (inChangePercent,0) <> 0 THEN (inPriceWithVAT_new - inPriceWithVAT_new * inChangePercent / 100) ELSE inPriceWithVAT_new END AS NUMERIC (16,4));
+    END IF;
+
 
     -- сохранили
     SELECT tmp.ioId, tmp.outPriceWithOutVAT

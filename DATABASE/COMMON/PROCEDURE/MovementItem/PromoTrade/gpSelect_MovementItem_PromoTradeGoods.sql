@@ -33,8 +33,10 @@ RETURNS TABLE (
       , AmountPlan_calc         TFloat -- 
       , AmountPlan_weight_calc  TFloat
 
-      , PriceWithOutVAT    TFloat
-      , PriceWithVAT       TFloat
+      , PriceWithOutVAT    TFloat       --прайс цена со скидкой документа
+      , PriceWithVAT       TFloat       --прайс цена со скидкой документа
+      , PriceWithOutVAT_new    TFloat   --прайс цена с новой скидкой документа (ком.условия)
+      , PriceWithVAT_new       TFloat   --прайс цена с новой скидкой документа (ком.условия)
       , SummWithOutVATPlan TFloat
       , SummWithVATPlan    TFloat 
       
@@ -52,6 +54,10 @@ $BODY$
             vbPriceListId Integer;
             vbPriceWithVAT Boolean;
             vbVATPercent   TFloat;
+            vbMovementId_PromoTradeCondition Integer;
+            vbChangePercent      TFloat;
+            vbChangePercent_new  TFloat;
+            
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoTradeGoods());
@@ -72,6 +78,25 @@ BEGIN
     WHERE Object_PriceList.DescId = zc_Object_PriceList()
       AND Object_PriceList.Id = vbPriceListId;
 
+    vbMovementId_PromoTradeCondition := (SELECT Movement.Id
+                                         FROM Movement
+                                         WHERE Movement.DescId = zc_Movement_PromoTradeCondition()
+                                           AND Movement.ParentId =  inMovementId
+                                         );
+
+    vbChangePercent := (SELECT MovementFloat.ValueData
+                        FROM MovementFloat 
+                        WHERE MovementFloat.MovementId = inMovementId
+                          AND MovementFloat.DescId = zc_MovementFloat_ChangePercent()
+                        );
+
+    vbChangePercent_new := (SELECT MovementFloat.ValueData
+                            FROM MovementFloat
+                            WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
+                              AND MovementFloat.DescId = zc_MovementFloat_ChangePercent_new()
+                            );
+                        
+
     RETURN QUERY
     WITH
     tmpPrice AS (SELECT tmp.GoodsId
@@ -83,36 +108,89 @@ BEGIN
                  )
 
 
-  , tmpMI AS (SELECT MovementItem.*
-                   , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+  , tmpMI AS (
+              SELECT tmp.Id
+                   , tmp.MovementId
+                   , tmp.ObjectId
+                   , tmp.GoodsKindId
+                   , tmp.Amount
+                   , tmp.isErased
+                   --текущая  цена Прайс со скидкой из документа
+                   , CASE WHEN COALESCE (vbChangePercent,0)<> 0 THEN (tmp.PriceWithOutVAT - tmp.PriceWithOutVAT * vbChangePercent / 100) ELSE tmp.PriceWithOutVAT END      ::TFloat    AS PriceWithOutVAT
+                   , CASE WHEN COALESCE (vbChangePercent,0)<> 0 THEN (tmp.PriceWithVAT - tmp.PriceWithVAT * vbChangePercent / 100) ELSE tmp.PriceWithVAT END               ::TFloat    AS PriceWithVAT
+                   --Новая    Цена Прайс с новой скидкой из  PromoTradeCondition
+                   , CASE WHEN COALESCE (vbChangePercent_new,0)<> 0 THEN (tmp.PriceWithOutVAT - tmp.PriceWithOutVAT * vbChangePercent_new / 100) ELSE tmp.PriceWithOutVAT END  ::TFloat    AS PriceWithOutVAT_new
+                   , CASE WHEN COALESCE (vbChangePercent_new,0)<> 0 THEN (tmp.PriceWithVAT - tmp.PriceWithVAT * vbChangePercent_new / 100) ELSE tmp.PriceWithVAT END           ::TFloat    AS PriceWithVAT_new
+              FROM (SELECT MovementItem.*
+                         , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                         -- расчет цены без НДС
+                         , CASE WHEN COALESCE (MIFloat_PriceWithOutVAT.ValueData,0) <> 0 
+                                THEN MIFloat_PriceWithOutVAT.ValueData
+                                ELSE CASE WHEN vbPriceWithVAT = TRUE
+                                          THEN CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) - COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
+                                          ELSE COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
+                                     END
+                           END    ::TFloat    AS PriceWithOutVAT
+                         -- расчет цены с НДС
+                         , CASE WHEN COALESCE (MIFloat_PriceWithVAT.ValueData,0) <> 0 
+                                THEN MIFloat_PriceWithVAT.ValueData
+                                ELSE CASE WHEN vbPriceWithVAT = TRUE
+                                          THEN COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
+                                          ELSE CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * ( (vbVATPercent + 100)/100) AS NUMERIC (16, 2))
+                                     END
+                           END    ::TFloat    AS PriceWithVAT
+                    FROM MovementItem 
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                         -- привязываем 2 раза по виду товара и без
+                         LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
+                                           AND tmpPrice.GoodsKindId IS NULL
+                         LEFT JOIN tmpPrice AS tmpPrice_Kind
+                                            ON tmpPrice_Kind.GoodsId = MovementItem.ObjectId
+                                           AND COALESCE (tmpPrice_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
 
-                   -- расчет цены без НДС, до 4 знаков
-                   , CASE WHEN vbPriceWithVAT = TRUE
-                          THEN CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) - COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
-                          ELSE COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
-                     END    ::TFloat    AS PriceWithOutVAT
-                   -- расчет цены с НДС, до 4 знаков
-                   , CASE WHEN vbPriceWithVAT = TRUE
-                          THEN COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
-                          ELSE CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * ( (vbVATPercent + 100)/100) AS NUMERIC (16, 2))
-                     END    ::TFloat    AS PriceWithVAT
-              FROM MovementItem 
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                   -- привязываем 2 раза по виду товара и без
-                   LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
-                                     AND tmpPrice.GoodsKindId IS NULL
-                   LEFT JOIN tmpPrice AS tmpPrice_Kind
-                                      ON tmpPrice_Kind.GoodsId = MovementItem.ObjectId
-                                     AND COALESCE (tmpPrice_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
-
-              WHERE MovementItem.DescId = zc_MI_Master()
-                AND MovementItem.MovementId = inMovementId
-                AND (MovementItem.isErased = FALSE OR inIsErased = TRUE) 
+                         LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
+                                                     ON MIFloat_PriceWithOutVAT.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                         LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                                     ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()      
+                    WHERE MovementItem.DescId = zc_MI_Master()
+                      AND MovementItem.MovementId = inMovementId
+                      AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+                   ) AS tmp 
               )
+  , tmpMIFloat AS (SELECT MovementItemFloat.*
+                   FROM MovementItemFloat
+                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                     AND MovementItemFloat.DescId IN (zc_MIFloat_PartnerCount()
+                                                    , zc_MIFloat_Summ()
+                                                    , zc_MIFloat_AmountPlan()
+                                                    , zc_MIFloat_PromoTax()
+                                                    , zc_MIFloat_ChangePercent()
+                                                    , zc_MIFloat_PricePromo()
+                                                    , zc_MIFloat_PricePromo_new()
+                                                    ) 
+                   )        
           
-          
+  , tmpMIString AS (SELECT MovementItemString.*
+                    FROM MovementItemString
+                    WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                      AND MovementItemString.DescId IN (zc_MIString_Comment()
+                                                      ) 
+                    ) 
+
+  , tmpMILO AS (SELECT MovementItemLinkObject.*
+                FROM MovementItemLinkObject
+                WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                  AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Partner()
+                                                      , zc_MILinkObject_TradeMark()
+                                                      , zc_MILinkObject_GoodsGroupProperty()
+                                                      , zc_MILinkObject_GoodsGroupDirection()
+                                                      ) 
+                )
+
         SELECT ROW_NUMBER() OVER (ORDER BY MovementItem.Id) ::Integer AS Ord
              , MovementItem.Id                        AS Id                  --идентификатор
              , MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
@@ -142,13 +220,17 @@ BEGIN
              , (MIFloat_AmountPlan.ValueData * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS AmountPlan_weight
              , (MIFloat_AmountPlan.ValueData * COALESCE (MIFloat_PromoTax.ValueData,1))    ::TFloat AS AmountPlan_calc
              , (MIFloat_AmountPlan.ValueData * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END * COALESCE (MIFloat_PromoTax.ValueData,1)) ::TFloat AS AmountPlan_weight_calc
+
+             --текущая 
+             , MovementItem.PriceWithOutVAT        ::TFloat    AS PriceWithOutVAT
+             , MovementItem.PriceWithVAT           ::TFloat    AS PriceWithVAT  
+
+             --Новая 
+             , MovementItem.PriceWithOutVAT_new    ::TFloat    AS PriceWithOutVAT_new
+             , MovementItem.PriceWithVAT_new       ::TFloat    AS PriceWithVAT_new  
              
-             -- расчет цены без НДС, до 4 знаков
-             , (MovementItem.PriceWithOutVAT - (1- COALESCE (MIFloat_ChangePercent.ValueData,100) / 100))   ::TFloat    AS PriceWithOutVAT
-             -- расчет цены с НДС, до 4 знаков
-             , (MovementItem.PriceWithVAT - (1- COALESCE (MIFloat_ChangePercent.ValueData,100) / 100))    ::TFloat    AS PriceWithVAT
-             , (MIFloat_AmountPlan.ValueData * (MovementItem.PriceWithOutVAT - (1- COALESCE (MIFloat_ChangePercent.ValueData,100) / 100)))  ::TFloat AS SummWithOutVATPlan
-             , (MIFloat_AmountPlan.ValueData * (MovementItem.PriceWithVAT - (1- COALESCE (MIFloat_ChangePercent.ValueData,100) / 100)))     ::TFloat AS SummWithVATPlan
+             , (MIFloat_AmountPlan.ValueData * (MovementItem.PriceWithOutVAT))  ::TFloat AS SummWithOutVATPlan
+             , (MIFloat_AmountPlan.ValueData * (MovementItem.PriceWithVAT))     ::TFloat AS SummWithVATPlan
              
              /*, MIFloat_PriceWithOutVAT.ValueData ::TFloat AS PriceWithOutVAT
              , MIFloat_PriceWithVAT.ValueData    ::TFloat AS PriceWithVAT 
@@ -157,57 +239,52 @@ BEGIN
              */
              , MIFloat_PromoTax.ValueData       ::TFloat AS PromoTax
              , MIFloat_ChangePercent.ValueData  ::TFloat AS ChangePercent
-             , MIFloat_PricePromo.ValueData     ::TFloat AS PricePromo
-             , MIFloat_PricePromo_new.ValueData ::TFloat AS PricePromo_new
+             , CASE WHEN COALESCE (MIFloat_PricePromo.ValueData,0) <> 0 THEN MIFloat_PricePromo.ValueData ELSE CASE WHEN COALESCE (MIFloat_ChangePercent.ValueData,0) <> 0 THEN (MovementItem.PriceWithVAT - MovementItem.PriceWithVAT * MIFloat_ChangePercent.ValueData/ 100) ELSE MovementItem.PriceWithVAT END  END                    ::TFloat AS PricePromo
+             , CASE WHEN COALESCE (MIFloat_PricePromo_new.ValueData,0) <> 0 THEN MIFloat_PricePromo_new.ValueData ELSE CASE WHEN COALESCE (MIFloat_ChangePercent.ValueData,0) <> 0 THEN (MovementItem.PriceWithVAT_new - MovementItem.PriceWithVAT_new * MIFloat_ChangePercent.ValueData/ 100) ELSE MovementItem.PriceWithVAT_new END END ::TFloat AS PricePromo_new
 
              , MIString_Comment.ValueData              AS Comment                     -- Примечание
              , MovementItem.isErased                   AS isErased                    -- Удален
         FROM tmpMI AS MovementItem
-             LEFT JOIN MovementItemFloat AS MIFloat_PartnerCount
-                                         ON MIFloat_PartnerCount.MovementItemId = MovementItem.Id
-                                        AND MIFloat_PartnerCount.DescId = zc_MIFloat_PartnerCount()
-             LEFT JOIN MovementItemFloat AS MIFloat_Summ
-                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+             LEFT JOIN tmpMIFloat AS MIFloat_PartnerCount
+                                  ON MIFloat_PartnerCount.MovementItemId = MovementItem.Id
+                                 AND MIFloat_PartnerCount.DescId = zc_MIFloat_PartnerCount()
+             LEFT JOIN tmpMIFloat AS MIFloat_Summ
+                                  ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                 AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
-             LEFT JOIN MovementItemFloat AS MIFloat_AmountPlan
-                                         ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
-                                        AND MIFloat_AmountPlan.DescId = zc_MIFloat_AmountPlan()
-             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
-                                         ON MIFloat_PriceWithOutVAT.MovementItemId = MovementItem.Id
-                                        AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
-             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
-                                         ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
-                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+             LEFT JOIN tmpMIFloat AS MIFloat_AmountPlan
+                                  ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
+                                 AND MIFloat_AmountPlan.DescId = zc_MIFloat_AmountPlan()
 
-             LEFT JOIN MovementItemFloat AS MIFloat_PromoTax
-                                         ON MIFloat_PromoTax.MovementItemId = MovementItem.Id
-                                        AND MIFloat_PromoTax.DescId = zc_MIFloat_PromoTax()
-             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                        AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-             LEFT JOIN MovementItemFloat AS MIFloat_PricePromo
-                                         ON MIFloat_PricePromo.MovementItemId = MovementItem.Id
-                                        AND MIFloat_PricePromo.DescId = zc_MIFloat_PricePromo()
-             LEFT JOIN MovementItemFloat AS MIFloat_PricePromo_new
-                                         ON MIFloat_PricePromo_new.MovementItemId = MovementItem.Id
-                                        AND MIFloat_PricePromo_new.DescId = zc_MIFloat_PricePromo_new()
+             LEFT JOIN tmpMIFloat AS MIFloat_PromoTax
+                                  ON MIFloat_PromoTax.MovementItemId = MovementItem.Id
+                                 AND MIFloat_PromoTax.DescId = zc_MIFloat_PromoTax()
+             LEFT JOIN tmpMIFloat AS MIFloat_ChangePercent
+                                  ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                 AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+             LEFT JOIN tmpMIFloat AS MIFloat_PricePromo
+                                  ON MIFloat_PricePromo.MovementItemId = MovementItem.Id
+                                 AND MIFloat_PricePromo.DescId = zc_MIFloat_PricePromo()
+             LEFT JOIN tmpMIFloat AS MIFloat_PricePromo_new
+                                  ON MIFloat_PricePromo_new.MovementItemId = MovementItem.Id
+                                 AND MIFloat_PricePromo_new.DescId = zc_MIFloat_PricePromo_new()
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
              /*LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() */
+                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+             */
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MovementItem.GoodsKindId
 
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
-                                              ON MILinkObject_Partner.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
+             LEFT JOIN tmpMILO AS MILinkObject_Partner
+                               ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                              AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
              LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MILinkObject_Partner.ObjectId
 
-             LEFT OUTER JOIN MovementItemString AS MIString_Comment
-                                                ON MIString_Comment.MovementItemId = MovementItem.ID
-                                               AND MIString_Comment.DescId = zc_MIString_Comment()
+             LEFT OUTER JOIN tmpMIString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = MovementItem.ID
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -218,19 +295,19 @@ BEGIN
                                    ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
              --
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_TradeMark
-                                              ON MILinkObject_TradeMark.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_TradeMark.DescId = zc_MILinkObject_TradeMark()  
-                                             AND COALESCE (MovementItem.ObjectId,0) = 0
+             LEFT JOIN tmpMILO AS MILinkObject_TradeMark
+                               ON MILinkObject_TradeMark.MovementItemId = MovementItem.Id
+                              AND MILinkObject_TradeMark.DescId = zc_MILinkObject_TradeMark()  
+                              AND COALESCE (MovementItem.ObjectId,0) = 0
              LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                   ON ObjectLink_Goods_TradeMark.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
              LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = COALESCE (MILinkObject_TradeMark.ObjectId, ObjectLink_Goods_TradeMark.ChildObjectId)
              --
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsGroupProperty
-                                              ON MILinkObject_GoodsGroupProperty.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsGroupProperty.DescId = zc_MILinkObject_GoodsGroupProperty()  
-                                             AND COALESCE (MovementItem.ObjectId,0) = 0
+             LEFT JOIN tmpMILO AS MILinkObject_GoodsGroupProperty
+                               ON MILinkObject_GoodsGroupProperty.MovementItemId = MovementItem.Id
+                              AND MILinkObject_GoodsGroupProperty.DescId = zc_MILinkObject_GoodsGroupProperty()  
+                              AND COALESCE (MovementItem.ObjectId,0) = 0
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
                                   ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = MovementItem.ObjectId
@@ -242,10 +319,10 @@ BEGIN
                                  AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
              LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId, MILinkObject_GoodsGroupProperty.ObjectId)
              --                                
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsGroupDirection
-                                              ON MILinkObject_GoodsGroupDirection.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsGroupDirection.DescId = zc_MILinkObject_GoodsGroupDirection() 
-                                             AND COALESCE (MovementItem.ObjectId,0) = 0
+             LEFT JOIN tmpMILO AS MILinkObject_GoodsGroupDirection
+                               ON MILinkObject_GoodsGroupDirection.MovementItemId = MovementItem.Id
+                              AND MILinkObject_GoodsGroupDirection.DescId = zc_MILinkObject_GoodsGroupDirection() 
+                              AND COALESCE (MovementItem.ObjectId,0) = 0
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupDirection
                                   ON ObjectLink_Goods_GoodsGroupDirection.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_Goods_GoodsGroupDirection.DescId = zc_ObjectLink_Goods_GoodsGroupDirection()

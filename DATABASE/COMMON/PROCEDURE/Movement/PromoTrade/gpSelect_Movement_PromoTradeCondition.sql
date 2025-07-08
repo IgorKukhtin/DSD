@@ -52,7 +52,7 @@ BEGIN
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
           , Object_PriceList.ValueData ::TVarChar AS Value
-          , ''                         ::TVarChar AS Value_new
+          , Object_PriceList.ValueData ::TVarChar AS Value_new
     FROM tmpText
          LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList 
                                       ON MovementLinkObject_PriceList.MovementId = inMovementId
