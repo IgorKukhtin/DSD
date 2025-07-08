@@ -108,7 +108,7 @@ BEGIN
 
         , tmpContract_View AS (SELECT * FROM Object_Contract_View 
                                WHERE Object_Contract_View.isErased = FALSE
-                                 AND (Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close() OR inIsShowAll = TRUE) 
+                                -- AND (Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close() OR inIsShowAll = TRUE) 
                                )
         , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
         , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
