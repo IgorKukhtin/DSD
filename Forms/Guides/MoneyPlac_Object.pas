@@ -55,8 +55,6 @@ type
     edSearchContractNumber: TcxTextEdit;
     cxLabel10: TcxLabel;
     edSearchOKPO: TcxTextEdit;
-    edSerchPartionGoods: TcxTextEdit;
-    cxLabel11: TcxLabel;
     FieldFilter_Search: TdsdFieldFilter;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;

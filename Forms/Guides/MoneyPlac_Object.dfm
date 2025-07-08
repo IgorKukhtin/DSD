@@ -1,24 +1,24 @@
 inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
   ClientHeight = 411
-  ClientWidth = 881
-  ExplicitWidth = 897
+  ClientWidth = 795
+  ExplicitWidth = 811
   ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 881
+    Width = 795
     Height = 385
     ExplicitWidth = 881
     ExplicitHeight = 385
     ClientRectBottom = 385
-    ClientRectRight = 881
+    ClientRectRight = 795
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 881
       ExplicitHeight = 385
       inherited cxGrid: TcxGrid
         Top = 41
-        Width = 881
+        Width = 795
         Height = 344
         ExplicitTop = 41
         ExplicitWidth = 881
@@ -308,10 +308,12 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
       object PanelSearch: TPanel
         Left = 0
         Top = 0
-        Width = 881
+        Width = 795
         Height = 41
         Align = alTop
         TabOrder = 1
+        ExplicitTop = -6
+        ExplicitWidth = 881
         object lbSearchCode: TcxLabel
           Left = 15
           Top = 13
@@ -374,24 +376,6 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
             144
             21)
           Width = 144
-        end
-        object edSerchPartionGoods: TcxTextEdit
-          Left = 1011
-          Top = 10
-          TabOrder = 6
-          Width = 147
-        end
-        object cxLabel11: TcxLabel
-          Left = 949
-          Top = 10
-          Caption = #1055#1072#1088#1090#1080#1103':'
-          ParentFont = False
-          Style.Font.Charset = DEFAULT_CHARSET
-          Style.Font.Color = clBlue
-          Style.Font.Height = -13
-          Style.Font.Name = 'Tahoma'
-          Style.Font.Style = [fsBold]
-          Style.IsFontAssigned = True
         end
       end
     end

@@ -3803,10 +3803,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStoragePlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStoragePlace_ObjectForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlaceCash_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlaceCash_ObjectForm');
   {

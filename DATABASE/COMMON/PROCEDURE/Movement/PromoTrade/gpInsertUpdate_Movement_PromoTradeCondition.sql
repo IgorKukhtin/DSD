@@ -60,9 +60,18 @@ BEGIN
     END IF;
 
     IF inOrd = 2
-    THEN 
+    THEN
+        --получаем сохраненное
+        vbChangePercent_new := (SELECT MovementFloat.ValueData 
+                                FROM MovementFloat
+                                WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
+                                  AND MovementFloat.DescId = zc_MovementFloat_ChangePercent_new()
+                                )::TVarChar;  
+          
+         
         --ChangePercent_new
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue_new)::TFloat);
+        
     END IF;
 
     IF inOrd = 4
