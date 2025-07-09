@@ -487,7 +487,7 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
     Top = 136
   end
   object GuidesSale: TdsdGuides
-    KeyField = 'Id'
+    KeyField = 'MovementId'
     LookupControl = edInvNumberSale
     FormNameParam.Value = 'TReport_Goods_SalebyReturnIn_ChoiceForm'
     FormNameParam.DataType = ftString
