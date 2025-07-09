@@ -78,41 +78,12 @@ BEGIN
 
     RETURN QUERY
     WITH
-   /* tmpPrice AS (SELECT tmp.GoodsId
-                      , tmp.GoodsKindId
-                      , tmp.ValuePrice
-                 FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId
-                                                          , inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
-                                                            ) AS tmp
-                 )
-
-
-  , */
-  tmpMI AS (SELECT MovementItem.*
+    tmpMI AS (SELECT MovementItem.*
                    , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
-
-                 /*  -- расчет цены без НДС, до 4 знаков
-                   , CASE WHEN vbPriceWithVAT = TRUE
-                          THEN CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) - COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
-                          ELSE COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
-                     END    ::TFloat    AS PriceWithOutVAT
-                   -- расчет цены с НДС, до 4 знаков
-                   , CASE WHEN vbPriceWithVAT = TRUE
-                          THEN COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)
-                          ELSE CAST (COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice) * ( (vbVATPercent + 100)/100) AS NUMERIC (16, 2))
-                     END    ::TFloat    AS PriceWithVAT
-                     */
               FROM MovementItem 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                 /*  -- привязываем 2 раза по виду товара и без
-                   LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
-                                     AND tmpPrice.GoodsKindId IS NULL
-                   LEFT JOIN tmpPrice AS tmpPrice_Kind
-                                      ON tmpPrice_Kind.GoodsId = MovementItem.ObjectId
-                                     AND COALESCE (tmpPrice_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
-                */
               WHERE MovementItem.DescId = zc_MI_Master()
                 AND MovementItem.MovementId = inMovementId
                 AND MovementItem.isErased = FALSE

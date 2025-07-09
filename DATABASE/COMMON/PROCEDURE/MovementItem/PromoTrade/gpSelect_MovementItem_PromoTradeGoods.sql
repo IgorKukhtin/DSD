@@ -33,6 +33,9 @@ RETURNS TABLE (
       , AmountPlan_calc         TFloat -- 
       , AmountPlan_weight_calc  TFloat
 
+      -- сохраненна€ цена ѕрайс
+      , PriceWithOutVAT_pr TFloat
+      , PriceWithVAT_pr    TFloat
       , PriceWithOutVAT    TFloat       --прайс цена со скидкой документа
       , PriceWithVAT       TFloat       --прайс цена со скидкой документа
       , PriceWithOutVAT_new    TFloat   --прайс цена с новой скидкой документа (ком.услови€)
@@ -115,6 +118,9 @@ BEGIN
                    , tmp.GoodsKindId
                    , tmp.Amount
                    , tmp.isErased
+                   -- сохраненна€ цена ѕрайс
+                   , tmp.PriceWithOutVAT      ::TFloat    AS PriceWithOutVAT_pr
+                   , tmp.PriceWithVAT         ::TFloat    AS PriceWithVAT_pr
                    --текуща€  цена ѕрайс со скидкой из документа
                    , CASE WHEN COALESCE (vbChangePercent,0)<> 0 THEN (tmp.PriceWithOutVAT - tmp.PriceWithOutVAT * vbChangePercent / 100) ELSE tmp.PriceWithOutVAT END      ::TFloat    AS PriceWithOutVAT
                    , CASE WHEN COALESCE (vbChangePercent,0)<> 0 THEN (tmp.PriceWithVAT - tmp.PriceWithVAT * vbChangePercent / 100) ELSE tmp.PriceWithVAT END               ::TFloat    AS PriceWithVAT
@@ -221,6 +227,10 @@ BEGIN
              , (MIFloat_AmountPlan.ValueData * COALESCE (MIFloat_PromoTax.ValueData,1))    ::TFloat AS AmountPlan_calc
              , (MIFloat_AmountPlan.ValueData * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END * COALESCE (MIFloat_PromoTax.ValueData,1)) ::TFloat AS AmountPlan_weight_calc
 
+             -- сохраненна€ цена ѕрайс
+             , MovementItem.PriceWithOutVAT_pr      ::TFloat    AS PriceWithOutVAT_pr
+             , MovementItem.PriceWithVAT_pr         ::TFloat    AS PriceWithVAT_pr
+
              --текуща€ 
              , MovementItem.PriceWithOutVAT        ::TFloat    AS PriceWithOutVAT
              , MovementItem.PriceWithVAT           ::TFloat    AS PriceWithVAT  
@@ -239,8 +249,8 @@ BEGIN
              */
              , MIFloat_PromoTax.ValueData       ::TFloat AS PromoTax
              , MIFloat_ChangePercent.ValueData  ::TFloat AS ChangePercent
-             , CASE WHEN COALESCE (MIFloat_PricePromo.ValueData,0) <> 0 THEN MIFloat_PricePromo.ValueData ELSE CASE WHEN COALESCE (MIFloat_ChangePercent.ValueData,0) <> 0 THEN (MovementItem.PriceWithVAT - MovementItem.PriceWithVAT * MIFloat_ChangePercent.ValueData/ 100) ELSE MovementItem.PriceWithVAT END  END                    ::TFloat AS PricePromo
-             , CASE WHEN COALESCE (MIFloat_PricePromo_new.ValueData,0) <> 0 THEN MIFloat_PricePromo_new.ValueData ELSE CASE WHEN COALESCE (MIFloat_ChangePercent.ValueData,0) <> 0 THEN (MovementItem.PriceWithVAT_new - MovementItem.PriceWithVAT_new * MIFloat_ChangePercent.ValueData/ 100) ELSE MovementItem.PriceWithVAT_new END END ::TFloat AS PricePromo_new
+             , CASE WHEN COALESCE (MIFloat_ChangePercent.ValueData,0) <> 0 THEN (MovementItem.PriceWithVAT - MovementItem.PriceWithVAT * MIFloat_ChangePercent.ValueData/ 100) ELSE CASE WHEN COALESCE (MIFloat_PricePromo.ValueData,0) <> 0 THEN MIFloat_PricePromo.ValueData ELSE MovementItem.PriceWithVAT END  END                    ::TFloat AS PricePromo
+             , CASE WHEN COALESCE (MIFloat_ChangePercent.ValueData,0) <> 0 THEN (MovementItem.PriceWithVAT_new - MovementItem.PriceWithVAT_new * MIFloat_ChangePercent.ValueData/ 100) ELSE CASE WHEN COALESCE (MIFloat_PricePromo_new.ValueData,0) <> 0 THEN MIFloat_PricePromo_new.ValueData ELSE MovementItem.PriceWithVAT_new END END ::TFloat AS PricePromo_new
 
              , MIString_Comment.ValueData              AS Comment                     -- ѕримечание
              , MovementItem.isErased                   AS isErased                    -- ”дален

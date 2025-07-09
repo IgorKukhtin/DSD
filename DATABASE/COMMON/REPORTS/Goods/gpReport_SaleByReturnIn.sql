@@ -29,7 +29,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKind
              , Amount        TFloat  -- 
              , AmountReturn  TFloat  -- 
              , AmountRem     TFloat  -- 
-             , Price         TFloat  -- 
+             , Price         TFloat  --   
              
              , InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, OperDatePartner TDateTime
              , InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, OperDate_Master TDateTime

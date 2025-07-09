@@ -6,6 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, In
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
@@ -16,12 +18,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
     IN inAmount                         TFloat    , --
     IN inSumm                           TFloat    , -- Cумм грн
     IN inPartnerCount                   TFloat    , --
-    IN inAmountPlan                     TFloat    , --
-    IN inPriceWithVAT                   TFloat    , --
+    IN inAmountPlan                     TFloat    , -- 
+    IN inPriceWithVAT_pr                TFloat    , -- Цена Прайс с НДС
+    IN inPriceWithOutVAT_pr             TFloat    , -- Цена Прайс без НДС
+    IN inPriceWithVAT                   TFloat    , -- Цена Прайс с скидкой из Документа
     IN inPriceWithVAT_new               TFloat    , -- Цена Прайс с новой скидкой из  PromoTradeCondition 
-   OUT outPriceWithOutVAT               TFloat    ,
-   OUT outSummWithOutVATPlan            TFloat    ,
-   OUT outSummWithVATPlan               TFloat    ,
+  -- OUT outPriceWithOutVAT               TFloat    ,
+  -- OUT outSummWithOutVATPlan            TFloat    ,
+  -- OUT outSummWithVATPlan               TFloat    ,
     IN inPromoTax                       TFloat    , --
     IN inChangePercent                  TFloat    , --
     IN inPricePromo                     TFloat    , --
@@ -92,8 +96,8 @@ BEGIN
 
 
     -- сохранили
-    SELECT tmp.ioId, tmp.outPriceWithOutVAT
-           INTO ioId, outPriceWithOutVAT
+    SELECT tmp.ioId--, tmp.outPriceWithOutVAT
+           INTO ioId--, outPriceWithOutVAT
     FROM lpInsertUpdate_MovementItem_PromoTradeGoods (ioId                   := ioId
                                                     , inMovementId           := inMovementId
                                                     , inPartnerId            := inPartnerId
@@ -102,7 +106,8 @@ BEGIN
                                                     , inSumm                 := inSumm
                                                     , inPartnerCount         := inPartnerCount
                                                     , inAmountPlan           := inAmountPlan
-                                                    , inPriceWithVAT         := inPriceWithVAT
+                                                    , inPriceWithVAT         := inPriceWithVAT_pr  --цена прайс - в селекте расчет цен со скидками
+                                                    , inPriceWithOutVAT      := inPriceWithOutVAT_pr  --цена прайс - в селекте расчет цен со скидками
                                                     , inPromoTax             := inPromoTax
                                                     , inChangePercent        := inChangePercent
                                                     , inPricePromo           := inPricePromo
@@ -172,11 +177,11 @@ BEGIN
                                                                );
      END IF;
 
-
+    /*
     -- вернули данные
     outSummWithOutVATPlan:= (inAmountPlan * outPriceWithOutVAT) ::TFloat;
     outSummWithVATPlan   := (inAmountPlan * inPriceWithVAT)     ::TFloat;
-
+    */
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

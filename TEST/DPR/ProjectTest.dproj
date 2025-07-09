@@ -5578,12 +5578,12 @@
 				<Form>Report_GoodsMI_ProductionSeparate_TotalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ReturnInChildDialog.pas">
-				<Form>ReturnInChildDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MoneyPlac_Object.pas">
 				<Form>MoneyPlaceCash_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReturnInChildDialog.pas">
+				<Form>ReturnInChildDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
