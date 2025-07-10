@@ -122,7 +122,8 @@ BEGIN
                      , MIFloat_ChangePercent.ValueData AS ChangePercent
                      , MIFloat_PricePromo.ValueData      ::TFloat AS PricePromo
                      , MIFloat_PricePromo_new.ValueData  ::TFloat AS PricePromo_new
-             
+                     
+                     , ROW_NUMBER() OVER (ORDER BY MovementItem.Id Desc) AS Ord        -- для вывода пустой строки
                 FROM tmpMI AS MovementItem
                      LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                           ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -256,18 +257,39 @@ BEGIN
                            ELSE 0
                       END ::TFloat AS Summ_pos                                                                         --Стоимость ввода позиции, грн
                FROM tmpData
-               WHERE COALESCE (tmpData.PromoTax,0) <> 0
+               WHERE COALESCE (tmpData.PromoTax,0) <> 0 
+               UNION ALL
+               --пустая строка
+               SELECT 5 AS Num
+                    , '' ::TVarChar AS Num_text
+                    , tmpData.Id
+                    , 0             AS GoodsId
+                    , 0             AS GoodsCode
+                    , '' ::TVarChar AS GoodsName
+                    , 0             AS GoodsKindId
+                    , '' ::TVarChar AS GoodsKindName
+                    , 0             AS MeasureId
+                    , '' ::TVarChar AS MeasureName
+                    , 0             AS PromoTax 
+                    , 0             AS PricePromo_new
+                    , 0 AS ChangePercent
+                    , 0  ::TFloat AS AmountPlan
+                    , 0  ::TFloat AS AmountPlan_weight
+                    , 0  ::TFloat AS SummPromo 
+                    , 0  ::TFloat AS Summ_pos
+               FROM tmpData
+               WHERE tmpData.Ord <> 1
                )
 
-        SELECT tmpData.NUM AS NUM
+        SELECT CASE WHEN tmpData.NUM = 5 THEN 0 ELSE tmpData.NUM END AS NUM
              , CASE WHEN tmpData.NUM IN (1, 2) THEN 1
                     WHEN tmpData.NUM IN (3, 4) THEN 2 
                     ELSE 3 
                END AS GroupNum
              , tmpData.Num_text
-             , tmpData.Id
+             , CASE WHEN tmpData.NUM = 5 THEN 0 ELSE tmpData.Id END AS Id
              , tmpData.GoodsId
-             , tmpData.GoodsCode
+             , tmpData.GoodsCode  ::Integer
              , tmpData.GoodsName
              , tmpData.GoodsKindId
              , tmpData.GoodsKindName

@@ -604,23 +604,23 @@ inherited PromoTradeForm: TPromoTradeForm
             Width = 70
           end
           object PricePromo: TcxGridDBColumn
-            Caption = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1090#1077#1082'.'#1079#1085'.)'
+            Caption = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1090#1077#1082'.'#1079#1085'.)  '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1090#1077#1082#1091#1097#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077')'
+            HeaderHint = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1090#1077#1082#1091#1097#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077') '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
             Width = 70
           end
           object PricePromo_new: TcxGridDBColumn
-            Caption = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1085#1086#1074'.'#1079#1085'.)'
+            Caption = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1085#1086#1074'.'#1079#1085'.)  '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
             DataBinding.FieldName = 'PricePromo_new'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1085#1086#1074#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077')'
+            HeaderHint = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1085#1086#1074#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077') '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
             Width = 70
           end
         end
@@ -995,6 +995,9 @@ inherited PromoTradeForm: TPromoTradeForm
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1088,6 +1091,9 @@ inherited PromoTradeForm: TPromoTradeForm
     object tsOkupaemost: TcxTabSheet
       Caption = '&4. '#1054#1082#1091#1087#1072#1077#1084#1086#1089#1090#1100
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridOkup: TcxGrid
         Left = 0
         Top = 0
