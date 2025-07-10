@@ -953,7 +953,6 @@ uses
   StickerSkinEdit in '..\..\Forms\Guides\StickerSkinEdit.pas' {StickerSkinEditForm: TParentForm},
   StickerSkin in '..\..\Forms\Guides\StickerSkin.pas' {StickerSkinForm: TParentForm},
   JuridicalRetailPartner_Object in '..\..\Forms\Guides\JuridicalRetailPartner_Object.pas' {JuridicalRetailPartner_ObjectForm: TParentForm},
-  Sticker_Object in '..\..\Forms\Guides\Sticker_Object.pas' {Sticker_ObjectForm: TParentForm},
   StickerProperty_Value in '..\..\Forms\Guides\StickerProperty_Value.pas' {StickerProperty_ValueForm: TParentForm},
   OrderInternalPackRemainsJournal in '..\..\Forms\Document\OrderInternalPackRemainsJournal.pas' {OrderInternalPackRemainsJournalForm: TParentForm},
   OrderInternalPackRemains in '..\..\Forms\Document\OrderInternalPackRemains.pas' {OrderInternalPackRemainsForm: TParentForm},
@@ -1589,7 +1588,8 @@ uses
   Report_GoodsMI_ProductionSeparate_TotalDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparate_TotalDialog.pas' {Report_GoodsMI_ProductionSeparate_TotalDialogForm: TParentForm},
   Report_GoodsMI_ProductionSeparate_Total in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparate_Total.pas' {Report_GoodsMI_ProductionSeparate_TotalForm: TParentForm},
   MoneyPlac_Object in '..\..\Forms\Guides\MoneyPlac_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm},
-  ReturnInChildDialog in '..\..\Forms\Document\ReturnInChildDialog.pas' {ReturnInChildDialogForm: TParentForm};
+  ReturnInChildDialog in '..\..\Forms\Document\ReturnInChildDialog.pas' {ReturnInChildDialogForm: TParentForm},
+  Sticker_Object in '..\..\Forms\Guides\Sticker_Object.pas' {Sticker_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

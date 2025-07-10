@@ -20,7 +20,8 @@ RETURNS TABLE (Id Integer,Code Integer, Comment TVarChar
              , Info TBlob, InfoTop TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
              , Value6 TFloat, Value7 TFloat, Value8 TFloat 
-             , Value9 TVarChar
+             , Value9 TVarChar 
+             , isDatStart Boolean, isDatEnd Boolean
              , isErased_Sticker Boolean
  
              , StickerPropertyId     Integer
@@ -152,6 +153,9 @@ BEGIN
 
                                 , ObjectString_Value9.ValueData ::TVarChar AS Value9
 
+                                , ObjectBoolean_DatStart.ValueData ::Boolean AS isDatStart
+                                , ObjectBoolean_DatEnd.ValueData   ::Boolean AS isDatEnd
+
                                 , Object_Sticker.isErased           AS isErased
                     
                            FROM (SELECT Object_Sticker.* 
@@ -245,7 +249,14 @@ BEGIN
                                  LEFT JOIN ObjectBlob AS ObjectBlob_InfoTop
                                                       ON ObjectBlob_InfoTop.ObjectId = Object_Sticker.Id 
                                                      AND ObjectBlob_InfoTop.DescId = zc_ObjectBlob_Sticker_InfoTop()
-                    
+
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_DatStart
+                                                         ON ObjectBoolean_DatStart.ObjectId = Object_Sticker.Id 
+                                                        AND ObjectBoolean_DatStart.DescId = zc_ObjectBoolean_Sticker_DatStart()
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_DatEnd
+                                                         ON ObjectBoolean_DatEnd.ObjectId = Object_Sticker.Id 
+                                                        AND ObjectBoolean_DatEnd.DescId = zc_ObjectBoolean_Sticker_DatEnd()
+
                                  LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
                                                       ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
                                                      AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
@@ -478,6 +489,9 @@ BEGIN
             , COALESCE (Object_Sticker.Value7, 0)            :: TFloat    AS Value7
             , COALESCE (Object_Sticker.Value8, 0)            :: TFloat    AS Value8
             , COALESCE (Object_Sticker.Value9, '')           :: TVarChar  AS Value9
+            
+            , COALESCE (Object_Sticker.isDatStart, FALSE)    :: Boolean   AS isDatStart
+            , COALESCE (Object_Sticker.isDatEnd, FALSE)      :: Boolean   AS isDatEnd
 
             , COALESCE (Object_Sticker.isErased, FALSE) :: Boolean  AS isErased_Sticker
 
@@ -616,7 +630,11 @@ BEGIN
                                 , ObjectFloat_Value6.ValueData      AS Value6
                                 , ObjectFloat_Value7.ValueData      AS Value7
                                 , ObjectFloat_Value8.ValueData      AS Value8
-                                , ObjectString_Value9.ValueData ::TVarChar AS Value9
+                                , ObjectString_Value9.ValueData ::TVarChar AS Value9 
+
+                                , ObjectBoolean_DatStart.ValueData ::Boolean AS isDatStart
+                                , ObjectBoolean_DatEnd.ValueData   ::Boolean AS isDatEnd
+
                                 , Object_Sticker.isErased           AS isErased
                     
                            FROM (SELECT Object_Sticker.* 
@@ -712,6 +730,13 @@ BEGIN
                                  LEFT JOIN ObjectBlob AS ObjectBlob_InfoTop
                                                       ON ObjectBlob_InfoTop.ObjectId = Object_Sticker.Id 
                                                      AND ObjectBlob_InfoTop.DescId = zc_ObjectBlob_Sticker_InfoTop()
+
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_DatStart
+                                                         ON ObjectBoolean_DatStart.ObjectId = Object_Sticker.Id 
+                                                        AND ObjectBoolean_DatStart.DescId = zc_ObjectBoolean_Sticker_DatStart()
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_DatEnd
+                                                         ON ObjectBoolean_DatEnd.ObjectId = Object_Sticker.Id 
+                                                        AND ObjectBoolean_DatEnd.DescId = zc_ObjectBoolean_Sticker_DatEnd()
                     
                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                                       ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
@@ -942,6 +967,8 @@ BEGIN
             , Object_Sticker.Value7
             , Object_Sticker.Value8
             , Object_Sticker.Value9 ::TVarChar
+            , COALESCE (Object_Sticker.isDatStart, FALSE) ::Boolean AS isDatStart
+            , COALESCE (Object_Sticker.isDatEnd, FALSE)   ::Boolean AS isDatEnd
             , Object_Sticker.isErased  AS isErased_Sticker
             
             , Object_StickerProperty.Id          AS StickerPropertyId

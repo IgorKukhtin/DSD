@@ -964,6 +964,24 @@ object Sticker_ObjectForm: TSticker_ObjectForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDatStart'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isDatStart'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDatEnd'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isDatEnd'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 432

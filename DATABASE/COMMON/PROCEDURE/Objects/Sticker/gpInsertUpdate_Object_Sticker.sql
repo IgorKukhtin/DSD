@@ -21,7 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker(
     IN inStickerSortName     TVarChar  , --
     IN inStickerNormName     TVarChar  , --
     IN inInfo                TBlob     , --
-    IN inInfoTop             TBlob     , --
+    IN inInfoTop             TBlob     , --       
     IN inValue1              TFloat    , -- значение цены
     IN inValue2              TFloat    , -- значение цены
     IN inValue3              TFloat    , --

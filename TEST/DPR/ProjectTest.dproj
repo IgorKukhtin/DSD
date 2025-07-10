@@ -3136,10 +3136,6 @@
 				<Form>JuridicalRetailPartner_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Sticker_Object.pas">
-				<Form>Sticker_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\StickerProperty_Value.pas">
 				<Form>StickerProperty_ValueForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5584,6 +5580,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReturnInChildDialog.pas">
 				<Form>ReturnInChildDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Sticker_Object.pas">
+				<Form>Sticker_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
