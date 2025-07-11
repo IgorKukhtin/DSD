@@ -98,7 +98,7 @@ BEGIN
     THEN 
         --Logist
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Report(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
-        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Report_(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue_new)::TFloat);
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Report_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue_new)::TFloat);
     END IF;   
 
     IF inOrd = 9
