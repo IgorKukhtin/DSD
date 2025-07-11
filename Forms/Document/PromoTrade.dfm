@@ -11,6 +11,7 @@ inherited PromoTradeForm: TPromoTradeForm
     Top = 179
     Width = 1164
     Height = 523
+    Properties.ActivePage = tsOkupaemost
     ExplicitTop = 179
     ExplicitWidth = 1164
     ExplicitHeight = 523
@@ -18,6 +19,7 @@ inherited PromoTradeForm: TPromoTradeForm
     ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
+      ExplicitTop = 0
       ExplicitWidth = 1164
       ExplicitHeight = 499
       inherited cxGrid: TcxGrid
@@ -646,6 +648,9 @@ inherited PromoTradeForm: TPromoTradeForm
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.3.'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object cxGridMov3: TcxGrid
               Left = 0
               Top = 0
@@ -719,6 +724,9 @@ inherited PromoTradeForm: TPromoTradeForm
           ClientRectTop = 24
           object tsAdvertising: TcxTabSheet
             Caption = '2.2. '#1048#1089#1090#1086#1088#1080#1103' '#1082#1083#1080#1077#1085#1090#1072
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object cxGridMov2: TcxGrid
               Left = 0
               Top = 0
@@ -817,6 +825,9 @@ inherited PromoTradeForm: TPromoTradeForm
           ClientRectTop = 24
           object cxTabSheet1: TcxTabSheet
             Caption = '2.1.'#1050#1086#1084#1084#1077#1088#1095#1077#1089#1082#1080#1077' '#1091#1089#1083#1086#1074#1080#1103
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object cxGridMov1: TcxGrid
               Left = 0
               Top = 0
@@ -884,6 +895,7 @@ inherited PromoTradeForm: TPromoTradeForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
+        ExplicitWidth = 8
       end
       object cxSplitter2: TcxSplitter
         Left = 0
@@ -893,6 +905,7 @@ inherited PromoTradeForm: TPromoTradeForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridPromoStateKind
+        ExplicitWidth = 8
       end
       object cxGridPromoStateKind: TcxGrid
         Left = 0
@@ -1091,9 +1104,6 @@ inherited PromoTradeForm: TPromoTradeForm
     object tsOkupaemost: TcxTabSheet
       Caption = '&4. '#1054#1082#1091#1087#1072#1077#1084#1086#1089#1090#1100
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridOkup: TcxGrid
         Left = 0
         Top = 0
@@ -1356,6 +1366,8 @@ inherited PromoTradeForm: TPromoTradeForm
           object Num_ch4: TcxGridDBColumn
             Caption = #8470
             DataBinding.FieldName = 'Num'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1370,6 +1382,8 @@ inherited PromoTradeForm: TPromoTradeForm
           object GoodsCode_ch4: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1474,6 +1488,17 @@ inherited PromoTradeForm: TPromoTradeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object PriceIn1_ch4: TcxGridDBColumn
+            Caption = #1057#1077#1073'-'#1090#1100', '#1075#1088#1085
+            DataBinding.FieldName = 'PriceIn1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1073'-'#1090#1100', '#1075#1088#1085
+            Options.Editing = False
+            Width = 112
           end
         end
         object cxGridLevelOkup: TcxGridLevel
@@ -2216,6 +2241,9 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spInsertUpdateMIMessage
         end>
       Caption = 'actUpdateDataSetMessage'
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
     end
     object InsertRecord: TInsertRecord [20]
       Category = 'Goods'

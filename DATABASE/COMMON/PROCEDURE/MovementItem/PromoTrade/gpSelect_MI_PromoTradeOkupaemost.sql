@@ -26,7 +26,22 @@ RETURNS TABLE (
       , AmountPlan        TFloat     --Ожидаемый среднемесячный объем продаж в Ед. Изм.
       , AmountPlan_weight TFloat     --Ожидаемый среднемесячный объем продаж, кг
       , SummPromo         TFloat     --Ожидаемый среднемесячный объем продаж, грн
-      , Summ_pos          TFloat     --Стоимость ввода позиции, грн
+      , Summ_pos          TFloat     --Стоимость ввода позиции, грн 
+      , PriceIn           TFloat     --Себ-ть, грн 
+      , ChangePrice       TFloat     --Расходы (переменные), грн
+      , ChangePrice_all   TFloat     --Расходы (все), грн
+      , Marga1            TFloat     --Маржа 1, грн 
+      , Marga2            TFloat     --Маржа 2, грн
+      , Due_Pass_year1    TFloat     --Ожидаемый проход1 в год, грн
+      , Due_Pass_year2    TFloat     --Ожидаемый проход2 в год, грн
+      , MarketSumm_dop    TFloat     --Доп маркетинг, год.
+      , Summ_bonus        TFloat     --Сумарный бонус, год.
+      , PersentOnCredit   TFloat     --% по кредиту, год
+      , TotalCost         TFloat     --Итого затрат, ГОД 
+      , Profit1           TFloat     --Прибыль1, грн год
+      , Profit2           TFloat     --Прибыль2, грн год
+      , PaybackPeriod1    TFloat     --Период окупаемости1, мес.
+      , PaybackPeriod2    TFloat     --Период окупаемости2, мес.
 )
 AS
 $BODY$
@@ -37,6 +52,12 @@ $BODY$
     DECLARE vbMovementId_PromoTradeCondition Integer;
             vbChangePercent TFloat;
             vbChangePercent_new  TFloat;
+            vbMarketSumm    TFloat;
+            vbRetroBonus    TFloat;
+            vbMarket        TFloat;
+            vbReturnIn      TFloat;
+            vbLogist        TFloat;
+            vbReport        TFloat;
             
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -69,16 +90,107 @@ BEGIN
                         WHERE MovementFloat.MovementId = inMovementId
                           AND MovementFloat.DescId = zc_MovementFloat_ChangePercent()
                         );
-
+    --"Скидка Значение новое"
     vbChangePercent_new := (SELECT MovementFloat.ValueData
                             FROM MovementFloat
                             WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
                               AND MovementFloat.DescId = zc_MovementFloat_ChangePercent_new()
                             );
+    --"Маркетинг (год), грн - Значение текущее"
+    vbMarketSumm := (SELECT MovementFloat.ValueData
+                     FROM MovementFloat
+                     WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
+                       AND MovementFloat.DescId = zc_MovementFloat_MarketSumm()
+                     ); 
+ 
+    --"Ретро бонус - Значение текущее"
+    vbRetroBonus := (SELECT MovementFloat.ValueData
+                     FROM MovementFloat
+                     WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
+                       AND MovementFloat.DescId = zc_MovementFloat_RetroBonus()
+                     );
+    --"Маркетинговый бюджет - Значение текущее" 
+    vbMarket := (SELECT MovementFloat.ValueData
+                 FROM MovementFloat
+                 WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
+                   AND MovementFloat.DescId = zc_MovementFloat_Market()
+                 );
+    --"Компенсация возвратов - Значение текущее"
+    vbReturnIn := (SELECT MovementFloat.ValueData
+                   FROM MovementFloat
+                   WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
+                     AND MovementFloat.DescId = zc_MovementFloat_ReturnIn()
+                   );                                   
+                     
+     --'Логистический бонус - Значение текущее" 
+    vbLogist := (SELECT MovementFloat.ValueData
+                 FROM MovementFloat
+                 WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
+                   AND MovementFloat.DescId = zc_MovementFloat_Logist()
+                 );
+     --'Отчеты - Значение текущее" 
+    vbReport := (SELECT MovementFloat.ValueData
+                 FROM MovementFloat
+                 WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
+                   AND MovementFloat.DescId = zc_MovementFloat_Report()
+                 );
 
+                     
     RETURN QUERY
     WITH
-    tmpMI AS (SELECT MovementItem.*
+    tmpMIFloat_Condition AS (SELECT MovementFloat.ValueData
+                             FROM MovementFloat
+                             WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
+                             ) 
+  , tmpParam_Condition AS (SELECT MovementFloat_DelayDay.ValueData        AS DelayDay
+                                , MovementFloat_RetroBonus.ValueData      AS RetroBonus
+                                , MovementFloat_RetroBonus_new.ValueData  AS RetroBonus_new
+                                , MovementFloat_Market.ValueData          AS Market
+                                , MovementFloat_Market_new.ValueData      AS Market_new
+                                , MovementFloat_ReturnIn.ValueData        AS ReturnIn
+                                , MovementFloat_ReturnIn_new.ValueData    AS ReturnIn_new
+                                , MovementFloat_Logist.ValueData          AS Logist
+                                , MovementFloat_Logist_new.ValueData      AS Logist_new
+                                , MovementFloat_Report.ValueData          AS Report
+                                , MovementFloat_Report_new.ValueData      AS Report_new
+                           FROM Movement
+                                LEFT JOIN MovementFloat AS MovementFloat_DelayDay
+                                                        ON MovementFloat_DelayDay.MovementId = inMovementId
+                                                       AND MovementFloat_DelayDay.DescId = zc_MovementFloat_DelayDay() 
+                                LEFT JOIN tmpMIFloat_Condition AS MovementFloat_RetroBonus 
+                                                               ON MovementFloat_RetroBonus.MovementId = vbMovementId_PromoTradeCondition
+                                                              AND MovementFloat_RetroBonus.DescId = zc_MovementFloat_RetroBonus()
+                                LEFT JOIN tmpMIFloat_Condition AS MovementFloat_RetroBonus_new 
+                                                               ON MovementFloat_RetroBonus_new.MovementId = vbMovementId_PromoTradeCondition
+                                                              AND MovementFloat_RetroBonus_new.DescId = zc_MovementFloat_RetroBonus_new()
+                                LEFT JOIN tmpMIFloat_Condition AS MovementFloat_Market 
+                                                               ON MovementFloat_Market.MovementId = vbMovementId_PromoTradeCondition
+                                                              AND MovementFloat_Market.DescId = zc_MovementFloat_Market()
+                                LEFT JOIN tmpMIFloat_Condition AS MovementFloat_Market_new 
+                                                               ON MovementFloat_Market_new.MovementId = vbMovementId_PromoTradeCondition
+                                                              AND MovementFloat_Market_new.DescId = zc_MovementFloat_Market_new()
+                                LEFT JOIN tmpMIFloat_Condition AS MovementFloat_ReturnIn
+                                                               ON MovementFloat_ReturnIn.MovementId = vbMovementId_PromoTradeCondition
+                                                              AND MovementFloat_ReturnIn.DescId = zc_MovementFloat_ReturnIn()
+                                LEFT JOIN tmpMIFloat_Condition AS MovementFloat_ReturnIn_new
+                                                               ON MovementFloat_ReturnIn_new.MovementId = vbMovementId_PromoTradeCondition
+                                                              AND MovementFloat_ReturnIn_new.DescId = zc_MovementFloat_ReturnIn_new()
+                                LEFT JOIN tmpMIFloat_Condition AS MovementFloat_Report
+                                                               ON MovementFloat_Report.MovementId = vbMovementId_PromoTradeCondition
+                                                              AND MovementFloat_Report.DescId = zc_MovementFloat_Report()
+                                LEFT JOIN tmpMIFloat_Condition AS MovementFloat_Report_new
+                                                               ON MovementFloat_Report_new.MovementId = vbMovementId_PromoTradeCondition
+                                                              AND MovementFloat_Report_new.DescId = zc_MovementFloat_Report_new()
+                                LEFT JOIN tmpMIFloat_Condition AS MovementFloat_Logist
+                                                               ON MovementFloat_Logist.MovementId = vbMovementId_PromoTradeCondition
+                                                              AND MovementFloat_Logist.DescId = zc_MovementFloat_Logist()
+                                LEFT JOIN tmpMIFloat_Condition AS MovementFloat_Logist_new
+                                                               ON MovementFloat_Logist_new.MovementId = vbMovementId_PromoTradeCondition
+                                                              AND MovementFloat_Logist_new.DescId = zc_MovementFloat_Logist_new()
+                           WHERE Movement = vbMovementId_PromoTradeCondition
+                          )             
+
+  , tmpMI AS (SELECT MovementItem.*
                    , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
               FROM MovementItem 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -97,7 +209,9 @@ BEGIN
                                                     , zc_MIFloat_Summ()
                                                     , zc_MIFloat_ChangePercent()
                                                     , zc_MIFloat_PricePromo()
-                                                    , zc_MIFloat_PricePromo_new()
+                                                    , zc_MIFloat_PricePromo_new() 
+                                                    , zc_MIFloat_PriceIn1() 
+                                                    , zc_MIFloat_ChangePrice()
                                                      )
                    )       
   , tmpData AS (
@@ -123,7 +237,12 @@ BEGIN
                      , MIFloat_PricePromo.ValueData      ::TFloat AS PricePromo
                      , MIFloat_PricePromo_new.ValueData  ::TFloat AS PricePromo_new
                      
-                     , ROW_NUMBER() OVER (ORDER BY MovementItem.Id Desc) AS Ord        -- для вывода пустой строки
+                     , MIFloat_PriceIn1.ValueData        ::TFloat AS PriceIn1
+                     , MIFloat_ChangePrice.ValueData     ::TFloat AS ChangePrice            
+                     
+                     , ROW_NUMBER() OVER (ORDER BY MovementItem.Id Desc) AS Ord        -- для вывода пустой строки 
+                     
+                     , tmpParam_Condition.*
                 FROM tmpMI AS MovementItem
                      LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                           ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -155,10 +274,17 @@ BEGIN
                                           ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                          AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
 
+                     LEFT JOIN tmpMIFloat AS MIFloat_PriceIn1
+                                          ON MIFloat_PriceIn1.MovementItemId = MovementItem.Id
+                                         AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
+                     LEFT JOIN tmpMIFloat AS MIFloat_ChangePrice
+                                          ON MIFloat_ChangePrice.MovementItemId = MovementItem.Id
+                                         AND MIFloat_ChangePrice.DescId = zc_MIFloat_ChangePrice()
+
                      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
                      LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MovementItem.GoodsKindId
                      
-                     
+                     LEFT JOIN tmpParam_Condition ON 1 = 1
                )
 
   , tmpRes AS (--Текущие условия
@@ -183,6 +309,15 @@ BEGIN
                            THEN (tmpData.Summ /tmpData.AmountPlan * (COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0)))
                            ELSE 0
                       END ::TFloat AS Summ_pos                                                                         --Стоимость ввода позиции, грн
+                    , tmpData.PriceIn1 ::TFloat   AS PriceIn                                                           --Себ-ть, грн
+                    , tmpData.ChangePrice ::TFloat                                                                     --Расходы (переменные), грн
+                    , (COALESCE (tmpData.RetroBonus,0) 
+                     + COALESCE (tmpData.Market,0) 
+                     + COALESCE (tmpData.ReturnIn,0) 
+                     + COALESCE (tmpData.Logist,0) 
+                     + COALESCE (tmpData.Report,0)) AS Sum1_Condition   -- "Значение текущее": "Ретро бонус" + "Маркетинговый бюджет" + "Компенсация возвратов" + "Логистический бонус" + "Отчеты"
+                    , tmpData.DelayDay
+                    , tmpData.MarketSumm
                FROM tmpData
              UNION ALL     
                --Текущие условия (Акция)
@@ -206,7 +341,16 @@ BEGIN
                     , CASE WHEN COALESCE (tmpData.AmountPlan,0) <> 0 
                            THEN tmpData.Summ /tmpData.AmountPlan * COALESCE (tmpData.AmountPlan_calc,0)
                            ELSE 0
-                      END ::TFloat AS Summ_pos                                                                         --Стоимость ввода позиции, грн
+                      END ::TFloat AS Summ_pos                                                                          --Стоимость ввода позиции, грн
+                    , tmpData.PriceIn1 ::TFloat   AS PriceIn                                                            --Себ-ть, грн
+                    , tmpData.ChangePrice ::TFloat                                                                     --Расходы (переменные), грн
+                    , (COALESCE (tmpData.RetroBonus,0) 
+                     + COALESCE (tmpData.Market,0) 
+                     + COALESCE (tmpData.ReturnIn,0) 
+                     + COALESCE (tmpData.Logist,0) 
+                     + COALESCE (tmpData.Report,0)) AS Sum1_Condition     -- "Значение текущее": "Ретро бонус" + "Маркетинговый бюджет" + "Компенсация возвратов" + "Логистический бонус" + "Отчеты"
+                    , tmpData.DelayDay
+                    , tmpData.MarketSumm
                FROM tmpData
                WHERE COALESCE (tmpData.PromoTax,0) <> 0
             UNION ALL
@@ -232,6 +376,15 @@ BEGIN
                            THEN (tmpData.Summ /tmpData.AmountPlan * (COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0)))
                            ELSE 0
                       END ::TFloat AS Summ_pos                                                                         --Стоимость ввода позиции, грн
+                    , tmpData.PriceIn1 ::TFloat   AS PriceIn                                                           --Себ-ть, грн
+                    , tmpData.ChangePrice ::TFloat                                                                     --Расходы (переменные), грн 
+                    , (COALESCE (tmpData.RetroBonus_new,0) 
+                     + COALESCE (tmpData.Market_new,0) 
+                     + COALESCE (tmpData.ReturnIn_new,0) 
+                     + COALESCE (tmpData.Logist_new,0) 
+                     + COALESCE (tmpData.Report_new,0)) AS Sum1_Condition     -- "Значение текущее": "Ретро бонус" + "Маркетинговый бюджет" + "Компенсация возвратов" + "Логистический бонус" + "Отчеты"  
+                    , tmpData.DelayDay
+                    , tmpData.MarketSumm
                FROM tmpData
             UNION ALL
                --Новые условия (Акция) 
@@ -256,6 +409,15 @@ BEGIN
                            THEN tmpData.Summ /tmpData.AmountPlan * COALESCE (tmpData.AmountPlan_calc,0)
                            ELSE 0
                       END ::TFloat AS Summ_pos                                                                         --Стоимость ввода позиции, грн
+                    , tmpData.PriceIn1 ::TFloat   AS PriceIn                                                           --Себ-ть, грн
+                    , tmpData.ChangePrice ::TFloat                                                                     --Расходы (переменные), грн
+                    , (COALESCE (tmpData.RetroBonus_new,0) 
+                     + COALESCE (tmpData.Market_new,0) 
+                     + COALESCE (tmpData.ReturnIn_new,0) 
+                     + COALESCE (tmpData.Logist_new,0) 
+                     + COALESCE (tmpData.Report_new,0)) AS Sum1_Condition     -- "Значение текущее": "Ретро бонус" + "Маркетинговый бюджет" + "Компенсация возвратов" + "Логистический бонус" + "Отчеты" 
+                    , tmpData.DelayDay
+                    , tmpData.MarketSumm
                FROM tmpData
                WHERE COALESCE (tmpData.PromoTax,0) <> 0 
                UNION ALL
@@ -277,16 +439,78 @@ BEGIN
                     , 0  ::TFloat AS AmountPlan_weight
                     , 0  ::TFloat AS SummPromo 
                     , 0  ::TFloat AS Summ_pos
+                    , 0  ::TFloat AS PriceIn
+                    , 0  ::TFloat AS ChangePrice
+                    , 0  ::TFloat AS Sum1_Condition 
+                    , 0  ::TFloat AS DelayDay
+                    , 0  ::TFloat AS MarketSumm
                FROM tmpData
                WHERE tmpData.Ord <> 1
                )
+    --
+    , tmpResult AS (SELECT tmpData.*
+                         , CASE WHEN tmpData.NUM NOT IN (2) THEN 0
+                                ELSE CASE WHEN COALESCE (tmpData.Due_Pass_year1,0) <> 0 THEN tmpData.MarketSumm * tmpRes2.Due_Pass_year1 / tmpData.Due_Pass_year1 ELSE 0 END
+                           END ::TFloat AS MarketSumm_dop                                                                                        -- Доп маркетинг, год.
+            
+                         , (COALESCE (tmpData.SummPromo,0) * COALESCE (tmpData.Sum1_Condition,0) * 12)  ::TFloat  AS Summ_bonus                  --Сумарный бонус, год. 
+                             
+                             
+                         , ( (COALESCE (tmpData.SummPromo,0) / 100 * 18.5) / 365 * COALESCE(tmpData.DelayDay) * 12)  ::TFloat AS PersentOnCredit --% по кредиту, год
+                         , (tmpData.Summ_pos 
+                            + CASE WHEN tmpData.NUM NOT IN (2) THEN 0
+                                   ELSE CASE WHEN COALESCE (tmpData.Due_Pass_year1,0) <> 0 THEN tmpData.MarketSumm * tmpRes2.Due_Pass_year1 / tmpData.Due_Pass_year1 ELSE 0 END
+                              END
+                            + (COALESCE (tmpData.SummPromo,0) * COALESCE (tmpData.Sum1_Condition,0) * 12)
+                            + ((COALESCE (tmpData.SummPromo,0) / 100 * 18.5) / 365 * COALESCE(tmpData.DelayDay) * 12)
+                            )                        ::TFloat AS TotalCost                                                                       --Итого затрат, ГОД
+                    FROM 
+                        (SELECT tmpData.NUM
+                             , CASE WHEN tmpData.NUM IN (1, 2) THEN 1
+                                    WHEN tmpData.NUM IN (3, 4) THEN 2 
+                                    ELSE 3 
+                               END AS GroupNum
+                             , tmpData.Num_text
+                             , tmpData.Id
+                             , tmpData.GoodsId
+                             , tmpData.GoodsCode  ::Integer
+                             , tmpData.GoodsName
+                             , tmpData.GoodsKindId
+                             , tmpData.GoodsKindName
+                             , tmpData.MeasureName
+                             , tmpData.PromoTax          ::TFloat
+                             , tmpData.PricePromo        ::TFloat
+                             , tmpData.ChangePercent     ::TFloat
+                             , tmpData.AmountPlan        ::TFloat                              --Ожидаемый среднемесячный объем продаж в Ед. Изм.
+                             , tmpData.AmountPlan_weight ::TFloat                              --Ожидаемый среднемесячный объем продаж, кг
+                             , tmpData.SummPromo         ::TFloat                              --Ожидаемый среднемесячный объем продаж, грн
+                             , tmpRes2.SummPromo         ::TFloat   AS SummPromo_pos           --Ожидаемый среднемесячный объем продаж, грн (по позиции (1,3) для расчета Доп маркетинг, год.)
+                             , tmpData.Summ_pos          ::TFloat                              --Стоимость ввода позиции, грн 
+                             , tmpData.PriceIn           ::TFloat                              --Себ-ть, грн
+                             , tmpData.ChangePrice       ::TFloat                              --Расходы (переменные), грн 
+                             , (tmpData.ChangePrice / 0.6) ::TFloat  AS ChangePrice_all        --Расходы (все), грн 
+                             , ( COALESCE (tmpData.PricePromo,0) - COALESCE (tmpData.PriceIn,0) - COALESCE ((tmpData.ChangePrice / 0.6), 0) ) ::TFloat AS Marga1     --Маржа 1, грн 
+                             , ( COALESCE (tmpData.PricePromo,0) - COALESCE (tmpData.PriceIn,0) - COALESCE (tmpData.ChangePrice,0) )          ::TFloat AS Marga2     --Маржа 2, грн   
+                
+                             , (( COALESCE (tmpData.PricePromo,0) - COALESCE (tmpData.PriceIn,0) - COALESCE ((tmpData.ChangePrice / 0.6), 0) )
+                                * tmpData.AmountPlan)    ::TFloat AS Due_Pass_year1                                                                                  --Ожидаемый проход1 в год, грн
+                
+                             , (( COALESCE (tmpData.PricePromo,0) - COALESCE (tmpData.PriceIn,0) - COALESCE (tmpData.ChangePrice, 0) )
+                                * tmpData.AmountPlan)    ::TFloat AS Due_Pass_year2                                                                                  --Ожидаемый проход2 в год, грн
+                             , tmpData.Sum1_Condition    ::TFloat
+                             , tmpData.DelayDay          ::TFloat
+                             , tmpData.MarketSumm        ::TFloat
+                        FROM tmpRes AS tmpData
+                        ) AS tmpData 
+                         --
+                         LEFT JOIN tmpRes AS tmpRes2 ON tmpRes2.Id = tmpData.Id
+                                                    AND tmpRes2.NUM = tmpData.NUM - 1                         
+                     )
+
 
         SELECT CASE WHEN tmpData.NUM = 5 THEN 0 ELSE tmpData.NUM END AS NUM
-             , CASE WHEN tmpData.NUM IN (1, 2) THEN 1
-                    WHEN tmpData.NUM IN (3, 4) THEN 2 
-                    ELSE 3 
-               END AS GroupNum
-             , tmpData.Num_text
+             , tmpData.GroupNum
+             , tmpData.Num_text ::TVarChar
              , CASE WHEN tmpData.NUM = 5 THEN 0 ELSE tmpData.Id END AS Id
              , tmpData.GoodsId
              , tmpData.GoodsCode  ::Integer
@@ -296,14 +520,38 @@ BEGIN
              , tmpData.MeasureName
              , tmpData.PromoTax          ::TFloat
              , tmpData.PricePromo        ::TFloat
-             --, tmpData.PricePromo_new    ::TFloat
              , tmpData.ChangePercent     ::TFloat
-             --, tmpData.PriceWithVAT      ::TFloat                              --Цена план (мес.), с учетом НДС
              , tmpData.AmountPlan        ::TFloat                              --Ожидаемый среднемесячный объем продаж в Ед. Изм.
              , tmpData.AmountPlan_weight ::TFloat                              --Ожидаемый среднемесячный объем продаж, кг
              , tmpData.SummPromo         ::TFloat                              --Ожидаемый среднемесячный объем продаж, грн
-             , tmpData.Summ_pos          ::TFloat                              --Стоимость ввода позиции, грн
-        FROM tmpRes AS tmpData
+             , tmpData.Summ_pos          ::TFloat                              --Стоимость ввода позиции, грн 
+             , tmpData.PriceIn           ::TFloat                              --Себ-ть, грн
+             , tmpData.ChangePrice       ::TFloat                              --Расходы (переменные), грн 
+             , tmpData.ChangePrice_all   ::TFloat                              --Расходы (все), грн 
+             , tmpData.Marga1            ::TFloat                              --Маржа 1, грн 
+             , tmpData.Marga2            ::TFloat                              --Маржа 2, грн  
+             , tmpData.Due_Pass_year1    ::TFloat                              --Ожидаемый проход1 в год, грн
+             , tmpData.Due_Pass_year2    ::TFloat                              --Ожидаемый проход2 в год, грн
+             , tmpData.MarketSumm_dop    ::TFloat                              --Доп маркетинг, год.
+             , tmpData.Summ_bonus        ::TFloat                              --Сумарный бонус, год. 
+             , tmpData.TotalCost         ::TFloat                              --Итого затрат, ГОД
+
+             , (COALESCE (tmpData.Due_Pass_year1,0)
+              - COALESCE (tmpData.TotalCost,0)) ::TFloat AS Profit1            --Прибыль1, грн год
+     
+             , (COALESCE (tmpData.Due_Pass_year2,0)
+              - COALESCE (tmpData.TotalCost,0)) ::TFloat AS Profit2            --Прибыль2, грн год
+     
+             , CASE WHEN COALESCE (tmpData.Due_Pass_year1,0) <> 0
+                    THEN (COALESCE (tmpData.TotalCost,0)/ COALESCE (tmpData.Due_Pass_year1,0))
+                    ELSE 0
+               END                       ::TFloat AS PaybackPeriod1            --Период окупаемости1, мес.
+             , CASE WHEN COALESCE (tmpData.Due_Pass_year1,0) <> 0
+                    THEN (COALESCE (tmpData.TotalCost,0)/ COALESCE (tmpData.Due_Pass_year1,0))
+                    ELSE 0
+               END                       ::TFloat AS PaybackPeriod2            --Период окупаемости2, мес.
+
+        FROM tmpResult AS tmpData 
         ORDER BY tmpData.Id
                , tmpData.NUM
         ;
