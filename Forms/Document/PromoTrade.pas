@@ -253,6 +253,13 @@ type
     OkupaemostDS: TDataSource;
     spSelectOkupaemost: TdsdStoredProc;
     Num_text_ch4: TcxGridDBColumn;
+    spInsertUpdate_MI_PriceCalc: TdsdStoredProc;
+    actInsertUpdate_MI_PriceCalc: TdsdExecStoredProc;
+    actRefreshCalc: TdsdDataSetRefresh;
+    macUpdate_calc: TMultiAction;
+    bbUpdate_calc: TdxBarButton;
+    spUpdateMI_Pricein: TdsdStoredProc;
+    actUpdateOkupDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

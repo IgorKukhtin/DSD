@@ -28,6 +28,7 @@ RETURNS TABLE (
       , SummPromo         TFloat     --Ожидаемый среднемесячный объем продаж, грн
       , Summ_pos          TFloat     --Стоимость ввода позиции, грн 
       , PriceIn           TFloat     --Себ-ть, грн 
+      , PriceIn_calc      TFloat     --Себ-ть, грн  (расчет)
       , ChangePrice       TFloat     --Расходы (переменные), грн
       , ChangePrice_all   TFloat     --Расходы (все), грн
       , Marga1            TFloat     --Маржа 1, грн 
@@ -175,6 +176,7 @@ BEGIN
                                                     , zc_MIFloat_PricePromo()
                                                     , zc_MIFloat_PricePromo_new() 
                                                     , zc_MIFloat_PriceIn1() 
+                                                    , zc_MIFloat_PriceIn1_Calc()
                                                     , zc_MIFloat_ChangePrice()
                                                      )
                    )       
@@ -201,7 +203,8 @@ BEGIN
                      , MIFloat_PricePromo.ValueData      ::TFloat AS PricePromo
                      , MIFloat_PricePromo_new.ValueData  ::TFloat AS PricePromo_new
                      
-                     , MIFloat_PriceIn1.ValueData        ::TFloat AS PriceIn1
+                     , MIFloat_PriceIn1.ValueData        ::TFloat AS PriceIn
+                     , MIFloat_PriceIn1_Calc.ValueData   ::TFloat AS PriceIn_calc
                      , MIFloat_ChangePrice.ValueData     ::TFloat AS ChangePrice            
                      
                      , ROW_NUMBER() OVER (ORDER BY MovementItem.Id Desc) AS Ord        -- для вывода пустой строки 
@@ -241,6 +244,10 @@ BEGIN
                      LEFT JOIN tmpMIFloat AS MIFloat_PriceIn1
                                           ON MIFloat_PriceIn1.MovementItemId = MovementItem.Id
                                          AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
+                     LEFT JOIN tmpMIFloat AS MIFloat_PriceIn1_Calc
+                                          ON MIFloat_PriceIn1_Calc.MovementItemId = MovementItem.Id
+                                         AND MIFloat_PriceIn1_Calc.DescId = zc_MIFloat_PriceIn1_Calc()
+
                      LEFT JOIN tmpMIFloat AS MIFloat_ChangePrice
                                           ON MIFloat_ChangePrice.MovementItemId = MovementItem.Id
                                          AND MIFloat_ChangePrice.DescId = zc_MIFloat_ChangePrice()
@@ -273,7 +280,8 @@ BEGIN
                            THEN (tmpData.Summ /tmpData.AmountPlan * (COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0)))
                            ELSE 0
                       END ::TFloat AS Summ_pos                                                                         --Стоимость ввода позиции, грн
-                    , tmpData.PriceIn1 ::TFloat   AS PriceIn                                                           --Себ-ть, грн
+                    , tmpData.PriceIn      ::TFloat   AS PriceIn                                                       --Себ-ть, грн
+                    , tmpData.PriceIn_calc ::TFloat   AS PriceIn_calc                                                  --Себ-ть, грн
                     , tmpData.ChangePrice ::TFloat                                                                     --Расходы (переменные), грн
                     , (COALESCE (tmpData.RetroBonus,0) 
                      + COALESCE (tmpData.Market,0) 
@@ -306,7 +314,8 @@ BEGIN
                            THEN tmpData.Summ /tmpData.AmountPlan * COALESCE (tmpData.AmountPlan_calc,0)
                            ELSE 0
                       END ::TFloat AS Summ_pos                                                                          --Стоимость ввода позиции, грн
-                    , tmpData.PriceIn1 ::TFloat   AS PriceIn                                                            --Себ-ть, грн
+                    , tmpData.PriceIn      ::TFloat   AS PriceIn                                                       --Себ-ть, грн
+                    , tmpData.PriceIn_calc ::TFloat   AS PriceIn_calc                                                  --Себ-ть, грн
                     , tmpData.ChangePrice ::TFloat                                                                     --Расходы (переменные), грн
                     , (COALESCE (tmpData.RetroBonus,0) 
                      + COALESCE (tmpData.Market,0) 
@@ -340,7 +349,8 @@ BEGIN
                            THEN (tmpData.Summ /tmpData.AmountPlan * (COALESCE (tmpData.AmountPlan,0) - COALESCE (tmpData.AmountPlan_calc,0)))
                            ELSE 0
                       END ::TFloat AS Summ_pos                                                                         --Стоимость ввода позиции, грн
-                    , tmpData.PriceIn1 ::TFloat   AS PriceIn                                                           --Себ-ть, грн
+                    , tmpData.PriceIn      ::TFloat   AS PriceIn                                                       --Себ-ть, грн
+                    , tmpData.PriceIn_calc ::TFloat   AS PriceIn_calc                                                  --Себ-ть, грн
                     , tmpData.ChangePrice ::TFloat                                                                     --Расходы (переменные), грн 
                     , (COALESCE (tmpData.RetroBonus_new,0) 
                      + COALESCE (tmpData.Market_new,0) 
@@ -373,7 +383,8 @@ BEGIN
                            THEN tmpData.Summ /tmpData.AmountPlan * COALESCE (tmpData.AmountPlan_calc,0)
                            ELSE 0
                       END ::TFloat AS Summ_pos                                                                         --Стоимость ввода позиции, грн
-                    , tmpData.PriceIn1 ::TFloat   AS PriceIn                                                           --Себ-ть, грн
+                    , tmpData.PriceIn      ::TFloat   AS PriceIn                                                       --Себ-ть, грн
+                    , tmpData.PriceIn_calc ::TFloat   AS PriceIn_calc                                                  --Себ-ть, грн
                     , tmpData.ChangePrice ::TFloat                                                                     --Расходы (переменные), грн
                     , (COALESCE (tmpData.RetroBonus_new,0) 
                      + COALESCE (tmpData.Market_new,0) 
@@ -404,6 +415,7 @@ BEGIN
                     , 0  ::TFloat AS SummPromo 
                     , 0  ::TFloat AS Summ_pos
                     , 0  ::TFloat AS PriceIn
+                    , 0  ::TFloat AS PriceIn_calc
                     , 0  ::TFloat AS ChangePrice
                     , 0  ::TFloat AS Sum1_Condition 
                     , 0  ::TFloat AS DelayDay
@@ -434,6 +446,7 @@ BEGIN
                              , tmpData.SummPromo         ::TFloat                              --Ожидаемый среднемесячный объем продаж, грн
                              , tmpData.Summ_pos          ::TFloat                              --Стоимость ввода позиции, грн 
                              , tmpData.PriceIn           ::TFloat                              --Себ-ть, грн
+                             , tmpData.PriceIn_calc      ::TFloat                              --Себ-ть, грн (расчет)
                              , tmpData.ChangePrice       ::TFloat                              --Расходы (переменные), грн 
                              , (tmpData.ChangePrice / 0.6) ::TFloat  AS ChangePrice_all        --Расходы (все), грн 
                              , ( COALESCE (tmpData.PricePromo,0) - COALESCE (tmpData.PriceIn,0) - COALESCE ((tmpData.ChangePrice / 0.6), 0) ) ::TFloat AS Marga1     --Маржа 1, грн 
@@ -490,6 +503,7 @@ BEGIN
              , tmpData.SummPromo         ::TFloat                              --Ожидаемый среднемесячный объем продаж, грн
              , tmpData.Summ_pos          ::TFloat                              --Стоимость ввода позиции, грн 
              , tmpData.PriceIn           ::TFloat                              --Себ-ть, грн
+             , tmpData.PriceIn_calc      ::TFloat                              --Себ-ть, грн  (расчет)
              , tmpData.ChangePrice       ::TFloat                              --Расходы (переменные), грн 
              , tmpData.ChangePrice_all   ::TFloat                              --Расходы (все), грн 
              , tmpData.Marga1            ::TFloat                              --Маржа 1, грн 

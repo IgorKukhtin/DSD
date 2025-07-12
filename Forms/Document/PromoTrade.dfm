@@ -3,7 +3,6 @@ inherited PromoTradeForm: TPromoTradeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 702
   ClientWidth = 1164
-  ExplicitTop = -86
   ExplicitWidth = 1180
   ExplicitHeight = 741
   PixelsPerInch = 96
@@ -996,9 +995,6 @@ inherited PromoTradeForm: TPromoTradeForm
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1485,6 +1481,16 @@ inherited PromoTradeForm: TPromoTradeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1077#1073'-'#1090#1100', '#1075#1088#1085
+            Width = 112
+          end
+          object PriceIn_calc_ch4: TcxGridDBColumn
+            Caption = #1057#1077#1073'-'#1090#1100', '#1075#1088#1085' ('#1056#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'PriceIn_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1073'-'#1090#1100' ('#1088#1072#1089#1095#1077#1090'), '#1075#1088#1085
             Options.Editing = False
             Width = 112
           end
@@ -1671,13 +1677,13 @@ inherited PromoTradeForm: TPromoTradeForm
       ExplicitTop = 2
     end
     inherited edOperDate: TcxDateEdit
-      Left = 8
-      Top = 54
+      Left = 15
+      Top = 61
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      ExplicitLeft = 8
-      ExplicitTop = 54
+      ExplicitLeft = 15
+      ExplicitTop = 61
       ExplicitWidth = 169
       Width = 169
     end
@@ -2105,7 +2111,22 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072'-2>'
       ImageIndex = 0
     end
-    object InsertRecordGD: TInsertRecord [6]
+    object actUpdateOkupDS: TdsdUpdateDataSet [6]
+      Category = 'Update_MI_Param'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_Pricein
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_Pricein
+        end
+        item
+          StoredProc = spSelectOkupaemost
+        end>
+      Caption = 'actUpdateCalcDS'
+      DataSource = OkupaemostDS
+    end
+    object InsertRecordGD: TInsertRecord [7]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2116,7 +2137,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'>'
       ImageIndex = 0
     end
-    object actSetErasedMIMaster_all: TdsdExecStoredProc [7]
+    object actSetErasedMIMaster_all: TdsdExecStoredProc [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2131,7 +2152,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = 'actSetErasedMIMaster_all'
       Hint = 'actSetErasedMIMaster_all'
     end
-    object actChoiceTradeMark: TOpenChoiceForm [8]
+    object actChoiceTradeMark: TOpenChoiceForm [9]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2158,7 +2179,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actChoiceGoodsGroupProperty: TOpenChoiceForm [9]
+    object actChoiceGoodsGroupProperty: TOpenChoiceForm [10]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2199,7 +2220,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actChoiceGoodsGroupPropertyParent: TOpenChoiceForm [10]
+    object actChoiceGoodsGroupPropertyParent: TOpenChoiceForm [11]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2240,7 +2261,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actChoiceGoodsGroupDirection: TOpenChoiceForm [11]
+    object actChoiceGoodsGroupDirection: TOpenChoiceForm [12]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2267,7 +2288,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actUpdate_Movement_isTaxPromo: TdsdExecStoredProc [12]
+    object actUpdate_Movement_isTaxPromo: TdsdExecStoredProc [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2283,7 +2304,7 @@ inherited PromoTradeForm: TPromoTradeForm
       ImageIndex = 27
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1084#1077#1085#1080#1090#1100' % '#1057#1082#1080#1076#1082#1080' <=> % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
     end
-    object actRefresh_Get: TdsdDataSetRefresh [13]
+    object actRefresh_Get: TdsdDataSetRefresh [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -2300,7 +2321,7 @@ inherited PromoTradeForm: TPromoTradeForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsertUpdateMISignNo: TdsdExecStoredProc [14]
+    object actInsertUpdateMISignNo: TdsdExecStoredProc [15]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2313,7 +2334,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
     end
-    object actUpdateMov1DS: TdsdUpdateDataSet [15]
+    object actUpdateMov1DS: TdsdUpdateDataSet [16]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2359,7 +2380,7 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spSelectOkupaemost
         end>
     end
-    object mactInsertUpdateMISignNo: TMultiAction [17]
+    object mactInsertUpdateMISignNo: TMultiAction [18]
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
@@ -2373,7 +2394,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
     end
-    object actUpdateDataSetMessage: TdsdUpdateDataSet [18]
+    object actUpdateDataSetMessage: TdsdUpdateDataSet [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2384,7 +2405,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       Caption = 'actUpdateDataSetMessage'
     end
-    object InsertRecord: TInsertRecord [20]
+    object InsertRecord: TInsertRecord [21]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2395,7 +2416,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
-    object actUpdateCalcDS: TdsdUpdateDataSet [21]
+    object actUpdateCalcDS: TdsdUpdateDataSet [22]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2555,7 +2576,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1058#1086#1074#1072#1088'>'
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [35]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [36]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
@@ -2585,7 +2606,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [36]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [37]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
@@ -2611,7 +2632,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [37]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [38]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
@@ -3267,6 +3288,51 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
     end
+    object actInsertUpdate_MI_PriceCalc: TdsdExecStoredProc
+      Category = 'Update_MI_Param'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MI_PriceCalc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MI_PriceCalc
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1062#1077#1085#1099' '#1089'/'#1089' ('#1087#1083#1072#1085'/'#1092#1072#1082#1090')'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1062#1077#1085#1099' '#1089'/'#1089' ('#1087#1083#1072#1085'/'#1092#1072#1082#1090')'
+      ImageIndex = 76
+    end
+    object actRefreshCalc: TdsdDataSetRefresh
+      Category = 'Update_MI_Param'
+      MoveParams = <>
+      StoredProc = spSelectOkupaemost
+      StoredProcList = <
+        item
+          StoredProc = spSelectOkupaemost
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object macUpdate_calc: TMultiAction
+      Category = 'Update_MI_Param'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_MI_PriceCalc
+        end
+        item
+          Action = actRefreshCalc
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1062#1077#1085#1099' '#1089'/'#1089
+      Hint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1062#1077#1085#1099' '#1089'/'#1089
+      ImageIndex = 76
+    end
   end
   inherited MasterDS: TDataSource
     Top = 272
@@ -3388,6 +3454,10 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_calc'
         end
         item
           Visible = True
@@ -3526,6 +3596,10 @@ inherited PromoTradeForm: TPromoTradeForm
       Visible = ivAlways
       ShowCaption = False
     end
+    object bbUpdate_calc: TdxBarButton
+      Action = macUpdate_calc
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -3623,13 +3697,13 @@ inherited PromoTradeForm: TPromoTradeForm
     Top = 320
   end
   inherited StatusGuides: TdsdGuides
-    Left = 32
-    Top = 48
+    Left = 16
+    Top = 72
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PromoTrade'
     Left = 80
-    Top = 40
+    Top = 64
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PromoTrade'
@@ -4088,13 +4162,13 @@ inherited PromoTradeForm: TPromoTradeForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PromoTrade_SetErased'
-    Left = 374
-    Top = 192
+    Left = 254
+    Top = 248
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PromoTrade_SetUnErased'
-    Left = 462
-    Top = 200
+    Left = 222
+    Top = 208
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_PromoTradeGoods'
@@ -5343,8 +5417,8 @@ inherited PromoTradeForm: TPromoTradeForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 852
-    Top = 158
+    Left = 908
+    Top = 238
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoTrade_Print'
@@ -5745,5 +5819,48 @@ inherited PromoTradeForm: TPromoTradeForm
     PackSize = 1
     Left = 136
     Top = 376
+  end
+  object spInsertUpdate_MI_PriceCalc: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_PromoTrade_PriceCalc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 976
+    Top = 424
+  end
+  object spUpdateMI_Pricein: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PromoTrade_PriceIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = OkupaemostCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceIn'
+        Value = Null
+        Component = OkupaemostCDS
+        ComponentItem = 'PriceIn'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1080
+    Top = 448
   end
 end
