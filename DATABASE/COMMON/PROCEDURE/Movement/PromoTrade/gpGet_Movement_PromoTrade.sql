@@ -48,7 +48,9 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
 
              , InsertDate TDateTime
-             , InsertName TVarChar
+             , InsertName TVarChar 
+             
+             , PersentOnCredit TFloat --% по кредиту, год для закладки окупаемость
              )
 AS
 $BODY$
@@ -129,7 +131,9 @@ BEGIN
           , '' :: TVarChar AS strSignNo
 
           , CURRENT_TIMESTAMP      ::TDateTime                AS InsertDate
-          , Object_User.ValueData  ::TVarChar                 AS InsertName
+          , Object_User.ValueData  ::TVarChar                 AS InsertName 
+          
+          , 18.5 ::TFloat AS PersentOnCredit
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
             LEFT OUTER JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
@@ -238,6 +242,7 @@ BEGIN
       , MovementDate_Insert.ValueData               AS InsertDate
       , Object_Insert.ValueData                     AS InsertName
 
+      , 18.5 ::TFloat AS PersentOnCredit
     FROM Movement AS Movement_PromoTrade
         LEFT JOIN tmpSign ON tmpSign.MovementId = Movement_PromoTrade.Id
 

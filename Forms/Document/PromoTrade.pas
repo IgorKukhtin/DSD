@@ -246,7 +246,7 @@ type
     AmountPlan_weight_ch4: TcxGridDBColumn;
     Summ_pos_ch4: TcxGridDBColumn;
     PromoTax_ch4: TcxGridDBColumn;
-    ChangePercent_ch4: TcxGridDBColumn;
+    ChangePercent_mi_ch4: TcxGridDBColumn;
     PricePromo_ch4: TcxGridDBColumn;
     cxGridLevelOkup: TcxGridLevel;
     OkupaemostCDS: TClientDataSet;
@@ -260,6 +260,11 @@ type
     bbUpdate_calc: TdxBarButton;
     spUpdateMI_Pricein: TdsdStoredProc;
     actUpdateOkupDS: TdsdUpdateDataSet;
+    cxLabel24: TcxLabel;
+    edPersentOnCredit: TcxCurrencyEdit;
+    RefreshDispatcher: TRefreshDispatcher;
+    spSelectPrintOkup: TdsdStoredProc;
+    actSelectPrintOkup: TdsdPrintAction;
   private
     { Private declarations }
   public
