@@ -1,4 +1,6 @@
 inherited AncestorDBGrid_boatForm: TAncestorDBGrid_boatForm
+  ExplicitWidth = 320
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl: TcxPageControl [0]
@@ -18,6 +20,8 @@ inherited AncestorDBGrid_boatForm: TAncestorDBGrid_boatForm
       Caption = 'tsMain'
       ImageIndex = 0
       TabVisible = False
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
