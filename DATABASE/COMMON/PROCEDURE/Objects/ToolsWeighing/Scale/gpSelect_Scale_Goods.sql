@@ -102,6 +102,46 @@ BEGIN
    END IF;
 
 
+   IF inBranchCode BETWEEN 301 AND 310
+   THEN
+       IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpRemains')
+       THEN
+           DROP TABLE _tmpRemains;
+       END IF;
+       
+       --
+       CREATE TEMP TABLE _tmpRemains ON COMMIT DROP
+                            AS (SELECT Container.ObjectId                   AS GoodsId
+                                     , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                     , SUM (Container.Amount)               AS Amount
+                                FROM Container
+                                     INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                    ON CLO_Unit.ContainerId = Container.Id
+                                                                   AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                   AND CLO_Unit.ObjectId IN (2961184 -- Склад спецодежда б/у
+                                                                                           , 8455    -- Склад специй
+                                                                                           , 3398383 -- Склад резины
+                                                                                           , 8456    -- Склад запчастей
+                                                                                            )
+                                     LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                   ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                  AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                WHERE Container.DescId = zc_Container_Count()
+                                  AND Container.Amount <> 0
+                                  AND inBranchCode BETWEEN 301 AND 310
+                                GROUP BY Container.ObjectId
+                                       , CLO_GoodsKind.ObjectId
+                               );
+   ELSE
+       IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpRemains')
+       THEN
+           DELETE FROM _tmpRemains;
+       ELSE
+           CREATE TEMP TABLE _tmpRemains (GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
+       END IF;
+   END IF;
+   
+
    IF inOrderExternalId > 0
    THEN
         -- параметры из документа - Movement
@@ -204,22 +244,11 @@ BEGIN
 
          -- Результат - по заявке
          RETURN QUERY
-            WITH tmpRemains AS (SELECT Container.ObjectId     AS GoodsId
-                                     , SUM (Container.Amount) AS Amount
-                                 FROM Container
-                                      INNER JOIN ContainerLinkObject AS CLO_Unit
-                                                                     ON CLO_Unit.ContainerId = Container.Id
-                                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                                    AND CLO_Unit.ObjectId IN (2961184 -- Склад спецодежда б/у
-                                                                                            , 8455    -- Склад специй
-                                                                                            , 3398383 -- Склад резины
-                                                                                            , 8456    -- Склад запчастей
-                                                                                             )
-                                 WHERE Container.DescId = zc_Container_Count()
-                                   AND Container.Amount <> 0
-                                   AND inBranchCode BETWEEN 301 AND 310
-                                 GROUP BY Container.ObjectId
-                                )
+            WITH tmpRemains AS (SELECT _tmpRemains.GoodsId
+                                     , SUM (_tmpRemains.Amount) AS Amount
+                                FROM _tmpRemains
+                                GROUP BY _tmpRemains.GoodsId
+                               )
                , tmpMovement AS (SELECT Movement_find.Id     AS MovementId
                                       , Movement_find.DescId AS MovementDescId
                                  FROM (SELECT inOrderExternalId AS MovementId WHERE vbRetailId <> 0) AS tmpMovement
@@ -506,15 +535,16 @@ BEGIN
                  , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN ObjectString_Goods_Scale.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
                  , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN Object_Goods.ValueData             ELSE ''                     END :: TVarChar AS GoodsName_new
 
-                 , Object_GoodsKind.Id         AS GoodsKindId
-                 , Object_GoodsKind.ObjectCode AS GoodsKindCode
-                 , Object_GoodsKind.ValueData  AS GoodsKindName
+                 , Object_GoodsKind.Id          AS GoodsKindId
+                 , Object_GoodsKind.ObjectCode  AS GoodsKindCode
+                 , Object_GoodsKind.ValueData   AS GoodsKindName
                  , Object_GoodsKind.Id :: TVarChar AS GoodsKindId_list
-                 , Object_GoodsKind.Id         AS GoodsKindId_max
-                 , Object_GoodsKind.ObjectCode AS GoodsKindCode_max
-                 , Object_GoodsKind.ValueData  AS GoodsKindName_max
-                 , Object_Measure.Id           AS MeasureId
-                 , Object_Measure.ValueData    AS MeasureName
+                 , Object_GoodsKind.Id          AS GoodsKindId_max
+                 , Object_GoodsKind.ObjectCode  AS GoodsKindCode_max
+                 , Object_GoodsKind.ValueData   AS GoodsKindName_max
+                 , Object_Measure.Id            AS MeasureId
+                 , Object_Measure.ValueData     AS MeasureName
+
                  , CASE WHEN inBranchCode BETWEEN 301 AND 310
                              THEN 0
                         WHEN Object_Measure.Id = zc_Measure_Kg()
@@ -560,7 +590,7 @@ BEGIN
                  , 0 :: TFloat                     AS Price_Income_to_addVat
                    -- Кол-во знаков для округления
                  , 0 :: TFloat                     AS RoundPrice
-                 
+
                  , 1 :: TFloat                     AS CountForPrice_Income
 
                  , CASE WHEN (tmpMI.Amount_Order - tmpMI.Amount_Weighing) > 0
@@ -696,7 +726,7 @@ BEGIN
                               , tmpContractGoods.ValuePrice_addVat, tmpContractGoods.ValuePrice_from_addVat, tmpContractGoods.ValuePrice_to_addVat
                                 -- Кол-во знаков для округления
                               , tmpContractGoods.RoundPrice
-                              
+
                               , tmpContractGoods.GoodsKindId
                          FROM tmpContractGoods
                               LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpContractGoods.GoodsId
@@ -708,25 +738,10 @@ BEGIN
                         )
                 , tmpRemains AS (SELECT tmpContractGoods.GoodsId      AS GoodsId
                                       , tmpContractGoods.GoodsKindId  AS GoodsKindId
-                                      , SUM (Container.Amount)        AS Amount
+                                      , _tmpRemains.Amount            AS Amount
                                  FROM tmpContractGoods
-                                      INNER JOIN Container ON Container.ObjectId = tmpContractGoods.GoodsId
-                                                          AND Container.DescId   = zc_Container_Count()
-                                                          AND Container.Amount   <> 0
-                                      INNER JOIN ContainerLinkObject AS CLO_Unit
-                                                                     ON CLO_Unit.ContainerId = Container.Id
-                                                                    AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
-                                                                    AND CLO_Unit.ObjectId IN (2961184 -- Склад спецодежда б/у
-                                                                                            , 8455    -- Склад специй
-                                                                                            , 3398383 -- Склад резины
-                                                                                            , 8456    -- Склад запчастей
-                                                                                             )
-                                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                                    ON CLO_GoodsKind.ContainerId = Container.Id
-                                                                   AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-                                 WHERE tmpContractGoods.GoodsKindId = COALESCE (CLO_GoodsKind.ObjectId, 0)
-                                 GROUP BY tmpContractGoods.GoodsId
-                                        , tmpContractGoods.GoodsKindId
+                                      INNER JOIN _tmpRemains ON _tmpRemains.GoodsId     = tmpContractGoods.GoodsId
+                                                            AND _tmpRemains.GoodsKindId = tmpContractGoods.GoodsKindId
                                 )
            -- Результат
            SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -758,7 +773,7 @@ BEGIN
                 , 0 :: TFloat AS Amount_diffWeight
                 , FALSE :: Boolean AS isTax_diff
 
-                , CASE WHEN tmpGoods.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна 
+                , CASE WHEN tmpGoods.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
                                                               , zc_Enum_InfoMoneyDestination_30100() -- Продукция
                                                                )
                             THEN tmpGoods.ValuePrice
@@ -1051,22 +1066,11 @@ BEGIN
         inMovementId:= COALESCE (inMovementId, 0);
         -- Результат - все товары
         RETURN QUERY
-           WITH tmpRemains AS (SELECT Container.ObjectId     AS GoodsId
-                                     , SUM (Container.Amount) AS Amount
-                                 FROM Container
-                                      INNER JOIN ContainerLinkObject AS CLO_Unit
-                                                                     ON CLO_Unit.ContainerId = Container.Id
-                                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                                    AND CLO_Unit.ObjectId IN (2961184 -- Склад спецодежда б/у
-                                                                                            , 8455    -- Склад специй
-                                                                                            , 3398383 -- Склад резины
-                                                                                            , 8456    -- Склад запчастей
-                                                                                             )
-                                 WHERE Container.DescId = zc_Container_Count()
-                                   AND Container.Amount <> 0
-                                   AND inBranchCode BETWEEN 301 AND 310
-                                 GROUP BY Container.ObjectId
-                                )
+           WITH tmpRemains AS (SELECT _tmpRemains.GoodsId
+                                    , SUM (_tmpRemains.Amount) AS Amount
+                               FROM _tmpRemains
+                               GROUP BY _tmpRemains.GoodsId
+                              )
               , tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                                       , View_InfoMoney.InfoMoneyCode
                                       , View_InfoMoney.InfoMoneyGroupName
@@ -1283,7 +1287,7 @@ BEGIN
                              OR inBranchCode IN (103)
                                )
                            --
-                           AND (tmpInfoMoney.InfoMoneyId > 0 
+                           AND (tmpInfoMoney.InfoMoneyId > 0
                              OR (ObjectBoolean_Goods_Asset.ValueData = TRUE AND inBranchCode BETWEEN 301 AND 310)
                                )
                         )
@@ -1418,6 +1422,7 @@ BEGIN
                 , Object_GoodsKind_max.ValueData          AS GoodsKindName_max
                 , Object_Measure.Id           AS MeasureId
                 , Object_Measure.ValueData    AS MeasureName
+
                 , CASE WHEN tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() THEN 0 -- Доходы + Переработка
                        WHEN Object_Measure.Id = zc_Measure_Kg()
                             THEN CASE WHEN inIsGoodsComplete = FALSE -- AND zc_Movement_Sale() = (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_MovementDesc())
@@ -1456,7 +1461,7 @@ BEGIN
                 , 0 :: TFloat                 AS Price_Income_to_addVat
                    -- Кол-во знаков для округления
                 , 0 :: TFloat                 AS RoundPrice
-                  -- 
+                  --
                 , 1 :: TFloat                 AS CountForPrice_Income
 
                 , 0                           AS Color_calc -- clBlack

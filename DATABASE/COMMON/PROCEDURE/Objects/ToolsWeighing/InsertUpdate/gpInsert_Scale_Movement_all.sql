@@ -403,6 +403,7 @@ BEGIN
            AND COALESCE (Object_Contract.ValueData, '') NOT ILIKE '%ξαμεν%'
            AND COALESCE (Object_Contract.ValueData, '') NOT ILIKE '%ξαμ³ν%'
            AND COALESCE (Object_Contract.ValueData, '') NOT ILIKE '%ξαμiν%'
+           AND vbUserId <> 5
          LIMIT 1
          ;
          --
