@@ -1,30 +1,30 @@
 inherited PromoTradeForm: TPromoTradeForm
   ActiveControl = edOperDate
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
-  ClientHeight = 715
+  ClientHeight = 702
   ClientWidth = 1164
   ExplicitWidth = 1180
-  ExplicitHeight = 754
+  ExplicitHeight = 741
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 179
     Width = 1164
-    Height = 536
+    Height = 523
     ExplicitTop = 179
     ExplicitWidth = 1164
-    ExplicitHeight = 536
-    ClientRectBottom = 536
+    ExplicitHeight = 523
+    ClientRectBottom = 523
     ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 1164
-      ExplicitHeight = 512
+      ExplicitHeight = 499
       inherited cxGrid: TcxGrid
         Width = 1164
-        Height = 137
+        Height = 211
         ExplicitWidth = 1164
-        ExplicitHeight = 137
+        ExplicitHeight = 211
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -389,7 +389,7 @@ inherited PromoTradeForm: TPromoTradeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 35
+            Width = 42
           end
           object GoodsKindName: TcxGridDBColumn [9]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -477,6 +477,7 @@ inherited PromoTradeForm: TPromoTradeForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1087#1083#1072#1085' ('#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081')'
             Options.Editing = False
+            Width = 65
           end
           object AmountPlan_calc: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1040#1082#1094#1080#1103' ('#1084#1077#1089'.)'
@@ -486,6 +487,7 @@ inherited PromoTradeForm: TPromoTradeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1040#1082#1094#1080#1103' ('#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081')'
+            Options.Editing = False
             Width = 70
           end
           object AmountPlan_weight_calc: TcxGridDBColumn
@@ -497,19 +499,45 @@ inherited PromoTradeForm: TPromoTradeForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1087#1083#1072#1085' '#1040#1082#1094#1080#1103' ('#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081')'
             Options.Editing = False
+            Width = 65
+          end
+          object PriceWithVAT_pr: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089'), '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceWithVAT_pr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091', '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
+          end
+          object PriceWithOutVAT_pr: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089'), '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceWithOutVAT_pr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091', '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
           end
           object PriceWithVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
+            Caption = #1062#1077#1085#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057' ('#1090#1077#1082'.'#1079#1085'. '#1089#1082#1080#1076#1082#1072')'
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1086' '#1087#1083#1072#1085', '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
+            Options.Editing = False
             Width = 70
           end
           object PriceWithOutVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057
+            Caption = #1062#1077#1085#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057' ('#1090#1077#1082'.'#1079#1085'. '#1089#1082#1080#1076#1082#1072')'
             DataBinding.FieldName = 'PriceWithOutVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -518,8 +546,29 @@ inherited PromoTradeForm: TPromoTradeForm
             HeaderHint = #1062#1077#1085#1072' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1086' '#1087#1083#1072#1085', '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057
             Options.Editing = False
           end
+          object PriceWithVAT_new: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057' ('#1085#1086#1074'.'#1079#1085'. '#1089#1082#1080#1076#1082#1072')'
+            DataBinding.FieldName = 'PriceWithVAT_new'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1086' '#1087#1083#1072#1085', '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
+          end
+          object PriceWithOutVAT_new: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057' ('#1085#1086#1074'.'#1079#1085'. '#1089#1082#1080#1076#1082#1072')'
+            DataBinding.FieldName = 'PriceWithOutVAT_new'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1086' '#1087#1083#1072#1085', '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057
+            Options.Editing = False
+          end
           object SummWithOutVATPlan: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057' ('#1090#1077#1082'.'#1079#1085'. '#1089#1082#1080#1076#1082#1072')'
             DataBinding.FieldName = 'SummWithOutVATPlan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -528,7 +577,7 @@ inherited PromoTradeForm: TPromoTradeForm
             Options.Editing = False
           end
           object SummWithVATPlan: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057' ('#1090#1077#1082'.'#1079#1085'. '#1089#1082#1080#1076#1082#1072')'
             DataBinding.FieldName = 'SummWithVATPlan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -555,44 +604,44 @@ inherited PromoTradeForm: TPromoTradeForm
             Width = 70
           end
           object PricePromo: TcxGridDBColumn
-            Caption = #1057#1087#1077#1094' '#1094#1077#1085#1072
+            Caption = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1090#1077#1082'.'#1079#1085'.)  '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1090#1077#1082#1091#1097#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077')'
+            HeaderHint = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1090#1077#1082#1091#1097#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077') '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
             Width = 70
           end
           object PricePromo_new: TcxGridDBColumn
-            Caption = #1057#1087#1077#1094' '#1094#1077#1085#1072
+            Caption = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1085#1086#1074'.'#1079#1085'.)  '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
             DataBinding.FieldName = 'PricePromo_new'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1085#1086#1074#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077')'
+            HeaderHint = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1085#1086#1074#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077') '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
             Width = 70
           end
         end
       end
       object Panel1: TPanel
         Left = 0
-        Top = 145
+        Top = 219
         Width = 1164
-        Height = 201
+        Height = 165
         Align = alBottom
         TabOrder = 1
         object cxPageControl1: TcxPageControl
           Left = 712
           Top = 1
           Width = 451
-          Height = 199
+          Height = 163
           Align = alRight
           TabOrder = 0
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
-          ClientRectBottom = 199
+          ClientRectBottom = 163
           ClientRectRight = 451
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
@@ -601,7 +650,7 @@ inherited PromoTradeForm: TPromoTradeForm
               Left = 0
               Top = 0
               Width = 451
-              Height = 175
+              Height = 139
               Align = alClient
               TabOrder = 0
               object cxGridDBTableViewMov3: TcxGridDBTableView
@@ -660,12 +709,12 @@ inherited PromoTradeForm: TPromoTradeForm
           Left = 295
           Top = 1
           Width = 409
-          Height = 199
+          Height = 163
           Align = alClient
           TabOrder = 1
           Properties.ActivePage = tsAdvertising
           Properties.CustomButtons.Buttons = <>
-          ClientRectBottom = 199
+          ClientRectBottom = 163
           ClientRectRight = 409
           ClientRectTop = 24
           object tsAdvertising: TcxTabSheet
@@ -674,7 +723,7 @@ inherited PromoTradeForm: TPromoTradeForm
               Left = 0
               Top = 0
               Width = 409
-              Height = 175
+              Height = 139
               Align = alClient
               TabOrder = 0
               object cxGridDBTableViewMov2: TcxGridDBTableView
@@ -741,7 +790,7 @@ inherited PromoTradeForm: TPromoTradeForm
           Left = 704
           Top = 1
           Width = 8
-          Height = 199
+          Height = 163
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl1
@@ -750,7 +799,7 @@ inherited PromoTradeForm: TPromoTradeForm
           Left = 287
           Top = 1
           Width = 8
-          Height = 199
+          Height = 163
           HotZoneClassName = 'TcxMediaPlayer8Style'
           Control = cxPageControl2
         end
@@ -758,12 +807,12 @@ inherited PromoTradeForm: TPromoTradeForm
           Left = 1
           Top = 1
           Width = 286
-          Height = 199
+          Height = 163
           Align = alLeft
           TabOrder = 4
           Properties.ActivePage = cxTabSheet1
           Properties.CustomButtons.Buttons = <>
-          ClientRectBottom = 199
+          ClientRectBottom = 163
           ClientRectRight = 286
           ClientRectTop = 24
           object cxTabSheet1: TcxTabSheet
@@ -772,7 +821,7 @@ inherited PromoTradeForm: TPromoTradeForm
               Left = 0
               Top = 0
               Width = 286
-              Height = 175
+              Height = 139
               Align = alClient
               TabOrder = 0
               object cxGridDBTableViewMov1: TcxGridDBTableView
@@ -829,7 +878,7 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       object cxSplitter4: TcxSplitter
         Left = 0
-        Top = 137
+        Top = 211
         Width = 1164
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -838,7 +887,7 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 346
+        Top = 384
         Width = 1164
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -847,9 +896,9 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       object cxGridPromoStateKind: TcxGrid
         Left = 0
-        Top = 354
+        Top = 392
         Width = 1164
-        Height = 158
+        Height = 107
         Align = alBottom
         TabOrder = 3
         object cxGridDBTableViewPromoStateKind: TcxGridDBTableView
@@ -946,14 +995,11 @@ inherited PromoTradeForm: TPromoTradeForm
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
         Width = 1164
-        Height = 512
+        Height = 499
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
@@ -1039,6 +1085,575 @@ inherited PromoTradeForm: TPromoTradeForm
         end
       end
     end
+    object tsOkupaemost: TcxTabSheet
+      Caption = '&4. '#1054#1082#1091#1087#1072#1077#1084#1086#1089#1090#1100
+      ImageIndex = 2
+      object GridOkup: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1164
+        Height = 499
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        object cxGridDBTableViewOkup: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = OkupaemostDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPromo_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_pos_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_weight_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPromo_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_pos_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_weight_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object Num_ch4: TcxGridDBColumn
+            Caption = #8470
+            DataBinding.FieldName = 'Num'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object Num_text_ch4: TcxGridDBColumn
+            DataBinding.FieldName = 'Num_text'
+            Options.Editing = False
+            Width = 70
+            IsCaptionAssigned = True
+          end
+          object GoodsCode_ch4: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 47
+          end
+          object GoodsName_ch4: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object GoodsKindName_ch4: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object MeasureName_ch4: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 35
+          end
+          object AmountPlan_ch4: TcxGridDBColumn
+            Caption = #1054#1078#1080#1076#1072#1077#1084#1099#1081' '#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081' '#1086#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1045#1076'. '#1048#1079#1084'.'
+            DataBinding.FieldName = 'AmountPlan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1078#1080#1076#1072#1077#1084#1099#1081' '#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081' '#1086#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1045#1076'. '#1048#1079#1084'.'
+            Options.Editing = False
+            Width = 118
+          end
+          object AmountPlan_weight_ch4: TcxGridDBColumn
+            Caption = #1054#1078#1080#1076#1072#1077#1084#1099#1081' '#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081' '#1086#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078', '#1082#1075
+            DataBinding.FieldName = 'AmountPlan_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1078#1080#1076#1072#1077#1084#1099#1081' '#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081' '#1086#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078', '#1082#1075
+            Options.Editing = False
+            Width = 112
+          end
+          object PricePromo_ch4: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
+            DataBinding.FieldName = 'PricePromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1087#1077#1094' '#1094#1077#1085#1072' ('#1090#1077#1082#1091#1097#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077')'
+            Options.Editing = False
+            Width = 70
+          end
+          object SummPromo_ch4: TcxGridDBColumn
+            Caption = #1054#1078#1080#1076#1072#1077#1084#1099#1081' '#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081' '#1086#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078', '#1075#1088#1085
+            DataBinding.FieldName = 'SummPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1078#1080#1076#1072#1077#1084#1099#1081' '#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081' '#1086#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078', '#1075#1088#1085
+            Options.Editing = False
+            Width = 121
+          end
+          object Summ_pos_ch4: TcxGridDBColumn
+            Caption = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1074#1074#1086#1076#1072' '#1087#1086#1079#1080#1094#1080#1080', '#1075#1088#1085
+            DataBinding.FieldName = 'Summ_pos'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object PromoTax_ch4: TcxGridDBColumn
+            Caption = #1044#1086#1083#1103' '#1040#1082#1094#1080#1080
+            DataBinding.FieldName = 'PromoTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ChangePercent_ch4: TcxGridDBColumn
+            Caption = '% '#1057#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PriceIn_ch4: TcxGridDBColumn
+            Caption = #1057#1077#1073'-'#1090#1100', '#1075#1088#1085
+            DataBinding.FieldName = 'PriceIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1073'-'#1090#1100', '#1075#1088#1085
+            Width = 112
+          end
+          object PriceIn_calc_ch4: TcxGridDBColumn
+            Caption = #1057#1077#1073'-'#1090#1100', '#1075#1088#1085' ('#1056#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'PriceIn_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1073'-'#1090#1100' ('#1088#1072#1089#1095#1077#1090'), '#1075#1088#1085
+            Options.Editing = False
+            Width = 112
+          end
+          object ChangePrice_ch4: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076#1099' ('#1087#1077#1088#1077#1084#1077#1085#1085#1099#1077'), '#1075#1088#1085
+            DataBinding.FieldName = 'ChangePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1093#1086#1076#1099' ('#1087#1077#1088#1077#1084#1077#1085#1085#1099#1077'), '#1075#1088#1085
+            Options.Editing = False
+            Width = 112
+          end
+          object ChangePrice_all_ch4: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076#1099' ('#1074#1089#1077'), '#1075#1088#1085
+            DataBinding.FieldName = 'ChangePrice_all'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1093#1086#1076#1099' ('#1074#1089#1077'), '#1075#1088#1085
+            Options.Editing = False
+            Width = 112
+          end
+          object Marga1_ch4: TcxGridDBColumn
+            Caption = #1052#1072#1088#1078#1072' 1, '#1075#1088#1085
+            DataBinding.FieldName = 'Marga1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1072#1088#1078#1072' 1, '#1075#1088#1085
+            Options.Editing = False
+            Width = 112
+          end
+          object Marga2_ch4: TcxGridDBColumn
+            Caption = #1052#1072#1088#1078#1072' 2, '#1075#1088#1085
+            DataBinding.FieldName = 'Marga2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1072#1088#1078#1072' 2, '#1075#1088#1085
+            Options.Editing = False
+            Width = 112
+          end
+          object Due_Pass_year1_ch4: TcxGridDBColumn
+            Caption = #1054#1078#1080#1076#1072#1077#1084#1099#1081' '#1087#1088#1086#1093#1086#1076'1 '#1074' '#1075#1086#1076', '#1075#1088#1085
+            DataBinding.FieldName = 'Due_Pass_year1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1078#1080#1076#1072#1077#1084#1099#1081' '#1087#1088#1086#1093#1086#1076'1 '#1074' '#1075#1086#1076', '#1075#1088#1085
+            Options.Editing = False
+            Width = 112
+          end
+          object Due_Pass_year2_ch4: TcxGridDBColumn
+            Caption = #1054#1078#1080#1076#1072#1077#1084#1099#1081' '#1087#1088#1086#1093#1086#1076'2 '#1074' '#1075#1086#1076', '#1075#1088#1085
+            DataBinding.FieldName = 'Due_Pass_year2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1078#1080#1076#1072#1077#1084#1099#1081' '#1087#1088#1086#1093#1086#1076'2 '#1074' '#1075#1086#1076', '#1075#1088#1085
+            Options.Editing = False
+            Width = 112
+          end
+          object MarketSumm_dop_ch4: TcxGridDBColumn
+            Caption = #1044#1086#1087' '#1084#1072#1088#1082#1077#1090#1080#1085#1075', '#1075#1086#1076'.'
+            DataBinding.FieldName = 'MarketSumm_dop'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1087' '#1084#1072#1088#1082#1077#1090#1080#1085#1075', '#1075#1086#1076'.'
+            Options.Editing = False
+            Width = 112
+          end
+          object Summ_bonus_ch4: TcxGridDBColumn
+            Caption = #1057#1091#1084#1072#1088#1085#1099#1081' '#1073#1086#1085#1091#1089', '#1075#1086#1076'.'
+            DataBinding.FieldName = 'Summ_bonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1072#1088#1085#1099#1081' '#1073#1086#1085#1091#1089', '#1075#1086#1076'.'
+            Options.Editing = False
+            Width = 112
+          end
+          object PersentOnCredit_ch4: TcxGridDBColumn
+            Caption = '% '#1087#1086' '#1082#1088#1077#1076#1080#1090#1091', '#1075#1086#1076
+            DataBinding.FieldName = 'PersentOnCredit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1087#1086' '#1082#1088#1077#1076#1080#1090#1091', '#1075#1086#1076
+            Options.Editing = False
+            Width = 112
+          end
+          object TotalCost_ch4: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1079#1072#1090#1088#1072#1090', '#1043#1054#1044
+            DataBinding.FieldName = 'TotalCost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1079#1072#1090#1088#1072#1090', '#1043#1054#1044
+            Options.Editing = False
+            Width = 112
+          end
+          object Profit1_ch4: TcxGridDBColumn
+            Caption = #1055#1088#1080#1073#1099#1083#1100'1, '#1075#1088#1085' '#1075#1086#1076
+            DataBinding.FieldName = 'Profit1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1073#1099#1083#1100'1, '#1075#1088#1085' '#1075#1086#1076
+            Options.Editing = False
+            Width = 112
+          end
+          object Profit2_ch4: TcxGridDBColumn
+            Caption = #1055#1088#1080#1073#1099#1083#1100'2, '#1075#1088#1085' '#1075#1086#1076
+            DataBinding.FieldName = 'Profit2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1073#1099#1083#1100'2, '#1075#1088#1085' '#1075#1086#1076
+            Options.Editing = False
+            Width = 112
+          end
+          object PaybackPeriod1_ch4: TcxGridDBColumn
+            Caption = #1055#1077#1088#1080#1086#1076' '#1086#1082#1091#1087#1072#1077#1084#1086#1089#1090#1080'1, '#1084#1077#1089'.'
+            DataBinding.FieldName = 'PaybackPeriod1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1077#1088#1080#1086#1076' '#1086#1082#1091#1087#1072#1077#1084#1086#1089#1090#1080'1, '#1084#1077#1089'.'
+            Options.Editing = False
+            Width = 112
+          end
+          object PaybackPeriod2_ch4: TcxGridDBColumn
+            Caption = #1055#1077#1088#1080#1086#1076' '#1086#1082#1091#1087#1072#1077#1084#1086#1089#1090#1080'2, '#1084#1077#1089'.'
+            DataBinding.FieldName = 'PaybackPeriod2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1077#1088#1080#1086#1076' '#1086#1082#1091#1087#1072#1077#1084#1086#1089#1090#1080'2, '#1084#1077#1089'.'
+            Options.Editing = False
+            Width = 112
+          end
+        end
+        object cxGridLevelOkup: TcxGridLevel
+          GridView = cxGridDBTableViewOkup
+        end
+      end
+    end
   end
   inherited DataPanel: TPanel
     Width = 1164
@@ -1062,13 +1677,13 @@ inherited PromoTradeForm: TPromoTradeForm
       ExplicitTop = 2
     end
     inherited edOperDate: TcxDateEdit
-      Left = 8
-      Top = 54
+      Left = 15
+      Top = 61
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      ExplicitLeft = 8
-      ExplicitTop = 54
+      ExplicitLeft = 15
+      ExplicitTop = 61
       ExplicitWidth = 169
       Width = 169
     end
@@ -1303,8 +1918,8 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 160
     end
     object cxLabel8: TcxLabel
-      Left = 277
-      Top = 109
+      Left = 280
+      Top = 111
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
@@ -1366,8 +1981,8 @@ inherited PromoTradeForm: TPromoTradeForm
     Width = 177
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 139
-    Top = 352
+    Left = 187
+    Top = 304
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 32
@@ -1496,7 +2111,22 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072'-2>'
       ImageIndex = 0
     end
-    object InsertRecordGD: TInsertRecord [6]
+    object actUpdateOkupDS: TdsdUpdateDataSet [6]
+      Category = 'Update_MI_Param'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_Pricein
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_Pricein
+        end
+        item
+          StoredProc = spSelectOkupaemost
+        end>
+      Caption = 'actUpdateCalcDS'
+      DataSource = OkupaemostDS
+    end
+    object InsertRecordGD: TInsertRecord [7]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1507,7 +2137,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'>'
       ImageIndex = 0
     end
-    object actSetErasedMIMaster_all: TdsdExecStoredProc [7]
+    object actSetErasedMIMaster_all: TdsdExecStoredProc [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1522,7 +2152,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = 'actSetErasedMIMaster_all'
       Hint = 'actSetErasedMIMaster_all'
     end
-    object actChoiceTradeMark: TOpenChoiceForm [8]
+    object actChoiceTradeMark: TOpenChoiceForm [9]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1549,7 +2179,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actChoiceGoodsGroupProperty: TOpenChoiceForm [9]
+    object actChoiceGoodsGroupProperty: TOpenChoiceForm [10]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1590,7 +2220,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actChoiceGoodsGroupPropertyParent: TOpenChoiceForm [10]
+    object actChoiceGoodsGroupPropertyParent: TOpenChoiceForm [11]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1631,7 +2261,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actChoiceGoodsGroupDirection: TOpenChoiceForm [11]
+    object actChoiceGoodsGroupDirection: TOpenChoiceForm [12]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1658,7 +2288,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actUpdate_Movement_isTaxPromo: TdsdExecStoredProc [12]
+    object actUpdate_Movement_isTaxPromo: TdsdExecStoredProc [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1674,7 +2304,7 @@ inherited PromoTradeForm: TPromoTradeForm
       ImageIndex = 27
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1084#1077#1085#1080#1090#1100' % '#1057#1082#1080#1076#1082#1080' <=> % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
     end
-    object actRefresh_Get: TdsdDataSetRefresh [13]
+    object actRefresh_Get: TdsdDataSetRefresh [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -1691,7 +2321,7 @@ inherited PromoTradeForm: TPromoTradeForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsertUpdateMISignNo: TdsdExecStoredProc [14]
+    object actInsertUpdateMISignNo: TdsdExecStoredProc [15]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1704,7 +2334,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
     end
-    object actUpdateMov1DS: TdsdUpdateDataSet [15]
+    object actUpdateMov1DS: TdsdUpdateDataSet [16]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1715,6 +2345,9 @@ inherited PromoTradeForm: TPromoTradeForm
         end
         item
           StoredProc = spSelect_PromoTradeCondition
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = 'actUpdateMov1DS'
       Hint = 'PromoTradeCondition'
@@ -1742,9 +2375,12 @@ inherited PromoTradeForm: TPromoTradeForm
         end
         item
           StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spSelectOkupaemost
         end>
     end
-    object mactInsertUpdateMISignNo: TMultiAction [17]
+    object mactInsertUpdateMISignNo: TMultiAction [18]
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
@@ -1758,7 +2394,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
     end
-    object actUpdateDataSetMessage: TdsdUpdateDataSet [18]
+    object actUpdateDataSetMessage: TdsdUpdateDataSet [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1769,7 +2405,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       Caption = 'actUpdateDataSetMessage'
     end
-    object InsertRecord: TInsertRecord [20]
+    object InsertRecord: TInsertRecord [21]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1780,7 +2416,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
-    object actUpdateCalcDS: TdsdUpdateDataSet [21]
+    object actUpdateCalcDS: TdsdUpdateDataSet [22]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1860,6 +2496,7 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spSelect
         end
         item
+          StoredProc = spSelectOkupaemost
         end
         item
         end>
@@ -1939,7 +2576,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1058#1086#1074#1072#1088'>'
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [35]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [36]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
@@ -1969,7 +2606,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [36]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [37]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
@@ -1995,7 +2632,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [37]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [38]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
@@ -2651,6 +3288,51 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
     end
+    object actInsertUpdate_MI_PriceCalc: TdsdExecStoredProc
+      Category = 'Update_MI_Param'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MI_PriceCalc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MI_PriceCalc
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1062#1077#1085#1099' '#1089'/'#1089' ('#1087#1083#1072#1085'/'#1092#1072#1082#1090')'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1062#1077#1085#1099' '#1089'/'#1089' ('#1087#1083#1072#1085'/'#1092#1072#1082#1090')'
+      ImageIndex = 76
+    end
+    object actRefreshCalc: TdsdDataSetRefresh
+      Category = 'Update_MI_Param'
+      MoveParams = <>
+      StoredProc = spSelectOkupaemost
+      StoredProcList = <
+        item
+          StoredProc = spSelectOkupaemost
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object macUpdate_calc: TMultiAction
+      Category = 'Update_MI_Param'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_MI_PriceCalc
+        end
+        item
+          Action = actRefreshCalc
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1062#1077#1085#1099' '#1089'/'#1089
+      Hint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1062#1077#1085#1099' '#1089'/'#1089
+      ImageIndex = 76
+    end
   end
   inherited MasterDS: TDataSource
     Top = 272
@@ -2683,7 +3365,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Top = 272
+    Left = 128
+    Top = 328
   end
   inherited BarManager: TdxBarManager
     Top = 271
@@ -2771,6 +3454,10 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_calc'
         end
         item
           Visible = True
@@ -2909,6 +3596,10 @@ inherited PromoTradeForm: TPromoTradeForm
       Visible = ivAlways
       ShowCaption = False
     end
+    object bbUpdate_calc: TdxBarButton
+      Action = macUpdate_calc
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -2918,8 +3609,8 @@ inherited PromoTradeForm: TPromoTradeForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
-    Left = 78
-    Top = 321
+    Left = 142
+    Top = 305
   end
   inherited PopupMenu: TPopupMenu
     Left = 688
@@ -3006,13 +3697,13 @@ inherited PromoTradeForm: TPromoTradeForm
     Top = 320
   end
   inherited StatusGuides: TdsdGuides
-    Left = 32
-    Top = 48
+    Left = 16
+    Top = 72
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PromoTrade'
     Left = 80
-    Top = 40
+    Top = 64
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PromoTrade'
@@ -3471,13 +4162,13 @@ inherited PromoTradeForm: TPromoTradeForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PromoTrade_SetErased'
-    Left = 374
-    Top = 192
+    Left = 254
+    Top = 248
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PromoTrade_SetUnErased'
-    Left = 462
-    Top = 200
+    Left = 222
+    Top = 208
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_PromoTradeGoods'
@@ -3551,10 +4242,37 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceWithVAT_pr'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceWithVAT_pr'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceWithOutVAT_pr'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceWithOutVAT_pr'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPriceWithVAT'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceWithVAT'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceWithVAT_new'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceWithVAT_new'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3565,6 +4283,7 @@ inherited PromoTradeForm: TPromoTradeForm
         Component = MasterCDS
         ComponentItem = 'PriceWithOutVAT'
         DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -3573,6 +4292,7 @@ inherited PromoTradeForm: TPromoTradeForm
         Component = MasterCDS
         ComponentItem = 'SummWithOutVATPlan'
         DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -3581,6 +4301,7 @@ inherited PromoTradeForm: TPromoTradeForm
         Component = MasterCDS
         ComponentItem = 'SummWithVATPlan'
         DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -3911,8 +4632,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 204
-    Top = 40
+    Left = 212
+    Top = 32
   end
   object spSelect_PromoTradeCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoTradeCondition'
@@ -4696,8 +5417,8 @@ inherited PromoTradeForm: TPromoTradeForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 852
-    Top = 158
+    Left = 908
+    Top = 238
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoTrade_Print'
@@ -5054,5 +5775,92 @@ inherited PromoTradeForm: TPromoTradeForm
     PackSize = 1
     Left = 286
     Top = 200
+  end
+  object OkupaemostCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 120
+    Top = 416
+  end
+  object OkupaemostDS: TDataSource
+    DataSet = OkupaemostCDS
+    Left = 168
+    Top = 416
+  end
+  object spSelectOkupaemost: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_PromoTradeOkupaemost'
+    DataSet = OkupaemostCDS
+    DataSets = <
+      item
+        DataSet = OkupaemostCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 136
+    Top = 376
+  end
+  object spInsertUpdate_MI_PriceCalc: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_PromoTrade_PriceCalc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 976
+    Top = 424
+  end
+  object spUpdateMI_Pricein: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PromoTrade_PriceIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = OkupaemostCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceIn'
+        Value = Null
+        Component = OkupaemostCDS
+        ComponentItem = 'PriceIn'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1080
+    Top = 448
   end
 end

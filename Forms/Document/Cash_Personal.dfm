@@ -2268,8 +2268,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 304
-    Top = 13
+    Left = 288
+    Top = 5
   end
   object GuidesPersonalServiceJournal: TdsdGuides
     KeyField = 'Id'

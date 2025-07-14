@@ -356,6 +356,24 @@ object Sticker_ListForm: TSticker_ListForm
         HeaderHint = #1074' '#1090#1086#1084#1091' '#1095#1080#1089#1083#1110' '#1083#1072#1082#1090#1086#1079#1080
         Width = 70
       end
+      object isDatStart: TcxGridDBColumn
+        Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1090#1072' '#1087#1088'-'#1074#1086
+        DataBinding.FieldName = 'isDatStart'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1076#1072#1090#1072' '#1087#1088'-'#1074#1086
+        Options.Editing = False
+        Width = 102
+      end
+      object isDatEnd: TcxGridDBColumn
+        Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1078#1080#1090#1080' '#1076#1086
+        DataBinding.FieldName = 'isDatEnd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1074#1078#1080#1090#1080' '#1076#1086
+        Options.Editing = False
+        Width = 80
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -2564,10 +2582,28 @@ object Sticker_ListForm: TSticker_ListForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDatStart'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isDatStart'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDatEnd'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isDatEnd'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 320
-    Top = 216
+    Left = 368
+    Top = 232
   end
   object PeriodChoice: TPeriodChoice
     Left = 480

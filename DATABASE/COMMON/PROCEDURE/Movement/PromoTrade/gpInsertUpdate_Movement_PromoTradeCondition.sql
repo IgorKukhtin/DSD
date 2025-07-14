@@ -14,7 +14,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;  
    DECLARE vbMovementId_PromoTradeCondition Integer;
-           vbChangePercent TVarChar;
+           vbChangePercent      TVarChar; 
+           vbChangePercent_new  TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PromoTrade());
@@ -60,9 +61,9 @@ BEGIN
     END IF;
 
     IF inOrd = 2
-    THEN 
+    THEN
         --ChangePercent_new
-        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue_new)::TFloat);
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue_new)::TFloat);       
     END IF;
 
     IF inOrd = 4
@@ -97,7 +98,7 @@ BEGIN
     THEN 
         --Logist
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Report(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
-        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Report_(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue_new)::TFloat);
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Report_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue_new)::TFloat);
     END IF;   
 
     IF inOrd = 9
@@ -107,11 +108,11 @@ BEGIN
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MarketSumm_new(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue_new)::TFloat);
     END IF;
     
-    IF vbUserId = 9457
+   /* IF vbUserId = 9457
     THEN
         RAISE EXCEPTION 'Test.Ok';
     END IF;
-
+    */
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -233,6 +233,33 @@ type
     spErasedMIMaster_all: TdsdStoredProc;
     actSetErasedMIMaster_all: TdsdExecStoredProc;
     Value_new_ch1: TcxGridDBColumn;
+    tsOkupaemost: TcxTabSheet;
+    GridOkup: TcxGrid;
+    cxGridDBTableViewOkup: TcxGridDBTableView;
+    Num_ch4: TcxGridDBColumn;
+    GoodsCode_ch4: TcxGridDBColumn;
+    GoodsName_ch4: TcxGridDBColumn;
+    MeasureName_ch4: TcxGridDBColumn;
+    GoodsKindName_ch4: TcxGridDBColumn;
+    SummPromo_ch4: TcxGridDBColumn;
+    AmountPlan_ch4: TcxGridDBColumn;
+    AmountPlan_weight_ch4: TcxGridDBColumn;
+    Summ_pos_ch4: TcxGridDBColumn;
+    PromoTax_ch4: TcxGridDBColumn;
+    ChangePercent_ch4: TcxGridDBColumn;
+    PricePromo_ch4: TcxGridDBColumn;
+    cxGridLevelOkup: TcxGridLevel;
+    OkupaemostCDS: TClientDataSet;
+    OkupaemostDS: TDataSource;
+    spSelectOkupaemost: TdsdStoredProc;
+    Num_text_ch4: TcxGridDBColumn;
+    spInsertUpdate_MI_PriceCalc: TdsdStoredProc;
+    actInsertUpdate_MI_PriceCalc: TdsdExecStoredProc;
+    actRefreshCalc: TdsdDataSetRefresh;
+    macUpdate_calc: TMultiAction;
+    bbUpdate_calc: TdxBarButton;
+    spUpdateMI_Pricein: TdsdStoredProc;
+    actUpdateOkupDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

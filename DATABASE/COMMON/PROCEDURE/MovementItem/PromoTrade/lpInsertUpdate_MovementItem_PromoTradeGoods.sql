@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, In
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoTradeGoods(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -14,8 +15,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoTradeGoods(
     IN inSumm                  TFloat    , --
     IN inPartnerCount          TFloat    , -- Цена на полке
     IN inAmountPlan            TFloat    , --
-    IN inPriceWithVAT          TFloat    , --   
-   OUT outPriceWithOutVAT      TFloat    ,
+    IN inPriceWithVAT          TFloat    , -- 
+    IN inPriceWithOutVAT       TFloat    , --    
     IN inPromoTax              TFloat    , --
     IN inChangePercent         TFloat    , --
     IN inPricePromo            TFloat    , --
@@ -27,7 +28,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoTradeGoods(
     IN inComment               TVarChar  , --Комментарий
     IN inUserId                Integer     -- пользователь
 )
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;  
@@ -63,7 +64,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePromo(), ioId, inPricePromo);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePromo_new(), ioId, inPricePromo_new);
-    
+
+   /* 
    --НДС из прайса договора 
     vbVat := COALESCE( (SELECT ObjectFloat_VATPercent.ValueData
                         FROM MovementLinkObject AS MLO
@@ -73,9 +75,9 @@ BEGIN
                         WHERE MLO.DescId = zc_MovementLinkObject_PriceList()
                           AND MLO.MovementId = inMovementId)
                       , 20)::TFloat;
-    outPriceWithOutVAT:= ROUND ((inPriceWithVAT - inPriceWithVAT * (vbVAT / (vbVAT + 100))) , 2)::TFloat ; 
+     */
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithOutVAT(), ioId, outPriceWithOutVAT);     
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithOutVAT(), ioId, inPriceWithOutVAT);     
     
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Partner(), ioId, inPartnerId);
@@ -124,7 +126,7 @@ BEGIN
          -- сохранили <В работе Автор документа>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoTradeStateKind(), inMovementId, zc_Enum_PromoTradeStateKind_Start());
          -- сохранили <В работе Автор документа>
-         PERFORM gpInsertUpdate_MI_Message_PromoTradeStateKind 11(ioId                    := 0
+         PERFORM gpInsertUpdate_MI_Message_PromoTradeStateKind (ioId                    := 0
                                                               , inMovementId            := inMovementId
                                                               , inPromoTradeStateKindId := zc_Enum_PromoTradeStateKind_Start()
                                                               , inIsQuickly             := FALSE
@@ -134,10 +136,11 @@ BEGIN
 
      END IF;
 
-    IF inUserId = 9457
+    /*IF inUserId = 9457
     THEN
         RAISE EXCEPTION 'Test.Ok';
     END IF;
+    */
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

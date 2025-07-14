@@ -1778,7 +1778,6 @@ end;
 
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInChildDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInChildDialogForm');
 
@@ -3778,10 +3777,11 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromo_ServiceGoodsJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromo_ServiceGoodsJournalChoiceForm');
   exit;
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroup_GoodsGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGroup_GoodsGroupForm');
   exit;
@@ -3805,10 +3805,10 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlaceCash_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlaceCash_ObjectForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsFuel_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsFuel_ObjectForm');
 
@@ -4320,13 +4320,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerNormEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerSortNormForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerFileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerFileForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerFileEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerFileEditForm');
   exit;
-   {
+
   //StickerPack
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerPackForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerPackForm');

@@ -142,7 +142,7 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
       item
         Name = 'inMovementId'
         Value = Null
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -383,7 +383,7 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
         Name = 'ContractName'
         Value = Null
         Component = FormParams
-        ComponentItem = 'inMovementId'
+        ComponentItem = 'ContractName'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -487,7 +487,7 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
     Top = 136
   end
   object GuidesSale: TdsdGuides
-    KeyField = 'Id'
+    KeyField = 'MovementId'
     LookupControl = edInvNumberSale
     FormNameParam.Value = 'TReport_Goods_SalebyReturnIn_ChoiceForm'
     FormNameParam.DataType = ftString
@@ -646,7 +646,7 @@ object ReturnInChildDialogForm: TReturnInChildDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 104
+    Left = 96
     Top = 81
   end
 end

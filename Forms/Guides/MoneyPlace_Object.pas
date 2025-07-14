@@ -21,7 +21,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TMoneyPlace_ObjectForm = class(TAncestorEnumForm)
@@ -42,6 +43,14 @@ type
     PaidKindName: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
     ContractCode: TcxGridDBColumn;
+    PanelSearch: TPanel;
+    lbSearchCode: TcxLabel;
+    edSearchName: TcxTextEdit;
+    lbSearchName: TcxLabel;
+    edSearchContractNumber: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    edSearchOKPO: TcxTextEdit;
+    FieldFilter_Search: TdsdFieldFilter;
   private
     { Private declarations }
   public

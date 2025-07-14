@@ -1,26 +1,28 @@
 inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
   ClientHeight = 411
-  ClientWidth = 881
-  ExplicitWidth = 897
-  ExplicitHeight = 449
+  ClientWidth = 795
+  ExplicitWidth = 811
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 881
+    Width = 795
     Height = 385
     ExplicitWidth = 881
     ExplicitHeight = 385
     ClientRectBottom = 385
-    ClientRectRight = 881
+    ClientRectRight = 795
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 881
       ExplicitHeight = 385
       inherited cxGrid: TcxGrid
-        Width = 881
-        Height = 385
+        Top = 41
+        Width = 795
+        Height = 344
+        ExplicitTop = 41
         ExplicitWidth = 881
-        ExplicitHeight = 385
+        ExplicitHeight = 344
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -156,7 +158,6 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
                 ImageIndex = 66
                 Value = 4
               end>
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -304,6 +305,79 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           end
         end
       end
+      object PanelSearch: TPanel
+        Left = 0
+        Top = 0
+        Width = 795
+        Height = 41
+        Align = alTop
+        TabOrder = 1
+        ExplicitTop = -6
+        ExplicitWidth = 881
+        object lbSearchCode: TcxLabel
+          Left = 15
+          Top = 13
+          Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077': '
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clBlue
+          Style.Font.Height = -13
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+        end
+        object edSearchName: TcxTextEdit
+          Left = 136
+          Top = 14
+          TabOrder = 1
+          DesignSize = (
+            195
+            21)
+          Width = 195
+        end
+        object lbSearchName: TcxLabel
+          Left = 340
+          Top = 13
+          Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072':'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clBlue
+          Style.Font.Height = -13
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+        end
+        object edSearchContractNumber: TcxTextEdit
+          Left = 437
+          Top = 14
+          TabOrder = 3
+          DesignSize = (
+            140
+            21)
+          Width = 140
+        end
+        object cxLabel10: TcxLabel
+          Left = 588
+          Top = 13
+          Caption = #1054#1050#1055#1054':'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clBlue
+          Style.Font.Height = -13
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+        end
+        object edSearchOKPO: TcxTextEdit
+          Left = 639
+          Top = 14
+          TabOrder = 5
+          DesignSize = (
+            144
+            21)
+          Width = 144
+        end
+      end
     end
   end
   inherited ActionList: TActionList
@@ -397,7 +471,7 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
         end
         item
           Name = 'PaymentDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaymentDate'
           DataType = ftDateTime
@@ -434,6 +508,25 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           MultiSelectSeparator = ','
         end>
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1079#1072#1074#1077#1088#1096#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1079#1072#1074#1077#1088#1096#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -443,10 +536,19 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_MoneyPlaceCash'
-    Top = 80
+    Params = <
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Top = 104
   end
   inherited BarManager: TdxBarManager
-    Top = 80
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -454,6 +556,10 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -483,5 +589,29 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           ItemName = 'dxBarStatic'
         end>
     end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
+  end
+  object FieldFilter_Search: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end
+      item
+        Column = OKPO
+        TextEdit = edSearchOKPO
+      end
+      item
+        Column = ContractNumber
+        TextEdit = edSearchContractNumber
+      end>
+    CheckBoxList = <>
+    Left = 608
+    Top = 128
   end
 end

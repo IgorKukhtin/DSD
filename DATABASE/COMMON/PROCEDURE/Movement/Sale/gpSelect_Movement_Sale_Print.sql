@@ -1604,6 +1604,37 @@ END IF;
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MovementItem.isErased   = FALSE
                      )
+       --кол-во ящиков из взвешиваний
+     , tmpCountWeighing AS (
+                            WITH
+                            tmpMov_Weighing AS (SELECT Movement.Id
+                                                  FROM Movement
+                                                  WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                 )
+                          , tmpMI_Weighing AS (SELECT *
+                                               FROM MovementItem
+                                               WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMov_Weighing.Id FROM tmpMov_Weighing)
+                                                 AND MovementItem.isErased = FALSE
+                                                 AND MovementItem.DescId = zc_MI_Master()
+                                                )
+                            --для скорости отдельный запрос
+                          , tmpMILO_GoodsKind AS (SELECT *
+                                                  FROM MovementItemLinkObject
+                                                  WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Weighing.Id FROM tmpMI_Weighing)
+                                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                                )
+                          
+                          SELECT MovementItem.ObjectId AS GoodsId
+                               , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                               , COUNT (*) AS COUNT
+                          FROM tmpMI_Weighing AS MovementItem
+                           LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                          GROUP BY MovementItem.ObjectId
+                                 , MILinkObject_GoodsKind.ObjectId
+                           )
 
       -- Результат
       SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
@@ -1817,7 +1848,8 @@ END IF;
                    THEN tmpMI.AmountPartner / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0)
                    ELSE tmpMI_WeighingPartner.Box_count
               END :: Integer AS Box_count_calc
-
+            --кол-во ящ взвешивания
+            , tmpCountWeighing.COUNT ::Integer AS Box_count_Weighing 
        FROM tmpMI
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId     = tmpMI.GoodsId
@@ -1889,6 +1921,10 @@ END IF;
 
             LEFT JOIN tmpMI_Tax ON tmpMI_Tax.GoodsId = tmpMI.GoodsId
                                AND COALESCE (tmpMI_Tax.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
+
+            LEFT JOIN tmpCountWeighing ON tmpCountWeighing.GoodsId = tmpMI.GoodsId
+                                      AND COALESCE (tmpCountWeighing.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
+        
        WHERE tmpMI.AmountPartner <> 0
        ORDER BY CASE WHEN vbGoodsPropertyId IN (83954  -- Метро
                                               , 83963  -- Ашан

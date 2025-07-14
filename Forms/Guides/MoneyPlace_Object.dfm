@@ -1,19 +1,21 @@
 inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
-  ClientWidth = 961
-  ExplicitWidth = 977
+  ClientWidth = 890
+  ExplicitWidth = 906
   ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 961
+    Width = 890
     ExplicitWidth = 961
-    ClientRectRight = 961
+    ClientRectRight = 890
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 961
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 961
+        Top = 41
+        Width = 890
+        Height = 241
         ExplicitWidth = 961
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -193,6 +195,79 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           end
         end
       end
+      object PanelSearch: TPanel
+        Left = 0
+        Top = 0
+        Width = 890
+        Height = 41
+        Align = alTop
+        TabOrder = 1
+        ExplicitTop = -6
+        ExplicitWidth = 881
+        object lbSearchCode: TcxLabel
+          Left = 15
+          Top = 13
+          Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077': '
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clBlue
+          Style.Font.Height = -13
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+        end
+        object edSearchName: TcxTextEdit
+          Left = 136
+          Top = 14
+          TabOrder = 1
+          DesignSize = (
+            195
+            21)
+          Width = 195
+        end
+        object lbSearchName: TcxLabel
+          Left = 340
+          Top = 13
+          Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072':'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clBlue
+          Style.Font.Height = -13
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+        end
+        object edSearchContractNumber: TcxTextEdit
+          Left = 437
+          Top = 14
+          TabOrder = 3
+          DesignSize = (
+            140
+            21)
+          Width = 140
+        end
+        object cxLabel10: TcxLabel
+          Left = 588
+          Top = 13
+          Caption = #1054#1050#1055#1054':'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clBlue
+          Style.Font.Height = -13
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+        end
+        object edSearchOKPO: TcxTextEdit
+          Left = 639
+          Top = 14
+          TabOrder = 5
+          DesignSize = (
+            144
+            21)
+          Width = 144
+        end
+      end
     end
   end
   inherited ActionList: TActionList
@@ -327,5 +402,25 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           ItemName = 'dxBarStatic'
         end>
     end
+  end
+  object FieldFilter_Search: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end
+      item
+        Column = OKPO
+        TextEdit = edSearchOKPO
+      end
+      item
+        Column = ContractNumber
+        TextEdit = edSearchContractNumber
+      end>
+    CheckBoxList = <>
+    Left = 576
+    Top = 112
   end
 end

@@ -52,7 +52,7 @@ BEGIN
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
           , Object_PriceList.ValueData ::TVarChar AS Value
-          , ''                         ::TVarChar AS Value_new
+          , Object_PriceList.ValueData ::TVarChar AS Value_new
     FROM tmpText
          LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList 
                                       ON MovementLinkObject_PriceList.MovementId = inMovementId
@@ -164,15 +164,15 @@ BEGIN
  UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          , zfConvert_FloatToString (MovementFloat_Report.ValueData)     ::TVarChar AS Value
-          , zfConvert_FloatToString (MovementFloat_Report_new.ValueData) ::TVarChar AS Value_new
+          , zfConvert_FloatToString (MovementFloat_MarketSumm.ValueData)     ::TVarChar AS Value
+          , zfConvert_FloatToString (MovementFloat_MarketSumm_new.ValueData) ::TVarChar AS Value_new
     FROM tmpText
-         LEFT JOIN MovementFloat AS MovementFloat_Report
-                                 ON MovementFloat_Report.MovementId = vbMovementId_PromoTradeCondition
-                                AND MovementFloat_Report.DescId = zc_MovementFloat_MarketSumm()
-         LEFT JOIN MovementFloat AS MovementFloat_Report_new
-                                 ON MovementFloat_Report_new.MovementId = vbMovementId_PromoTradeCondition
-                                AND MovementFloat_Report_new.DescId = zc_MovementFloat_MarketSumm_new()
+         LEFT JOIN MovementFloat AS MovementFloat_MarketSumm
+                                 ON MovementFloat_MarketSumm.MovementId = vbMovementId_PromoTradeCondition
+                                AND MovementFloat_MarketSumm.DescId = zc_MovementFloat_MarketSumm()
+         LEFT JOIN MovementFloat AS MovementFloat_MarketSumm_new
+                                 ON MovementFloat_MarketSumm_new.MovementId = vbMovementId_PromoTradeCondition
+                                AND MovementFloat_MarketSumm_new.DescId = zc_MovementFloat_MarketSumm_new()
     WHERE tmpText.Ord = 9
  ORDER by 1  
     ;
