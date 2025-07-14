@@ -995,6 +995,9 @@ inherited PromoTradeForm: TPromoTradeForm
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1088,6 +1091,9 @@ inherited PromoTradeForm: TPromoTradeForm
     object tsOkupaemost: TcxTabSheet
       Caption = '&4. '#1054#1082#1091#1087#1072#1077#1084#1086#1089#1090#1100
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridOkup: TcxGrid
         Left = 0
         Top = 0
@@ -3321,7 +3327,9 @@ inherited PromoTradeForm: TPromoTradeForm
     end
     object macUpdate_calc: TMultiAction
       Category = 'Update_MI_Param'
+      TabSheet = tsOkupaemost
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actInsertUpdate_MI_PriceCalc
