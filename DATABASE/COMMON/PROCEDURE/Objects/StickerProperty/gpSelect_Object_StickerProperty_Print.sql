@@ -332,7 +332,7 @@ BEGIN
                                       -- только для Kg
                                       AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
                                    )
-       , tmpObject_GoodsPropertyValue AS
+        , tmpObject_GoodsPropertyValue AS
                             (SELECT ObjectLink_GoodsPropertyValue_Goods.ObjectId      AS ObjectId
                                   , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
                                   , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
@@ -341,7 +341,7 @@ BEGIN
                                               THEN ObjectString_BarCode.ValueData
                                               ELSE ''
                                     END AS BarCode
-                                  , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh()
+                                  , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh() AND inWeight > 0
                                               THEN -- Левая часть Ш/К
                                                    LEFT (ObjectString_BarCode.ValueData, (ObjectFloat_StartPosInt.ValueData - 1) :: Integer)
                                                          -- добавили нули слева
@@ -560,7 +560,7 @@ BEGIN
             , Object_StickerSkin.Id              AS StickerSkinId
             , Object_StickerSkin.ValueData       AS StickerSkinName
 
-            , CASE WHEN inIs70_70 = TRUE AND COALESCE (Object_Measure.Id, 0) <> zc_Measure_Sh()
+            , CASE WHEN inIs70_70 = TRUE AND COALESCE (Object_Measure.Id, 0) <> zc_Measure_Sh() AND inWeight > 0
                         THEN TRUE
                    ELSE ObjectBoolean_Fix.ValueData
               END :: Boolean AS isFix

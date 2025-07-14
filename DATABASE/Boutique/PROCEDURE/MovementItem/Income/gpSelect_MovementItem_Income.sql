@@ -205,7 +205,7 @@ BEGIN
                                         - 100)
                                   ELSE 0
                              END AS NUMERIC (16, 0)) <= 10 
-                 THEN zc_Color_Red() 
+                 THEN zc_Color_Red() -- zc_Color_Red() 
                  ELSE zc_Color_Black() 
               END :: Integer  AS Color_Calc
 

@@ -2218,7 +2218,7 @@ end if;
                            OR _tmpRemainsSumm.InfoMoneyId        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                            OR _tmpRemainsSumm.InfoMoneyId_Detail = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                -- сумма остатка - по цене с/с
-                               THEN -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                               THEN -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0) AS NUMERIC (16,4))
 --                               THEN -1 * COALESCE (_tmpRemainsSumm.OperSumm, 0)
                           ELSE -- сумма остатка - сумма с/с на дату
                                -1 * COALESCE (_tmpRemainsSumm.OperSumm, 0)
@@ -2226,7 +2226,7 @@ end if;
                      END
                      -- добавили движение до конца мес€ца по цене с/с
                    + CASE WHEN vbIsLastOnMonth_RK = TRUE -- AND vbUserId IN (zc_Enum_Process_Auto_PrimeCost())
-                          THEN COALESCE (_tmpRemainsCount.OperCount_add, 0) * COALESCE (HistoryCost.Price, 0)
+                          THEN COALESCE (_tmpRemainsCount.OperCount_add, 0) * COALESCE (HistoryCost.Price, tmpHistoryCost_find.Price, 0)
                           ELSE 0
                      END
 
@@ -2248,6 +2248,11 @@ end if;
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
+
+                   -- нашли с/с если нет дл€ ContainerId_Goods
+                   LEFT JOIN tmpHistoryCost_find ON tmpHistoryCost_find.ContainerId_Summ = Container_Summ.Id
+                                                AND HistoryCost.ContainerId IS NULL
+
               WHERE vbPriceListId = 0
                  AND inMovementId <> 2184096  --  ротон хранение - 31.07.2015
                  AND inMovementId <> 24210332 -- ÷≈’ упаковки - 30.12.2022
@@ -2255,6 +2260,7 @@ end if;
                    OR _tmpRemainsCount.OperCount_find <> 0
                    OR vbIsLastOnMonth = FALSE
                      )
+
 
              UNION ALL
               -- 1.2.2. это расчетные остатки (их надо вычесть) -- !!!дл€ "наши если кол=0 в "последний" день" + "филиалы" за дату перехода!!!!

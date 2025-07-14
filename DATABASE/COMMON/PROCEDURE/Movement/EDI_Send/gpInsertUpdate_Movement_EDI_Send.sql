@@ -19,15 +19,40 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI_Send());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     
+     IF inParentId < 0
+     THEN
+         inParentId:= -1 * inParentId;
+     /*ELSE
+         IF (EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 428382) -- Кладовщик Днепр
+            AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 12392840) -- Разрешено Scale - отправка EDIN
+            )
+            OR vbUserId = 5
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нет прав для отправки EDIN.';
+         END IF;*/
+     END IF;
 
 
-     IF (EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 428382) -- Кладовщик Днепр
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 428382) -- Кладовщик Днепр
         AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 12392840) -- Разрешено Scale - отправка EDIN
-        )
-        OR vbUserId = 5
+        AND NOT EXISTS (SELECT 1
+                        FROM MovementLinkObject AS MLO
+                             INNER JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr
+                                                      ON ObjectBoolean_EdiOrdspr.ObjectId  = MLO.ObjectId
+                                                     AND ObjectBoolean_EdiOrdspr.DescId    IN (zc_ObjectBoolean_Partner_EdiOrdspr()
+                                                                                             , zc_ObjectBoolean_Partner_EdiInvoice()
+                                                                                             , zc_ObjectBoolean_Partner_EdiDesadv()
+                                                                                              )
+                                                     AND ObjectBoolean_EdiOrdspr.ValueData = TRUE
+                        WHERE MLO.MovementId = inParentId
+                          AND MLO.DescId     = zc_MovementLinkObject_To()
+                       )
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав для отправки EDIN.';
      END IF;
+
 
      -- Поиск
      vbDescId := (SELECT Id FROM MovementBooleanDesc WHERE Code ILIKE inDescCode);

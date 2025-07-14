@@ -136,6 +136,13 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerPack(), ioId, vbStickerPackId);
 
+
+IF vbUserId = 5 AND 1=1
+THEN
+    RAISE EXCEPTION 'Admin - Test - ничего не менять';
+END IF;
+
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 

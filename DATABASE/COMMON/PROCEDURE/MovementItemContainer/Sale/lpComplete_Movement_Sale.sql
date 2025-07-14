@@ -260,6 +260,7 @@ END IF;*/
                -- !!! замовлення в яких більше 2,7 кілограма.
                AND (COALESCE (tmpMIOrder.Amount,0) = 0 OR tmpMIOrder.Amount > 2.7)
                --AND (COALESCE (tmpMIOrder.Amount,0) = 0 OR tmpMIOrder.Amount > 5)
+               AND inUserId <> 5
               LIMIT 1
              ) AS tmp;
 

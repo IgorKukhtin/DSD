@@ -204,6 +204,13 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Sticker_DatEnd(), ioId, inisDatEnd);
 
+
+IF vbUserId = 5 AND 1=1
+THEN
+    RAISE EXCEPTION 'Admin - Test - ничего не менять';
+END IF;
+
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
