@@ -166,6 +166,15 @@ type
     GoodsCode_FilterValue:String;
     GoodsName_FilterValue:String;
 
+    Id_FilterValue_save : String;
+    isPartion_Sticker_save : Boolean;
+    DateStart_Sticker_save : TDateTime;
+    DateTare_Sticker_save : TDateTime;
+    DatePack_Sticker_save : TDateTime;
+    DateProduction_Sticker_save : TDateTime;
+    NumPack_Sticker_save : Double;
+    NumTech_Sticker_save : Double;
+
     procedure CancelCxFilter;
     function Checked: boolean;
     procedure InitializeStickerPack(StickerPackGroupId:Integer);
@@ -308,7 +317,9 @@ begin
        //№ смены технологов, по умолчанию = 1 (для режим 3)
        ParamByName('inNumTech').Value        := ParamsMI.ParamByName('NumTech_Sticker').AsFloat;
        //
-       ParamByName('inWeight').Value         := 0;//***ParamsMI.ParamByName('RealWeight_Get').AsFloat;
+       //ParamByName('inWeight').Value       := 0;
+       //***
+       ParamByName('inWeight').Value         := ParamsMI.ParamByName('RealWeight_Get').AsFloat;
        //
        Execute;
     end;
@@ -356,7 +367,9 @@ begin
        //№ смены технологов, по умолчанию = 1 (для режим 3)
        ParamByName('inNumTech').Value        := ParamsMI.ParamByName('NumTech_Sticker').AsFloat;
        //
-       ParamByName('inWeight').Value         := 0;//***ParamsMI.ParamByName('RealWeight_Get').AsFloat;
+       //ParamByName('inWeight').Value         := 0;
+       //***
+       ParamByName('inWeight').Value         := ParamsMI.ParamByName('RealWeight_Get').AsFloat;
        //
        //Execute;
     end;
@@ -514,18 +527,54 @@ begin
             fStartWrite:=true;
 
             EditWeightValue.Text:= '1';
+            ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text);
 
             EditGoodsCode.Text:= IntToStr(ParamsMI.ParamByName('GoodsCode_1001').AsInteger);
             EditGoodsKindCode.Text:=IntToStr(ParamsMI.ParamByName('GoodsKindCode_1001').AsInteger);
+            // Восстанавливаем
+            ParamsMI.ParamByName('DateStart_Sticker').AsDateTime:= DateStart_Sticker_save;
+            ParamsMI.ParamByName('isStartEnd_Sticker').AsBoolean :=cbStartEnd.Checked;
+            ParamsMI.ParamByName('isTare_Sticker').AsBoolean     :=cbTare.Checked;
+            ParamsMI.ParamByName('isGoodsName_Sticker').AsBoolean:=cbGoodsName.Checked;
+
+           //0 - дата нач/конечн произв-ва на этикетке
+            deDateStart.Date:= DateStart_Sticker_save;
+           //1 - печатать дату нач/конечн произв-ва на этикетке
+           //cbStartEnd.Checked := TRUE;
+           //2 - печатать для ТАРЫ
+           //ParamsMI.ParamByName('isTare_Sticker').AsBoolean        := cbTare.Checked;
+           //3 - печатать ПАРТИЮ для тары
+           ParamsMI.ParamByName('isPartion_Sticker').AsBoolean     := isPartion_Sticker_save;
+           //печатать название тов. (для режим 2,3)
+           //ParamsMI.ParamByName('isGoodsName_Sticker').AsBoolean   := cbGoodsName.Checked;
+           //дата для тары  (для режим 2)
+           ParamsMI.ParamByName('DateTare_Sticker').AsDateTime      := DateTare_Sticker_save;
+           //дата упаковки  (для режим 3)
+           ParamsMI.ParamByName('DatePack_Sticker').AsDateTime      := DatePack_Sticker_save;
+           //дата произв-ва (для режим 3)
+           ParamsMI.ParamByName('DateProduction_Sticker').AsDateTime:= DateProduction_Sticker_save;
+           //№ партии  упаковки, по умолчанию = 1 (для режим 3)
+           ParamsMI.ParamByName('NumPack_Sticker').AsFloat          := NumPack_Sticker_save;
+           //№ смены технологов, по умолчанию = 1 (для режим 3)
+           ParamsMI.ParamByName('NumTech_Sticker').AsFloat          := NumTech_Sticker_save;
 
             fStartWrite:=false;
 
+            Id_FilterValue:= Id_FilterValue_save;
+
+            fEnterGoodsCode:= true;
+            fEnterGoodsName:= false;
+            fEnterGoodsKindCode:=true;
+            fEnterId:= true;
             //CDS.Filter:='';
-            // CDS.Filtered:=false;
-             CDS.Filtered:=true;
+            EditGoodsKindCodeChange(EditGoodsKindCode);
+
+            fEnterId:= false;
 
             if cb_70_70.Checked = TRUE
-            then pShowReport
+            then if ParamsMI.ParamByName('isPreviewPrint_1001').AsBoolean = true
+                 then pShowReport
+                 else
             else cb_70_70.Checked:= TRUE;
 
             if (ParamsMI.ParamByName('isPreviewPrint_1001').AsBoolean = true)
@@ -538,8 +587,8 @@ begin
             exit;
      end
      else begin
-         ParamsMI.ParamByName('GoodsCode_1001').AsInteger:=0;
-         ParamsMI.ParamByName('GoodsKindCode_1001').AsFloat:=0;
+         //ParamsMI.ParamByName('GoodsCode_1001').AsInteger:=0;
+         //ParamsMI.ParamByName('GoodsKindCode_1001').AsFloat:=0;
 
          fStickerPropertyId:=-1;
          fStickerFileName:='';
@@ -625,7 +674,7 @@ begin
               EditGoodsCode.Text:='';
               EditGoodsName.Text:='';
               EditGoodsKindCode.Text:='';
-              EditWeightValue.Text:='2';
+              EditWeightValue.Text:='1';
 
               CDS.Filter:='';
               CDS.Filtered:=false;
@@ -847,8 +896,25 @@ begin
 
        if Result = TRUE then
        begin
+           // сохранили
+           Id_FilterValue_save := CDS.FieldByName('Id').AsString;
            ParamByName('GoodsCode_1001').AsInteger:=CDS.FieldByName('GoodsCode').AsInteger;
            ParamByName('GoodsKindCode_1001').AsFloat:=CDS.FieldByName('GoodsKindCode').AsInteger;
+           // сохранили
+           //
+           DateStart_Sticker_save:= ParamByName('DateStart_Sticker').AsDateTime;
+           //3 - печатать ПАРТИЮ для тары
+           isPartion_Sticker_save:= ParamsMI.ParamByName('isPartion_Sticker').AsBoolean;
+           //дата для тары  (для режим 2)
+           DateTare_Sticker_save:= ParamsMI.ParamByName('DateTare_Sticker').AsDateTime;
+           //дата упаковки  (для режим 3)
+           DatePack_Sticker_save:= ParamsMI.ParamByName('DatePack_Sticker').AsDateTime;
+           //дата произв-ва (для режим 3)
+           DateProduction_Sticker_save:= ParamsMI.ParamByName('DateProduction_Sticker').AsDateTime;
+           //№ партии  упаковки, по умолчанию = 1 (для режим 3)
+           NumPack_Sticker_save:= ParamsMI.ParamByName('NumPack_Sticker').AsFloat;
+           //№ смены технологов, по умолчанию = 1 (для режим 3)
+           NumTech_Sticker_save:= ParamsMI.ParamByName('NumTech_Sticker').AsFloat;
        end;
 
      end;
@@ -1081,7 +1147,7 @@ begin
                        ShowMessage('Ошибка.Не выбран <Код товара>.');
                        ActiveControl:=EditGoodsCode;
                   end
-        else if ParamsMI.ParamByName('RealWeight').AsFloat<=1
+        else if ParamsMI.ParamByName('RealWeight').AsFloat<=0
              then
                   //Здесь кол-во печать Этикеток
                   if 1=1//(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
@@ -1335,7 +1401,8 @@ begin
   //Принтеры
   InitializePrinterSticker;
   //***
-  gbGoodsWieghtValue.Visible:= (SettingMain.isSticker_Weight); // or (1=1);
+  //gbGoodsWieghtValue.Visible:= (SettingMain.isSticker_Weight);
+  gbGoodsWieghtValue.Visible:= (SettingMain.isSticker_Weight) or (1=1);
   //
 
   //вес тары (ручной режим)

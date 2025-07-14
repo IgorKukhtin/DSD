@@ -442,6 +442,7 @@ begin
      ParamAdd(Params,'isLockStartWeighing',ftBoolean);
      ParamAdd(Params,'isListInventory',ftBoolean);
      ParamAdd(Params,'isCalc_Sh',ftBoolean);
+     ParamAdd(Params,'isPeresort',ftBoolean);
 
      ParamAdd(Params,'isOperCountPartner',ftBoolean); // Кол-во поставщика
      ParamAdd(Params,'isOperPricePartner',ftBoolean); // цены поставщика
@@ -643,9 +644,12 @@ begin
          ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
          ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
          ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
+         ParamAdd(Params,'MeasureId',ftInteger);         // Единица измерения
+         ParamAdd(Params,'MeasureName',ftString);        // Единица измерения
          ParamAdd(Params,'StorageLineId',ftInteger);     // Линия пр-ва
          ParamAdd(Params,'StorageLineCode',ftInteger);   // Линия пр-ва
          ParamAdd(Params,'StorageLineName',ftString);    // Линия пр-ва
+
          ParamAdd(Params,'RealWeight_Get',ftFloat);      //
          ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и % скидки для кол-ва)
          ParamAdd(Params,'CountTare',ftFloat);           // Количество тары
@@ -698,6 +702,22 @@ begin
          ParamAdd(Params,'Weight_gd',ftFloat);           // Вес шт. товара
 
          ParamAdd(Params,'Amount_Goods',ftFloat);        //
+
+         // Партия-Пересорт
+         ParamAdd(Params,'PartionDate_in',ftDateTime); //
+         ParamAdd(Params,'PartionDate_out',ftDateTime);   //
+         ParamAdd(Params,'Amount_in_calc',ftFloat);          // Кол-во
+         ParamAdd(Params,'Amount_out_calc',ftFloat);         // Кол-во
+         // Товар-Пересорт
+         ParamAdd(Params,'GoodsId_out',ftInteger);           // Товары
+         ParamAdd(Params,'GoodsCode_out',ftInteger);         // Товары
+         ParamAdd(Params,'GoodsName_out',ftString);          // Товары
+         ParamAdd(Params,'GoodsKindId_out',ftInteger);       // Виды товаров
+         ParamAdd(Params,'GoodsKindCode_out',ftInteger);     // Виды товаров
+         ParamAdd(Params,'GoodsKindName_out',ftString);      // Виды товаров
+         ParamAdd(Params,'MeasureId_out',ftInteger);         // Единица измерения
+         ParamAdd(Params,'MeasureName_out',ftString);        // Единица измерения
+         ParamAdd(Params,'Weight_gd_out',ftFloat);           // Вес шт. товара
 
          ParamAdd(Params,'PartionCellId',ftInteger);       //
          ParamAdd(Params,'PartionCellName',ftString);      //

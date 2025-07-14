@@ -1225,12 +1225,15 @@ begin
          else
             ParamsMovement.ParamByName('PriceListId').AsInteger:= 0;
 
-         //
-         ParamsMI.ParamByName('isAuto_1001').AsBoolean:= cbAuto_1001.Checked;
+         // здесь isModeSave - другая логика
+         ParamsMI.ParamByName('isAuto_1001').AsBoolean:= not isModeSave; //cbAuto_1001.Checked;
          ParamsMI.ParamByName('isPreviewPrint_1001').AsBoolean:= cbPreviewPrint_1001.Checked;
+         //
 
-         // Диалог для параметров товара - Sticker
-         if GuideGoodsStickerForm.Execute (ParamsMovement, isModeSave) = TRUE
+         if cbAuto_1001.Checked = TRUE then GuideGoodsStickerForm.cb_70_70.Checked:= TRUE;
+
+         // Диалог для параметров товара - Sticker + режим ВСЕГДА isModeSave TRUE
+         if GuideGoodsStickerForm.Execute (ParamsMovement, TRUE) = TRUE
          then begin
                     Result:=true;
                     RefreshDataSet;
@@ -2709,7 +2712,14 @@ begin
            Key2:= VK_SPACE;
            if (GetParams_Goods (FALSE, '', TRUE)) and (SettingMain.isSticker = TRUE) and (cbAuto_1001.Checked = FALSE)
            then FormKeyDown(Sender,Key2, []);
-     end;//isRetail=FALSE
+     end
+     else
+         if ((Key = VK_F12)  and (SettingMain.isSticker = TRUE))
+         //or ((Key = VK_SPACE) and (Shift <> []) and (SettingMain.isSticker = TRUE))
+         then
+         begin Key := 0;
+               GetParams_Goods (FALSE, '', FALSE);
+         end;
      //
      if (Key = VK_SPACE) and (Shift = [ssCtrl]) and (GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE'))
          and ((ActiveControl <> EditPartionGoods) or (trim(EditPartionGoods.Text) = '') or (Pos(' ', EditPartionGoods.Text) > 0))

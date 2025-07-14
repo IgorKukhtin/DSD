@@ -853,7 +853,7 @@ begin
        //
        Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
        //для печати этикетки - Заказ клиента
-       if (SettingMain.BranchCode > 1000) and (1=0) //***
+       if (SettingMain.BranchCode > 1000) and (1=1) //***
        then Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight_Get').AsFloat)
        else Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('ChangePercentAmount').AsFloat);
        //
@@ -909,7 +909,7 @@ begin
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //для печати этикетки - Заказ клиента
-       if (SettingMain.BranchCode > 1000) and (1=0) //***
+       if (SettingMain.BranchCode > 1000) and (1=1) //***
        then Params.AddParam('inMovementId_Promo', ftInteger, ptInput, execParamsMI.ParamByName('MovementId_1001').asInteger)
        else Params.AddParam('inMovementId_Promo', ftInteger, ptInput, execParamsMI.ParamByName('MovementId_Promo').AsInteger);
        //
@@ -2155,6 +2155,7 @@ begin
                         execParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         execParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;
                         execParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
+                        execParamsMovement.ParamByName('isPeresort').asBoolean:= CDS.FieldByName('isPeresort').asBoolean;
 
                         execParamsMovement.ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
                         execParamsMovement.ParamByName('isOperPricePartner').asBoolean      := CDS.FieldByName('isOperPricePartner').asBoolean;
@@ -2205,6 +2206,7 @@ begin
                         ParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         ParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;
                         ParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
+                        ParamsMovement.ParamByName('isPeresort').asBoolean:= CDS.FieldByName('isPeresort').asBoolean;
 
                         ParamsMovement.ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
                         ParamsMovement.ParamByName('isOperPricePartner').asBoolean      := CDS.FieldByName('isOperPricePartner').asBoolean;

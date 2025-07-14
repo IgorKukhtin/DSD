@@ -22,7 +22,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdCommon;
+  dxSkinXmas2008Blue, dsdCommon, cxCheckBox;
 
 type
   TGuideGoodsPeresortForm = class(TForm)
@@ -50,9 +50,18 @@ type
     actRefresh: TAction;
     actChoice: TAction;
     actExit: TAction;
-    Weight: TcxGridDBColumn;
-    WeightTare: TcxGridDBColumn;
-    CountForWeight: TcxGridDBColumn;
+    Weight_gd: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    infoPanelGoods_in2: TPanel;
+    infoPanelGoodsCode_in: TPanel;
+    LabelGoodsCode_in: TLabel;
+    PanelGoodsCode_in: TPanel;
+    infoPanelGoodsKindName_in: TPanel;
+    LabelGoodsKindName_in: TLabel;
+    PanelGoodsName_in: TPanel;
+    Panel1: TPanel;
+    cbAll: TcxCheckBox;
+    Key_str: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -67,20 +76,20 @@ type
     procedure EditGoodsCodeEnter(Sender: TObject);
     procedure CDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
-    procedure FormDestroy(Sender: TObject);
     procedure actRefreshExecute(Sender: TObject);
     procedure actChoiceExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
+    procedure cbAllPropertiesChange(Sender: TObject);
   private
     fEnterGoodsCode:Boolean;
     fEnterGoodsName:Boolean;
 
-    ParamsGoods_local: TParams;
+    fStartWrite : Boolean;
 
     procedure CancelCxFilter;
     function Checked: boolean;
   public
-    function Execute(var execParamsGoods:TParams): boolean;
+    function Execute(var execParamsMI:TParams): boolean;
   end;
 
 var
@@ -92,9 +101,9 @@ implementation
 
 uses dmMainScale;
 {------------------------------------------------------------------------------}
-function TGuideGoodsPeresortForm.Execute(var execParamsGoods:TParams): boolean;
+function TGuideGoodsPeresortForm.Execute(var execParamsMI:TParams): boolean;
 begin
-     CopyValuesParamsFrom(execParamsGoods,ParamsGoods_local);
+     fStartWrite:= true;
 
      EditGoodsCode.Text:='';
      EditGoodsName.Text:='';
@@ -102,28 +111,62 @@ begin
      CancelCxFilter;
      CDS.Filtered:=false;
      CDS.Filtered:=true;
+     //
+     with spSelect do
+     begin
+          Params.Clear;
+          Params.AddParam('inGoodsId_in', ftInteger, ptInput, execParamsMI.ParamByName('GoodsId').AsInteger);
+          Params.AddParam('inGoodsKindId_in', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId').AsInteger);
+          Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+          Execute;
+     end;
+     //
+     PanelGoodsCode_in.Caption:= execParamsMI.ParamByName('GoodsCode').AsString;
+     PanelGoodsName_in.Caption:= execParamsMI.ParamByName('GoodsName').AsString + ' ' + execParamsMI.ParamByName('GoodsKindName').AsString;
 
-     if ParamsGoods_local.ParamByName('GoodsId').AsInteger<>0
-     then CDS.Locate('GoodsId',ParamsGoods_local.ParamByName('GoodsId').AsString,[])
-     else if ParamsGoods_local.ParamByName('GoodsCode').AsInteger<>0
-          then CDS.Locate('GoodsCode',ParamsGoods_local.ParamByName('GoodsCode').AsString,[]);
+     if execParamsMI.ParamByName('GoodsId_out').AsInteger<>0
+     then CDS.Locate('Key_str',execParamsMI.ParamByName('GoodsId_out').AsString+'_'+execParamsMI.ParamByName('GoodsKindId_out').AsString,[])
+     ;
 
      fEnterGoodsCode:=false;
      fEnterGoodsName:=false;
      ActiveControl:=EditGoodsName;
      //
      Application.ProcessMessages;
-     Application.ProcessMessages;
-     Application.ProcessMessages;
+
+     cbAll.Checked:= FALSE;
+     fStartWrite:= false;
 
      result:=ShowModal=mrOk;
-     if result then CopyValuesParamsFrom(ParamsGoods_local,execParamsGoods);
+     //if result then CopyValuesParamsFrom(ParamsGoods_local,execParamsGoods);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsPeresortForm.CancelCxFilter;
 begin
      if cxDBGridDBTableView.DataController.Filter.Active
      then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsPeresortForm.cbAllPropertiesChange(Sender: TObject);
+begin
+     //
+     if fStartWrite = TRUE then exit;
+     //
+     with spSelect do
+     begin
+          Params.Clear;
+          if cbAll.Checked = TRUE then
+          begin
+            Params.AddParam('inGoodsId_in', ftInteger, ptInput, 0);
+            Params.AddParam('inGoodsKindId_in', ftInteger, ptInput, 0);
+          end
+          else begin
+            Params.AddParam('inGoodsId_in', ftInteger, ptInput, ParamsMI.ParamByName('GoodsId').AsInteger);
+            Params.AddParam('inGoodsKindId_in', ftInteger, ptInput, ParamsMI.ParamByName('GoodsKindId').AsInteger);
+          end;
+          Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+          Execute;
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsPeresortForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
@@ -169,11 +212,17 @@ begin
      //
      if not Result
      then ActiveControl:=EditGoodsName
-     else with ParamsGoods_local do
+     else with ParamsMI do
           begin
-               ParamByName('GoodsId').AsInteger:= CDS.FieldByName('GoodsId').AsInteger;
-               ParamByName('GoodsCode').AsInteger:= CDS.FieldByName('GoodsCode').AsInteger;
-               ParamByName('GoodsName').asString:= CDS.FieldByName('GoodsName').asString;
+               ParamByName('GoodsId_out').AsInteger:= CDS.FieldByName('GoodsId').AsInteger;
+               ParamByName('GoodsCode_out').AsInteger:= CDS.FieldByName('GoodsCode').AsInteger;
+               ParamByName('GoodsName_out').asString:= CDS.FieldByName('GoodsName').asString;
+               ParamByName('GoodsKindId_out').AsInteger:= CDS.FieldByName('GoodsKindId').AsInteger;
+               ParamByName('GoodsKindCode_out').AsInteger:= CDS.FieldByName('GoodsKindCode').AsInteger;
+               ParamByName('GoodsKindName_out').asString:= CDS.FieldByName('GoodsKindName').asString;
+               ParamByName('MeasureId_out').AsInteger:= CDS.FieldByName('MeasureId').AsInteger;
+               ParamByName('MeasureId_out').AsInteger:= CDS.FieldByName('MeasureId').AsInteger;
+               ParamByName('Weight_gd_out').asFloat:= CDS.FieldByName('Weight_gd').asFloat;
           end;
 end;
 {------------------------------------------------------------------------------}
@@ -239,13 +288,13 @@ procedure TGuideGoodsPeresortForm.EditGoodsNameKeyPress(Sender: TObject; var Key
 begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsPeresortForm.actRefreshExecute(Sender: TObject);
-var GoodsId:String;
+var Key_str:String;
 begin
     with spSelect do begin
-        GoodsId:= DataSet.FieldByName('GoodsId').AsString;
+        Key_str:= DataSet.FieldByName('Key_str').AsString;
         Execute;
-        if GoodsId <> '' then
-          DataSet.Locate('GoodsId',GoodsId,[loCaseInsensitive]);
+        if Key_str <> '' then
+          DataSet.Locate('Key_str',Key_str,[loCaseInsensitive]);
     end;
 end;
 {------------------------------------------------------------------------------}
@@ -261,33 +310,12 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsPeresortForm.FormCreate(Sender: TObject);
 begin
-  Create_ParamsGoodsLine(ParamsGoods_local);
-
   with spSelect do
   begin
-       StoredProcName:='gpSelect_Scale_Goods';
+       StoredProcName:='gpSelect_Scale_GoodsByGoodsKindPeresort';
        OutputType:=otDataSet;
-       Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
-       Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
-       Params.AddParam('inMovementId', ftInteger, ptInput, 0);
-       Params.AddParam('inOrderExternalId', ftInteger, ptInput, 0);
-       Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
-       Params.AddParam('inGoodsCode', ftInteger, ptInput, 0);
-       Params.AddParam('inGoodsName', ftString, ptInput, '');
-       Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput,0);
-       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
-       Execute;
   end;
   //
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Weight').Index].Visible                        := (SettingMain.BranchCode = 1);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].VisibleForCustomization    := (SettingMain.BranchCode = 1);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountForWeight').Index].VisibleForCustomization:= (SettingMain.BranchCode = 1);
-
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsPeresortForm.FormDestroy(Sender: TObject);
-begin
-  ParamsGoods_local.Free;
 end;
 {------------------------------------------------------------------------------}
 end.

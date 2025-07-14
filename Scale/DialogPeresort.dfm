@@ -4,8 +4,6 @@ inherited DialogPeresortForm: TDialogPeresortForm
   ClientWidth = 357
   OldCreateOrder = True
   Position = poScreenCenter
-  OnCloseQuery = FormCloseQuery
-  OnCreate = FormCreate
   ExplicitWidth = 373
   ExplicitHeight = 474
   PixelsPerInch = 96
@@ -18,33 +16,34 @@ inherited DialogPeresortForm: TDialogPeresortForm
     ExplicitWidth = 357
     ExplicitHeight = 50
     inherited bbOk: TBitBtn
-      Left = 21
+      Left = 11
       Width = 88
       Height = 28
       Default = False
       Font.Height = -13
       ParentFont = False
-      ExplicitLeft = 21
+      ExplicitLeft = 11
       ExplicitWidth = 88
       ExplicitHeight = 28
     end
     inherited bbCancel: TBitBtn
-      Left = 117
+      Left = 109
       Width = 88
       Height = 28
       Font.Height = -13
       Kind = bkCustom
       ParentFont = False
-      ExplicitLeft = 117
+      ExplicitLeft = 109
       ExplicitWidth = 88
       ExplicitHeight = 28
     end
     object BitBtn1: TBitBtn
-      Left = 215
+      Left = 211
       Top = 12
       Width = 136
       Height = 28
-      Caption = #1058#1086#1074#1072#1088' '#1056#1072#1089#1093#1086#1076
+      Action = actExec
+      Caption = #1058#1086#1074#1072#1088
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -71,34 +70,31 @@ inherited DialogPeresortForm: TDialogPeresortForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 309
     object LabelGoodsName_in: TLabel
       Left = 0
       Top = 0
-      Width = 357
+      Width = 115
       Height = 14
       Align = alTop
       Caption = '      '#1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1080#1093#1086#1076
       Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clBlue
+      Font.Color = clPurple
       Font.Height = -11
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitLeft = 1
-      ExplicitWidth = 315
     end
-    object cxButtonEdit1: TcxButtonEdit
+    object EditGoodsName_in: TcxButtonEdit
       Left = 5
-      Top = 20
+      Top = 18
       ParentFont = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      Properties.OnButtonClick = EditPartionCellPropertiesButtonClick
       Style.Font.Charset = RUSSIAN_CHARSET
       Style.Font.Color = clBlack
       Style.Font.Height = -13
@@ -106,8 +102,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 0
-      Text = 'EditPartionCell'
-      OnKeyDown = EditPartionCellKeyDown
+      Text = 'EditGoodsName_in'
       Width = 340
     end
   end
@@ -119,7 +114,6 @@ inherited DialogPeresortForm: TDialogPeresortForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 309
     object infoPanelGoodsCode_in: TPanel
       Left = 0
       Top = 0
@@ -128,24 +122,20 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitLeft = 1
-      ExplicitTop = 1
-      ExplicitHeight = 48
       object LabelGoodsCode_in: TLabel
         Left = 0
         Top = 0
-        Width = 105
+        Width = 66
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1050#1086#1076' '#1055#1088#1080#1093#1086#1076
         Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlue
+        Font.Color = clPurple
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = 1
       end
       object PanelGoodsCode_in: TPanel
         Left = 0
@@ -156,14 +146,12 @@ inherited DialogPeresortForm: TDialogPeresortForm
         BevelOuter = bvNone
         Caption = 'PanelGoodsCode_in'
         Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clNavy
+        Font.Color = clBlack
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitLeft = -6
-        ExplicitTop = 8
       end
     end
     object infoPanelGoodsKindName_in: TPanel
@@ -174,25 +162,20 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 106
-      ExplicitTop = 1
-      ExplicitWidth = 208
-      ExplicitHeight = 48
-      object Label5: TLabel
+      object LabelGoodsKindName_in: TLabel
         Left = 0
         Top = 0
-        Width = 252
+        Width = 107
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1055#1088#1080#1093#1086#1076
         Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlue
+        Font.Color = clPurple
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 107
       end
       object PanelGoodsKindName_in: TPanel
         Left = 0
@@ -203,14 +186,12 @@ inherited DialogPeresortForm: TDialogPeresortForm
         BevelOuter = bvNone
         Caption = 'PanelGoodsKindName_in'
         Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clNavy
+        Font.Color = clBlack
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitWidth = 208
-        ExplicitHeight = 34
       end
     end
   end
@@ -222,7 +203,6 @@ inherited DialogPeresortForm: TDialogPeresortForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitWidth = 309
     object infoPanelAmount_in: TPanel
       Left = 0
       Top = 0
@@ -237,21 +217,19 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
-      ExplicitTop = -5
       object LabelAmount_in: TLabel
         Left = 0
         Top = 0
-        Width = 166
+        Width = 102
         Height = 14
         Align = alTop
         Caption = '      '#1050#1086#1083'-'#1074#1086' '#1055#1088#1080#1093#1086#1076
         Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlue
+        Font.Color = clPurple
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 102
       end
       object EditAmount_in: TcxCurrencyEdit
         Left = 5
@@ -261,17 +239,14 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Properties.Alignment.Vert = taVCenter
         Properties.AssignedValues.DisplayFormat = True
         Properties.DecimalPlaces = 0
-        Properties.OnChange = EditTare1PropertiesChange
+        Properties.ReadOnly = True
         Style.Font.Charset = RUSSIAN_CHARSET
-        Style.Font.Color = clNavy
+        Style.Font.Color = clBlack
         Style.Font.Height = -13
         Style.Font.Name = 'Arial'
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
-        OnEnter = EditTare1Enter
-        OnExit = EditTare1Exit
-        OnKeyDown = EditTare5KeyDown
         Width = 115
       end
     end
@@ -283,22 +258,19 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 172
-      ExplicitTop = -5
       object LabelPartionDate_in: TLabel
         Left = 0
         Top = 0
-        Width = 191
+        Width = 102
         Height = 14
         Align = alTop
         Caption = '      '#1055#1072#1088#1090#1080#1103' '#1055#1088#1080#1093#1086#1076
         Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlue
+        Font.Color = clPurple
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 102
       end
       object EditPartionDate_in: TcxDateEdit
         Left = 12
@@ -328,8 +300,21 @@ inherited DialogPeresortForm: TDialogPeresortForm
     Align = alTop
     BevelInner = bvLowered
     TabOrder = 4
-    ExplicitTop = 160
-    ExplicitWidth = 309
+    ExplicitTop = 171
+    object cbRePack: TcxCheckBox
+      Left = 115
+      Top = 14
+      Caption = #1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -13
+      Style.Font.Name = 'Arial'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      TabOrder = 0
+      Width = 121
+    end
   end
   object Panel1: TPanel
     Left = 0
@@ -339,8 +324,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitWidth = 309
-    object Panel2: TPanel
+    object infoPanelGoodsCode_out: TPanel
       Left = 0
       Top = 0
       Width = 105
@@ -348,32 +332,28 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitLeft = 1
-      ExplicitTop = 1
-      ExplicitHeight = 48
       object Label1: TLabel
         Left = 0
         Top = 0
-        Width = 105
+        Width = 81
         Height = 14
         Align = alTop
         Caption = '      '#1050#1086#1076' '#1056#1072#1089#1093#1086#1076
         Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clPurple
+        Font.Color = clBlue
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 81
       end
-      object Panel3: TPanel
+      object PanelGoodsCode_out: TPanel
         Left = 0
         Top = 14
         Width = 105
         Height = 41
         Align = alClient
         BevelOuter = bvNone
-        Caption = 'PanelGoodsCode_in'
+        Caption = 'PanelGoodsCode_out'
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clNavy
         Font.Height = -13
@@ -381,11 +361,9 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitLeft = -6
-        ExplicitTop = 8
       end
     end
-    object Panel4: TPanel
+    object infoPanelGoodsKindName_out: TPanel
       Left = 105
       Top = 0
       Width = 252
@@ -393,34 +371,29 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 106
-      ExplicitTop = 1
-      ExplicitWidth = 208
-      ExplicitHeight = 48
-      object Label2: TLabel
+      object LabelGoodsKindName_out: TLabel
         Left = 0
         Top = 0
-        Width = 252
+        Width = 104
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1056#1072#1089#1093#1086#1076
         Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clPurple
+        Font.Color = clBlue
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 104
       end
-      object Panel5: TPanel
+      object PanelGoodsKindName_out: TPanel
         Left = 0
         Top = 14
         Width = 252
         Height = 41
         Align = alClient
         BevelOuter = bvNone
-        Caption = 'PanelGoodsKindName_in'
+        Caption = 'PanelGoodsKindName_out'
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clNavy
         Font.Height = -13
@@ -428,12 +401,10 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitWidth = 208
-        ExplicitHeight = 34
       end
     end
   end
-  object Panel7: TPanel
+  object infoPanelGoodsName_out: TPanel
     Left = 0
     Top = 271
     Width = 357
@@ -441,44 +412,39 @@ inherited DialogPeresortForm: TDialogPeresortForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitTop = 265
-    ExplicitWidth = 305
-    object Label3: TLabel
+    object LabelGoodsName_out: TLabel
       Left = 0
       Top = 0
-      Width = 357
+      Width = 112
       Height = 14
       Align = alTop
       Caption = '      '#1053#1072#1079#1074#1072#1085#1080#1077' '#1056#1072#1089#1093#1086#1076
       Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clPurple
+      Font.Color = clBlue
       Font.Height = -11
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitTop = -4
-      ExplicitWidth = 309
     end
-    object cxButtonEdit2: TcxButtonEdit
-      Left = 7
+    object EditGoodsName_out: TcxButtonEdit
+      Left = 5
       Top = 20
       ParentFont = False
       Properties.Buttons = <
         item
+          Action = actExec
           Default = True
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      Properties.OnButtonClick = EditPartionCellPropertiesButtonClick
       Style.Font.Charset = RUSSIAN_CHARSET
-      Style.Font.Color = clBlack
+      Style.Font.Color = clNavy
       Style.Font.Height = -13
       Style.Font.Name = 'Arial'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 0
-      Text = 'EditPartionCell'
-      OnKeyDown = EditPartionCellKeyDown
+      Text = 'EditGoodsName_out'
       Width = 340
     end
   end
@@ -490,7 +456,6 @@ inherited DialogPeresortForm: TDialogPeresortForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 7
-    ExplicitWidth = 309
     object Panel9: TPanel
       Left = 0
       Top = 0
@@ -505,24 +470,21 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = -6
-      ExplicitWidth = 114
-      object Label4: TLabel
+      object LabelAmount_out: TLabel
         Left = 0
         Top = 0
-        Width = 166
+        Width = 99
         Height = 14
         Align = alTop
         Caption = '      '#1050#1086#1083'-'#1074#1086' '#1056#1072#1089#1093#1086#1076
         Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clPurple
+        Font.Color = clBlue
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 99
       end
-      object cxCurrencyEdit1: TcxCurrencyEdit
+      object EditAmount_out: TcxCurrencyEdit
         Left = 5
         Top = 20
         ParentFont = False
@@ -530,7 +492,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Properties.Alignment.Vert = taVCenter
         Properties.AssignedValues.DisplayFormat = True
         Properties.DecimalPlaces = 0
-        Properties.OnChange = EditTare1PropertiesChange
+        Properties.ReadOnly = True
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clNavy
         Style.Font.Height = -13
@@ -538,13 +500,10 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
-        OnEnter = EditTare1Enter
-        OnExit = EditTare1Exit
-        OnKeyDown = EditTare5KeyDown
         Width = 115
       end
     end
-    object Panel10: TPanel
+    object infoPanelPartionDate_out: TPanel
       Left = 166
       Top = 0
       Width = 191
@@ -552,23 +511,21 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 111
-      object Label6: TLabel
+      object LabelPartionDate_out: TLabel
         Left = 0
         Top = 0
-        Width = 191
+        Width = 99
         Height = 14
         Align = alTop
-        Caption = '      '#1055#1072#1088#1090#1080#1103' '#1087#1088#1080#1093#1086#1076
+        Caption = '      '#1055#1072#1088#1090#1080#1103' '#1056#1072#1089#1093#1086#1076
         Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clPurple
+        Font.Color = clBlue
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 101
       end
-      object cxDateEdit1: TcxDateEdit
+      object EditPartionDate_out: TcxDateEdit
         Left = 12
         Top = 20
         EditValue = 41640d
@@ -578,7 +535,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Properties.SaveTime = False
         Properties.ShowTime = False
         Style.Font.Charset = RUSSIAN_CHARSET
-        Style.Font.Color = clBlack
+        Style.Font.Color = clNavy
         Style.Font.Height = -13
         Style.Font.Name = 'Arial'
         Style.Font.Style = [fsBold]
@@ -586,6 +543,16 @@ inherited DialogPeresortForm: TDialogPeresortForm
         TabOrder = 0
         Width = 102
       end
+    end
+  end
+  object ActionList: TActionList
+    Left = 64
+    Top = 168
+    object actExec: TAction
+      Category = 'ScaleLib'
+      Caption = #1058#1086#1074#1072#1088
+      Hint = 'actExec'
+      OnExecute = actExecExecute
     end
   end
 end

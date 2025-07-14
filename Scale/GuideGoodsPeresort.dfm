@@ -14,15 +14,14 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 14
   object GridPanel: TPanel
     Left = 0
-    Top = 41
+    Top = 96
     Width = 619
-    Height = 430
+    Height = 375
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -71,8 +70,8 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
         ShowHint = True
       end
       object bbChoice: TSpeedButton
-        Left = 67
-        Top = 3
+        Left = 74
+        Top = 4
         Width = 31
         Height = 29
         Action = actChoice
@@ -93,7 +92,7 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
       Left = 0
       Top = 33
       Width = 619
-      Height = 397
+      Height = 342
       Align = alClient
       TabOrder = 1
       object cxDBGridDBTableView: TcxGridDBTableView
@@ -123,11 +122,18 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
           Width = 35
         end
         object GoodsName: TcxGridDBColumn
-          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          Caption = #1058#1086#1074#1072#1088' '#1056#1072#1089#1093#1086#1076
           DataBinding.FieldName = 'GoodsName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 150
+        end
+        object GoodsKindName: TcxGridDBColumn
+          Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+          DataBinding.FieldName = 'GoodsKindName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
         end
         object MeasureName: TcxGridDBColumn
           Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -136,9 +142,9 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
           HeaderAlignmentVert = vaCenter
           Width = 35
         end
-        object Weight: TcxGridDBColumn
+        object Weight_gd: TcxGridDBColumn
           Caption = #1042#1077#1089
-          DataBinding.FieldName = 'Weight'
+          DataBinding.FieldName = 'Weight_gd'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -146,25 +152,12 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
           HeaderAlignmentVert = vaCenter
           Width = 40
         end
-        object WeightTare: TcxGridDBColumn
-          Caption = #1042#1077#1089' '#1074#1090#1091#1083#1082#1080
-          DataBinding.FieldName = 'WeightTare'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        object Key_str: TcxGridDBColumn
+          DataBinding.FieldName = 'Key_str'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 40
-        end
-        object CountForWeight: TcxGridDBColumn
-          Caption = #1050#1086#1083'. '#1076#1083#1103' '#1042#1077#1089#1072
-          DataBinding.FieldName = 'CountForWeight'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 40
+          Width = 70
         end
       end
       object cxDBGridLevel: TcxGridLevel
@@ -174,7 +167,7 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
   end
   object ParamsPanel: TPanel
     Left = 0
-    Top = 0
+    Top = 55
     Width = 619
     Height = 41
     Align = alTop
@@ -186,7 +179,7 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
       Width = 137
       Height = 41
       Align = alLeft
-      Caption = #1050#1086#1076
+      Caption = #1050#1086#1076' '#1056#1072#1089#1093#1086#1076
       TabOrder = 0
       object EditGoodsCode: TEdit
         Left = 5
@@ -207,7 +200,7 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
       Width = 482
       Height = 41
       Align = alClient
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+      Caption = #1058#1086#1074#1072#1088' '#1056#1072#1089#1093#1086#1076
       TabOrder = 1
       object EditGoodsName: TEdit
         Left = 5
@@ -220,6 +213,114 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
         OnEnter = EditGoodsNameEnter
         OnKeyDown = EditGoodsNameKeyDown
         OnKeyPress = EditGoodsNameKeyPress
+      end
+    end
+  end
+  object infoPanelGoods_in2: TPanel
+    Left = 0
+    Top = 0
+    Width = 619
+    Height = 55
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 2
+    object infoPanelGoodsCode_in: TPanel
+      Left = 0
+      Top = 0
+      Width = 105
+      Height = 55
+      Align = alLeft
+      BevelOuter = bvNone
+      TabOrder = 0
+      object LabelGoodsCode_in: TLabel
+        Left = 0
+        Top = 0
+        Width = 105
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1050#1086#1076' '#1055#1088#1080#1093#1086#1076
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clPurple
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 66
+      end
+      object PanelGoodsCode_in: TPanel
+        Left = 0
+        Top = 14
+        Width = 105
+        Height = 41
+        Align = alClient
+        BevelOuter = bvNone
+        Caption = 'PanelGoodsCode_in'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+      end
+    end
+    object infoPanelGoodsKindName_in: TPanel
+      Left = 105
+      Top = 0
+      Width = 391
+      Height = 55
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+      object LabelGoodsKindName_in: TLabel
+        Left = 0
+        Top = 0
+        Width = 391
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1058#1086#1074#1072#1088' '#1055#1088#1080#1093#1086#1076
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clPurple
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 78
+      end
+      object PanelGoodsName_in: TPanel
+        Left = 0
+        Top = 14
+        Width = 391
+        Height = 41
+        Align = alClient
+        BevelOuter = bvNone
+        Caption = 'PanelGoodsName_in'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+      end
+    end
+    object Panel1: TPanel
+      Left = 496
+      Top = 0
+      Width = 123
+      Height = 55
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 2
+      object cbAll: TcxCheckBox
+        Left = 6
+        Top = 27
+        Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1057#1045
+        Properties.OnChange = cbAllPropertiesChange
+        TabOrder = 0
+        Width = 105
       end
     end
   end

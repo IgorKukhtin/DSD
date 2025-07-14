@@ -1069,9 +1069,19 @@ begin
      else
      with ParamsMI do begin
         ParamByName('GoodsId').AsInteger:=CDS.FieldByName('GoodsId').AsInteger;
+        ParamByName('GoodsCode').AsInteger:=CDS.FieldByName('GoodsCode').AsInteger;
+        ParamByName('GoodsName').AsString:=CDS.FieldByName('GoodsName').AsString;
+
         if rgGoodsKind.Items.Count > 1
         then ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
         else ParamByName('GoodsKindId').AsInteger:= 0;
+        ParamByName('GoodsKindName').AsString:= rgGoodsKind.Items[rgGoodsKind.ItemIndex];
+
+        ParamByName('MeasureId').AsInteger:= CDS.FieldByName('MeasureId').AsInteger;
+        ParamByName('MeasureName').AsString:= CDS.FieldByName('MeasureName').AsString;
+
+        // Вес шт. товара
+        ParamByName('Weight_gd').AsFloat:= CDS.FieldByName('Weight').AsFloat;
 
         ParamByName('MovementId_Promo').AsInteger:=CDS.FieldByName('MovementId_Promo').AsInteger;
 
@@ -1534,12 +1544,14 @@ begin
                 exit;
           end;
      //***
-     if not DialogPeresortForm.Execute(ParamsMovement,ParamsMI)
-     then begin
-              Result:= false;
-              ActiveControl:= EditGoodsCode;
-              exit;
-      end;
+     if ParamsMovement.ParamByName('isPeresort').AsBoolean = TRUE
+     then
+       if not DialogPeresortForm.Execute(ParamsMovement,ParamsMI)
+       then begin
+                Result:= false;
+                ActiveControl:= EditTareCount;
+                exit;
+        end;
 
      //
      //Save MI

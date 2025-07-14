@@ -19,19 +19,20 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, Vcl.ComCtrls, dxCore, cxDateUtils, cxButtonEdit,
-  cxMaskEdit, cxDropDownEdit, cxCalendar, Data.DB, Datasnap.DBClient, dsdCommon;
+  cxMaskEdit, cxDropDownEdit, cxCalendar, Data.DB, Datasnap.DBClient, dsdCommon,
+  cxCheckBox;
 
 type
   TDialogPeresortForm = class(TAncestorDialogScaleForm)
     infoPanelGoodsName_in: TPanel;
     LabelGoodsName_in: TLabel;
-    cxButtonEdit1: TcxButtonEdit;
+    EditGoodsName_in: TcxButtonEdit;
     infoPanelGoods_in2: TPanel;
     infoPanelGoodsCode_in: TPanel;
     LabelGoodsCode_in: TLabel;
     PanelGoodsCode_in: TPanel;
     infoPanelGoodsKindName_in: TPanel;
-    Label5: TLabel;
+    LabelGoodsKindName_in: TLabel;
     PanelGoodsKindName_in: TPanel;
     PanelTare4: TPanel;
     infoPanelAmount_in: TPanel;
@@ -42,59 +43,30 @@ type
     EditPartionDate_in: TcxDateEdit;
     infoPanel: TPanel;
     Panel1: TPanel;
-    Panel2: TPanel;
+    infoPanelGoodsCode_out: TPanel;
     Label1: TLabel;
-    Panel3: TPanel;
-    Panel4: TPanel;
-    Label2: TLabel;
-    Panel5: TPanel;
-    Panel7: TPanel;
-    Label3: TLabel;
-    cxButtonEdit2: TcxButtonEdit;
+    PanelGoodsCode_out: TPanel;
+    infoPanelGoodsKindName_out: TPanel;
+    LabelGoodsKindName_out: TLabel;
+    PanelGoodsKindName_out: TPanel;
+    infoPanelGoodsName_out: TPanel;
+    LabelGoodsName_out: TLabel;
+    EditGoodsName_out: TcxButtonEdit;
     Panel8: TPanel;
     Panel9: TPanel;
-    Label4: TLabel;
-    cxCurrencyEdit1: TcxCurrencyEdit;
-    Panel10: TPanel;
-    Label6: TLabel;
-    cxDateEdit1: TcxDateEdit;
+    LabelAmount_out: TLabel;
+    EditAmount_out: TcxCurrencyEdit;
+    infoPanelPartionDate_out: TPanel;
+    LabelPartionDate_out: TLabel;
+    EditPartionDate_out: TcxDateEdit;
     BitBtn1: TBitBtn;
-    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-    procedure FormCreate(Sender: TObject);
-    procedure EditTare1KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure EditTare2KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure EditTare3KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure EditTare4KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure EditTare5KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure EditTare6KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure EditTare7KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure EditTare8KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure EditTare9KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure EditTare10KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    ActionList: TActionList;
+    actExec: TAction;
+    cbRePack: TcxCheckBox;
     procedure EditPartionCellKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure EditTare1Enter(Sender: TObject);
-    procedure EditTare1Exit(Sender: TObject);
-    procedure EditTare1PropertiesChange(Sender: TObject);
-    procedure EditPartionCellPropertiesButtonClick(Sender: TObject;
-      AButtonIndex: Integer);
-    procedure EditWeightTare2KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure EditWeightTare1KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure EditTare0KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure infoPanelGoods_inClick(Sender: TObject);
+    procedure actExecExecute(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     PartionCellId : Integer;
     MeasureId : Integer;
@@ -139,64 +111,27 @@ uses UtilScale, GuideGoodsPeresort, dmMainScale;
 {------------------------------------------------------------------------------}
 function TDialogPeresortForm.Execute(var execParamsMovement:TParams;var execParamsMI:TParams): boolean;
 begin
-{
+     execParamsMI.ParamByName('Amount_in_calc').AsFloat:= execParamsMI.ParamByName('RealWeight').AsFloat
+                                                        - execParamsMI.ParamByName('CountTare').AsFloat
+                                                        * execParamsMI.ParamByName('WeightTare').AsFloat
+                                                         ;
      //
-     if not DMMainScaleCehForm.gpGet_Scale_Goods_gk(execParamsMI) then exit;
-
-     //Количество упаковок - Флоупак +  Нар.180 + Нар. 200
-     EditTare0.Text:=FloatToStr(execParamsMI.ParamByName('CountPack').AsFloat);
-     // Вес 1-ой упаковки
-     WeightPack:= execParamsMI.ParamByName('WeightPack').AsFloat;
-     // Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
-     if execParamsMI.ParamByName('NamePack').AsString <> ''
-     then WeightTare_0:= execParamsMI.ParamByName('WeightPack').AsFloat
-     else WeightTare_0:= 0;
-
-     // Вес товара для шт.
-     Weight_gd:= execParamsMI.ParamByName('Weight_gd').AsFloat;
-
-     // Название 1-ой упаковки - Флоупак +  Нар.180 + Нар
-     if execParamsMI.ParamByName('NamePack').AsString <> ''
-     then if execParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh
-          then LabelTare0.Caption:= 'Кол-во ' + execParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(execParamsMI.ParamByName('Weight_gd').AsFloat)+' кг.) + ('+FloatToStr(execParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
-          else LabelTare0.Caption:= 'Кол-во ' + execParamsMI.ParamByName('NamePack').AsString + ' ('+FloatToStr(execParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
-     else if execParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh
-          then LabelTare0.Caption:= 'Нет Кол-во Флоупак ('+FloatToStr(execParamsMI.ParamByName('Weight_gd').AsFloat)+' кг.) + ('+FloatToStr(execParamsMI.ParamByName('WeightPack').AsFloat)+' кг.)'
-          else LabelTare0.Caption:= 'Нет Кол-во Флоупак';
-
-
-     // на старте этот поддон
-     if (execParamsMI.ParamByName('CountTare1').AsFloat = 0)
-    and (execParamsMI.ParamByName('CountTare1').AsFloat = 0)
-     then begin execParamsMI.ParamByName('CountTare1').AsFloat:= 1; ActiveControl:= EditWeightTare1; end
-     else ActiveControl:= EditTare1;
-
-
-     EditTare1.Text:=FloatToStr(execParamsMI.ParamByName('CountTare1').AsFloat);
-     EditWeightTare1.Text:=FloatToStr(SettingMain.WeightTare1);
-     EditTare2.Text:=FloatToStr(execParamsMI.ParamByName('CountTare2').AsFloat);
-     EditWeightTare2.Text:=FloatToStr(SettingMain.WeightTare2);
-
-     EditTare3.Text:=FloatToStr(execParamsMI.ParamByName('CountTare3').AsFloat);
-     EditTare4.Text:=FloatToStr(execParamsMI.ParamByName('CountTare4').AsFloat);
-     EditTare5.Text:=FloatToStr(execParamsMI.ParamByName('CountTare5').AsFloat);
-     EditTare6.Text:=FloatToStr(execParamsMI.ParamByName('CountTare6').AsFloat);
-     EditTare7.Text:=FloatToStr(execParamsMI.ParamByName('CountTare7').AsFloat);
-     EditTare8.Text:=FloatToStr(execParamsMI.ParamByName('CountTare8').AsFloat);
-     EditTare9.Text:=FloatToStr(execParamsMI.ParamByName('CountTare9').AsFloat);
-     EditTare10.Text:=FloatToStr(execParamsMI.ParamByName('CountTare10').AsFloat);
+     PanelGoodsCode_in.Caption:= execParamsMI.ParamByName('GoodsCode').AsString;
+     EditGoodsName_in.Text:= execParamsMI.ParamByName('GoodsName').AsString;
+     PanelGoodsKindName_in.Caption:= execParamsMI.ParamByName('GoodsKindName').AsString;
+     EditAmount_in.Text:= FloatToStr(execParamsMI.ParamByName('Amount_in_calc').AsFloat);
+     EditAmount_in.Properties.DisplayFormat:= ',0.#### ' + execParamsMI.ParamByName('MeasureName').AsString;
+     EditPartionDate_in.Date:= Date;
      //
-     PartionCellId:=execParamsMI.ParamByName('PartionCellId').AsInteger;
-     EditPartionCell.Text:= execParamsMI.ParamByName('PartionCellName').AsString;
+     PanelGoodsCode_out.Caption:= execParamsMI.ParamByName('GoodsCode_out').AsString;
+     EditGoodsName_out.Text:= execParamsMI.ParamByName('GoodsName_out').AsString;
+     PanelGoodsKindName_out.Caption:= execParamsMI.ParamByName('GoodsKindName_out').AsString;
+     //подставляется приход
+     EditAmount_out.Text:= FloatToStr(execParamsMI.ParamByName('Amount_in_calc').AsFloat);
      //
-     PartionDateEdit.Text:= DateToStr(execParamsMovement.ParamByName('OperDate').AsDateTime);
-     //
-     RealWeight:= execParamsMI.ParamByName('RealWeight').AsFloat;
-     RealWeight_Get:= execParamsMI.ParamByName('RealWeight_Get').AsFloat;
-     MeasureId:= execParamsMI.ParamByName('MeasureId').AsInteger;
-     //
-     EditTare1PropertiesChange(EditTare1);
-     }
+     EditAmount_out.Properties.DisplayFormat:= ',0.#### ' + execParamsMI.ParamByName('MeasureName_out').AsString;
+     EditPartionDate_out.Date:= Date;
+
      //
      result:=(ShowModal=mrOk);
      //
@@ -228,166 +163,58 @@ begin
      }
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditPartionCellPropertiesButtonClick(Sender: TObject;  AButtonIndex: Integer);
-var lParams:TParams;
+procedure TDialogPeresortForm.FormResize(Sender: TObject);
 begin
-         Create_ParamsGoodsLine(lParams);
+  exit;
+  inherited;
 
-           Create_ParamsPartionCell(lParams);
-           lParams.ParamByName('PartionCellId').asInteger:=0;
-           lParams.ParamByName('PartionCellName').asString:='';
-           lParams.ParamByName('InvNumber').asString:='';
-            //
-            if 1=1 //GuidePartionCellForm.Execute(lParams)
-            then
-            begin
-                 PartionCellId:=lParams.ParamByName('PartionCellId').AsInteger;
-                 //
-                 //EditPartionCell.Text:= lParams.ParamByName('PartionCellName').AsString;
-                 EditPartionCell.Text:= lParams.ParamByName('InvNumber').AsString;
-            end
-            else
-            begin
-                 PartionCellId:=0;
-                 //
-                 EditPartionCell.Text:= '';
-            end;
-            lParams.Free;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare1Enter(Sender: TObject);
-begin
-     TEdit(Sender).SelectAll;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare1Exit(Sender: TObject);
-begin
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare1PropertiesChange(Sender: TObject);
-begin
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditWeightTare1KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditTare2;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditWeightTare2KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditTare3;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare1KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditWeightTare1;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare2KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditWeightTare2;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare3KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditTare4;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare4KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditTare5;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare5KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditTare6;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare6KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditTare7;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare7KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditTare8;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare8KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditTare9;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare9KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditTare10;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare10KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditTare0KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=EditPartionCell;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPeresortForm.EditPartionCellKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-    //if Key=13
-    //then ActiveControl:=bbOk;
+    if Key=13
+    then ActiveControl:=bbOk;
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.FormCloseQuery(Sender: TObject;var CanClose: Boolean);
+procedure TDialogPeresortForm.actExecExecute(Sender: TObject);
 begin
-  inherited;
-  CanClose:= true;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.FormCreate(Sender: TObject);
-begin
-  inherited;
-  //
-  with spSelect do
-  begin
+  if GuideGoodsPeresortForm.Execute(ParamsMI)
+  then begin
+     PanelGoodsCode_out.Caption:= ParamsMI.ParamByName('GoodsCode_out').AsString;
+     EditGoodsName_out.Text:= ParamsMI.ParamByName('GoodsName_out').AsString;
+     PanelGoodsKindName_out.Caption:= ParamsMI.ParamByName('GoodsKindName_out').AsString;
+     //
+     if ParamsMI.ParamByName('MeasureId').AsInteger = ParamsMI.ParamByName('MeasureId_out').AsInteger
+     then //не меняется
+          ParamsMI.ParamByName('Amount_out_calc').AsFloat:= ParamsMI.ParamByName('Amount_in_calc').AsFloat
+
+     else if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_sh)
+         and (ParamsMI.ParamByName('MeasureId_out').AsInteger = zc_Measure_kg)
+          then //переводится в вес
+               ParamsMI.ParamByName('Amount_out_calc').AsFloat:= _myTrunct_3(ParamsMI.ParamByName('Amount_in_calc').AsFloat * ParamsMI.ParamByName('Weight_gd_out').AsFloat)
+
+          else if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_kg)
+              and (ParamsMI.ParamByName('MeasureId_out').AsInteger = zc_Measure_sh)
+              and (ParamsMI.ParamByName('Weight_gd_out').AsFloat > 0)
+          then //переводится в шт
+               ParamsMI.ParamByName('Amount_out_calc').AsFloat:= ROUND(ParamsMI.ParamByName('Amount_in_calc').AsFloat / ParamsMI.ParamByName('Weight_gd_out').AsFloat)
+          else
+              ParamsMI.ParamByName('Amount_out_calc').AsFloat:= 0;
+     //
+     EditAmount_out.Text:= FloatToStr(ParamsMI.ParamByName('Amount_out_calc').AsFloat);
+     EditAmount_out.Properties.DisplayFormat:= ',0.#### ' + ParamsMI.ParamByName('MeasureName_out').AsString;
+     //
+     ActiveControl:=bbOk;
   end;
-end;
-
-procedure TDialogPeresortForm.infoPanelGoods_inClick(Sender: TObject);
-begin
-  inherited;
 
 end;
-
 {------------------------------------------------------------------------------}
 function TDialogPeresortForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
+     Result:= false;
+     if True then
+
      Result:= true;
 end;
 {------------------------------------------------------------------------------}

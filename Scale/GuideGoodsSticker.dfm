@@ -323,7 +323,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           object EditWeightValue: TcxCurrencyEdit
             Left = 5
             Top = 15
-            EditValue = 2.000000000000000000
+            EditValue = 1.000000000000000000
             Properties.Alignment.Horz = taRightJustify
             Properties.Alignment.Vert = taVCenter
             Properties.AssignedValues.DisplayFormat = True
@@ -497,8 +497,8 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           BevelOuter = bvNone
           TabOrder = 3
           object cb_70_70: TcxCheckBox
-            Left = 15
-            Top = -1
+            Left = 14
+            Top = -2
             Caption = '70 x 70'
             TabOrder = 0
             OnClick = cb_70_70Click
