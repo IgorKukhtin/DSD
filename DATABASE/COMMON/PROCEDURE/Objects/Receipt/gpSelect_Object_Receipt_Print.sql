@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpselect_object_receipt_print(
   RETURNS TABLE(receiptid integer, code integer, name tvarchar, receiptcode tvarchar, isMain Boolean
               , value tfloat, ValueWeight TFloat, taxexit tfloat, partionvalue tfloat, partioncount tfloat, weightpackage tfloat
               , startdate tdatetime
-              , GoodsGroupName tvarchar, goodsid integer, goodsCode integer, goodsname tvarchar, goodskindname tvarchar
+              , GoodsGroupName tvarchar, goodsid integer, goodsCode integer, goodsname tvarchar
+              , goodskindname tvarchar, GoodsKindCompleteName TVarChar
               , measurename tvarchar
               , infomoneyname tvarchar
               , ChildValueWeight TFloat
@@ -55,6 +56,7 @@ BEGIN
          , Object_Goods.ObjectCode       AS GoodsCode
          , Object_Goods.ValueData        AS GoodsName
          , Object_GoodsKind.ValueData    AS GoodsKindName
+         , Object_GoodsKindComplete.ValueData AS GoodsKindCompleteName
          , Object_Measure.ValueData      AS MeasureName
          , Object_InfoMoney_View.InfoMoneyName ::TVarChar as InfoMoneyName
 
@@ -107,6 +109,11 @@ BEGIN
                               AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_Receipt_GoodsKind.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
+                               ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = Object_Receipt.Id
+                              AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
+          LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = ObjectLink_Receipt_GoodsKindComplete.ChildObjectId
+                                                            
           LEFT JOIN ObjectDate AS ObjectDate_StartDate
                                ON ObjectDate_StartDate.ObjectId = Object_Receipt.Id
                               AND ObjectDate_StartDate.DescId = zc_ObjectDate_Receipt_Start()
