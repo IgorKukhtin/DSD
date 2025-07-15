@@ -1404,7 +1404,7 @@ begin
               LabelStringValue.Caption:='Партия СЫРЬЯ';
               ActiveControl:=StringValueEdit;
               StringValueEdit.Text:=CDS.FieldByName('PartionGoods').AsString;
-              if not Execute (true, false) then begin execParams.Free;exit;end;
+              if not Execute (true, false, false) then begin execParams.Free;exit;end;
               //
               ParamAddValue(execParams,'inValueData',ftString,StringValueEdit.Text);
               DMMainScaleForm.gpUpdate_Scale_MIString(execParams);
@@ -1761,7 +1761,7 @@ begin
           LabelStringValue.Caption:='Документ поставщика № для <'+ParamsMovement.ParamByName('MovementDescName_master').asString+'>';
           ActiveControl:=StringValueEdit;
           StringValueEdit.Text:=ParamsMovement.ParamByName('InvNumberPartner').AsString;
-          if Execute (false, false)
+          if Execute (false, false, false)
           then begin ParamsMovement.ParamByName('InvNumberPartner').AsString:= StringValueEdit.Text;
                      PanelPartner.Caption:=GetPanelPartnerCaption(ParamsMovement);
           end;
@@ -1786,7 +1786,7 @@ begin
           LabelStringValue.Caption:='Ввод примечания для <'+ParamsMovement.ParamByName('MovementDescName_master').asString+'>';
           ActiveControl:=StringValueEdit;
           StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
-          if Execute (false, false)
+          if Execute (false, false, false)
           then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
           //
           EditSubjectDoc.Text:= ParamsMovement.ParamByName('DocumentComment').AsString;
@@ -1853,7 +1853,7 @@ begin
                     LabelStringValue.Caption:='Ввод примечания для <'+execParams.ParamByName('SubjectDocName').AsString+'>';
                     ActiveControl:=StringValueEdit;
                     StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
-                    if Execute (false, false)
+                    if Execute (false, false, false)
                     then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
                     //
                     EditSubjectDoc.Text:= EditSubjectDoc.Text + ' / ' + ParamsMovement.ParamByName('DocumentComment').AsString;
@@ -2769,7 +2769,7 @@ begin
                    if GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE')
                    then with DialogStringValueForm do
                         begin
-                             if not Execute (false, true) then begin ShowMessage ('Действие отменено.');exit;end;
+                             if not Execute (false, true, false) then begin ShowMessage ('Действие отменено.');exit;end;
                              //
                              if DMMainScaleForm.gpGet_Scale_PSW_delete (StringValueEdit.Text) <> ''
                              then begin ShowMessage ('Пароль неверный.Действие отменено.');exit;end;

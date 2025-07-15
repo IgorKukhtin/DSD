@@ -35,10 +35,6 @@ type
     bbChoice: TSpeedButton;
     spSelect: TdsdStoredProc;
     CDS: TClientDataSet;
-    gbGoodsCode: TGroupBox;
-    EditGoodsCode: TEdit;
-    gbGoodsName: TGroupBox;
-    EditGoodsName: TEdit;
     cxDBGrid: TcxGrid;
     cxDBGridDBTableView: TcxGridDBTableView;
     cxDBGridLevel: TcxGridLevel;
@@ -62,6 +58,12 @@ type
     Panel1: TPanel;
     cbAll: TcxCheckBox;
     Key_str: TcxGridDBColumn;
+    infoPanelGoodsCode_out: TPanel;
+    Label1: TLabel;
+    EditGoodsCode: TEdit;
+    infoPanelGoodsName_out: TPanel;
+    LabelGoodsName_out: TLabel;
+    EditGoodsName: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;

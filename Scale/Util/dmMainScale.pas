@@ -56,6 +56,8 @@ type
     function gpGet_Scale_PSW_delete (inPSW: String): String;
     // !!!Scale + ScaleCeh!!!
     function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean; CountMovement,CountAccount,CountTransport,CountQuality,CountPack,CountSpec,CountTax : Integer): Boolean;
+    // Scale
+    function gpGet_Scale_GoodsByGoodsKindPeresort_check(var execParamsMI:TParams): Boolean;
     //
     // +++Scale+++
     function gpGet_Scale_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
@@ -117,6 +119,29 @@ begin
     //
     Result:=DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
 end;}
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_GoodsByGoodsKindPeresort_check(var execParamsMI:TParams): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_GoodsByGoodsKindPeresort_check';
+       OutputType:=otDataSet;
+       Params.Clear;
+
+       Params.AddParam('inGoodsId_in', ftInteger, ptInput, execParamsMI.ParamByName('GoodsId').AsInteger);
+       Params.AddParam('inGoodsKindId_in', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId').AsInteger);
+       Params.AddParam('inGoodsId_out', ftInteger, ptInput, execParamsMI.ParamByName('GoodsId_out').AsInteger);
+       Params.AddParam('inGoodsKindId_out', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId_out').AsInteger);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+
+       //try
+         Execute;
+       //
+       Result:= DataSet.FieldByName('isOk').AsBoolean = TRUE;
+    end;
+end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
 begin
@@ -893,6 +918,14 @@ begin
        Params.AddParam('inTareId_10', ftInteger, ptInput, SettingMain.TareId_10);
 
        Params.AddParam('inPartionCellId', ftInteger, ptInput, execParamsMI.ParamByName('PartionCellId').AsInteger);
+
+       // Партия-Пересорт
+       Params.AddParam('inGoodsId_out', ftInteger, ptInput, execParamsMI.ParamByName('GoodsId_out').AsInteger);
+       Params.AddParam('inGoodsKindId_out', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId_out').AsInteger);
+       Params.AddParam('inPartionDate_out', ftDateTime, ptInput, execParamsMI.ParamByName('PartionDate_out').AsDateTime);
+       Params.AddParam('inPartionDate_in', ftDateTime, ptInput, execParamsMI.ParamByName('PartionDate_in').AsDateTime);
+       Params.AddParam('inAmount_in_calc', ftFloat, ptInput, execParamsMI.ParamByName('Amount_in_calc').AsFloat);
+       Params.AddParam('inAmount_out_calc', ftFloat, ptInput, execParamsMI.ParamByName('Amount_out_calc').AsFloat);
 
        Params.AddParam('inPrice', ftFloat, ptInput, execParamsMI.ParamByName('Price').AsFloat);
        Params.AddParam('inPrice_Return', ftFloat, ptInput, execParamsMI.ParamByName('Price_Return').AsFloat);

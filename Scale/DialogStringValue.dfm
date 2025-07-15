@@ -6,14 +6,14 @@ inherited DialogStringValueForm: TDialogStringValueForm
   Position = poScreenCenter
   OnCloseQuery = FormCloseQuery
   ExplicitWidth = 449
-  ExplicitHeight = 125
+  ExplicitHeight = 129
   PixelsPerInch = 96
   TextHeight = 14
   inherited bbPanel: TPanel
     Top = 49
     Width = 433
     ExplicitTop = 49
-    ExplicitWidth = 237
+    ExplicitWidth = 433
   end
   object PanelStringValue: TPanel
     Left = 0
@@ -23,7 +23,6 @@ inherited DialogStringValueForm: TDialogStringValueForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 237
     object LabelStringValue: TLabel
       Left = 0
       Top = 0

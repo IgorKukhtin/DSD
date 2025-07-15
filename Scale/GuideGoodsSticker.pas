@@ -763,7 +763,7 @@ begin
            then actExitExecute(Self)
            else with DialogStringValueForm do
                 begin
-                     if not Execute (false, true) then begin ShowMessage ('Для отмены ПЕЧАТИ ЭТИКЕТОК необходимо ввести пароль.'); exit; end;
+                     if not Execute (false, true, false) then begin ShowMessage ('Для отмены ПЕЧАТИ ЭТИКЕТОК необходимо ввести пароль.'); exit; end;
                      //
                      if DMMainScaleForm.gpGet_Scale_PSW_delete (StringValueEdit.Text) <> ''
                      then begin ShowMessage ('Пароль неверный.Отменить ПЕЧАТЬ ЭТИКЕТОК нельзя.');exit;end
@@ -1376,7 +1376,7 @@ begin
            then CanClose:=true
            else with DialogStringValueForm do
                 begin
-                     if not Execute (false, true) then begin ShowMessage ('Для отмены взвешивания необходимо ввести пароль.'); exit; end;
+                     if not Execute (false, true, false) then begin ShowMessage ('Для отмены взвешивания необходимо ввести пароль.'); exit; end;
                      //
                      if DMMainScaleForm.gpGet_Scale_PSW_delete (StringValueEdit.Text) <> ''
                      then begin ShowMessage ('Пароль неверный.Отменить взвешивание нельзя.');exit;end
