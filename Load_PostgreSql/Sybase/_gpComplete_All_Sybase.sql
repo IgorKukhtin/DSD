@@ -30,7 +30,17 @@ THEN RETURN; END IF;
      IF vbStatusId_next = zc_Enum_Status_UnComplete() THEN RETURN; END IF;
      
 
-if CURRENT_TIMESTAMP between '09.07.2025 8:35' and '09.07.2025 22:00' AND 1=0
+
+
+if CURRENT_TIMESTAMP between '15.07.2025 9:00' and '15.07.2025 09:10' AND 1=0
+   and not exists (select 1 from _bi_Table_Remains where OperDate > '15.07.2025')
+then
+    PERFORM gpInsert_bi_Table_Remains (inOperDate:= '15.07.2025', inSession:= zfCalc_UserAdmin());
+    RETURN;
+END IF;
+
+
+if CURRENT_TIMESTAMP between '15.07.2025 8:05' and '15.07.2025 22:00' AND 1=0
 then
     RAISE EXCEPTION 'Ошибка.ok-pause';
 end if;
