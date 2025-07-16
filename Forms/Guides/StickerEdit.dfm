@@ -377,9 +377,16 @@
   end
   object cbDatEnd: TcxCheckBox
     Left = 368
-    Top = 494
+    Top = 492
     Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1074#1078#1080#1090#1080' '#1076#1086
     TabOrder = 47
+    Width = 169
+  end
+  object cbisnotInfoComment: TcxCheckBox
+    Left = 368
+    Top = 517
+    Caption = #1057#1082#1088#1099#1090#1100' '#1089#1083#1086#1074#1086' "'#1057#1054#1057#1058#1040#1042'"'
+    TabOrder = 48
     Width = 169
   end
   object ActionList: TActionList
@@ -614,6 +621,14 @@
         Name = 'inisDatEnd'
         Value = Null
         Component = cbDatEnd
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisnotInfoComment'
+        Value = Null
+        Component = cbisnotInfoComment
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -896,6 +911,13 @@
         Name = 'isDatEnd'
         Value = Null
         Component = cbDatEnd
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isnotInfoComment'
+        Value = Null
+        Component = cbisnotInfoComment
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

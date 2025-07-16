@@ -265,6 +265,15 @@ object Sticker_ObjectForm: TSticker_ObjectForm
         Options.Editing = False
         Width = 80
       end
+      object isnotInfoComment: TcxGridDBColumn
+        Caption = #1057#1082#1088#1099#1090#1100' '#1089#1083#1086#1074#1086' "'#1057#1054#1057#1058#1040#1042'"'
+        DataBinding.FieldName = 'isnotInfoComment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1082#1088#1099#1090#1100' '#1089#1083#1086#1074#1086' "'#1057#1054#1057#1058#1040#1042'" ('#1076#1072' / '#1085#1077#1090')'
+        Options.Editing = False
+        Width = 80
+      end
       object Value1: TcxGridDBColumn
         Caption = #1059#1075#1083#1077#1074#1086#1076#1080' '#1085#1077' '#1073#1086#1083#1100#1096#1077
         DataBinding.FieldName = 'Value1'
@@ -979,6 +988,15 @@ object Sticker_ObjectForm: TSticker_ObjectForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'isDatEnd'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisnotInfoComment'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isnotInfoComment'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

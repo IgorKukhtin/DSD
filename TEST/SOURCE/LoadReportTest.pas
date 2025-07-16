@@ -165,8 +165,10 @@ begin
   exit;
   LoadReportFromFile('PrintMovement_PromoTrade', ReportPath + '\Товарный Учет\PrintMovement_PromoTrade.fr3');
   exit;
-
-  LoadReportFromFile('Печать_Снятие с хранения в места отбора', ReportPath + '\Отчеты (товарные)\Печать_Снятие с хранения в места отбора.fr3');
+  }
+  LoadReportFromFile('PrintMovement_PromoTradeOkupaemost', ReportPath + '\Товарный Учет\PrintMovement_PromoTradeOkupaemost.fr3');
+  exit;
+  {LoadReportFromFile('Печать_Снятие с хранения в места отбора', ReportPath + '\Отчеты (товарные)\Печать_Снятие с хранения в места отбора.fr3');
   exit;
   LoadReportFromFile('PrintUser_Badge', ReportPath + '\Справочники\PrintUser_Badge.fr3');
 

@@ -197,18 +197,18 @@ BEGIN
                               ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
              LEFT JOIN tmpMovementDate AS MovementDate_StartPromo
-                                     ON MovementDate_StartPromo.MovementId = Movement_PromoTrade.Id
-                                    AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                       ON MovementDate_StartPromo.MovementId = Movement_PromoTrade.Id
+                                      AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
              LEFT JOIN tmpMovementDate AS MovementDate_EndPromo
-                                     ON MovementDate_EndPromo.MovementId =  Movement_PromoTrade.Id
-                                    AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                       ON MovementDate_EndPromo.MovementId =  Movement_PromoTrade.Id
+                                      AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
 
              LEFT JOIN tmpMovementDate AS MovementDate_OperDateStart
-                                    ON MovementDate_OperDateStart.MovementId = Movement_PromoTrade.Id
-                                   AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+                                       ON MovementDate_OperDateStart.MovementId = Movement_PromoTrade.Id
+                                      AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
              LEFT JOIN tmpMovementDate AS MovementDate_OperDateEnd
-                                    ON MovementDate_OperDateEnd.MovementId = Movement_PromoTrade.Id
-                                   AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+                                       ON MovementDate_OperDateEnd.MovementId = Movement_PromoTrade.Id
+                                      AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
              LEFT JOIN tmpMovementFloat AS MovementFloat_CostPromo
                                         ON MovementFloat_CostPromo.MovementId = Movement_PromoTrade.Id

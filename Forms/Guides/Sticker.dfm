@@ -415,6 +415,15 @@ object StickerForm: TStickerForm
         Options.Editing = False
         Width = 80
       end
+      object isnotInfoComment: TcxGridDBColumn
+        Caption = #1057#1082#1088#1099#1090#1100' '#1089#1083#1086#1074#1086' "'#1057#1054#1057#1058#1040#1042'"'
+        DataBinding.FieldName = 'isnotInfoComment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1082#1088#1099#1090#1100' '#1089#1083#1086#1074#1086' "'#1057#1054#1057#1058#1040#1042'" ('#1076#1072' / '#1085#1077#1090')'
+        Options.Editing = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -2790,10 +2799,37 @@ object StickerForm: TStickerForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDatStart'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isDatStart'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDatEnd'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isDatEnd'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisnotInfoComment'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isnotInfoComment'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 320
-    Top = 216
+    Left = 368
+    Top = 208
   end
   object PeriodChoice: TPeriodChoice
     Left = 456
