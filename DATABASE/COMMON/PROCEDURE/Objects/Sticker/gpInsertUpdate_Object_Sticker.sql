@@ -5,7 +5,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar,TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar,Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar,Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar,Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker(
  INOUT ioId                  Integer   , -- ключ объекта <Товар>
@@ -33,6 +34,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker(
     IN inValue9              TVarChar  , -- 
     IN inisDatStart          Boolean   ,
     IN inisDatEnd            Boolean   ,
+    IN inisnotInfoComment    Boolean   , 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -203,6 +205,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Sticker_DatStart(), ioId, inisDatStart);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Sticker_DatEnd(), ioId, inisDatEnd);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Sticker_notInfoComment(), ioId, inisnotInfoComment);
 
 
 IF vbUserId = 5 AND 1=1
@@ -221,6 +225,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.07.25         *inisnotInfoComment
  18.06.25         *
  27.05.25         *
  01.09.23         *

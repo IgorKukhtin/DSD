@@ -1547,12 +1547,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Sticker_DatEnd() RETURNS Integer AS 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Cash(), 'zc_ObjectBoolean_Sticker_DatEnd', 'Показать только вжити до' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Sticker_DatEnd');
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Sticker_notInfoComment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Sticker_notInfoComment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Cash(), 'zc_ObjectBoolean_Sticker_notInfoComment', 'Скрыть слово "СОСТАВ"' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Sticker_notInfoComment');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 16.07.25         * zc_ObjectBoolean_Sticker_notInfoComment
  24.06.25         * zc_ObjectBoolean_Sticker_DatStart
                     zc_ObjectBoolean_Sticker_DatEnd              
  21.03.25         * zc_ObjectBoolean_PersonalServiceList_NotAuto

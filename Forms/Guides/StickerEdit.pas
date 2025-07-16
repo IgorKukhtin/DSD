@@ -89,6 +89,7 @@ type
     cxLabel21: TcxLabel;
     cbDatStart: TcxCheckBox;
     cbDatEnd: TcxCheckBox;
+    cbisnotInfoComment: TcxCheckBox;
 
   private
     { Private declarations }

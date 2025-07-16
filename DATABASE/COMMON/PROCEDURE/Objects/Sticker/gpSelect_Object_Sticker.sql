@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar -- , StickerName TVarC
              , Value6 TFloat, Value7 TFloat, Value8 TFloat
              , Value9 TVarChar
              , isDatStart Boolean, isDatEnd Boolean
+             , isnotInfoComment Boolean
              , isErased Boolean
               )
 AS
@@ -123,6 +124,7 @@ BEGIN
                                 
                                 , ObjectBoolean_DatStart.ValueData ::Boolean AS isDatStart
                                 , ObjectBoolean_DatEnd.ValueData   ::Boolean AS isDatEnd
+                                , COALESCE (ObjectBoolean_notInfoComment.ValueData, FALSE) ::Boolean AS isnotInfoComment
 
                                 , Object_Sticker.isErased           AS isErased
                     
@@ -240,6 +242,10 @@ BEGIN
                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_DatEnd
                                                          ON ObjectBoolean_DatEnd.ObjectId = Object_Sticker.Id 
                                                         AND ObjectBoolean_DatEnd.DescId = zc_ObjectBoolean_Sticker_DatEnd()
+
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_notInfoComment
+                                                         ON ObjectBoolean_notInfoComment.ObjectId = Object_Sticker.Id 
+                                                        AND ObjectBoolean_notInfoComment.DescId = zc_ObjectBoolean_Sticker_notInfoComment()
                           )
 
        -- –ÂÁÛÎ¸Ú‡Ú
@@ -301,6 +307,7 @@ BEGIN
             
             , COALESCE (Object_Sticker.isDatStart, FALSE) ::Boolean AS isDatStart
             , COALESCE (Object_Sticker.isDatEnd, FALSE)   ::Boolean AS isDatEnd
+            , COALESCE (Object_Sticker.isnotInfoComment, FALSE) ::Boolean AS isnotInfoComment
 
             , COALESCE (Object_Sticker.isErased, FALSE) :: Boolean           AS isErased
 
@@ -405,6 +412,7 @@ BEGIN
 
             , ObjectBoolean_DatStart.ValueData ::Boolean AS isDatStart
             , ObjectBoolean_DatEnd.ValueData   ::Boolean AS isDatEnd
+            , COALESCE (ObjectBoolean_notInfoComment.ValueData, FALSE) ::Boolean AS isnotInfoComment
 
             , Object_Sticker.isErased           AS isErased
 
@@ -513,6 +521,10 @@ BEGIN
                                      ON ObjectBoolean_DatEnd.ObjectId = Object_Sticker.Id 
                                     AND ObjectBoolean_DatEnd.DescId = zc_ObjectBoolean_Sticker_DatEnd()
 
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_notInfoComment
+                                     ON ObjectBoolean_notInfoComment.ObjectId = Object_Sticker.Id 
+                                    AND ObjectBoolean_notInfoComment.DescId = zc_ObjectBoolean_Sticker_notInfoComment()
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                   ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
                                  AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
@@ -526,7 +538,6 @@ BEGIN
              LEFT JOIN ObjectBlob AS ObjectBlob_StickerFile_InfoTop
                                   ON ObjectBlob_StickerFile_InfoTop.ObjectId = Object_StickerFile.Id 
                                  AND ObjectBlob_StickerFile_InfoTop.DescId = zc_ObjectBlob_StickerFile_InfoTop()
-
 
              LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark_70_70
                                   ON ObjectLink_StickerFile_TradeMark_70_70.ObjectId = Object_StickerFile_70_70.Id
@@ -547,6 +558,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.07.25         *isnotInfoComment
  24.06.25         *
  18.06.25         *
  27.05.25         *
