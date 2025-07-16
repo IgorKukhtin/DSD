@@ -136,6 +136,12 @@ BEGIN
 
                            , MIBoolean_BarCode.ValueData AS isBarCode
 
+                             -- Партия-Пересорт
+                           , MILinkObject_Goods_out.ObjectId     AS GoodsId_out
+                           , MILinkObject_GoodsKind_out.ObjectId AS GoodsKindId_out
+                           , MIDate_PartionGoods_out.ValueData   AS PartionGoodsDate_out
+                           , MIFloat_Amount_out.ValueData        AS Amount_out
+
                            , MovementItem.isErased
 
                       FROM MovementItem
@@ -152,6 +158,20 @@ BEGIN
                            LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+
+                           -- Партия-Пересорт
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_out
+                                                            ON MILinkObject_Goods_out.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Goods_out.DescId         = zc_MILinkObject_Goods_out()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_out
+                                                            ON MILinkObject_GoodsKind_out.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind_out.DescId         = zc_MILinkObject_GoodsKind_out()
+                           LEFT JOIN MovementItemDate AS MIDate_PartionGoods_out
+                                                      ON MIDate_PartionGoods_out.MovementItemId = MovementItem.Id
+                                                     AND MIDate_PartionGoods_out.DescId         = zc_MIDate_PartionGoods_out()
+                           LEFT JOIN MovementItemFloat AS MIFloat_Amount_out
+                                                       ON MIFloat_Amount_out.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Amount_out.DescId         = zc_MIFloat_Amount_out()
 
                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                                        ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
@@ -428,7 +448,22 @@ BEGIN
            , Object_PriceList.ValueData      AS PriceListName
            , (Object_Reason.ValueData || ' (' || Object_ReturnKind.ValueData || ')') :: TVarChar AS ReasonName
            , Object_Asset.Id                 AS  AssetId
-           , (Object_Asset.ValueData || ' (' || Object_Asset.ObjectCode :: TVarChar || ')' || CASE WHEN ObjectString_Asset_InvNumber.ValueData  <> '' THEN ' (' || ObjectString_Asset_InvNumber.ValueData || ')'  ELSE '' END) :: TVarChar AS AssetName
+           , (CASE WHEN -- Партия-Пересорт
+                        tmpMI.GoodsId_out > 0 AND Object_Asset.ValueData IS NULL
+                        THEN CASE WHEN Object_Measure.Id <> Object_Measure_out.Id
+                                       THEN zfConvert_FloatToString (tmpMI.Amount_out) || ' ' || Object_Measure_out.ValueData || ' '
+                                       ELSE ''
+                             END
+                          || '(' || zfConvert_DateShortToString (tmpMI.PartionGoodsDate) || '-'
+                          || '' || zfConvert_DateShortToString (tmpMI.PartionGoodsDate_out) || ') '
+                          || '(' || Object_Goods_out.ObjectCode :: TVarChar || ')'
+                          || Object_Goods_out.ValueData
+                          || ' * ' || COALESCE (Object_GoodsKind_out.ValueData, '')
+
+                        ELSE Object_Asset.ValueData || ' (' || Object_Asset.ObjectCode :: TVarChar || ')'
+                          || CASE WHEN ObjectString_Asset_InvNumber.ValueData  <> '' THEN ' (' || ObjectString_Asset_InvNumber.ValueData || ')'  ELSE '' END
+
+              END) :: TVarChar AS AssetName
 
            , tmpMI.InsertDate :: TDateTime AS InsertDate
            , tmpMI.UpdateDate :: TDateTime AS UpdateDate
@@ -473,6 +508,14 @@ BEGIN
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpMI.PriceListId
             LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = tmpMI.ReasonId
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
+
+            -- Партия-Пересорт
+            LEFT JOIN Object AS Object_Goods_out     ON Object_Goods_out.Id     = tmpMI.GoodsId_out
+            LEFT JOIN Object AS Object_GoodsKind_out ON Object_GoodsKind_out.Id = tmpMI.GoodsKindId_out
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_out
+                                 ON ObjectLink_Goods_Measure_out.ObjectId = tmpMI.GoodsId_out
+                                AND ObjectLink_Goods_Measure_out.DescId   = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure_out ON Object_Measure_out.Id = ObjectLink_Goods_Measure_out.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_ReturnKind
                                  ON ObjectLink_ReturnKind.ObjectId = Object_Reason.Id

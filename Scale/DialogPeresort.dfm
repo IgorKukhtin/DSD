@@ -1,5 +1,5 @@
 inherited DialogPeresortForm: TDialogPeresortForm
-  Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+  Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072
   ClientHeight = 435
   ClientWidth = 357
   OldCreateOrder = True
@@ -43,7 +43,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Width = 136
       Height = 28
       Action = actExec
-      Caption = #1058#1086#1074#1072#1088
+      Caption = #1058#1086#1074#1072#1088' '#1056#1072#1089#1093#1086#1076
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -13

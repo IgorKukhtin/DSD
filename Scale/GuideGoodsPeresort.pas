@@ -223,7 +223,7 @@ begin
                ParamByName('GoodsKindCode_out').AsInteger:= CDS.FieldByName('GoodsKindCode').AsInteger;
                ParamByName('GoodsKindName_out').asString:= CDS.FieldByName('GoodsKindName').asString;
                ParamByName('MeasureId_out').AsInteger:= CDS.FieldByName('MeasureId').AsInteger;
-               ParamByName('MeasureId_out').AsInteger:= CDS.FieldByName('MeasureId').AsInteger;
+               ParamByName('MeasureName_out').AsString:= CDS.FieldByName('MeasureName').AsString;
                ParamByName('Weight_gd_out').asFloat:= CDS.FieldByName('Weight_gd').asFloat;
           end;
 end;

@@ -269,6 +269,15 @@ BEGIN
                AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
                AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
                   )
+
+               -- Этих Отправляем Сразу + РК
+               /*OR (Object_Retail.Id IN (310846 -- !!!ВК!!!
+                                       )
+               AND MovementLinkObject_From.ObjectId = zc_Unit_RK()
+               AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
+               AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
+                  )*/
+
                /*OR (COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) NOT IN (0, zc_Branch_Basis())
                AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '5 MIN'
                AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '5 MIN'

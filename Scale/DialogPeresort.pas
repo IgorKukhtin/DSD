@@ -94,8 +94,10 @@ begin
      PanelGoodsCode_out.Caption:= execParamsMI.ParamByName('GoodsCode_out').AsString;
      EditGoodsName_out.Text:= execParamsMI.ParamByName('GoodsName_out').AsString;
      PanelGoodsKindName_out.Caption:= execParamsMI.ParamByName('GoodsKindName_out').AsString;
-     //подставляется приход
-     EditAmount_out.Text:= FloatToStr(execParamsMI.ParamByName('Amount_in_calc').AsFloat);
+     if execParamsMI.ParamByName('GoodsId_out').AsInteger > 0
+     then EditAmount_out.Text:= FloatToStr(execParamsMI.ParamByName('Amount_out_calc').AsFloat)
+     else //подставляется приход
+          EditAmount_out.Text:= FloatToStr(execParamsMI.ParamByName('Amount_in_calc').AsFloat);
      //
      EditAmount_out.Properties.DisplayFormat:= ',0.#### ' + execParamsMI.ParamByName('MeasureName_out').AsString;
      EditPartionDate_out.Date:= Date;
@@ -117,7 +119,7 @@ begin
   then begin
      PanelGoodsCode_out.Caption:= ParamsMI.ParamByName('GoodsCode_out').AsString;
      EditGoodsName_out.Text:= ParamsMI.ParamByName('GoodsName_out').AsString;
-     PanelGoodsKindName_out.Caption:= ParamsMI.ParamByName('GoodsKindName_out').AsString;
+     PanelGoodsKindName_out.Caption:= '('+ParamsMI.ParamByName('GoodsKindCode_out').AsString+')'+ParamsMI.ParamByName('GoodsKindName_out').AsString;
      //
      if ParamsMI.ParamByName('MeasureId').AsInteger = ParamsMI.ParamByName('MeasureId_out').AsInteger
      then //не меняется
@@ -126,7 +128,7 @@ begin
      else if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_sh)
          and (ParamsMI.ParamByName('MeasureId_out').AsInteger = zc_Measure_kg)
           then //переводится в вес
-               ParamsMI.ParamByName('Amount_out_calc').AsFloat:= _myTrunct_3(ParamsMI.ParamByName('Amount_in_calc').AsFloat * ParamsMI.ParamByName('Weight_gd_out').AsFloat)
+               ParamsMI.ParamByName('Amount_out_calc').AsFloat:= _myTrunct_3(ParamsMI.ParamByName('Amount_in_calc').AsFloat * ParamsMI.ParamByName('Weight_gd').AsFloat)
 
           else if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_kg)
               and (ParamsMI.ParamByName('MeasureId_out').AsInteger = zc_Measure_sh)

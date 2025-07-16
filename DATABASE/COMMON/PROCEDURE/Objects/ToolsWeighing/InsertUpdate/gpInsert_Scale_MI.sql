@@ -10,9 +10,16 @@
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
+/*DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat
+                                         , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                         , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                         , TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar
+                                         , Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean
+                                         , TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);*/
 DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat
                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                         , Integer, Integer, TDateTime, TDateTime, TFloat, TFloat
                                          , TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar
                                          , Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean
                                          , TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
@@ -62,6 +69,14 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inTareId_10             Integer   , --
 
     IN inPartionCellId         Integer   , --
+
+    -- Партия-Пересорт
+    IN inGoodsId_out           Integer   , --
+    IN inGoodsKindId_out       Integer   , --
+    IN inPartionDate_out       TDateTime , --
+    IN inPartionDate_in        TDateTime , --
+    IN inAmount_in_calc        TFloat    , --
+    IN inAmount_out_calc       TFloat    , --
 
     IN inPrice                 TFloat    , -- Цена
     IN inPrice_Return          TFloat    , -- Цена или !!!Цена по спецификации!!!
@@ -940,7 +955,11 @@ BEGIN
          vbId:= gpInsertUpdate_MovementItem_WeighingPartner (ioId                  := 0
                                                            , inMovementId          := inMovementId
                                                            , inGoodsId             := inGoodsId
-                                                           , inAmount              := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                                                           , inAmount              := CASE WHEN inGoodsId_out > 0 AND inBranchCode = 1
+                                                                                                -- Партия-Пересорт
+                                                                                                THEN inAmount_in_calc
+
+                                                                                           WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                                                                                 THEN vbAmount_byWeightTare_goods
 
                                                                                            -- Для Этикетка
@@ -957,6 +976,10 @@ BEGIN
                                                                                            /*WHEN vbRetailId IN (310828) -- Метро
                                                                                                 THEN CEIL ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10) * 100) / 100
                                                                                            */
+                                                                                           WHEN inGoodsId_out > 0 AND inBranchCode = 1
+                                                                                                -- Партия-Пересорт
+                                                                                                THEN inAmount_in_calc
+
                                                                                            WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                                                                                 THEN vbAmount_byWeightTare_goods
 
@@ -1024,6 +1047,12 @@ BEGIN
 
                                                            , inPartionCellId       := inPartionCellId
 
+                                                             -- Партия-Пересорт
+                                                           , inGoodsId_out         := inGoodsId_out
+                                                           , inGoodsKindId_out     := inGoodsKindId_out
+                                                           , inPartionDate_out     := inPartionDate_out
+                                                           , inAmount_out_calc     := inAmount_out_calc
+
                                                            , inCountPack           := CASE WHEN inIsBarCode = TRUE AND vbWeightTotal <> 0
                                                                                                 THEN vbAmount_byPack / vbWeightTotal
                                                                                            ELSE inCount
@@ -1085,7 +1114,15 @@ BEGIN
                                                                                       -- (-)% Скидки (+)% Наценки
                                                            , inChangePercent       := vbChangePercent
                                                            , inPartionGoods        := inPartionGoods
-                                                           , inPartionGoodsDate    := CASE WHEN inIsPartionGoodsDate = TRUE THEN inPartionGoodsDate ELSE NULL END
+                                                           , inPartionGoodsDate    := CASE WHEN inGoodsId_out > 0 AND inBranchCode = 1
+                                                                                                -- Партия-Пересорт
+                                                                                                THEN inPartionDate_in
+
+                                                                                           WHEN inIsPartionGoodsDate = TRUE
+                                                                                                THEN inPartionGoodsDate
+
+                                                                                           ELSE NULL
+                                                                                      END
 
                                                            , inGoodsKindId         := CASE WHEN inBranchCode > 1000
                                                                                                 -- !!!здесь StickerPack!!!

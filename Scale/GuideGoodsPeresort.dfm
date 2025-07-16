@@ -190,7 +190,7 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
       object Label1: TLabel
         Left = 0
         Top = 0
-        Width = 112
+        Width = 81
         Height = 14
         Align = alTop
         Caption = '      '#1050#1086#1076' '#1056#1072#1089#1093#1086#1076
@@ -200,8 +200,6 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = -3
-        ExplicitTop = -4
       end
       object EditGoodsCode: TEdit
         Left = 6
@@ -236,7 +234,7 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
       object LabelGoodsName_out: TLabel
         Left = 0
         Top = 0
-        Width = 507
+        Width = 75
         Height = 14
         Align = alTop
         Caption = #1058#1086#1074#1072#1088' '#1056#1072#1089#1093#1086#1076
@@ -246,7 +244,6 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 75
       end
       object EditGoodsName: TEdit
         Left = -1
@@ -287,7 +284,7 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
       object LabelGoodsCode_in: TLabel
         Left = 0
         Top = 0
-        Width = 112
+        Width = 66
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -298,9 +295,6 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = -6
-        ExplicitTop = -6
-        ExplicitWidth = 105
       end
       object PanelGoodsCode_in: TPanel
         Left = 0
@@ -335,7 +329,7 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
       object LabelGoodsKindName_in: TLabel
         Left = 0
         Top = 0
-        Width = 384
+        Width = 78
         Height = 14
         Align = alTop
         Caption = #1058#1086#1074#1072#1088' '#1055#1088#1080#1093#1086#1076
@@ -345,7 +339,6 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 78
       end
       object PanelGoodsName_in: TPanel
         Left = 0

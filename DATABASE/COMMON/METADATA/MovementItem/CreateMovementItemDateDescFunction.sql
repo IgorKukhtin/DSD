@@ -6,6 +6,10 @@ CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_next() RETURNS Integer AS $BOD
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_PartionGoods_next', 'Дата партии (ячейка хранения)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_next');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_out() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_out'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PartionGoods_out', 'Дата партии (расход)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_out');
+
 
 CREATE OR REPLACE FUNCTION zc_MIDate_OperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_OperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemDateDesc (Code, ItemName)
