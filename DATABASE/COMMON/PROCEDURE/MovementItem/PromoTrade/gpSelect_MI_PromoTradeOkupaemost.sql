@@ -582,8 +582,8 @@ BEGIN
              , vbRetailName    ::TVarChar AS RetailName
              , vbChangePercent     ::TFloat   AS ChangePercent
              , vbChangePercent_new ::TFloat   AS ChangePercent_new
-             , SUM (CASE WHEN tmpData.Num = 1 THEN COALESCE (tmpData.Persent1_Condition,0) ELSE 0 END) OVER() ::TFloat  AS Persent_Condition      -- "Значение текущее": "Ретро бонус" + "Маркетинговый бюджет" + "Компенсация возвратов" + "Логистический бонус" + "Отчеты"
-             , SUM (CASE WHEN tmpData.Num = 3 THEN COALESCE (tmpData.Persent1_Condition,0) ELSE 0 END) OVER() ::TFloat  AS Persent_Condition_new  -- "Значение новое":   "Ретро бонус" + "Маркетинговый бюджет" + "Компенсация возвратов" + "Логистический бонус" + "Отчеты"
+             , CASE WHEN tmpData.Num = 1 THEN COALESCE (tmpData.Persent1_Condition,0) ELSE 0 END ::TFloat  AS Persent_Condition      -- "Значение текущее": "Ретро бонус" + "Маркетинговый бюджет" + "Компенсация возвратов" + "Логистический бонус" + "Отчеты"
+             , CASE WHEN tmpData.Num = 3 THEN COALESCE (tmpData.Persent1_Condition,0) ELSE 0 END ::TFloat  AS Persent_Condition_new  -- "Значение новое":   "Ретро бонус" + "Маркетинговый бюджет" + "Компенсация возвратов" + "Логистический бонус" + "Отчеты"
              , tmpData.PartnerCount ::TFloat
              , tmpData.Summ         ::TFloat
         FROM tmpResult AS tmpData 

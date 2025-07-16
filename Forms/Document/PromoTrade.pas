@@ -266,6 +266,9 @@ type
     spSelectPrintOkup: TdsdStoredProc;
     actSelectPrintOkup: TdsdPrintAction;
     bbSelectPrintOkup: TdxBarButton;
+    spSelectPrintOkupNew: TdsdStoredProc;
+    actSelectPrintOkup_new: TdsdPrintAction;
+    bbSelectPrintOkup_new: TdxBarButton;
   private
     { Private declarations }
   public
