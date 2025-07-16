@@ -265,6 +265,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     spSelectPrintOkup: TdsdStoredProc;
     actSelectPrintOkup: TdsdPrintAction;
+    bbSelectPrintOkup: TdxBarButton;
   private
     { Private declarations }
   public

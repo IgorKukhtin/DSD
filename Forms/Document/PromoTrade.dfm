@@ -1096,7 +1096,6 @@ inherited PromoTradeForm: TPromoTradeForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 1
         object cxGridDBTableViewOkup: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = OkupaemostDS
@@ -2025,16 +2024,6 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
-          IndexFieldNames = 'LineNo'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'Ord'
-        end
-        item
-          DataSet = PrintSignCDS
-          UserName = 'frxDBDSign'
         end>
       Params = <
         item
@@ -2082,8 +2071,8 @@ inherited PromoTradeForm: TPromoTradeForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_PromoTrade'
-      ReportNameParam.Value = 'PrintMovement_PromoTrade'
+      ReportName = 'PrintMovement_PromoTradeOkupaemost'
+      ReportNameParam.Value = 'PrintMovement_PromoTradeOkupaemost'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -3415,6 +3404,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object macUpdate_calc: TMultiAction
@@ -3573,6 +3563,14 @@ inherited PromoTradeForm: TPromoTradeForm
         end
         item
           Visible = True
+          ItemName = 'bbSelectPrintOkup'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -3698,6 +3696,10 @@ inherited PromoTradeForm: TPromoTradeForm
     end
     object bbUpdate_calc: TdxBarButton
       Action = macUpdate_calc
+      Category = 0
+    end
+    object bbSelectPrintOkup: TdxBarButton
+      Action = actSelectPrintOkup
       Category = 0
     end
   end
@@ -5990,11 +5992,11 @@ inherited PromoTradeForm: TPromoTradeForm
     Top = 256
   end
   object spSelectPrintOkup: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_PromoTradeOkupaemost'
-    DataSet = PrintItemsCDS
+    StoredProcName = 'gpSelect_MI_PromoTradeOkupaemost_Print'
+    DataSet = PrintHeaderCDS
     DataSets = <
       item
-        DataSet = PrintItemsCDS
+        DataSet = PrintHeaderCDS
       end>
     Params = <
       item
@@ -6010,6 +6012,18 @@ inherited PromoTradeForm: TPromoTradeForm
         Value = Null
         Component = edPersentOnCredit
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNum1'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNum2'
+        Value = '2'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
