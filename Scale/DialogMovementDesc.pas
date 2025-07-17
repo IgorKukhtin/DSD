@@ -694,7 +694,7 @@ begin
 
     if CDS.Filtered then CDS.Filtered:=false;
     //
-    if (Length(trim(EditBarCode.Text))>2) //and (SettingMain.isCeh = FALSE)
+    if (Length(trim(EditBarCode.Text))>3) //and (SettingMain.isCeh = FALSE)
     then begin
               //Проверка <Контрольная сумма>
               if (Length(trim(EditBarCode.Text))>=13)and(CheckBarCode(trim(EditBarCode.Text)) = FALSE)

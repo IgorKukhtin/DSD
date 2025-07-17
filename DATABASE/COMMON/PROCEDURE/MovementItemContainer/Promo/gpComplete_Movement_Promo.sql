@@ -176,8 +176,12 @@ BEGIN
                                                                      AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
                                 WHERE Movement.ParentId = inMovementId
                                )
-            , tmpPromoGoods AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsId
+            , tmpPromoGoods AS (SELECT DISTINCT MovementItem.ObjectId                         AS GoodsId
+                                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                 FROM MovementItem
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                                 WHERE MovementItem.MovementId = inMovementId
                                   AND MovementItem.DescId     = zc_MI_Master()
                                   AND MovementItem.isErased   = FALSE
@@ -200,8 +204,16 @@ BEGIN
                                     ON MI_PromoGoods.MovementId = Movement.Id
                                    AND MI_PromoGoods.DescId     = zc_MI_Master()
                                    AND MI_PromoGoods.isErased   = FALSE
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = MI_PromoGoods.Id
+                                            AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+
             -- Товары
-            INNER JOIN tmpPromoGoods ON tmpPromoGoods.GoodsId = MI_PromoGoods.ObjectId
+            INNER JOIN tmpPromoGoods ON tmpPromoGoods.GoodsId     = MI_PromoGoods.ObjectId
+                                    AND (tmpPromoGoods.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                      OR tmpPromoGoods.GoodsKindId = 0
+                                      OR COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0
+                                        )
 
             INNER JOIN MovementItem AS MI_PromoPartner
                                     ON MI_PromoPartner.MovementId = Movement_PromoPartner.Id

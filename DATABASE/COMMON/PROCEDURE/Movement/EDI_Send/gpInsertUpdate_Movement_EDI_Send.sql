@@ -54,6 +54,25 @@ BEGIN
      END IF;
 
 
+     /*IF EXISTS (SELECT 1
+                FROM MovementLinkObject AS MLO
+                     INNER JOIN ObjectLink AS OL_Partner_Juridical
+                                           ON OL_Partner_Juridical.ChildObjectId = MLO.ObjectId
+                                          AND OL_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
+                     INNER JOIN ObjectBoolean AS ObjectBoolean_VchasnoEdi
+                                              ON ObjectBoolean_VchasnoEdi.ObjectId  = OL_Partner_Juridical.ChildObjectId
+                                             AND ObjectBoolean_VchasnoEdi.DescId    = zc_ObjectBoolean_Juridical_VchasnoEdi()
+                                             AND ObjectBoolean_VchasnoEdi.ValueData = TRUE
+                WHERE MLO.MovementId = inParentId
+                  AND MLO.DescId     = zc_MovementLinkObject_To()
+                  AND 1=0
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав для отправки EDIN.';
+     END IF;*/
+
+
+
      -- Поиск
      vbDescId := (SELECT Id FROM MovementBooleanDesc WHERE Code ILIKE inDescCode);
      -- проверка

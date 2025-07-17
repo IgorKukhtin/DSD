@@ -12,7 +12,7 @@ $BODY$
 BEGIN
     -- inStartDate:='01.06.2014';
     --
-    DELETE FROM _bi_Table_Remains WHERE OperDate BETWEEN inOperDate AND inOperDate + INTERVAL '1 DAY';
+    DELETE FROM _bi_Table_Remains WHERE OperDate BETWEEN DATE_TRUNC ('DAY', inOperDate) AND inOperDate + INTERVAL '1 DAY';
 
 
 
@@ -58,6 +58,10 @@ BEGIN
                                                               ON CLO_Unit.ContainerId = Container.Id
                                                              AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                INNER JOIN tmpUnit ON tmpUnit.UnitId = CLO_Unit.ObjectId
+                               -- без Товар в пути
+                               LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                             ON CLO_Account.ContainerId = Container.Id
+                                                            AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
                                -- !!!
                                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                              ON CLO_GoodsKind.ContainerId = Container.Id
@@ -70,6 +74,8 @@ BEGIN
                                LEFT JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.ContainerId = Container.Id
                                                               AND MIContainer.OperDate   >= inOperDate
+                          -- !!!без Товар в пути!!!
+                          WHERE CLO_Account.ObjectId IS NULL
                           GROUP BY Container.Id
                                  , tmpGoods.GoodsId
                                  , CLO_GoodsKind.ObjectId
@@ -96,6 +102,12 @@ BEGIN
                                                               ON CLO_Unit.ContainerId = Container.Id
                                                              AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                INNER JOIN tmpUnit ON tmpUnit.UnitId = CLO_Unit.ObjectId
+
+                               -- без Товар в пути
+                               LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                             ON CLO_Account.ContainerId = Container.ParentId
+                                                            AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+
                                -- !!!
                                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                              ON CLO_GoodsKind.ContainerId = Container.Id
@@ -108,6 +120,8 @@ BEGIN
                                LEFT JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.ContainerId = Container.Id
                                                               AND MIContainer.OperDate   >= inOperDate
+                          -- !!!без Товар в пути!!!
+                          WHERE CLO_Account.ObjectId IS NULL
                           GROUP BY Container.Id
                                  , Container.ParentId
                                  , tmpGoods.GoodsId
@@ -220,4 +234,5 @@ FROM _bi_Table_Remains
      LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _bi_Table_Remains.GoodsKindId
 */
 -- тест
+-- UPDATE  _bi_Table_Remains SET OperDate = '15.07.2025' WHERE OperDate > '15.07.2025'
 -- SELECT * FROM gpInsert_bi_Table_Remains (inOperDate:= '14.07.2025', inSession:= zfCalc_UserAdmin())

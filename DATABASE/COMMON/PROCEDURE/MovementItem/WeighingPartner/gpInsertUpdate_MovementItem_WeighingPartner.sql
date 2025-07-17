@@ -12,11 +12,27 @@
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);*/
+/*
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);*/
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                                   , Integer, Integer, TDateTime, TDateTime, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                                   , Integer, Integer, TDateTime, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 
@@ -64,6 +80,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingPartner(
     IN inTareId_10             Integer   , --
 
     IN inPartionCellId         Integer   , -- 
+
+    -- Партия-Пересорт
+    IN inGoodsId_out           Integer   , --
+    IN inGoodsKindId_out       Integer   , --
+    IN inPartionDate_out       TDateTime , --
+    IN inAmount_out_calc       TFloat    , --
 
     IN inCountPack           TFloat    , -- Количество упаковок
     IN inHeadCount           TFloat    , -- Количество голов
@@ -286,6 +308,21 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare6(), ioId, inWeightTare6);
 
      END IF;
+
+
+     -- Партия-Пересорт
+     IF inGoodsId_out > 0
+     THEN 
+         -- сохранили связь с <товар>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods_out(), ioId, inGoodsId_out);
+         -- сохранили связь с <Виды товаров>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind_out(), ioId, inGoodsKindId_out);
+         -- сохранили свойство <Дата партии (расход)>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_out(), ioId, inPartionDate_out);
+         -- сохранили свойство <Кол-во расход>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Amount_out(), ioId, inAmount_out_calc);
+     END IF;
+
 
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);

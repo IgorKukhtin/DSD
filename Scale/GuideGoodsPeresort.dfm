@@ -172,20 +172,46 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
     Height = 41
     Align = alTop
     BevelOuter = bvNone
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlue
+    Font.Height = -12
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 1
-    object gbGoodsCode: TGroupBox
+    object infoPanelGoodsCode_out: TPanel
       Left = 0
       Top = 0
-      Width = 137
+      Width = 112
       Height = 41
       Align = alLeft
-      Caption = #1050#1086#1076' '#1056#1072#1089#1093#1086#1076
+      BevelOuter = bvNone
       TabOrder = 0
+      object Label1: TLabel
+        Left = 0
+        Top = 0
+        Width = 81
+        Height = 14
+        Align = alTop
+        Caption = '      '#1050#1086#1076' '#1056#1072#1089#1093#1086#1076
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
       object EditGoodsCode: TEdit
-        Left = 5
-        Top = 17
-        Width = 125
+        Left = 6
+        Top = 16
+        Width = 97
         Height = 22
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clNavy
+        Font.Height = -12
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 0
         Text = 'EditGoodsCode'
         OnChange = EditGoodsCodeChange
@@ -194,19 +220,42 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
         OnKeyPress = EditGoodsCodeKeyPress
       end
     end
-    object gbGoodsName: TGroupBox
-      Left = 137
+    object infoPanelGoodsName_out: TPanel
+      Left = 112
       Top = 0
-      Width = 482
+      Width = 507
       Height = 41
       Align = alClient
-      Caption = #1058#1086#1074#1072#1088' '#1056#1072#1089#1093#1086#1076
+      BevelOuter = bvNone
       TabOrder = 1
+      ExplicitLeft = 248
+      ExplicitTop = -3
+      ExplicitWidth = 371
+      object LabelGoodsName_out: TLabel
+        Left = 0
+        Top = 0
+        Width = 75
+        Height = 14
+        Align = alTop
+        Caption = #1058#1086#1074#1072#1088' '#1056#1072#1089#1093#1086#1076
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
       object EditGoodsName: TEdit
-        Left = 5
-        Top = 17
+        Left = -1
+        Top = 16
         Width = 332
         Height = 22
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clNavy
+        Font.Height = -12
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 0
         Text = 'EditGoodsName'
         OnChange = EditGoodsNameChange
@@ -227,7 +276,7 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
     object infoPanelGoodsCode_in: TPanel
       Left = 0
       Top = 0
-      Width = 105
+      Width = 112
       Height = 55
       Align = alLeft
       BevelOuter = bvNone
@@ -235,7 +284,7 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
       object LabelGoodsCode_in: TLabel
         Left = 0
         Top = 0
-        Width = 105
+        Width = 66
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -246,12 +295,11 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 66
       end
       object PanelGoodsCode_in: TPanel
         Left = 0
         Top = 14
-        Width = 105
+        Width = 112
         Height = 41
         Align = alClient
         BevelOuter = bvNone
@@ -263,23 +311,27 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
+        ExplicitLeft = 1
+        ExplicitTop = 20
+        ExplicitWidth = 105
       end
     end
     object infoPanelGoodsKindName_in: TPanel
-      Left = 105
+      Left = 112
       Top = 0
-      Width = 391
+      Width = 384
       Height = 55
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitLeft = 105
+      ExplicitWidth = 391
       object LabelGoodsKindName_in: TLabel
         Left = 0
         Top = 0
-        Width = 391
+        Width = 78
         Height = 14
         Align = alTop
-        Alignment = taCenter
         Caption = #1058#1086#1074#1072#1088' '#1055#1088#1080#1093#1086#1076
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clPurple
@@ -287,14 +339,14 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 78
       end
       object PanelGoodsName_in: TPanel
         Left = 0
         Top = 14
-        Width = 391
+        Width = 384
         Height = 41
         Align = alClient
+        Alignment = taLeftJustify
         BevelOuter = bvNone
         Caption = 'PanelGoodsName_in'
         Font.Charset = RUSSIAN_CHARSET
@@ -304,6 +356,9 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
+        ExplicitLeft = -1
+        ExplicitTop = 20
+        ExplicitWidth = 391
       end
     end
     object Panel1: TPanel
@@ -315,12 +370,19 @@ object GuideGoodsPeresortForm: TGuideGoodsPeresortForm
       BevelOuter = bvNone
       TabOrder = 2
       object cbAll: TcxCheckBox
-        Left = 6
-        Top = 27
+        Left = 5
+        Top = 20
         Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1057#1045
+        ParentFont = False
         Properties.OnChange = cbAllPropertiesChange
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -12
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
         TabOrder = 0
-        Width = 105
+        Width = 112
       end
     end
   end

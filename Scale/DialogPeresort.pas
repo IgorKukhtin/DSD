@@ -62,41 +62,9 @@ type
     BitBtn1: TBitBtn;
     ActionList: TActionList;
     actExec: TAction;
-    cbRePack: TcxCheckBox;
-    procedure EditPartionCellKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure actExecExecute(Sender: TObject);
     procedure FormResize(Sender: TObject);
   private
-    PartionCellId : Integer;
-    MeasureId : Integer;
-    CountTare1: Integer;
-    CountTare2: Integer;
-    CountTare3: Integer;
-    CountTare4: Integer;
-    CountTare5: Integer;
-    CountTare6: Integer;
-    CountTare7: Integer;
-    CountTare8: Integer;
-    CountTare9: Integer;
-    CountTare10: Integer;
-    CountTare_0: Integer;
-
-    // Вес Товара
-    Weight_gd  : Double;
-    // Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
-    WeightPack  : Double;
-    // ШТ
-    Sh_calc: Double;
-
-    // Вес 1-ой упаковки - Флоупак +  Нар.180 + Нар. 200
-    WeightTare_0: Double;
-    //
-    WeightTare1 : Double;
-    WeightTare2 : Double;
-
-    RealWeight  : Double;
-    RealWeight_Get : Double;
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
     function Execute (var execParamsMovement:TParams;var execParamsMI:TParams) : boolean;
@@ -106,7 +74,7 @@ var
    DialogPeresortForm: TDialogPeresortForm;
 
 implementation
-uses UtilScale, GuideGoodsPeresort, dmMainScale;
+uses UtilScale, GuideGoodsPeresort, dmMainScale, DialogStringValue;
 {$R *.dfm}
 {------------------------------------------------------------------------------}
 function TDialogPeresortForm.Execute(var execParamsMovement:TParams;var execParamsMI:TParams): boolean;
@@ -126,8 +94,10 @@ begin
      PanelGoodsCode_out.Caption:= execParamsMI.ParamByName('GoodsCode_out').AsString;
      EditGoodsName_out.Text:= execParamsMI.ParamByName('GoodsName_out').AsString;
      PanelGoodsKindName_out.Caption:= execParamsMI.ParamByName('GoodsKindName_out').AsString;
-     //подставляется приход
-     EditAmount_out.Text:= FloatToStr(execParamsMI.ParamByName('Amount_in_calc').AsFloat);
+     if execParamsMI.ParamByName('GoodsId_out').AsInteger > 0
+     then EditAmount_out.Text:= FloatToStr(execParamsMI.ParamByName('Amount_out_calc').AsFloat)
+     else //подставляется приход
+          EditAmount_out.Text:= FloatToStr(execParamsMI.ParamByName('Amount_in_calc').AsFloat);
      //
      EditAmount_out.Properties.DisplayFormat:= ',0.#### ' + execParamsMI.ParamByName('MeasureName_out').AsString;
      EditPartionDate_out.Date:= Date;
@@ -135,46 +105,12 @@ begin
      //
      result:=(ShowModal=mrOk);
      //
-     {if Result then
-     begin
-          execParamsMI.ParamByName('PartionCellId').AsInteger:= PartionCellId;
-          execParamsMI.ParamByName('PartionCellName').AsString:= EditPartionCell.Text;
-          //
-          if CountTare1 > 0 then SettingMain.WeightTare1:= WeightTare1 else SettingMain.WeightTare1:= 0;
-          if CountTare2 > 0 then SettingMain.WeightTare2:= WeightTare2 else SettingMain.WeightTare2:= 0;
-
-          execParamsMI.ParamByName('CountPack').AsFloat:=CountTare_0;
-
-          execParamsMI.ParamByName('CountTare1').AsFloat:=CountTare1;
-          execParamsMI.ParamByName('CountTare2').AsFloat:=CountTare2;
-          execParamsMI.ParamByName('CountTare3').AsFloat:=CountTare3;
-          execParamsMI.ParamByName('CountTare4').AsFloat:=CountTare4;
-          execParamsMI.ParamByName('CountTare5').AsFloat:=CountTare5;
-          execParamsMI.ParamByName('CountTare6').AsFloat:=CountTare6;
-          execParamsMI.ParamByName('CountTare7').AsFloat:=CountTare7;
-          execParamsMI.ParamByName('CountTare8').AsFloat:=CountTare8;
-          execParamsMI.ParamByName('CountTare9').AsFloat:=CountTare9;
-          execParamsMI.ParamByName('CountTare10').AsFloat:=CountTare10;
-
-          if (Sh_calc > 0) and (execParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh) and (RealWeight_Get > 0)
-          then execParamsMI.ParamByName('RealWeight').AsFloat:= Sh_calc;
-
-     end;
-     }
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPeresortForm.FormResize(Sender: TObject);
 begin
   exit;
   inherited;
-
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPeresortForm.EditPartionCellKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    if Key=13
-    then ActiveControl:=bbOk;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPeresortForm.actExecExecute(Sender: TObject);
@@ -183,7 +119,7 @@ begin
   then begin
      PanelGoodsCode_out.Caption:= ParamsMI.ParamByName('GoodsCode_out').AsString;
      EditGoodsName_out.Text:= ParamsMI.ParamByName('GoodsName_out').AsString;
-     PanelGoodsKindName_out.Caption:= ParamsMI.ParamByName('GoodsKindName_out').AsString;
+     PanelGoodsKindName_out.Caption:= '('+ParamsMI.ParamByName('GoodsKindCode_out').AsString+')'+ParamsMI.ParamByName('GoodsKindName_out').AsString;
      //
      if ParamsMI.ParamByName('MeasureId').AsInteger = ParamsMI.ParamByName('MeasureId_out').AsInteger
      then //не меняется
@@ -192,7 +128,7 @@ begin
      else if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_sh)
          and (ParamsMI.ParamByName('MeasureId_out').AsInteger = zc_Measure_kg)
           then //переводится в вес
-               ParamsMI.ParamByName('Amount_out_calc').AsFloat:= _myTrunct_3(ParamsMI.ParamByName('Amount_in_calc').AsFloat * ParamsMI.ParamByName('Weight_gd_out').AsFloat)
+               ParamsMI.ParamByName('Amount_out_calc').AsFloat:= _myTrunct_3(ParamsMI.ParamByName('Amount_in_calc').AsFloat * ParamsMI.ParamByName('Weight_gd').AsFloat)
 
           else if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_kg)
               and (ParamsMI.ParamByName('MeasureId_out').AsInteger = zc_Measure_sh)
@@ -213,7 +149,32 @@ end;
 function TDialogPeresortForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
      Result:= false;
-     if True then
+     //
+     try
+         ParamsMI.ParamByName('PartionDate_in').AsDateTime:= StrToDate (EditPartionDate_in.Text)
+     except
+           ShowMessage ('Ошибка.Партия дата приход.');
+           exit;
+     end;
+     //
+     try
+         ParamsMI.ParamByName('PartionDate_out').AsDateTime:= StrToDate (EditPartionDate_out.Text)
+     except
+           ShowMessage ('Ошибка.Партия дата расход.');
+           exit;
+     end;
+     //
+     Result:= DMMainScaleForm.gpGet_Scale_GoodsByGoodsKindPeresort_check(ParamsMI);
+     //
+     if not  Result then
+     begin
+          if not DialogStringValueForm.Execute(false, true, true)
+          then begin ShowMessage ('Не разрешено проводить данный вид пересортицы.Для подтверждения необходимо ввести пароль СБ.'); exit; end;
+          //
+          //
+          if DMMainScaleForm.gpGet_Scale_PSW_delete (DialogStringValueForm.StringValueEdit.Text) <> ''
+          then begin ShowMessage ('Пароль неверный.Провести данный вид пересортицы нельзя.');exit;end;
+     end;
 
      Result:= true;
 end;

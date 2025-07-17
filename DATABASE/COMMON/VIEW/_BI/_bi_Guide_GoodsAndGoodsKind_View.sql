@@ -55,7 +55,7 @@ AS
             -- Вид Товара
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                  ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = Object_GoodsByGoodsKind.Id
-                                AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId
 
             -- Св-во "Срок годности в днях"

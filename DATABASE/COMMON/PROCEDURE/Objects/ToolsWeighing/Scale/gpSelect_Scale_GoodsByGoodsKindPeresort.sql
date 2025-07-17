@@ -108,6 +108,7 @@ BEGIN
 
        WHERE ObjectBoolean_ScaleCeh.DescId    IN (zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh(), zc_ObjectBoolean_GoodsByGoodsKind_Order())
          AND ObjectBoolean_ScaleCeh.ValueData = TRUE
+         AND Object_Goods.ObjectCode > 0
          AND inGoodsId_in = 0
 
        ORDER BY 3, 6
