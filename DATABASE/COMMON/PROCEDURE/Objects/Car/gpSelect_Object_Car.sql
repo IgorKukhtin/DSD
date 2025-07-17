@@ -46,6 +46,12 @@ BEGIN
      RETURN QUERY 
        WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
 
+       , tmpOL_Asset AS (SELECT *
+                              , ROW_NUMBER () OVER (PARTITION BY ObjectLink_Asset_Car.ChildObjectId ORDER BY ObjectLink_Asset_Car.ObjectId ASC) AS Ord
+                         FROM ObjectLink AS ObjectLink_Asset_Car
+                         WHERE ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
+                           AND COALESCE (ObjectLink_Asset_Car.ChildObjectId,0) <> 0
+                         )
        SELECT 
              Object_Car.Id          AS Id
            , Object_Car.ObjectCode  AS Code
@@ -213,9 +219,10 @@ BEGIN
                                 AND ObjectLink_Car_Juridical.DescId = zc_ObjectLink_Car_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Car_Juridical.ChildObjectId    
            -- информативно
-            LEFT JOIN ObjectLink AS ObjectLink_Asset_Car
+            LEFT JOIN tmpOL_Asset AS ObjectLink_Asset_Car
                                  ON ObjectLink_Asset_Car.ChildObjectId = Object_Car.Id
                                 AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
+                                AND ObjectLink_Asset_Car.Ord = 1
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectLink_Asset_Car.ObjectId        
 
             LEFT JOIN ObjectString AS ObjectString_InvNumber
