@@ -71,6 +71,15 @@ BEGIN
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoTradeGoods());
     vbUserId:= lpGetUserBySession (inSession);
 
+
+    -- проверка прав - Данные Окупаемость
+    IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 12456720))
+    THEN 
+        RETURN;
+    END IF;
+
+
+
     vbPriceListId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PriceList());
 
     SELECT ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT

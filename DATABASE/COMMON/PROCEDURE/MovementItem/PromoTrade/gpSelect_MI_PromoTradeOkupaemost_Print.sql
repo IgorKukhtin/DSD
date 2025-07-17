@@ -36,6 +36,13 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- проверка прав - Данные Окупаемость
+    IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 12456720)) 
+    THEN 
+        RETURN;
+    END IF;
+
+
     RETURN QUERY
     WITH 
     --расчетные данные
