@@ -19,6 +19,10 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PromoTrade());
 
 
+
+
+     --  считаем с/с  
+     
      -- Проверили - Ви товара
      IF EXISTS (SELECT 1
                 FROM MovementItem
@@ -40,9 +44,6 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Необходимо заполнить колонку вид товара.';
      END IF;
-
-
-     --  считаем с/с
 
      -- нашли месяц
      vbMonthPromo := (SELECT CASE WHEN EXTRACT (DAY FROM MovementDate_Insert.ValueData) BETWEEN 1 AND 10
@@ -127,6 +128,7 @@ BEGIN
                                                    ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
                                                   AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
                          GROUP BY tmpGoods.GoodsId, COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0)
+                  
                         )
 
           -- факт цена продажи
