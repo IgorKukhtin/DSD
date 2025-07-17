@@ -18,8 +18,8 @@ RETURNS TABLE (
       , GoodsCode           Integer --код объекта  <товар>
       , GoodsName           TVarChar --наименование объекта <товар>
       , MeasureName         TVarChar --Единица измерения  
-      , GoodsKindId            Integer --ИД обьекта <Вид товара>
-      , GoodsKindName          TVarChar --Наименование обьекта <Вид товара>      
+      , GoodsKindId         Integer --ИД обьекта <Вид товара>
+      , GoodsKindName       TVarChar --Наименование обьекта <Вид товара>      
       , TradeMarkId Integer, TradeMarkName       TVarChar --Торговая марка 
       , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar 
       , GoodsGroupDirectionId Integer, GoodsGroupDirectionName TVarChar  
@@ -40,9 +40,14 @@ RETURNS TABLE (
       , PriceWithVAT       TFloat       --прайс цена со скидкой документа
       , PriceWithOutVAT_new    TFloat   --прайс цена с новой скидкой документа (ком.условия)
       , PriceWithVAT_new       TFloat   --прайс цена с новой скидкой документа (ком.условия)
-      , SummWithOutVATPlan TFloat
-      , SummWithVATPlan    TFloat 
-      
+      , PriceIn                TFloat   --Себ-ть прод, грн/кг
+      , PriceIn_calc           TFloat   --Себ-ть прод, грн/кг (расчет) 
+      , ChangePrice            TFloat   --Себ-ть расходы, грн/кг
+      , SummWithOutVATPlan     TFloat   --Сумма со скидкой документа
+      , SummWithVATPlan        TFloat   --Сумма со скидкой документа
+      , SummWithOutVATPlan_new TFloat   --Сумма с новой скидкой документа (ком.условия)
+      , SummWithVATPlan_new    TFloat   --Сумма с новой скидкой документа (ком.условия)
+
       , PromoTax           TFloat
       , ChangePercent      TFloat
       , PricePromo         TFloat
@@ -98,7 +103,6 @@ BEGIN
                             WHERE MovementFloat.MovementId = vbMovementId_PromoTradeCondition
                               AND MovementFloat.DescId = zc_MovementFloat_ChangePercent_new()
                             );
-                        
 
     RETURN QUERY
     WITH
@@ -109,7 +113,6 @@ BEGIN
                                                           , inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
                                                             ) AS tmp
                  )
-
 
   , tmpMI AS (
               SELECT tmp.Id
@@ -167,6 +170,7 @@ BEGIN
                       AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                    ) AS tmp 
               )
+
   , tmpMIFloat AS (SELECT MovementItemFloat.*
                    FROM MovementItemFloat
                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
@@ -177,6 +181,9 @@ BEGIN
                                                     , zc_MIFloat_ChangePercent()
                                                     , zc_MIFloat_PricePromo()
                                                     , zc_MIFloat_PricePromo_new()
+                                                    , zc_MIFloat_PriceIn1()
+                                                    , zc_MIFloat_PriceIn1_Calc()
+                                                    , zc_MIFloat_ChangePrice()
                                                     ) 
                    )        
           
@@ -238,9 +245,16 @@ BEGIN
              --Новая 
              , MovementItem.PriceWithOutVAT_new    ::TFloat    AS PriceWithOutVAT_new
              , MovementItem.PriceWithVAT_new       ::TFloat    AS PriceWithVAT_new  
+             --c/c
+             , MIFloat_PriceIn1.ValueData        ::TFloat AS PriceIn
+             , MIFloat_PriceIn1_Calc.ValueData   ::TFloat AS PriceIn_calc
+             , MIFloat_ChangePrice.ValueData     ::TFloat AS ChangePrice
              
              , (MIFloat_AmountPlan.ValueData * (MovementItem.PriceWithOutVAT))  ::TFloat AS SummWithOutVATPlan
              , (MIFloat_AmountPlan.ValueData * (MovementItem.PriceWithVAT))     ::TFloat AS SummWithVATPlan
+             --
+             , (MIFloat_AmountPlan.ValueData * (MovementItem.PriceWithOutVAT_new))  ::TFloat AS SummWithOutVATPlan_new
+             , (MIFloat_AmountPlan.ValueData * (MovementItem.PriceWithVAT_new))     ::TFloat AS SummWithVATPlan_new
              
              /*, MIFloat_PriceWithOutVAT.ValueData ::TFloat AS PriceWithOutVAT
              , MIFloat_PriceWithVAT.ValueData    ::TFloat AS PriceWithVAT 
@@ -278,6 +292,16 @@ BEGIN
              LEFT JOIN tmpMIFloat AS MIFloat_PricePromo_new
                                   ON MIFloat_PricePromo_new.MovementItemId = MovementItem.Id
                                  AND MIFloat_PricePromo_new.DescId = zc_MIFloat_PricePromo_new()
+
+             LEFT JOIN tmpMIFloat AS MIFloat_PriceIn1
+                                  ON MIFloat_PriceIn1.MovementItemId = MovementItem.Id
+                                 AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
+             LEFT JOIN tmpMIFloat AS MIFloat_PriceIn1_Calc
+                                  ON MIFloat_PriceIn1_Calc.MovementItemId = MovementItem.Id
+                                 AND MIFloat_PriceIn1_Calc.DescId = zc_MIFloat_PriceIn1_Calc()
+             LEFT JOIN tmpMIFloat AS MIFloat_ChangePrice
+                                  ON MIFloat_ChangePrice.MovementItemId = MovementItem.Id
+                                 AND MIFloat_ChangePrice.DescId = zc_MIFloat_ChangePrice()
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
