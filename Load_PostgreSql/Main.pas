@@ -268,6 +268,7 @@ type
     cbPrintForm_calc: TCheckBox;
     toZConnection_master: TZConnection;
     toSqlQuery_master: TZQuery;
+    cb_bi_Table_Remains: TCheckBox;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -384,6 +385,7 @@ type
     procedure pUpdateTransport_PartnerCount;
 
     procedure pUnCompleteDocument_StatusId_next;
+    procedure pInsert_bi_Remains;
 
     // Documents :
 
@@ -2088,10 +2090,16 @@ begin
 
      isMsgCurrency_all:= FALSE;
 
+     //
+     cb_bi_Table_Remains.Checked := (ParamStr(1) = 'auto_bi_Remains')
+                                  or(ParamStr(2) = 'auto_bi_Remains')
+                                  or(ParamStr(3) = 'auto_bi_Remains')
+                                   ;
+     //
 end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormShow(Sender: TObject);
 begin
-
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StartProcess;
@@ -2187,6 +2195,9 @@ begin
 
      if (ParamStr(2)='autoFillSoldTable_curr')
      then pLoadFillSoldTable_curr;
+
+     if (cb_bi_Table_Remains.Checked)
+     then pInsert_bi_Remains;
 
 
      if (ParamStr(2)='autoFillSoldTable') or (ParamStr(2)='autoFillGoodsList')
@@ -4663,7 +4674,34 @@ begin
      end;
      //
      myLogMemo_add('end UnComplete Äëÿ StatusId_next');
-     myDisabledCB(cbCurrency);
+     myDisabledCB(cbUnComplete_StatusId_next);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pInsert_bi_Remains;
+var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
+    i,SaveRecord:Integer;
+    MSec_complete:Integer;
+    isSale_str:String;
+begin
+     if (not cb_bi_Table_Remains.Checked)or(not cb_bi_Table_Remains.Enabled) then exit;
+     //
+     myEnabledCB(cb_bi_Table_Remains);
+     Application.ProcessMessages;
+     //
+     fromZConnection.Connected:=false;
+     myLogMemo_add('start Insert bi_Remains');
+     with fromZQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select * from gpInsert_bi_Table_Remains ( ' + FormatToVarCharServer_isSpace(DateToStr(Date)) + ', zfCalc_UserAdmin())');
+        //Open;
+        Application.ProcessMessages;
+        fTryOpenSq(fromZQuery);
+     end;
+     //
+     Application.ProcessMessages;
+     myLogMemo_add('end Insert bi_Remains');
+     myDisabledCB(cb_bi_Table_Remains);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pUpdateTransport_PartnerCount;

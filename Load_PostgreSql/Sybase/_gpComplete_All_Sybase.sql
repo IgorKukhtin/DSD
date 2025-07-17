@@ -42,7 +42,7 @@ then
 END IF;
 
 
-if CURRENT_TIMESTAMP between '16.07.2025 8:05' and '16.07.2025 22:00' AND 1=0
+if CURRENT_TIMESTAMP between '17.07.2025 8:05' and '17.07.2025 22:00' AND 1=1
 then
     RAISE EXCEPTION 'Ошибка.ok-pause';
 end if;

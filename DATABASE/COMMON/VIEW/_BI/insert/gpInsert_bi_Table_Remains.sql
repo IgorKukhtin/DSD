@@ -12,7 +12,7 @@ $BODY$
 BEGIN
     -- inStartDate:='01.06.2014';
     --
-    DELETE FROM _bi_Table_Remains WHERE OperDate BETWEEN inOperDate AND inOperDate + INTERVAL '1 DAY';
+    DELETE FROM _bi_Table_Remains WHERE OperDate BETWEEN DATE_TRUNC ('DAY', inOperDate) AND inOperDate + INTERVAL '1 DAY';
 
 
 
