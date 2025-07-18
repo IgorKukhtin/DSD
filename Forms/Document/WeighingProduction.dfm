@@ -2223,7 +2223,26 @@ object WeighingProductionForm: TWeighingProductionForm
         item
           Visible = True
           ItemName = 'bbSelectMIPrintPassport'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Brutto'
         end>
+    end
+    object bbPrint_Brutto: TdxBarButton
+      Action = actPrint_Brutto
+      Category = 0
+    end
+    object Separator: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2633,6 +2652,42 @@ object WeighingProductionForm: TWeighingProductionForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1072#1090#1077#1075#1086#1088#1080#1102' '#1090#1086#1074'. '#1080#1083#1080' '#1064'/'#1082' '#1076#1083#1103' '#1103#1097'.'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1072#1090#1077#1075#1086#1088#1080#1102' '#1090#1086#1074'. '#1080#1083#1080' '#1064'/'#1082' '#1076#1083#1103' '#1103#1097'.'
       ImageIndex = 55
+    end
+    object actPrint_Brutto: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintBrutto
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintBrutto
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' (Brutto)'
+      Hint = #1055#1077#1095#1072#1090#1100' (Brutto)'
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingProductionBrutto'
+      ReportNameParam.Value = 'PrintMovement_WeighingProductionBrutto'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintNoGroup: TdsdPrintAction
       Category = 'DSDLib'
@@ -3977,5 +4032,29 @@ object WeighingProductionForm: TWeighingProductionForm
     PackSize = 1
     Left = 903
     Top = 432
+  end
+  object spSelectPrintBrutto: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_WeighingProduction_PrintBrutto'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 751
+    Top = 424
   end
 end

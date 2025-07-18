@@ -280,6 +280,10 @@ type
     sbbPrint: TdxBarSubItem;
     edNumSecurity: TcxCurrencyEdit;
     cxLabel23: TcxLabel;
+    spSelectPrintBrutto: TdsdStoredProc;
+    actPrint_Brutto: TdsdPrintAction;
+    bbPrint_Brutto: TdxBarButton;
+    Separator: TdxBarSeparator;
   private
   public
   end;

@@ -214,6 +214,9 @@ type
     bbSelectMIPrintPassport: TdxBarButton;
     bbUpdateBox: TdxBarButton;
     PartionNum: TcxGridDBColumn;
+    spSelectPrintBrutto: TdsdStoredProc;
+    actPrint_Brutto: TdsdPrintAction;
+    bbPrint_Brutto: TdxBarButton;
   private
   public
   end;

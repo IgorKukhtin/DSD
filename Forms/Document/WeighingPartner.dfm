@@ -2,7 +2,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')>'
-  ClientHeight = 462
+  ClientHeight = 460
   ClientWidth = 1366
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -417,24 +417,27 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Left = 0
     Top = 155
     Width = 1366
-    Height = 307
+    Height = 305
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 307
+    ExplicitHeight = 307
+    ClientRectBottom = 305
     ClientRectRight = 1366
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 283
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1366
-        Height = 283
+        Height = 281
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 283
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1699,6 +1702,10 @@ object WeighingPartnerForm: TWeighingPartnerForm
         item
           Visible = True
           ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Brutto'
         end>
     end
     object bbPrintAction1: TdxBarButton
@@ -1718,6 +1725,10 @@ object WeighingPartnerForm: TWeighingPartnerForm
     end
     object bbUpdateBox: TdxBarButton
       Action = macUpdateBox
+      Category = 0
+    end
+    object bbPrint_Brutto: TdxBarButton
+      Action = actPrint_Brutto
       Category = 0
     end
   end
@@ -2548,6 +2559,42 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actPrint_Brutto: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintBrutto
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintBrutto
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' (Brutto)'
+      Hint = #1055#1077#1095#1072#1090#1100' (Brutto)'
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingProductionBrutto'
+      ReportNameParam.Value = 'PrintMovement_WeighingProductionBrutto'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object MasterDS: TDataSource
@@ -3829,8 +3876,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 1188
-    Top = 286
+    Left = 1260
+    Top = 254
   end
   object spSelectPrint_diff: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_WeighingPartner_Print'
@@ -3860,8 +3907,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1127
-    Top = 256
+    Left = 1215
+    Top = 304
   end
   object spSelectPrint_all: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_WeighingPartner_Print'
@@ -3953,5 +4000,29 @@ object WeighingPartnerForm: TWeighingPartnerForm
     PackSize = 1
     Left = 831
     Top = 336
+  end
+  object spSelectPrintBrutto: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_WeighingProduction_PrintBrutto'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 607
+    Top = 360
   end
 end
