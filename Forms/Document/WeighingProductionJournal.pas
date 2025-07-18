@@ -136,6 +136,9 @@ type
     isRePack: TcxGridDBColumn;
     NumSecurity: TcxGridDBColumn;
     isNumSecurity: TcxGridDBColumn;
+    spSelectPrintBrutto: TdsdStoredProc;
+    actPrint_Brutto: TdsdPrintAction;
+    bbPrint_Brutto: TdxBarButton;
   private
   public
   end;

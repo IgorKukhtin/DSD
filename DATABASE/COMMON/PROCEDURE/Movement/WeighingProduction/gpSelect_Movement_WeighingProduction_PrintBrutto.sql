@@ -101,6 +101,7 @@ BEGIN
                                                     , zc_MIFloat_WeightTare()
                                                     , zc_MIFloat_CountPack()
                                                     , zc_MIFloat_WeightPack()
+                                                    , zc_MIFloat_CountSkewer1()
                                                     , zc_MIFloat_WeightSkewer1()
                                                     , zc_MIFloat_CountSkewer2()
                                                     , zc_MIFloat_WeightSkewer2()
@@ -154,9 +155,9 @@ BEGIN
                                     --, MILinkObject_PartionGoods.ObjectId        AS PartionGoodsId
 
                    , SUM (MIFloat_CountSkewer1.ValueData)   AS CountSkewer1
-                   , SUM (MIFloat_WeightSkewer1.ValueData)  AS WeightSkewer1
+                   ,  (MIFloat_WeightSkewer1.ValueData)  AS WeightSkewer1
                    , SUM (MIFloat_CountSkewer2.ValueData)   AS CountSkewer2
-                   , SUM (MIFloat_WeightSkewer2.ValueData)  AS WeightSkewer2
+                   ,  (MIFloat_WeightSkewer2.ValueData)  AS WeightSkewer2
                    , SUM (MIFloat_WeightOther.ValueData)    AS WeightOther
               FROM tmpMovementItem AS MovementItem
  
@@ -245,11 +246,13 @@ BEGIN
                      , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
                      , COALESCE (MIDate_PartionGoods.ValueData,NULL)
                      , COALESCE (MIString_PartionGoods.ValueData,'')
-                     --, MILinkObject_PartionGoods.ObjectId
+                     --, MILinkObject_PartionGoods.ObjectId   
+                     , MIFloat_WeightSkewer1.ValueData
+                     , MIFloat_WeightSkewer2.ValueData
                  )
 
        --результат
-       SELECT
+       SELECT        
              Object_Goods.Id                    AS GoodsId
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData                AS GoodsGroupName
@@ -261,7 +264,12 @@ BEGIN
 
            , tmpMI.Amount
            , CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
-           , (COALESCE (tmpMI.WeightTare_1,0) + COALESCE (tmpMI.WeightTare_2,0))    ::TFloat     AS WeightTare
+           , (COALESCE (tmpMI.WeightTare_1,0) + COALESCE (tmpMI.WeightTare_2,0)) ::TFloat AS WeightTare
+           , (COALESCE (tmpMI.WeightTare_1,0) + COALESCE (tmpMI.WeightTare_2,0)
+             + (COALESCE (tmpMI.CountSkewer1,0) * COALESCE (tmpMI.WeightSkewer1,0))
+             + (COALESCE (tmpMI.CountSkewer2,0) * COALESCE (tmpMI.WeightSkewer2,0))
+             + COALESCE (tmpMI.WeightOther,0)
+              )    ::TFloat     AS TotalWeightTare
            --, tmpMI.WeightTare_1    ::TFloat
            --, tmpMI.WeightTare_2    ::TFloat
            , tmpMI.RealWeight ::TFloat
