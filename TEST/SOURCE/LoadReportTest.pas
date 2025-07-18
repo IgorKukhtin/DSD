@@ -165,10 +165,10 @@ begin
   exit;
   LoadReportFromFile('PrintMovement_PromoTrade', ReportPath + '\Товарный Учет\PrintMovement_PromoTrade.fr3');
   exit;
-  }
+
   LoadReportFromFile('PrintMovement_PromoTradeOkupaemost', ReportPath + '\Товарный Учет\PrintMovement_PromoTradeOkupaemost.fr3');
   exit;
-  {LoadReportFromFile('Печать_Снятие с хранения в места отбора', ReportPath + '\Отчеты (товарные)\Печать_Снятие с хранения в места отбора.fr3');
+  LoadReportFromFile('Печать_Снятие с хранения в места отбора', ReportPath + '\Отчеты (товарные)\Печать_Снятие с хранения в места отбора.fr3');
   exit;
   LoadReportFromFile('PrintUser_Badge', ReportPath + '\Справочники\PrintUser_Badge.fr3');
 
@@ -267,8 +267,12 @@ begin
   LoadReportFromFile('PrintMovement_WeighingProduction', ReportPath + '\Товарный Учет\PrintMovement_WeighingProduction.fr3');
   LoadReportFromFile('PrintMovement_WeighingProductionWmsSticker', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionWmsSticker.fr3');
   exit;
+ }
+ 
+  LoadReportFromFile('PrintMovement_WeighingProductionBrutto', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionBrutto.fr3');
+  exit;
 
-
+ {
   LoadReportFromFile('PrintMI_WeighingProductionPassport', ReportPath + '\Товарный Учет\PrintMI_WeighingProductionPassport.fr3');
   exit;
 
