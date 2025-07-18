@@ -264,7 +264,6 @@ BEGIN
               , Object_GoodsKind.ValueData
         ;
 
-
     RETURN NEXT Cursor2;
 
 END;
