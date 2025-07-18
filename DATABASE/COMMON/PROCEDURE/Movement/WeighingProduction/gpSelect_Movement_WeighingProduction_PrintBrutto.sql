@@ -17,7 +17,9 @@ $BODY$
     DECLARE Cursor2 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_WeighingProduction_Print());
+     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_WeighingProduction_Print());
+     vbUserId:= lpGetUserBySession (inSession);
+
 
     
     OPEN Cursor1 FOR
@@ -25,6 +27,7 @@ BEGIN
        SELECT
              Movement.Id                                        AS Id
            , (Movement.InvNumber || CASE WHEN vbIsWeighing = TRUE THEN '/' || (MFloat_WeighingNumber.ValueData :: Integer) :: TVarChar ELSE '' END) :: TVarChar AS InvNumber
+           , MovementDesc.ItemName                              AS MovementDescName
            , Movement.OperDate                                  AS OperDate
            , Object_Status.ObjectCode                           AS StatusCode
            , Object_Status.ValueData                            AS StatusName
@@ -61,6 +64,11 @@ BEGIN
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
 
+            LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
+                                    ON MovementFloat_MovementDesc.MovementId =  Movement.Id
+                                   AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
+            LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData
+
        WHERE Movement.Id = inMovementId
       --   AND Movement.DescId = zc_Movement_WeighingProduction()
       ;
@@ -93,6 +101,10 @@ BEGIN
                                                     , zc_MIFloat_WeightTare()
                                                     , zc_MIFloat_CountPack()
                                                     , zc_MIFloat_WeightPack()
+                                                    , zc_MIFloat_WeightSkewer1()
+                                                    , zc_MIFloat_CountSkewer2()
+                                                    , zc_MIFloat_WeightSkewer2()
+                                                    , zc_MIFloat_WeightOther()
                                                      )
                  )
 
@@ -119,17 +131,16 @@ BEGIN
                   )
 
 
-  , tmpMI AS (SELECT MovementItem.Id                           AS MovementItemId
-                   , MovementItem.ObjectId                     AS GoodsId
-                   , MILinkObject_GoodsKind.ObjectId           AS GoodsKindId
-                   , MovementItem.Amount                       AS Amount           --Количество
-                   , COALESCE (MIFloat_RealWeight.ValueData,0) AS RealWeight       --Реальный вес
-                   , (COALESCE (MIFloat_WeightTare.ValueData,0)
+  , tmpMI AS (SELECT MovementItem.ObjectId                     AS GoodsId
+                   , COALESCE (MILinkObject_GoodsKind.ObjectId,0)    AS GoodsKindId
+                   , SUM (MovementItem.Amount)                       AS Amount           --Количество
+                   , SUM (COALESCE (MIFloat_RealWeight.ValueData,0)) AS RealWeight       --Реальный вес
+                   , SUM (COALESCE (MIFloat_WeightTare.ValueData,0)
                      -- + Упаковка
                       + COALESCE (MIFloat_CountPack.ValueData, 0) * COALESCE (MIFloat_WeightPack.ValueData, 0)
                        ) AS WeightTare_1       --вес тары Документ <Взвешивание (производство)>
                     
-                   , ( COALESCE (MIFloat_CountTare1.ValueData,0) * COALESCE (MIFloat_WeightTare1.ValueData,0)
+                   , SUM ( COALESCE (MIFloat_CountTare1.ValueData,0) * COALESCE (MIFloat_WeightTare1.ValueData,0)
                      + COALESCE (MIFloat_CountTare2.ValueData,0) * COALESCE (MIFloat_WeightTare2.ValueData,0)
                      + COALESCE (MIFloat_CountTare3.ValueData,0) * COALESCE (MIFloat_WeightTare3.ValueData,0)
                      + COALESCE (MIFloat_CountTare4.ValueData,0) * COALESCE (MIFloat_WeightTare4.ValueData,0)
@@ -138,10 +149,15 @@ BEGIN
                      + COALESCE (MIFloat_CountPack.ValueData, 0) * COALESCE (MIFloat_WeightPack.ValueData, 0)
                       ) ::TFloat AS WeightTare_2                                              --вес тары Документ <Взвешивание (контрагент)>
 
-                   , MIDate_PartionGoods.ValueData             AS PartionGoodsDate
-                   , MIString_PartionGoods.ValueData           AS PartionGoods
-                   , MILinkObject_PartionGoods.ObjectId        AS PartionGoodsId
-                                    
+                   , COALESCE (MIDate_PartionGoods.ValueData,NULL)::TDateTime  AS PartionGoodsDate
+                   , COALESCE (MIString_PartionGoods.ValueData,'')::TVarChar   AS PartionGoods
+                                    --, MILinkObject_PartionGoods.ObjectId        AS PartionGoodsId
+
+                   , SUM (MIFloat_CountSkewer1.ValueData)   AS CountSkewer1
+                   , SUM (MIFloat_WeightSkewer1.ValueData)  AS WeightSkewer1
+                   , SUM (MIFloat_CountSkewer2.ValueData)   AS CountSkewer2
+                   , SUM (MIFloat_WeightSkewer2.ValueData)  AS WeightSkewer2
+                   , SUM (MIFloat_WeightOther.ValueData)    AS WeightOther
               FROM tmpMovementItem AS MovementItem
  
                    LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
@@ -195,6 +211,26 @@ BEGIN
                    LEFT JOIN tmpMIFloat AS MIFloat_WeightTare5
                                         ON MIFloat_WeightTare5.MovementItemId = MovementItem.Id
                                        AND MIFloat_WeightTare5.DescId = zc_MIFloat_WeightTare5()
+   
+                   LEFT JOIN tmpMIFloat AS MIFloat_CountSkewer1
+                                        ON MIFloat_CountSkewer1.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountSkewer1.DescId = zc_MIFloat_CountSkewer1()
+       
+                   LEFT JOIN tmpMIFloat AS MIFloat_WeightSkewer1
+                                        ON MIFloat_WeightSkewer1.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightSkewer1.DescId = zc_MIFloat_WeightSkewer1()
+       
+                   LEFT JOIN tmpMIFloat AS MIFloat_CountSkewer2
+                                        ON MIFloat_CountSkewer2.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountSkewer2.DescId = zc_MIFloat_CountSkewer2()
+       
+                   LEFT JOIN tmpMIFloat AS MIFloat_WeightSkewer2
+                                        ON MIFloat_WeightSkewer2.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightSkewer2.DescId = zc_MIFloat_WeightSkewer2()
+       
+                   LEFT JOIN tmpMIFloat AS MIFloat_WeightOther
+                                        ON MIFloat_WeightOther.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightOther.DescId = zc_MIFloat_WeightOther()
 
                    LEFT JOIN tmpMIDate AS MIDate_PartionGoods
                                        ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -202,15 +238,19 @@ BEGIN
                    LEFT JOIN tmpMIString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                   LEFT JOIN tmpMILO AS MILinkObject_PartionGoods
+                  /* LEFT JOIN tmpMILO AS MILinkObject_PartionGoods
                                      ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
-                                    AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+                                    AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods() */
+              GROUP BY MovementItem.ObjectId
+                     , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+                     , COALESCE (MIDate_PartionGoods.ValueData,NULL)
+                     , COALESCE (MIString_PartionGoods.ValueData,'')
+                     --, MILinkObject_PartionGoods.ObjectId
                  )
 
        --результат
        SELECT
-             tmpMI.MovementItemId               AS Id
-           , Object_Goods.Id                    AS GoodsId
+             Object_Goods.Id                    AS GoodsId
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData                AS GoodsGroupName
            , Object_Goods.ObjectCode            AS GoodsCode
@@ -226,14 +266,20 @@ BEGIN
            --, tmpMI.WeightTare_2    ::TFloat
            , tmpMI.RealWeight ::TFloat
 
-           , Object_PartionGoods.Id             AS PartionGoodsId
-           , Object_PartionGoods.ValueData      AS PartionGoodsName
-           , ObjectDate_Value.ValueData         AS PartionGoodsOperDate
+           , tmpMI.CountSkewer1
+           , tmpMI.WeightSkewer1
+           , tmpMI.CountSkewer2
+           , tmpMI.WeightSkewer2
+           , tmpMI.WeightOther                                    
+
+           --, Object_PartionGoods.Id             AS PartionGoodsId
+           --, Object_PartionGoods.ValueData      AS PartionGoodsName
+           --, ObjectDate_Value.ValueData         AS PartionGoodsOperDate
            , tmpMI.PartionGoodsDate
            , tmpMI.PartionGoods
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI.PartionGoodsId
+            --LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI.PartionGoodsId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
@@ -255,9 +301,9 @@ BEGIN
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-            LEFT JOIN ObjectDate AS ObjectDate_Value
+           /* LEFT JOIN ObjectDate AS ObjectDate_Value
                                  ON ObjectDate_Value.ObjectId = Object_PartionGoods.Id                    -- дата
-                                AND ObjectDate_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+                                AND ObjectDate_Value.DescId = zc_ObjectDate_PartionGoods_Value() */
        ORDER BY ObjectString_Goods_GroupNameFull.ValueData
               , Object_GoodsGroup.ValueData
               , Object_Goods.ValueData
