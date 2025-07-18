@@ -89,6 +89,7 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint_Security: TdsdStoredProc;
     bbPrintSecurity: TSpeedButton;
+    SpeedButton3: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -138,6 +139,8 @@ begin
      then // если нужен следующий и он один, тогда открывать форму не надо
           if TRUE = DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement_local,FALSE,TRUE)//isLast=FALSE,isNext=TRUE
           then begin CopyValuesParamsFrom(ParamsMovement_local,execParamsMovement);exit;end;}
+
+     bbPrintSecurity.Visible:= (SettingMain.BranchCode = 1) or (SettingMain.BranchCode = 101);
 
      isChoice_local:=(isChoice);
      bbChoice.Enabled:=(isChoice_local) or (UserId_begin=5);
