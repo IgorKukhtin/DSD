@@ -235,7 +235,9 @@ BEGIN
                             THEN COALESCE (tmpMI.BoxCount,0)
                             ELSE 0
                        END)   :: TFloat  AS BoxCount_calc
-                , SUM (CASE WHEN COALESCE (tmpGoodsPropertyValue_GP.BoxCount, 0) <> 0 THEN COALESCE (tmpMI.Amount,0) /tmpGoodsPropertyValue_GP.BoxCount ELSE 0 END ) :: TFloat  AS BoxCount_calc2    -- "Кол-во у покуп." / "Кол-во ед. в ящ."
+
+                  -- "Кол-во у покуп." / "Кол-во ед. в ящ."
+                , SUM (CASE WHEN COALESCE (tmpGoodsPropertyValue_GP.BoxCount, 0) <> 0 THEN CAST (COALESCE (tmpMI.Amount,0) /tmpGoodsPropertyValue_GP.BoxCount AS Integer) ELSE 0 END ) :: TFloat  AS BoxCount_calc2
 
                 , CASE WHEN inisDetail = TRUE THEN Movement.Id ELSE 0 END         ::Integer AS MovementId
                 , CASE WHEN inisDetail = TRUE THEN Movement.InvNumber ELSE '' END ::TVarChar AS InvNumber
