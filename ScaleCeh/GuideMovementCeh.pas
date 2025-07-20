@@ -89,7 +89,10 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint_Security: TdsdStoredProc;
     bbPrintSecurity: TSpeedButton;
-    SpeedButton3: TSpeedButton;
+    bbPrint_TareBrutto: TSpeedButton;
+    PrintHeaderCDS: TClientDataSet;
+    actPrint_TareBrutto: TdsdPrintAction;
+    spSelectPrintBrutto: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

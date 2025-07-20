@@ -34,7 +34,6 @@ object GuideMovementCehForm: TGuideMovementCehForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitTop = 3
       object ButtonExit: TSpeedButton
         Left = 326
         Top = 4
@@ -91,7 +90,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
       end
       object bbPrint: TSpeedButton
         Left = 433
-        Top = 3
+        Top = 4
         Width = 31
         Height = 29
         Hint = #1055#1077#1095#1072#1090#1100
@@ -280,21 +279,21 @@ object GuideMovementCehForm: TGuideMovementCehForm
         ParentShowHint = False
         ShowHint = True
       end
-      object SpeedButton3: TSpeedButton
+      object bbPrint_TareBrutto: TSpeedButton
         Left = 532
         Top = 4
         Width = 31
         Height = 29
-        Hint = #1056#1072#1079#1085#1080#1094#1072' '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1050#1083#1072#1076#1086#1074#1097#1080#1082'/'#1054#1093#1088#1072#1085#1085#1080#1082#1072
+        Action = actPrint_TareBrutto
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
           8000008000000080800080000000800080008080000080808000C0C0C0000000
           FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          888888880000000888888888FFFFFFF888888888000000088888880000FFFFFF
-          88888077770FFFFFF88878888880FFFFFF887888888900000008788888888887
-          77787FFFFFFFFFF7777887F0000000FF7778887FFFFFFF0FF7788887F8888807
-          77888888788888F8888888888F88888088888888877777778888}
+          8888888888888888888888000000000788888077777777777888788888888887
+          778878888889F9F7708878888888888777787FFFFFFFFFF7777887F0000000FF
+          7778887FF9FFF10FF7788887F898180777888888788988F8888888888F189880
+          8888888887777777888888888888888888888888888888888888}
         ParentShowHint = False
         ShowHint = True
       end
@@ -831,6 +830,40 @@ object GuideMovementCehForm: TGuideMovementCehForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_TareBrutto: TdsdPrintAction
+      Category = 'ScaleLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintBrutto
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintBrutto
+        end>
+      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' + '#1058#1072#1088#1072
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingProductionBrutto'
+      ReportNameParam.Value = 'PrintMovement_WeighingProductionBrutto'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -892,5 +925,35 @@ object GuideMovementCehForm: TGuideMovementCehForm
     PackSize = 1
     Left = 240
     Top = 208
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 484
+    Top = 217
+  end
+  object spSelectPrintBrutto: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_WeighingProduction_PrintBrutto'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = CDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 391
+    Top = 248
   end
 end

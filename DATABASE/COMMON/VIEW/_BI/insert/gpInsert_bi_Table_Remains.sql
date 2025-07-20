@@ -12,8 +12,11 @@ $BODY$
 BEGIN
     -- inStartDate:='01.06.2014';
     --
-    DELETE FROM _bi_Table_Remains WHERE OperDate BETWEEN DATE_TRUNC ('DAY', inOperDate) AND inOperDate + INTERVAL '1 DAY';
 
+     IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) NOT IN (11) --OR 1=1
+     THEN
+         DELETE FROM _bi_Table_Remains WHERE OperDate BETWEEN DATE_TRUNC ('DAY', inOperDate) AND inOperDate + INTERVAL '1 DAY';
+     END IF;
 
 
     WITH tmpUnit AS (-- Филиалы
@@ -232,7 +235,11 @@ FROM _bi_Table_Remains
      LEFT JOIN Object AS Object_Unit      ON Object_Unit.Id      = _bi_Table_Remains.UnitId
      LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = _bi_Table_Remains.GoodsId
      LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _bi_Table_Remains.GoodsKindId
+WHERE OperDate = '15.07.2025 9:00'
+--
+-- SELECT DISTINCT OperDate FROM _bi_Table_Remains ORDER BY 1
 */
 -- тест
--- UPDATE  _bi_Table_Remains SET OperDate = '15.07.2025' WHERE OperDate > '15.07.2025'
+-- DELETE FROM  _bi_Table_Remains WHERE OperDate between '20.07.2025 9:00' and '20.07.2025 9:10'
+-- UPDATE  _bi_Table_Remains SET OperDate = '20.07.2025 9:00' WHERE OperDate between '20.07.2025 11:00' and '20.07.2025 11:10'
 -- SELECT * FROM gpInsert_bi_Table_Remains (inOperDate:= '14.07.2025', inSession:= zfCalc_UserAdmin())

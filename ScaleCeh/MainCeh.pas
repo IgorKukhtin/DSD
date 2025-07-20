@@ -1824,7 +1824,7 @@ begin
           LabelStringValue.Caption:='Партия СЫРЬЯ';
           ActiveControl:=StringValueEdit;
           StringValueEdit.Text:=CDS.FieldByName('PartionGoods').AsString;
-          if not Execute (true, false) then begin execParams.Free;exit;end;
+          if not Execute (true, false, false) then begin execParams.Free;exit;end;
           //
           //Проверка - только для Обв.
           if SettingMain.isGoodsComplete = FALSE
@@ -4273,7 +4273,7 @@ begin
                     LabelStringValue.Caption:='Ввод примечания для <'+execParams.ParamByName('SubjectDocName').AsString+'>';
                     ActiveControl:=StringValueEdit;
                     StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
-                    if Execute (false, false)
+                    if Execute (false, false, false)
                     then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
                     //
                     EditSubjectDoc.Text:= EditSubjectDoc.Text + ' / ' + ParamsMovement.ParamByName('DocumentComment').AsString;

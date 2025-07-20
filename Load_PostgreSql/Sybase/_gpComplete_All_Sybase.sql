@@ -21,7 +21,7 @@ BEGIN
 
 if inMovementId  = 30603865 AND 1=0
 THEN RETURN; END IF;
-
+	
      -- нашли
      SELECT DescId, StatusId, StatusId_next, OperDate INTO vbMovementDescId, vbStatusId, vbStatusId_next, vbOperDate FROM Movement WHERE Id = inMovementId;
      -- !!!выход!!!
@@ -31,21 +31,16 @@ THEN RETURN; END IF;
      
 
 
-
-if CURRENT_TIMESTAMP between '16.07.2025 9:00' and '16.07.2025 09:10' AND 1=0
-   and not exists (select 1 from _bi_Table_Remains where OperDate > '16.07.2025')
-then
-    PERFORM gpInsert_bi_Table_Remains (inOperDate:= '16.07.2025', inSession:= zfCalc_UserAdmin());
-    -- update _bi_Table_Remains set OperDate = '16.07.2025 9:00' where OperDate > '16.07.2025'
-    -- select distinct OperDate from _bi_Table_Remains order by 1
-    RETURN;
-END IF;
-
-
-if CURRENT_TIMESTAMP between '17.07.2025 8:05' and '17.07.2025 22:00' AND 1=1
+if CURRENT_TIMESTAMP between '18.07.2025 8:15' and '18.07.2025 22:00' AND 1=0
 then
     RAISE EXCEPTION 'Ошибка.ok-pause';
 end if;
+
+
+IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) IN (23, 0, 1,2,3,4) AND vbMovementDescId IN (zc_Movement_Inventory()) AND 1=0
+THEN
+    RETURN;
+END IF;
 
      -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
      /*IF    (EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 8462, 8461, 256716, 1387416))

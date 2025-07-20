@@ -1949,7 +1949,7 @@ BEGIN
                     WHERE MLO_From.MovementId = inMovementId
                       AND MLO_From.DescId     = zc_MovementLinkObject_From()
                       -- !!!расход с упаковки!!!
-                      AND MLO_From.ObjectId   IN (zc_Unit_Pack(), zc_Unit_RK_Label())
+                      AND MLO_From.ObjectId   IN (zc_Unit_Pack(), zc_Unit_RK_Label(), 8458) -- + Склад База ГП
                    )
         -- AND vbUserId = 5
      THEN

@@ -139,7 +139,8 @@ uses
   invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas',
   DialogOrderExternal in '..\Scale\DialogOrderExternal.pas' {DialogOrderExternalForm},
   GuideGoodsPeresort in '..\Scale\GuideGoodsPeresort.pas' {GuideGoodsPeresortForm},
-  DialogPeresort in '..\Scale\DialogPeresort.pas' {DialogPeresortForm};
+  DialogPeresort in '..\Scale\DialogPeresort.pas' {DialogPeresortForm},
+  DialogGofro in '..\Scale\DialogGofro.pas' {DialogGofroForm};
 
 {$R *.res}
 
@@ -164,7 +165,7 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-         //
+  //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
          //
@@ -206,7 +207,9 @@ begin
          //
          Application.CreateForm(TDialogPeresortForm, DialogPeresortForm);
          Application.CreateForm(TGuideGoodsPeresortForm, GuideGoodsPeresortForm);
-  end
+         Application.CreateForm(TDialogPeresortForm, DialogPeresortForm);
+         Application.CreateForm(TDialogGofroForm, DialogGofroForm);
+end
   else
 
   // Процесс аутентификации
@@ -264,6 +267,8 @@ begin
          //
          Application.CreateForm(TDialogPeresortForm, DialogPeresortForm);
          Application.CreateForm(TGuideGoodsPeresortForm, GuideGoodsPeresortForm);
+         Application.CreateForm(TDialogPeresortForm, DialogPeresortForm);
+         Application.CreateForm(TDialogGofroForm, DialogGofroForm);
   end;
   //
   Application.Run;

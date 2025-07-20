@@ -719,6 +719,56 @@ begin
          ParamAdd(Params,'MeasureName_out',ftString);        // Единица измерения
          ParamAdd(Params,'Weight_gd_out',ftFloat);           // Вес шт. товара
 
+         // Гофро-ящики+Поддон+Ящик+Гофро-уголок
+         //Поддон
+         ParamAdd(Params,'GoodsId_gofro_pd',ftInteger);           // Товары
+         ParamAdd(Params,'GoodsCode_gofro_pd',ftInteger);         // Товары
+         ParamAdd(Params,'GoodsName_gofro_pd',ftString);          // Товары
+         ParamAdd(Params,'Amount_gofro_pd',ftFloat);              // Кол-во
+         //Ящик
+         ParamAdd(Params,'GoodsId_gofro_box',ftInteger);          // Товары
+         ParamAdd(Params,'GoodsCode_gofro_box',ftInteger);        // Товары
+         ParamAdd(Params,'GoodsName_gofro_box',ftString);         // Товары
+         ParamAdd(Params,'Amount_gofro_box',ftFloat);             // Кол-во
+         //Гофро-уголок
+         ParamAdd(Params,'GoodsId_gofro_ugol',ftInteger);          // Товары
+         ParamAdd(Params,'GoodsCode_gofro_ugol',ftInteger);        // Товары
+         ParamAdd(Params,'GoodsName_gofro_ugol',ftString);         // Товары
+         ParamAdd(Params,'Amount_gofro_ugol',ftFloat);             // Кол-во
+         //Гофро-ящик
+         ParamAdd(Params,'GoodsId_gofro_1',ftInteger);          // Товары
+         ParamAdd(Params,'GoodsCode_gofro_1',ftInteger);        // Товары
+         ParamAdd(Params,'GoodsName_gofro_1',ftString);         // Товары
+         ParamAdd(Params,'Amount_gofro_1',ftFloat);             // Кол-во
+         ParamAdd(Params,'GoodsId_gofro_2',ftInteger);          // Товары
+         ParamAdd(Params,'GoodsCode_gofro_2',ftInteger);        // Товары
+         ParamAdd(Params,'GoodsName_gofro_2',ftString);         // Товары
+         ParamAdd(Params,'Amount_gofro_2',ftFloat);             // Кол-во
+         ParamAdd(Params,'GoodsId_gofro_3',ftInteger);          // Товары
+         ParamAdd(Params,'GoodsCode_gofro_3',ftInteger);        // Товары
+         ParamAdd(Params,'GoodsName_gofro_3',ftString);         // Товары
+         ParamAdd(Params,'Amount_gofro_3',ftFloat);             // Кол-во
+         ParamAdd(Params,'GoodsId_gofro_4',ftInteger);          // Товары
+         ParamAdd(Params,'GoodsCode_gofro_4',ftInteger);        // Товары
+         ParamAdd(Params,'GoodsName_gofro_4',ftString);         // Товары
+         ParamAdd(Params,'Amount_gofro_4',ftFloat);             // Кол-во
+         ParamAdd(Params,'GoodsId_gofro_5',ftInteger);          // Товары
+         ParamAdd(Params,'GoodsCode_gofro_5',ftInteger);        // Товары
+         ParamAdd(Params,'GoodsName_gofro_5',ftString);         // Товары
+         ParamAdd(Params,'Amount_gofro_5',ftFloat);             // Кол-во
+         ParamAdd(Params,'GoodsId_gofro_6',ftInteger);          // Товары
+         ParamAdd(Params,'GoodsCode_gofro_6',ftInteger);        // Товары
+         ParamAdd(Params,'GoodsName_gofro_6',ftString);         // Товары
+         ParamAdd(Params,'Amount_gofro_6',ftFloat);             // Кол-во
+         ParamAdd(Params,'GoodsId_gofro_7',ftInteger);          // Товары
+         ParamAdd(Params,'GoodsCode_gofro_7',ftInteger);        // Товары
+         ParamAdd(Params,'GoodsName_gofro_7',ftString);         // Товары
+         ParamAdd(Params,'Amount_gofro_7',ftFloat);             // Кол-во
+         ParamAdd(Params,'GoodsId_gofro_8',ftInteger);          // Товары
+         ParamAdd(Params,'GoodsCode_gofro_8',ftInteger);        // Товары
+         ParamAdd(Params,'GoodsName_gofro_8',ftString);         // Товары
+         ParamAdd(Params,'Amount_gofro_8',ftFloat);             // Кол-во
+
          ParamAdd(Params,'PartionCellId',ftInteger);       //
          ParamAdd(Params,'PartionCellName',ftString);      //
 
