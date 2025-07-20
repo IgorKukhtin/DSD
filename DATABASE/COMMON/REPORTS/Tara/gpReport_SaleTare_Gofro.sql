@@ -1,5 +1,5 @@
 -- Function: gpReport_SaleTare_Gofro()
-
+   
 DROP FUNCTION IF EXISTS gpReport_SaleTare_Gofro (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_SaleTare_Gofro (TDateTime, TDateTime, Integer, Integer,Boolean, TVarChar);
 
@@ -90,7 +90,8 @@ BEGIN
                     , MovementItem.Id
                     , MovementItem.ObjectId      AS ObjectId
                     , MILinkObject_Box.ObjectId  AS GoodsId
-                    , COALESCE (MovementItem.Amount,0) AS Amount
+                    --, COALESCE (MovementItem.Amount,0) AS Amount
+                    , 0        AS Amount
                     , COALESCE (MIFloat_BoxCount.ValueData,0) AS BoxCount
                FROM tmpMI_All AS MovementItem
                     INNER JOIN tmpMIF_Box AS MIFloat_BoxCount
