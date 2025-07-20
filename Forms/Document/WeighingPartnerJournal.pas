@@ -145,6 +145,11 @@ type
     bbsPrint: TdxBarSubItem;
     actWeighingPartner_ActDiffF: TdsdInsertUpdateAction;
     bbWeighingPartner_ActDiffF: TdxBarButton;
+    spSelectPrintBrutto: TdsdStoredProc;
+    actPrint_Brutto: TdsdPrintAction;
+    bbPrint_Brutto: TdxBarButton;
+    dxBarButton1: TdxBarButton;
+    rSeparator: TdxBarSeparator;
   private
   public
   end;
