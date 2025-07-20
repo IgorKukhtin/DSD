@@ -14,7 +14,14 @@ $BODY$
 BEGIN
 
      -- определяем товар по коду
-     outGoodsId := (SELECT Object.Id FROM Object WHERE Object.ObjectCode = ioGoodsCode AND Object.DescId = zc_Object_Goods());
+     outGoodsId := (SELECT Object.Id
+                    FROM Object
+                         LEFT JOIN Container ON Container.ObjectId = Object.Id
+                    WHERE Object.ObjectCode = ioGoodsCode
+                      AND Object.DescId     = zc_Object_Goods()
+                    ORDER BY COALESCE (Container.Amount, 0) DESC
+                    LIMIT 1
+                   );
      --проверка
      IF COALESCE (outGoodsId, 0) = 0
      THEN
