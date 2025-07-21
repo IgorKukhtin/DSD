@@ -1616,10 +1616,10 @@ procedure TLoadFormTest.LoadSheetWorkTimeCloseFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeCloseEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeCloseEditForm');
-  exit;
+  {//exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeCloseForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeCloseJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeCloseJournalForm');
   //exit;

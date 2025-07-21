@@ -646,7 +646,14 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inOperDate'
+          Name = 'inDateStart'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inDateEnd'
           Value = Null
           Component = deEnd
           DataType = ftDateTime
@@ -713,7 +720,14 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inOperDate'
+          Name = 'inDateStart'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inDateEnd'
           Value = Null
           Component = deEnd
           DataType = ftDateTime
