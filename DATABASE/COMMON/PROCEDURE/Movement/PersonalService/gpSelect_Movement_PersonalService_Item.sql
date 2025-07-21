@@ -144,7 +144,7 @@ BEGIN
      END IF;
 
      ---
-     /*IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPersonalServiceList_check'))
+   /*  IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPersonalServiceList_check'))
      THEN
           -- Оптимизация
           CREATE TEMP TABLE tmpPersonalServiceList_check ON COMMIT DROP AS 
@@ -195,8 +195,9 @@ BEGIN
      
 
      RETURN QUERY
-     WITH 
-        tmpPersonalServiceList_check
+     WITH
+        tmpUserAll_check AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ 
+      , tmpPersonalServiceList_check
         AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
             FROM ObjectLink AS ObjectLink_User_Member
                  INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
@@ -230,8 +231,8 @@ BEGIN
             SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
             FROM Object AS Object_PersonalServiceList
             WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-              AND (vbIsUserAll = TRUE
-                OR vbUserId = 80373 -- Прохорова С.А.
+              AND (EXISTS (SELECT 1 FROM tmpUserAll_check)
+               OR vbUserId = 80373 -- Прохорова С.А.
                   )
            UNION
             -- Админ и другие видят ВСЕХ
@@ -241,7 +242,7 @@ BEGIN
               AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin())
            )
 
-, tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+        , tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
@@ -1398,7 +1399,7 @@ BEGIN
                                             AND MILinkObject_UnitFineSubject.DescId = zc_MILinkObject_UnitFineSubject()
             LEFT JOIN Object AS Object_UnitFineSubject ON Object_UnitFineSubject.Id = MILinkObject_UnitFineSubject.ObjectId
             
-            LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId_mi
+            LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId   --tmpAll.PersonalServiceListId_mi
 
             --LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId     
 
