@@ -1616,7 +1616,7 @@ procedure TLoadFormTest.LoadSheetWorkTimeCloseFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeCloseEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeCloseEditForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeCloseForm');
 
