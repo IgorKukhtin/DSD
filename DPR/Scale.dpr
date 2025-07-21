@@ -140,7 +140,8 @@ uses
   DialogOrderExternal in '..\Scale\DialogOrderExternal.pas' {DialogOrderExternalForm},
   GuideGoodsPeresort in '..\Scale\GuideGoodsPeresort.pas' {GuideGoodsPeresortForm},
   DialogPeresort in '..\Scale\DialogPeresort.pas' {DialogPeresortForm},
-  DialogGofro in '..\Scale\DialogGofro.pas' {DialogGofroForm};
+  DialogGofro in '..\Scale\DialogGofro.pas' {DialogGofroForm},
+  GuideGofro in '..\Scale\GuideGofro.pas' {GuideGofroForm};
 
 {$R *.res}
 
@@ -165,7 +166,7 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  //
+         //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
          //
@@ -209,6 +210,7 @@ begin
          Application.CreateForm(TGuideGoodsPeresortForm, GuideGoodsPeresortForm);
          Application.CreateForm(TDialogPeresortForm, DialogPeresortForm);
          Application.CreateForm(TDialogGofroForm, DialogGofroForm);
+         Application.CreateForm(TGuideGofroForm, GuideGofroForm);
 end
   else
 
@@ -269,6 +271,7 @@ end
          Application.CreateForm(TGuideGoodsPeresortForm, GuideGoodsPeresortForm);
          Application.CreateForm(TDialogPeresortForm, DialogPeresortForm);
          Application.CreateForm(TDialogGofroForm, DialogGofroForm);
+         Application.CreateForm(TGuideGofroForm, GuideGofroForm);
   end;
   //
   Application.Run;

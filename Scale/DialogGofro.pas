@@ -30,7 +30,6 @@ type
     LabelGoodsCode_1: TLabel;
     infoPanelGoodsName_1: TPanel;
     LabelGoodsName_1: TLabel;
-    BitBtn1: TBitBtn;
     ActionList: TActionList;
     actExec: TAction;
     EditGoodsCode_1: TcxCurrencyEdit;
@@ -147,10 +146,10 @@ type
     Label27: TLabel;
     EditAmount_ugol: TcxCurrencyEdit;
     infoPanelSpace_poddon: TPanel;
-    procedure actExecExecute(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure EditGoodsCode_pdKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure EditGoodsName_pdPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
@@ -161,27 +160,56 @@ var
    DialogGofroForm: TDialogGofroForm;
 
 implementation
-uses UtilScale, GuideGoodsPeresort, dmMainScale, DialogStringValue;
+uses UtilScale, GuideGofro, dmMainScale, DialogStringValue;
 {$R *.dfm}
 {------------------------------------------------------------------------------}
 function TDialogGofroForm.Execute(var execParamsMovement:TParams;var execParamsMI:TParams): boolean;
 begin
-     EditGoodsCode_pd.Caption:= execParamsMI.ParamByName('GoodsCode_pd').AsString;
-     EditGoodsName_pd.Text:= execParamsMI.ParamByName('GoodsName_pd').AsString;
-     EditAmount_pd.Text:= FloatToStr(execParamsMI.ParamByName('Amount_pd').AsFloat);
+     EditGoodsCode_pd.Caption:= execParamsMI.ParamByName('GoodsCode_gofro_pd').AsString;
+     EditGoodsName_pd.Text:= execParamsMI.ParamByName('GoodsName_gofro_pd').AsString;
+     EditAmount_pd.Text:= FloatToStr(execParamsMI.ParamByName('Amount_gofro_pd').AsFloat);
      //
-     PanelGoodsCode_out.Caption:= execParamsMI.ParamByName('GoodsCode_out').AsString;
-     EditGoodsName_out.Text:= execParamsMI.ParamByName('GoodsName_out').AsString;
-     PanelGoodsKindName_out.Caption:= execParamsMI.ParamByName('GoodsKindName_out').AsString;
-     if execParamsMI.ParamByName('GoodsId_out').AsInteger > 0
-     then EditAmount_out.Text:= FloatToStr(execParamsMI.ParamByName('Amount_out_calc').AsFloat)
-     else //подставляется приход
-          EditAmount_out.Text:= FloatToStr(execParamsMI.ParamByName('Amount_in_calc').AsFloat);
+     EditGoodsCode_box.Caption:= execParamsMI.ParamByName('GoodsCode_gofro_box').AsString;
+     EditGoodsName_box.Text:= execParamsMI.ParamByName('GoodsName_gofro_box').AsString;
+     EditAmount_box.Text:= FloatToStr(execParamsMI.ParamByName('Amount_gofro_box').AsFloat);
      //
-     EditAmount_out.Properties.DisplayFormat:= ',0.#### ' + execParamsMI.ParamByName('MeasureName_out').AsString;
-     EditPartionDate_out.Date:= Date;
-
+     EditGoodsCode_ugol.Caption:= execParamsMI.ParamByName('GoodsCode_gofro_ugol').AsString;
+     EditGoodsName_ugol.Text:= execParamsMI.ParamByName('GoodsName_gofro_ugol').AsString;
+     EditAmount_ugol.Text:= FloatToStr(execParamsMI.ParamByName('Amount_gofro_ugol').AsFloat);
      //
+     EditGoodsCode_1.Caption:= execParamsMI.ParamByName('GoodsCode_gofro_1').AsString;
+     EditGoodsName_1.Text:= execParamsMI.ParamByName('GoodsName_gofro_1').AsString;
+     EditAmount_1.Text:= FloatToStr(execParamsMI.ParamByName('Amount_gofro_1').AsFloat);
+     //
+     EditGoodsCode_2.Caption:= execParamsMI.ParamByName('GoodsCode_gofro_2').AsString;
+     EditGoodsName_2.Text:= execParamsMI.ParamByName('GoodsName_gofro_2').AsString;
+     EditAmount_2.Text:= FloatToStr(execParamsMI.ParamByName('Amount_gofro_2').AsFloat);
+     //
+     EditGoodsCode_3.Caption:= execParamsMI.ParamByName('GoodsCode_gofro_3').AsString;
+     EditGoodsName_3.Text:= execParamsMI.ParamByName('GoodsName_gofro_3').AsString;
+     EditAmount_3.Text:= FloatToStr(execParamsMI.ParamByName('Amount_gofro_3').AsFloat);
+     //
+     EditGoodsCode_4.Caption:= execParamsMI.ParamByName('GoodsCode_gofro_4').AsString;
+     EditGoodsName_4.Text:= execParamsMI.ParamByName('GoodsName_gofro_4').AsString;
+     EditAmount_4.Text:= FloatToStr(execParamsMI.ParamByName('Amount_gofro_4').AsFloat);
+     //
+     EditGoodsCode_5.Caption:= execParamsMI.ParamByName('GoodsCode_gofro_5').AsString;
+     EditGoodsName_5.Text:= execParamsMI.ParamByName('GoodsName_gofro_5').AsString;
+     EditAmount_5.Text:= FloatToStr(execParamsMI.ParamByName('Amount_gofro_5').AsFloat);
+     //
+     EditGoodsCode_6.Caption:= execParamsMI.ParamByName('GoodsCode_gofro_6').AsString;
+     EditGoodsName_6.Text:= execParamsMI.ParamByName('GoodsName_gofro_6').AsString;
+     EditAmount_6.Text:= FloatToStr(execParamsMI.ParamByName('Amount_gofro_6').AsFloat);
+     //
+     EditGoodsCode_7.Caption:= execParamsMI.ParamByName('GoodsCode_gofro_7').AsString;
+     EditGoodsName_7.Text:= execParamsMI.ParamByName('GoodsName_gofro_7').AsString;
+     EditAmount_7.Text:= FloatToStr(execParamsMI.ParamByName('Amount_gofro_7').AsFloat);
+     //
+     EditGoodsCode_8.Caption:= execParamsMI.ParamByName('GoodsCode_gofro_8').AsString;
+     EditGoodsName_8.Text:= execParamsMI.ParamByName('GoodsName_gofro_8').AsString;
+     EditAmount_8.Text:= FloatToStr(execParamsMI.ParamByName('Amount_gofro_8').AsFloat);
+     //
+     ActiveControl:= EditGoodsCode_pd;
      result:=(ShowModal=mrOk);
      //
 end;
@@ -189,80 +217,50 @@ end;
 procedure TDialogGofroForm.EditGoodsCode_pdKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
-  inherited;
   if Key = 13 then ActiveControl:= EditGoodsCode_box;
-
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogGofroForm.FormResize(Sender: TObject);
+procedure TDialogGofroForm.EditGoodsName_pdPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+var ParamsGuide_local :TParams;
 begin
-  exit;
-  inherited;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogGofroForm.actExecExecute(Sender: TObject);
-begin
-  if GuideGoodsPeresortForm.Execute(ParamsMI)
+  Create_ParamsGuide(ParamsGuide_local);
+  //
+  ParamsGuide_local.ParamByName('GuideId').AsInteger:= ParamsMI.ParamByName('GoodsId_gofro_pd').AsString;
+  ParamsGuide_local.ParamByName('GuideCode').AsInteger:= ParamsMI.ParamByName('GoodsCode_gofro_pd').AsString;
+  ParamsGuide_local.ParamByName('GuideName').asString:= ParamsMI.ParamByName('GoodsName_gofro_pd').AsString;
+  //
+  if GuideGofroForm.Execute(ParamsGuide_local)
   then begin
-     PanelGoodsCode_out.Caption:= ParamsMI.ParamByName('GoodsCode_out').AsString;
-     EditGoodsName_out.Text:= ParamsMI.ParamByName('GoodsName_out').AsString;
-     PanelGoodsKindName_out.Caption:= '('+ParamsMI.ParamByName('GoodsKindCode_out').AsString+')'+ParamsMI.ParamByName('GoodsKindName_out').AsString;
+     EditGoodsCode_pd.Caption:= ParamsGuide_local.ParamByName('GuideCode').AsString;
+     EditGoodsName_pd.Text:= ParamsGuide_local.ParamByName('GuideName').AsString;
      //
-     if ParamsMI.ParamByName('MeasureId').AsInteger = ParamsMI.ParamByName('MeasureId_out').AsInteger
-     then //не меняется
-          ParamsMI.ParamByName('Amount_out_calc').AsFloat:= ParamsMI.ParamByName('Amount_in_calc').AsFloat
-
-     else if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_sh)
-         and (ParamsMI.ParamByName('MeasureId_out').AsInteger = zc_Measure_kg)
-          then //переводится в вес
-               ParamsMI.ParamByName('Amount_out_calc').AsFloat:= _myTrunct_3(ParamsMI.ParamByName('Amount_in_calc').AsFloat * ParamsMI.ParamByName('Weight_gd').AsFloat)
-
-          else if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_kg)
-              and (ParamsMI.ParamByName('MeasureId_out').AsInteger = zc_Measure_sh)
-              and (ParamsMI.ParamByName('Weight_gd_out').AsFloat > 0)
-          then //переводится в шт
-               ParamsMI.ParamByName('Amount_out_calc').AsFloat:= ROUND(ParamsMI.ParamByName('Amount_in_calc').AsFloat / ParamsMI.ParamByName('Weight_gd_out').AsFloat)
-          else
-              ParamsMI.ParamByName('Amount_out_calc').AsFloat:= 0;
+     ParamsMI.ParamByName('GoodsId_gofro_pd').AsString:=   ParamsGuide_local.ParamByName('GuideId').AsInteger;
+     ParamsMI.ParamByName('GoodsCode_gofro_pd').AsString:= ParamsGuide_local.ParamByName('GuideCode').AsInteger;
+     ParamsMI.ParamByName('GoodsName_gofro_pd').AsString:= ParamsGuide_local.ParamByName('GuideName').asString;
      //
-     EditAmount_out.Text:= FloatToStr(ParamsMI.ParamByName('Amount_out_calc').AsFloat);
-     EditAmount_out.Properties.DisplayFormat:= ',0.#### ' + ParamsMI.ParamByName('MeasureName_out').AsString;
-     //
-     ActiveControl:=bbOk;
+     ActiveControl:=EditGoodsCode_box;
   end;
-
+  //
+  ParamsGuide_local.Free;
 end;
 {------------------------------------------------------------------------------}
 function TDialogGofroForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
      Result:= false;
      //
-     try
-         ParamsMI.ParamByName('PartionDate_in').AsDateTime:= StrToDate (EditPartionDate_in.Text)
+     try ParamsMI.ParamByName('Amount_gofro_pd').AsFloat := StrToFloat(EditAmount_pd.Text);
      except
-           ShowMessage ('Ошибка.Партия дата приход.');
-           exit;
+          ParamsMI.ParamByName('Amount_gofro_pd').AsFloat := 0;
      end;
+     Result:= ParamsMI.ParamByName('Amount_gofro_pd').AsFloat >= 0;
      //
-     try
-         ParamsMI.ParamByName('PartionDate_out').AsDateTime:= StrToDate (EditPartionDate_out.Text)
-     except
-           ShowMessage ('Ошибка.Партия дата расход.');
-           exit;
-     end;
-     //
-     Result:= DMMainScaleForm.gpGet_Scale_GoodsByGoodsKindPeresort_check(ParamsMI);
-     //
-     if not  Result then
+     if not Result then
      begin
-          if not DialogStringValueForm.Execute(false, true, true)
-          then begin ShowMessage ('Не разрешено проводить данный вид пересортицы.Для подтверждения необходимо ввести пароль СБ.'); exit; end;
-          //
-          //
-          if DMMainScaleForm.gpGet_Scale_PSW_delete (DialogStringValueForm.StringValueEdit.Text) <> ''
-          then begin ShowMessage ('Пароль неверный.Провести данный вид пересортицы нельзя.');exit;end;
+          ShowMessage ('Введите значение <Кол-во Поддоны>.');
+          exit;
      end;
-
+     //
+     //
      Result:= true;
 end;
 {------------------------------------------------------------------------------}
