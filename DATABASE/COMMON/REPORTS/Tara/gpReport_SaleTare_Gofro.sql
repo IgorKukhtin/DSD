@@ -77,27 +77,45 @@ BEGIN
                       AND MovementItemFloat.DescId = zc_MIFloat_BoxCount()
                     )
 
+   , tmpMIF_AmountPartner AS (SELECT MovementItemFloat.*
+                              FROM MovementItemFloat
+                              WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                AND MovementItemFloat.DescId = zc_MIFloat_AmountPartner()
+                              )
+
    , tmpMI AS (SELECT MovementItem.MovementId
                     , MovementItem.Id
                     , 0                     AS ObjectId
                     , MovementItem.ObjectId AS GoodsId
                     , COALESCE (MovementItem.Amount,0) AS Amount
-                    , 0                     AS BoxCount
+                    , 0                                AS BoxCount 
+                    -- AmountPartner
+                    , MIFloat_AmountPartner.ValueData  AS AmountPartner
                FROM tmpMI_All AS MovementItem
                     INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+
+                    LEFT JOIN tmpMIF_AmountPartner AS MIFloat_AmountPartner
+                                                   ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
               UNION
                SELECT MovementItem.MovementId
                     , MovementItem.Id
                     , MovementItem.ObjectId      AS ObjectId
                     , MILinkObject_Box.ObjectId  AS GoodsId
                     --, COALESCE (MovementItem.Amount,0) AS Amount
-                    , 0        AS Amount
+                    , 0                                       AS Amount
                     , COALESCE (MIFloat_BoxCount.ValueData,0) AS BoxCount
+                    -- AmountPartner
+                    , MIFloat_AmountPartner.ValueData         AS AmountPartner
                FROM tmpMI_All AS MovementItem
                     INNER JOIN tmpMIF_Box AS MIFloat_BoxCount
                                           ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                     LEFT JOIN tmpMILO_Box AS MILinkObject_Box
                                           ON MILinkObject_Box.MovementItemId = MovementItem.Id
+
+                    LEFT JOIN tmpMIF_AmountPartner AS MIFloat_AmountPartner
+                                                   ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
 
                )
    , tmpMovementDate AS (SELECT MovementDate.*
@@ -237,7 +255,7 @@ BEGIN
                        END)   :: TFloat  AS BoxCount_calc
 
                   -- "Кол-во у покуп." / "Кол-во ед. в ящ."
-                , SUM (CASE WHEN COALESCE (tmpGoodsPropertyValue_GP.BoxCount, 0) <> 0 THEN CAST (COALESCE (tmpMI.Amount,0) /tmpGoodsPropertyValue_GP.BoxCount AS Integer) ELSE 0 END ) :: TFloat  AS BoxCount_calc2
+                , SUM (CASE WHEN COALESCE (tmpGoodsPropertyValue_GP.BoxCount, 0) <> 0 THEN CAST (COALESCE (tmpMI.AmountPartner,0) /tmpGoodsPropertyValue_GP.BoxCount AS Integer) ELSE 0 END ) :: TFloat  AS BoxCount_calc2
 
                 , CASE WHEN inisDetail = TRUE THEN Movement.Id ELSE 0 END         ::Integer AS MovementId
                 , CASE WHEN inisDetail = TRUE THEN Movement.InvNumber ELSE '' END ::TVarChar AS InvNumber
