@@ -749,8 +749,10 @@ BEGIN
                                        THEN 1
                                        ELSE 0
                                  END
-                               -- , 'СКЛАД:'
-                               , tmpLanguageParam.Value1 ||': '
+                               , -- СКЛАД: (СОСТАВ)
+                                 CASE WHEN COALESCE (ObjectBoolean_Sticker_notInfoComment.ValueData, FALSE) = TRUE THEN ''
+                                      ELSE tmpLanguageParam.Value1 ||': '
+                                 END
                               || ObjectBlob_Info.ValueData
 
                             --|| CASE WHEN Object_StickerSkin.ValueData ILIKE '%без оболонки%' THEN ' ' || Object_StickerSkin.ValueData || CHR (13) ELSE '' END
@@ -924,6 +926,12 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
                                   ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
                                  AND ObjectLink_StickerProperty_Sticker.DescId = zc_ObjectLink_StickerProperty_Sticker()
+                                 
+             -- Скрыть слово "СОСТАВ"
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Sticker_notInfoComment
+                                     ON ObjectBoolean_Sticker_notInfoComment.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                    AND ObjectBoolean_Sticker_notInfoComment.DescId   = zc_ObjectBoolean_Sticker_notInfoComment()
+              
 
              LEFT JOIN ObjectLink AS ObjectLink_Retail_StickerHeader
                                   ON ObjectLink_Retail_StickerHeader.ObjectId = inRetailId

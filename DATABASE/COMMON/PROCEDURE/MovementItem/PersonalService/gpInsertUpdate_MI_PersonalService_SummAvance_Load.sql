@@ -135,6 +135,44 @@ BEGIN
      END IF;
      */
             
+     --  Проверка
+     IF 1 < (SELECT COUNT(*)
+             FROM (SELECT DISTINCT Object_Personal_View.MemberId
+                   FROM Object_Personal_View
+                   WHERE Object_Personal_View.PositionId = vbPositionId
+                     AND Object_Personal_View.UnitId     = vbUnitId
+                     AND REPLACE (REPLACE(TRIM (Object_Personal_View.PersonalName),'''',''),'`','') ILIKE REPLACE (REPLACE (TRIM (inFIO),'''',''),'`','')
+                  ) AS tmp
+            )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Найдено несколько ФИО <%> <%> <%> в справочнике Физ лица.', inFIO, inPositionName, inUnitName;
+     END IF;
+
+     --  Проверка
+     IF 1 < (SELECT COUNT(*)
+             FROM (SELECT tmp.PersonalId
+                   FROM (SELECT Object_Personal_View.PersonalId
+                              , ROW_NUMBER() OVER (PARTITION BY Object_Personal_View.MemberId
+                                                   -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
+                                                   ORDER BY CASE WHEN COALESCE (Object_Personal_View.DateOut, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
+                                                          , CASE WHEN Object_Personal_View.isOfficial = TRUE THEN 0 ELSE 1 END
+                                                          , CASE WHEN Object_Personal_View.isMain = TRUE THEN 0 ELSE 1 END
+                                                          , Object_Personal_View.MemberId
+                                                  ) AS Ord
+                         FROM Object_Personal_View
+                         WHERE Object_Personal_View.PositionId = vbPositionId
+                           AND Object_Personal_View.UnitId = vbUnitId
+                           --AND Object_Personal_View.MemberId = vbMemberId
+                           AND REPLACE (REPLACE(TRIM (Object_Personal_View.PersonalName),'''',''),'`','') ILIKE REPLACE (REPLACE (TRIM (inFIO),'''',''),'`','')
+                         ) AS tmp
+                   WHERE tmp.Ord = 1
+                  ) AS tmp
+            )
+     THEN
+         RAISE EXCEPTION 'Ошибка-2.Найдено несколько ФИО <%> <%> <%> в справочнике Физ лица.(%)(%)', inFIO, inPositionName, inUnitName, vbUnitId, vbPositionId;
+     END IF;
+
+     --  по физ лицу должности и подр - находим сотрудника
      vbPersonalId := (SELECT tmp.PersonalId
                       FROM (SELECT Object_Personal_View.PersonalId
                                  , ROW_NUMBER() OVER (PARTITION BY Object_Personal_View.MemberId
@@ -233,6 +271,12 @@ BEGIN
                                                                                                   AND gpSelect.PositionId = vbPositionId
                                                                                                   AND gpSelect.UnitId = vbUnitId
       LIMIT 1;
+
+     -- проверка
+     IF vbUserId = 5 AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Test Admin = ok.';
+     END IF;
 
 END;
 $BODY$

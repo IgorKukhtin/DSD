@@ -3,7 +3,7 @@ object GuideGofroForm: TGuideGofroForm
   Top = 242
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1086#1092#1088#1086'+'#1055#1086#1076#1076#1086#1085#1099'+'#1071#1097#1080#1082#1080'>'
   ClientHeight = 572
-  ClientWidth = 731
+  ClientWidth = 542
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,19 +21,21 @@ object GuideGofroForm: TGuideGofroForm
   object GridPanel: TPanel
     Left = 0
     Top = 41
-    Width = 731
+    Width = 542
     Height = 531
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 731
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 731
+      Width = 542
       Height = 33
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 731
       object bbExit: TSpeedButton
         Left = 443
         Top = 3
@@ -92,10 +94,11 @@ object GuideGofroForm: TGuideGofroForm
     object cxDBGrid: TcxGrid
       Left = 0
       Top = 33
-      Width = 731
+      Width = 542
       Height = 498
       Align = alClient
       TabOrder = 1
+      ExplicitWidth = 731
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -129,6 +132,14 @@ object GuideGofroForm: TGuideGofroForm
           HeaderAlignmentVert = vaCenter
           Width = 150
         end
+        object MeasureName: TcxGridDBColumn
+          Caption = #1045#1076'.'#1080#1079#1084'.'
+          DataBinding.FieldName = 'MeasureName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 40
+        end
         object IsErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
           DataBinding.FieldName = 'IsErased'
@@ -146,11 +157,12 @@ object GuideGofroForm: TGuideGofroForm
   object ParamsPanel: TPanel
     Left = 0
     Top = 0
-    Width = 731
+    Width = 542
     Height = 41
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 731
     object gbGuideCode: TGroupBox
       Left = 0
       Top = 0
@@ -175,11 +187,12 @@ object GuideGofroForm: TGuideGofroForm
     object gbGuideName: TGroupBox
       Left = 137
       Top = 0
-      Width = 594
+      Width = 405
       Height = 41
       Align = alClient
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077
       TabOrder = 1
+      ExplicitWidth = 594
       object EditGuideName: TEdit
         Left = 5
         Top = 17

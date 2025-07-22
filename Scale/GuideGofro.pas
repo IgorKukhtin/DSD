@@ -1,4 +1,4 @@
-unit GuideRetail;
+unit GuideGofro;
 
 interface
 
@@ -50,6 +50,7 @@ type
     actRefresh: TAction;
     actChoice: TAction;
     actExit: TAction;
+    MeasureName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGuideNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -264,6 +265,8 @@ begin
   begin
        StoredProcName:='gpSelect_Scale_Gofro';
        OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Execute;
   end;
 

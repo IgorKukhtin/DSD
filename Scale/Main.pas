@@ -378,6 +378,7 @@ type
   public
     function Save_Movement_PersonalComplete(execParams:TParams):Boolean;
     function Save_Movement_PersonalLoss(execParams:TParams):Boolean;
+    function Save_Movement_gofro(execParamsMI:TParams):Boolean;
     function fGetScale_CurrentWeight:Double;
     function fGetScale_AP_CurrentWeight_cycle : String;
 
@@ -394,7 +395,7 @@ uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc
     ,GuideGoods,GuideGoodsPartner,GuideGoodsSticker
     ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuideMovementReturnIn, GuidePartner
     ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, GuideReason, GuideAsset, GuideRetail, DialogDateValue, DialogDateReport
-    ,IdIPWatch, LookAndFillSettings, DialogMsg, DialogIncome_PricePartner;
+    ,IdIPWatch, LookAndFillSettings, DialogMsg, DialogIncome_PricePartner, DialogGofro;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -464,6 +465,10 @@ begin
          ShowMessage('Ошибка.Проведение документа не предусмотрено.');
          exit;
      end;
+     //
+     // Гофро-ящики+Поддон+Ящик+Гофро-уголок
+     Save_Movement_gofro(ParamsMI);
+     //
      //
      // Проверка - нужен ли Акт
      ParamsMovement.ParamByName('isFind_diff_inf').AsBoolean:=FALSE;
@@ -609,6 +614,10 @@ begin
           execParams.ParamByName('ToName').AsString:=ParamsMovement.ParamByName('ToName').AsString;
           Save_Movement_PersonalComplete(execParams);
           execParams.Free;
+          //
+          // Гофро-ящики+Поддон+Ящик+Гофро-уголок
+          Save_Movement_gofro(ParamsMI);
+          //
           //
           //Print and Create Quality + Transport + Tax
           if (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
@@ -801,6 +810,26 @@ begin
                DMMainScaleForm.gpUpdate_Scale_Movement_PersonalLoss(lParams);
           end;
           lParams.Free;
+     end;
+end;
+//------------------------------------------------------------------------------------------------
+function TMainForm.Save_Movement_gofro(execParamsMI:TParams):Boolean;
+begin
+     Result:= (ParamsMovement.ParamByName('MovementDescId').asInteger = zc_Movement_Sale)
+          //and ()
+            ;
+     if Result then Result:= DMMainScaleForm.gpGet_Scale_MI_Goods_gofro(ParamsMovement,ParamsMI);
+
+     if Result then
+     begin
+          //
+          Result:= DialogGofroForm.Execute(execParamsMI);
+          if Result then
+          begin
+               //PanelPartner.Caption:='('+IntToStr(lParams.ParamByName('PersonalCode').asInteger)+')'+lParams.ParamByName('PersonalName').asString + ' *** ' + GetPanelPartnerCaption(ParamsMovement);
+               //ParamAddValue(lParams,'MovementId', ftInteger,execParams.ParamByName('MovementId').asInteger);
+//               DMMainScaleForm.gpUpdate_Scale_Movement_gofro(execParamsMI);
+          end;
      end;
 end;
 //------------------------------------------------------------------------------------------------
