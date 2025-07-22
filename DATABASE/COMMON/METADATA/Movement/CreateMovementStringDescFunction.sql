@@ -267,9 +267,38 @@ CREATE OR REPLACE FUNCTION zc_MovementString_RRN() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_RRN', 'RRN уникальный номер транзакции' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_RRN');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_Code1C() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_Code1C'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_Code1C', 'Таб номер сотрудника' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_Code1C');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_INN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_Code1C'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_INN', 'ИНН' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_Code1C');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_FIO() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_FIO'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_FIO', 'ФИО' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_FIO');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_Error() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_Error'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_Error', 'Код ошибки после переноса в Тпбель р.вр.' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_Error');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberHospital() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberHospital'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_InvNumberHospital', '№ больничного' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberHospital');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_NumHospital() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_NumHospital'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_NumHospital', '№ случая' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_NumHospital');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 21.07.25         * zc_MovementString_Code1C 
+                    zc_MovementString_INN 
+                    zc_MovementString_FIO
  04.08.23                                                                      * zc_MovementString_RRN
  02.05.23                                                                      * zc_MovementString_Uuid
  23.03.23                                                                      * zc_MovementString_DealId
