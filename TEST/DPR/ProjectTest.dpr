@@ -1589,7 +1589,8 @@ uses
   Report_GoodsMI_ProductionSeparate_Total in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparate_Total.pas' {Report_GoodsMI_ProductionSeparate_TotalForm: TParentForm},
   MoneyPlac_Object in '..\..\Forms\Guides\MoneyPlac_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm},
   ReturnInChildDialog in '..\..\Forms\Document\ReturnInChildDialog.pas' {ReturnInChildDialogForm: TParentForm},
-  Sticker_Object in '..\..\Forms\Guides\Sticker_Object.pas' {Sticker_ObjectForm: TParentForm};
+  Sticker_Object in '..\..\Forms\Guides\Sticker_Object.pas' {Sticker_ObjectForm: TParentForm},
+  HospitalDoc_1CJournal in '..\..\Forms\Document\HospitalDoc_1CJournal.pas' {HospitalDoc_1CJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

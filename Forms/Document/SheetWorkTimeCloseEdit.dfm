@@ -125,11 +125,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperDate'
+        Name = 'inDateStart'
         Value = Null
-        Component = ceOperDate
         DataType = ftDateTime
-        ParamType = ptUnknown
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateEnd'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 118
@@ -201,10 +207,19 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDate'
+        Name = 'inDateStart'
         Value = Null
         Component = FormParams
-        ComponentItem = 'OperDate'
+        ComponentItem = 'inDateStart'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateEnd'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inDateEnd'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

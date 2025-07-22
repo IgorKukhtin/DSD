@@ -1,11 +1,13 @@
 -- Function: gpGet_Movement_SheetWorkTimeClose()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_SheetWorkTimeClose (Integer, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_SheetWorkTimeClose (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_SheetWorkTimeClose (Integer, TDateTime, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_SheetWorkTimeClose(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- дата Документа
+    IN inDateStart         TDateTime, -- дата Документа
+    IN inDateEnd           TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
@@ -32,9 +34,9 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_SheetWorkTimeClose_seq') AS TVarChar) AS InvNumber
-             , inOperDate                                       AS OperDate
-             , inOperDate                                       AS OperDateEnd
-             , (inOperDate + INTERVAL '1 DAY' + INTERVAL '10 HOURS') ::TDateTime       AS TimeClose
+             , inDateStart                                       AS OperDate
+             , inDateEnd                                         AS OperDateEnd
+             , (inDateEnd + INTERVAL '1 DAY' + INTERVAL '10 HOURS') ::TDateTime  AS TimeClose
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , FALSE   ::Boolean                                AS isClosed
@@ -126,9 +128,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.07.25         * inDateStart, inDateEnd
  26.02.24         *
  10.08.21         * 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_SheetWorkTimeClose (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_SheetWorkTimeClose (inMovementId:= 1, inDateStart:= CURRENT_DATE, inDateEnd:= CURRENT_DATE, inSession:= '9818')

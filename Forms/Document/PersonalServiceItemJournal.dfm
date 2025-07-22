@@ -2294,6 +2294,7 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         end>
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
       Hint = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actExportTXTVostok: TMultiAction
@@ -2770,10 +2771,11 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 8
-    Top = 115
+    Left = 56
+    Top = 227
   end
   inherited MasterCDS: TClientDataSet
+    Left = 56
     Top = 139
   end
   inherited spSelect: TdsdStoredProc

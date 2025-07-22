@@ -1561,6 +1561,8 @@ type
     miReport_Send_PartionCell_many: TMenuItem;
     actReport_GoodsMI_ProductionSeparateTotal: TdsdOpenForm;
     miReport_GoodsMI_ProductionSeparateTotal: TMenuItem;
+    actHospitalDoc_1C: TdsdOpenForm;
+    miHospitalDoc_1C: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
