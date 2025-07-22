@@ -1667,11 +1667,15 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_ContractGoods() RETURNS Integer
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_Contract_JuridicalDoc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_Contract_JuridicalDoc' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_Contract_JuridicalDoc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_Contract_JuridicalDoc' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+--Загрузка <Больничные листы из 1С> из файла
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_HospitalDoc_1C() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_HospitalDoc_1C' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_HospitalDoc_1C() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_HospitalDoc_1C' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 22.07.25         * Загрузка <Больничные листы из 1С> из файла
  25.04.25         * Загрузка для Договоров   Юридические лица(печать док.)
  14.11.24         * Загрузка ContractGoodsMovement
  24.07.24         * Загрузка GoodsNormDiff
