@@ -112,6 +112,7 @@ type
     procedure LoadMemberPriceListFormTest;
     procedure LoadMemberSheetWorkTimeFormTest;
     procedure LoadMemberHolidayFormTest;
+    procedure LoadHospitalDoc_1CFormTest;
     procedure LoadMemberPersonalServiceListFormTest;
     procedure LoadMessagePersonalServiceLastFormTest;
     procedure LoadMobileTariffFormTest;
@@ -4696,6 +4697,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHolidayEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberHolidayEditForm');
+end;
+ procedure TLoadFormTest.LoadHospitalDoc_1CFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('THospitalDoc_1CJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('THospitalDoc_1CJournalForm');
 end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
