@@ -41,7 +41,7 @@ BEGIN
             , tmpCount AS (SELECT SUM (COALESCE (tmpCount_all.Res, 0)) :: Integer AS Res FROM tmpCount_all
                           )
             , tmpSecond AS (SELECT CASE WHEN vbUserId = 6561986 -- Брикова В.В.
-                                        --OR vbUserId = 5
+                                          OR vbUserId = 5
                                              THEN 0
 
                                         -- если много процессов

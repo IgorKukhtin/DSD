@@ -11,7 +11,7 @@ type
 
   TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave, ediDelnotSave,
     ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice, ediError,
-    ediRecadv, ediTTN, ediComDocSign, ediComDocSendSign);
+    ediRecadv, ediTTN, ediComDocSign, ediComDocSendSign, ediSendCondra);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -180,6 +180,7 @@ type
 
     FResultParam: TdsdParam;
     FFileNameParam: TdsdParam;
+    FMetadataParam: TdsdParam;
 
     FKeyFileNameParam: TdsdParam;
     FKeyUserNameParam: TdsdParam;
@@ -199,6 +200,7 @@ type
     function LocalExecute: Boolean; override;
     function GetVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
     function POSTVchasnoEDI(ATypeExchange : Integer; AStream: TMemoryStream): Boolean;
+    function POSTCondraEDI(ATypeExchange : Integer): Boolean;
     function POSTSignVchasnoEDI: Boolean;
     function SignData(UserSign : String): Boolean;
     function OrderLoad : Boolean;
@@ -209,6 +211,8 @@ type
     function ComDocSave : Boolean;
     function DoSignComDoc: Boolean;
     function DoSendSignComDoc: Boolean;
+    function DoSendCondra: Boolean;
+
     procedure ShowMessages(AMessage: String);
   public
     constructor Create(AOwner: TComponent); override;
@@ -240,6 +244,7 @@ type
     property ErrorText: TdsdParam read FErrorTextParam write FErrorTextParam;
 //    property Result: TdsdParam read FResultParam write FResultParam;
 //    property FileName: TdsdParam read FFileNameParam write FFileNameParam;
+//    property Metadata: TdsdParam read FMetadataParam write FMetadataParam;
     // Содержимое массива Json для формирования DataSet
 //    property PairParams: TOwnedCollection read FPairParams write FPairParams;
     property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
@@ -5817,6 +5822,10 @@ begin
   FFileNameParam.DataType := ftString;
   FFileNameParam.Value := '';
 
+  FMetadataParam := TdsdParam.Create(nil);
+  FMetadataParam.DataType := ftString;
+  FMetadataParam.Value := '';
+
   FKeyFileNameParam := TdsdParam.Create(nil);
   FKeyFileNameParam.DataType := ftString;
   FKeyFileNameParam.Value := '';
@@ -5843,6 +5852,7 @@ begin
   FreeAndNil(FKeyFileNameParam);
   FreeAndNil(FDefaultFilePathParam);
   FreeAndNil(FDefaultFileNameParam);
+  FreeAndNil(FMetadataParam);
   FreeAndNil(FFileNameParam);
   FreeAndNil(FHostParam);
   FreeAndNil(FTokenParam);
@@ -5865,6 +5875,7 @@ end;
 // 3 - Звгрузить пракрепленный файл и сохранить его на диск
 // 4 - Звгрузить оригинальный файл в Result
 // 5 - Звгрузить оригинальный файл и сохранить его на диск
+// 6 - Отправка файла с методанными
 function TdsdVchasnoEDIAction.GetVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
   var IdHTTP: TCustomIdHTTP;
       i,j : Integer;
@@ -6190,6 +6201,80 @@ begin
     if Params <> '' then Params := '?' + Params;
 
     AStream.Position := 0;
+
+    try
+      S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
+    except on E:EIdHTTPProtocolException  do
+                ShowMessages(e.ErrorMessage);
+    end;
+
+    if IdHTTP.ResponseCode in [200,201] then
+    begin
+      jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+      try
+        if (jsonObj.Get('deal_status') <> nil) and (jsonObj.Get('deal_status').JsonValue.Value = 'in_work') and
+         (jsonObj.Get('document_id') <> nil)  then
+        begin
+          FDocumentIdParam.Value := jsonObj.Get('document_id').JsonValue.Value;
+          if jsonObj.Get('vchasno_id') <> nil then
+            FVchasnoIdParam.Value := jsonObj.Get('vchasno_id').JsonValue.Value
+          else FVchasnoIdParam.Value := '';
+        end;
+      finally
+        FreeAndNil(jsonObj);
+      end;
+      Result := True;
+    end;
+  finally
+    Stream.Free;
+    IdHTTP.Free;
+  end;
+end;
+
+// ATypeExchange
+// 0 - Отправить файла + методанные
+function TdsdVchasnoEDIAction.POSTCondraEDI(ATypeExchange : Integer): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      Params, S: String;
+      Stream: TIdMultiPartFormDataStream;
+      jsonObj: TJSONObject;
+begin
+  inherited;
+  Result := False;
+
+  if (FTokenParam.Value = '') or
+     (FHostParam.Value = '') then
+  begin
+    ShowMessages('Не заполнены Host или Токен.');
+    Exit;
+  end;
+
+  // Непосредственно отправка
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  Stream := TIdMultiPartFormDataStream.Create;
+  try
+
+    // Поле JSON (можна задати ContentType)
+    Stream.AddFormField('metadata', FMetadataParam.Value, 'utf-8').ContentType := 'application/json';
+
+    // Додаємо файл
+    Stream.AddFile('file', FFileNameParam.Value, 'application/pdf');
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'multipart/form-data; boundary=' + Stream.Boundary;
+    IdHTTP.Request.ContentLength := Stream.Size;
+    IdHTTP.Request.ContentEncoding := 'UTF-8';
+    IdHTTP.Request.Accept := '*/*';
+    IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    IdHTTP.Request.Connection := 'keep-alive';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '';
+//    Params := 'deal_id=' + FOrderParam.Value;
+//    if Params <> '' then Params := '?' + Params;
 
     try
       S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
@@ -6956,6 +7041,30 @@ begin
   end;
 end;
 
+function TdsdVchasnoEDIAction.DoSendCondra: Boolean;
+begin
+  Result := False;
+  if HeaderDataSet.FieldByName('DocumentId_vch').AsString = '' then Exit;
+//  if HeaderDataSet.FieldByName('VchasnoId').AsString = '' then Exit;
+
+  FFileNameParam.Value := HeaderDataSet.FieldByName('FileName').AsString;
+  FMetadataParam.Value := HeaderDataSet.FieldByName('Metadata').AsString;
+  try
+
+    // Отправляем файл документа
+    Result := POSTCondraEDI(0);
+
+    // Запишем в базу что сделали
+//    EDI.UpdateOrderDELNOTSignVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger
+//                                      , HeaderDataSet.FieldByName('MovementId_EDI_send').asInteger
+//                                      , not Result
+//                                        );
+
+  finally
+  end;
+
+end;
+
 procedure TdsdVchasnoEDIAction.ShowMessages(AMessage: String);
 begin
   FErrorTextParam.Value := AMessage;
@@ -6977,6 +7086,8 @@ begin
 
     ediComDocSign : Result := DoSignComDoc;
     ediComDocSendSign : Result := DoSendSignComDoc;
+
+    ediSendCondra : Result := DoSendCondra;
 
   else raise Exception.Create('Не описано метод обработки типа документов.');
   end;

@@ -28,6 +28,8 @@ type
     function gpSelect_Object_Language: TArrayList;
     function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_Goods_gk(var execParams:TParams): Boolean;
+    function gpGet_Scale_Goods_gofro(var execParams:TParams;inGoodsCode:Integer): Boolean;
+    function gpGet_Scale_MI_Goods_gofro(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
     // Scale + ScaleCeh
     function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
     function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
@@ -1230,6 +1232,125 @@ begin
        {except
          SetLength(Result, 0);
          ShowMessage('Ошибка получения - gpSelect_Scale_GoodsKindWeighing');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_MI_Goods_gofro(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
+begin
+    with spSelect do
+    begin
+       //код GoodsCode
+       StoredProcName:='gpGet_Scale_MI_Goods_gofro';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inParnerId', ftInteger, ptInput, execParamsMovement.ParamByName('calcPartnerId').AsInteger);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       //try
+         Execute;
+         //
+         Result:=DataSet.FieldByName('isPartner_GoodsBox').AsBoolean;
+       //
+       if Result
+       then
+         with execParamsMI do
+         begin
+           //ParamByName('GoodsId_gofro_pd').AsInteger:=;
+           //ParamByName('GoodsCode_gofro_pd').AsString;
+           //ParamByName('GoodsName_gofro_pd').AsString;
+           //ParamByName('Amount_gofro_pd').AsFloat;
+           //
+           //ParamByName('GoodsId_gofro_box').AsInteger:=;
+           //ParamByName('GoodsCode_gofro_box').AsString;
+           //ParamByName('GoodsName_gofro_box').AsString;
+           //ParamByName('Amount_gofro_box').AsFloat;
+           //
+           //ParamByName('GoodsId_gofro_ugol').AsInteger:=;
+           //ParamByName('GoodsCode_gofro_ugol').AsString;
+           //ParamByName('GoodsName_gofro_ugol').AsString;
+           //ParamByName('Amount_gofro_ugol').AsFloat;
+           //
+           ParamByName('GoodsId_gofro_1').AsInteger  :=DataSet.FieldByName('GoodsId_gofro_1').AsInteger;
+           ParamByName('GoodsCode_gofro_1').AsInteger:=DataSet.FieldByName('GoodsCode_gofro_1').AsInteger;
+           ParamByName('GoodsName_gofro_1').AsString :=DataSet.FieldByName('GoodsName_gofro_1').AsString;
+           ParamByName('Amount_gofro_1').AsFloat     :=DataSet.FieldByName('Amount_gofro_1').AsFloat;
+           //
+           ParamByName('GoodsId_gofro_2').AsInteger  :=DataSet.FieldByName('GoodsId_gofro_2').AsInteger;
+           ParamByName('GoodsCode_gofro_2').AsInteger:=DataSet.FieldByName('GoodsCode_gofro_2').AsInteger;
+           ParamByName('GoodsName_gofro_2').AsString :=DataSet.FieldByName('GoodsName_gofro_2').AsString;
+           ParamByName('Amount_gofro_2').AsFloat     :=DataSet.FieldByName('Amount_gofro_2').AsFloat;
+           //
+           ParamByName('GoodsId_gofro_3').AsInteger  :=DataSet.FieldByName('GoodsId_gofro_3').AsInteger;
+           ParamByName('GoodsCode_gofro_3').AsInteger:=DataSet.FieldByName('GoodsCode_gofro_3').AsInteger;
+           ParamByName('GoodsName_gofro_3').AsString :=DataSet.FieldByName('GoodsName_gofro_3').AsString;
+           ParamByName('Amount_gofro_3').AsFloat     :=DataSet.FieldByName('Amount_gofro_3').AsFloat;
+           //
+           ParamByName('GoodsId_gofro_4').AsInteger  :=DataSet.FieldByName('GoodsId_gofro_4').AsInteger;
+           ParamByName('GoodsCode_gofro_4').AsInteger:=DataSet.FieldByName('GoodsCode_gofro_4').AsInteger;
+           ParamByName('GoodsName_gofro_4').AsString :=DataSet.FieldByName('GoodsName_gofro_4').AsString;
+           ParamByName('Amount_gofro_4').AsFloat     :=DataSet.FieldByName('Amount_gofro_4').AsFloat;
+           //
+           ParamByName('GoodsId_gofro_5').AsInteger  :=DataSet.FieldByName('GoodsId_gofro_5').AsInteger;
+           ParamByName('GoodsCode_gofro_5').AsInteger:=DataSet.FieldByName('GoodsCode_gofro_5').AsInteger;
+           ParamByName('GoodsName_gofro_5').AsString :=DataSet.FieldByName('GoodsName_gofro_5').AsString;
+           ParamByName('Amount_gofro_5').AsFloat     :=DataSet.FieldByName('Amount_gofro_5').AsFloat;
+           //
+           ParamByName('GoodsId_gofro_6').AsInteger  :=DataSet.FieldByName('GoodsId_gofro_6').AsInteger;
+           ParamByName('GoodsCode_gofro_6').AsInteger:=DataSet.FieldByName('GoodsCode_gofro_6').AsInteger;
+           ParamByName('GoodsName_gofro_6').AsString :=DataSet.FieldByName('GoodsName_gofro_6').AsString;
+           ParamByName('Amount_gofro_6').AsFloat     :=DataSet.FieldByName('Amount_gofro_6').AsFloat;
+           //
+           ParamByName('GoodsId_gofro_7').AsInteger  :=DataSet.FieldByName('GoodsId_gofro_7').AsInteger;
+           ParamByName('GoodsCode_gofro_7').AsInteger:=DataSet.FieldByName('GoodsCode_gofro_7').AsInteger;
+           ParamByName('GoodsName_gofro_7').AsString :=DataSet.FieldByName('GoodsName_gofro_7').AsString;
+           ParamByName('Amount_gofro_7').AsFloat     :=DataSet.FieldByName('Amount_gofro_7').AsFloat;
+           //
+           ParamByName('GoodsId_gofro_8').AsInteger  :=DataSet.FieldByName('GoodsId_gofro_8').AsInteger;
+           ParamByName('GoodsCode_gofro_8').AsInteger:=DataSet.FieldByName('GoodsCode_gofro_8').AsInteger;
+           ParamByName('GoodsName_gofro_8').AsString :=DataSet.FieldByName('GoodsName_gofro_8').AsString;
+           ParamByName('Amount_gofro_8').AsFloat     :=DataSet.FieldByName('Amount_gofro_8').AsFloat;
+
+         end;
+
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_Goods_gofro(var execParams:TParams;inGoodsCode:Integer): Boolean;
+begin
+    if inGoodsCode <= 0 then
+    begin
+         Result:=false;
+         exit
+    end;
+    //
+    with spSelect do
+    begin
+       //код GoodsCode
+       StoredProcName:='gpGet_Scale_Goods_gofro';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inGoodsCode', ftInteger, ptInput, inGoodsCode);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       //try
+         Execute;
+         //
+         Result:=DataSet.RecordCount<>0;
+       //
+       with execParams do
+       begin
+         ParamByName('GoodsId').AsInteger  := DataSet.FieldByName('GoodsId').AsInteger;
+         ParamByName('GoodsCode').AsInteger:= DataSet.FieldByName('GoodsCode').AsInteger;
+         ParamByName('GoodsName').asString := DataSet.FieldByName('GoodsName').asString;
+
+         ParamByName('MeasureId').AsInteger  := DataSet.FieldByName('MeasureId').asInteger;
+         ParamByName('MeasureName').asString := DataSet.FieldByName('MeasureName').asString;
+       end;
+       {except
+         result.Code := Code;
+         result.Id   := 0;
+         result.Name := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Goods_gofro');
        end;}
     end;
 end;
