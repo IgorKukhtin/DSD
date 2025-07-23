@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  ExternalLoad;
 
 type
   THospitalDoc_1CJournalForm = class(TAncestorJournalForm)
@@ -54,6 +55,11 @@ type
     Comment: TcxGridDBColumn;
     bbOpenFormMemberHolidayEdit: TdxBarButton;
     SummPF: TcxGridDBColumn;
+    spGetImportSetting: TdsdStoredProc;
+    spGetImportSettingId: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actStartLoad: TMultiAction;
+    bbtStartLoad: TdxBarButton;
   private
     { Private declarations }
   public

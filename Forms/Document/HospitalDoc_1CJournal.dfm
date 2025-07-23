@@ -199,7 +199,7 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
             Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
             DataBinding.FieldName = 'ServiceDate'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'MMMM YY'
+            Properties.DisplayFormat = 'MMMM YYYY'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
@@ -559,6 +559,60 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object spGetImportSettingId: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = 44927d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRetailId'
+          Value = ''
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spGetImportSettingId
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' <'#1041#1086#1083#1100#1085#1080#1095#1085#1099#1093' '#1083#1080#1089#1090#1086#1074' '#1080#1079' 1'#1057'> '#1080#1079' '#1101#1082#1089#1077#1083#1103'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' <'#1041#1086#1083#1100#1085#1080#1095#1085#1099#1093' '#1083#1080#1089#1090#1086#1074' '#1080#1079' 1'#1057'> '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' <'#1041#1086#1083#1100#1085#1080#1095#1085#1099#1093' '#1083#1080#1089#1090#1086#1074' '#1080#1079' 1'#1057'> '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' <'#1041#1086#1083#1100#1085#1080#1095#1085#1099#1093' '#1083#1080#1089#1090#1086#1074' '#1080#1079' 1'#1057'> '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -658,6 +712,10 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbtStartLoad'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -715,6 +773,10 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
       Hint = #1054#1087#1083#1072#1090#1080#1090#1100
       Visible = ivAlways
       ImageIndex = 56
+    end
+    object bbtStartLoad: TdxBarButton
+      Action = actStartLoad
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -911,5 +973,39 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     PackSize = 1
     Left = 647
     Top = 360
+  end
+  object spGetImportSetting: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'THospitalDoc_1CJournalForm;zc_Object_ImportSetting_HospitalDoc_1' +
+          'C'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 184
   end
 end
