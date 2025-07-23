@@ -47,9 +47,13 @@ BEGIN
    ;
 
 
+   IF vbUserId = 5
+   THEN
+      RAISE EXCEPTION 'Ошибка.Админ нет прав.';
+   END IF;
 
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE;
+ LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
