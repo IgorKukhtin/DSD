@@ -449,6 +449,19 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), ioId, inUserId);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
+     ELSE
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), ioId, inUserId);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), ioId, CURRENT_TIMESTAMP);
+     END IF;
+
       -- сохранили протокол
       PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 

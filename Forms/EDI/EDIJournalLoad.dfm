@@ -2382,6 +2382,170 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       spHeader = spHeaderComDoc
       spList = spListComDoc
     end
+    object mactVchasnoEDICONDRA: TMultiAction
+      Category = 'QualityDoc'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = acGet_Quality_ReportName
+        end
+        item
+          Action = actPrintQuality_saveFile
+        end
+        item
+          Action = actSelectData_Condra
+        end
+        item
+          Action = actVchasno_SendCondra
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'> '#1042#1095 +
+        #1072#1089#1085#1086' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'>'
+      ImageIndex = 89
+    end
+    object acGet_Quality_ReportName: TdsdExecStoredProc
+      Category = 'QualityDoc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameQuality_export
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameQuality_export
+        end>
+      Caption = 'acGet_Quality_ReportName'
+    end
+    object actPrintQuality_saveFile: TdsdPrintAction
+      Category = 'QualityDoc'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Quality
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Quality
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster2'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'frxPDFExport_find'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_ShowDialog'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_EmbeddedFonts'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_Background'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FileNameExport'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'FileNameQuality'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GetFileNameExport'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'FileNameQuality'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Invoice1'
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameQuality'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actSelectData_Condra: TdsdExecStoredProc
+      Category = 'QualityDoc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectData_Condra
+      StoredProcList = <
+        item
+          StoredProc = spSelectData_Condra
+        end>
+      Caption = 'actSelectData_Condra'
+    end
+    object actVchasno_SendCondra: TdsdVchasnoEDIAction
+      Category = 'QualityDoc'
+      MoveParams = <>
+      Caption = 'actVchasnoEDISignComdoc'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediSendCondra
+      KeyFileName.Value = ''
+      KeyFileName.Component = FormParams
+      KeyFileName.ComponentItem = 'FileNameKey'
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.Component = FormParams
+      KeyUserName.ComponentItem = 'UserNameKey'
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      HeaderDataSet = DataCondraCDS
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -2731,6 +2895,14 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         item
           Visible = True
           ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbVchasnoEDICONDRA'
         end>
     end
     object dxBarSeparator1: TdxBarSeparator
@@ -2776,6 +2948,10 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     end
     object dxBarButton1: TdxBarButton
       Action = mactVchasnoEDISignComdoc
+      Category = 0
+    end
+    object bbVchasnoEDICONDRA: TdxBarButton
+      Action = mactVchasnoEDICONDRA
       Category = 0
     end
   end
@@ -3349,6 +3525,18 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'GLN_Epicentr'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameQuality'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileNameQuality'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4254,5 +4442,91 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     PackSize = 1
     Left = 992
     Top = 208
+  end
+  object spSelectPrint_Quality: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Quality_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 271
+    Top = 343
+  end
+  object spGetReportNameQuality_export: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Quality_ReportName_export'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outReportName_fr3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameQuality'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileNameQuality'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 286
+  end
+  object spSelectData_Condra: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Quality_Condra'
+    DataSet = DataCondraCDS
+    DataSets = <
+      item
+        DataSet = DataCondraCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 327
+    Top = 319
+  end
+  object DataCondraCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 400
+    Top = 304
   end
 end
