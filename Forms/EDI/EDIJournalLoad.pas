@@ -246,6 +246,16 @@ type
     mactVchasnoEDISignComdoc: TMultiAction;
     dxBarButton1: TdxBarButton;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
+    mactVchasnoEDICONDRA: TMultiAction;
+    bbVchasnoEDICONDRA: TdxBarButton;
+    spSelectPrint_Quality: TdsdStoredProc;
+    spGetReportNameQuality_export: TdsdStoredProc;
+    acGet_Quality_ReportName: TdsdExecStoredProc;
+    actVchasno_SendCondra: TdsdVchasnoEDIAction;
+    actPrintQuality_saveFile: TdsdPrintAction;
+    spSelectData_Condra: TdsdStoredProc;
+    DataCondraCDS: TClientDataSet;
+    actSelectData_Condra: TdsdExecStoredProc;
   private
     { Private declarations }
   public
