@@ -21,7 +21,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems, cxButtonEdit;
+  dsdAddOn, dxBarExtItems, cxButtonEdit, dsdCommon;
 
 type
   TMemberPersonalServiceListForm = class(TParentForm)
@@ -68,7 +68,12 @@ type
     actMemberChoiceInsert: TOpenChoiceForm;
     macInsert: TMultiAction;
     actMemberInsert: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    bbInsertMember: TdxBarButton;
+    macInsert_byGrid: TMultiAction;
+    actMemberInsertByGrid: TdsdExecStoredProc;
+    spInsertByGrid: TdsdStoredProc;
+    macMemberInsertByGrid_list: TMultiAction;
+    bbInsert_byGrid: TdxBarButton;
   private
     { Private declarations }
   public

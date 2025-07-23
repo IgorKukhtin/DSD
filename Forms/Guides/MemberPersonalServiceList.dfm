@@ -261,7 +261,19 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbInsertMember'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_byGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -335,8 +347,12 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
       Visible = ivAlways
       ImageIndex = 42
     end
-    object bb: TdxBarButton
+    object bbInsertMember: TdxBarButton
       Action = macInsert
+      Category = 0
+    end
+    object bbInsert_byGrid: TdxBarButton
+      Action = macInsert_byGrid
       Category = 0
     end
   end
@@ -601,6 +617,23 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
         end>
       isShowModal = True
     end
+    object macInsert_byGrid: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actMemberChoiceInsert
+        end
+        item
+          Action = macMemberInsertByGrid_list
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1092#1080#1079'. '#1083#1080#1094#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1092#1080#1079'. '#1083#1080#1094#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
+      ImageIndex = 39
+    end
     object macInsert: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -618,6 +651,17 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1092#1080#1079'. '#1083#1080#1094#1091' '#1074#1089#1077' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
       ImageIndex = 27
     end
+    object actMemberInsertByGrid: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertByGrid
+      StoredProcList = <
+        item
+          StoredProc = spInsertByGrid
+        end>
+      Caption = 'actMemberInsert'
+    end
     object actMemberInsert: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -628,6 +672,16 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
           StoredProc = spInsert
         end>
       Caption = 'actMemberInsert'
+    end
+    object macMemberInsertByGrid_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actMemberInsertByGrid
+        end>
+      View = cxGridDBTableView
+      Caption = 'macMemberInsertByGrid_list'
     end
   end
   object spSelect: TdsdStoredProc
@@ -684,10 +738,14 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 224
     Top = 272
   end
@@ -763,5 +821,30 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
     Params = <>
     Left = 664
     Top = 88
+  end
+  object spInsertByGrid: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_MemberPersonalServiceListOne'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMemberId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inMemberId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PersonalServiceListId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 587
+    Top = 182
   end
 end

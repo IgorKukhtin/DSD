@@ -1,7 +1,7 @@
 -- Function: lpInsertUpdate_Movement_HospitalDoc_1C ()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_HospitalDoc_1C (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, Integer
-                                                              , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_HospitalDoc_1C (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_HospitalDoc_1C (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_HospitalDoc_1C(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_HospitalDoc_1C(
     IN inINN                 TVarChar  , -- 
     IN inFIO                 TVarChar  , -- 
     IN inComment             TVarChar  , -- 
-    IN inError               TVarChar  , -- 
+    --IN inError               TVarChar  , -- 
     IN inInvNumberPartner    TVarChar  , -- 
     IN inInvNumberHospital   TVarChar  , -- 
     IN inNumHospital         TVarChar  , -- 
@@ -32,7 +32,7 @@ BEGIN
 
      -- определяем ключ доступа
      --vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_HospitalDoc_1C());
-     vbUserId:= lpGetUserBySession (inSession);
+     --vbUserId:= lpGetUserBySession (inSession);
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -59,7 +59,7 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment); 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Error(), ioId, inError); 
+     --PERFORM lpInsertUpdate_MovementString (zc_MovementString_Error(), ioId, inError); 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner); 
      -- сохранили свойство <>
