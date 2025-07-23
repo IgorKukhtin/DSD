@@ -758,6 +758,44 @@ end if;
                               WHERE vbIsOnly = FALSE
                                 --AND (vbPersonalServiceListId <> 445325 OR vbUserId <> 5)
                              )
+
+             -- Для премия надо получить только - Корректировка ЗП
+           , tmpContainer_prem AS (SELECT DISTINCT
+                                          CLO_ServiceDate.ContainerId
+                                        , tmpParent.PersonalId
+                                        , tmpParent.UnitId
+                                        , tmpParent.PositionId
+                                        , tmpParent.InfoMoneyId
+                                          -- здесь другая ведомость?
+                                        , tmpParent.PersonalServiceListId
+                                   FROM tmpParent
+                                        INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                                       ON CLO_ServiceDate.ObjectId = vbServiceDateId
+                                                                      AND CLO_ServiceDate.DescId = zc_ContainerLinkObject_ServiceDate()
+                                        INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                       ON CLO_Personal.ObjectId = tmpParent.PersonalId
+                                                                      AND CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                                                      AND CLO_Personal.ContainerId = CLO_ServiceDate.ContainerId
+                                        INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                                       ON CLO_InfoMoney.ObjectId = tmpParent.InfoMoneyId
+                                                                      AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                                                      AND CLO_InfoMoney.ContainerId = CLO_ServiceDate.ContainerId
+                                        INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                       ON CLO_Unit.ObjectId = tmpParent.UnitId
+                                                                      AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                      AND CLO_Unit.ContainerId = CLO_ServiceDate.ContainerId
+                                        INNER JOIN ContainerLinkObject AS CLO_Position
+                                                                       ON CLO_Position.ObjectId = tmpParent.PositionId
+                                                                      AND CLO_Position.DescId = zc_ContainerLinkObject_Position()
+                                                                      AND CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
+                                        -- + условие ОДНА Ведомость
+                                        INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                                       ON CLO_PersonalServiceList.ObjectId =  vbPersonalServiceListId -- tmpParent.PersonalServiceListId
+                                                                      AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
+                                                                      AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
+                                   -- !!! схема премии!!!
+                                   WHERE vbIsOnly = TRUE
+                                  )
           /*tmpCash*/
          , tmpMIContainer AS (SELECT SUM (CASE WHEN vbIsOnly = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
                                      -- Аванс (выплачено)
@@ -770,8 +808,8 @@ end if;
                                      -- Другие (выплачено)
                                    , SUM (CASE WHEN vbIsOnly = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND CLO_PersonalServiceList.ObjectId <> vbPersonalServiceListId and 1=1 then 0 WHEN MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService())THEN MIContainer.Amount ELSE 0 END) AS Amount_service
 
-                                       -- Корректировка ЗП
-                                    , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_LossPersonal() THEN MIContainer.Amount ELSE 0 END) AS Amount_LossPersonal
+                                     -- Корректировка ЗП
+                                   , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_LossPersonal() THEN MIContainer.Amount ELSE 0 END) AS Amount_LossPersonal
 
                                    , tmpContainer.PersonalId
                                    , tmpContainer.UnitId
@@ -804,6 +842,52 @@ end if;
                                      , tmpContainer.InfoMoneyId
                                      , tmpContainer.PersonalServiceListId
                                    --, MIContainer.MovementDescId
+                             UNION ALL
+                              SELECT 0 AS Amount_current
+                                     -- Аванс (выплачено)
+                                   , 0 AS Amount_avance
+                                     -- Аванс (возврат)
+                                   , 0 AS Amount_avance_ret
+
+                                     -- Карта БН - 2ф.  (выплачено)
+                                   , 0 AS AmountCardSecond_avance
+                                     -- Другие (выплачено)
+                                   , 0 AS Amount_service
+
+                                     -- Корректировка ЗП
+                                   , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_LossPersonal() THEN MIContainer.Amount ELSE 0 END) AS Amount_LossPersonal
+
+                                   , tmpContainer.PersonalId
+                                   , tmpContainer.UnitId
+                                   , tmpContainer.PositionId
+                                   , tmpContainer.InfoMoneyId
+                                   , tmpContainer.PersonalServiceListId
+                                   , MAX (MIContainer.MovementId) AS MovementId_find
+                                   , MAX (tmpContainer.ContainerId) AS ContainerId_find
+
+                              FROM tmpContainer_prem AS tmpContainer
+                                   INNER JOIN MovementItemContainer AS MIContainer
+                                                                    ON MIContainer.ContainerId    = tmpContainer.ContainerId
+                                                                   AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                   AND MIContainer.MovementDescId IN (zc_Movement_LossPersonal())
+                                   LEFT JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                                 ON CLO_PersonalServiceList.ContainerId = MIContainer.ContainerId
+                                                                AND CLO_PersonalServiceList.DescId     = zc_ContainerLinkObject_PersonalServiceList()
+                                   LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                                   LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList_cash
+                                                                ON MLO_PersonalServiceList_cash.MovementId = MIContainer.MovementId
+                                                               AND MLO_PersonalServiceList_cash.DescId     = zc_MovementLinkObject_PersonalServiceList()
+
+                                   LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                                                ON MLO_PersonalServiceList.MovementId = Movement.ParentId
+                                                               AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                   LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = COALESCE (MLO_PersonalServiceList_cash.ObjectId, MLO_PersonalServiceList.ObjectId)
+
+                              GROUP BY tmpContainer.PersonalId
+                                     , tmpContainer.UnitId
+                                     , tmpContainer.PositionId
+                                     , tmpContainer.InfoMoneyId
+                                     , tmpContainer.PersonalServiceListId
                              )
        -- <Карта БН (округление) - 2ф>
       , tmpMIContainer_diff AS (SELECT SUM (-- Округление по карте - ВСЕ
