@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_MemberPersonalServiceList()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_MemberPersonalServiceList(TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_MemberPersonalServiceList(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MemberPersonalServiceList(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MemberPersonalServiceList(
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -49,6 +51,7 @@ BEGIN
                                                                          AND ObjectLink_MemberPersonalServiceList_Member.DescId = zc_ObjectLink_MemberPersonalServiceList_Member()
                                                       
                                                 WHERE Object_MemberPersonalServiceList.DescId = zc_Object_MemberPersonalServiceList()
+                                                  AND (Object_MemberPersonalServiceList.isErased = inIsErased OR inIsErased = TRUE)
                                                )
 
       SELECT Object_MemberPersonalServiceList.Id         AS Id

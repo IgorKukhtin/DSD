@@ -74,6 +74,8 @@ type
     spInsertByGrid: TdsdStoredProc;
     macMemberInsertByGrid_list: TMultiAction;
     bbInsert_byGrid: TdxBarButton;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,0 +1,39 @@
+-- Function: gpReComplete_Movement_HospitalDoc_1C(integer, boolean, tvarchar)
+
+DROP FUNCTION IF EXISTS gpReComplete_Movement_HospitalDoc_1C (Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpReComplete_Movement_HospitalDoc_1C(
+    IN inMovementId        Integer               , -- ключ Документа
+    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+)
+RETURNS VOID
+AS
+$BODY$
+  DECLARE vbUserId Integer;
+BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_HospitalDoc_1C());
+
+     IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_UnComplete_HospitalDoc_1C())
+     THEN
+         -- Распроводим Документ
+         PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                      , inUserId     := vbUserId);
+     END IF;
+
+     -- Проводим Документ
+     PERFORM lpComplete_Movement_HospitalDoc_1C (inMovementId     := inMovementId
+                                               , inUserId         := vbUserId);
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.07.25         *
+*/
+
+-- тест
+-- 
