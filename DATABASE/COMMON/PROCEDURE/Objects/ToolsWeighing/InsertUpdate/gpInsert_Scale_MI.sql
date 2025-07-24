@@ -807,6 +807,7 @@ BEGIN
         AND (zfCheck_Time_ExceptionOn_Remains() = TRUE
          OR vbUserId = 5
             )
+        AND vbUserId <> 5
      THEN
          -- Нашли остаток
          vbRemainsCount_check:= (SELECT SUM (Container.Amount)
