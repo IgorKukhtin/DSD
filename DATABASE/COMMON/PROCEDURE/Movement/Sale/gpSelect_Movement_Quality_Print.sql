@@ -76,6 +76,7 @@ BEGIN
     -- очень важная проверка
     IF COALESCE ((SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId), 0) <> zc_Enum_Status_Complete()
        AND vbUserId <> zc_Enum_Process_Auto_PrimeCost()
+       AND vbUserId <> 5
     THEN
         IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Erased()
         THEN
