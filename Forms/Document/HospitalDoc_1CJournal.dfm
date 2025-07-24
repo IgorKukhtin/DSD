@@ -1,26 +1,26 @@
 inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1041#1086#1083#1100#1085#1080#1095#1085#1099#1077' '#1083#1080#1089#1090#1099' '#1080#1079' 1'#1057'>'
   ClientHeight = 537
-  ClientWidth = 975
+  ClientWidth = 1090
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 991
+  ExplicitWidth = 1106
   ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 975
+    Width = 1090
     Height = 480
     TabOrder = 3
     ExplicitWidth = 975
     ExplicitHeight = 480
     ClientRectBottom = 480
-    ClientRectRight = 975
+    ClientRectRight = 1090
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 975
       ExplicitHeight = 480
       inherited cxGrid: TcxGrid
-        Width = 975
+        Width = 1090
         Height = 480
         ExplicitWidth = 975
         ExplicitHeight = 480
@@ -385,7 +385,7 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 975
+    Width = 1090
     ExplicitWidth = 975
     inherited deStart: TcxDateEdit
       EditValue = 44927d
@@ -481,10 +481,8 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint_Spec
       StoredProcList = <
         item
-          StoredProc = spSelectPrint_Spec
         end>
       Caption = #1055#1088#1080#1082#1072#1079' '#1085#1072' '#1086#1090#1087#1091#1089#1082
       Hint = #1055#1088#1080#1082#1072#1079' '#1085#1072' '#1086#1090#1087#1091#1089#1082
@@ -542,6 +540,17 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actUpdate_SheetWorkTime: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_SheetWorkTime
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_SheetWorkTime
+        end>
+      Caption = 'actUpdate_TotalLines'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -612,6 +621,32 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' <'#1041#1086#1083#1100#1085#1080#1095#1085#1099#1093' '#1083#1080#1089#1090#1086#1074' '#1080#1079' 1'#1057'> '#1080#1079' '#1101#1082#1089#1077#1083#1103
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' <'#1041#1086#1083#1100#1085#1080#1095#1085#1099#1093' '#1083#1080#1089#1090#1086#1074' '#1080#1079' 1'#1057'> '#1080#1079' '#1101#1082#1089#1077#1083#1103
       ImageIndex = 41
+    end
+    object macUpdate_SheetWorkTime_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_SheetWorkTime
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_SheetWorkTime_list'
+    end
+    object macUpdate_SheetWorkTime: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_SheetWorkTime_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1090#1072#1073#1077#1083#1100' '#1074#1089#1077' '#1041#1086#1083#1100#1085#1080#1095#1085#1099#1077'?'
+      InfoAfterExecute = #1041#1086#1083#1100#1085#1080#1095#1085#1099#1077' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099' '#1074' '#1090#1072#1073#1077#1083#1100
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1090#1072#1073#1077#1083#1100' '#1074#1089#1077' '#1041#1086#1083#1100#1085#1080#1095#1085#1099#1077
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1090#1072#1073#1077#1083#1100' '#1074#1089#1077' '#1041#1086#1083#1100#1085#1080#1095#1085#1099#1077
+      ImageIndex = 74
     end
   end
   inherited MasterDS: TDataSource
@@ -708,6 +743,10 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -778,6 +817,10 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
       Action = actStartLoad
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = macUpdate_SheetWorkTime
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -806,17 +849,17 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_MemberHoliday'
+    StoredProcName = 'gpComplete_Movement_HospitalDoc_1C'
     Left = 80
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_MemberHoliday'
+    StoredProcName = 'gpUnComplete_Movement_HospitalDoc_1C'
     Left = 80
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_MemberHoliday'
+    StoredProcName = 'gpSetErased_Movement_HospitalDoc_1C'
     Left = 208
     Top = 376
   end
@@ -860,7 +903,7 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_MemberHoliday'
+    StoredProcName = 'gpReComplete_Movement_HospitalDoc_1C'
     Left = 176
     Top = 304
   end
@@ -953,27 +996,6 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     Left = 824
     Top = 48
   end
-  object spSelectPrint_Spec: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_MemberHoliday_Print'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 647
-    Top = 360
-  end
   object spGetImportSetting: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
     DataSets = <
@@ -1007,5 +1029,22 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     PackSize = 1
     Left = 840
     Top = 184
+  end
+  object spUpdate_MI_SheetWorkTime: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_SheetWorkTime_byHospitalDoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 561
+    Top = 360
   end
 end

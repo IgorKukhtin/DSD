@@ -92,7 +92,10 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , isBankOut Boolean
              , BankOutDate TDateTime, BankOutDate_export TDateTime
              --, Ord Integer  
-             , SummNalog_print TFloat
+             , SummNalog_print TFloat   
+             
+             , InsertName TVarChar, UpdateName TVarChar
+             , InsertDate TDateTime, UpdateDate TDateTime
               )
 AS
 $BODY$
@@ -281,7 +284,25 @@ BEGIN
                                 -- AND vbUserId = 5
                               GROUP BY tmpMIContainer_find_diff.MovementItemId
                              )
-          , tmpMI AS (SELECT MovementItem.Id                          AS MovementItemId
+          , tmpMI AS (WITH
+                      tmp AS (SELECT MovementItem.*
+                              FROM tmpIsErased
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                        AND MovementItem.isErased = tmpIsErased.isErased 
+                              )
+                    , MILO AS (SELECT *
+                               FROM MovementItemLinkObject
+                               WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmp.Id FROM tmp)
+                                 AND MovementItemLinkObject.DescId IN (zc_MILinkObject_InfoMoney()
+                                                                     , zc_MILinkObject_Unit()
+                                                                     , zc_MILinkObject_Position()
+                                                                     , zc_MILinkObject_Member()
+                                                                     , zc_MILinkObject_PersonalServiceList() 
+                                                                  )
+                              )
+
+                      SELECT MovementItem.Id                          AS MovementItemId
                            , MovementItem.Amount
                            , MovementItem.ObjectId                    AS PersonalId
                            , MILinkObject_Unit.ObjectId               AS UnitId
@@ -293,31 +314,59 @@ BEGIN
                            , MovementItem.isErased
                              -- ¹ ï/ï
                            , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId ORDER BY MovementItem.Id DESC) AS Ord
-                      FROM tmpIsErased
-                           INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                  AND MovementItem.DescId = zc_MI_Master()
-                                                  AND MovementItem.isErased = tmpIsErased.isErased
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
-                                                            ON MILinkObject_Position.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
-                                                            ON MILinkObject_Member.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
+                      FROM tmp AS MovementItem
+                           LEFT JOIN MILO AS MILinkObject_InfoMoney
+                                          ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                         AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                           LEFT JOIN MILO AS MILinkObject_Unit
+                                          ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                         AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                           LEFT JOIN MILO AS MILinkObject_Position
+                                          ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                         AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+                           LEFT JOIN MILO AS MILinkObject_Member
+                                          ON MILinkObject_Member.MovementItemId = MovementItem.Id
+                                         AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
                            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                 ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
 
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
-                                                            ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
+                           LEFT JOIN MILO AS MILinkObject_PersonalServiceList
+                                          ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
+                                         AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
                      )
-      , tmpMIChild_all AS (SELECT
+      , tmpMIChild_all AS (WITH
+                           tmp AS (SELECT MovementItem.*
+                                   FROM MovementItem
+                                   WHERE MovementItem.MovementId = inMovementId
+                                     AND MovementItem.DescId = zc_MI_Child()
+                                     AND MovementItem.isErased = FALSE
+                                  )
+
+                    , MILO AS (SELECT *
+                               FROM MovementItemLinkObject
+                               WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmp.Id FROM tmp)
+                                 AND MovementItemLinkObject.DescId IN (zc_MILinkObject_StaffListSummKind()
+                                                                     , zc_MILinkObject_StaffList()
+                                                                     , zc_MILinkObject_ModelService()
+                                                                     , zc_MILinkObject_StorageLine()
+                                                                     , zc_MILinkObject_PositionLevel() 
+                                                                  )
+                              )
+
+                    , MIFloat AS (SELECT *
+                                  FROM MovementItemFloat
+                                  WHERE MovementItemFloat.MovementItemId IN (SELECT tmp.Id FROM tmp)
+                                    AND MovementItemFloat.DescId IN (zc_MIFloat_DayCount()
+                                                                        , zc_MIFloat_WorkTimeHoursOne()
+                                                                        , zc_MIFloat_Price()
+                                                                        , zc_MIFloat_GrossOne()
+                                                                        , zc_MIFloat_HoursPlan()
+                                                                        , zc_MIFloat_HoursDay() 
+                                                                     )
+                                 )
+
+                             SELECT
                                   MovementItem.ParentId                    AS ParentId
                                 , MovementItem.Id                          AS MovementItemId
                                 , MovementItem.Amount                      AS Amount
@@ -333,51 +382,45 @@ BEGIN
                                 , COALESCE (MIFloat_HoursPlan.ValueData, 0)          AS HoursPlan
                                 , COALESCE (MIFloat_HoursDay.ValueData, 0)           AS HoursDay*/
 
-                           FROM MovementItem
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_StaffListSummKind
-                                                               ON MILinkObject_StaffListSummKind.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_StaffListSummKind.DescId = zc_MILinkObject_StaffListSummKind()
+                           FROM tmp AS MovementItem
+                              LEFT JOIN MILO AS MILinkObject_StaffListSummKind
+                                             ON MILinkObject_StaffListSummKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_StaffListSummKind.DescId = zc_MILinkObject_StaffListSummKind()
                               LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = MILinkObject_StaffListSummKind.ObjectId
                               --
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_StaffList
-                                                               ON MILinkObject_StaffList.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_StaffList.DescId = zc_MILinkObject_StaffList()
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_ModelService
-                                                               ON MILinkObject_ModelService.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_ModelService.DescId = zc_MILinkObject_ModelService()
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
-                                                               ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_PositionLevel
-                                                               ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
-
+                              LEFT JOIN MILO AS MILinkObject_StaffList
+                                             ON MILinkObject_StaffList.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_StaffList.DescId = zc_MILinkObject_StaffList()
+                              LEFT JOIN MILO AS MILinkObject_ModelService
+                                             ON MILinkObject_ModelService.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_ModelService.DescId = zc_MILinkObject_ModelService()
+                              LEFT JOIN MILO AS MILinkObject_StorageLine
+                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+                              LEFT JOIN MILO AS MILinkObject_PositionLevel
+                                             ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
                               --
-                              LEFT JOIN MovementItemFloat AS MIFloat_DayCount
-                                                          ON MIFloat_DayCount.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_DayCount.DescId = zc_MIFloat_DayCount()
-                              LEFT JOIN MovementItemFloat AS MIFloat_WorkTimeHoursOne
-                                                          ON MIFloat_WorkTimeHoursOne.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_WorkTimeHoursOne.DescId = zc_MIFloat_WorkTimeHoursOne()
-                              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                              LEFT JOIN MovementItemFloat AS MIFloat_GrossOne
-                                                          ON MIFloat_GrossOne.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_GrossOne.DescId = zc_MIFloat_GrossOne()
-                              LEFT JOIN MovementItemFloat AS MIFloat_HoursPlan
-                                                          ON MIFloat_HoursPlan.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_HoursPlan.DescId = zc_MIFloat_HoursPlan()
-                              LEFT JOIN MovementItemFloat AS MIFloat_HoursDay
-                                                          ON MIFloat_HoursDay.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_HoursDay.DescId = zc_MIFloat_HoursDay()
-
-
-
-                           WHERE MovementItem.MovementId = inMovementId
-                              AND MovementItem.DescId = zc_MI_Child()
-                              AND MovementItem.isErased = FALSE
+                              LEFT JOIN MIFloat AS MIFloat_DayCount
+                                                ON MIFloat_DayCount.MovementItemId = MovementItem.Id
+                                               AND MIFloat_DayCount.DescId = zc_MIFloat_DayCount()
+                              LEFT JOIN MIFloat AS MIFloat_WorkTimeHoursOne
+                                                ON MIFloat_WorkTimeHoursOne.MovementItemId = MovementItem.Id
+                                               AND MIFloat_WorkTimeHoursOne.DescId = zc_MIFloat_WorkTimeHoursOne()
+                              LEFT JOIN MIFloat AS MIFloat_Price
+                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                              LEFT JOIN MIFloat AS MIFloat_GrossOne
+                                                ON MIFloat_GrossOne.MovementItemId = MovementItem.Id
+                                               AND MIFloat_GrossOne.DescId = zc_MIFloat_GrossOne()
+                              LEFT JOIN MIFloat AS MIFloat_HoursPlan
+                                                ON MIFloat_HoursPlan.MovementItemId = MovementItem.Id
+                                               AND MIFloat_HoursPlan.DescId = zc_MIFloat_HoursPlan()
+                              LEFT JOIN MIFloat AS MIFloat_HoursDay
+                                                ON MIFloat_HoursDay.MovementItemId = MovementItem.Id
+                                               AND MIFloat_HoursDay.DescId = zc_MIFloat_HoursDay()
                           )
+
          , tmpMIChild AS (SELECT tmpMIChild_all.ParentId
                                , SUM (tmpMIChild_all.Amount)           AS Amount
                                , MAX (tmpMIChild_all.DayCount)         AS DayCount
@@ -655,6 +698,8 @@ BEGIN
                   FROM MovementItemDate
                   WHERE MovementItemDate.MovementItemId IN (SELECT tmpAll.MovementItemId FROM tmpAll)
                     AND MovementItemDate.DescId IN (zc_MIDate_BankOut()
+                                                  , zc_MIDate_Insert()
+                                                  , zc_MIDate_Update()  
                                                      )  
                     AND inMovementId > 0
                  )
@@ -662,7 +707,9 @@ BEGIN
                 FROM MovementItemLinkObject
                 WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpAll.MovementItemId FROM tmpAll)
                   AND MovementItemLinkObject.DescId IN (zc_MILinkObject_FineSubject()
-                                                      , zc_MILinkObject_UnitFineSubject() 
+                                                      , zc_MILinkObject_UnitFineSubject()
+                                                      , zc_MILinkObject_Insert()
+                                                      , zc_MILinkObject_Update() 
                                                    )
                   AND inMovementId > 0
                )
@@ -1084,6 +1131,10 @@ BEGIN
             --, tmpAll.Ord :: Integer    
             , tmpNalog_print.SummNalog ::TFloat AS SummNalog_print
 
+            , Object_Insert.ValueData    AS InsertName
+            , Object_Update.ValueData    AS UpdateName
+            , MIDate_Insert.ValueData    AS InsertDate
+            , MIDate_Update.ValueData    AS UpdateDate
        FROM tmpAll_MILO AS tmpAll
             LEFT JOIN tmpMI_card_b2 ON tmpMI_card_b2.MemberId_Personal = tmpAll.MemberId_Personal
                                    AND tmpAll.Ord = 1
@@ -1432,6 +1483,23 @@ BEGIN
 
           LEFT JOIN tmpNalog_print ON tmpNalog_print.PersonalId = tmpAll.PersonalId
           LEFT JOIN tmpNoNalog_print ON tmpNoNalog_print.PersonalId = tmpMIContainer_all.PersonalId
+
+          LEFT JOIN MIDate AS MIDate_Insert
+                           ON MIDate_Insert.MovementItemId = tmpAll.MovementItemId
+                          AND MIDate_Insert.DescId = zc_MIDate_Insert()
+          LEFT JOIN MIDate AS MIDate_Update
+                           ON MIDate_Update.MovementItemId = tmpAll.MovementItemId
+                          AND MIDate_Update.DescId = zc_MIDate_Update()
+
+          LEFT JOIN MILO AS MILO_Insert
+                         ON MILO_Insert.MovementItemId = tmpAll.MovementItemId
+                        AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+
+          LEFT JOIN MILO AS MILO_Update
+                         ON MILO_Update.MovementItemId = tmpAll.MovementItemId
+                        AND MILO_Update.DescId = zc_MILinkObject_Update()
+          LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
       ;
 
  END;

@@ -48,7 +48,6 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    spSelectPrint_Spec: TdsdStoredProc;
     Code1C: TcxGridDBColumn;
     isMain: TcxGridDBColumn;
     FIO: TcxGridDBColumn;
@@ -60,6 +59,11 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     actStartLoad: TMultiAction;
     bbtStartLoad: TdxBarButton;
+    spUpdate_MI_SheetWorkTime: TdsdStoredProc;
+    actUpdate_SheetWorkTime: TdsdExecStoredProc;
+    macUpdate_SheetWorkTime_list: TMultiAction;
+    macUpdate_SheetWorkTime: TMultiAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
