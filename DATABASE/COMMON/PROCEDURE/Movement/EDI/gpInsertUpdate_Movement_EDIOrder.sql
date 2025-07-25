@@ -2,14 +2,16 @@
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIOrder(
     IN inOrderInvNumber      TVarChar  , -- Номер документа
     IN inOrderOperDate       TDateTime , -- Дата документа
     IN inGLN                 TVarChar  , -- Код GLN - Покупатель
     IN inGLNPlace            TVarChar  , -- Код GLN - место доставки
-    IN inDealId              TVarChar  , -- ІД замовлення у системі ВЧАСНО
+    IN inDealId              TVarChar  , -- ІД угоди замовлення у системі ВЧАСНО
+    IN inId_doc              TVarChar  , -- ІД doc замовлення у системі ВЧАСНО
     IN gIsDelete             Boolean   , -- виртуальный, что б в компоненте понимать - надо ли удалять заявки "за сегодня", а "за вчера" - они удаляются всегда
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -141,6 +143,24 @@ end if;
                AND Movement.StatusId <> zc_Enum_Status_Erased()
             )
      THEN
+         -- сохранили DocId_vch внутрішній ІД документ у системі, после этого повторную загрузку не делаем
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_DocId_vch(), Movement.Id, inId_doc)
+         FROM Movement
+              INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                        ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                       AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                       AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+              -- Проверка Вчасно - есть ли этот DealId, тогда повторную загрузку не делаем
+              INNER JOIN MovementString AS MovementString_DealId
+                                        ON MovementString_DealId.MovementId = Movement.Id
+                                       AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+                                       AND MovementString_DealId.ValueData  = inDealId
+         WHERE Movement.DescId = zc_Movement_EDI()
+           AND Movement.OperDate = inOrderOperDate
+           AND Movement.InvNumber = inOrderInvNumber
+           AND Movement.StatusId <> zc_Enum_Status_Erased()
+        ;
+
          -- Выход т.к. документ уже загружен
          RETURN QUERY
             SELECT Movement.Id

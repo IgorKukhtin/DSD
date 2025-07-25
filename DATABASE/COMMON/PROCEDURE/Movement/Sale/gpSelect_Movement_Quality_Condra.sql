@@ -4,15 +4,25 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_Quality_Condra (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Quality_Condra(
     IN inMovementId         Integer  , -- ключ Документа
-    IN inSession            TVarChar    -- сессия пользователя
+    IN inSession            TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (DocumentId_vch   TVarChar
-             , DealId           TVarChar
-             , VchasnoId        TVarChar
-             , InvNumber_order  TVarChar
-             , InvNumber        TVarChar
-             , FileName         TVarChar
-             , MetaData         Text
+RETURNS TABLE (MovementId_edi         Integer
+             , DocumentId_vch         TVarChar
+             , DealId                 TVarChar
+             , VchasnoId              TVarChar
+             , DocId_vch              TVarChar
+             , InvNumber_order        TVarChar
+             , InvNumber              TVarChar
+             , FileName               TVarChar
+             , sender_gln             TVarChar
+             , recipient_gln          TVarChar
+             , buyer_gln              TVarChar
+             , number                 TVarChar
+             , document_function_code TVarChar
+             , FileName_pdf           TVarChar
+             , doc_to_attach_id       TVarChar
+             , doc_to_attach_number   TVarChar
+             , MetaData               Text
               )
 AS
 $BODY$
@@ -61,6 +71,7 @@ BEGIN
                              , MovementString_DocumentId_vch.ValueData    AS DocumentId_vch
                              , MovementString_DealId.ValueData            AS DealId
                              , MovementString_VchasnoId.ValueData         AS VchasnoId
+                             , MovementString_DocId_vch.ValueData         AS DocId_vch
 
                         FROM MovementLinkMovement AS MovementLinkMovement_Order
                              LEFT JOIN Movement AS Movement_order ON Movement_order.Id = MovementLinkMovement_Order.MovementChildId
@@ -85,6 +96,9 @@ BEGIN
                              LEFT JOIN MovementString AS MovementString_VchasnoId
                                                       ON MovementString_VchasnoId.MovementId = Movement_EDI.Id
                                                      AND MovementString_VchasnoId.DescId = zc_MovementString_VchasnoId()
+                             LEFT JOIN MovementString AS MovementString_DocId_vch
+                                                      ON MovementString_DocId_vch.MovementId = Movement_EDI.Id
+                                                     AND MovementString_DocId_vch.DescId     = zc_MovementString_DocId_vch()
 
 
                              LEFT JOIN Movement ON Movement.Id = inMovementId
@@ -186,27 +200,36 @@ BEGIN
                           AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
                        )
        SELECT
-              tmpData.DealId -- tmpData.DocumentId_vch
+              tmpData.MovementId_edi
+            , tmpData.DocumentId_vch
             , tmpData.DealId
             , tmpData.VchasnoId
+            , tmpData.DocId_vch
             , tmpData.InvNumber_order
             , tmpData.InvNumber
-              -- имя отправляемого файла
+              -- имя отправляемого файла (с диска)
             , (gpGet.outFileName || '.pdf') :: TVarChar AS FileName
+              --
+            , COALESCE (tmpData.SenderGLNCode, '')         :: TVarChar  AS sender_gln
+            , CASE WHEN tmpData.RecipientGLNCode <> '' THEN tmpData.RecipientGLNCode ELSE COALESCE (tmpData.BuyerGLNCode, '') END :: TVarChar AS recipient_gln
+            , COALESCE (tmpData.BuyerGLNCode, '')          :: TVarChar AS buyer_gln
+            , ('Doc_' || COALESCE (tmpData.InvNumber, '')) :: TVarChar AS number -- tmpData.InvNumber_order
+            , '2002'                                       :: TVarChar AS document_function_code
+            , ''                                           :: TVarChar AS FileName_pdf
+          --, COALESCE (gpGet.outFileName, '')             :: TVarChar AS FileName_pdf
+            , COALESCE (tmpData.DocId_vch, '')             :: TVarChar AS doc_to_attach_id -- DocumentId_vch -- VchasnoId -- tmpData.DealId
+            , COALESCE (tmpData.InvNumber_order, '')       :: TVarChar AS doc_to_attach_number
+
               -- джейсон с описанием
             , ('{"sender_gln": "' || COALESCE (tmpData.SenderGLNCode, '') || '",'
              ||'"recipient_gln": "' || CASE WHEN tmpData.RecipientGLNCode <> '' THEN tmpData.RecipientGLNCode ELSE COALESCE (tmpData.BuyerGLNCode, '') END || '",'
              ||'"buyer_gln": "' || COALESCE (tmpData.BuyerGLNCode, '') || '",'
-             ||'"number": "' || COALESCE (tmpData.InvNumber_order, '') || '",' -- tmpData.InvNumber
-             ||'"document_function_code": "11",'
+             ||'"number": "' || COALESCE (tmpData.InvNumber, '') || '",' -- tmpData.InvNumber
+             ||'"document_function_code": "2002",'
              ||'"file": "' || COALESCE (gpGet.outFileName, '') || '.pdf' || '",'
-             ||'"doc_to_attach_id": "'  || COALESCE (tmpData.DealId, '') || '",' -- DocumentId_vch -- VchasnoId
+             ||'"doc_to_attach_id": "'  || COALESCE (tmpData.DocId_vch, '') || '",' -- DocumentId_vch -- VchasnoId
              ||'"doc_to_attach_number": "' || COALESCE (tmpData.InvNumber_order, '') || '"'
              ||'}') :: Text AS MetaData
-
-
-                --"date_created": "2025-06-12T07:58:57.438Z",
-                --"date_updated": "2025-06-12T07:58:57.438Z",
 
        FROM gpGet_Movement_Quality_ReportName_export (inMovementId, inSession) AS gpGet
             LEFT JOIN tmpData ON tmpData.MovementId = inMovementId

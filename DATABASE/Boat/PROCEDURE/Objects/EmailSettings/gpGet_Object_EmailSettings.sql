@@ -34,11 +34,17 @@ BEGIN
                              )
        --
        SELECT tmpEmailSettings_Host.Value                    :: TVarChar AS Https_order
---            , (tmpEmailSettings_Port.Value || inOrderNumber) :: TVarChar AS Https_pdf
---            , (tmpEmailSettings_Mail.Value || inOrderNumber) :: TVarChar AS Https_png
-            , (tmpEmailSettings_Port.Value || inOrderNumber || '.pdf') :: TVarChar AS Https_pdf
-            , (tmpEmailSettings_Mail.Value || inOrderNumber || '.png') :: TVarChar AS Https_png
-            , CASE WHEN tmpEmailSettings_User.Value <> '' THEN tmpEmailSettings_User.Value ELSE tmpEmailSettings_Password.Value END :: TVarChar AS TokenValue
+              -- new
+            , (tmpEmailSettings_Port.Value || inOrderNumber) :: TVarChar AS Https_pdf
+            , (tmpEmailSettings_Mail.Value || inOrderNumber) :: TVarChar AS Https_png
+              -- old
+            --, (tmpEmailSettings_Port.Value || inOrderNumber || '.pdf') :: TVarChar AS Https_pdf
+            --, (tmpEmailSettings_Mail.Value || inOrderNumber || '.png') :: TVarChar AS Https_png
+              --
+            , CASE WHEN tmpEmailSettings_User.Value <> ''     THEN tmpEmailSettings_User.Value
+                   WHEN tmpEmailSettings_Password.Value <> '' THEN tmpEmailSettings_Password.Value
+                   ELSE ''
+              END :: TVarChar AS TokenValue
               INTO outHttps_order
                  , outHttps_pdf
                  , outHttps_png
