@@ -64,7 +64,7 @@ type
     function ConvertEDIDate(ADateTime: string): TDateTime;
     // VchasnoEDI
     procedure InsertUpdateOrderVchasnoEDI(ORDER: OrderXML.IXMLORDERType;
-      spHeader, spList: TdsdStoredProc; lFileName, ADealId : String);
+      spHeader, spList: TdsdStoredProc; lFileName, ADealId, AId_doc : String);
     procedure UpdateOrderDESADVSaveVchasnoEDI(AEDIId, Id_send : Integer; isError : Boolean);
     procedure UpdateOrderORDERSPSaveVchasnoEDI(AEDIId, Id_send: Integer; isError : Boolean);
 
@@ -114,7 +114,7 @@ type
       spFileInfo, spFileBlob: TdsdStoredProc; Directory: string; DebugMode: boolean);
     procedure ErrorLoad(Directory: string);
     // заказ VchasnoEDI
-    procedure OrderLoadVchasnoEDI(AOrder, AFileName, ADealId : string; spHeader, spList: TdsdStoredProc);
+    procedure OrderLoadVchasnoEDI(AOrder, AFileName, ADealId, AId_doc : string; spHeader, spList: TdsdStoredProc);
     // Comdoc VchasnoEDI
     procedure ComdocLoadVchasnoEDI(FileData, AFileName, ADealId, AVchasno_id, ADocumentId_vch : string; spHeader, spList: TdsdStoredProc);
     // отправка подтверждения заказа
@@ -577,6 +577,7 @@ begin
   FUpdateEDIVchasnoEDI := TdsdStoredProc.Create(nil);
   FUpdateEDIVchasnoEDI.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
   FUpdateEDIVchasnoEDI.Params.AddParam('inDealId', ftString, ptInput, '');
+  FUpdateEDIVchasnoEDI.Params.AddParam('inId_doc', ftString, ptInput, '');
   FUpdateEDIVchasnoEDI.StoredProcName := 'gpUpdate_Movement_EDI_VchasnoEDI';
   FUpdateEDIVchasnoEDI.OutputType := otResult;
 
@@ -4950,7 +4951,7 @@ if VarIsNull(ComSigner) then
 end;
 
 procedure TEDI.InsertUpdateOrderVchasnoEDI(ORDER: OrderXML.IXMLORDERType;
-  spHeader, spList: TdsdStoredProc; lFileName, ADealId : String);
+  spHeader, spList: TdsdStoredProc; lFileName, ADealId, AId_doc : String);
 var
   MovementId, GoodsPropertyId: integer;
   i: integer;
@@ -4965,6 +4966,7 @@ begin
       ParamByName('inGLNPlace').Value := HEAD.DELIVERYPLACE;
       ParamByName('inGLN').Value := HEAD.BUYER;
       ParamByName('inDealId').Value := ADealId;
+      ParamByName('inId_doc').Value := AId_doc;
 
       Execute;
       //
@@ -4977,6 +4979,7 @@ begin
   finally
       // обнулили, чтоб не мешать EDI
       spHeader.ParamByName('inDealId').Value := '';
+      spHeader.ParamByName('inId_doc').Value := '';
   end;
   //
   for i := 0 to ORDER.HEAD.POSITION.Count - 1 do
@@ -5002,6 +5005,7 @@ begin
     //
     FUpdateEDIVchasnoEDI.ParamByName('inMovementId').Value := MovementId;
     FUpdateEDIVchasnoEDI.ParamByName('inDealId').Value := ADealId;
+    FUpdateEDIVchasnoEDI.ParamByName('inId_doc').Value := AId_doc;
     FUpdateEDIVchasnoEDI.Execute;
 end;
 
@@ -5142,14 +5146,14 @@ begin
   end;
 end;
 
-procedure TEDI.OrderLoadVchasnoEDI(AOrder, AFileName, ADealId: String; spHeader, spList: TdsdStoredProc);
+procedure TEDI.OrderLoadVchasnoEDI(AOrder, AFileName, ADealId, AId_doc: String; spHeader, spList: TdsdStoredProc);
 var
   ORDER: OrderXML.IXMLORDERType;
 begin
   try
     ORDER := OrderXML.LoadORDER(AOrder);
     // загружаем в базенку
-    InsertUpdateOrderVchasnoEDI(ORDER, spHeader, spList, AFileName, ADealId);
+    InsertUpdateOrderVchasnoEDI(ORDER, spHeader, spList, AFileName, ADealId, AId_doc);
   except
     on E: Exception do begin raise Exception.Create(E.Message);
     end;
@@ -6238,6 +6242,7 @@ function TdsdVchasnoEDIAction.POSTCondraEDI(ATypeExchange : Integer): Boolean;
       Params, S: String;
       Stream: TIdMultiPartFormDataStream;
       jsonObj: TJSONObject;
+      testStringStream:TStringStream;
 begin
   inherited;
   Result := False;
@@ -6281,6 +6286,13 @@ begin
     except on E:EIdHTTPProtocolException  do
                 ShowMessages(e.ErrorMessage);
     end;
+
+    // для теста -
+    testStringStream:= TStringStream.Create('', TEncoding.UTF8);
+    Stream.Position := 0;
+    testStringStream.CopyFrom(Stream, 0);
+    testStringStream.SaveToFile('test_Condra.txt');
+
 
     if IdHTTP.ResponseCode in [200,201] then
     begin
@@ -6788,7 +6800,7 @@ begin
                 // создание документ
                 case EDIDocType of
                   ediOrder: EDI.OrderLoadVchasnoEDI(Copy(FResultParam.Value, Max(POS('<', FResultParam.Value), 1), Length(FResultParam.Value)),
-                                                    FFileNameParam.Value, DataSetCDS.FieldByName('deal_id').AsString, FspHeader, FspList
+                                                    FFileNameParam.Value, DataSetCDS.FieldByName('deal_id').AsString,DataSetCDS.FieldByName('Id').AsString, FspHeader, FspList
                                                    );
                 end;
               end;
