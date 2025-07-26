@@ -21,7 +21,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate_Total (
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , FromName TVarChar, ToName TVarChar
              
-             , PartionGoods  TVarChar, PartionGoods_main  TVarChar 
+             , PartionGoods  TVarChar, PartionGoods_main  TVarChar, PartionGoods_main2  TVarChar 
              , PartionGoods_Date TVarChar --TDateTime 
              , FromCode_partion Integer, FromName_partion TVarChar
              
@@ -107,7 +107,6 @@ BEGIN
           SELECT Id FROM Object_Unit_View ;   --SELECT Id FROM Object WHERE DescId = zc_Object_Unit();
     END IF;
 
-
     -- –езультат
     RETURN QUERY
     
@@ -125,6 +124,12 @@ BEGIN
                                            WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'мо-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
                                            ELSE MovementString_PartionGoods.ValueData ::TVarChar
                                       END ::TVarChar AS PartionGoods_main
+                                    --, LEFT ( MovementString_PartionGoods.ValueData ::TVarChar, length (MovementString_PartionGoods.ValueData)-11 )  ::TVarChar AS PartionGoods_main2  
+                                    , CASE WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'пр-%' THEN LEFT ( MovementString_PartionGoods.ValueData ::TVarChar, length (MovementString_PartionGoods.ValueData)-11 )  ::TVarChar
+                                           WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'об-%' THEN LEFT ( MovementString_PartionGoods.ValueData ::TVarChar, length (MovementString_PartionGoods.ValueData)-11 )  ::TVarChar
+                                           WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'мо-%' THEN LEFT ( MovementString_PartionGoods.ValueData ::TVarChar, length (MovementString_PartionGoods.ValueData)-11 )  ::TVarChar
+                                           ELSE '' ::TVarChar
+                                      END ::TVarChar AS PartionGoods_main2
                                FROM Movement 
                                     LEFT JOIN MovementString AS MovementString_PartionGoods
                                                              ON MovementString_PartionGoods.MovementId = Movement.Id
@@ -163,7 +168,8 @@ BEGIN
                            , tmpMovement.FromId
                            , tmpMovement.ToId
                            , tmpMovement.PartionGoods                        AS PartionGoods
-                           , tmpMovement.PartionGoods_main 
+                           , tmpMovement.PartionGoods_main
+                           , tmpMovement.PartionGoods_main2 
                            , tmpMovement.FromCode_partion
                            , MIContainer.ObjectId_Analyzer                   AS GoodsId
                           -- , 0 AS Summ
@@ -207,6 +213,7 @@ BEGIN
                              , tmpMovement.OperDate
                              , tmpMovement.PartionGoods
                              , tmpMovement.PartionGoods_main
+                             , tmpMovement.PartionGoods_main2
                              , tmpMovement.FromCode_partion
                              , MIContainer.ObjectId_Analyzer
                              , MIContainer.DescId
@@ -226,6 +233,7 @@ BEGIN
                              , tmpMI_Container.OperDate
                              , tmpMI_Container.PartionGoods
                              , tmpMI_Container.PartionGoods_main
+                             , tmpMI_Container.PartionGoods_main2
                              , tmpMI_Container.FromCode_partion
                              , tmpMI_Container.GoodsId 
                              , tmpMI_Container.StorageLineId_in
@@ -242,7 +250,8 @@ BEGIN
                              , tmpMI_Container.InvNumber
                              , tmpMI_Container.OperDate
                              , tmpMI_Container.PartionGoods
-                             , tmpMI_Container.PartionGoods_main
+                             , tmpMI_Container.PartionGoods_main 
+                             , tmpMI_Container.PartionGoods_main2
                              , tmpMI_Container.FromCode_partion
                              , tmpMI_Container.GoodsId 
                              , tmpMI_Container.StorageLineId_in
@@ -261,6 +270,7 @@ BEGIN
                        , tmpMI_Container.ToId
                        , tmpMI_Container.PartionGoods
                        , tmpMI_Container.PartionGoods_main
+                       , tmpMI_Container.PartionGoods_main2
                        , tmpMI_Container.FromCode_partion
                        , tmpMI_Container.GoodsId 
                        , tmpMI_Container.StorageLineId_in
@@ -279,6 +289,7 @@ BEGIN
                          , tmpMI_Container.OperDate
                          , tmpMI_Container.PartionGoods
                          , tmpMI_Container.PartionGoods_main
+                         , tmpMI_Container.PartionGoods_main2
                          , tmpMI_Container.FromCode_partion
                          , tmpMI_Container.GoodsId
                          , tmpMI_Container.StorageLineId_in
@@ -321,13 +332,15 @@ BEGIN
   , tmpMI_totalPartion AS
            (SELECT tmpMI.GoodsId 
                  , tmpMI.PartionGoods
-                 , tmpMI.PartionGoods_main 
+                 , tmpMI.PartionGoods_main
+                 , tmpMI.PartionGoods_main2 
                  , -1* SUM (tmpMI.Summ) AS Summ
                  , -1* SUM (tmpMI.Amount) AS Amount
                  ,  SUM (tmpMI.HeadCount) AS HeadCount
             FROM (SELECT  tmpMI_out.GoodsId
                         , tmpMI_out.PartionGoods
                         , tmpMI_out.PartionGoods_main
+                        , tmpMI_out.PartionGoods_main2
                         , tmpMI_out.Summ
                         , tmpMI_out.Amount
                         , tmpMI_out.HeadCount
@@ -340,6 +353,7 @@ BEGIN
                   SELECT  tmpMI_out_Sum.GoodsId       
                         , tmpMI_out_Sum.PartionGoods
                         , tmpMI_out_Sum.PartionGoods_main
+                        , tmpMI_out_Sum.PartionGoods_main2
                         , tmpMI_out_Sum.Summ
                         , tmpMI_out_Sum.Amount
                         , 0 AS HeadCount
@@ -352,6 +366,7 @@ BEGIN
             GROUP BY tmpMI.GoodsId
                    , tmpMI.PartionGoods
                    , tmpMI.PartionGoods_main
+                   , tmpMI.PartionGoods_main2
            )
  
    , tmpMI_totalMovement AS
@@ -400,7 +415,13 @@ BEGIN
                   ELSE tmpOperationGroup.PartionGoods ::TVarChar
              END ::TVarChar AS PartionGoods_main
           */
-           , tmpOperationGroup.PartionGoods_main ::TVarChar
+           , tmpOperationGroup.PartionGoods_main  ::TVarChar
+           --, tmpOperationGroup.PartionGoods_main2 ::TVarChar
+           , CASE WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'пр-%' THEN LEFT ( tmpOperationGroup.PartionGoods ::TVarChar, length (tmpOperationGroup.PartionGoods)-11 )  ::TVarChar
+                  WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'об-%' THEN LEFT ( tmpOperationGroup.PartionGoods ::TVarChar, length (tmpOperationGroup.PartionGoods)-11 )  ::TVarChar
+                  WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'мо-%' THEN LEFT ( tmpOperationGroup.PartionGoods ::TVarChar, length (tmpOperationGroup.PartionGoods)-11 )  ::TVarChar
+                  ELSE '' ::TVarChar
+             END ::TVarChar AS PartionGoods_main2
            , Right (tmpOperationGroup.PartionGoods_main ,10) ::TVarChar  AS  PartionGoods_Date 
            , Object_From_partion.ObjectCode::Integer    AS FromCode_partion
            , Object_From_partion.ValueData ::TVarChar   AS FromName_partion
@@ -448,7 +469,7 @@ BEGIN
                  , tmpMI.GoodsKindId
                  , tmpMI.StorageLineId_in
                  , tmpMI.StorageLineId_out
-                  , ABS (SUM(tmpMI.Summ))        AS Summ
+                 , ABS (SUM(tmpMI.Summ))        AS Summ
                  , ABS (SUM(tmpMI.Amount))      AS Amount
                  , ABS (SUM(tmpMI.HeadCount))   AS HeadCount
                  , tmpMI.ChildGoodsId     
