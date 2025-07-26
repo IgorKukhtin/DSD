@@ -1,13 +1,16 @@
 -- Function: gpUpdate_Movement_EDI_VchasnoEDI()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_EDI_VchasnoEDI (Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdate_Movement_EDI_VchasnoEDI (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_EDI_VchasnoEDI (Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_EDI_VchasnoEDI(
     IN inMovementId          Integer    , -- Ключ объекта <Документ>
-    IN inDealId              TVarChar   , -- внутрішній ІД замовлення у системі
-    IN inSession             TVarChar     -- Пользователь
-)                              
-RETURNS VOID AS
+    IN inDealId              TVarChar   , -- внутрішній ІД угоди замовлення у системі
+    IN inId_doc              TVarChar   , -- ІД doc замовлення у системі ВЧАСНО
+    IN inSession             TVarChar        -- Пользователь
+)
+RETURNS VOID
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -17,6 +20,9 @@ BEGIN
 
      -- сохранили DealId внутрішній ІД замовлення у системі, после этого повторную загрузку не делаем
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_DealId(), inMovementId, inDealId);
+
+     -- сохранили DocId_vch
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_DocId_vch(), inMovementId, inId_doc);
 
      -- сохранили
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), inMovementId, TRUE);
@@ -32,7 +38,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 20.03.23                                                       * 
+ 20.03.23                                                       *
 */
 
 -- тест

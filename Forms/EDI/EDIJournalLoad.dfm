@@ -4,6 +4,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
   ClientWidth = 1368
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -474
   ExplicitWidth = 1384
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -531,7 +532,21 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
             HeaderHint = #1042#1085#1091#1090#1088#1110#1096#1085#1110#1081' VchasnoId '#1042#1095#1072#1089#1085#1086'-EDI'
             Width = 107
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
+          object DocId_vch: TcxGridDBColumn
+            Caption = #1030#1044' doc'
+            DataBinding.FieldName = 'DocId_vch'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object isEdiComdoc: TcxGridDBColumn
             Caption = 'ComDoc '#1042#1095#1072#1089#1085#1086'-EDI'
             DataBinding.FieldName = 'isEdiComdoc'
             HeaderAlignmentHorz = taCenter
@@ -2397,6 +2412,9 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         end
         item
           Action = actVchasno_SendCondra
+        end
+        item
+          Action = actRefresh
         end>
       QuestionBeforeExecute = 
         #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'> '#1042#1095 +
@@ -2514,7 +2532,9 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       Category = 'QualityDoc'
       MoveParams = <>
       Caption = 'actVchasnoEDISignComdoc'
-      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.Value = 
+        'https://edi.vchasno.ua/api/v2/additional-documents/condra-attach' +
+        'ment'
       Host.DataType = ftString
       Host.MultiSelectSeparator = ','
       Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
@@ -3030,6 +3050,13 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'inDealId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId_doc'
         Value = Null
         DataType = ftString
         ParamType = ptInput

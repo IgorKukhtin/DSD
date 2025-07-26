@@ -956,7 +956,13 @@ END IF;
          -- 6.1. Проверка
          IF COALESCE (vbProdOptionsId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Не найдено значение опции с Key = <%> + Цвет = <%>.', inValue1, vbColor_title;
+             RAISE EXCEPTION 'Ошибка.Не найдено значение опции%с Key = <%> %.%Название на сайте = <%>.'
+                            , CHR (13)
+                            , inValue1
+                            , CASE WHEN vbColor_title <> '' THEN ' + Цвет = <' || vbColor_title || '>' ELSE '' END
+                            , CHR (13)
+                            , inValue2
+                             ;
          END IF;
          -- 6.1. Проверка - category_title+inValue2 должен соответствовать MaterialOptionsId
          IF (inTitle ILIKE 'hypalon_primary' OR inTitle ILIKE 'hypalon_secondary')

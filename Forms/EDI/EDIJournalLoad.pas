@@ -245,7 +245,7 @@ type
     actVchasnoEDISignComdoc: TdsdVchasnoEDIAction;
     mactVchasnoEDISignComdoc: TMultiAction;
     dxBarButton1: TdxBarButton;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    isEdiComdoc: TcxGridDBColumn;
     mactVchasnoEDICONDRA: TMultiAction;
     bbVchasnoEDICONDRA: TdxBarButton;
     spSelectPrint_Quality: TdsdStoredProc;
@@ -256,6 +256,7 @@ type
     spSelectData_Condra: TdsdStoredProc;
     DataCondraCDS: TClientDataSet;
     actSelectData_Condra: TdsdExecStoredProc;
+    DocId_vch: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -50,6 +50,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DealId         TVarChar
              , DocumentId_vch TVarChar
              , VchasnoId      TVarChar
+             , DocId_vch      TVarChar
              , isVchasno      Boolean
              , isEdiComdoc    Boolean
               )
@@ -178,6 +179,7 @@ BEGIN
            , MovementString_DealId.ValueData         ::TVarChar AS DealId
            , MovementString_DocumentId_vch.ValueData ::TVarChar AS DocumentId_vch
            , MovementString_VchasnoId.ValueData      ::TVarChar AS VchasnoId
+           , MovementString_DocId_vch.ValueData      ::TVarChar AS DocId_vch
            , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '') <> '' THEN TRUE ELSE FALSE END ::Boolean AS isVchasno
              -- Загрузка ComDoc Вчасно-EDI
            , COALESCE(MovementBoolean_EdiComdoc.ValueData, FALSE) AS isEdiComdoc
@@ -367,6 +369,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_VchasnoId
                                      ON MovementString_VchasnoId.MovementId = Movement.Id
                                     AND MovementString_VchasnoId.DescId     = zc_MovementString_VchasnoId()
+            LEFT JOIN MovementString AS MovementString_DocId_vch
+                                     ON MovementString_DocId_vch.MovementId = Movement.Id
+                                    AND MovementString_DocId_vch.DescId     = zc_MovementString_DocId_vch()
+                                    
             -- Загрузка ComDoc Вчасно-EDI
             LEFT JOIN MovementBoolean AS MovementBoolean_EdiComdoc
                                       ON MovementBoolean_EdiComdoc.MovementId =  Movement.Id

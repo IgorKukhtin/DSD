@@ -616,7 +616,7 @@ begin
           execParams.Free;
           //
           // Гофро-ящики+Поддон+Ящик+Гофро-уголок
-          Save_Movement_gofro(ParamsMI);
+          //Save_Movement_gofro(ParamsMI);
           //
           //
           //Print and Create Quality + Transport + Tax

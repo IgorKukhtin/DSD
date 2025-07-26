@@ -53,7 +53,20 @@ BEGIN
             , tmpEmailKind.EmailKindId
             , tmpEmailKind.EmailKindName
             , tmpEmailKind.EmailToolsId
-            , tmpEmailKind.EmailToolsName
+            , CASE WHEN tmpEmailKind.EmailKindId = zc_Enum_EmailKind_HTTP_OrderClient()
+                    AND tmpEmailKind.EmailToolsId = zc_Enum_EmailTools_Host()
+                        THEN 'Заказ клиента'
+                   WHEN tmpEmailKind.EmailKindId = zc_Enum_EmailKind_HTTP_OrderClient()
+                    AND tmpEmailKind.EmailToolsId = zc_Enum_EmailTools_Port()
+                        THEN 'PDF'
+                   WHEN tmpEmailKind.EmailKindId = zc_Enum_EmailKind_HTTP_OrderClient()
+                    AND tmpEmailKind.EmailToolsId = zc_Enum_EmailTools_Mail()
+                        THEN 'PNG'
+                   WHEN tmpEmailKind.EmailKindId = zc_Enum_EmailKind_HTTP_OrderClient()
+                    AND tmpEmailKind.EmailToolsId = zc_Enum_EmailTools_User()
+                        THEN 'Token'
+                   ELSE tmpEmailKind.EmailToolsName
+              END :: TVarChar AS EmailToolsName
              
        FROM tmpEmailKind
          LEFT JOIN tmpObject ON tmpObject.EmailKindId = tmpEmailKind.EmailKindId

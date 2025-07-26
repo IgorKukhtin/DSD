@@ -64,7 +64,7 @@ type
     function ConvertEDIDate(ADateTime: string): TDateTime;
     // VchasnoEDI
     procedure InsertUpdateOrderVchasnoEDI(ORDER: OrderXML.IXMLORDERType;
-      spHeader, spList: TdsdStoredProc; lFileName, ADealId : String);
+      spHeader, spList: TdsdStoredProc; lFileName, ADealId, AId_doc : String);
     procedure UpdateOrderDESADVSaveVchasnoEDI(AEDIId, Id_send : Integer; isError : Boolean);
     procedure UpdateOrderORDERSPSaveVchasnoEDI(AEDIId, Id_send: Integer; isError : Boolean);
 
@@ -114,7 +114,7 @@ type
       spFileInfo, spFileBlob: TdsdStoredProc; Directory: string; DebugMode: boolean);
     procedure ErrorLoad(Directory: string);
     // заказ VchasnoEDI
-    procedure OrderLoadVchasnoEDI(AOrder, AFileName, ADealId : string; spHeader, spList: TdsdStoredProc);
+    procedure OrderLoadVchasnoEDI(AOrder, AFileName, ADealId, AId_doc : string; spHeader, spList: TdsdStoredProc);
     // Comdoc VchasnoEDI
     procedure ComdocLoadVchasnoEDI(FileData, AFileName, ADealId, AVchasno_id, ADocumentId_vch : string; spHeader, spList: TdsdStoredProc);
     // отправка подтверждения заказа
@@ -181,6 +181,15 @@ type
     FResultParam: TdsdParam;
     FFileNameParam: TdsdParam;
     FMetadataParam: TdsdParam;
+    //Качественное
+    FMetadata_sender_glnParam: TdsdParam;
+    FMetadata_recipient_glnParam: TdsdParam;
+    FMetadata_buyer_glnParam: TdsdParam;
+    FMetadata_numberParam: TdsdParam;
+    FMetadata_document_function_codeParam: TdsdParam;
+    FMetadata_fileParam: TdsdParam;
+    FMetadata_doc_to_attach_idParam: TdsdParam;
+    FMetadata_doc_to_attach_numberParam: TdsdParam;
 
     FKeyFileNameParam: TdsdParam;
     FKeyUserNameParam: TdsdParam;
@@ -577,6 +586,7 @@ begin
   FUpdateEDIVchasnoEDI := TdsdStoredProc.Create(nil);
   FUpdateEDIVchasnoEDI.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
   FUpdateEDIVchasnoEDI.Params.AddParam('inDealId', ftString, ptInput, '');
+  FUpdateEDIVchasnoEDI.Params.AddParam('inId_doc', ftString, ptInput, '');
   FUpdateEDIVchasnoEDI.StoredProcName := 'gpUpdate_Movement_EDI_VchasnoEDI';
   FUpdateEDIVchasnoEDI.OutputType := otResult;
 
@@ -4950,7 +4960,7 @@ if VarIsNull(ComSigner) then
 end;
 
 procedure TEDI.InsertUpdateOrderVchasnoEDI(ORDER: OrderXML.IXMLORDERType;
-  spHeader, spList: TdsdStoredProc; lFileName, ADealId : String);
+  spHeader, spList: TdsdStoredProc; lFileName, ADealId, AId_doc : String);
 var
   MovementId, GoodsPropertyId: integer;
   i: integer;
@@ -4965,6 +4975,7 @@ begin
       ParamByName('inGLNPlace').Value := HEAD.DELIVERYPLACE;
       ParamByName('inGLN').Value := HEAD.BUYER;
       ParamByName('inDealId').Value := ADealId;
+      ParamByName('inId_doc').Value := AId_doc;
 
       Execute;
       //
@@ -4977,6 +4988,7 @@ begin
   finally
       // обнулили, чтоб не мешать EDI
       spHeader.ParamByName('inDealId').Value := '';
+      spHeader.ParamByName('inId_doc').Value := '';
   end;
   //
   for i := 0 to ORDER.HEAD.POSITION.Count - 1 do
@@ -5002,6 +5014,7 @@ begin
     //
     FUpdateEDIVchasnoEDI.ParamByName('inMovementId').Value := MovementId;
     FUpdateEDIVchasnoEDI.ParamByName('inDealId').Value := ADealId;
+    FUpdateEDIVchasnoEDI.ParamByName('inId_doc').Value := AId_doc;
     FUpdateEDIVchasnoEDI.Execute;
 end;
 
@@ -5140,16 +5153,17 @@ begin
       FInsertEDIEvents.ParamByName('inMovementId_send').Value := 0;
     end;
   end;
+    //
 end;
 
-procedure TEDI.OrderLoadVchasnoEDI(AOrder, AFileName, ADealId: String; spHeader, spList: TdsdStoredProc);
+procedure TEDI.OrderLoadVchasnoEDI(AOrder, AFileName, ADealId, AId_doc: String; spHeader, spList: TdsdStoredProc);
 var
   ORDER: OrderXML.IXMLORDERType;
 begin
   try
     ORDER := OrderXML.LoadORDER(AOrder);
     // загружаем в базенку
-    InsertUpdateOrderVchasnoEDI(ORDER, spHeader, spList, AFileName, ADealId);
+    InsertUpdateOrderVchasnoEDI(ORDER, spHeader, spList, AFileName, ADealId, AId_doc);
   except
     on E: Exception do begin raise Exception.Create(E.Message);
     end;
@@ -5826,6 +5840,39 @@ begin
   FMetadataParam.DataType := ftString;
   FMetadataParam.Value := '';
 
+  FMetadata_sender_glnParam := TdsdParam.Create(nil);
+  FMetadata_sender_glnParam.DataType := ftString;
+  FMetadata_sender_glnParam.Value := '';
+
+  FMetadata_recipient_glnParam := TdsdParam.Create(nil);
+  FMetadata_recipient_glnParam.DataType := ftString;
+  FMetadata_recipient_glnParam.Value := '';
+
+  FMetadata_buyer_glnParam := TdsdParam.Create(nil);
+  FMetadata_buyer_glnParam.DataType := ftString;
+  FMetadata_buyer_glnParam.Value := '';
+
+  FMetadata_numberParam := TdsdParam.Create(nil);
+  FMetadata_numberParam.DataType := ftString;
+  FMetadata_numberParam.Value := '';
+
+  FMetadata_document_function_codeParam := TdsdParam.Create(nil);
+  FMetadata_document_function_codeParam.DataType := ftString;
+  FMetadata_document_function_codeParam.Value := '';
+
+  FMetadata_fileParam := TdsdParam.Create(nil);
+  FMetadata_fileParam.DataType := ftString;
+  FMetadata_fileParam.Value := '';
+
+  FMetadata_doc_to_attach_idParam := TdsdParam.Create(nil);
+  FMetadata_doc_to_attach_idParam.DataType := ftString;
+  FMetadata_doc_to_attach_idParam.Value := '';
+
+  FMetadata_doc_to_attach_numberParam := TdsdParam.Create(nil);
+  FMetadata_doc_to_attach_numberParam.DataType := ftString;
+  FMetadata_doc_to_attach_numberParam.Value := '';
+
+
   FKeyFileNameParam := TdsdParam.Create(nil);
   FKeyFileNameParam.DataType := ftString;
   FKeyFileNameParam.Value := '';
@@ -5854,6 +5901,16 @@ begin
   FreeAndNil(FDefaultFileNameParam);
   FreeAndNil(FMetadataParam);
   FreeAndNil(FFileNameParam);
+
+  FreeAndNil(FMetadata_sender_glnParam);
+  FreeAndNil(FMetadata_recipient_glnParam);
+  FreeAndNil(FMetadata_buyer_glnParam);
+  FreeAndNil(FMetadata_numberParam);
+  FreeAndNil(FMetadata_document_function_codeParam);
+  FreeAndNil(FMetadata_fileParam);
+  FreeAndNil(FMetadata_doc_to_attach_idParam);
+  FreeAndNil(FMetadata_doc_to_attach_numberParam);
+
   FreeAndNil(FHostParam);
   FreeAndNil(FTokenParam);
   FreeAndNil(FVchasnoIdParam);
@@ -6238,6 +6295,7 @@ function TdsdVchasnoEDIAction.POSTCondraEDI(ATypeExchange : Integer): Boolean;
       Params, S: String;
       Stream: TIdMultiPartFormDataStream;
       jsonObj: TJSONObject;
+      testStringStream:TStringStream;
 begin
   inherited;
   Result := False;
@@ -6256,8 +6314,16 @@ begin
   try
 
     // Поле JSON (можна задати ContentType)
-    Stream.AddFormField('metadata', FMetadataParam.Value, 'utf-8').ContentType := 'application/json';
-
+    //Stream.AddFormField('metadata', FMetadataParam.Value, 'utf-8').ContentType := 'application/json';
+    //
+    if FMetadata_sender_glnParam.Value <> ''             then Stream.AddFormField('sender_gln', FMetadata_sender_glnParam.Value);
+    if FMetadata_recipient_glnParam.Value <> ''          then Stream.AddFormField('recipient_gln', FMetadata_recipient_glnParam.Value);
+    if FMetadata_buyer_glnParam.Value <> ''              then Stream.AddFormField('buyer_gln', FMetadata_buyer_glnParam.Value);
+    if FMetadata_numberParam.Value <> ''                 then Stream.AddFormField('number', FMetadata_numberParam.Value);
+    if FMetadata_document_function_codeParam.Value <> '' then Stream.AddFormField('document_function_code', FMetadata_document_function_codeParam.Value);
+    if FMetadata_fileParam.Value <> ''                   then Stream.AddFormField('file', FMetadata_fileParam.Value);
+    if FMetadata_doc_to_attach_idParam.Value <> ''       then Stream.AddFormField('doc_to_attach_id', FMetadata_doc_to_attach_idParam.Value);
+    if FMetadata_doc_to_attach_numberParam.Value <> ''   then Stream.AddFormField('doc_to_attach_number', FMetadata_doc_to_attach_numberParam.Value);
     // Додаємо файл
     Stream.AddFile('file', FFileNameParam.Value, 'application/pdf');
 
@@ -6281,6 +6347,14 @@ begin
     except on E:EIdHTTPProtocolException  do
                 ShowMessages(e.ErrorMessage);
     end;
+
+    // для теста -
+    //testStringStream:= TStringStream.Create('', TEncoding.UTF8);
+    //Stream.Position := 0;
+    //testStringStream.CopyFrom(Stream, 0);
+    //testStringStream.SaveToFile('test_Condra.txt');
+    //testStringStream.Free;
+
 
     if IdHTTP.ResponseCode in [200,201] then
     begin
@@ -6788,7 +6862,7 @@ begin
                 // создание документ
                 case EDIDocType of
                   ediOrder: EDI.OrderLoadVchasnoEDI(Copy(FResultParam.Value, Max(POS('<', FResultParam.Value), 1), Length(FResultParam.Value)),
-                                                    FFileNameParam.Value, DataSetCDS.FieldByName('deal_id').AsString, FspHeader, FspList
+                                                    FFileNameParam.Value, DataSetCDS.FieldByName('deal_id').AsString,DataSetCDS.FieldByName('Id').AsString, FspHeader, FspList
                                                    );
                 end;
               end;
@@ -7044,21 +7118,32 @@ end;
 function TdsdVchasnoEDIAction.DoSendCondra: Boolean;
 begin
   Result := False;
-  if HeaderDataSet.FieldByName('DocumentId_vch').AsString = '' then Exit;
-//  if HeaderDataSet.FieldByName('VchasnoId').AsString = '' then Exit;
+  if HeaderDataSet.FieldByName('DocId_vch').AsString = '' then Exit;
 
   FFileNameParam.Value := HeaderDataSet.FieldByName('FileName').AsString;
   FMetadataParam.Value := HeaderDataSet.FieldByName('Metadata').AsString;
+  //
+  FMetadata_sender_glnParam.Value := HeaderDataSet.FieldByName('sender_gln').AsString;
+  FMetadata_recipient_glnParam.Value := HeaderDataSet.FieldByName('recipient_gln').AsString;
+  FMetadata_buyer_glnParam.Value := HeaderDataSet.FieldByName('buyer_gln').AsString;
+  FMetadata_numberParam.Value := HeaderDataSet.FieldByName('number').AsString;
+  FMetadata_document_function_codeParam.Value := HeaderDataSet.FieldByName('document_function_code').AsString;
+  FMetadata_fileParam.Value := HeaderDataSet.FieldByName('FileName_pdf').AsString;
+  FMetadata_doc_to_attach_idParam.Value := HeaderDataSet.FieldByName('doc_to_attach_id').AsString;
+  FMetadata_doc_to_attach_numberParam.Value := HeaderDataSet.FieldByName('doc_to_attach_number').AsString;
+  //
   try
 
     // Отправляем файл документа
     Result := POSTCondraEDI(0);
 
     // Запишем в базу что сделали
-//    EDI.UpdateOrderDELNOTSignVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger
-//                                      , HeaderDataSet.FieldByName('MovementId_EDI_send').asInteger
-//                                      , not Result
-//                                        );
+    EDI.FInsertEDIEvents.ParamByName('inMovementId').Value :=HeaderDataSet.FieldByName('MovementId_edi').asInteger;
+    EDI.FInsertEDIEvents.ParamByName('inMovementId_send').Value := 0;
+    if Result = FALSE
+    then EDI.FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Отправки Вчасно Декларация'
+    else EDI.FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Декларация';
+    EDI.FInsertEDIEvents.Execute;
 
   finally
   end;
