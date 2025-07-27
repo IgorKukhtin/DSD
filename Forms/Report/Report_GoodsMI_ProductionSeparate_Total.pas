@@ -150,6 +150,10 @@ type
     cxLabel11: TcxLabel;
     actOpenFormProductionSeparate: TdsdOpenForm;
     bOpenFormProductionSeparate: TdxBarButton;
+    Print_test_4134_part: TdsdStoredProc;
+    actPrint_4134_part: TdsdPrintAction;
+    dxBarSubItem1: TdxBarSubItem;
+    bbPrint_4134_part: TdxBarButton;
   private
     { Private declarations }
   public
