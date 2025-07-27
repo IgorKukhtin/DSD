@@ -38,11 +38,11 @@ BEGIN
                                       , lfSelect.PositionId
                                       , lfSelect.PositionLevelId
                                       , lfSelect.BranchId
-                                 FROM lfSelect_Object_Member_findPersonal (CASE WHEN zfConvert_StringToNumber ('9457') < 0 THEN (ABS (9457 :: Integer)) :: TVarChar ELSE '9457' END) AS lfSelect
-                                 WHERE lfSelect.MemberId = 13058 AND lfSelect.Ord = 1
+                                 FROM lfSelect_Object_Member_findPersonal (CASE WHEN zfConvert_StringToNumber (inSession) < 0 THEN (ABS (inSession :: Integer)) :: TVarChar ELSE inSession END) AS lfSelect
+                                 WHERE lfSelect.PersonalId = vbPersonalId AND lfSelect.Ord = 1
                                  )
                          
-               , tmpOperDate AS (SELECT GENERATE_SERIES ('01.07.2025'::TDateTime, '07.07.2025'::TDateTime, '1 DAY' :: INTERVAL) AS OperDate)
+               , tmpOperDate AS (SELECT GENERATE_SERIES (vbStartDate::TDateTime, vbEndDAte::TDateTime, '1 DAY' :: INTERVAL) AS OperDate)
 
                SELECT STRING_AGG (zfConvert_DateShortToString (tmpOperDate.OperDate )::TVarchar ||' внесено '||zfCalc_ViewWorkHour (MI_SheetWorkTime.Amount, ObjectString_WorkTimeKind_ShortName.ValueData::TVarChar) , '; ') ::TVarChar AS Text
                FROM tmpOperDate
@@ -78,11 +78,11 @@ BEGIN
                GROUP BY tmpPersonal.MemberId
                );
       --если табель проставлен сохраняем ошибку в док. больн. лист
-     IF COALESCE (vbError,'') = '' 
+     IF COALESCE (vbError,'') <> '' 
      THEN
           -- сохранили свойство <>
           PERFORM lpInsertUpdate_MovementString (zc_MovementString_Error(), inMovementId_hd, vbError); 
-          RETURN;
+          --RAISE EXCEPTION 'Admin - Test = OK <%>', vbError;
      ELSE
      -- иначе проставляем больничные в табеле
      -- автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind
@@ -140,17 +140,17 @@ BEGIN
      PERFORM lpComplete_Movement (inMovementId := inMovementId_hd
                                 , inDescId     := zc_Movement_HospitalDoc_1C()
                                 , inUserId     := vbUserId
-                                 );
+                                 ); 
      END IF;
 
     
     
-
+    
     -- !!! ВРЕМЕННО !!!
-    IF vbUserId = 5 OR vbUserId = 9457 THEN
+    IF  vbUserId = 9457 THEN
         RAISE EXCEPTION 'Admin - Test = OK';
     END IF;
-
+    
 
 END;
 $BODY$
