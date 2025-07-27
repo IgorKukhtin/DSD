@@ -64,6 +64,7 @@ BEGIN
                                     AND MovementString_InvNumberPartner.ValueData = inInvNumberPartner
       WHERE Movement.OperDate = inServiceDate
         AND Movement.DescId = zc_Movement_HospitalDoc_1C()
+        AND Movement.StatusId <> zc_Enum_Status_Erased() 
       ;
      --физ. лицо по ИНН 
      vbMemberId := (SELECT ObjectString_INN.ObjectId

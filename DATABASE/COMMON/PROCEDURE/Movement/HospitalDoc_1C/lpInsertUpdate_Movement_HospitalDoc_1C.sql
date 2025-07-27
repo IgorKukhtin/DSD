@@ -88,6 +88,10 @@ BEGIN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
      END IF;
+     
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+
 
 END;
 $BODY$

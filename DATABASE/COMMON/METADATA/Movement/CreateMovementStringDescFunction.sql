@@ -275,9 +275,9 @@ CREATE OR REPLACE FUNCTION zc_MovementString_Code1C() RETURNS Integer AS $BODY$B
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_Code1C', 'Таб номер сотрудника' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_Code1C');
 
-CREATE OR REPLACE FUNCTION zc_MovementString_INN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_Code1C'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MovementString_INN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_INN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)
-  SELECT 'zc_MovementString_INN', 'ИНН' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_Code1C');
+  SELECT 'zc_MovementString_INN', 'ИНН' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_INN');
 
 CREATE OR REPLACE FUNCTION zc_MovementString_FIO() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_FIO'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)
