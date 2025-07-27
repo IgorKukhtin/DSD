@@ -115,7 +115,7 @@ BEGIN
                   -- Группы ОПиУ (!!!приоритет - ArticleLoss!!!)
                 , COALESCE (View_ProfitLossDirection.ProfitLossGroupId, COALESCE (lfSelect.ProfitLossGroupId, 0)) AS ProfitLossGroupId
                   -- Аналитики ОПиУ - направления (!!!приоритет - ArticleLoss!!!)
-                , COALESCE (ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId, CASE WHEN COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (MovementLinkObject_ArticleLoss.ObjectId, 0)))) = 0
+                , COALESCE (ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId, CASE WHEN COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (CASE WHEN Object_To.DescId <> zc_Object_Car() THEN MovementLinkObject_To.ObjectId ELSE NULL END, COALESCE (MovementLinkObject_ArticleLoss.ObjectId, 0)))) = 0
                                                                                                 THEN CASE /*WHEN Object_From.DescId = zc_Object_Member()
                                                                                                                THEN COALESCE (lfSelect.ProfitLossDirectionId, 0)*/ -- !!!исключение!!!
                                                                                                           WHEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId IN (zc_Enum_AccountDirection_20100() -- Запасы + на складах ГП
@@ -202,10 +202,10 @@ BEGIN
                                                     AND Object_From.DescId = zc_Object_Member()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Branch
-                                     ON ObjectLink_Branch.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
+                                     ON ObjectLink_Branch.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (CASE WHEN Object_To.DescId <> zc_Object_Car() THEN MovementLinkObject_To.ObjectId ELSE NULL END, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
                                     AND ObjectLink_Branch.DescId = zc_ObjectLink_Unit_Branch()
                 LEFT JOIN ObjectLink AS ObjectLink_Business
-                                     ON ObjectLink_Business.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
+                                     ON ObjectLink_Business.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (CASE WHEN Object_To.DescId <> zc_Object_Car() THEN MovementLinkObject_To.ObjectId ELSE NULL END, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
                                     AND ObjectLink_Business.DescId = zc_ObjectLink_Unit_Business()
                 LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_Business
                                      ON ObjectLink_ArticleLoss_Business.ObjectId = MovementLinkObject_ArticleLoss.ObjectId
@@ -213,12 +213,14 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_Branch
                                      ON ObjectLink_ArticleLoss_Branch.ObjectId = MovementLinkObject_ArticleLoss.ObjectId
                                     AND ObjectLink_ArticleLoss_Branch.DescId   = zc_ObjectLink_ArticleLoss_Branch()
+
                 -- для затрат (!!!если не указан ArticleLoss!!!)
                 LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect
-                       ON lfSelect.UnitId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
+                       ON lfSelect.UnitId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (CASE WHEN Object_To.DescId <> zc_Object_Car() THEN MovementLinkObject_To.ObjectId ELSE NULL END, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
                       AND MovementLinkObject_ArticleLoss.ObjectId IS NULL
+
                 -- для Перевыставление затрат на Юр Лицо (!!!даже если указан ArticleLoss!!!)
-                LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
+                LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (CASE WHEN Object_To.DescId <> zc_Object_Car() THEN MovementLinkObject_To.ObjectId ELSE NULL END, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
                                                                 AND ObjectLink_Unit_Contract.DescId   = zc_ObjectLink_Unit_Contract()
                 LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney ON ObjectLink_Contract_InfoMoney.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
                                                                      AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()

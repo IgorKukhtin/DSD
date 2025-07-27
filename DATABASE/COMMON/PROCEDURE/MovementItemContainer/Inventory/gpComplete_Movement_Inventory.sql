@@ -804,7 +804,7 @@ BEGIN
              , _tmp.PartionGoods
              , _tmp.PartionGoodsDate
 
-             , (_tmp.OperCount)
+             , (CASE WHEN _tmp.OperCount > 123123123 AND vbUserId IN (zc_Enum_Process_Auto_PrimeCost()) THEN 1 ELSE _tmp.OperCount END) AS OperCount
              , (_tmp.OperCountCount)
              , (_tmp.OperSumm)
 
@@ -837,6 +837,13 @@ BEGIN
              LEFT JOIN tmpContainer_all ON tmpContainer_all.MovementItemId = _tmp.MovementItemId
                                        AND tmpContainer_all.Ord            = 1 -- на всякий случай - № п/п
               ;
+
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE ABS (_tmpItem.OperCount) > 123123123)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Остаток ввод кол-во = <%>', (SELECT _tmpItem.OperCount FROM _tmpItem WHERE ABS (_tmpItem.OperCount) > 123123123 ORDER BY ABS (_tmpItem.OperCount) LIMIT 1);
+     END IF;
+
 
      -- Если дублируются товары + св-ва
      IF EXISTS (SELECT 1
@@ -1923,6 +1930,8 @@ end if;
                   , lfSelect.ValuePrice  AS ValuePrice
              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate + INTERVAL '1 DAY') AS lfSelect;
 
+--if vbUserId IN (zc_Enum_Process_Auto_PrimeCost(), 5)
+--then
      -- 3.1. заполняем таблицу - суммовые элементы документа, !!!без!!! свойств для формирования Аналитик в проводках (если ContainerId=0 тогда возьмем их из _tmpItem)
      INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss, ContainerId, AccountId, OperSumm)
         WITH tmp_all AS
@@ -2381,6 +2390,7 @@ end if;
              --                      AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
        ;
 
+-- end if;
 
 if vbUserId IN (5, zc_Enum_Process_Auto_PrimeCost()) and 1=0
 then
