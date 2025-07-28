@@ -267,12 +267,12 @@ begin
   LoadReportFromFile('PrintMovement_WeighingProduction', ReportPath + '\Товарный Учет\PrintMovement_WeighingProduction.fr3');
   LoadReportFromFile('PrintMovement_WeighingProductionWmsSticker', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionWmsSticker.fr3');
   exit;
- }
+
  
   LoadReportFromFile('PrintMovement_WeighingProductionBrutto', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionBrutto.fr3');
   exit;
 
- {
+
   LoadReportFromFile('PrintMI_WeighingProductionPassport', ReportPath + '\Товарный Учет\PrintMI_WeighingProductionPassport.fr3');
   exit;
 
@@ -542,6 +542,9 @@ begin
   LoadReportFromFile('Акт обвалки (4001)', ReportPath + '\Производство\Акт обвалки (4001).fr3');
   exit;
   }
+
+  LoadReportFromFile('Акт обвалки (4134) отчет(партии)', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчет(партии).fr3');
+  exit;
   LoadReportFromFile('Акт обвалки (its) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (its) отчет.fr3');
   LoadReportFromFile('Акт обвалки (4134) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчет.fr3');
   LoadReportFromFile('Акт обвалки (4218) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (4218) отчет.fr3');
