@@ -930,12 +930,20 @@ inherited SaleForm: TSaleForm
       Width = 170
     end
     object cbCurrencyUser: TcxCheckBox
-      Left = 1274
-      Top = 23
+      Left = 1273
+      Top = 14
       Caption = #1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
       Properties.ReadOnly = True
       TabOrder = 43
       Width = 120
+    end
+    object cbGofro: TcxCheckBox
+      Left = 1273
+      Top = 61
+      Caption = #1043#1086#1092#1088#1086'('#1072#1074#1090#1086#1089#1087#1080#1089#1072#1085#1080#1077')'
+      Properties.ReadOnly = True
+      TabOrder = 44
+      Width = 136
     end
   end
   object cxLabel17: TcxLabel [2]
@@ -1159,7 +1167,7 @@ inherited SaleForm: TSaleForm
   end
   object cbTotalSumm_GoodsReal: TcxCheckBox [28]
     Left = 1273
-    Top = 61
+    Top = 38
     Hint = 
       #1055#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1080#1079' '#1055#1088#1072#1081#1089#1072' '#1080#1083#1080' '#1040#1082#1094#1080#1081' '#1087#1088#1080' '#1055#1088#1086#1074#1077#1076#1077#1085#1080#1080', '#1089' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077#1084' ' +
       #1055#1088#1072#1074
@@ -4559,6 +4567,13 @@ inherited SaleForm: TSaleForm
         Component = edCorrSumm
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGofro'
+        Value = Null
+        Component = cbGofro
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -5417,8 +5432,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1384
-    Top = 16
+    Left = 1360
+    Top = 32
   end
   object spTax: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'

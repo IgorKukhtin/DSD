@@ -528,11 +528,17 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_Reason2() RETURNS integer AS $BODY
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Reason2', 'Причина скидки в кол-ве - качество'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Reason2');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Gofro() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Gofro'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Gofro', 'Гофро(автосписание)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Gofro');
+
+
   
     
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 28.07.25         * zc_MovementBoolean_Gofro
  17.11.24         * zc_MovementBoolean_DocPartner
  15.11.24         * zc_MovementBoolean_MultWithVAT
  08.10.24         * zc_MovementBoolean_PriceDiff

@@ -287,6 +287,7 @@ type
     bbPrintBoxTotalPartner: TdxBarButton;
     cxLabel30: TcxLabel;
     edCorrSumm: TcxCurrencyEdit;
+    cbGofro: TcxCheckBox;
   private
     { Private declarations }
   public

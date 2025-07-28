@@ -2,7 +2,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 490
   ClientWidth = 1494
-  ExplicitLeft = -292
+  ExplicitLeft = -330
   ExplicitWidth = 1510
   ExplicitHeight = 529
   PixelsPerInch = 96
@@ -721,13 +721,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel13: TcxLabel
-      Left = 1274
-      Top = 50
+      Left = 1410
+      Top = 27
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
       Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 1330
+      Left = 1410
       Top = 50
       Properties.Buttons = <
         item
@@ -1071,7 +1071,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object cbCurrencyUser: TcxCheckBox
       Left = 1274
-      Top = 23
+      Top = 19
       Caption = #1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
       Properties.ReadOnly = True
       TabOrder = 63
@@ -1079,7 +1079,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object cbTotalSumm_GoodsReal: TcxCheckBox
       Left = 1274
-      Top = 63
+      Top = 43
       Hint = 
         #1055#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1080#1079' '#1055#1088#1072#1081#1089#1072' '#1080#1083#1080' '#1040#1082#1094#1080#1081' '#1087#1088#1080' '#1055#1088#1086#1074#1077#1076#1077#1085#1080#1080', '#1089' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077#1084' ' +
         #1055#1088#1072#1074
@@ -1108,6 +1108,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Properties.ReadOnly = False
       TabOrder = 67
       Width = 116
+    end
+    object cbGofro: TcxCheckBox
+      Left = 1274
+      Top = 64
+      Caption = #1043#1086#1092#1088#1086'('#1072#1074#1090#1086#1089#1087#1080#1089#1072#1085#1080#1077')'
+      Properties.ReadOnly = True
+      TabOrder = 68
+      Width = 136
     end
   end
   object cbPromo: TcxCheckBox [2]
@@ -3917,6 +3925,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Value = Null
         Component = edCorrSumm
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGofro'
+        Value = Null
+        Component = cbGofro
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216

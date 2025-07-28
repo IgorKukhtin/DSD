@@ -882,6 +882,16 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 44
           end
+          object isGofro: TcxGridDBColumn
+            Caption = #1043#1086#1092#1088#1086
+            DataBinding.FieldName = 'isGofro'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1086#1092#1088#1086' ('#1072#1074#1090#1086#1089#1087#1080#1089#1072#1085#1080#1077')'
+            Options.Editing = False
+            Width = 84
+          end
           object PersonalSigningName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1076#1087#1080#1089#1072#1085#1090')'
             DataBinding.FieldName = 'PersonalSigningName'

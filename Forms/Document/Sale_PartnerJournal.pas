@@ -270,6 +270,7 @@ type
     spSelectPrintBox_PartnerTotal: TdsdStoredProc;
     actPrintBoxTotalPartner: TdsdPrintAction;
     bbPrintBoxTotalPartner: TdxBarButton;
+    isGofro: TcxGridDBColumn;
   private
     { Private declarations }
   public

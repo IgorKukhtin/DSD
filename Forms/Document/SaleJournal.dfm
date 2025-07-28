@@ -975,6 +975,16 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 44
           end
+          object isGofro: TcxGridDBColumn
+            Caption = #1043#1086#1092#1088#1086
+            DataBinding.FieldName = 'isGofro'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1086#1092#1088#1086' ('#1072#1074#1090#1086#1089#1087#1080#1089#1072#1085#1080#1077')'
+            Options.Editing = False
+            Width = 84
+          end
         end
       end
     end
