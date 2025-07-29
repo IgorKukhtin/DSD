@@ -289,7 +289,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       AlignSplitter = salRight
       AllowHotZoneDrag = False
       Control = ParamsAllPanel
-      ExplicitLeft = -8
     end
     object ParamsPanel: TPanel
       Left = 380
@@ -586,7 +585,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           object LabelOrderExternal: TLabel
             Left = 1
             Top = 1
-            Width = 66
+            Width = 241
             Height = 13
             Align = alTop
             Alignment = taCenter
@@ -597,6 +596,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
+            ExplicitWidth = 66
           end
           object PanelOrderExternal: TPanel
             Left = 1
@@ -764,6 +764,38 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       OnExecute = actSaveExecute
     end
     object actPrint: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <>
+      ReportName = 'NULL'
+      ReportNameParam.Value = Null
+      ReportNameParam.ComponentItem = 'ReportNameSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_total: TdsdPrintAction
       Category = 'Print'
       MoveParams = <
         item

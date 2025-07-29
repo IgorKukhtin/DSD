@@ -195,14 +195,14 @@ type
     procedure EditGoodsCode_pdExit(Sender: TObject);
     procedure EditGoodsCode_boxExit(Sender: TObject);
     procedure EditGoodsCode_ugolExit(Sender: TObject);
-    procedure EditAmount_1Exit(Sender: TObject);
-    procedure EditAmount_2Exit(Sender: TObject);
-    procedure EditAmount_3Exit(Sender: TObject);
-    procedure EditAmount_4Exit(Sender: TObject);
-    procedure EditAmount_5Exit(Sender: TObject);
-    procedure EditAmount_6Exit(Sender: TObject);
-    procedure EditAmount_7Exit(Sender: TObject);
-    procedure EditAmount_8Exit(Sender: TObject);
+    procedure EditGoodsCode_1Exit(Sender: TObject);
+    procedure EditGoodsCode_2Exit(Sender: TObject);
+    procedure EditGoodsCode_3Exit(Sender: TObject);
+    procedure EditGoodsCode_4Exit(Sender: TObject);
+    procedure EditGoodsCode_5Exit(Sender: TObject);
+    procedure EditGoodsCode_6Exit(Sender: TObject);
+    procedure EditGoodsCode_7Exit(Sender: TObject);
+    procedure EditGoodsCode_8Exit(Sender: TObject);
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
@@ -363,7 +363,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogGofroForm.EditAmount_1Exit(Sender: TObject);
+procedure TDialogGofroForm.EditGoodsCode_1Exit(Sender: TObject);
 var lParams:TParams;
 begin
      if (EditGoodsCode_1.Value > 0)
@@ -395,7 +395,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogGofroForm.EditAmount_2Exit(Sender: TObject);
+procedure TDialogGofroForm.EditGoodsCode_2Exit(Sender: TObject);
 var lParams:TParams;
 begin
      if (EditGoodsCode_2.Value > 0)
@@ -427,7 +427,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogGofroForm.EditAmount_3Exit(Sender: TObject);
+procedure TDialogGofroForm.EditGoodsCode_3Exit(Sender: TObject);
 var lParams:TParams;
 begin
      if (EditGoodsCode_3.Value > 0)
@@ -459,7 +459,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogGofroForm.EditAmount_4Exit(Sender: TObject);
+procedure TDialogGofroForm.EditGoodsCode_4Exit(Sender: TObject);
 var lParams:TParams;
 begin
      if (EditGoodsCode_4.Value > 0)
@@ -491,7 +491,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogGofroForm.EditAmount_5Exit(Sender: TObject);
+procedure TDialogGofroForm.EditGoodsCode_5Exit(Sender: TObject);
 var lParams:TParams;
 begin
      if (EditGoodsCode_5.Value > 0)
@@ -523,7 +523,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogGofroForm.EditAmount_6Exit(Sender: TObject);
+procedure TDialogGofroForm.EditGoodsCode_6Exit(Sender: TObject);
 var lParams:TParams;
 begin
      if (EditGoodsCode_6.Value > 0)
@@ -555,7 +555,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogGofroForm.EditAmount_7Exit(Sender: TObject);
+procedure TDialogGofroForm.EditGoodsCode_7Exit(Sender: TObject);
 var lParams:TParams;
 begin
      if (EditGoodsCode_7.Value > 0)
@@ -587,7 +587,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogGofroForm.EditAmount_8Exit(Sender: TObject);
+procedure TDialogGofroForm.EditGoodsCode_8Exit(Sender: TObject);
 var lParams:TParams;
 begin
      if (EditGoodsCode_8.Value > 0)

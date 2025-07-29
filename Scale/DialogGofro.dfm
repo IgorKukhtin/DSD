@@ -95,6 +95,7 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
+        OnExit = EditGoodsCode_1Exit
         OnKeyDown = EditGoodsCode_1KeyDown
         Width = 85
       end
@@ -190,7 +191,6 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
-        OnExit = EditAmount_1Exit
         OnKeyDown = EditAmount_1KeyDown
         Width = 79
       end
@@ -253,6 +253,7 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
+        OnExit = EditGoodsCode_2Exit
         OnKeyDown = EditGoodsCode_2KeyDown
         Width = 85
       end
@@ -348,7 +349,6 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
-        OnExit = EditAmount_2Exit
         OnKeyDown = EditAmount_2KeyDown
         Width = 79
       end
@@ -465,6 +465,7 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
+        OnExit = EditGoodsCode_3Exit
         OnKeyDown = EditGoodsCode_3KeyDown
         Width = 85
       end
@@ -560,7 +561,6 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
-        OnExit = EditAmount_3Exit
         OnKeyDown = EditAmount_3KeyDown
         Width = 79
       end
@@ -614,6 +614,7 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
+        OnExit = EditGoodsCode_4Exit
         OnKeyDown = EditGoodsCode_4KeyDown
         Width = 85
       end
@@ -709,7 +710,6 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
-        OnExit = EditAmount_4Exit
         OnKeyDown = EditAmount_4KeyDown
         Width = 79
       end
@@ -763,6 +763,7 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
+        OnExit = EditGoodsCode_8Exit
         OnKeyDown = EditGoodsCode_8KeyDown
         Width = 85
       end
@@ -858,7 +859,6 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
-        OnExit = EditAmount_8Exit
         OnKeyDown = EditAmount_8KeyDown
         Width = 79
       end
@@ -912,6 +912,7 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
+        OnExit = EditGoodsCode_7Exit
         OnKeyDown = EditGoodsCode_7KeyDown
         Width = 85
       end
@@ -1007,7 +1008,6 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
-        OnExit = EditAmount_7Exit
         OnKeyDown = EditAmount_7KeyDown
         Width = 79
       end
@@ -1061,6 +1061,7 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
+        OnExit = EditGoodsCode_6Exit
         OnKeyDown = EditGoodsCode_6KeyDown
         Width = 85
       end
@@ -1156,7 +1157,6 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
-        OnExit = EditAmount_6Exit
         OnKeyDown = EditAmount_6KeyDown
         Width = 79
       end
@@ -1210,6 +1210,7 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
+        OnExit = EditGoodsCode_5Exit
         OnKeyDown = EditGoodsCode_5KeyDown
         Width = 85
       end
@@ -1305,7 +1306,6 @@ inherited DialogGofroForm: TDialogGofroForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
-        OnExit = EditAmount_5Exit
         OnKeyDown = EditAmount_5KeyDown
         Width = 79
       end

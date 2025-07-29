@@ -952,7 +952,10 @@ begin
        Params.AddParam('inAssetId', ftInteger, ptInput, execParamsMovement.ParamByName('AssetId').AsInteger);
        Params.AddParam('inIsReason', ftBoolean, ptInput, SettingMain.isReason);
        Params.AddParam('inIsAsset', ftBoolean, ptInput, execParamsMovement.ParamByName('isAsset').AsBoolean);
-       Params.AddParam('inIsBarCode', ftBoolean, ptInput, execParamsMI.ParamByName('isBarCode').AsBoolean);
+       //
+       if SettingMain.isSticker = TRUE
+       then Params.AddParam('inIsBarCode', ftBoolean, ptInput, execParamsMI.ParamByName('isTotal_1001').AsBoolean)
+       else Params.AddParam('inIsBarCode', ftBoolean, ptInput, execParamsMI.ParamByName('isBarCode').AsBoolean);
 
        Params.AddParam('inIsAmountPartnerSecond', ftBoolean, ptInput, execParamsMI.ParamByName('isAmountPartnerSecond').AsBoolean);
        Params.AddParam('inIsPriceWithVAT', ftBoolean, ptInput, execParamsMI.ParamByName('isPriceWithVAT').AsBoolean);

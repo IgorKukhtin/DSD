@@ -5,7 +5,7 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 991
-  ExplicitHeight = 575
+  ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -368,6 +368,9 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
+    end
     object actSelect_byPrint: TdsdExecStoredProc [1]
       Category = 'Print_QualityDoc'
       MoveParams = <>
@@ -530,9 +533,6 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-    end
-    inherited actMovementItemContainer: TdsdOpenForm
-      Enabled = False
     end
     object actPrint_Quality_ReportName: TdsdExecStoredProc [25]
       Category = 'Print_QualityDoc'
