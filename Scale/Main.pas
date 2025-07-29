@@ -296,6 +296,11 @@ type
     OrderExternalName_1001: TcxGridDBColumn;
     cbAuto_1001: TcxCheckBox;
     cbPreviewPrint_1001: TcxCheckBox;
+    cbTotal_1001_del: TcxCheckBox;
+    cbTotal_1001_add: TcxCheckBox;
+    Ord_1001: TcxGridDBColumn;
+    Ord_1001_group: TcxGridDBColumn;
+    Amount_1001: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -2106,6 +2111,22 @@ begin
   //
   cbAuto_1001.Visible:= SettingMain.BranchCode >1000;
   cbPreviewPrint_1001.Visible:= SettingMain.BranchCode >1000;
+  cbTotal_1001_add.Visible:= SettingMain.BranchCode >1000;
+  cbTotal_1001_del.Visible:= SettingMain.BranchCode >1000;
+  if SettingMain.BranchCode >1000 then
+  begin
+     bbSale_Order_all.Visible:= FALSE;
+     bbSale_Order_diff.Visible:= FALSE;
+     bbSale_Order_diffTax.Visible:= FALSE;
+     //
+     LabelPartner.Caption:= '';
+     LabelContract.Caption:= '';
+     LabelOrderExternal.Caption:= '';
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isBarCode').Index].Caption:= 'Итог Ящ.';
+  end;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Ord_1001').Index].Visible:=SettingMain.BranchCode >1000;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Ord_1001_group').Index].Visible:=SettingMain.BranchCode >1000;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_1001').Index].Visible:=SettingMain.BranchCode >1000;
   //
   // надо отловить сохранение 2 раза
   DMMainScaleForm.time_exec_Insert_Scale_MI:=now;
@@ -2223,7 +2244,7 @@ begin
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PriceListName').Index].Visible       := TRUE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Visible               := TRUE;
      //
-     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isBarCode').Index].Visible           := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isBarCode').Index].Visible           := TRUE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPromo').Index].Visible             := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('ChangePercentAmount').Index].Visible := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountPartner').Index].Visible       := FALSE;
@@ -2432,9 +2453,11 @@ begin
                                //+'  ('+ParamByName('PaidKindName').asString+')'
     else PanelContract.Caption:='';
 
-    if ParamByName('ChangePercent').AsFloat<=0
-    then LabelPartner.Caption:='Контрагент - скидка <'+FloatToStr(-1*ParamByName('ChangePercent').asFloat)+'%>'
-    else LabelPartner.Caption:='Контрагент - наценка <'+FloatToStr(ParamByName('ChangePercent').asFloat)+'%>';
+    if SettingMain.BranchCode > 1000
+    then LabelPartner.Caption:=''
+    else if ParamByName('ChangePercent').AsFloat<=0
+         then LabelPartner.Caption:='Контрагент - скидка <'+FloatToStr(-1*ParamByName('ChangePercent').asFloat)+'%>'
+         else LabelPartner.Caption:='Контрагент - наценка <'+FloatToStr(ParamByName('ChangePercent').asFloat)+'%>';
 
 
     PanelTotalSumm.Caption:=FormatFloat(',0.00##',ParamByName('TotalSumm').asFloat);
@@ -2739,20 +2762,32 @@ begin
      then
      begin Key := 0;
            Key2:= VK_SPACE;
+           ParamsMI.ParamByName('isTotal_1001').AsBoolean:= cbTotal_1001_add.Checked;
            if (GetParams_Goods (FALSE, '', TRUE)) and (SettingMain.isSticker = TRUE) and (cbAuto_1001.Checked = FALSE)
-           then FormKeyDown(Sender,Key2, []);
+           then begin
+                      cbTotal_1001_add.Checked:= FALSE;
+                      //
+                      FormKeyDown(Sender,Key2, []);
+           end;
      end
      else
          if ((Key = VK_F12)  and (SettingMain.isSticker = TRUE))
          //or ((Key = VK_SPACE) and (Shift <> []) and (SettingMain.isSticker = TRUE))
          then
          begin Key := 0;
+               cbAuto_1001.Checked:= TRUE;
+               ParamsMI.ParamByName('isTotal_1001').AsBoolean:= cbTotal_1001_add.Checked;
                GetParams_Goods (FALSE, '', FALSE);
+               cbTotal_1001_add.Checked:= FALSE;
          end;
      //
      if (Key = VK_SPACE) and (Shift = [ssCtrl]) and (GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE'))
          and ((ActiveControl <> EditPartionGoods) or (trim(EditPartionGoods.Text) = '') or (Pos(' ', EditPartionGoods.Text) > 0))
-     then begin Key:= 0; GetParams_Goods (FALSE, '', FALSE); end;//isRetail=FALSE
+     then begin
+                Key:= 0;
+                ParamsMI.ParamByName('isTotal_1001').AsBoolean:= cbTotal_1001_add.Checked;
+                GetParams_Goods (FALSE, '', FALSE); end;//isRetail=FALSE
+                cbTotal_1001_add.Checked:= FALSE;
      //
      // Меняется шрифт
      if (Key = VK_F10) and (Shift = [ssCtrl]) then miFontClick(Self);
@@ -2821,17 +2856,47 @@ end;
 {------------------------------------------------------------------------}
 procedure TMainForm.bbSale_Order_allClick(Sender: TObject);
 begin
+     // F8 - Печать ИТОГОВОЙ ЭТИКЕТКИ
+     if (SettingMain.isSticker = TRUE)
+     then
+     begin
+          cbTotal_1001_add.Checked:= true;
+          ParamsMI.ParamByName('isTotal_1001').AsBoolean:= TRUE;
+          GetParams_Goods (FALSE, '', FALSE);
+          cbTotal_1001_add.Checked:= false;
+          exit;
+     end;
+     //
+     //
+     if not bbSale_Order_all.Visible then exit;
+     //
      with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,FALSE,FALSE);
-end;
-{------------------------------------------------------------------------}
-procedure TMainForm.bbSale_Order_diffClick(Sender: TObject);
-begin
-     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,TRUE,FALSE);
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.bbSale_Order_diffTaxClick(Sender: TObject);
 begin
+     // F9 - Печать ИТОГОВОЙ ЭТИКЕТКИ
+     if (SettingMain.isSticker = TRUE)
+     then
+     begin
+          cbTotal_1001_add.Checked:= true;
+          ParamsMI.ParamByName('isTotal_1001').AsBoolean:= TRUE;
+          GetParams_Goods (FALSE, '', FALSE);
+          cbTotal_1001_add.Checked:= false;
+          exit;
+     end;
+     //
+     //
+     if not bbSale_Order_diffTax.Visible then exit;
+     //
      with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,FALSE,TRUE);
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbSale_Order_diffClick(Sender: TObject);
+begin
+     if not bbSale_Order_diff.Visible then exit;
+     //
+     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,TRUE,FALSE);
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.bbSetPartionGoodsClick(Sender: TObject);

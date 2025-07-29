@@ -1248,6 +1248,39 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 35
         end
+        object Ord_1001_group: TcxGridDBColumn
+          Caption = #8470' '#1103#1097#1080#1082
+          DataBinding.FieldName = 'Ord_1001_group'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object Ord_1001: TcxGridDBColumn
+          Caption = #8470' '#1087'/'#1087' '#1103#1097'.'
+          DataBinding.FieldName = 'Ord_1001'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object Amount_1001: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1103#1097'.'
+          DataBinding.FieldName = 'Amount_1001'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
         object GoodsCode: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'GoodsCode'
@@ -3099,6 +3132,13 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          object cbTotal_1001_del: TcxCheckBox
+            Left = 7
+            Top = 0
+            Caption = 'F1 -'#1059#1076#1072#1083#1080#1090#1100' '#1048#1090#1086#1075#1086#1074#1099#1081' '#1103#1097#1080#1082
+            TabOrder = 0
+            Width = 197
+          end
         end
       end
       object infoPanelPriceList: TPanel
@@ -3243,6 +3283,13 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          object cbTotal_1001_add: TcxCheckBox
+            Left = 10
+            Top = -1
+            Caption = 'F9 - '#1048#1090#1086#1075#1086#1074#1099#1081' '#1103#1097#1080#1082
+            TabOrder = 0
+            Width = 153
+          end
         end
       end
     end

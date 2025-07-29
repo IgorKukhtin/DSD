@@ -105,6 +105,7 @@ type
     PanelOrderExternal: TPanel;
     PanelBtnOrderExternal: TPanel;
     btnOrderExternal: TButton;
+    actPrint_total: TdsdPrintAction;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -383,6 +384,21 @@ begin
     //Здесь кол-во печать Этикеток
     actPrint.CopiesCount:=ParamsMI.ParamByName('RealWeight').AsInteger;
     actPrint.Execute;
+
+    if (cb_70_70.Checked = TRUE) and (ParamsMI.ParamByName('isTotal_1001').AsBoolean = TRUE)
+    then begin
+            execParamsMI.ParamByName('MovementItemId').AsInteger:=DataSet.FieldByName('Id').AsInteger;
+
+            spSelectPrint.ParamByName('inWeight').Value:= ;
+
+            actPrint_total.ReportNameParam.Value:=CDS.FieldByName('StickerFileName_70_70').asString;
+            actPrint_total.Printer:=System.Copy(rgPriceList.Items[rgPriceList.ItemIndex], 5, Length(rgPriceList.Items[rgPriceList.ItemIndex]) - 4);
+            actPrint_total.WithOutPreview:= not cbPreviewPrint.Checked;
+            //actPrint_total.WithOutPreview:= TRUE;
+            //Здесь кол-во печать Этикеток
+            actPrint_total.CopiesCount:=1;
+            actPrint_total.Execute;
+    end;
 
     finally
            frxDBDHeaderForm.UserName:= 'frxDBDHeader';
@@ -940,6 +956,8 @@ begin
           //Result:=not cbPreviewPrint.Checked;
           Result:= TRUE;
      end;
+     //
+     ParamsMI.ParamByName('isTotal_1001').AsBoolean:= false;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.EditGoodsCodeChange(Sender: TObject);

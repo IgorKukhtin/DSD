@@ -683,6 +683,7 @@ begin
          ParamAdd(Params,'GoodsKindCode_1001',ftInteger);
          ParamAdd(Params,'isAuto_1001',ftBoolean);
          ParamAdd(Params,'isPreviewPrint_1001',ftBoolean);
+         ParamAdd(Params,'isTotal_1001',ftBoolean);
 
          ParamAdd(Params,'CountTare1',ftFloat);          // Количество тары вида1
          ParamAdd(Params,'CountTare2',ftFloat);          // Количество тары вида2
@@ -1224,6 +1225,7 @@ begin
           or(Items[i].Name = 'RetailId_1001')
           or(Items[i].Name = 'RetailName_1001')
 
+          or(Items[i].Name = 'isTotal_1001')
           or(Items[i].Name = 'isAuto_1001')
           or(Items[i].Name = 'isPreviewPrint_1001')
           or(Items[i].Name = 'GoodsCode_1001')
