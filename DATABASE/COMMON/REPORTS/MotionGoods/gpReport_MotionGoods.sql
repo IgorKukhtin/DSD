@@ -989,7 +989,7 @@ BEGIN
         , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
         , CASE WHEN Object_GoodsKind.ValueData          <> '' THEN Object_GoodsKind.ValueData
-               WHEN tmpMIContainer_group.GoodsKindName_complete <> '' THEN tmpMIContainer_group.GoodsKindName_complete
+               WHEN 1=0 AND tmpMIContainer_group.GoodsKindName_complete <> '' THEN tmpMIContainer_group.GoodsKindName_complete
                ELSE ''
           END :: TVarChar AS GoodsKindName
         , CAST (COALESCE(tmpMIContainer_group.GoodsKindName_complete, '') AS TVarChar) AS GoodsKindName_complete
