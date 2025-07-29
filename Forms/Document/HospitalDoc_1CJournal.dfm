@@ -12,17 +12,17 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     Width = 1090
     Height = 480
     TabOrder = 3
-    ExplicitWidth = 975
+    ExplicitWidth = 1090
     ExplicitHeight = 480
     ClientRectBottom = 480
     ClientRectRight = 1090
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 975
+      ExplicitWidth = 1090
       ExplicitHeight = 480
       inherited cxGrid: TcxGrid
         Width = 1090
         Height = 480
-        ExplicitWidth = 975
+        ExplicitWidth = 1090
         ExplicitHeight = 480
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -386,7 +386,7 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
   end
   inherited Panel: TPanel
     Width = 1090
-    ExplicitWidth = 975
+    ExplicitWidth = 1090
     inherited deStart: TcxDateEdit
       EditValue = 44927d
     end
@@ -421,8 +421,47 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
   inherited ActionList: TActionList
     Left = 23
     Top = 194
+    object actInsert_MI_PersonalService: TdsdExecStoredProc [0]
+      Category = 'PersonalService'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_PersonalService
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_PersonalService
+        end>
+      Caption = 'actUpdate_TotalLines'
+    end
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
+    end
+    object macInsert_PersonalService_list: TMultiAction [2]
+      Category = 'PersonalService'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_MI_PersonalService
+        end>
+      View = cxGridDBTableView
+      Caption = 'macInsert_PersonalService_list'
+    end
+    object macInsert_PersonalService: TMultiAction [4]
+      Category = 'PersonalService'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsert_PersonalService_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' <'#1053#1072#1095'. '#1087#1077#1088#1074'. 5 '#1082'.'#1076 +
+        #1085'.>?'
+      InfoAfterExecute = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' <'#1053#1072#1095'. '#1087#1077#1088#1074'. 5 '#1082'.'#1076#1085'.> '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' <'#1053#1072#1095'. '#1087#1077#1088#1074'. 5 '#1082'.'#1076#1085'.>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' <'#1053#1072#1095'. '#1087#1077#1088#1074'. 5 '#1082'.'#1076#1085'.>'
+      ImageIndex = 47
     end
     inherited actInsert: TdsdInsertUpdateAction
       ShortCut = 0
@@ -542,7 +581,7 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
       OpenBeforeShow = True
     end
     object actUpdate_SheetWorkTime: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'SheetWorkTime'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_MI_SheetWorkTime
@@ -623,7 +662,7 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
       ImageIndex = 41
     end
     object macUpdate_SheetWorkTime_list: TMultiAction
-      Category = 'DSDLib'
+      Category = 'SheetWorkTime'
       MoveParams = <>
       ActionList = <
         item
@@ -633,7 +672,7 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
       Caption = 'macUpdate_SheetWorkTime_list'
     end
     object macUpdate_SheetWorkTime: TMultiAction
-      Category = 'DSDLib'
+      Category = 'SheetWorkTime'
       MoveParams = <>
       ActionList = <
         item
@@ -751,7 +790,19 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_PersonalService'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbtStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -819,6 +870,10 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     end
     object dxBarButton1: TdxBarButton
       Action = macUpdate_SheetWorkTime
+      Category = 0
+    end
+    object bbInsert_PersonalService: TdxBarButton
+      Action = macInsert_PersonalService
       Category = 0
     end
   end
@@ -1046,5 +1101,22 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     PackSize = 1
     Left = 561
     Top = 360
+  end
+  object spInsert_MI_PersonalService: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_PersonalService_byHospitalDoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 713
+    Top = 368
   end
 end
