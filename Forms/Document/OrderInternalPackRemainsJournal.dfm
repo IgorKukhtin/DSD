@@ -961,6 +961,39 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintStickerTermo: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -1086,31 +1119,11 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         end
         item
           Visible = True
-          ItemName = 'bbPrintRemains'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintDetail'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintDiff'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintRemainsLess'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintRemainsLessUpak'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPrintRemains_fact2'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -1169,6 +1182,66 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
     end
     object bbPrintRemains_fact2: TdxBarButton
       Action = actPrintRemains_fact2
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrintRemains'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDiff'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintRemainsLess'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintRemainsLessUpak'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintRemains_fact2'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStickerTermo'
+        end>
+    end
+    object Separator: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbPrintStickerTermo: TdxBarButton
+      Action = actPrintStickerTermo
       Category = 0
     end
   end
@@ -1437,5 +1510,26 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
     PackSize = 1
     Left = 599
     Top = 328
+  end
+  object spSelectPrintSticker: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 839
+    Top = 192
   end
 end

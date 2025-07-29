@@ -10256,7 +10256,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 882
+    Left = 890
     Top = 136
   end
   object spUpdateAmountSecondAll_to: TdsdStoredProc
@@ -10360,8 +10360,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 888
-    Top = 137
+    Left = 928
+    Top = 145
   end
   object spUpdateAmountSecond_toPACK: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_Amount_toPACK'
@@ -10530,8 +10530,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 343
-    Top = 152
+    Left = 327
+    Top = 160
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_AmountPack'
