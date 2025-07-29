@@ -24,7 +24,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TOrderInternalPackRemainsJournalForm = class(TAncestorJournalForm)
@@ -61,6 +61,12 @@ type
     spSelectPrintRemains_fact2: TdsdStoredProc;
     actPrintRemains_fact2: TdsdPrintAction;
     bbPrintRemains_fact2: TdxBarButton;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintStickerTermo: TdsdPrintAction;
+    dxBarButton1: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    Separator: TdxBarSeparator;
+    bbPrintStickerTermo: TdxBarButton;
   private
     { Private declarations }
   public
