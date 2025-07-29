@@ -321,6 +321,7 @@ type
     bbb: TdxBarButton;
     cxLabel25: TcxLabel;
     edCorrSumm: TcxCurrencyEdit;
+    cbGofro: TcxCheckBox;
   private
     { Private declarations }
   public

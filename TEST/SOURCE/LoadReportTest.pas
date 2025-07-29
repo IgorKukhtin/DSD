@@ -267,12 +267,12 @@ begin
   LoadReportFromFile('PrintMovement_WeighingProduction', ReportPath + '\Товарный Учет\PrintMovement_WeighingProduction.fr3');
   LoadReportFromFile('PrintMovement_WeighingProductionWmsSticker', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionWmsSticker.fr3');
   exit;
- }
+
  
   LoadReportFromFile('PrintMovement_WeighingProductionBrutto', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionBrutto.fr3');
   exit;
 
- {
+
   LoadReportFromFile('PrintMI_WeighingProductionPassport', ReportPath + '\Товарный Учет\PrintMI_WeighingProductionPassport.fr3');
   exit;
 
@@ -541,7 +541,10 @@ begin
 
   LoadReportFromFile('Акт обвалки (4001)', ReportPath + '\Производство\Акт обвалки (4001).fr3');
   exit;
-  }
+
+
+  LoadReportFromFile('Акт обвалки (4134) отчет(партии)', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчет(партии).fr3');
+  exit;
   LoadReportFromFile('Акт обвалки (its) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (its) отчет.fr3');
   LoadReportFromFile('Акт обвалки (4134) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчет.fr3');
   LoadReportFromFile('Акт обвалки (4218) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (4218) отчет.fr3');
@@ -556,7 +559,7 @@ begin
   ///exit;
   LoadReportFromFile('Акт обвалки (4001)расчет', ReportPath + '\Производство\Акт обвалки (4001)расчет.fr3');
   exit;
-  {
+
   LoadReportFromFile('Накладная по обвалке', ReportPath + '\Производство\Накладная по обвалке.fr3');
   exit;
   LoadReportFromFile('Накладная по взвешиванию куттера', ReportPath + '\Производство\Накладная по взвешиванию куттера.fr3');
@@ -574,7 +577,10 @@ begin
 
   LoadReportFromFile('Заявка на сырье', ReportPath + '\Производство\Заявка на сырье.fr3');
   exit;
-
+  }
+   LoadReportFromFile('PrintMovement_OrderInternalPackRemainsSticker', ReportPath + '\Товарный Учет\PrintMovement_OrderInternalPackRemainsSticker.fr3');
+  exit;
+  {
   LoadReportFromFile('Заявка на упаковку (остатки)', ReportPath + '\Производство\Заявка на упаковку (остатки).fr3');
 
   LoadReportFromFile('Заявка на упаковку (остатки детально)', ReportPath + '\Производство\Заявка на упаковку (остатки детально).fr3');

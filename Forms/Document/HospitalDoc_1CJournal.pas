@@ -64,6 +64,11 @@ type
     macUpdate_SheetWorkTime_list: TMultiAction;
     macUpdate_SheetWorkTime: TMultiAction;
     dxBarButton1: TdxBarButton;
+    spInsert_MI_PersonalService: TdsdStoredProc;
+    actInsert_MI_PersonalService: TdsdExecStoredProc;
+    macInsert_PersonalService_list: TMultiAction;
+    macInsert_PersonalService: TMultiAction;
+    bbInsert_PersonalService: TdxBarButton;
   private
     { Private declarations }
   public

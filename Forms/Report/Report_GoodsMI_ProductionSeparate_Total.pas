@@ -154,6 +154,9 @@ type
     actPrint_4134_part: TdsdPrintAction;
     dxBarSubItem1: TdxBarSubItem;
     bbPrint_4134_part: TdxBarButton;
+    Print_test_4134_grPart: TdsdStoredProc;
+    actPrint_4134_grPart: TdsdPrintAction;
+    bbPrint_4134_grPart: TdxBarButton;
   private
     { Private declarations }
   public

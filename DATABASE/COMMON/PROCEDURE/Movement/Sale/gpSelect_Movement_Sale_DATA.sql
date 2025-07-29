@@ -53,6 +53,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isPromo Boolean
              , isPav Boolean    
              , isTotalSumm_GoodsReal  Boolean  --Расчет суммы по схеме - Товар (факт)
+             , isGofro Boolean                 --Гофро(автосписание)
              , MovementPromo TVarChar
              , InsertDate TDateTime 
              , InsertDate_order TDateTime
@@ -343,6 +344,7 @@ end if;
                                                                 , zc_MovementBoolean_Promo() 
                                                                 , zc_MovementBoolean_CurrencyUser()
                                                                 , zc_MovementBoolean_TotalSumm_GoodsReal()
+                                                                , zc_MovementBoolean_Gofro()
                                                                 )
                                  )
         , tmpMovementDate AS (SELECT MovementDate.*
@@ -936,6 +938,7 @@ end if;
            , COALESCE (MovementBoolean_Promo.ValueData, False)  :: Boolean AS isPromo
            , CASE WHEN tmpOL_Partner_Unit.ChildObjectId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPav   
            , COALESCE (MovementBoolean_TotalSumm_GoodsReal.ValueData, FALSE)         :: Boolean AS isTotalSumm_GoodsReal
+           , COALESCE (MovementBoolean_Gofro.ValueData, FALSE)                       :: Boolean AS isGofro
            
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
@@ -1017,6 +1020,10 @@ end if;
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_Promo
                                          ON MovementBoolean_Promo.MovementId =  Movement.Id
                                         AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_Gofro
+                                         ON MovementBoolean_Gofro.MovementId = Movement.Id
+                                        AND MovementBoolean_Gofro.DescId = zc_MovementBoolean_Gofro()
 
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_CurrencyUser
                                          ON MovementBoolean_CurrencyUser.MovementId = Movement.Id
@@ -1303,6 +1310,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.07.25         * isGofro
  06.06.25         *
  01.05.25         * TotalLines
  14.04.25         *

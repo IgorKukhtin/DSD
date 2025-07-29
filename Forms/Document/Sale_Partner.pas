@@ -270,6 +270,7 @@ type
     cxLabel30: TcxLabel;
     cxLabel32: TcxLabel;
     edCorrSumm: TcxCurrencyEdit;
+    cbGofro: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TOrderInternalPackRemainsForm = class(TAncestorDocumentForm)
@@ -344,6 +344,11 @@ type
     bbOrderInternalPackRem: TdxBarButton;
     KeyId: TcxGridDBColumn;
     chKeyId: TcxGridDBColumn;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintStickerTermo: TdsdPrintAction;
+    dxBarSubItem1: TdxBarSubItem;
+    Separator1: TdxBarSeparator;
+    bbPrintStickerTermo: TdxBarButton;
   private
     { Private declarations }
   public

@@ -12,19 +12,18 @@
     Height = 503
     ExplicitTop = 126
     ExplicitWidth = 1140
-    ExplicitHeight = 513
+    ExplicitHeight = 503
     ClientRectBottom = 503
     ClientRectRight = 1140
     inherited tsMain: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1053#1040' '#1091#1087#1072#1082' / '#1055#1056#1048#1061#1054#1044' '#1089' '#1091#1087#1072#1082
-      ExplicitTop = 0
       ExplicitWidth = 1140
-      ExplicitHeight = 489
+      ExplicitHeight = 479
       inherited cxGrid: TcxGrid
         Width = 1140
-        Height = 281
+        Height = 271
         ExplicitWidth = 1140
-        ExplicitHeight = 281
+        ExplicitHeight = 271
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1834,7 +1833,7 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 286
+        Top = 276
         Width = 1140
         Height = 203
         Align = alBottom
@@ -3540,7 +3539,7 @@
       end
       object cxBottomSplitter: TcxSplitter
         Left = 0
-        Top = 281
+        Top = 271
         Width = 1140
         Height = 5
         AlignSplitter = salBottom
@@ -3550,14 +3549,11 @@
     object tsTotal: TcxTabSheet
       Caption = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
         Width = 1140
-        Height = 489
+        Height = 479
         Align = alClient
         TabOrder = 0
         object cxGridDBTableViewChildTotal: TcxGridDBTableView
@@ -5278,14 +5274,11 @@
     object tsAll: TcxTabSheet
       Caption = #1055#1083#1072#1085' ('#1074#1089#1077')'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
         Width = 1140
-        Height = 489
+        Height = 479
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -6815,14 +6808,11 @@
     object tsDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1088#1072#1089#1095#1077#1090' '#1060#1040#1050#1058
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid_Det: TcxGrid
         Left = 0
         Top = 0
         Width = 1140
-        Height = 489
+        Height = 479
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -8926,6 +8916,39 @@
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actPrintStickerTermo: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -9060,31 +9083,7 @@
         end
         item
           Visible = True
-          ItemName = 'bbPrintRemains'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintDetail'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintDiff'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintRemainsLess'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintRemainsLessUpak'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintRemains_fact2'
+          ItemName = 'dxBarSubItem1'
         end
         item
           Visible = True
@@ -9335,6 +9334,60 @@
       Action = actOpenFormOrderInternalPackRem
       Category = 0
       ImageIndex = 83
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrintRemains'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDiff'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintRemainsLess'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintRemainsLessUpak'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintRemains_fact2'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStickerTermo'
+        end>
+    end
+    object Separator1: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbPrintStickerTermo: TdxBarButton
+      Action = actPrintStickerTermo
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -10005,6 +10058,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 342
     Top = 505
@@ -10034,6 +10088,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 342
     Top = 449
@@ -10864,6 +10919,7 @@
         DataSummaryItemIndex = 5
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 758
     Top = 377
@@ -11000,6 +11056,7 @@
         DataSummaryItemIndex = 5
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 718
     Top = 457
@@ -11043,5 +11100,26 @@
     PackSize = 1
     Left = 863
     Top = 320
+  end
+  object spSelectPrintSticker: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 919
+    Top = 400
   end
 end
