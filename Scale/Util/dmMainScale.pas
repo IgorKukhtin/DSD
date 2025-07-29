@@ -46,6 +46,7 @@ type
     // Scale
     function gpGet_Scale_Movement_findOldPeriod(var execParamsMovement:TParams): Boolean;
     function gpGet_Scale_Movement_OperDatePartner(var execParamsMovement:TParams): Boolean;
+    function gpGet_Scale_Scale_MI_StickerTotal(var execParamsMI:TParams): Double;
     // !!!Scale + ScaleCeh!!!
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
@@ -68,6 +69,8 @@ type
     function gpInsert_Scale_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
     function gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
     function gpUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
+    function gpUpdate_Scale_MI_StickerTotal(MovementItemId:Integer; isStickerTotal : Boolean): Boolean;
+
     //
     // Scale
     function gpUpdate_Scale_Movement_Transport(execParamsMovement:TParams): Boolean;
@@ -480,6 +483,25 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_Scale_MI_StickerTotal(var execParamsMI:TParams): Double;
+begin
+    Result:=0;
+    if execParamsMI.ParamByName('MovementItemId').AsInteger<>0 then
+    with spSelect do begin
+       StoredProcName:='gpGet_Scale_MI_StickerTotal';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementItemId', ftInteger, ptInputOutput, execParamsMI.ParamByName('MovementItemId').AsInteger);
+       //try
+         Execute;
+         Result:=DataSet.FieldByName('AmountTotal').asFloat;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
 begin
     Result:=false;
@@ -751,6 +773,27 @@ begin
          ShowMessage('Ошибка получения - gpInsert_Movement_all');
        end;}
     end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_MI_StickerTotal(MovementItemId:Integer; isStickerTotal : Boolean): Boolean;
+begin
+    Result:=false;
+    with spSelect do begin
+       StoredProcName:='gpUpdate_Scale_MI_StickerTotal';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementItemId', ftInteger, ptInput, MovementItemId);
+       Params.AddParam('inValue', ftBoolean, ptInput, isStickerTotal);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpInsertUpdate_Scale_Movement');
+       end;}
+    end;
+    //
     Result:=true;
 end;
 {------------------------------------------------------------------------}

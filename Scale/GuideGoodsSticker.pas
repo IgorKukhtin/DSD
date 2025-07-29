@@ -385,21 +385,6 @@ begin
     actPrint.CopiesCount:=ParamsMI.ParamByName('RealWeight').AsInteger;
     actPrint.Execute;
 
-    if (cb_70_70.Checked = TRUE) and (ParamsMI.ParamByName('isTotal_1001').AsBoolean = TRUE)
-    then begin
-            execParamsMI.ParamByName('MovementItemId').AsInteger:=DataSet.FieldByName('Id').AsInteger;
-
-            spSelectPrint.ParamByName('inWeight').Value:= ;
-
-            actPrint_total.ReportNameParam.Value:=CDS.FieldByName('StickerFileName_70_70').asString;
-            actPrint_total.Printer:=System.Copy(rgPriceList.Items[rgPriceList.ItemIndex], 5, Length(rgPriceList.Items[rgPriceList.ItemIndex]) - 4);
-            actPrint_total.WithOutPreview:= not cbPreviewPrint.Checked;
-            //actPrint_total.WithOutPreview:= TRUE;
-            //«десь кол-во печать Ётикеток
-            actPrint_total.CopiesCount:=1;
-            actPrint_total.Execute;
-    end;
-
     finally
            frxDBDHeaderForm.UserName:= 'frxDBDHeader';
     end;
@@ -949,6 +934,26 @@ begin
           //сохранение MovementItem
           //Result:=true;
           Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
+
+          // после сохранени€ - еще ѕ≈„ј“№ »“ќ√ќ¬ќ…
+          try
+            frxDBDHeaderForm.UserName:= 'frxDBDHeader_';
+            //
+            if (cb_70_70.Checked = TRUE) and (ParamsMI.ParamByName('isTotal_1001').AsBoolean = TRUE)
+            then begin
+                    spSelectPrint.ParamByName('inWeight').Value:= DMMainScaleForm.gpGet_Scale_Scale_MI_StickerTotal(ParamsMI);
+
+                    actPrint_total.ReportNameParam.Value:=CDS.FieldByName('StickerFileName_70_70').asString;
+                    actPrint_total.Printer:=System.Copy(rgPriceList.Items[rgPriceList.ItemIndex], 5, Length(rgPriceList.Items[rgPriceList.ItemIndex]) - 4);
+                    actPrint_total.WithOutPreview:= not cbPreviewPrint.Checked;
+                    //actPrint_total.WithOutPreview:= FALSE;
+                    //«десь кол-во печать Ётикеток
+                    actPrint_total.CopiesCount:=1;
+                    actPrint_total.Execute;
+            end;
+          finally
+                 frxDBDHeaderForm.UserName:= 'frxDBDHeader';
+          end;
 
           if not Result
           then ShowMessage('Error.not Result');
