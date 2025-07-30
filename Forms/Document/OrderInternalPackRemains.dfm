@@ -11452,8 +11452,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1032
-    Top = 267
+    Left = 1120
+    Top = 411
   end
   object spUpdate_MI_IsCalculated_No: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_IsCalculated'
