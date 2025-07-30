@@ -344,11 +344,46 @@ type
     bbOrderInternalPackRem: TdxBarButton;
     KeyId: TcxGridDBColumn;
     chKeyId: TcxGridDBColumn;
-    spSelectPrintSticker: TdsdStoredProc;
-    actPrintStickerTermo: TdsdPrintAction;
+    spSelectPrintSticker1: TdsdStoredProc;
+    actPrintStickerTermo1: TdsdPrintAction;
     dxBarSubItem1: TdxBarSubItem;
     Separator1: TdxBarSeparator;
     bbPrintStickerTermo: TdxBarButton;
+    dxBarSubItem2: TdxBarSubItem;
+    spSelectPrintSticker2: TdsdStoredProc;
+    spSelectPrintSticker3: TdsdStoredProc;
+    spSelectPrintSticker4: TdsdStoredProc;
+    spSelectPrintSticker5: TdsdStoredProc;
+    spSelectPrintSticker6: TdsdStoredProc;
+    spSelectPrintSticker7: TdsdStoredProc;
+    spSelectPrintSticker8: TdsdStoredProc;
+    spSelectPrintSticker9: TdsdStoredProc;
+    spSelectPrintSticker10: TdsdStoredProc;
+    spSelectPrintStickerLast: TdsdStoredProc;
+    actPrintStickerTermoLast: TdsdPrintAction;
+    actPrintStickerTermo2: TdsdPrintAction;
+    actPrintStickerTermo3: TdsdPrintAction;
+    actPrintStickerTermo4: TdsdPrintAction;
+    actPrintStickerTermo5: TdsdPrintAction;
+    actPrintStickerTermo6: TdsdPrintAction;
+    actPrintStickerTermo7: TdsdPrintAction;
+    actPrintStickerTermo8: TdsdPrintAction;
+    actPrintStickerTermo9: TdsdPrintAction;
+    actPrintStickerTermo10: TdsdPrintAction;
+    spSelectPrintStickerAll: TdsdStoredProc;
+    actPrintStickerTermoAll: TdsdPrintAction;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    dxBarButton6: TdxBarButton;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    dxBarButton9: TdxBarButton;
+    dxBarButton10: TdxBarButton;
+    dxBarButton11: TdxBarButton;
+    dxBarButton12: TdxBarButton;
   private
     { Private declarations }
   public

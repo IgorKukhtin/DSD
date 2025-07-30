@@ -225,6 +225,39 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
   inherited ActionList: TActionList
     Left = 47
     Top = 250
+    object actPrintStickerTermoLast: TdsdPrintAction [2]
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintStickerLast
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStickerLast
+        end>
+      Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081'. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TOrderInternalPackRemainsForm'
       FormNameParam.Value = 'TOrderInternalPackRemainsForm'
@@ -994,6 +1027,369 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintStickerTermoAll: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintStickerAll
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStickerAll
+        end>
+      Caption = #1048#1090#1086#1075#1086'. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStickerTermo1: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker1
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker1
+        end>
+      Caption = '1. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStickerTermo2: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker2
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker2
+        end>
+      Caption = '2. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStickerTermo3: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker3
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker3
+        end>
+      Caption = '3. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStickerTermo4: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker4
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker4
+        end>
+      Caption = '4. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStickerTermo5: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker5
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker5
+        end>
+      Caption = '5. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStickerTermo6: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker6
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker6
+        end>
+      Caption = '6. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStickerTermo7: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker7
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker7
+        end>
+      Caption = '7. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStickerTermo8: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker9
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker9
+        end>
+      Caption = '8. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStickerTermo9: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker9
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker9
+        end>
+      Caption = '9. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStickerTermo10: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker10
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker10
+        end>
+      Caption = '10. '#1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalPackRemainsSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -1127,6 +1523,10 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         end
         item
           Visible = True
+          ItemName = 'dxBarSubItem1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1226,11 +1626,7 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         end
         item
           Visible = True
-          ItemName = 'Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintStickerTermo'
+          ItemName = 'dxBarButton14'
         end>
     end
     object Separator: TdxBarSeparator
@@ -1241,8 +1637,147 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
       ShowCaption = False
     end
     object bbPrintStickerTermo: TdxBarButton
-      Action = actPrintStickerTermo
+      Action = actPrintStickerTermoAll
+      Caption = #1079#1072#1082#1072#1079' '#1048#1090#1086#1075#1086
       Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1057#1090#1080#1082#1077#1088
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton9'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStickerTermo'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton10'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton12'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton13'
+        end>
+    end
+    object dxBarSubItem2: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarButton2: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actPrintStickerTermo2
+      Caption = #1079#1072#1082#1072#1079' 2'
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actPrintStickerTermo5
+      Caption = #1079#1072#1082#1072#1079' 5'
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actPrintStickerTermo9
+      Caption = #1079#1072#1082#1072#1079' 9'
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actPrintStickerTermo6
+      Caption = #1079#1072#1082#1072#1079' 6'
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actPrintStickerTermo8
+      Caption = #1079#1072#1082#1072#1079' 8'
+      Category = 0
+    end
+    object dxBarButton8: TdxBarButton
+      Action = actPrintStickerTermo7
+      Caption = #1079#1072#1082#1072#1079' 7'
+      Category = 0
+    end
+    object dxBarSubItem3: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarButton9: TdxBarButton
+      Action = actPrintStickerTermoLast
+      Caption = #1079#1072#1082#1072#1079' '#1055#1086#1089#1083#1077#1076#1085#1080#1081
+      Category = 0
+    end
+    object dxBarButton10: TdxBarButton
+      Action = actPrintStickerTermo1
+      Caption = #1079#1072#1082#1072#1079' 1'
+      Category = 0
+    end
+    object dxBarButton11: TdxBarButton
+      Action = actPrintStickerTermo3
+      Caption = #1079#1072#1082#1072#1079' 3'
+      Category = 0
+    end
+    object dxBarButton12: TdxBarButton
+      Action = actPrintStickerTermo4
+      Caption = #1079#1072#1082#1072#1079' 4'
+      Category = 0
+    end
+    object dxBarButton13: TdxBarButton
+      Action = actPrintStickerTermo10
+      Caption = #1079#1072#1082#1072#1079' 10'
+      Category = 0
+    end
+    object dxBarButton14: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1468,8 +2003,8 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 855
-    Top = 320
+    Left = 599
+    Top = 416
   end
   object spSelectPrintRemainsLess: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderInternalPackRemainsLess_Print'
@@ -1529,7 +2064,415 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 839
-    Top = 192
+    Left = 919
+    Top = 232
+  end
+  object spSelectPrintSticker1: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 831
+    Top = 304
+  end
+  object spSelectPrintSticker2: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 855
+    Top = 304
+  end
+  object spSelectPrintSticker3: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 887
+    Top = 304
+  end
+  object spSelectPrintSticker4: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 919
+    Top = 304
+  end
+  object spSelectPrintSticker5: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '5'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 951
+    Top = 304
+  end
+  object spSelectPrintStickerAll: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 887
+    Top = 392
+  end
+  object spSelectPrintStickerLast: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 943
+    Top = 392
+  end
+  object spSelectPrintSticker10: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '10'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 951
+    Top = 344
+  end
+  object spSelectPrintSticker9: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '9'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 927
+    Top = 344
+  end
+  object spSelectPrintSticker8: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '8'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 895
+    Top = 344
+  end
+  object spSelectPrintSticker7: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '7'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 863
+    Top = 344
+  end
+  object spSelectPrintSticker6: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '6'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 831
+    Top = 344
   end
 end
