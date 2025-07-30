@@ -47,6 +47,14 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , AmountDoc   TFloat
              , AmountStart TFloat
              , AmountEnd   TFloat
+               --
+               -- Для Печати Этикетки № п/п
+             , Ord_1001       Integer
+               -- Для Печати Этикетки - № группы
+             , Ord_1001_group Integer
+               -- Для Печати Этикетки - накопительно кол-во
+             , Amount_1001    TFloat
+               --
              , Ord         Integer
              , isErased    Boolean
               )
@@ -134,7 +142,7 @@ BEGIN
 
                            , MIFloat_PromoMovement.ValueData :: Integer AS MovementId_Promo
 
-                           , MIBoolean_BarCode.ValueData AS isBarCode
+                           , COALESCE (MIBoolean_BarCode.ValueData, FALSE) AS isBarCode
 
                              -- Партия-Пересорт
                            , MILinkObject_Goods_out.ObjectId     AS GoodsId_out
@@ -357,6 +365,144 @@ BEGIN
                                                              ON ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ObjectId  = Object_GoodsByGoodsKind.Id
                                                             AND ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
                                  )
+             -- Группы Для Печати Этикетки
+           , tmp_group_1001_all AS (SELECT tmpMI.MovementItemId
+                                         , tmpMI.MovementId_Promo
+                                         , tmpMI.GoodsId
+                                         , tmpMI.GoodsKindId
+                                           -- № п/п для группы
+                                         , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementId_Promo
+                                                                         , tmpMI.GoodsId
+                                                                         , tmpMI.GoodsKindId
+                                                              ORDER BY tmpMI.MovementItemId ASC
+                                                             ) AS Ord_group
+                                    FROM tmpMI
+                                    WHERE tmpMI.isErased = FALSE
+                                      -- только последние
+                                      AND tmpMI.isBarCode = TRUE
+                                      -- Этикетки
+                                      AND vbBranchCode > 1000
+                                      AND vbUserId = 5
+                                   )
+           -- Группы Для Печати Этикетки, варианты: 1) нет групп 2) одна группа 3) больше 1-ой группы
+          , tmp_group_1001_find AS (SELECT -- для 0 и 1 группы всегда Id_min
+                                           COALESCE (tmp_group_1001_all_old.MovementItemId + 1, tmpMI.Id_min) AS Id_start
+                                           -- если есть хоть одна группа, её Id и есть последний
+                                         , COALESCE (tmp_group_1001_all.MovementItemId, tmpMI.Id_max) AS Id_end
+                                           -- № п/п для группы
+                                         , COALESCE (tmp_group_1001_all.Ord_group, 1) AS Ord_group
+                                           -- если есть группа без №
+                                         , tmpMI.Id_max
+                                            --
+                                         , tmpMI.MovementId_Promo
+                                         , tmpMI.GoodsId
+                                         , tmpMI.GoodsKindId
+                                    FROM -- одна запись всегда
+                                         (SELECT MIN (tmpMI.MovementItemId) AS Id_min, MAX (tmpMI.MovementItemId) AS Id_max
+                                               , tmpMI.MovementId_Promo
+                                               , tmpMI.GoodsId
+                                               , tmpMI.GoodsKindId
+                                          FROM tmpMI
+                                          WHERE tmpMI.isErased = FALSE
+                                            -- Этикетки
+                                            AND vbBranchCode > 1000
+                                            AND vbUserId = 5
+                                          GROUP BY tmpMI.MovementId_Promo
+                                                 , tmpMI.GoodsId
+                                                 , tmpMI.GoodsKindId
+                                         ) AS tmpMI
+                                         -- здесь всегда последний Id для этой группы
+                                         LEFT JOIN tmp_group_1001_all ON tmp_group_1001_all.MovementItemId   >= tmpMI.Id_min
+                                                                     AND tmp_group_1001_all.MovementId_Promo = tmpMI.MovementId_Promo
+                                                                     AND tmp_group_1001_all.GoodsId          = tmpMI.GoodsId
+                                                                     AND tmp_group_1001_all.GoodsKindId      = tmpMI.GoodsKindId
+
+                                         -- здесь может быть предыдущая группа
+                                         LEFT JOIN tmp_group_1001_all AS tmp_group_1001_all_old 
+                                                                      ON tmp_group_1001_all_old.Ord_group        = tmp_group_1001_all.Ord_group - 1
+                                                                     AND tmp_group_1001_all_old.MovementId_Promo = tmpMI.MovementId_Promo
+                                                                     AND tmp_group_1001_all_old.GoodsId          = tmpMI.GoodsId
+                                                                     AND tmp_group_1001_all_old.GoodsKindId      = tmpMI.GoodsKindId
+                                   )
+                 -- Для Печати Этикетки
+           , tmp_group_1001_res AS (-- группы с №
+                                    SELECT tmp_group_1001_find.Id_start
+                                         , tmp_group_1001_find.Id_end
+                                           -- показать с этого айди накопительно ВЕС
+                                         , tmp_group_1001_find.Id_end AS Id_show_w
+                                           --
+                                         , tmp_group_1001_find.MovementId_Promo
+                                         , tmp_group_1001_find.GoodsId
+                                         , tmp_group_1001_find.GoodsKindId
+                                           -- № п/п для группы
+                                         , tmp_group_1001_find.Ord_group
+                                    FROM tmp_group_1001_find
+
+                                   UNION ALL
+                                    -- добавим последнюю группу без №
+                                    SELECT tmpMI.Id_end + 1  AS Id_start
+                                         , tmpMI.Id_max      AS Id_end
+                                           -- показать с этого айди накопительно ВЕС
+                                         , tmpMI.Id_end + 1  AS Id_show_w
+                                           --
+                                         , tmpMI.MovementId_Promo
+                                         , tmpMI.GoodsId
+                                         , tmpMI.GoodsKindId
+                                           -- № п/п для группы
+                                         , tmpMI.Ord_group + 1        AS Ord_group
+
+                                    FROM -- получили одну запись - последняя группа, если после нее есть другие
+                                         (SELECT tmp_group_1001_find.Id_end
+                                               , tmp_group_1001_find.Id_max
+                                               , tmp_group_1001_find.Ord_group
+                                                 --
+                                               , tmp_group_1001_find.MovementId_Promo
+                                               , tmp_group_1001_find.GoodsId
+                                               , tmp_group_1001_find.GoodsKindId
+                                                 -- № п/п
+                                               , ROW_NUMBER() OVER (PARTITION BY tmp_group_1001_find.MovementId_Promo
+                                                                               , tmp_group_1001_find.GoodsId
+                                                                               , tmp_group_1001_find.GoodsKindId
+                                                                    -- нужна только последняя
+                                                                    ORDER BY tmp_group_1001_find.Ord_group DESC
+                                                                   ) AS Ord
+                                          FROM tmp_group_1001_find
+                                               -- только для последней
+                                               JOIN (SELECT MAX (tmp_group_1001_find.Id_start) AS Id_start_max
+                                                          , tmp_group_1001_find.MovementId_Promo
+                                                          , tmp_group_1001_find.GoodsId
+                                                          , tmp_group_1001_find.GoodsKindId
+                                                     FROM tmp_group_1001_find
+                                                     GROUP BY tmp_group_1001_find.MovementId_Promo
+                                                            , tmp_group_1001_find.GoodsId
+                                                            , tmp_group_1001_find.GoodsKindId
+                                                    ) AS tmp_group_1001_check
+                                                      ON tmp_group_1001_check.MovementId_Promo = tmp_group_1001_find.MovementId_Promo
+                                                     AND tmp_group_1001_check.GoodsId          = tmp_group_1001_find.GoodsId
+                                                     AND tmp_group_1001_check.GoodsKindId      = tmp_group_1001_find.GoodsKindId
+                                                     -- только для последней
+                                                     AND tmp_group_1001_check.Id_start_max     = tmp_group_1001_find.Id_start
+
+                                          WHERE tmp_group_1001_find.Id_end < tmp_group_1001_find.Id_max
+                                         ) AS tmpMI
+                                    WHERE tmpMI.Ord = 1
+                                   )
+                 -- Для Печати Этикетки
+               , tmp_group_1001 AS (SELECT tmpMI.MovementItemId
+                                         , tmp_group_1001_res.Id_start
+                                         , tmp_group_1001_res.Id_end
+                                           -- № п/п для группы
+                                         , tmp_group_1001_res.Ord_group
+                                           -- показать с этого айди накопительно ВЕС
+                                         , tmp_group_1001_res.Id_end AS Id_show_w
+                                    FROM tmpMI
+                                         -- Для Печати Этикетки
+                                         JOIN tmp_group_1001_res ON tmpMI.MovementItemId BETWEEN tmp_group_1001_res.Id_start AND tmp_group_1001_res.Id_end
+                                                                AND tmp_group_1001_res.MovementId_Promo = tmpMI.MovementId_Promo
+                                                                AND tmp_group_1001_res.GoodsId          = tmpMI.GoodsId
+                                                                AND tmp_group_1001_res.GoodsKindId      = tmpMI.GoodsKindId
+                                   )
+
        -- Результат
        SELECT
              tmpMI.MovementItemId
@@ -468,8 +614,12 @@ BEGIN
            , tmpMI.InsertDate :: TDateTime AS InsertDate
            , tmpMI.UpdateDate :: TDateTime AS UpdateDate
 
+             --
            , COALESCE (tmpMI.isBarCode, FALSE) :: Boolean AS isBarCode
-           , CASE WHEN tmpMI.MovementId_Promo > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
+           , CASE WHEN tmpMI.MovementId_Promo > 0
+                       THEN TRUE
+                  ELSE FALSE
+             END :: Boolean AS isPromo
 
              -- только для zc_Movement_OrderExternal - 1001...
            , (COALESCE (Object_Retail.ValueData, Object_GoodsProperty_alan.ValueData)
@@ -492,6 +642,39 @@ BEGIN
            , tmpAmountDoc.AmountStart :: TFloat AS AmountStart
            , tmpAmountDoc.AmountEnd   :: TFloat AS AmountEnd
 
+             -- Для Печати Этикетки № п/п
+           , CASE WHEN tmpMI.isErased = TRUE
+                       THEN 0
+                  ELSE ROW_NUMBER() OVER (PARTITION BY COALESCE (tmp_group_1001.Ord_group, 1)
+                                                     , tmpMI.MovementId_Promo
+                                                     , tmpMI.GoodsId
+                                                     , tmpMI.GoodsKindId
+                                                     , tmpMI.isErased
+                                          ORDER BY tmpMI.MovementItemId ASC
+                                         )
+             END :: Integer AS Ord_1001
+
+             -- Для Печати Этикетки - № группы
+           , CASE WHEN tmpMI.isErased = TRUE
+                       THEN 0
+                  ELSE COALESCE (tmp_group_1001.Ord_group, 1)
+             END :: Integer AS Ord_1001_group
+           --, tmp_group_1001.Id_start :: Integer AS Ord_1001_group
+
+             -- Для Печати Этикетки - накопительно кол-во
+           , (CASE WHEN tmpMI.MovementItemId >= tmp_group_1001.Id_show_w AND tmp_group_1001.Id_show_w > 0 AND tmpMI.isErased = FALSE
+              THEN
+              SUM (tmpMI.RealWeight -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END
+                 - tmpMI.WeightTare * tmpMI.CountTare
+                  ) OVER (PARTITION BY COALESCE (tmp_group_1001.Ord_group, 1)
+                                     , tmpMI.MovementId_Promo
+                                     , tmpMI.GoodsId
+                                     , tmpMI.GoodsKindId
+                          ORDER BY tmpMI.MovementItemId ASC
+                         )
+              ELSE 0
+              END) :: TFloat AS Amount_1001
+             --
            , ROW_NUMBER() OVER (ORDER BY tmpMI.MovementItemId ASC) :: Integer AS Ord
            , tmpMI.isErased
 
@@ -548,6 +731,11 @@ BEGIN
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
             LEFT JOIN Object AS Object_GoodsProperty_alan ON Object_GoodsProperty_alan.Id = 83955 -- Алан
 
+            -- Для Печати Этикетки
+            LEFT JOIN tmp_group_1001 ON tmp_group_1001.MovementItemId = tmpMI.MovementItemId
+
+       WHERE tmpMI.isErased = FALSE
+          OR vbUserId <> 5
        ORDER BY tmpMI.MovementItemId DESC
      ;
 

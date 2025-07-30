@@ -289,6 +289,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       AlignSplitter = salRight
       AllowHotZoneDrag = False
       Control = ParamsAllPanel
+      ExplicitLeft = -8
     end
     object ParamsPanel: TPanel
       Left = 380
@@ -585,7 +586,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           object LabelOrderExternal: TLabel
             Left = 1
             Top = 1
-            Width = 241
+            Width = 66
             Height = 13
             Align = alTop
             Alignment = taCenter
@@ -596,7 +597,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitWidth = 66
           end
           object PanelOrderExternal: TPanel
             Left = 1

@@ -301,6 +301,7 @@ type
     Ord_1001: TcxGridDBColumn;
     Ord_1001_group: TcxGridDBColumn;
     Amount_1001: TcxGridDBColumn;
+    bbTotal_1001_del: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -350,6 +351,7 @@ type
     procedure bbUpdatePricePartnerClick(Sender: TObject);
     procedure bbPrintReestrClick(Sender: TObject);
     procedure bbPrint_MIPassportClick(Sender: TObject);
+    procedure bbTotal_1001_delClick(Sender: TObject);
   private
     //aTest: Boolean;
     Scale_AP: IAPScale;
@@ -2109,11 +2111,12 @@ var i : Integer;
 begin
   fStartBarCode:= false;
   //
-  cbAuto_1001.Visible:= SettingMain.BranchCode >1000;
-  cbPreviewPrint_1001.Visible:= SettingMain.BranchCode >1000;
-  cbTotal_1001_add.Visible:= SettingMain.BranchCode >1000;
-  cbTotal_1001_del.Visible:= SettingMain.BranchCode >1000;
-  if SettingMain.BranchCode >1000 then
+  cbAuto_1001.Visible:= SettingMain.isSticker = TRUE;
+  cbPreviewPrint_1001.Visible:= SettingMain.isSticker = TRUE;
+  cbTotal_1001_add.Visible:= SettingMain.isSticker = TRUE;
+  cbTotal_1001_del.Visible:= SettingMain.isSticker = TRUE;
+  bbTotal_1001_del.Visible:= SettingMain.isSticker = TRUE;
+  if SettingMain.isSticker = TRUE then
   begin
      bbSale_Order_all.Visible:= FALSE;
      bbSale_Order_diff.Visible:= FALSE;
@@ -2124,9 +2127,9 @@ begin
      LabelOrderExternal.Caption:= '';
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isBarCode').Index].Caption:= 'Итог Ящ.';
   end;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Ord_1001').Index].Visible:=SettingMain.BranchCode >1000;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Ord_1001_group').Index].Visible:=SettingMain.BranchCode >1000;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_1001').Index].Visible:=SettingMain.BranchCode >1000;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Ord_1001').Index].Visible:=SettingMain.isSticker = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Ord_1001_group').Index].Visible:=SettingMain.isSticker = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_1001').Index].Visible:=SettingMain.isSticker = TRUE;
   //
   // надо отловить сохранение 2 раза
   DMMainScaleForm.time_exec_Insert_Scale_MI:=now;
@@ -2321,9 +2324,15 @@ begin
   bbChangePartionGoods.Visible:=(HeadCountPanel.Visible) or (SettingMain.isPartionDate = TRUE);
 
   bbChangeCountPack.Visible:=not bbChangeHeadCount.Visible;
+  if SettingMain.isSticker = TRUE then bbChangeCountPack.Visible:= false;
+  if SettingMain.isSticker = TRUE then bbChangeBoxCount.Visible:= false;
+  if SettingMain.isSticker = TRUE then bbChangeNumberTare.Visible:= false;
+  if SettingMain.isSticker = TRUE then bbChangeLevelNumber.Visible:= false;
+
   //
   bbUpdatePartner.Visible:= (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310);
   bbUpdateUnit.Visible:= not bbUpdatePartner.Visible;
+  if SettingMain.isSticker = TRUE then bbUpdateUnit.Visible:= false;
   //
   bbGuideGoodsView.Visible:= GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE');
   //
@@ -2751,8 +2760,9 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 var Key2 : Word;
-
 begin
+     if Key = VK_F1 then bbTotal_1001_delClick(Self);
+
      if Key = VK_F8 then bbSale_Order_allClick(Self);
      if Key = VK_F9 then bbSale_Order_diffTaxClick(Self);
 
@@ -2947,6 +2957,29 @@ begin
           //
      end;
 end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbTotal_1001_delClick(Sender: TObject);
+begin
+   if (SettingMain.isSticker = TRUE) then
+   begin
+      if CDS.FieldByName('isBarCode').AsBoolean = FALSE
+      then begin
+             ShowMessage('Ошибка.Признак <Итоговый ящик> не уставновлен.');
+             exit;
+      end;
+      //
+      if MessageDlg('Действительно удалить признак <Итоговый ящик>?'
+                  +#10+#13+'Для ' + '('+CDS.FieldByName('GoodsCode').AsString+') ' + CDS.FieldByName('GoodsName').AsString+' '+CDS.FieldByName('GoodsKindName').AsString
+                  +#10+#13+'Итого вес=('+CDS.FieldByName('Amount_1001').AsString+')'
+              ,mtConfirmation,mbYesNoCancel,0) <> 6
+      then exit;
+      //
+      DMMainScaleForm.gpUpdate_Scale_MI_StickerTotal(CDS.FieldByName('MovementItemId').AsInteger, FALSE);
+      //
+      RefreshDataSet;
+   end;
+end;
+
 {------------------------------------------------------------------------}
 procedure TMainForm.actExitExecute(Sender: TObject);
 begin Close;end;

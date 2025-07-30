@@ -880,6 +880,12 @@ BEGIN
                    , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
 
+                          /*WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
+                           AND MILinkObject_GoodsKind.ObjectId <> zc_GoodsKind_Basis()
+                           -- для пересортицы - всегда
+                           AND vbIsPeresort = TRUE
+                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)*/
+
                           WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
                            AND MILinkObject_GoodsKind.ObjectId <> zc_GoodsKind_Basis()
                            AND vbUnitId_To <> 2790412 -- ЦЕХ Тушенка -- 8006902 -- ЦЕХ упаковки Тушенки
@@ -898,6 +904,13 @@ BEGIN
                            AND vbIsPartionGoodsKind_Unit_From = TRUE
                            AND _tmpList_Goods_1942.GoodsId IS NULL
                                THEN COALESCE (MILinkObject_GoodsKindComplete.ObjectId, CASE WHEN _tmpItem_pr.GoodsKindId <> zc_GoodsKind_WorkProgress() THEN _tmpItem_pr.GoodsKindId ELSE 0 END)
+
+                          WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
+                           AND MILinkObject_GoodsKindComplete.ObjectId <> zc_GoodsKind_Basis()
+                           -- для пересортицы - всегда
+                           AND vbIsPeresort = TRUE
+                               THEN COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0)
+
                           ELSE 0
                      END AS GoodsKindId_complete
 
@@ -1976,13 +1989,13 @@ end if;
      ;
 
 
-IF inUserId = 5 AND 1=0
+IF 1=0
 THEN
 -- , (select CLO_PartionGoods.ObjectId from ContainerLinkObject AS CLO_PartionGoods where CLO_PartionGoods.ContainerId = Container.ContainerId AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()) as PartionGoodsId
 
     RAISE EXCEPTION 'Ошибка. <%>   <%> '
-, (select _tmpItemChild.ContainerId_GoodsFrom from _tmpItemChild  where _tmpItemChild.MovementItemId = 330226344 )
-, (select _tmpItemChild.PartionGoodsId from _tmpItemChild  where _tmpItemChild.MovementItemId = 330226344 )
+, (select lfGet_Object_ValueData_sh (_tmpItemChild.GoodsKindId) from _tmpItemChild  where _tmpItemChild.MovementItemId = 330644795  )
+, (select _tmpItemChild.PartionGoodsId from _tmpItemChild  where _tmpItemChild.MovementItemId = 330644795  )
 ;
 end if;
 

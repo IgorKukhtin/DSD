@@ -142,7 +142,7 @@ object MainForm: TMainForm
         OnClick = bbChangeNumberTareClick
       end
       object bbChangeLevelNumber: TSpeedButton
-        Left = 304
+        Left = 305
         Top = 2
         Width = 31
         Height = 29
@@ -533,7 +533,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbUpdatePartner: TSpeedButton
-        Left = 380
+        Left = 382
         Top = 2
         Width = 31
         Height = 29
@@ -816,8 +816,8 @@ object MainForm: TMainForm
         OnClick = bbUpdateAssetClick
       end
       object bbUpdatePricePartner: TSpeedButton
-        Left = 82
-        Top = 3
+        Left = 85
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -868,6 +868,25 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbPrint_MIPassportClick
+      end
+      object bbTotal_1001_del: TSpeedButton
+        Left = 21
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1059#1076#1072#1083#1080#1090#1100' '#1048#1090#1086#1075#1086#1074#1099#1081' '#1103#1097#1080#1082
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888888888888888888873333333333333387BBBBBBBBBBBBB387BBBBBBBBBBB
+          BB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBB
+          BB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBBBBB888BBBBBB0888
+          8888888777778888888888888888888888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbTotal_1001_delClick
       end
     end
     object infoPanelTotalSumm: TPanel
@@ -3134,7 +3153,7 @@ object MainForm: TMainForm
           TabOrder = 0
           object cbTotal_1001_del: TcxCheckBox
             Left = 7
-            Top = 0
+            Top = -1
             Caption = 'F1 -'#1059#1076#1072#1083#1080#1090#1100' '#1048#1090#1086#1075#1086#1074#1099#1081' '#1103#1097#1080#1082
             TabOrder = 0
             Width = 197
