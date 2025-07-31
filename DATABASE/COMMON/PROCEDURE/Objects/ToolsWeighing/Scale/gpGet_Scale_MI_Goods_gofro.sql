@@ -59,6 +59,8 @@ BEGIN
    
 
    IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inParnerId AND OB.DescId = zc_ObjectBoolean_Partner_GoodsBox() AND OB.ValueData = TRUE)
+      AND vbUserId = 5
+      AND 1=0
    THEN
 
     vbMovementId_Sale:= (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId);

@@ -89,7 +89,7 @@ BEGIN
                       )
                )
    --OR vbUserId = 5
-   -- AND vbUserId <> 5
+   AND vbUserId <> 5
                   AND vbUserId <> 9457
 
     THEN
