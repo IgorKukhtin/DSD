@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
-  ExternalLoad;
+  ExternalLoad, cxMemo;
 
 type
   THospitalDoc_1CJournalForm = class(TAncestorJournalForm)
@@ -69,6 +69,9 @@ type
     macInsert_PersonalService_list: TMultiAction;
     macInsert_PersonalService: TMultiAction;
     bbInsert_PersonalService: TdxBarButton;
+    ceError: TcxMemo;
+    cxLabel3: TcxLabel;
+    spSelectError: TdsdStoredProc;
   private
     { Private declarations }
   public

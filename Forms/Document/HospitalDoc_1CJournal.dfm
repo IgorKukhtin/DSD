@@ -9,19 +9,20 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 90
     Width = 1090
-    Height = 480
+    Height = 447
     TabOrder = 3
     ExplicitWidth = 1090
     ExplicitHeight = 480
-    ClientRectBottom = 480
+    ClientRectBottom = 447
     ClientRectRight = 1090
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1090
       ExplicitHeight = 480
       inherited cxGrid: TcxGrid
         Width = 1090
-        Height = 480
+        Height = 447
         ExplicitWidth = 1090
         ExplicitHeight = 480
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -386,12 +387,40 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
   end
   inherited Panel: TPanel
     Width = 1090
+    Height = 64
     ExplicitWidth = 1090
+    ExplicitHeight = 64
     inherited deStart: TcxDateEdit
+      Left = 121
       EditValue = 44927d
+      ExplicitLeft = 121
     end
     inherited deEnd: TcxDateEdit
+      Left = 122
+      Top = 34
       EditValue = 44927d
+      ExplicitLeft = 122
+      ExplicitTop = 34
+      ExplicitWidth = 83
+      Width = 83
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 10
+      Top = 33
+      ExplicitLeft = 10
+      ExplicitTop = 33
+    end
+    object ceError: TcxMemo
+      Left = 306
+      Top = 6
+      TabOrder = 4
+      Height = 51
+      Width = 401
+    end
+    object cxLabel3: TcxLabel
+      Left = 254
+      Top = 6
+      Caption = #1054#1096#1080#1073#1082#1080':'
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -462,6 +491,24 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' <'#1053#1072#1095'. '#1087#1077#1088#1074'. 5 '#1082'.'#1076#1085'.>'
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' <'#1053#1072#1095'. '#1087#1077#1088#1074'. 5 '#1082'.'#1076#1085'.>'
       ImageIndex = 47
+    end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectError
+        end>
+    end
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectError
+        end>
     end
     inherited actInsert: TdsdInsertUpdateAction
       ShortCut = 0
@@ -1118,5 +1165,53 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     PackSize = 1
     Left = 713
     Top = 368
+  end
+  object spSelectError: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_HospitalDoc_1C_Error'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'instartdate'
+        Value = 44927d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inenddate'
+        Value = 44927d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Error_text'
+        Value = Null
+        Component = ceError
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 936
+    Top = 43
   end
 end

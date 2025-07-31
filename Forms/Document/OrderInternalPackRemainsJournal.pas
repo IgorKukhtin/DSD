@@ -67,6 +67,34 @@ type
     bbsPrint: TdxBarSubItem;
     Separator: TdxBarSeparator;
     bbPrintStickerTermo: TdxBarButton;
+    spSelectPrintSticker1: TdsdStoredProc;
+    spSelectPrintSticker2: TdsdStoredProc;
+    spSelectPrintSticker3: TdsdStoredProc;
+    spSelectPrintSticker4: TdsdStoredProc;
+    spSelectPrintSticker5: TdsdStoredProc;
+    spSelectPrintStickerAll: TdsdStoredProc;
+    spSelectPrintStickerLast: TdsdStoredProc;
+    spSelectPrintSticker10: TdsdStoredProc;
+    spSelectPrintSticker9: TdsdStoredProc;
+    spSelectPrintSticker8: TdsdStoredProc;
+    spSelectPrintSticker7: TdsdStoredProc;
+    spSelectPrintSticker6: TdsdStoredProc;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarSubItem2: TdxBarSubItem;
+    dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    dxBarButton6: TdxBarButton;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    dxBarSubItem3: TdxBarSubItem;
+    dxBarButton9: TdxBarButton;
+    dxBarButton10: TdxBarButton;
+    dxBarButton11: TdxBarButton;
+    dxBarButton12: TdxBarButton;
+    dxBarButton13: TdxBarButton;
+    dxBarButton14: TdxBarButton;
   private
     { Private declarations }
   public

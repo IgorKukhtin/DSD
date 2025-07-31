@@ -62,10 +62,9 @@ BEGIN
                                                       ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
                                                      AND MIObject_Position.DescId = zc_MILinkObject_Position()
                                                      AND MIObject_Position.ObjectId = tmpPersonal.PositionId
-                    INNER JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                    LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
                                                      ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id
                                                     AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
-                                                    AND COALESCE (MIObject_PositionLevel.ObjectId,0) = COALESCE (tmpPersonal.PositionLevelId,0)
                     LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                                                      ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
                                                     AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
@@ -75,6 +74,7 @@ BEGIN
                                           AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
                WHERE MI_SheetWorkTime.Amount <> 0
                 AND MIObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_HospitalDoc()
+                AND COALESCE (MIObject_PositionLevel.ObjectId,0) = COALESCE (tmpPersonal.PositionLevelId,0)
                GROUP BY tmpPersonal.MemberId
                );
       --если табель проставлен сохраняем ошибку в док. больн. лист
