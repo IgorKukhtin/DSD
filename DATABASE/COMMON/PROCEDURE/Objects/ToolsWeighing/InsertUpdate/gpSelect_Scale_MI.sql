@@ -382,7 +382,7 @@ BEGIN
                                       AND tmpMI.isBarCode = TRUE
                                       -- Этикетки
                                       AND vbBranchCode > 1000
-                                      AND vbUserId = 5
+                                      -- AND vbUserId = 5
                                    )
            -- Группы Для Печати Этикетки, варианты: 1) нет групп 2) одна группа 3) больше 1-ой группы
           , tmp_group_1001_find AS (SELECT -- для 0 и 1 группы всегда Id_min
@@ -406,7 +406,7 @@ BEGIN
                                           WHERE tmpMI.isErased = FALSE
                                             -- Этикетки
                                             AND vbBranchCode > 1000
-                                            AND vbUserId = 5
+                                            -- AND vbUserId = 5
                                           GROUP BY tmpMI.MovementId_Promo
                                                  , tmpMI.GoodsId
                                                  , tmpMI.GoodsKindId
@@ -734,8 +734,8 @@ BEGIN
             -- Для Печати Этикетки
             LEFT JOIN tmp_group_1001 ON tmp_group_1001.MovementItemId = tmpMI.MovementItemId
 
-       WHERE tmpMI.isErased = FALSE
-          OR vbUserId <> 5
+       -- WHERE tmpMI.isErased = FALSE
+       --    OR vbUserId <> 5
        ORDER BY tmpMI.MovementItemId DESC
      ;
 

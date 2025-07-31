@@ -1,9 +1,10 @@
 -- Function: gpUpdate_Scale_MI_StickerTotal()
 
-DROP FUNCTION IF EXISTS gpUpdate_Scale_MI_StickerTotal (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Scale_MI_StickerTotal (Integer, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Scale_MI_StickerTotal(
     IN inMovementItemId  Integer      ,
+    IN inValue           Boolean      , --
     IN inBranchCode      Integer      , --
     IN inSession         TVarChar       -- сессия пользователя
 )
@@ -16,7 +17,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
    
      -- сохранили свойство
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_BarCode(), inMovementItemId, FALSE);
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_BarCode(), inMovementItemId, inValue);
 
 END;
 $BODY$
