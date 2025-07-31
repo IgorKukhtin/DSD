@@ -1623,10 +1623,6 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         item
           Visible = True
           ItemName = 'bbPrintRemains_fact2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton14'
         end>
     end
     object Separator: TdxBarSeparator
