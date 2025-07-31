@@ -1,7 +1,8 @@
 -- Function: gpSelect_ProductionSeparate_Print_byReport_Test()
 
 DROP FUNCTION IF EXISTS gpSelect_ProductionSeparate_Print_byReport_Test (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_ProductionSeparate_Print_byReport_Test (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_ProductionSeparate_Print_byReport_Test (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ProductionSeparate_Print_byReport_Test (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ProductionSeparate_Print_byReport_Test(
     IN inStartDate          TDateTime ,  
@@ -12,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpSelect_ProductionSeparate_Print_byReport_Test(
     IN inMovementId         Integer   , -- ключ Документа
     IN inGoodsId            Integer   ,
     IN inisGroup            Boolean   , --итоговая накладная по гл. партии
-    IN inPartionGoods_main  TVarChar  , --главная партия
+    IN inPartionGoods_main  TVarChar  , --главная партия 
+    IN inPartionGoods_main2 TVarChar  , --главная партия
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -26,8 +28,7 @@ $BODY$
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor; 
-    
-    DECLARE vbGroup_its Boolean;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -94,14 +95,6 @@ BEGIN
     --если не выбран прайс норма 
     inPriceListId_norm := CASE WHEN COALESCE (inPriceListId_norm,0) = 0 THEN 12048635 ELSE inPriceListId_norm END;
 
-    -- определяем признак что идет итог по пратиям об, мо, пр 
-    vbGroup_its := (CASE WHEN inPartionGoods_main ::TVarChar LIKE 'пр-%' THEN TRUE
-                         WHEN inPartionGoods_main ::TVarChar LIKE 'об-%' THEN TRUE
-                         WHEN inPartionGoods_main ::TVarChar LIKE 'мо-%' THEN TRUE
-                         ELSE FALSE
-                    END);
-
-
    OPEN Cursor1 FOR
    WITH 
        -- список товаров для отличия в Separate основного сырья от голов
@@ -121,8 +114,8 @@ BEGIN
                                                          ON MovementString_PartionGoods.MovementId =  Movement.Id
                                                         AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                            ON MovementLinkObject_From.MovementId = Movement.Id
-                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                            WHERE Movement.Id = inMovementId
                              AND COALESCE (inMovementId,0) <> 0
                              AND inisGroup = FALSE
@@ -170,15 +163,24 @@ BEGIN
                            OR COALESCE (inGoodsId,0) = 0
                         )
 
-      --ограничиваем товаром если выбор нескольких документов по товару
-     , tmpMovement AS (SELECT tmpMovement_all.*
-                            , CASE WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
-                                   WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'об-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
-                                   WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'мо-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
-                                   ELSE tmpMovement_all.PartionGoods ::TVarChar
-                              END AS PartionGoods_main
-                       FROM tmpMovement_all
-                       WHERE tmpMovement_all.MovementId IN (SELECT DISTINCT tmpMI_Master.MovementId FROM tmpMI_Master)
+     --ограничиваем партией   об- пр-
+     , tmpMovement AS (SELECT *
+                       FROM (--ограничиваем товаром если выбор нескольких документов по товару
+                             SELECT tmpMovement_all.*
+                                  , CASE WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
+                                         WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'об-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
+                                         WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'мо-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
+                                         ELSE tmpMovement_all.PartionGoods ::TVarChar
+                                    END AS PartionGoods_main
+                                  , CASE WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'пр-%' THEN LEFT ( tmpMovement_all.PartionGoods ::TVarChar, length (tmpMovement_all.PartionGoods)-11 )  ::TVarChar
+                                         WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'об-%' THEN LEFT ( tmpMovement_all.PartionGoods ::TVarChar, length (tmpMovement_all.PartionGoods)-11 )  ::TVarChar
+                                         WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'мо-%' THEN LEFT ( tmpMovement_all.PartionGoods ::TVarChar, length (tmpMovement_all.PartionGoods)-11 )  ::TVarChar
+                                         ELSE '' ::TVarChar
+                                    END ::TVarChar AS PartionGoods_main2 
+                             FROM tmpMovement_all
+                             WHERE tmpMovement_all.MovementId IN (SELECT DISTINCT tmpMI_Master.MovementId FROM tmpMI_Master)
+                            ) AS tmp
+                       WHERE (tmp.PartionGoods_main2 = inPartionGoods_main2 OR COALESCE (inPartionGoods_main2,'') = '')
                        )
 
        --данные по партии для товара 4134 по партии
@@ -190,10 +192,10 @@ BEGIN
                                , tmpData.PriceFact ::TFloat
                                , tmpData.SummFact ::TFloat
                                , tmpData.Persent_v 
-                 FROM (SELECT DISTINCT tmpMovement.PartionGoods_main, MAX (tmpMovement.OperDate) AS OperDate FROM tmpMovement
-                      GROUP BY tmpMovement.PartionGoods_main) AS tmpPartionGoods
-                  LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpPartionGoods.OperDate::TDateTime, tmpPartionGoods.OperDate::TDateTime, 0, inPriceListId_norm, 4261, tmpPartionGoods.PartionGoods_main, inSession) AS tmpData  ON 1=1
-                 )
+                          FROM (SELECT DISTINCT tmpMovement.PartionGoods_main, MAX (tmpMovement.OperDate) AS OperDate FROM tmpMovement
+                               GROUP BY tmpMovement.PartionGoods_main) AS tmpPartionGoods
+                           LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpPartionGoods.OperDate::TDateTime, tmpPartionGoods.OperDate::TDateTime, 0, inPriceListId_norm, 4261, tmpPartionGoods.PartionGoods_main, inSession) AS tmpData  ON 1=1
+                          )
 
        --данные по документам
      , tmpData AS (SELECT tmpMovement.*
@@ -473,8 +475,8 @@ BEGIN
 
       
       -- Результат 
-      SELECT CASE WHEN vbGroup_its = FALSE THEN tmpMain_Group.MovementId ELSE inPartionGoods_main END AS MovementId
-           , CASE WHEN vbGroup_its = FALSE THEN tmpMain_Group.InvNumber ELSE inPartionGoods_main END AS InvNumber
+      SELECT tmpMain_Group.MovementId  AS MovementId
+           , tmpMain_Group.InvNumber   AS InvNumber
            , tmpMain_Group.OperDate
            , tmpMain_Group.PartionGoods
            , tmpMain_Group.PartionGoods_main
@@ -632,99 +634,87 @@ BEGIN
            -- группировка по док или гл. партии
            LEFT JOIN tmpMain_Group ON tmpMain_Group.MovementId = CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END 
                                
-      GROUP BY CASE WHEN vbGroup_its = FALSE THEN tmpMain_Group.MovementId ELSE inPartionGoods_main END
-           , CASE WHEN vbGroup_its = FALSE THEN tmpMain_Group.InvNumber ELSE inPartionGoods_main END
-           , tmpMain_Group.OperDate
-           , tmpMain_Group.PartionGoods
-           , tmpMain_Group.PartionGoods_main
-           , tmpMain_Group.OperDate_partion
-           , tmpMain_Group.GoodsNameMaster
-           , tmpMain_Group.CountMaster
-           , tmpMain_Group.CountMaster_4134
-           , tmpMain_Group.SummMaster
-           , tmpMain_Group.HeadCountMaster
-           --, tmpMain_Group.PriceMaster
-           , tmpMain_Group.FromName
-           , tmpMain_Group.PersonalPackerName
-           , tmpMain_Group.GoodsNameIncome
-           , tmpMain_Group.CountIncome
-           , tmpMain_Group.SummIncome
-           , tmpMain_Group.HeadCountIncome
-           , tmpMain_Group.CountPackerIncome
-           , tmpMain_Group.AmountPartnerIncome
-           , tmpMain_Group.HeadCount1
-           , tmpMain_Group.PriceIncome
-           , tmpMain_Group.PriceIncome1
-           , tmpMain_Group.PriceIncome2
-           , tmpMain_Group.SummCostIncome
-           , tmpMain_Group.CountDocIncome
-           , tmpMain_Group.Count_CountPacker
-           , tmpMain_Group.CountSeparate
-           , tmpMain_Group.PercentCount
-           , tmpMain_Group.GoodsNameSeparate
-           , tmpMain_Group.SummHeadCount1
-           
-           /* CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END 
-           , CASE WHEN inisGroup = TRUE THEN '' ELSE tmpCursor1.InvNumber END 
-           , CASE WHEN inisGroup = TRUE THEN '' ELSE tmpCursor1.PartionGoods END 
-           , tmpCursor1.PartionGoods_main
-           , tmpCursor1.GoodsNameMaster
-           , tmpCursor1.FromName 
-           , tmpCursor1.PersonalPackerName
-           , tmpCursor1.GoodsNameIncome
-           , tmpCursor1.GoodsNameSeparate
-
-           , tmpCursor1.PriceMaster
-           */      
-          -- , tmpCursor1.PriceMaster
-           , tmpCursor1.Separate_info  
-           , tmpCursor1.GoodsName_4134
-           , tmpCursor1.PriceFact_4134
-           --  
-           , tmpCursor1.GoodsId
-           , tmpCursor1.GoodsCode
-           , tmpCursor1.GoodsName 
-           , tmpCursor1.GoodsGroupCode
-           , tmpCursor1.GoodsGroupName
-           , tmpCursor1.GoodsGroupNameFull 
-           , tmpCursor1.GroupStatId
-           , tmpCursor1.GroupStatName
-           , tmpCursor1.PricePlan
-           , tmpCursor1.PriceNorm
-           --, tmpCursor1.PriceFact_nk
-           
-           , tmpGroup.Price_gr1
-           , tmpGroup.Price_gr2
-           , tmpGroup.Price_gr3
-           , tmpGroup.Price_gr4
-           , tmpGroup.Price_gr5
-           , tmpGroup.Price_gr6
-           , tmpGroup.Price_gr7
-           , tmpGroup.Price_gr8
-           , tmpGroup.Price_gr9
-           , tmpGroup.Price_gr10
-
-           , tmpGroup.Price_nk_gr1
-           , tmpGroup.Price_nk_gr2
-           , tmpGroup.Price_nk_gr3
-           , tmpGroup.Price_nk_gr4
-           , tmpGroup.Price_nk_gr5
-           , tmpGroup.Price_nk_gr6
-           , tmpGroup.Price_nk_gr7
-           , tmpGroup.Price_nk_gr8
-           , tmpGroup.Price_nk_gr9
-           , tmpGroup.Price_nk_gr10
- 
-           , TRIM (tmpGroup.GoodsGroupName1) 
-           , TRIM (tmpGroup.GoodsGroupName2) 
-           , TRIM (tmpGroup.GoodsGroupName3) 
-           , TRIM (tmpGroup.GoodsGroupName4) 
-           , TRIM (tmpGroup.GoodsGroupName5) 
-           , TRIM (tmpGroup.GoodsGroupName6) 
-           , TRIM (tmpGroup.GoodsGroupName7) 
-           , TRIM (tmpGroup.GoodsGroupName8) 
-           , TRIM (tmpGroup.GoodsGroupName9) 
-           , TRIM (tmpGroup.GoodsGroupName10)
+      GROUP BY tmpMain_Group.MovementId
+             , tmpMain_Group.InvNumber
+             , tmpMain_Group.OperDate
+             , tmpMain_Group.PartionGoods
+             , tmpMain_Group.PartionGoods_main
+             , tmpMain_Group.OperDate_partion
+             , tmpMain_Group.GoodsNameMaster
+             , tmpMain_Group.CountMaster
+             , tmpMain_Group.CountMaster_4134
+             , tmpMain_Group.SummMaster
+             , tmpMain_Group.HeadCountMaster
+             --, tmpMain_Group.PriceMaster
+             , tmpMain_Group.FromName
+             , tmpMain_Group.PersonalPackerName
+             , tmpMain_Group.GoodsNameIncome
+             , tmpMain_Group.CountIncome
+             , tmpMain_Group.SummIncome
+             , tmpMain_Group.HeadCountIncome
+             , tmpMain_Group.CountPackerIncome
+             , tmpMain_Group.AmountPartnerIncome
+             , tmpMain_Group.HeadCount1
+             , tmpMain_Group.PriceIncome
+             , tmpMain_Group.PriceIncome1
+             , tmpMain_Group.PriceIncome2
+             , tmpMain_Group.SummCostIncome
+             , tmpMain_Group.CountDocIncome
+             , tmpMain_Group.Count_CountPacker
+             , tmpMain_Group.CountSeparate
+             , tmpMain_Group.PercentCount
+             , tmpMain_Group.GoodsNameSeparate
+             , tmpMain_Group.SummHeadCount1
+             
+            -- , tmpCursor1.PriceMaster
+             , tmpCursor1.Separate_info  
+             , tmpCursor1.GoodsName_4134
+             , tmpCursor1.PriceFact_4134
+             --  
+             , tmpCursor1.GoodsId
+             , tmpCursor1.GoodsCode
+             , tmpCursor1.GoodsName 
+             , tmpCursor1.GoodsGroupCode
+             , tmpCursor1.GoodsGroupName
+             , tmpCursor1.GoodsGroupNameFull 
+             , tmpCursor1.GroupStatId
+             , tmpCursor1.GroupStatName
+             , tmpCursor1.PricePlan
+             , tmpCursor1.PriceNorm
+             --, tmpCursor1.PriceFact_nk
+             
+             , tmpGroup.Price_gr1
+             , tmpGroup.Price_gr2
+             , tmpGroup.Price_gr3
+             , tmpGroup.Price_gr4
+             , tmpGroup.Price_gr5
+             , tmpGroup.Price_gr6
+             , tmpGroup.Price_gr7
+             , tmpGroup.Price_gr8
+             , tmpGroup.Price_gr9
+             , tmpGroup.Price_gr10
+  
+             , tmpGroup.Price_nk_gr1
+             , tmpGroup.Price_nk_gr2
+             , tmpGroup.Price_nk_gr3
+             , tmpGroup.Price_nk_gr4
+             , tmpGroup.Price_nk_gr5
+             , tmpGroup.Price_nk_gr6
+             , tmpGroup.Price_nk_gr7
+             , tmpGroup.Price_nk_gr8
+             , tmpGroup.Price_nk_gr9
+             , tmpGroup.Price_nk_gr10
+   
+             , TRIM (tmpGroup.GoodsGroupName1) 
+             , TRIM (tmpGroup.GoodsGroupName2) 
+             , TRIM (tmpGroup.GoodsGroupName3) 
+             , TRIM (tmpGroup.GoodsGroupName4) 
+             , TRIM (tmpGroup.GoodsGroupName5) 
+             , TRIM (tmpGroup.GoodsGroupName6) 
+             , TRIM (tmpGroup.GoodsGroupName7) 
+             , TRIM (tmpGroup.GoodsGroupName8) 
+             , TRIM (tmpGroup.GoodsGroupName9) 
+             , TRIM (tmpGroup.GoodsGroupName10)
   
  ;
 
