@@ -255,11 +255,15 @@ BEGIN
                   )
 
                OR -- Этих Отправляем 10-min
-                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '10 MIN'
+                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '20 MIN'
                AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
-                   < CURRENT_TIMESTAMP - INTERVAL '10 MIN'
+                   < CURRENT_TIMESTAMP - INTERVAL '20 MIN'
                -- схема Vchasno - EDI
                AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
+               -- Vchasno - без этих
+               AND Object_Retail.Id NOT IN (310859 -- !!!Новус!!!
+                                       -- , 310846 -- !!!ВК!!!
+                                           )
                   )
 
                -- Этих Отправляем Сразу
