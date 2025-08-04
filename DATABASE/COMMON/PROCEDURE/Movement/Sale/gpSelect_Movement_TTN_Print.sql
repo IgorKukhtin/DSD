@@ -193,6 +193,20 @@ BEGIN
     END IF;
 
 
+     -- определяется параметр
+     vbGoodsPropertyId:= (SELECT zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId), MovementLinkObject_To.ObjectId)
+                          FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                          WHERE Movement.Id = inMovementId
+                         );
 
      --
     OPEN Cursor1 FOR
@@ -214,7 +228,8 @@ BEGIN
                                         * -- вес 1-ого пакета
                                           COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
                                      ELSE 0
-                                END ) ) ) :: TFloat AS TotalWeightPackage
+                                END ) ) ) :: TFloat AS TotalWeightPackage 
+                            , SUM (COALESCE (tmpMI.BoxWeight, 0)):: TFloat AS TotalWeightBox
 
                      FROM (WITH
                            tmpMI AS (SELECT *
@@ -231,21 +246,58 @@ BEGIN
                          , tmpMIFloat AS (SELECT MovementItemFloat.*
                                           FROM MovementItemFloat
                                           WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                                            AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPartner())
+                                            AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPartner()
+                                                                           , zc_MIFloat_BoxCount()
+                                                                            )
                                           )
-                           SELECT MovementItem.ObjectId                         AS GoodsId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                 , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
-                                                  THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                                             ELSE MovementItem.Amount
-                                        END
-                                        * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )
-                                        ) AS AmountPartnerWeight
 
+                           --  для товаров + GoodsKindId  вес упаковок
+                         , tmpObject_GoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                                                                 , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                                                 , COALESCE (ObjectFloat_Weight.ValueData, 0)                          AS GoodsBox_Weight
+                                                            FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                                                                 ) AS tmpGoodsProperty
+                                                                 INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                                                       ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                                                      AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                    
+                                                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                                                      ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                                     AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                                                      ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                                     AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                    
+                                                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                                                                                      ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                                     AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+                                                                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                                                       ON ObjectFloat_Weight.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
+                                                                                      AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                    
+                                                           -- WHERE 1=0
+                                                           )
+
+
+                           SELECT MovementItem.ObjectId                         AS GoodsId
+                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
+                                                 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                            ELSE MovementItem.Amount
+                                       END
+                                       * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )
+                                       ) AS AmountPartnerWeight
+                                
+                                , SUM (COALESCE (MIFloat_BoxCount.ValueData, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)):: TFloat AS BoxWeight
                            FROM tmpMI AS MovementItem
                                  LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
+                                 LEFT JOIN tmpMIFloat AS MIFloat_BoxCount
+                                                      ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+
                                  LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
 
                                  LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
@@ -260,6 +312,9 @@ BEGIN
                                                      AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                                  LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+                                 LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId     = MovementItem.ObjectId
+                                                                       AND tmpObject_GoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+ 
                            WHERE MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = FALSE
@@ -512,18 +567,18 @@ BEGIN
            , tmpTransportGoods.MemberName6
            , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn() THEN tmpTransportGoods.MemberName7 ELSE 'Комірник ' ||tmpTransportGoods.MemberName4 END AS MemberName7
            , tmpTransportGoods.TotalCountBox
-           , tmpTransportGoods.TotalWeightBox
-           ,   COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0) AS TotalWeight_Brutto
-           , ((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)    :: TFloat AS TotalWeight_BruttoKg
-           , ((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000) :: TFloat AS TotalWeight_BruttoT
-           , TRUNC ((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000) :: TFloat AS TotalWeight_BruttoT1
-           , TRUNC ( ( ROUND( (COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000, 3)
-                    - TRUNC ((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000)
+           , tmpPackage.TotalWeightBox --tmpTransportGoods.TotalWeightBox
+           ,   COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0) AS TotalWeight_Brutto
+           , ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)    :: TFloat AS TotalWeight_BruttoKg
+           , ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000) :: TFloat AS TotalWeight_BruttoT
+           , TRUNC ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000) :: TFloat AS TotalWeight_BruttoT1
+           , TRUNC ( ( ROUND( (COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000, 3)
+                    - TRUNC ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000)
                      ) * 1000) :: TFloat AS TotalWeight_BruttoT2
 
            , CASE WHEN 1 =
-             TRUNC ( ((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0)) / 1000
-                    - TRUNC ((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0)) / 1000)
+             TRUNC ( ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0)) / 1000
+                    - TRUNC ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0)) / 1000)
                      ) * 1000)
                   THEN 'тисячна' ELSE 'тисячних' END :: TVarChar AS Info2
           --
@@ -561,7 +616,7 @@ BEGIN
                     = 0
                       THEN 0
                  ELSE
-                      CAST ((((COALESCE (tmpTransportGoods.TotalWeightBox, 0)
+                      CAST ((((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0)
                              + COALESCE (MovementFloat_TotalCountKg.ValueData, 0)
                              + COALESCE (tmpPackage.TotalWeightPackage,0)
                               ) / 1)
@@ -569,7 +624,7 @@ BEGIN
                       + COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId), 0)
                       ) AS NUMERIC (16,0)) :: TFloat END :: TFloat AS Weight_all
           --загальна вага в тоннах
-          , ( ( ((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)
+          , ( ( ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)
                       + (COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId), 0)
                        + COALESCE ((select tmpCar_param.Weight from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId), 0)
                         ))/1000) :: TFloat AS Weight_all_t --в тоннах
