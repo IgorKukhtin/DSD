@@ -3639,6 +3639,47 @@ object UtilPrintForm: TUtilPrintForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintBox: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintBox
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintBox
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099
+      Hint = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackWeight'
+      ReportNameParam.Value = 'PrintMovement_SalePackWeight'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
@@ -5055,5 +5096,32 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 487
     Top = 272
+  end
+  object spSelectPrintBox: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_BoxPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 663
+    Top = 328
   end
 end

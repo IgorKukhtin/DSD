@@ -474,7 +474,11 @@ begin
      end;
      //
      // Гофро-ящики+Поддон+Ящик+Гофро-уголок
-     Save_Movement_gofro(ParamsMI);
+     //if not Save_Movement_gofro(ParamsMI)
+     //then begin
+     //    ShowMessage('Необходимо заполнить данные по Гофротара.');
+     //    exit;
+     //end;
      //
      //
      // Проверка - нужен ли Акт
@@ -611,6 +615,18 @@ begin
           MovementId_begin:= ParamsMovement.ParamByName('MovementId_begin').AsInteger;
           MovementId_begin:= ParamsMovement.ParamByName('MovementId').AsInteger;
           isOpen_ActDiff:= ParamsMovement.ParamByName('isOpen_ActDiff').AsBoolean;
+          //
+          // Гофро-ящики+Поддон+Ящик+Гофро-уголок
+           if not Save_Movement_gofro(ParamsMI) then
+           begin
+                ParamsMI.ParamByName('isPartner_Goods_gofro').AsBoolean:= false;
+                ShowMessage('Данные Гофротара не заполнены.');
+                //exit;
+           end;
+           //
+           if (ParamsMI.ParamByName('isPartner_Goods_gofro').AsBoolean = true)
+           then Print_Box_Goods (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+          //
           //Комплектовщики
           Create_ParamsPersonalComplete(execParams);
           execParams.ParamByName('MovementId').AsInteger:=ParamsMovement.ParamByName('MovementId').AsInteger;
@@ -621,10 +637,6 @@ begin
           execParams.ParamByName('ToName').AsString:=ParamsMovement.ParamByName('ToName').AsString;
           Save_Movement_PersonalComplete(execParams);
           execParams.Free;
-          //
-          // Гофро-ящики+Поддон+Ящик+Гофро-уголок
-          //Save_Movement_gofro(ParamsMI);
-          //
           //
           //Print and Create Quality + Transport + Tax
           if (ParamsMovement.ParamByName('isDocPartner').AsBoolean = FALSE)
@@ -822,6 +834,8 @@ end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.Save_Movement_gofro(execParamsMI:TParams):Boolean;
 begin
+     execParamsMI.ParamByName('isPartner_Goods_gofro').AsBoolean:= false;
+     //
      Result:= (ParamsMovement.ParamByName('MovementDescId').asInteger = zc_Movement_Sale)
           //and ()
             ;
@@ -833,11 +847,10 @@ begin
           Result:= DialogGofroForm.Execute(execParamsMI);
           if Result then
           begin
-               //PanelPartner.Caption:='('+IntToStr(lParams.ParamByName('PersonalCode').asInteger)+')'+lParams.ParamByName('PersonalName').asString + ' *** ' + GetPanelPartnerCaption(ParamsMovement);
-               //ParamAddValue(lParams,'MovementId', ftInteger,execParams.ParamByName('MovementId').asInteger);
-//               DMMainScaleForm.gpUpdate_Scale_Movement_gofro(execParamsMI);
+               DMMainScaleForm.gpUpdate_Scale_MI_Goods_gofro(execParamsMI);
           end;
-     end;
+     end
+     else Result:= true;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.bbUpdatePartnerClick(Sender: TObject);

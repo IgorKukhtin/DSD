@@ -721,6 +721,7 @@ begin
          ParamAdd(Params,'Weight_gd_out',ftFloat);           // Вес шт. товара
 
          // Гофро-ящики+Поддон+Ящик+Гофро-уголок
+         ParamAdd(Params,'isPartner_Goods_gofro',ftBoolean);
          //Поддон
          ParamAdd(Params,'GoodsId_gofro_pd',ftInteger);           // Товары
          ParamAdd(Params,'GoodsCode_gofro_pd',ftInteger);         // Товары

@@ -195,6 +195,8 @@ type
     actPrint_Account_PageCount: TdsdPrintAction;
     actPrint_OrderExternal_PageCount: TdsdPrintAction;
     spSelectPrint_OrderExternal_srv_r: TdsdStoredProc;
+    spSelectPrintBox: TdsdStoredProc;
+    actPrintBox: TdsdPrintAction;
   private
   end;
   //
@@ -222,6 +224,7 @@ type
   function Print_Income_Price_diff (MovementId: Integer):Boolean;
   function Print_Movement_Income_Sklad(MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Box_Total (MovementId: Integer):Boolean;
+  function Print_Box_Goods (MovementId: Integer):Boolean;
 
   function Print_Movement_Income_Reestr(StartDate, EndDate : TDateTime; MovementDescId,UnitId:Integer):Boolean;
 
@@ -340,6 +343,16 @@ begin
      //
      UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
      UtilPrintForm.actPrintBoxTotalPartner.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Box_Goods (MovementId: Integer):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+     UtilPrintForm.actPrintBox.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 function Print_Income_Price_diff (MovementId: Integer):Boolean;

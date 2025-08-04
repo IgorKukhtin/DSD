@@ -134,6 +134,7 @@ inherited DialogGofroForm: TDialogGofroForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Properties.OnButtonClick = EditGoodsName_1PropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -13
@@ -292,6 +293,7 @@ inherited DialogGofroForm: TDialogGofroForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Properties.OnButtonClick = EditGoodsName_2PropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -13
@@ -504,6 +506,7 @@ inherited DialogGofroForm: TDialogGofroForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Properties.OnButtonClick = EditGoodsName_3PropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -13
@@ -653,6 +656,7 @@ inherited DialogGofroForm: TDialogGofroForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Properties.OnButtonClick = EditGoodsName_4PropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -13
@@ -802,6 +806,7 @@ inherited DialogGofroForm: TDialogGofroForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Properties.OnButtonClick = EditGoodsName_8PropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -13
@@ -951,6 +956,7 @@ inherited DialogGofroForm: TDialogGofroForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Properties.OnButtonClick = EditGoodsName_7PropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -13
@@ -1100,6 +1106,7 @@ inherited DialogGofroForm: TDialogGofroForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Properties.OnButtonClick = EditGoodsName_6PropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -13
@@ -1249,6 +1256,7 @@ inherited DialogGofroForm: TDialogGofroForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Properties.OnButtonClick = EditGoodsName_5PropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -13
@@ -1398,6 +1406,7 @@ inherited DialogGofroForm: TDialogGofroForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Properties.OnButtonClick = EditGoodsName_boxPropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -13
@@ -1703,6 +1712,7 @@ inherited DialogGofroForm: TDialogGofroForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Properties.OnButtonClick = EditGoodsName_ugolPropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -13

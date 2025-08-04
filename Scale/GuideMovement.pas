@@ -160,6 +160,7 @@ type
     cbPrintTransport_Total: TCheckBox;
     cbIncome_sklad: TCheckBox;
     bbPrintGofro: TSpeedButton;
+    bbPrintGofro_Goods: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -202,6 +203,7 @@ type
     procedure cbPrintTransport_TotalClick(Sender: TObject);
     procedure cbIncome_skladClick(Sender: TObject);
     procedure bbPrintGofroClick(Sender: TObject);
+    procedure bbPrintGofro_GoodsClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -893,6 +895,12 @@ end;
 procedure TGuideMovementForm.bbPrintGofroClick(Sender: TObject);
 begin
      Print_Box_Total (CDS.FieldByName('MovementId_parent').AsInteger  // MovementId
+                     );
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbPrintGofro_GoodsClick(Sender: TObject);
+begin
+     Print_Box_Goods (CDS.FieldByName('MovementId_parent').AsInteger  // MovementId
                      );
 end;
 {------------------------------------------------------------------------------}

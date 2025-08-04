@@ -203,6 +203,26 @@ type
     procedure EditGoodsCode_6Exit(Sender: TObject);
     procedure EditGoodsCode_7Exit(Sender: TObject);
     procedure EditGoodsCode_8Exit(Sender: TObject);
+    procedure EditGoodsName_boxPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure EditGoodsName_ugolPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure EditGoodsName_1PropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure EditGoodsName_2PropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure EditGoodsName_3PropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure EditGoodsName_4PropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure EditGoodsName_5PropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure EditGoodsName_6PropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure EditGoodsName_7PropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure EditGoodsName_8PropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
@@ -285,7 +305,7 @@ begin
          else begin
                   ActiveControl:= EditGoodsCode_pd;
                   ParamsMI.ParamByName('GoodsId_gofro_pd').AsInteger:= 0;
-                  ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_pd.Text+'> не найден.');
+                  ShowMessage('Ошибка.Поддон с кодом <'+EditGoodsCode_pd.Text+'> не найден.');
          end;
          lParams.Free;
      end
@@ -317,7 +337,7 @@ begin
          else begin
                   ActiveControl:= EditGoodsCode_box;
                   ParamsMI.ParamByName('GoodsId_gofro_box').AsInteger:= 0;
-                  ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_box.Text+'> не найден.');
+                  ShowMessage('Ошибка.Ящика с кодом <'+EditGoodsCode_box.Text+'> не найден.');
          end;
          lParams.Free;
      end
@@ -349,7 +369,7 @@ begin
          else begin
                   ActiveControl:= EditGoodsCode_ugol;
                   ParamsMI.ParamByName('GoodsId_gofro_ugol').AsInteger:= 0;
-                  ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_ugol.Text+'> не найден.');
+                  ShowMessage('Ошибка.Гофроуголок с кодом <'+EditGoodsCode_ugol.Text+'> не найден.');
          end;
          lParams.Free;
      end
@@ -381,7 +401,7 @@ begin
          else begin
                   ActiveControl:= EditGoodsCode_1;
                   ParamsMI.ParamByName('GoodsId_gofro_1').AsInteger:= 0;
-                  ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_1.Text+'> не найден.');
+                  ShowMessage('Ошибка.Товар-1 с кодом <'+EditGoodsCode_1.Text+'> не найден.');
          end;
          lParams.Free;
      end
@@ -413,7 +433,7 @@ begin
          else begin
                   ActiveControl:= EditGoodsCode_2;
                   ParamsMI.ParamByName('GoodsId_gofro_2').AsInteger:= 0;
-                  ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_2.Text+'> не найден.');
+                  ShowMessage('Ошибка.Товар-2 с кодом <'+EditGoodsCode_2.Text+'> не найден.');
          end;
          lParams.Free;
      end
@@ -445,7 +465,7 @@ begin
          else begin
                   ActiveControl:= EditGoodsCode_3;
                   ParamsMI.ParamByName('GoodsId_gofro_3').AsInteger:= 0;
-                  ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_3.Text+'> не найден.');
+                  ShowMessage('Ошибка.Товар-3 с кодом <'+EditGoodsCode_3.Text+'> не найден.');
          end;
          lParams.Free;
      end
@@ -477,7 +497,7 @@ begin
          else begin
                   ActiveControl:= EditGoodsCode_4;
                   ParamsMI.ParamByName('GoodsId_gofro_4').AsInteger:= 0;
-                  ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_4.Text+'> не найден.');
+                  ShowMessage('Ошибка.Товар-4 с кодом <'+EditGoodsCode_4.Text+'> не найден.');
          end;
          lParams.Free;
      end
@@ -509,7 +529,7 @@ begin
          else begin
                   ActiveControl:= EditGoodsCode_5;
                   ParamsMI.ParamByName('GoodsId_gofro_5').AsInteger:= 0;
-                  ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_5.Text+'> не найден.');
+                  ShowMessage('Ошибка.Товар-5 с кодом <'+EditGoodsCode_5.Text+'> не найден.');
          end;
          lParams.Free;
      end
@@ -541,7 +561,7 @@ begin
          else begin
                   ActiveControl:= EditGoodsCode_6;
                   ParamsMI.ParamByName('GoodsId_gofro_6').AsInteger:= 0;
-                  ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_6.Text+'> не найден.');
+                  ShowMessage('Ошибка.Товар-6 с кодом <'+EditGoodsCode_6.Text+'> не найден.');
          end;
          lParams.Free;
      end
@@ -573,7 +593,7 @@ begin
          else begin
                   ActiveControl:= EditGoodsCode_7;
                   ParamsMI.ParamByName('GoodsId_gofro_7').AsInteger:= 0;
-                  ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_7.Text+'> не найден.');
+                  ShowMessage('Ошибка.Товар-7 с кодом <'+EditGoodsCode_7.Text+'> не найден.');
          end;
          lParams.Free;
      end
@@ -605,7 +625,7 @@ begin
          else begin
                   ActiveControl:= EditGoodsCode_8;
                   ParamsMI.ParamByName('GoodsId_gofro_8').AsInteger:= 0;
-                  ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_8.Text+'> не найден.');
+                  ShowMessage('Ошибка.Товар-8 с кодом <'+EditGoodsCode_8.Text+'> не найден.');
          end;
          lParams.Free;
      end
@@ -781,7 +801,257 @@ begin
      ParamsMI.ParamByName('GoodsCode_gofro_pd').AsInteger:= ParamsGuide_local.ParamByName('GuideCode').AsInteger;
      ParamsMI.ParamByName('GoodsName_gofro_pd').AsString:= ParamsGuide_local.ParamByName('GuideName').asString;
      //
-     ActiveControl:=EditGoodsCode_box;
+     ActiveControl:=EditAmount_pd;
+  end;
+  //
+  ParamsGuide_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogGofroForm.EditGoodsName_boxPropertiesButtonClick(
+  Sender: TObject; AButtonIndex: Integer);
+var ParamsGuide_local :TParams;
+begin
+  Create_ParamsGuide(ParamsGuide_local);
+  //
+  ParamsGuide_local.ParamByName('GuideId').AsInteger:= ParamsMI.ParamByName('GoodsId_gofro_box').AsInteger;
+  ParamsGuide_local.ParamByName('GuideCode').AsInteger:= ParamsMI.ParamByName('GoodsCode_gofro_box').AsInteger;
+  ParamsGuide_local.ParamByName('GuideName').asString:= ParamsMI.ParamByName('GoodsName_gofro_box').AsString;
+  //
+  if GuideGofroForm.Execute(ParamsGuide_local)
+  then begin
+     EditGoodsCode_box.Text:= ParamsGuide_local.ParamByName('GuideCode').AsString;
+     EditGoodsName_box.Text:= ParamsGuide_local.ParamByName('GuideName').AsString;
+     //
+     ParamsMI.ParamByName('GoodsId_gofro_box').AsInteger:=   ParamsGuide_local.ParamByName('GuideId').AsInteger;
+     ParamsMI.ParamByName('GoodsCode_gofro_box').AsInteger:= ParamsGuide_local.ParamByName('GuideCode').AsInteger;
+     ParamsMI.ParamByName('GoodsName_gofro_box').AsString:= ParamsGuide_local.ParamByName('GuideName').asString;
+     //
+     ActiveControl:=EditAmount_box;
+  end;
+  //
+  ParamsGuide_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogGofroForm.EditGoodsName_ugolPropertiesButtonClick(
+  Sender: TObject; AButtonIndex: Integer);
+var ParamsGuide_local :TParams;
+begin
+  Create_ParamsGuide(ParamsGuide_local);
+  //
+  ParamsGuide_local.ParamByName('GuideId').AsInteger:= ParamsMI.ParamByName('GoodsId_gofro_ugol').AsInteger;
+  ParamsGuide_local.ParamByName('GuideCode').AsInteger:= ParamsMI.ParamByName('GoodsCode_gofro_ugol').AsInteger;
+  ParamsGuide_local.ParamByName('GuideName').asString:= ParamsMI.ParamByName('GoodsName_gofro_ugol').AsString;
+  //
+  if GuideGofroForm.Execute(ParamsGuide_local)
+  then begin
+     EditGoodsCode_ugol.Text:= ParamsGuide_local.ParamByName('GuideCode').AsString;
+     EditGoodsName_ugol.Text:= ParamsGuide_local.ParamByName('GuideName').AsString;
+     //
+     ParamsMI.ParamByName('GoodsId_gofro_ugol').AsInteger:=   ParamsGuide_local.ParamByName('GuideId').AsInteger;
+     ParamsMI.ParamByName('GoodsCode_gofro_ugol').AsInteger:= ParamsGuide_local.ParamByName('GuideCode').AsInteger;
+     ParamsMI.ParamByName('GoodsName_gofro_ugol').AsString:= ParamsGuide_local.ParamByName('GuideName').asString;
+     //
+     ActiveControl:=EditAmount_ugol;
+  end;
+  //
+  ParamsGuide_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogGofroForm.EditGoodsName_1PropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+var ParamsGuide_local :TParams;
+begin
+  Create_ParamsGuide(ParamsGuide_local);
+  //
+  ParamsGuide_local.ParamByName('GuideId').AsInteger:= ParamsMI.ParamByName('GoodsId_gofro_1').AsInteger;
+  ParamsGuide_local.ParamByName('GuideCode').AsInteger:= ParamsMI.ParamByName('GoodsCode_gofro_1').AsInteger;
+  ParamsGuide_local.ParamByName('GuideName').asString:= ParamsMI.ParamByName('GoodsName_gofro_1').AsString;
+  //
+  if GuideGofroForm.Execute(ParamsGuide_local)
+  then begin
+     EditGoodsCode_1.Text:= ParamsGuide_local.ParamByName('GuideCode').AsString;
+     EditGoodsName_1.Text:= ParamsGuide_local.ParamByName('GuideName').AsString;
+     //
+     ParamsMI.ParamByName('GoodsId_gofro_1').AsInteger  :=ParamsGuide_local.ParamByName('GuideId').AsInteger;
+     ParamsMI.ParamByName('GoodsCode_gofro_1').AsInteger:=ParamsGuide_local.ParamByName('GuideCode').AsInteger;
+     ParamsMI.ParamByName('GoodsName_gofro_1').AsString :=ParamsGuide_local.ParamByName('GuideName').asString;
+     //
+     ActiveControl:=EditAmount_1;
+  end;
+  //
+  ParamsGuide_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogGofroForm.EditGoodsName_2PropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+var ParamsGuide_local :TParams;
+begin
+  Create_ParamsGuide(ParamsGuide_local);
+  //
+  ParamsGuide_local.ParamByName('GuideId').AsInteger:= ParamsMI.ParamByName('GoodsId_gofro_2').AsInteger;
+  ParamsGuide_local.ParamByName('GuideCode').AsInteger:= ParamsMI.ParamByName('GoodsCode_gofro_2').AsInteger;
+  ParamsGuide_local.ParamByName('GuideName').asString:= ParamsMI.ParamByName('GoodsName_gofro_2').AsString;
+  //
+  if GuideGofroForm.Execute(ParamsGuide_local)
+  then begin
+     EditGoodsCode_2.Text:= ParamsGuide_local.ParamByName('GuideCode').AsString;
+     EditGoodsName_2.Text:= ParamsGuide_local.ParamByName('GuideName').AsString;
+     //
+     ParamsMI.ParamByName('GoodsId_gofro_2').AsInteger  :=ParamsGuide_local.ParamByName('GuideId').AsInteger;
+     ParamsMI.ParamByName('GoodsCode_gofro_2').AsInteger:=ParamsGuide_local.ParamByName('GuideCode').AsInteger;
+     ParamsMI.ParamByName('GoodsName_gofro_2').AsString :=ParamsGuide_local.ParamByName('GuideName').asString;
+     //
+     ActiveControl:=EditAmount_2;
+  end;
+  //
+  ParamsGuide_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogGofroForm.EditGoodsName_3PropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+var ParamsGuide_local :TParams;
+begin
+  Create_ParamsGuide(ParamsGuide_local);
+  //
+  ParamsGuide_local.ParamByName('GuideId').AsInteger:= ParamsMI.ParamByName('GoodsId_gofro_3').AsInteger;
+  ParamsGuide_local.ParamByName('GuideCode').AsInteger:= ParamsMI.ParamByName('GoodsCode_gofro_3').AsInteger;
+  ParamsGuide_local.ParamByName('GuideName').asString:= ParamsMI.ParamByName('GoodsName_gofro_3').AsString;
+  //
+  if GuideGofroForm.Execute(ParamsGuide_local)
+  then begin
+     EditGoodsCode_3.Text:= ParamsGuide_local.ParamByName('GuideCode').AsString;
+     EditGoodsName_3.Text:= ParamsGuide_local.ParamByName('GuideName').AsString;
+     //
+     ParamsMI.ParamByName('GoodsId_gofro_3').AsInteger  :=ParamsGuide_local.ParamByName('GuideId').AsInteger;
+     ParamsMI.ParamByName('GoodsCode_gofro_3').AsInteger:=ParamsGuide_local.ParamByName('GuideCode').AsInteger;
+     ParamsMI.ParamByName('GoodsName_gofro_3').AsString :=ParamsGuide_local.ParamByName('GuideName').asString;
+     //
+     ActiveControl:=EditAmount_3;
+  end;
+  //
+  ParamsGuide_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogGofroForm.EditGoodsName_4PropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+var ParamsGuide_local :TParams;
+begin
+  Create_ParamsGuide(ParamsGuide_local);
+  //
+  ParamsGuide_local.ParamByName('GuideId').AsInteger:= ParamsMI.ParamByName('GoodsId_gofro_4').AsInteger;
+  ParamsGuide_local.ParamByName('GuideCode').AsInteger:= ParamsMI.ParamByName('GoodsCode_gofro_4').AsInteger;
+  ParamsGuide_local.ParamByName('GuideName').asString:= ParamsMI.ParamByName('GoodsName_gofro_4').AsString;
+  //
+  if GuideGofroForm.Execute(ParamsGuide_local)
+  then begin
+     EditGoodsCode_4.Text:= ParamsGuide_local.ParamByName('GuideCode').AsString;
+     EditGoodsName_4.Text:= ParamsGuide_local.ParamByName('GuideName').AsString;
+     //
+     ParamsMI.ParamByName('GoodsId_gofro_4').AsInteger  :=ParamsGuide_local.ParamByName('GuideId').AsInteger;
+     ParamsMI.ParamByName('GoodsCode_gofro_4').AsInteger:=ParamsGuide_local.ParamByName('GuideCode').AsInteger;
+     ParamsMI.ParamByName('GoodsName_gofro_4').AsString :=ParamsGuide_local.ParamByName('GuideName').asString;
+     //
+     ActiveControl:=EditAmount_4;
+  end;
+  //
+  ParamsGuide_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogGofroForm.EditGoodsName_5PropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+var ParamsGuide_local :TParams;
+begin
+  Create_ParamsGuide(ParamsGuide_local);
+  //
+  ParamsGuide_local.ParamByName('GuideId').AsInteger:= ParamsMI.ParamByName('GoodsId_gofro_5').AsInteger;
+  ParamsGuide_local.ParamByName('GuideCode').AsInteger:= ParamsMI.ParamByName('GoodsCode_gofro_5').AsInteger;
+  ParamsGuide_local.ParamByName('GuideName').asString:= ParamsMI.ParamByName('GoodsName_gofro_5').AsString;
+  //
+  if GuideGofroForm.Execute(ParamsGuide_local)
+  then begin
+     EditGoodsCode_5.Text:= ParamsGuide_local.ParamByName('GuideCode').AsString;
+     EditGoodsName_5.Text:= ParamsGuide_local.ParamByName('GuideName').AsString;
+     //
+     ParamsMI.ParamByName('GoodsId_gofro_5').AsInteger  :=ParamsGuide_local.ParamByName('GuideId').AsInteger;
+     ParamsMI.ParamByName('GoodsCode_gofro_5').AsInteger:=ParamsGuide_local.ParamByName('GuideCode').AsInteger;
+     ParamsMI.ParamByName('GoodsName_gofro_5').AsString :=ParamsGuide_local.ParamByName('GuideName').asString;
+     //
+     ActiveControl:=EditAmount_5;
+  end;
+  //
+  ParamsGuide_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogGofroForm.EditGoodsName_6PropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+var ParamsGuide_local :TParams;
+begin
+  Create_ParamsGuide(ParamsGuide_local);
+  //
+  ParamsGuide_local.ParamByName('GuideId').AsInteger:= ParamsMI.ParamByName('GoodsId_gofro_6').AsInteger;
+  ParamsGuide_local.ParamByName('GuideCode').AsInteger:= ParamsMI.ParamByName('GoodsCode_gofro_6').AsInteger;
+  ParamsGuide_local.ParamByName('GuideName').asString:= ParamsMI.ParamByName('GoodsName_gofro_6').AsString;
+  //
+  if GuideGofroForm.Execute(ParamsGuide_local)
+  then begin
+     EditGoodsCode_6.Text:= ParamsGuide_local.ParamByName('GuideCode').AsString;
+     EditGoodsName_6.Text:= ParamsGuide_local.ParamByName('GuideName').AsString;
+     //
+     ParamsMI.ParamByName('GoodsId_gofro_6').AsInteger  :=ParamsGuide_local.ParamByName('GuideId').AsInteger;
+     ParamsMI.ParamByName('GoodsCode_gofro_6').AsInteger:=ParamsGuide_local.ParamByName('GuideCode').AsInteger;
+     ParamsMI.ParamByName('GoodsName_gofro_6').AsString :=ParamsGuide_local.ParamByName('GuideName').asString;
+     //
+     ActiveControl:=EditAmount_6;
+  end;
+  //
+  ParamsGuide_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogGofroForm.EditGoodsName_7PropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+var ParamsGuide_local :TParams;
+begin
+  Create_ParamsGuide(ParamsGuide_local);
+  //
+  ParamsGuide_local.ParamByName('GuideId').AsInteger:= ParamsMI.ParamByName('GoodsId_gofro_7').AsInteger;
+  ParamsGuide_local.ParamByName('GuideCode').AsInteger:= ParamsMI.ParamByName('GoodsCode_gofro_7').AsInteger;
+  ParamsGuide_local.ParamByName('GuideName').asString:= ParamsMI.ParamByName('GoodsName_gofro_7').AsString;
+  //
+  if GuideGofroForm.Execute(ParamsGuide_local)
+  then begin
+     EditGoodsCode_7.Text:= ParamsGuide_local.ParamByName('GuideCode').AsString;
+     EditGoodsName_7.Text:= ParamsGuide_local.ParamByName('GuideName').AsString;
+     //
+     ParamsMI.ParamByName('GoodsId_gofro_7').AsInteger  :=ParamsGuide_local.ParamByName('GuideId').AsInteger;
+     ParamsMI.ParamByName('GoodsCode_gofro_7').AsInteger:=ParamsGuide_local.ParamByName('GuideCode').AsInteger;
+     ParamsMI.ParamByName('GoodsName_gofro_7').AsString :=ParamsGuide_local.ParamByName('GuideName').asString;
+     //
+     ActiveControl:=EditAmount_7;
+  end;
+  //
+  ParamsGuide_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogGofroForm.EditGoodsName_8PropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+var ParamsGuide_local :TParams;
+begin
+  Create_ParamsGuide(ParamsGuide_local);
+  //
+  ParamsGuide_local.ParamByName('GuideId').AsInteger:= ParamsMI.ParamByName('GoodsId_gofro_8').AsInteger;
+  ParamsGuide_local.ParamByName('GuideCode').AsInteger:= ParamsMI.ParamByName('GoodsCode_gofro_8').AsInteger;
+  ParamsGuide_local.ParamByName('GuideName').asString:= ParamsMI.ParamByName('GoodsName_gofro_8').AsString;
+  //
+  if GuideGofroForm.Execute(ParamsGuide_local)
+  then begin
+     EditGoodsCode_8.Text:= ParamsGuide_local.ParamByName('GuideCode').AsString;
+     EditGoodsName_8.Text:= ParamsGuide_local.ParamByName('GuideName').AsString;
+     //
+     ParamsMI.ParamByName('GoodsId_gofro_8').AsInteger  :=ParamsGuide_local.ParamByName('GuideId').AsInteger;
+     ParamsMI.ParamByName('GoodsCode_gofro_8').AsInteger:=ParamsGuide_local.ParamByName('GuideCode').AsInteger;
+     ParamsMI.ParamByName('GoodsName_gofro_8').AsString :=ParamsGuide_local.ParamByName('GuideName').asString;
+     //
+     ActiveControl:=EditAmount_8;
   end;
   //
   ParamsGuide_local.Free;
@@ -916,71 +1186,71 @@ begin
      // 0.1.1.Поддон - Проверка
      if (EditGoodsCode_pd.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_pd').AsInteger = 0)
      then begin
-               ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_pd.Text+'> не найден.');
+               ShowMessage('Ошибка.Поддон с кодом <'+EditGoodsCode_pd.Text+'> не найден.');
                ActiveControl:= EditGoodsCode_pd;
                exit;
          end;
      // 0.1.2.Поддон - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_pd').AsFloat > 0) and (ParamsMI.ParamByName('GoodsId_gofro_pd').AsInteger = 0)
      then begin
-               ShowMessage('Ошибка.Не определен Товар с кол-вом = <'+FloatToStr(ParamsMI.ParamByName('Amount_gofro_pd').AsFloat)+'>.');
+               ShowMessage('Ошибка.Не определен Поддон с кол-вом = <'+FloatToStr(ParamsMI.ParamByName('Amount_gofro_pd').AsFloat)+'>.');
                ActiveControl:= EditGoodsCode_pd;
                exit;
          end;
      // 0.1.3.Поддон - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_pd').AsFloat = 0) and (ParamsMI.ParamByName('GoodsId_gofro_pd').AsInteger > 0)
      then begin
-               ShowMessage('Ошибка.Не определено кол-во для Товара = <'+EditGoodsName_pd.Text+'>.');
+               ShowMessage('Ошибка.Не определено кол-во для <'+EditGoodsName_pd.Text+'>.');
                ActiveControl:= EditAmount_pd;
                exit;
          end;
      //
      // 0.2.1.ящик - Проверка
-     if (EditGoodsCode_pd.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_box').AsInteger = 0)
+     if (EditGoodsCode_box.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_box').AsInteger = 0)
      then begin
-               ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_box.Text+'> не найден.');
+               ShowMessage('Ошибка.Ящик с кодом <'+EditGoodsCode_box.Text+'> не найден.');
                ActiveControl:= EditGoodsCode_box;
                exit;
          end;
      // 0.2.2.ящик - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_box').AsFloat > 0) and (ParamsMI.ParamByName('GoodsId_gofro_box').AsInteger = 0)
      then begin
-               ShowMessage('Ошибка.Не определен Товар с кол-вом = <'+FloatToStr(ParamsMI.ParamByName('Amount_gofro_box').AsFloat)+'>.');
+               ShowMessage('Ошибка.Не определен Ящик с кол-вом = <'+FloatToStr(ParamsMI.ParamByName('Amount_gofro_box').AsFloat)+'>.');
                ActiveControl:= EditGoodsCode_box;
                exit;
          end;
      // 0.2.3.ящик - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_box').AsFloat = 0) and (ParamsMI.ParamByName('GoodsId_gofro_box').AsInteger > 0)
      then begin
-               ShowMessage('Ошибка.Не определено кол-во для Товара = <'+EditGoodsName_box.Text+'>.');
+               ShowMessage('Ошибка.Не определено кол-во для <'+EditGoodsName_box.Text+'>.');
                ActiveControl:= EditAmount_box;
                exit;
          end;
      //
-     // 0.3.1.Гофро-уголок - Проверка
-     if (EditGoodsCode_pd.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_ugol').AsInteger = 0)
+     // 0.3.1.Гофроуголок - Проверка
+     if (EditGoodsCode_ugol.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_ugol').AsInteger = 0)
      then begin
-               ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_ugol.Text+'> не найден.');
+               ShowMessage('Ошибка.Гофроуголок с кодом <'+EditGoodsCode_ugol.Text+'> не найден.');
                ActiveControl:= EditGoodsCode_ugol;
                exit;
          end;
      // 0.3.2.Гофро-уголок - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_ugol').AsFloat > 0) and (ParamsMI.ParamByName('GoodsId_gofro_ugol').AsInteger = 0)
      then begin
-               ShowMessage('Ошибка.Не определен Товар с кол-вом = <'+FloatToStr(ParamsMI.ParamByName('Amount_gofro_ugol').AsFloat)+'>.');
+               ShowMessage('Ошибка.Не определен Гофроуголок с кол-вом = <'+FloatToStr(ParamsMI.ParamByName('Amount_gofro_ugol').AsFloat)+'>.');
                ActiveControl:= EditGoodsCode_ugol;
                exit;
          end;
      // 0.3.3.Гофро-уголок - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_ugol').AsFloat = 0) and (ParamsMI.ParamByName('GoodsId_gofro_ugol').AsInteger > 0)
      then begin
-               ShowMessage('Ошибка.Не определено кол-во для Товара = <'+EditGoodsName_ugol.Text+'>.');
+               ShowMessage('Ошибка.Не определено кол-во для <'+EditGoodsName_ugol.Text+'>.');
                ActiveControl:= EditAmount_ugol;
                exit;
          end;
      //
      // 1.1.Гофро-ящик-1 - Проверка
-     if (EditGoodsCode_pd.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_1').AsInteger = 0)
+     if (EditGoodsCode_1.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_1').AsInteger = 0)
      then begin
                ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_1.Text+'> не найден.');
                ActiveControl:= EditGoodsCode_1;
@@ -996,13 +1266,13 @@ begin
      // 1.3.Гофро-ящик-1 - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_1').AsFloat = 0) and (ParamsMI.ParamByName('GoodsId_gofro_1').AsInteger > 0)
      then begin
-               ShowMessage('Ошибка.Не определено кол-во для Товара = <'+EditGoodsName_1.Text+'>.');
+               ShowMessage('Ошибка.Не определено кол-во для <'+EditGoodsName_1.Text+'>.');
                ActiveControl:= EditAmount_1;
                exit;
          end;
      //
      // 2.1.Гофро-ящик-2 - Проверка
-     if (EditGoodsCode_pd.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_2').AsInteger = 0)
+     if (EditGoodsCode_2.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_2').AsInteger = 0)
      then begin
                ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_2.Text+'> не найден.');
                ActiveControl:= EditGoodsCode_2;
@@ -1018,13 +1288,13 @@ begin
      // 2.3.Гофро-ящик-2 - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_2').AsFloat = 0) and (ParamsMI.ParamByName('GoodsId_gofro_2').AsInteger > 0)
      then begin
-               ShowMessage('Ошибка.Не определено кол-во для Товара = <'+EditGoodsName_2.Text+'>.');
+               ShowMessage('Ошибка.Не определено кол-во для <'+EditGoodsName_2.Text+'>.');
                ActiveControl:= EditAmount_2;
                exit;
          end;
      //
      // 3.1.Гофро-ящик-3 - Проверка
-     if (EditGoodsCode_pd.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_3').AsInteger = 0)
+     if (EditGoodsCode_3.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_3').AsInteger = 0)
      then begin
                ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_3.Text+'> не найден.');
                ActiveControl:= EditGoodsCode_3;
@@ -1040,13 +1310,13 @@ begin
      // 3.3.Гофро-ящик-3 - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_3').AsFloat = 0) and (ParamsMI.ParamByName('GoodsId_gofro_3').AsInteger > 0)
      then begin
-               ShowMessage('Ошибка.Не определено кол-во для Товара = <'+EditGoodsName_3.Text+'>.');
+               ShowMessage('Ошибка.Не определено кол-во для <'+EditGoodsName_3.Text+'>.');
                ActiveControl:= EditAmount_3;
                exit;
          end;
      //
      // 4.1.Гофро-ящик-4 - Проверка
-     if (EditGoodsCode_pd.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_4').AsInteger = 0)
+     if (EditGoodsCode_4.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_4').AsInteger = 0)
      then begin
                ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_4.Text+'> не найден.');
                ActiveControl:= EditGoodsCode_4;
@@ -1062,13 +1332,13 @@ begin
      // 4.3.Гофро-ящик-4 - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_4').AsFloat = 0) and (ParamsMI.ParamByName('GoodsId_gofro_4').AsInteger > 0)
      then begin
-               ShowMessage('Ошибка.Не определено кол-во для Товара = <'+EditGoodsName_4.Text+'>.');
+               ShowMessage('Ошибка.Не определено кол-во для <'+EditGoodsName_4.Text+'>.');
                ActiveControl:= EditAmount_4;
                exit;
          end;
      //
      // 5.1.Гофро-ящик-5 - Проверка
-     if (EditGoodsCode_pd.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_5').AsInteger = 0)
+     if (EditGoodsCode_5.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_5').AsInteger = 0)
      then begin
                ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_5.Text+'> не найден.');
                ActiveControl:= EditGoodsCode_5;
@@ -1084,13 +1354,13 @@ begin
      // 5.3.Гофро-ящик-5 - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_5').AsFloat = 0) and (ParamsMI.ParamByName('GoodsId_gofro_5').AsInteger > 0)
      then begin
-               ShowMessage('Ошибка.Не определено кол-во для Товара = <'+EditGoodsName_5.Text+'>.');
+               ShowMessage('Ошибка.Не определено кол-во для <'+EditGoodsName_5.Text+'>.');
                ActiveControl:= EditAmount_5;
                exit;
          end;
      //
      // 6.1.Гофро-ящик-6 - Проверка
-     if (EditGoodsCode_pd.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_6').AsInteger = 0)
+     if (EditGoodsCode_6.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_6').AsInteger = 0)
      then begin
                ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_6.Text+'> не найден.');
                ActiveControl:= EditGoodsCode_6;
@@ -1106,13 +1376,13 @@ begin
      // 6.3.Гофро-ящик-6 - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_6').AsFloat = 0) and (ParamsMI.ParamByName('GoodsId_gofro_6').AsInteger > 0)
      then begin
-               ShowMessage('Ошибка.Не определено кол-во для Товара = <'+EditGoodsName_6.Text+'>.');
+               ShowMessage('Ошибка.Не определено кол-во для <'+EditGoodsName_6.Text+'>.');
                ActiveControl:= EditAmount_6;
                exit;
          end;
      //
      // 7.1.Гофро-ящик-7 - Проверка
-     if (EditGoodsCode_pd.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_7').AsInteger = 0)
+     if (EditGoodsCode_7.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_7').AsInteger = 0)
      then begin
                ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_7.Text+'> не найден.');
                ActiveControl:= EditGoodsCode_7;
@@ -1128,13 +1398,13 @@ begin
      // 7.3.Гофро-ящик-7 - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_7').AsFloat = 0) and (ParamsMI.ParamByName('GoodsId_gofro_7').AsInteger > 0)
      then begin
-               ShowMessage('Ошибка.Не определено кол-во для Товара = <'+EditGoodsName_7.Text+'>.');
+               ShowMessage('Ошибка.Не определено кол-во для <'+EditGoodsName_7.Text+'>.');
                ActiveControl:= EditAmount_7;
                exit;
          end;
      //
      // 8.1.Гофро-ящик-8 - Проверка
-     if (EditGoodsCode_pd.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_8').AsInteger = 0)
+     if (EditGoodsCode_8.Value > 0) and (ParamsMI.ParamByName('GoodsId_gofro_8').AsInteger = 0)
      then begin
                ShowMessage('Ошибка.Товар с кодом <'+EditGoodsCode_8.Text+'> не найден.');
                ActiveControl:= EditGoodsCode_8;
@@ -1150,7 +1420,7 @@ begin
      // 8.3.Гофро-ящик-8 - Проверка
      if (ParamsMI.ParamByName('Amount_gofro_8').AsFloat = 0) and (ParamsMI.ParamByName('GoodsId_gofro_8').AsInteger > 0)
      then begin
-               ShowMessage('Ошибка.Не определено кол-во для Товара = <'+EditGoodsName_8.Text+'>.');
+               ShowMessage('Ошибка.Не определено кол-во для <'+EditGoodsName_8.Text+'>.');
                ActiveControl:= EditAmount_8;
                exit;
          end;
