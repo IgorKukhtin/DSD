@@ -20,7 +20,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox, cxMemo, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC;
+  cxCheckBox, cxMemo, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC, dsdCommon;
 
 type
   TInvoiceForm = class(TAncestorEditDialog_boatForm)
