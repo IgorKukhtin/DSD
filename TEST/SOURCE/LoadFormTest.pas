@@ -1652,15 +1652,15 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
-  exit;
+  {exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
   //exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
   //exit;

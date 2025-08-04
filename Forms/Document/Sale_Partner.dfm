@@ -2,7 +2,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 490
   ClientWidth = 1494
-  ExplicitLeft = -330
+  ExplicitLeft = -235
   ExplicitWidth = 1510
   ExplicitHeight = 529
   PixelsPerInch = 96
@@ -65,6 +65,21 @@ inherited Sale_PartnerForm: TSale_PartnerForm
               Format = ',0.####'
               Kind = skSum
               Column = CountPack
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightPackage_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BoxWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartnerWeightWithBox
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -114,6 +129,21 @@ inherited Sale_PartnerForm: TSale_PartnerForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightPackage_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BoxWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartnerWeightWithBox
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -276,7 +306,43 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 57
           end
-          object ChangePercentAmount: TcxGridDBColumn [14]
+          object WeightPackage_calc: TcxGridDBColumn [14]
+            Caption = #1042#1077#1089' '#1087#1072#1082#1077#1090#1086#1074
+            DataBinding.FieldName = 'WeightPackage_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 57
+          end
+          object BoxWeight: TcxGridDBColumn [15]
+            Caption = #1042#1077#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
+            DataBinding.FieldName = 'BoxWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 57
+          end
+          object AmountPartnerWeightWithBox: TcxGridDBColumn [16]
+            Caption = #1042#1077#1089' '#1041#1088#1091#1090#1090#1086', '#1082#1075
+            DataBinding.FieldName = 'AmountPartnerWeightWithBox'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 57
+          end
+          object ChangePercentAmount: TcxGridDBColumn [17]
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -288,7 +354,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 45
           end
-          object Amount: TcxGridDBColumn [15]
+          object Amount: TcxGridDBColumn [18]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -300,7 +366,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 60
           end
-          object AmountChangePercent: TcxGridDBColumn [16]
+          object AmountChangePercent: TcxGridDBColumn [19]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'AmountChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -311,7 +377,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 80
           end
-          object TotalPercentAmount: TcxGridDBColumn [17]
+          object TotalPercentAmount: TcxGridDBColumn [20]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1080#1076#1082#1072
             DataBinding.FieldName = 'TotalPercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -323,7 +389,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 60
           end
-          object AmountPartner: TcxGridDBColumn [18]
+          object AmountPartner: TcxGridDBColumn [21]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -333,7 +399,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object ChangePercent: TcxGridDBColumn [19]
+          object ChangePercent: TcxGridDBColumn [22]
             Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -344,14 +410,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 80
           end
-          object CountForPrice: TcxGridDBColumn [20]
+          object CountForPrice: TcxGridDBColumn [23]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object Price: TcxGridDBColumn [21]
+          object Price: TcxGridDBColumn [24]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -361,7 +427,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object PriceTare: TcxGridDBColumn [22]
+          object PriceTare: TcxGridDBColumn [25]
             Caption = #1062#1077#1085#1072' '#1086#1073'. '#1090#1072#1088#1099'.'
             DataBinding.FieldName = 'PriceTare'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -373,7 +439,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object PriceIn: TcxGridDBColumn [23]
+          object PriceIn: TcxGridDBColumn [26]
             Caption = #1062#1077#1085#1072' '#1074#1093'.'
             DataBinding.FieldName = 'PriceIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -385,7 +451,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object PricePromo: TcxGridDBColumn [24]
+          object PricePromo: TcxGridDBColumn [27]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -396,7 +462,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist: TcxGridDBColumn [25]
+          object Price_Pricelist: TcxGridDBColumn [28]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -408,7 +474,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist_vat: TcxGridDBColumn [26]
+          object Price_Pricelist_vat: TcxGridDBColumn [29]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist_vat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -420,7 +486,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object isCheck_Pricelist: TcxGridDBColumn [27]
+          object isCheck_Pricelist: TcxGridDBColumn [30]
             Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'isCheck_Pricelist'
             HeaderAlignmentHorz = taCenter
@@ -428,14 +494,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 61
           end
-          object HeadCount: TcxGridDBColumn [28]
+          object HeadCount: TcxGridDBColumn [31]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object AssetName: TcxGridDBColumn [29]
+          object AssetName: TcxGridDBColumn [32]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
             DataBinding.FieldName = 'AssetName'
             Visible = False
@@ -444,7 +510,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 65
           end
-          object BoxCount: TcxGridDBColumn [30]
+          object BoxCount: TcxGridDBColumn [33]
             Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -455,7 +521,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object BoxName: TcxGridDBColumn [31]
+          object BoxName: TcxGridDBColumn [34]
             Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -471,7 +537,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object InfoMoneyCode: TcxGridDBColumn [32]
+          object InfoMoneyCode: TcxGridDBColumn [35]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -480,7 +546,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [33]
+          object InfoMoneyGroupName: TcxGridDBColumn [36]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -489,7 +555,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [34]
+          object InfoMoneyDestinationName: TcxGridDBColumn [37]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -498,7 +564,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [35]
+          object InfoMoneyName: TcxGridDBColumn [38]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -507,7 +573,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 100
           end
-          object InfoMoneyName_all: TcxGridDBColumn [36]
+          object InfoMoneyName_all: TcxGridDBColumn [39]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -516,7 +582,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 90
           end
-          object isPeresort: TcxGridDBColumn [37]
+          object isPeresort: TcxGridDBColumn [40]
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPeresort'
             HeaderAlignmentHorz = taCenter
@@ -524,7 +590,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object AmountSumm: TcxGridDBColumn [38]
+          object AmountSumm: TcxGridDBColumn [41]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -534,7 +600,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 100
           end
-          object GoodsRealCode: TcxGridDBColumn [39]
+          object GoodsRealCode: TcxGridDBColumn [42]
             Caption = #1050#1086#1076' '#1090#1086#1074'.('#1092#1072#1082#1090' '#1086#1090#1075#1088')'
             DataBinding.FieldName = 'GoodsRealCode'
             Visible = False
@@ -544,7 +610,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 74
           end
-          object GoodsRealName: TcxGridDBColumn [40]
+          object GoodsRealName: TcxGridDBColumn [43]
             Caption = #1058#1086#1074#1072#1088' ('#1092#1072#1082#1090' '#1086#1090#1075#1088')'
             DataBinding.FieldName = 'GoodsRealName'
             HeaderAlignmentHorz = taCenter
@@ -553,7 +619,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 78
           end
-          object GoodsKindRealName: TcxGridDBColumn [41]
+          object GoodsKindRealName: TcxGridDBColumn [44]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1092#1072#1082#1090' '#1086#1090#1075#1088')'
             DataBinding.FieldName = 'GoodsKindRealName'
             HeaderAlignmentHorz = taCenter
