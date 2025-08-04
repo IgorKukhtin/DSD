@@ -30,7 +30,11 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , MovementId_Promo Integer, MovementPromo TVarChar, PricePromo Numeric (16,8)
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
-             , isPeresort Boolean
+             , isPeresort Boolean  
+             
+             , WeightPackage_calc TFloat         --Вес пакетов
+             , BoxWeight          TFloat         --ВЕс упаковок
+             , AmountPartnerWeightWithBox TFloat --вес брутто
               )
 AS
 $BODY$
@@ -473,7 +477,11 @@ BEGIN
            , tmpGoods.InfoMoneyName_all
 
            , FALSE AS isErased
-           , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort
+           , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort 
+           
+           , 0 :: TFloat AS WeightPackage_calc
+           , 0 :: TFloat AS BoxWeight 
+           , 0 :: TFloat AS AmountPartnerWeightWithBox
        FROM (SELECT Object_Goods.Id                                        AS GoodsId
                   , Object_Goods.ObjectCode                                AS GoodsCode
 
@@ -674,7 +682,11 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyName_all
 
            , tmpMI_Goods.isErased
-           , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort
+           , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort 
+           
+           , 0 ::TFloat  AS WeightPackage_calc 
+           , 0 :: TFloat AS BoxWeight
+           , 0 :: TFloat AS AmountPartnerWeightWithBox
        FROM tmpMI_Goods
             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
                                 AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
@@ -800,7 +812,11 @@ BEGIN
                                  , MovementItem.isErased                         AS isErased  
 
                                  , MILinkObject_GoodsReal.ObjectId                   AS GoodsRealId
-                                 , COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) AS GoodsKindRealId
+                                 , COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) AS GoodsKindRealId  
+                                 
+                                 -- так считаем Кол-во Упаковок (пакетов)
+                                 , (CASE WHEN MIFloat_WeightTare.ValueData < 0.1 THEN COALESCE (MIFloat_CountTare.ValueData, 0) ELSE 0 END) AS CountPackage_calc
+                                
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Master()
@@ -854,6 +870,13 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                              ON MIFloat_Count.MovementItemId = MovementItem.Id
                                                             AND MIFloat_Count.DescId = zc_MIFloat_Count()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CountTare
+                                                             ON MIFloat_CountTare.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_CountTare.DescId = zc_MIFloat_CountTare()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_WeightTare
+                                                             ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
 
                                  LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
                                                                ON MIBoolean_BarCode.MovementItemId = MovementItem.Id
@@ -977,7 +1000,8 @@ BEGIN
 
                               , tmpMI_Goods.Amount                     AS Amount
                               , tmpMI_Goods.AmountChangePercent
-                              , tmpMI_Goods.AmountPartner
+                              , tmpMI_Goods.AmountPartner   
+                              , (COALESCE (tmpMI_Goods.AmountPartner, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) AS AmountPartnerWeight
                               , tmpMI_Goods.ChangePercentAmount
                               , (tmpMI_Goods.Amount - COALESCE (tmpMI_Goods.AmountChangePercent, 0)) :: TFloat AS TotalPercentAmount
                               , tmpMI_Goods.ChangePercent      :: TFloat AS ChangePercent
@@ -1068,6 +1092,7 @@ BEGIN
                               , tmpMI_Goods.isErased
                               , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort
 
+                              , tmpMI_Goods.CountPackage_calc
                           FROM tmpMI_Goods
                                LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
                                                    AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
@@ -1093,6 +1118,9 @@ BEGIN
                                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                                LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                     ON ObjectFloat_Weight.ObjectId = tmpMI_Goods.GoodsId
+                                                    AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
                                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Goods.GoodsKindId
 
@@ -1158,7 +1186,7 @@ BEGIN
                                                                    ON ObjectFloat_Weight.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
                                                                   AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
-                                        WHERE 1=0
+                                       -- WHERE 1=0
                                        )
 
 
@@ -1235,10 +1263,59 @@ BEGIN
            , tmpResult.isErased
            , tmpResult.isPeresort
 
+
+
+             -- Вес Упаковок (пакетов)
+           , CASE WHEN tmpResult.CountPackage_calc > 0
+                       THEN tmpResult.CountPackage_calc
+                          * -- вес 1-ого пакета
+                            COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+
+                  WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) > 0
+                       THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
+                            CAST (tmpResult.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) ) AS NUMERIC (16, 0))
+                          * -- вес 1-ого пакета
+                            COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+                  ELSE 0
+             END :: TFloat AS WeightPackage_calc
+
+           , (COALESCE (tmpResult.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)):: TFloat AS BoxWeight
+
+             -- ВЕС БРУТТО
+           , (-- "чистый" вес "у покупателя" - ???почему по ТЗ скидка за вес НЕ должна учитываться???
+              tmpResult.AmountPartnerWeight
+            + -- плюс Вес "гофроящиков"
+              COALESCE (tmpResult.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)
+            + -- плюс Вес Упаковок (пакетов)
+              CASE WHEN tmpResult.CountPackage_calc > 0
+                       THEN tmpResult.CountPackage_calc
+                           * -- вес 1-ого пакета
+                             COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+
+                  WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) > 0
+                        THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
+                             CAST (tmpResult.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) ) AS NUMERIC (16, 0))
+                           * -- вес 1-ого пакета
+                             COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+                   ELSE 0
+              END
+             ) :: TFloat AS AmountPartnerWeightWithBox
        FROM tmpResult
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId     = tmpResult.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpResult.GoodsKindId
-            LEFT JOIN Object AS Object_GoodsBox ON Object_GoodsBox.Id = tmpObject_GoodsPropertyValue.GoodsBoxId
+            LEFT JOIN Object AS Object_GoodsBox ON Object_GoodsBox.Id = tmpObject_GoodsPropertyValue.GoodsBoxId  
+            
+          -- Товар и Вид товара
+          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpResult.GoodsId
+                                                AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpResult.GoodsKindId
+          -- вес 1-ого пакета
+          LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectFloat_WeightPackage.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
+          -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+          LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectFloat_WeightTotal.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
            ;
 
      END IF;
