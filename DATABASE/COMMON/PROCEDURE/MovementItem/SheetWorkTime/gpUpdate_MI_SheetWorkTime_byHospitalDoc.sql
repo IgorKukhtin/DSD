@@ -9,12 +9,13 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_SheetWorkTime_byHospitalDoc(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbStartDate TDateTime;
-   DECLARE vbEndDAte   TDateTime;
-   DECLARE vbPersonalId   Integer;
+   DECLARE vbUserId         Integer;
+   DECLARE vbStartDate      TDateTime;
+   DECLARE vbEndDAte        TDateTime;
+   DECLARE vbPersonalId     Integer;
    DECLARE vbWorkTimeKindId Integer;
-   DECLARE vbError TVarChar;
+   DECLARE vbError          TVarChar;
+           vbStatusId       Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
     IF zfConvert_StringToNumber (inSession) < 0
@@ -22,6 +23,12 @@ BEGIN
     ELSE vbUserId := lpGetUserBySession (inSession);
     END IF;
 
+    vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId_hd); 
+     --удаленные пропускаем
+     IF zc_Enum_Status_Erased() = vbStatusId
+     THEN
+         RETURN;
+     END IF;
 
      -- даты нач и окончани€ больничного
      vbStartDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId_hd AND MovementDate.DescId = zc_MovementDate_StartStop());
@@ -110,7 +117,7 @@ BEGIN
                            WHERE lfSelect.PersonalId = vbPersonalId AND lfSelect.Ord = 1
                            )
          , tmpOperDate AS (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate)
-         
+
          SELECT tmpOperDate.OperDate
               , tmpPersonal.MemberId
               , tmpPersonal.PersonalId
@@ -135,12 +142,16 @@ BEGIN
                                  AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine()
              LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = ObjectLink_Personal_StorageLine.ChildObjectId
      ) AS tmp;
-     
-     --проводим документ Ѕольн. лист--
-     PERFORM lpComplete_Movement (inMovementId := inMovementId_hd
-                                , inDescId     := zc_Movement_HospitalDoc_1C()
-                                , inUserId     := vbUserId
-                                 ); 
+
+       IF zc_Enum_Status_Complete() <> vbStatusId
+       THEN
+       --проводим документ Ѕольн. лист--
+       PERFORM lpComplete_Movement (inMovementId := inMovementId_hd
+                                  , inDescId     := zc_Movement_HospitalDoc_1C()
+                                  , inUserId     := vbUserId
+                                   ); 
+       END IF;     
+
      END IF;
 
     
