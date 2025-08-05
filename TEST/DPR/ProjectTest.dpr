@@ -1590,7 +1590,8 @@ uses
   MoneyPlac_Object in '..\..\Forms\Guides\MoneyPlac_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm},
   ReturnInChildDialog in '..\..\Forms\Document\ReturnInChildDialog.pas' {ReturnInChildDialogForm: TParentForm},
   Sticker_Object in '..\..\Forms\Guides\Sticker_Object.pas' {Sticker_ObjectForm: TParentForm},
-  HospitalDoc_1CJournal in '..\..\Forms\Document\HospitalDoc_1CJournal.pas' {HospitalDoc_1CJournalForm: TParentForm};
+  HospitalDoc_1CJournal in '..\..\Forms\Document\HospitalDoc_1CJournal.pas' {HospitalDoc_1CJournalForm: TParentForm},
+  Scale_Gofro in '..\..\Forms\Guides\Scale_Gofro.pas' {Scale_GofroForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

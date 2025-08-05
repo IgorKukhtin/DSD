@@ -637,6 +637,9 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TScale_GofroForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TScale_GofroForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindPeresortForm');
