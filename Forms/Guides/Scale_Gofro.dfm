@@ -24,13 +24,10 @@ object Scale_GofroForm: TScale_GofroForm
     Height = 317
     Align = alClient
     Images = dmMain.SortImageList
-    TabOrder = 4
+    TabOrder = 2
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 26
-    ExplicitWidth = 390
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -93,9 +90,7 @@ object Scale_GofroForm: TScale_GofroForm
     Width = 475
     Height = 33
     Align = alTop
-    TabOrder = 5
-    ExplicitTop = 20
-    ExplicitWidth = 458
+    TabOrder = 4
     object lbSearchName: TcxLabel
       Left = 6
       Top = 7
@@ -183,6 +178,7 @@ object Scale_GofroForm: TScale_GofroForm
     Params = <
       item
         Name = 'inBranchCode'
+        Value = Null
         Component = FormParams
         ComponentItem = 'BranchCode'
         ParamType = ptInput
@@ -227,7 +223,7 @@ object Scale_GofroForm: TScale_GofroForm
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Id'
+          ComponentItem = 'GuideId'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -235,8 +231,15 @@ object Scale_GofroForm: TScale_GofroForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Name'
+          ComponentItem = 'GuideName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GuideCode'
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

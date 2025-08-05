@@ -1642,6 +1642,9 @@ end;
 
 procedure TLoadFormTest.LoadSaleFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TScale_MI_gofroForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TScale_MI_gofroForm');
+  //exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PayForm');
@@ -1655,8 +1658,8 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
-  {exit;
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
   //exit;
