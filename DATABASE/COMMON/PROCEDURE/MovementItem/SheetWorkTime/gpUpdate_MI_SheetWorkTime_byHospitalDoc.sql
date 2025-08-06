@@ -36,7 +36,16 @@ BEGIN
      vbPersonalId     := (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId_hd AND MovementLinkObject.DescId = zc_MovementLinkObject_Personal());
      vbWorkTimeKindId := (zc_Enum_WorkTimeKind_HospitalDoc());
 
-
+     --Если сотрудник не найден записываем ошибку
+     IF COALESCE (vbPersonalId,0) = 0
+     THEN
+         vbError := (SELECT'Не найден сотрудник '
+                         ||(SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_FIO())
+                         --|| CHR (13)
+                         ||' ИНН '
+                         ||(SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_INN()) 
+                    ) ;
+     ELSE    
      -- Проверка что незаполнен табель на дни больничного
      vbError := (WITH
                  tmpPersonal AS (SELECT lfSelect.MemberId
@@ -84,6 +93,8 @@ BEGIN
                 AND COALESCE (MIObject_PositionLevel.ObjectId,0) = COALESCE (tmpPersonal.PositionLevelId,0)
                GROUP BY tmpPersonal.MemberId
                );
+     END IF;
+
       --если табель проставлен сохраняем ошибку в док. больн. лист
      IF COALESCE (vbError,'') <> '' 
      THEN

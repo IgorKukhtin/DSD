@@ -713,13 +713,48 @@ end if;
                                                              ON Movement_Production.Id = MovementLinkMovement_Production.MovementChildId
                                      WHERE MovementLinkMovement_Production.DescId = zc_MovementLinkMovement_Production()
                                     )
-        , tmpMovement_Transport AS (SELECT MovementLinkMovement_Transport.MovementId
+        , tmpMovement_Transport AS (
+                                    -- ѕоиск - отдельно дл€ скорости
+                                    WITH 
+                                    tmpMF_MovementItemId AS (SELECT MF.MovementId AS MovementId_sale
+                                                                  , MF.ValueData :: Integer AS ValueData 
+                                                             FROM MovementFloat AS MF WHERE MF.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                                              AND MF.DescId = zc_MovementFloat_MovementItemId())
+                                  , tmpMI_reestr AS (SELECT MI.MovementId
+                                                          , tmpMF_MovementItemId.MovementId_sale
+                                                     FROM MovementItem AS MI
+                                                          INNER JOIN tmpMF_MovementItemId ON tmpMF_MovementItemId.ValueData = MI.Id
+                                                     WHERE MI.Id IN (SELECT DISTINCT tmpMF_MovementItemId.ValueData FROM tmpMF_MovementItemId)
+                                                       AND MI.isErased = FALSE
+                                                    )
+                                  , tmpMLM_Transport_reestr AS (SELECT MLM.MovementChildId
+                                                                     , tmpMI_reestr.MovementId_sale
+                                                                FROM MovementLinkMovement AS MLM
+                                                                     LEFT JOIN tmpMI_reestr ON tmpMI_reestr.MovementId = MLM.MovementId
+                                                                WHERE MLM.MovementId IN (SELECT DISTINCT tmpMI_reestr.MovementId FROM tmpMI_reestr)
+                                                                  AND MLM.DescId     = zc_MovementLinkMovement_Transport()
+                                                               )
+
+                                   SELECT tmpMovement.Id AS MovementId
+                                        , Movement_Transport.*
+                                   FROM tmpMovement
+                                        LEFT JOIN tmpMLM_Transport_reestr ON tmpMLM_Transport_reestr.MovementId_sale = tmpMovement.Id
+                                        LEFT JOIN tmpMLM AS tmpMLM_Transport
+                                                         ON tmpMLM_Transport.MovementId = tmpMovement.Id 
+                                                        AND tmpMLM_Transport.DescId     = zc_MovementLinkMovement_Transport()
+
+                                        LEFT JOIN Movement AS Movement_Transport
+                                                           ON Movement_Transport.Id = COALESCE (tmpMLM_Transport_reestr.MovementChildId, tmpMLM_Transport.MovementChildId)
+                                  )
+                                  /*  
+                                    SELECT MovementLinkMovement_Transport.MovementId
                                          , Movement_Transport.*
                                     FROM tmpMLM AS MovementLinkMovement_Transport
                                          LEFT JOIN Movement AS Movement_Transport
                                                             ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
                                     WHERE MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
-                                   )
+                                   )*/
+
         , tmpMovement_ReturnIn AS (SELECT MovementLinkMovement_ReturnIn.MovementId
                                         , Movement_ReturnIn.*
                                    FROM tmpMLM AS MovementLinkMovement_ReturnIn
@@ -1355,3 +1390,6 @@ $BODY$
 --Ѕыло 1 мес€ц - 3 мин 21 сек
 --сейчас 1 мес€ц - 28 сек
 --select * from gpSelect_Movement_Sale_DATA(instartdate := ('23.10.2024')::TDateTime , inenddate := ('23.10.2024')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId:= zfCalc_UserAdmin() :: Integer);
+
+
+select * from gpSelect_Movement_Sale_DATA(instartdate := ('01.08.2025')::TDateTime , inenddate := ('01.08.2025')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId:= zfCalc_UserAdmin() :: Integer);
