@@ -1765,7 +1765,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       isShowModal = False
     end
     object actTax: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Tax'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spTax
@@ -1778,6 +1778,19 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ImageIndex = 41
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
+    end
+    object actTaxByGrid: TdsdExecStoredProc
+      Category = 'Tax'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spTax
+      StoredProcList = <
+        item
+          StoredProc = spTax
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 30
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -3557,6 +3570,32 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object macTaxByGrid_list: TMultiAction
+      Category = 'Tax'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actTaxByGrid
+        end>
+      View = cxGridDBTableView
+      Caption = 'macTaxByGrid_list'
+      ImageIndex = 30
+    end
+    object macTaxByGrid: TMultiAction
+      Category = 'Tax'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macTaxByGrid_list
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1083#1103' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085 +
+        #1099#1077'>?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>.'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1042#1089#1077#1093
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1042#1089#1077#1093
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3654,6 +3693,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           Visible = True
           ItemName = 'bbTax'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxByGrid'
         end
         item
           Visible = True
@@ -4101,6 +4144,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     end
     object bbPrintBoxTotalPartner: TdxBarButton
       Action = actPrintBoxTotalPartner
+      Category = 0
+    end
+    object bbTaxByGrid: TdxBarButton
+      Action = macTaxByGrid
       Category = 0
     end
   end

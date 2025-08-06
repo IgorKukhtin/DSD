@@ -13,18 +13,19 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     Width = 1090
     Height = 447
     TabOrder = 3
+    ExplicitTop = 90
     ExplicitWidth = 1090
-    ExplicitHeight = 480
+    ExplicitHeight = 447
     ClientRectBottom = 447
     ClientRectRight = 1090
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1090
-      ExplicitHeight = 480
+      ExplicitHeight = 447
       inherited cxGrid: TcxGrid
         Width = 1090
         Height = 447
         ExplicitWidth = 1090
-        ExplicitHeight = 480
+        ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -450,7 +451,18 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
   inherited ActionList: TActionList
     Left = 23
     Top = 194
-    object actInsert_MI_PersonalService: TdsdExecStoredProc [0]
+    object actInsert_MI_PersonalServiceDel: TdsdExecStoredProc [0]
+      Category = 'PersonalService'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_PersonalServiceDel
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_PersonalServiceDel
+        end>
+      Caption = 'actInsert_MI_PersonalServiceDel'
+    end
+    object actInsert_MI_PersonalService: TdsdExecStoredProc [1]
       Category = 'PersonalService'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -461,10 +473,20 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
         end>
       Caption = 'actUpdate_TotalLines'
     end
+    object macInsert_PersonalServiceDel_list: TMultiAction [2]
+      Category = 'PersonalService'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_MI_PersonalServiceDel
+        end>
+      View = cxGridDBTableView
+      Caption = 'macInsert_PersonalServiceDel_list'
+    end
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object macInsert_PersonalService_list: TMultiAction [2]
+    object macInsert_PersonalService_list: TMultiAction [4]
       Category = 'PersonalService'
       MoveParams = <>
       ActionList = <
@@ -474,10 +496,13 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
       View = cxGridDBTableView
       Caption = 'macInsert_PersonalService_list'
     end
-    object macInsert_PersonalService: TMultiAction [4]
+    object macInsert_PersonalService: TMultiAction [6]
       Category = 'PersonalService'
       MoveParams = <>
       ActionList = <
+        item
+          Action = macInsert_PersonalServiceDel_list
+        end
         item
           Action = macInsert_PersonalService_list
         end
@@ -1155,10 +1180,17 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inMovementId_hd'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeleted'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1213,5 +1245,29 @@ inherited HospitalDoc_1CJournalForm: THospitalDoc_1CJournalForm
     PackSize = 1
     Left = 936
     Top = 43
+  end
+  object spInsert_MI_PersonalServiceDel: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_PersonalService_byHospitalDoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId_hd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeleted'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 793
+    Top = 360
   end
 end

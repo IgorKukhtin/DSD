@@ -271,6 +271,10 @@ type
     actPrintBoxTotalPartner: TdsdPrintAction;
     bbPrintBoxTotalPartner: TdxBarButton;
     isGofro: TcxGridDBColumn;
+    actTaxByGrid: TdsdExecStoredProc;
+    macTaxByGrid_list: TMultiAction;
+    macTaxByGrid: TMultiAction;
+    bbTaxByGrid: TdxBarButton;
   private
     { Private declarations }
   public

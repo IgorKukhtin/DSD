@@ -407,6 +407,10 @@ type
     macUpdate_TotalLines: TMultiAction;
     macUpdate_TotalLines_list: TMultiAction;
     bbUpdate_TotalLines: TdxBarButton;
+    actTaxByGrid: TdsdExecStoredProc;
+    macTaxByGrid_list: TMultiAction;
+    macTaxByGrid: TMultiAction;
+    bbTaxByGrid: TdxBarButton;
   private
     { Private declarations }
   public

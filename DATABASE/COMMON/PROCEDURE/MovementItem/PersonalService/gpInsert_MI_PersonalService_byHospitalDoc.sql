@@ -1,9 +1,11 @@
 -- Function: gpInsert_MI_PersonalService_byHospitalDoc()
 
-DROP FUNCTION IF EXISTS gpInsert_MI_PersonalService_byHospitalDoc (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsert_MI_PersonalService_byHospitalDoc (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_MI_PersonalService_byHospitalDoc (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MI_PersonalService_byHospitalDoc(
     IN inMovementId_hd       Integer   , -- Ключ объекта <Документа Больничный 1С>
+    IN inisDeleted           Boolean   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -60,6 +62,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Документ для ведомости <Відомість Лікарняні за рахунок підприємства> не найден.';
      END IF;
+
      IF zc_Enum_Status_Complete() = (SELECT StatusId FROM Movement WHERE Id = vbMovementId)
      THEN
          RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> Проведен.'
@@ -91,7 +94,9 @@ BEGIN
                                                         , inSummFine            := COALESCE (gpSelect.SummFine, 0)                ::TFloat
                                                         , inSummFineOthRecalc   := COALESCE (gpSelect.Amount, 0)                  ::TFloat  
                                                         , inSummHosp            := COALESCE (gpSelect.SummHosp, 0)                ::TFloat
-                                                        , inSummHospOthRecalc   := vbSummHospOthRecalc                            ::TFloat
+                                                        , inSummHospOthRecalc   := CASE WHEN inisDeleted = TRUE THEN 0 
+                                                                                        ELSE COALESCE (gpSelect.SummHospOthRecalc,0) + COALESCE (vbSummHospOthRecalc,0) 
+                                                                                   END ::TFloat     --сотрудникам обнулим , затем с накопление загрузим все больничные (в случае если их несколько)
                                                         , inSummCompensationRecalc := COALESCE (gpSelect.SummCompensationRecalc, 0) ::TFloat
                                                         , inSummAuditAdd        := COALESCE (gpSelect.SummAuditAdd,0)             ::TFloat
                                                         , inSummHouseAdd        := COALESCE (gpSelect.SummHouseAdd,0)             ::TFloat
@@ -137,6 +142,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 06.08.25         * add inisDeleted
  28.07.25         *
 */
 
