@@ -20,10 +20,23 @@ BEGIN
       AND NOT EXISTS (SELECT 1 FROM MovementBoolean    AS MB  WHERE MB.MovementId  = inMovementId AND MB.DescId  = zc_MovementBoolean_NPP_calc()           AND MB.ValueData = TRUE)
       AND NOT EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_DocumentTaxKind() AND MLO.ObjectId = zc_Enum_DocumentTaxKind_Prepay())
    THEN
-       RAISE EXCEPTION 'Ошибка.Для документа <%> № <%> от <%>  не выполнено действие <Сформировать № п/п ДЛЯ колонки 1/2строка>.'
+       RAISE EXCEPTION 'Ошибка.Для документа <%> № <%> от <%> не выполнено действие <Сформировать № п/п ДЛЯ колонки 1/2строка>.'
                      , (SELECT MovementDesc.ItemName FROM MovementDesc         WHERE MovementDesc.Id = zc_Movement_TaxCorrective())
                      , (SELECT MS.ValueData          FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberPartner())
                      , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId)
+                      ;
+   END IF;
+
+   -- проверка - Electron
+   IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Electron() AND MB.ValueData = TRUE)
+      AND EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberRegistered() AND MS.ValueData <> '')
+   THEN
+       RAISE EXCEPTION 'Ошибка.Документ% <%> № <%> от <%> зарегистрирован.%Нет прав выгружать в Медок.'
+                     , CHR (13)
+                     , (SELECT MovementDesc.ItemName FROM MovementDesc JOIN Movement ON Movement.Id = inMovementId AND Movement.DescId = MovementDesc.Id)
+                     , (SELECT MS.ValueData          FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberPartner())
+                     , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId)
+                     , CHR (13)
                       ;
    END IF;
 
