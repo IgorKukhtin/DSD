@@ -17,7 +17,7 @@ $BODY$
            vbServiceDate TDateTime;
            vbPersonalServiceListId Integer;
            vbSummHospOthRecalc     TFloat;
-           
+   DECLARE vbError       TVarChar;         
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -34,11 +34,33 @@ BEGIN
 
      vbServiceDate := (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId_hd AND MovementDate.DescId = zc_MovementDate_ServiceDate());
      vbPersonalId  := (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId_hd AND MovementLinkObject.DescId = zc_MovementLinkObject_Personal());
-     vbSummHospOthRecalc := (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId_hd AND MovementFloat.DescId = zc_MovementFloat_SummStart());
+     vbSummHospOthRecalc := (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId_hd AND MovementFloat.DescId = zc_MovementFloat_SummStart()); 
+     --
+     vbError := (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_Error());
 
      --если сумма 0 пропустить
      IF COALESCE (vbSummHospOthRecalc,0) = 0
      THEN
+         RETURN;
+     END IF;
+
+     --Если сотрудник не найден записываем ошибку
+     IF COALESCE (vbPersonalId,0) = 0
+     THEN
+         vbError := (SELECT (CASE WHEN COALESCE (vbError,'')  <> '' THEN vbError||'. ' ELSE '' END) ::TVarChar
+                         ||'Не найден сотрудник '
+                         ||COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_FIO()),'')
+                         --|| CHR (13)
+                         ||' ИНН '
+                         ||COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_INN()),'')
+                     WHERE vbError NOT LIKE '%Не найден сотрудник%' 
+                    ) ;
+         -- 
+         IF COALESCE (vbError,'') <> '' 
+         THEN
+             --
+             PERFORM lpInsertUpdate_MovementString (zc_MovementString_Error(), inMovementId_hd, vbError);
+         END IF; 
          RETURN;
      END IF;
             

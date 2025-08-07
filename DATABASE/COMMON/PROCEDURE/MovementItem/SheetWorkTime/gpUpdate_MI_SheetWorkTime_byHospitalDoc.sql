@@ -40,10 +40,10 @@ BEGIN
      IF COALESCE (vbPersonalId,0) = 0
      THEN
          vbError := (SELECT'Не найден сотрудник '
-                         ||(SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_FIO())
+                         ||COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_FIO()),'')
                          --|| CHR (13)
                          ||' ИНН '
-                         ||(SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_INN()) 
+                         ||COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_INN()),'') 
                     ) ;
      ELSE    
      -- Проверка что незаполнен табель на дни больничного
