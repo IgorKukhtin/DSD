@@ -817,6 +817,9 @@ inherited Cash_PersonalForm: TCash_PersonalForm
           object Amount_LossPersonal: TcxGridDBColumn [35]
             Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1047#1055
             DataBinding.FieldName = 'Amount_LossPersonal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
