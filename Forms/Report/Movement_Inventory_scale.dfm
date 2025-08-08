@@ -785,63 +785,6 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actPrint_MovGroup_Sec: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrint_Mov_gr_Sec
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Mov_gr_Sec
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081' ('#1086#1093#1088#1072#1085#1072')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081' ('#1086#1093#1088#1072#1085#1072')'
-      ImageIndex = 15
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;InsertDate'
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 45658d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 45658d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumber_security'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDate_security'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_Inventory_Scale_group'
-      ReportNameParam.Value = 'PrintMovement_Inventory_Scale_group'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
     object actPrint_MovGroup: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -887,6 +830,63 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Inventory_Scale_group'
+      ReportNameParam.Value = 'PrintMovement_Inventory_Scale_group'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_MovGroup_Sec: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Mov_gr_Sec
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Mov_gr_Sec
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081' ('#1086#1093#1088#1072#1085#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' c '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1086#1081' ('#1086#1093#1088#1072#1085#1072')'
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;InsertDate'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 45658d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 45658d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_security'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate_security'
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
