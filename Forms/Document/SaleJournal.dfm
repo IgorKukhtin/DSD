@@ -985,6 +985,15 @@ inherited SaleJournalForm: TSaleJournalForm
             Options.Editing = False
             Width = 84
           end
+          object FileName: TcxGridDBColumn
+            Caption = #1048#1084#1103' '#1092#1072#1081#1083#1072' scv'
+            DataBinding.FieldName = 'FileName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
         end
       end
     end

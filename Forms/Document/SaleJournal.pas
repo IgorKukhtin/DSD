@@ -411,6 +411,7 @@ type
     macTaxByGrid_list: TMultiAction;
     macTaxByGrid: TMultiAction;
     bbTaxByGrid: TdxBarButton;
+    FileName: TcxGridDBColumn;
   private
     { Private declarations }
   public

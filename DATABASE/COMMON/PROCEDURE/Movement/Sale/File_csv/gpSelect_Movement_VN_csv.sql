@@ -1,0 +1,239 @@
+-- Function: gpSelect_Movement_VN_csv(Integer, tvarchar)
+
+DROP FUNCTION IF EXISTS gpSelect_Movement_VN_csv (Integer, tvarchar);
+
+CREATE OR REPLACE FUNCTION gpSelect_Movement_VN_csv(
+    IN inStartDate          TDateTime , --
+    IN inEndDate            TDateTime , --
+    IN inSession              TVarChar    -- сессия пользователя
+)
+RETURNS TABLE (RowData TBlob)
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbFileName TVarChar;
+BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
+     vbUserId := lpGetUserBySession (inSession);
+
+     vbFileName := (SELECT gpGet_Movement_VN_scv_FileName (inStartDate, inEndDate, 0, inSession)
+                          ||' '
+                          ||(SELECT zfConvert_FIO(ValueData, 2, TRUE) FROM Object WHERE Id = vbUserId) ::TVarChar
+                   );
+
+/*
+в шапке
+ПН;Номер;Дата у пок;Общая сумма без ндс;НДС; сумма с ндс ;ЕДРПОУ АЛАН;  1или 2 - форма оплаты где 1-бн и 2 - нал
+
+в строчной части будет
+Номер п/п;Товар;Код;Вид упаковки;Код вида;Количество;Цена без ндс;Сумма без ндс
+     
+Например
+ПН;45646;20250808;10000.20;348483738;1
+1;Колбаса;221;Флоу;129;100.2;50.00;5010.00
+2;Колбаса;222;Флоу;129;100.2;50.00;5010.00
+ПН;42646;20250809;10000.20;348483738;1
+1;Колбаса;221;Флоу;129;100.2;50.00;5010.00
+2;Колбаса;222;Флоу;129;100.2;50.00;5010.00
+
+*/
+      
+     -- Таблица для результата
+     CREATE TEMP TABLE _Result (RowData TBlob) ON COMMIT DROP;
+ 
+     -- !!!Формат CSV 
+
+     -- первая строчка CSV  - Шапка / строки
+     INSERT INTO _Result(RowData)
+     WITH
+     tmpMovement AS (SELECT Movement.*
+                     FROM Movement
+                         INNER JOIN MovementString AS MovementString_FileName
+                                                   ON MovementString_FileName.MovementId = Movement.Id
+                                                  AND MovementString_FileName.DescId = zc_MovementString_FileName()
+                                                  AND MovementString_FileName.ValueData = vbFileName    
+                     WHERE Movement.DescId = zc_Movement_Sale()
+                        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                     --LIMIT 3
+                     )
+        , tmpMovementDate AS (SELECT MovementDate.*
+                              FROM MovementDate
+                              WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                AND MovementDate.DescId IN ( zc_MovementDate_OperDatePartner()
+                                                           )
+                              )
+        , tmpMovementFloat AS (SELECT MovementFloat.*
+                               FROM MovementFloat
+                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                 AND MovementFloat.DescId IN (zc_MovementFloat_TotalSummMVAT()
+                                                            , zc_MovementFloat_TotalSummPVAT()
+                                                            , zc_MovementFloat_VATPercent()
+                                                              )
+                              )                              
+                              
+        , tmpMLO AS (SELECT MovementLinkObject.*
+                     FROM MovementLinkObject
+                     WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                       AND MovementLinkObject.DescId = zc_MovementLinkObject_PaidKind()
+                     )
+ 
+        , tmpMovementBoolean AS (SELECT MovementBoolean.*
+                                 FROM MovementBoolean
+                                 WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementBoolean.DescId IN (zc_MovementBoolean_PriceWithVAT()
+                                                                )
+                                 )
+                                            
+        , tmpMov_rez AS (SELECT Movement.Id
+                              , Movement.InvNumber
+                              , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner   
+                              , MovementFloat_TotalSummMVAT.ValueData AS TotalSummMVAT
+                              , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) ) AS TotalSummVat
+                              , MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT
+                              , 348483738 AS OKPO
+                              , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN 1 ELSE 2 END AS PaidKind 
+                              
+                              , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+                              , MovementFloat_VATPercent.ValueData             AS VATPercent
+                         FROM tmpMovement AS Movement
+                                  LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
+                                                               ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                                              AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                         
+                                  LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
+                                                            ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                                           AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                      
+                                  LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummMVAT
+                                                             ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                                            AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+                                  LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummPVAT
+                                                             ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
+                                                            AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()   
+                      
+                                  LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
+                                                             ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                                            AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                      
+                                  LEFT JOIN tmpMLO AS MovementLinkObject_PaidKind
+                                                   ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                  AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                  LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId and Object_PaidKind.DescId = zc_Object_PaidKind()
+                            )
+
+
+        , tmpMI AS (SELECT MovementItem.* 
+                    FROM MovementItem
+                    WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                      AND MovementItem.DescId = zc_MI_Master()
+                      AND MovementItem.isErased = FALSE
+                    )
+
+        , tmpMILinkObject_GoodsKind AS (SELECT MILinkObject_GoodsKind.*
+                                        FROM MovementItemLinkObject AS MILinkObject_GoodsKind
+                                        WHERE MILinkObject_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                       )   
+        , tmpMIFloat AS (SELECT MovementItemFloat.*
+                         FROM MovementItemFloat
+                         WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                           AND MovementItemFloat.DescId IN (zc_MIFloat_Price(), zc_MIFloat_AmountPartner())
+                        )  
+
+        , tmpMI_rez AS (SELECT MovementItem.MovementId
+                             , ROW_NUMBER () OVER (PARTITION BY MovementItem.MovementId ORDER BY MovementItem.Id) AS Ord
+                             , Object_Goods.ValueData      AS GoodsName
+                             , Object_Goods.ObjectCode     AS GoodsCOde
+                             , Object_GoodsKind.ValueData  AS GoodsKindName
+                             , Object_GoodsKind.ObjectCode AS GoodsKindCOde 
+                             , MovementItem.Amount         AS Amount
+                             , MIFloat_AmountPartner.ValueData AS AmountPartner
+                             , MIFloat_Price.ValueData     AS Price      --                            
+                        FROM tmpMI AS MovementItem
+                             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+                             LEFT JOIN tmpMILinkObject_GoodsKind AS MILinkObject_GoodsKind
+                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+                             LEFT JOIN tmpMIFloat AS MIFloat_Price
+                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                             LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
+                                                  ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()                        
+                        )
+
+
+        , tmpData AS (SELECT Movement.Id AS MovementId
+                           , Movement.InvNumber
+                           , zfConvert_DateToStringY (Movement.OperDatePartner) AS OperDatePartner  
+                           , Movement.TotalSummPVAT
+                           , Movement.TotalSummVat
+                           , Movement.TotalSummMVAT
+                           , Movement.OKPO
+                           , Movement.PaidKind 
+                           --
+                           , tmpMI.Ord
+                           , tmpMI.GoodsName
+                           , tmpMI.GoodsCOde
+                           , tmpMI.GoodsKindName
+                           , tmpMI.GoodsKindCOde 
+                           , tmpMI.AmountPartner
+                           , tmpMI.Price AS Price_mi  
+                           , CASE WHEN Movement.PriceWithVAT = FALSE OR Movement.VATPercent = 0 THEN tmpMI.Price ELSE tmpMI.Price / Movement.VATPercent END AS Price --Без НДс
+                           , (tmpMI.AmountPartner * CASE WHEN Movement.PriceWithVAT = FALSE OR Movement.VATPercent = 0 THEN tmpMI.Price ELSE tmpMI.Price / Movement.VATPercent END) AS SummPVAT  --сумма без НДС
+                      FROM tmpMov_rez AS Movement
+                           LEFT JOIN tmpMI_rez AS tmpMI ON tmpMI.MovementId = Movement.Id
+                      )  
+        SELECT CASE WHEN tmpData.Ord = 1 
+                    THEN 'ПН;'||tmpData.InvNumber
+                         ||';'||tmpData.OperDatePartner
+                         ||';'||CAST (tmpData.TotalSummMVAT AS NUMERIC (16,2)) ::TVarChar
+                         ||';'||CAST (tmpData.TotalSummVat AS NUMERIC (16,2)) ::TVarChar
+                         ||';'||CAST (tmpData.TotalSummPVAT AS NUMERIC (16,2)) ::TVarChar
+                         ||';'||tmpData.OKPO
+                         ||';'||tmpData.PaidKind
+                         ||CHR (13)
+                         ||tmpData.Ord
+                         ||';'||tmpData.GoodsName
+                         ||';'||tmpData.GoodsCOde
+                         ||';'||tmpData.GoodsKindName
+                         ||';'||tmpData.GoodsKindCOde
+                         ||';'||CAST (tmpData.AmountPartner AS NUMERIC(16,2)) ::TVarChar
+                         ||';'||CAST (tmpData.Price AS NUMERIC (16,2)) ::TVarChar
+                         ||';'||CAST (tmpData.SummPVAT AS NUMERIC (16,2)) ::TVarChar
+                    ELSE tmpData.Ord ::TVarChar
+                         ||';'||tmpData.GoodsName
+                         ||';'||tmpData.GoodsCOde
+                         ||';'||tmpData.GoodsKindName
+                         ||';'||tmpData.GoodsKindCOde
+                         ||';'||CAST (tmpData.AmountPartner AS NUMERIC (16,2)) ::TVarChar
+                         ||';'||CAST (tmpData.Price AS NUMERIC (16,2)) ::TVarChar
+                         ||';'||CAST (tmpData.SummPVAT AS NUMERIC (16,2)) ::TVarChar
+               END  
+        FROM tmpData
+        ORDER BY tmpData.MovementId
+                ,tmpData.Ord 
+       ;
+    
+    -- Результат
+    RETURN QUERY
+       SELECT _Result.RowData FROM _Result;
+
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.08.25         * 
+ */
+
+-- тест
+-- SELECT * FROM gpSelect_Movement_VN_csv (inStartDate:= '08.08.2025', inEndDate:= '08.08.2025', inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
