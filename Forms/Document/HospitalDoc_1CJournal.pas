@@ -72,6 +72,9 @@ type
     ceError: TcxMemo;
     cxLabel3: TcxLabel;
     spSelectError: TdsdStoredProc;
+    spInsert_MI_PersonalServiceDel: TdsdStoredProc;
+    actInsert_MI_PersonalServiceDel: TdsdExecStoredProc;
+    macInsert_PersonalServiceDel_list: TMultiAction;
   private
     { Private declarations }
   public

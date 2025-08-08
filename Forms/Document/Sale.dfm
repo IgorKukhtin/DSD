@@ -3,8 +3,6 @@ inherited SaleForm: TSaleForm
   ClientHeight = 658
   ClientWidth = 1465
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -282
-  ExplicitTop = -65
   ExplicitWidth = 1481
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -3430,6 +3428,43 @@ inherited SaleForm: TSaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdateScale_MI_gofro: TdsdInsertUpdateAction
+      Category = 'Gofro'
+      MoveParams = <>
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' <'#1043#1086#1092#1088#1086'>'
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' <'#1043#1086#1092#1088#1086'>'
+      ImageIndex = 60
+      FormName = 'TScale_MI_gofroForm'
+      FormNameParam.Value = 'TScale_MI_gofroForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchCode'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParnerId'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3826,6 +3861,14 @@ inherited SaleForm: TSaleForm
         item
           Visible = True
           ItemName = 'bbUpdateTotalSumm_GoodsReal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end>
     end
     object bbsPrint: TdxBarSubItem
@@ -4026,6 +4069,10 @@ inherited SaleForm: TSaleForm
     end
     object bbb: TdxBarButton
       Action = actPrintBoxTotal1
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdateScale_MI_gofro
       Category = 0
     end
   end

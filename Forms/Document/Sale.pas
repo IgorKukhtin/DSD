@@ -322,6 +322,8 @@ type
     cxLabel25: TcxLabel;
     edCorrSumm: TcxCurrencyEdit;
     cbGofro: TcxCheckBox;
+    actUpdateScale_MI_gofro: TdsdInsertUpdateAction;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

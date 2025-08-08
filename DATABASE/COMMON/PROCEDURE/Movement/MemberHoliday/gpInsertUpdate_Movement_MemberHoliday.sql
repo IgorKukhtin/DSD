@@ -31,6 +31,31 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.<Тип отпуска> должен быть заполнен.';
      END IF;
 
+     --проверка если за этот период уже есть отпуск
+     IF EXISTS (SELECT 1
+                FROM MovementLinkObject AS MovementLinkObject_Member
+                     JOIN Movement ON Movement.DescId = zc_Movement_MemberHoliday()
+                                  AND Movement.Id = MovementLinkObject_Member.MovementId
+                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+                    
+                     LEFT JOIN MovementDate AS MovementDate_BeginDateStart
+                                            ON MovementDate_BeginDateStart.MovementId = Movement.Id
+                                           AND MovementDate_BeginDateStart.DescId = zc_MovementDate_BeginDateStart()
+                     LEFT JOIN MovementDate AS MovementDate_BeginDateEnd
+                                            ON MovementDate_BeginDateEnd.MovementId = Movement.Id
+                                           AND MovementDate_BeginDateEnd.DescId = zc_MovementDate_BeginDateEnd()
+
+                WHERE MovementLinkObject_Member.MovementId <> ioId
+                  AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                  AND MovementLinkObject_Member.ObjectId = inMemberId
+                  AND MovementDate_BeginDateStart.ValueData <= inBeginDateEnd
+                  AND MovementDate_BeginDateEnd.ValueData >= inBeginDateStart
+                )
+     THEN
+         RAISE EXCEPTION 'Ошибка.За этот период для <%> уже есть отпуск', (SELECT ValueData FROM Object WHERE Id = inMemberId);
+     END IF;
+                                                    
+
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_MemberHoliday ( ioId              := ioId
                                                   , inInvNumber       := inInvNumber
@@ -43,7 +68,14 @@ BEGIN
                                                   , inMemberMainId    := inMemberMainId
                                                   , inWorkTimeKindId  := inWorkTimeKindId
                                                   , inUserId          := vbUserId
-                                                   );
+                                                   );  
+ 
+ 
+     -- !!! ВРЕМЕННО !!!
+    IF  vbUserId = 9457 THEN
+        RAISE EXCEPTION 'Admin - Test = OK';
+    END IF;
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

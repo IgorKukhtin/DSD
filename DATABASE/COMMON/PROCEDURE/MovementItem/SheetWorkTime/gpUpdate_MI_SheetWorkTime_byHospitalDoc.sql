@@ -9,12 +9,13 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_SheetWorkTime_byHospitalDoc(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbStartDate TDateTime;
-   DECLARE vbEndDAte   TDateTime;
-   DECLARE vbPersonalId   Integer;
+   DECLARE vbUserId         Integer;
+   DECLARE vbStartDate      TDateTime;
+   DECLARE vbEndDAte        TDateTime;
+   DECLARE vbPersonalId     Integer;
    DECLARE vbWorkTimeKindId Integer;
-   DECLARE vbError TVarChar;
+   DECLARE vbError          TVarChar;
+           vbStatusId       Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
     IF zfConvert_StringToNumber (inSession) < 0
@@ -22,6 +23,12 @@ BEGIN
     ELSE vbUserId := lpGetUserBySession (inSession);
     END IF;
 
+    vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId_hd); 
+     --удаленные пропускаем
+     IF zc_Enum_Status_Erased() = vbStatusId
+     THEN
+         RETURN;
+     END IF;
 
      -- даты нач и окончания больничного
      vbStartDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId_hd AND MovementDate.DescId = zc_MovementDate_StartStop());
@@ -29,7 +36,16 @@ BEGIN
      vbPersonalId     := (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId_hd AND MovementLinkObject.DescId = zc_MovementLinkObject_Personal());
      vbWorkTimeKindId := (zc_Enum_WorkTimeKind_HospitalDoc());
 
-
+     --Если сотрудник не найден записываем ошибку
+     IF COALESCE (vbPersonalId,0) = 0
+     THEN
+         vbError := (SELECT'Не найден сотрудник '
+                         ||COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_FIO()),'')
+                         --|| CHR (13)
+                         ||' ИНН '
+                         ||COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_INN()),'') 
+                    ) ;
+     ELSE    
      -- Проверка что незаполнен табель на дни больничного
      vbError := (WITH
                  tmpPersonal AS (SELECT lfSelect.MemberId
@@ -77,6 +93,8 @@ BEGIN
                 AND COALESCE (MIObject_PositionLevel.ObjectId,0) = COALESCE (tmpPersonal.PositionLevelId,0)
                GROUP BY tmpPersonal.MemberId
                );
+     END IF;
+
       --если табель проставлен сохраняем ошибку в док. больн. лист
      IF COALESCE (vbError,'') <> '' 
      THEN
@@ -110,7 +128,7 @@ BEGIN
                            WHERE lfSelect.PersonalId = vbPersonalId AND lfSelect.Ord = 1
                            )
          , tmpOperDate AS (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate)
-         
+
          SELECT tmpOperDate.OperDate
               , tmpPersonal.MemberId
               , tmpPersonal.PersonalId
@@ -135,12 +153,16 @@ BEGIN
                                  AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine()
              LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = ObjectLink_Personal_StorageLine.ChildObjectId
      ) AS tmp;
-     
-     --проводим документ Больн. лист--
-     PERFORM lpComplete_Movement (inMovementId := inMovementId_hd
-                                , inDescId     := zc_Movement_HospitalDoc_1C()
-                                , inUserId     := vbUserId
-                                 ); 
+
+       IF zc_Enum_Status_Complete() <> vbStatusId
+       THEN
+       --проводим документ Больн. лист--
+       PERFORM lpComplete_Movement (inMovementId := inMovementId_hd
+                                  , inDescId     := zc_Movement_HospitalDoc_1C()
+                                  , inUserId     := vbUserId
+                                   ); 
+       END IF;     
+
      END IF;
 
     

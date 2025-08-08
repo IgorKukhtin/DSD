@@ -3816,7 +3816,7 @@ inherited SaleJournalForm: TSaleJournalForm
       isShowModal = False
     end
     object actTax: TdsdExecStoredProc [103]
-      Category = 'DSDLib'
+      Category = 'Tax'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spTax
@@ -5425,6 +5425,45 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1074#1082#1090')'
       ImageIndex = 45
     end
+    object actTaxByGrid: TdsdExecStoredProc
+      Category = 'Tax'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spTax
+      StoredProcList = <
+        item
+          StoredProc = spTax
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 30
+    end
+    object macTaxByGrid_list: TMultiAction
+      Category = 'Tax'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actTaxByGrid
+        end>
+      View = cxGridDBTableView
+      Caption = 'macTaxByGrid_list'
+      ImageIndex = 30
+    end
+    object macTaxByGrid: TMultiAction
+      Category = 'Tax'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macTaxByGrid_list
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1083#1103' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085 +
+        #1099#1077'>?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>.'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1042#1089#1077#1093
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1042#1089#1077#1093
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -5521,6 +5560,10 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'bbTax'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxByGrid'
         end
         item
           Visible = True
@@ -6146,6 +6189,10 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbUpdate_TotalLines: TdxBarButton
       Action = macUpdate_TotalLines
+      Category = 0
+    end
+    object bbTaxByGrid: TdxBarButton
+      Action = macTaxByGrid
       Category = 0
     end
   end

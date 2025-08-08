@@ -409,10 +409,11 @@ end;
 
 procedure TLoadFormTest.LoadCashFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournal_srv_rForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournal_srv_rForm');
   exit;
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationBonusForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationBonusForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalBonusForm'));
@@ -420,7 +421,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialog_BonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialog_BonusForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashForm');
 
@@ -428,7 +429,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCash_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
 
@@ -437,10 +438,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCash_PersonalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCash_PersonalJournalForm');
    }
@@ -637,6 +638,9 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TScale_GofroForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TScale_GofroForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindPeresortForm');
@@ -1639,7 +1643,11 @@ end;
 
 procedure TLoadFormTest.LoadSaleFormTest;
 begin
-  {
+{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TScale_MI_gofroForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TScale_MI_gofroForm');
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PayForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PayJournalForm'));
@@ -1649,21 +1657,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_TransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_TransportJournalForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
-  {exit;
-
+  exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
   //exit;
-   }
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
-  //exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderForm');

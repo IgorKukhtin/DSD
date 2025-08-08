@@ -1,9 +1,11 @@
 -- Function: gpInsert_MI_PersonalService_byHospitalDoc()
 
-DROP FUNCTION IF EXISTS gpInsert_MI_PersonalService_byHospitalDoc (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsert_MI_PersonalService_byHospitalDoc (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_MI_PersonalService_byHospitalDoc (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MI_PersonalService_byHospitalDoc(
     IN inMovementId_hd       Integer   , -- Ключ объекта <Документа Больничный 1С>
+    IN inisDeleted           Boolean   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -15,7 +17,7 @@ $BODY$
            vbServiceDate TDateTime;
            vbPersonalServiceListId Integer;
            vbSummHospOthRecalc     TFloat;
-           
+   DECLARE vbError       TVarChar;         
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -32,11 +34,33 @@ BEGIN
 
      vbServiceDate := (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId_hd AND MovementDate.DescId = zc_MovementDate_ServiceDate());
      vbPersonalId  := (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId_hd AND MovementLinkObject.DescId = zc_MovementLinkObject_Personal());
-     vbSummHospOthRecalc := (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId_hd AND MovementFloat.DescId = zc_MovementFloat_SummStart());
+     vbSummHospOthRecalc := (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId_hd AND MovementFloat.DescId = zc_MovementFloat_SummStart()); 
+     --
+     vbError := (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_Error());
 
      --если сумма 0 пропустить
      IF COALESCE (vbSummHospOthRecalc,0) = 0
      THEN
+         RETURN;
+     END IF;
+
+     --Если сотрудник не найден записываем ошибку
+     IF COALESCE (vbPersonalId,0) = 0
+     THEN
+         vbError := (SELECT (CASE WHEN COALESCE (vbError,'')  <> '' THEN vbError||'. ' ELSE '' END) ::TVarChar
+                         ||'Не найден сотрудник '
+                         ||COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_FIO()),'')
+                         --|| CHR (13)
+                         ||' ИНН '
+                         ||COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_hd AND MS.DescId = zc_MovementString_INN()),'')
+                     WHERE vbError NOT LIKE '%Не найден сотрудник%' 
+                    ) ;
+         -- 
+         IF COALESCE (vbError,'') <> '' 
+         THEN
+             --
+             PERFORM lpInsertUpdate_MovementString (zc_MovementString_Error(), inMovementId_hd, vbError);
+         END IF; 
          RETURN;
      END IF;
             
@@ -60,6 +84,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Документ для ведомости <Відомість Лікарняні за рахунок підприємства> не найден.';
      END IF;
+
      IF zc_Enum_Status_Complete() = (SELECT StatusId FROM Movement WHERE Id = vbMovementId)
      THEN
          RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> Проведен.'
@@ -91,7 +116,9 @@ BEGIN
                                                         , inSummFine            := COALESCE (gpSelect.SummFine, 0)                ::TFloat
                                                         , inSummFineOthRecalc   := COALESCE (gpSelect.Amount, 0)                  ::TFloat  
                                                         , inSummHosp            := COALESCE (gpSelect.SummHosp, 0)                ::TFloat
-                                                        , inSummHospOthRecalc   := vbSummHospOthRecalc                            ::TFloat
+                                                        , inSummHospOthRecalc   := CASE WHEN inisDeleted = TRUE THEN 0 
+                                                                                        ELSE COALESCE (gpSelect.SummHospOthRecalc,0) + COALESCE (vbSummHospOthRecalc,0) 
+                                                                                   END ::TFloat     --сотрудникам обнулим , затем с накопление загрузим все больничные (в случае если их несколько)
                                                         , inSummCompensationRecalc := COALESCE (gpSelect.SummCompensationRecalc, 0) ::TFloat
                                                         , inSummAuditAdd        := COALESCE (gpSelect.SummAuditAdd,0)             ::TFloat
                                                         , inSummHouseAdd        := COALESCE (gpSelect.SummHouseAdd,0)             ::TFloat
@@ -137,6 +164,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 06.08.25         * add inisDeleted
  28.07.25         *
 */
 
