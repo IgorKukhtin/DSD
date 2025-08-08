@@ -68,6 +68,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PersonalName_Collation TVarChar
              , UnitName_Collation TVarChar
              , BranchName_Collation TVarChar
+             , FileName TVarChar
               )
 AS
 $BODY$

@@ -68,6 +68,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PersonalName_Collation TVarChar
              , UnitName_Collation TVarChar
              , BranchName_Collation TVarChar 
+             , FileName TVarChar
              )
 AS
 $BODY$
@@ -361,6 +362,7 @@ end if;
                                   AND MovementString.DescId IN (zc_MovementString_InvNumberPartner()
                                                               , zc_MovementString_Comment()
                                                               , zc_MovementString_InvNumberOrder()
+                                                              , zc_MovementString_FileName()
                                                               )
                                )
         , tmpMovementFloat AS (SELECT MovementFloat.*
@@ -1017,7 +1019,9 @@ end if;
            , tmpContract_param.PersonalCode_Collation  ::Integer
            , tmpContract_param.PersonalName_Collation  ::TVarChar
            , tmpContract_param.UnitName_Collation      ::TVarChar
-           , tmpContract_param.BranchName_Collation    ::TVarChar
+           , tmpContract_param.BranchName_Collation    ::TVarChar   
+           
+           , MovementString_FileName.ValueData         ::TVarChar AS FileName
        FROM tmpMovement AS Movement
 
             LEFT JOIN tmpStatus AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -1090,6 +1094,10 @@ end if;
             LEFT JOIN tmpMovementString AS MovementString_InvNumberOrder
                                         ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                        AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+            LEFT JOIN tmpMovementString AS MovementString_FileName
+                                        ON MovementString_FileName.MovementId = Movement.Id
+                                       AND MovementString_FileName.DescId = zc_MovementString_FileName()
 
             LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
                                        ON MovementFloat_VATPercent.MovementId =  Movement.Id

@@ -25,6 +25,8 @@ inherited SaleJournalForm: TSaleJournalForm
       inherited cxGrid: TcxGrid
         Width = 1374
         Height = 475
+        ExplicitLeft = -112
+        ExplicitTop = 200
         ExplicitWidth = 1374
         ExplicitHeight = 475
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -985,6 +987,15 @@ inherited SaleJournalForm: TSaleJournalForm
             Options.Editing = False
             Width = 84
           end
+          object FileName: TcxGridDBColumn
+            Caption = #1048#1084#1103' '#1092#1072#1081#1083#1072' scv'
+            DataBinding.FieldName = 'FileName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
         end
       end
     end
@@ -1200,7 +1211,41 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object macUpdate_TotalLines_list: TMultiAction [1]
+    object actExport_file_csv: TdsdStoredProcExportToFile [1]
+      Category = 'Export_Csv'
+      MoveParams = <>
+      dsdStoredProcName = spSelectFileName_csv
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'FileName'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      FileExt = '.csv'
+      FileExtParam.Value = '.csv'
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
+      Left = 1208
+      Top = 168
+    end
+    object actGetFileName_csv: TdsdExecStoredProc [2]
+      Category = 'Export_Csv'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetFileName_csv
+      StoredProcList = <
+        item
+          StoredProc = spGetFileName_csv
+        end>
+      Caption = 'actGetFileName_csv'
+    end
+    object macUpdate_TotalLines_list: TMultiAction [3]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1222,7 +1267,25 @@ inherited SaleJournalForm: TSaleJournalForm
       View = cxGridDBTableView
       ImageIndex = 79
     end
-    object actPrint_Quality_ReportName_list: TdsdExecStoredProc [2]
+    object macInsertFileName_csv_one: TMultiAction [4]
+      Category = 'Export_Csv'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFileName_csv
+        end
+        item
+          Action = actInsertFileName_csv
+        end
+        item
+          Action = actExport_file_csv
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1091#1102' '#1074' '#1092#1072#1081#1083'-csv?'
+      InfoAfterExecute = #1092#1072#1081#1083'-csv '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1091#1102' '#1074' '#1092#1072#1081#1083'-csv'
+      ImageIndex = 89
+    end
+    object actPrint_Quality_ReportName_list: TdsdExecStoredProc [5]
       Category = 'Group_TTN_Quality'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1233,7 +1296,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actPrint_Quality_ReportName'
     end
-    object actPrintBoxTotal: TdsdPrintAction [3]
+    object actPrintBoxTotal: TdsdPrintAction [6]
       Category = 'Print'
       MoveParams = <
         item
@@ -1282,7 +1345,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintSaleOrderTax: TdsdPrintAction [4]
+    object actPrintSaleOrderTax: TdsdPrintAction [7]
       Category = 'Print'
       MoveParams = <
         item
@@ -1332,7 +1395,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object macUpdate_PriceList: TMultiAction [5]
+    object macUpdate_PriceList: TMultiAction [8]
       Category = 'UpdatePriceList'
       MoveParams = <>
       ActionList = <
@@ -1351,7 +1414,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
       ImageIndex = 56
     end
-    object actUpdate_TotalLines: TdsdExecStoredProc [6]
+    object actUpdate_TotalLines: TdsdExecStoredProc [9]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1362,7 +1425,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actUpdate_TotalLines'
     end
-    object macUpdate_PriceList_list: TMultiAction [7]
+    object macUpdate_PriceList_list: TMultiAction [10]
       Category = 'UpdatePriceList'
       MoveParams = <>
       ActionList = <
@@ -1373,7 +1436,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
       ImageIndex = 56
     end
-    object actPrint_QualityDoc_list: TdsdPrintAction [8]
+    object actPrint_QualityDoc_list: TdsdPrintAction [11]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -1425,7 +1488,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actUpdate_PriceList: TdsdExecStoredProc [9]
+    object actUpdate_PriceList: TdsdExecStoredProc [12]
       Category = 'UpdatePriceList'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1437,7 +1500,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = 'actUpdate_PriceList'
       ImageIndex = 56
     end
-    object macUpdate_TotalLines: TMultiAction [10]
+    object macUpdate_TotalLines: TMultiAction [13]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1465,7 +1528,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' <'#1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082'>'
       ImageIndex = 79
     end
-    object macPrint_TTN_Copy1_list: TMultiAction [11]
+    object macPrint_TTN_Copy1_list: TMultiAction [14]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -1491,7 +1554,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
       ImageIndex = 15
     end
-    object actInsertUpdate_Quality_byTransport: TdsdExecStoredProc [12]
+    object actInsertUpdate_Quality_byTransport: TdsdExecStoredProc [15]
       Category = 'Group_TTN_Quality'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1503,7 +1566,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = 'InsertUpdate_Quality_byTransport'
       Hint = 'InsertUpdate_TTN_byTransport'
     end
-    object mactPrint_Sale_list: TMultiAction [13]
+    object mactPrint_Sale_list: TMultiAction [16]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -1533,7 +1596,7 @@ inherited SaleJournalForm: TSaleJournalForm
       ImageIndex = 3
       ShortCut = 16464
     end
-    object actSPPrintTTNProcName_list: TdsdExecStoredProc [14]
+    object actSPPrintTTNProcName_list: TdsdExecStoredProc [17]
       Category = 'Group_TTN_Quality'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1544,7 +1607,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actSPPrintTTNProcName_list'
     end
-    object actInsertUpdate_TTN_byTransport: TdsdExecStoredProc [15]
+    object actInsertUpdate_TTN_byTransport: TdsdExecStoredProc [18]
       Category = 'Group_TTN_Quality'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1555,7 +1618,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'InsertUpdate_TTN_byTransport'
     end
-    object macPrint_TTN_final: TMultiAction [16]
+    object macPrint_TTN_final: TMultiAction [19]
       Category = 'Print_TTN'
       MoveParams = <
         item
@@ -1581,7 +1644,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086#1074#1086#1081' '#1058#1058#1053
       ImageIndex = 15
     end
-    object actPrintReturnInDay_2copy: TdsdPrintAction [17]
+    object actPrintReturnInDay_2copy: TdsdPrintAction [20]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -1632,7 +1695,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object macPrintPack_2copy: TMultiAction [18]
+    object macPrintPack_2copy: TMultiAction [21]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -1660,7 +1723,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
     end
-    object actPrint_TTN_final: TdsdPrintAction [19]
+    object actPrint_TTN_final: TdsdPrintAction [22]
       Category = 'Print_TTN'
       MoveParams = <>
       StoredProc = spSelectPrint_TTN_final
@@ -1698,7 +1761,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_TTN_copy1_list: TdsdPrintAction [20]
+    object actPrint_TTN_copy1_list: TdsdPrintAction [23]
       Category = 'Group_TTN_Quality'
       MoveParams = <>
       StoredProc = spSelectPrint_TTN
@@ -1737,7 +1800,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintPack_2copy: TdsdPrintAction [21]
+    object actPrintPack_2copy: TdsdPrintAction [24]
       Category = 'Group_TTN_Quality'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1782,7 +1845,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object macPrintPack_3copy: TMultiAction [22]
+    object macPrintPack_3copy: TMultiAction [25]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -1810,7 +1873,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
     end
-    object macPrint_TTN_Copy3_list: TMultiAction [23]
+    object macPrint_TTN_Copy3_list: TMultiAction [26]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -1836,7 +1899,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
       ImageIndex = 15
     end
-    object actPrint_TTN_copy3_list: TdsdPrintAction [24]
+    object actPrint_TTN_copy3_list: TdsdPrintAction [27]
       Category = 'Group_TTN_Quality'
       MoveParams = <>
       StoredProc = spSelectPrint_TTN
@@ -1876,7 +1939,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintPack_3copy: TdsdPrintAction [25]
+    object actPrintPack_3copy: TdsdPrintAction [28]
       Category = 'Group_TTN_Quality'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1921,7 +1984,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object macPrint_QualityDoc_list: TMultiAction [26]
+    object macPrint_QualityDoc_list: TMultiAction [29]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -1947,7 +2010,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       ImageIndex = 16
     end
-    object macPrint_TTN_Copy2_list: TMultiAction [27]
+    object macPrint_TTN_Copy2_list: TMultiAction [30]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -1973,7 +2036,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
       ImageIndex = 15
     end
-    object actPrint_TTN_copy2_list: TdsdPrintAction [28]
+    object actPrint_TTN_copy2_list: TdsdPrintAction [31]
       Category = 'Group_TTN_Quality'
       MoveParams = <>
       StoredProc = spSelectPrint_TTN
@@ -2013,7 +2076,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object macPrint_Group_list_cash_Ret: TMultiAction [29]
+    object macPrint_Group_list_cash_Ret: TMultiAction [32]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -2049,7 +2112,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
       ImageIndex = 44
     end
-    object macPrint_Group_list: TMultiAction [30]
+    object macPrint_Group_list: TMultiAction [33]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -2085,7 +2148,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
       ImageIndex = 44
     end
-    object macPrint_Group_cash: TMultiAction [31]
+    object macPrint_Group_cash: TMultiAction [34]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -2115,7 +2178,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1053#1040#1051')'
       ImageIndex = 15
     end
-    object macPrint_Group_list_cash: TMultiAction [32]
+    object macPrint_Group_list_cash: TMultiAction [35]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -2145,7 +2208,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
       ImageIndex = 44
     end
-    object macPrint_Group: TMultiAction [33]
+    object macPrint_Group: TMultiAction [36]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -2175,7 +2238,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053')'
       ImageIndex = 44
     end
-    object macPrint_Group_cash_Ret: TMultiAction [34]
+    object macPrint_Group_cash_Ret: TMultiAction [37]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -2211,7 +2274,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' + '#1074#1086#1079#1074#1088#1072#1090' ('#1053#1040#1051')'
       ImageIndex = 15
     end
-    object actUpdatePrintAuto_True: TdsdExecStoredProc [35]
+    object actUpdatePrintAuto_True: TdsdExecStoredProc [38]
       Category = 'Group_TTN_Quality'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2223,7 +2286,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = 'actUpdatePrintAuto_True'
       Hint = #1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' PrintAuto = True'
     end
-    object actUpdatePrintAuto_False: TdsdExecStoredProc [36]
+    object actUpdatePrintAuto_False: TdsdExecStoredProc [39]
       Category = 'Group_TTN_Quality'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2235,7 +2298,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = 'actUpdatePrintAuto_False'
       Hint = #1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' PrintAuto = False'
     end
-    object macPrint_Sale2_TTN_Quality: TMultiAction [37]
+    object macPrint_Sale2_TTN_Quality: TMultiAction [40]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -2265,7 +2328,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (2 '#1088#1072#1089#1093#1086#1076'+'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
       ImageIndex = 44
     end
-    object macPrint_Sale2_TTN_Quality_list: TMultiAction [38]
+    object macPrint_Sale2_TTN_Quality_list: TMultiAction [41]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -2301,7 +2364,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
       ImageIndex = 44
     end
-    object macPrint_Sale3_TTN_Quality: TMultiAction [39]
+    object macPrint_Sale3_TTN_Quality: TMultiAction [42]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -2331,7 +2394,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (3 '#1088#1072#1089#1093#1086#1076'+3'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
       ImageIndex = 44
     end
-    object macPrint_Sale3_TTN_Quality_list: TMultiAction [40]
+    object macPrint_Sale3_TTN_Quality_list: TMultiAction [43]
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -2367,7 +2430,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
       ImageIndex = 44
     end
-    object macRoundAmountPartner: TMultiAction [41]
+    object macRoundAmountPartner: TMultiAction [44]
       Category = 'UpdateAmount'
       MoveParams = <>
       ActionList = <
@@ -2385,7 +2448,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       ImageIndex = 45
     end
-    object actPrintBox: TdsdPrintAction [42]
+    object actPrintBox: TdsdPrintAction [45]
       Category = 'Print'
       MoveParams = <
         item
@@ -2438,7 +2501,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintSaleOrder: TdsdPrintAction [43]
+    object actPrintSaleOrder: TdsdPrintAction [46]
       Category = 'Print'
       MoveParams = <
         item
@@ -2488,7 +2551,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object mactPrint_Account_List: TMultiAction [44]
+    object mactPrint_Account_List: TMultiAction [47]
       Category = 'Print_Account'
       MoveParams = <
         item
@@ -2521,7 +2584,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090#1072' '#1087#1086' '#1089#1087#1080#1089#1082#1091
       ImageIndex = 15
     end
-    object actUpdateMI_Sale_PriceIn: TdsdExecStoredProc [45]
+    object actUpdateMI_Sale_PriceIn: TdsdExecStoredProc [48]
       Category = 'UpdatePriceIn'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2533,7 +2596,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = 'actUpdateMI_Sale_PriceIn'
       ImageIndex = 80
     end
-    object actPrintPackGross: TdsdPrintAction [46]
+    object actPrintPackGross: TdsdPrintAction [49]
       Category = 'Print'
       MoveParams = <
         item
@@ -2580,7 +2643,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actSPPrintTTNProcName: TdsdExecStoredProc [47]
+    object actSPPrintTTNProcName: TdsdExecStoredProc [50]
       Category = 'Print_TTN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2591,7 +2654,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actSPPrintTTNProcName'
     end
-    object actPrintTEST: TdsdPrintAction [48]
+    object actPrintTEST: TdsdPrintAction [51]
       Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint_test
@@ -2632,7 +2695,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Account_List: TdsdPrintAction [49]
+    object actPrint_Account_List: TdsdPrintAction [52]
       Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint_Total_List
@@ -2675,7 +2738,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Quality_ReportName: TdsdExecStoredProc [50]
+    object actPrint_Quality_ReportName: TdsdExecStoredProc [53]
       Category = 'Print_QualityDoc'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2686,7 +2749,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actPrint_Quality_ReportName'
     end
-    object mactPrint_TTN2: TMultiAction [51]
+    object mactPrint_TTN2: TMultiAction [54]
       Category = 'Print_TTN'
       MoveParams = <
         item
@@ -2718,7 +2781,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053' ('#1073#1088#1091#1090#1090#1086')'
       ImageIndex = 15
     end
-    object macInsert_LockUnique: TMultiAction [52]
+    object macInsert_LockUnique: TMultiAction [55]
       Category = 'Print_Total'
       MoveParams = <
         item
@@ -2742,7 +2805,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
       ImageIndex = 3
     end
-    object actPrint_PackWeight: TdsdPrintAction [53]
+    object actPrint_PackWeight: TdsdPrintAction [56]
       Category = 'Print_Fozzy'
       MoveParams = <
         item
@@ -2792,7 +2855,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object mactPrint_Sale_Total_List: TMultiAction [54]
+    object mactPrint_Sale_Total_List: TMultiAction [57]
       Category = 'Print_Total'
       MoveParams = <
         item
@@ -2825,7 +2888,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
       ImageIndex = 3
     end
-    object actPrint_TTN2: TdsdPrintAction [55]
+    object actPrint_TTN2: TdsdPrintAction [58]
       Category = 'Print_TTN'
       MoveParams = <>
       StoredProc = spSelectPrint_TTN2
@@ -2863,7 +2926,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object mactPrint_Sale_Total_To: TMultiAction [56]
+    object mactPrint_Sale_Total_To: TMultiAction [59]
       Category = 'Print_Total'
       MoveParams = <
         item
@@ -2889,7 +2952,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       ImageIndex = 3
     end
-    object mactPrint_Sale_Total: TMultiAction [57]
+    object mactPrint_Sale_Total: TMultiAction [60]
       Category = 'Print_Total'
       MoveParams = <
         item
@@ -2915,7 +2978,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 3
     end
-    object mactPrint_Sale: TMultiAction [58]
+    object mactPrint_Sale: TMultiAction [61]
       Category = 'Print'
       MoveParams = <
         item
@@ -2945,7 +3008,7 @@ inherited SaleJournalForm: TSaleJournalForm
       ImageIndex = 3
       ShortCut = 16464
     end
-    object actPrint_Total_To: TdsdPrintAction [59]
+    object actPrint_Total_To: TdsdPrintAction [62]
       Category = 'Print_Total'
       MoveParams = <>
       StoredProc = spSelectPrint_Total_To
@@ -2988,7 +3051,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Total_List: TdsdPrintAction [60]
+    object actPrint_Total_List: TdsdPrintAction [63]
       Category = 'Print_Total'
       MoveParams = <>
       StoredProc = spSelectPrint_Total_List
@@ -3031,7 +3094,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Total: TdsdPrintAction [61]
+    object actPrint_Total: TdsdPrintAction [64]
       Category = 'Print_Total'
       MoveParams = <>
       StoredProc = spSelectPrint_Total
@@ -3074,7 +3137,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actSPPrintSaleProcName: TdsdExecStoredProc [62]
+    object actSPPrintSaleProcName: TdsdExecStoredProc [65]
       Category = 'Print'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3085,7 +3148,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actSPPrintSaleProcName'
     end
-    object actPrintReturnInDay: TdsdPrintAction [63]
+    object actPrintReturnInDay: TdsdPrintAction [66]
       Category = 'Print'
       MoveParams = <
         item
@@ -3135,7 +3198,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actSPSavePrintState: TdsdExecStoredProc [64]
+    object actSPSavePrintState: TdsdExecStoredProc [67]
       Category = 'Print'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3146,7 +3209,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actSPSavePrintState'
     end
-    object actPrint: TdsdPrintAction [65]
+    object actPrint: TdsdPrintAction [68]
       Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -3189,7 +3252,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actDelete_LockUnique: TdsdExecStoredProc [66]
+    object actDelete_LockUnique: TdsdExecStoredProc [69]
       Category = 'Print_Total'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3200,7 +3263,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actDelete_LockUnique'
     end
-    object actPrint_Tax_ReportName: TdsdExecStoredProc [67]
+    object actPrint_Tax_ReportName: TdsdExecStoredProc [70]
       Category = 'Print_Tax'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3211,7 +3274,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actPrint_Tax_ReportName'
     end
-    object actPrintPack_Transport: TdsdPrintAction [68]
+    object actPrintPack_Transport: TdsdPrintAction [71]
       Category = 'Print_TTN'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -3255,7 +3318,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object mactPrint_Tax_Us: TMultiAction [69]
+    object mactPrint_Tax_Us: TMultiAction [72]
       Category = 'Print_Tax'
       MoveParams = <
         item
@@ -3281,7 +3344,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 16
     end
-    object actPrint_ExpInvoice: TdsdPrintAction [70]
+    object actPrint_ExpInvoice: TdsdPrintAction [73]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -3332,7 +3395,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintTax_Us: TdsdPrintAction [71]
+    object actPrintTax_Us: TdsdPrintAction [74]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -3375,7 +3438,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object macRoundAmountPartner_list: TMultiAction [72]
+    object macRoundAmountPartner_list: TMultiAction [75]
       Category = 'UpdateAmount'
       MoveParams = <>
       ActionList = <
@@ -3386,7 +3449,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = #1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       ImageIndex = 45
     end
-    object actRoundAmountPartner: TdsdExecStoredProc [73]
+    object actRoundAmountPartner: TdsdExecStoredProc [76]
       Category = 'UpdateAmount'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3397,7 +3460,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actUpdate_MI_AmountPartner_round'
     end
-    object actPrint_Pack: TdsdPrintAction [74]
+    object actPrint_Pack: TdsdPrintAction [77]
       Category = 'Print_Fozzy'
       MoveParams = <
         item
@@ -3443,7 +3506,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actOpenReportForm: TdsdOpenForm [75]
+    object actOpenReportForm: TdsdOpenForm [78]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -3558,7 +3621,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       isShowModal = False
     end
-    object actInsert_LockUnique: TdsdExecStoredProc [76]
+    object actInsert_LockUnique: TdsdExecStoredProc [79]
       Category = 'Print_Total'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3569,7 +3632,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'spInsert_LockUnique'
     end
-    object actPrint_ExpSpec: TdsdPrintAction [77]
+    object actPrint_ExpSpec: TdsdPrintAction [80]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -3621,7 +3684,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object macPrintPack_Transport: TMultiAction [79]
+    object macPrintPack_Transport: TMultiAction [82]
       Category = 'Print_TTN'
       MoveParams = <
         item
@@ -3646,7 +3709,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
     end
-    object macPrintPackList_Transport: TMultiAction [80]
+    object macPrintPackList_Transport: TMultiAction [83]
       Category = 'Print_TTN'
       MoveParams = <
         item
@@ -3671,7 +3734,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103'>'
       ImageIndex = 20
     end
-    object actPrintPack: TdsdPrintAction [81]
+    object actPrintPack: TdsdPrintAction [84]
       Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -3715,7 +3778,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actChecked: TdsdExecStoredProc [85]
+    object actChecked: TdsdExecStoredProc [88]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3794,7 +3857,7 @@ inherited SaleJournalForm: TSaleJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actMovementCheck: TdsdOpenForm [94]
+    object actMovementCheck: TdsdOpenForm [97]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -3815,7 +3878,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       isShowModal = False
     end
-    object actTax: TdsdExecStoredProc [103]
+    object actTax: TdsdExecStoredProc [106]
       Category = 'Tax'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3830,7 +3893,7 @@ inherited SaleJournalForm: TSaleJournalForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
     end
-    object mactPrint_Account: TMultiAction [104]
+    object mactPrint_Account: TMultiAction [107]
       Category = 'Print_Account'
       MoveParams = <
         item
@@ -3856,7 +3919,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object mactPrint_Tax_Client: TMultiAction [105]
+    object mactPrint_Tax_Client: TMultiAction [108]
       Category = 'Print_Tax'
       MoveParams = <
         item
@@ -3882,7 +3945,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object actPrintTax_Client: TdsdPrintAction [106]
+    object actPrintTax_Client: TdsdPrintAction [109]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -3925,7 +3988,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object ExecuteDialog: TExecuteDialog [107]
+    object ExecuteDialog: TExecuteDialog [110]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
@@ -3964,7 +4027,7 @@ inherited SaleJournalForm: TSaleJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object mactPrint_Transport: TMultiAction [108]
+    object mactPrint_Transport: TMultiAction [111]
       Category = 'Print_TTN'
       MoveParams = <
         item
@@ -3990,7 +4053,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
       ImageIndex = 20
     end
-    object actPrint_Account: TdsdPrintAction [109]
+    object actPrint_Account: TdsdPrintAction [112]
       Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -4033,7 +4096,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Transport: TdsdPrintAction [110]
+    object actPrint_Transport: TdsdPrintAction [113]
       Category = 'Print_TTN'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -4076,7 +4139,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Account_ReportName: TdsdExecStoredProc [111]
+    object actPrint_Account_ReportName: TdsdExecStoredProc [114]
       Category = 'Print_Account'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4087,7 +4150,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actPrint_Account_ReportName'
     end
-    object actPrint_Transport_ReportName: TdsdExecStoredProc [112]
+    object actPrint_Transport_ReportName: TdsdExecStoredProc [115]
       Category = 'Print_TTN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4098,7 +4161,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actPrint_Transport_ReportName'
     end
-    object actPrint_ExpPack: TdsdPrintAction [113]
+    object actPrint_ExpPack: TdsdPrintAction [116]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -4145,7 +4208,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Spec: TdsdPrintAction [114]
+    object actPrint_Spec: TdsdPrintAction [117]
       Category = 'Print_Fozzy'
       MoveParams = <
         item
@@ -5464,6 +5527,45 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 30
     end
+    object actInsertFileName_csv: TdsdExecStoredProc
+      Category = 'Export_Csv'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertFileName_csv
+      StoredProcList = <
+        item
+          StoredProc = spInsertFileName_csv
+        end>
+      Caption = 'actUpdate_TotalLines'
+    end
+    object macInsertFileName_csv_list: TMultiAction
+      Category = 'Export_Csv'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertFileName_csv
+        end>
+      View = cxGridDBTableView
+      Caption = 'macInsertFileName_csv_list'
+    end
+    object macInsertFileName_csv: TMultiAction
+      Category = 'Export_Csv'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFileName_csv
+        end
+        item
+          Action = macInsertFileName_csv_list
+        end
+        item
+          Action = actExport_file_csv
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1042#1089#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1074' '#1092#1072#1081#1083'-csv?'
+      InfoAfterExecute = #1092#1072#1081#1083'-csv '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1042#1089#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1074' '#1092#1072#1081#1083'-csv'
+      ImageIndex = 90
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -6157,6 +6259,18 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'bbExportFile_fromMail_All'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertFileName_csv'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertFileName_csv_one'
         end>
     end
     object bbPrint_Group_cash_Ret: TdxBarButton
@@ -6193,6 +6307,14 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbTaxByGrid: TdxBarButton
       Action = macTaxByGrid
+      Category = 0
+    end
+    object bbInsertFileName_csv: TdxBarButton
+      Action = macInsertFileName_csv
+      Category = 0
+    end
+    object bbInsertFileName_csv_one: TdxBarButton
+      Action = macInsertFileName_csv_one
       Category = 0
     end
   end
@@ -8522,5 +8644,101 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 959
     Top = 376
+  end
+  object spGetFileName_csv: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_VN_scv_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 136
+    Top = 216
+  end
+  object spInsertFileName_csv: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Sale_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 136
+    Top = 248
+  end
+  object spSelectFileName_csv: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_VN_csv'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42614d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42614d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 224
   end
 end
