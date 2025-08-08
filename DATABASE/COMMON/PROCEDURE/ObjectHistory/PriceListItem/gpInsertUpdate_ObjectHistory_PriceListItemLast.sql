@@ -91,6 +91,7 @@ BEGIN
 
    -- Проверка
    IF COALESCE (inValue, 0) = 0
+  AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
   AND EXISTS (SELECT 1
               FROM ObjectLink AS OL_Goods_InfoMoney
                   INNER JOIN Object_InfoMoney_View AS View_InfoMoney

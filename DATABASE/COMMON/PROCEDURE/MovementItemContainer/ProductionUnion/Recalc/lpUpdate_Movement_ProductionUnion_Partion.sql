@@ -521,12 +521,10 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2017', inEndDate:= '20.07.2017', inFromId:=8448,   inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ деликатесов       + Склад База ГП
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2017', inEndDate:= '20.07.2017', inFromId:=8447,   inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный         + Склад База ГП
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.02.2017', inEndDate:= '13.02.2017', inFromId:=951601, inToId:=8439, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ упаковки мясо + Участок мясного сырья
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.03.2017', inEndDate:= '02.03.2017', inFromId:=981821, inToId:=951601, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ шприц. мясо + ЦЕХ упаковки мясо
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '04.07.2022', inEndDate:= '04.07.2022', inFromId:=8020711, inToId:=8020714, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбаса + деликатесы (Ирна) + Склад База ГП (Ирна)
-
-
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2017', inEndDate:= '20.07.2017', inFromId:=8447,   inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный         + Склад База ГП
 -- where ContainerId = 628180
 -- select * from MovementItemContainer where ContainerId = 568111
 

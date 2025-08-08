@@ -48,28 +48,31 @@ BEGIN
      -- при распроведении или удалении - в табеле автоматом  удаляется WorkTimeKind
      IF vbUserId <> 5 AND NOT EXISTS (SELECT 1
                                       FROM Movement
-                                           INNER JOIN MovementDate AS MovementDate_BeginDateStart
-                                                                   ON MovementDate_BeginDateStart.MovementId = Movement.Id
-                                                                  AND MovementDate_BeginDateStart.DescId     = zc_MovementDate_BeginDateStart()
-                                                                  AND MovementDate_BeginDateStart.ValueData  = vbBeginDateStart
+                                           LEFT JOIN MovementDate AS MovementDate_BeginDateStart
+                                                                  ON MovementDate_BeginDateStart.MovementId = Movement.Id
+                                                                 AND MovementDate_BeginDateStart.DescId     = zc_MovementDate_BeginDateStart()
+                                                               --AND MovementDate_BeginDateStart.ValueData  = vbBeginDateStart
             
                                            INNER JOIN MovementDate AS MovementDate_BeginDateEnd
                                                                    ON MovementDate_BeginDateEnd.MovementId = Movement.Id
                                                                   AND MovementDate_BeginDateEnd.DescId     = zc_MovementDate_BeginDateEnd()
-                                                                  AND MovementDate_BeginDateEnd.ValueData  = vbBeginDateEnd
+                                                                --AND MovementDate_BeginDateEnd.ValueData  = vbBeginDateEnd
             
-                                           INNER JOIN MovementLinkObject AS MovementLinkObject_WorkTimeKind
+                                           /*INNER JOIN MovementLinkObject AS MovementLinkObject_WorkTimeKind
                                                                          ON MovementLinkObject_WorkTimeKind.MovementId = Movement.Id
                                                                         AND MovementLinkObject_WorkTimeKind.DescId     = zc_MovementLinkObject_WorkTimeKind()
-                                                                        AND MovementLinkObject_WorkTimeKind.ObjectId   = vbWorkTimeKindId
+                                                                        AND MovementLinkObject_WorkTimeKind.ObjectId   = vbWorkTimeKindId*/
             
                                            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
                                                                         ON MovementLinkObject_Member.MovementId = Movement.Id
                                                                        AND MovementLinkObject_Member.DescId     = zc_MovementLinkObject_Member()
                                                                        AND MovementLinkObject_Member.ObjectId   = vbMemberId
                                       WHERE Movement.DescId = zc_Movement_MemberHoliday()
-                                        AND Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', vbOperDate) AND (DATE_TRUNC ('MONTH', vbOperDate + INTERVAL '1 MONTH') - INTERVAL '1 DAY')
+                                        AND Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', vbOperDate - INTERVAL '1 MONTH') AND (DATE_TRUNC ('MONTH', vbOperDate + INTERVAL '1 MONTH') - INTERVAL '1 DAY')
                                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                                        AND ((vbBeginDateStart BETWEEN MovementDate_BeginDateStart.ValueData AND MovementDate_BeginDateEnd.ValueData)
+                                          OR (vbBeginDateEnd BETWEEN MovementDate_BeginDateStart.ValueData AND MovementDate_BeginDateEnd.ValueData)
+                                            )
                                      )
      THEN
          PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, TRUE, inSession);
@@ -85,17 +88,17 @@ BEGIN
                           INNER JOIN MovementDate AS MovementDate_BeginDateStart
                                                   ON MovementDate_BeginDateStart.MovementId = Movement.Id
                                                  AND MovementDate_BeginDateStart.DescId     = zc_MovementDate_BeginDateStart()
-                                                 AND MovementDate_BeginDateStart.ValueData  = vbBeginDateStart
+                                               --AND MovementDate_BeginDateStart.ValueData  = vbBeginDateStart
      
                           INNER JOIN MovementDate AS MovementDate_BeginDateEnd
                                                   ON MovementDate_BeginDateEnd.MovementId = Movement.Id
                                                  AND MovementDate_BeginDateEnd.DescId     = zc_MovementDate_BeginDateEnd()
-                                                 AND MovementDate_BeginDateEnd.ValueData  = vbBeginDateEnd
+                                               --AND MovementDate_BeginDateEnd.ValueData  = vbBeginDateEnd
      
-                          INNER JOIN MovementLinkObject AS MovementLinkObject_WorkTimeKind
+                          /*INNER JOIN MovementLinkObject AS MovementLinkObject_WorkTimeKind
                                                         ON MovementLinkObject_WorkTimeKind.MovementId = Movement.Id
                                                        AND MovementLinkObject_WorkTimeKind.DescId     = zc_MovementLinkObject_WorkTimeKind()
-                                                       AND MovementLinkObject_WorkTimeKind.ObjectId   = vbWorkTimeKindId
+                                                       AND MovementLinkObject_WorkTimeKind.ObjectId   = vbWorkTimeKindId*/
      
                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
                                                        ON MovementLinkObject_Member.MovementId = Movement.Id
@@ -104,6 +107,9 @@ BEGIN
                      WHERE Movement.DescId = zc_Movement_MemberHoliday()
                        AND Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', vbOperDate) AND (DATE_TRUNC ('MONTH', vbOperDate + INTERVAL '1 MONTH') - INTERVAL '1 DAY')
                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                       AND ((vbBeginDateStart BETWEEN MovementDate_BeginDateStart.ValueData AND MovementDate_BeginDateEnd.ValueData)
+                         OR (vbBeginDateEnd BETWEEN MovementDate_BeginDateStart.ValueData AND MovementDate_BeginDateEnd.ValueData)
+                           )
                     )
      THEN
          -- Обнулили

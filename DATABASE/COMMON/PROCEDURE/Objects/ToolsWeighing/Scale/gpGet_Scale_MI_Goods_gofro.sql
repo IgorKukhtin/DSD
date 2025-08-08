@@ -75,8 +75,27 @@ BEGIN
 
 
    IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inParnerId AND OB.DescId = zc_ObjectBoolean_Partner_GoodsBox() AND OB.ValueData = TRUE)
-      AND vbUserId = 5
-      AND 1=1
+      AND (--vbUserId = 5 OR
+           EXISTS (SELECT 1
+                   FROM MovementLinkMovement AS MovementLinkMovement_Order
+                        INNER JOIN Movement AS Movement_Order ON Movement_Order.Id        = MovementLinkMovement_Order.MovementChildId
+                                                             AND Movement_Order.InvNumber = '45515127'
+                   WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                     AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
+                  )
+        OR EXISTS (SELECT 1
+                   FROM MovementLinkMovement AS MovementLinkMovement_Order
+                        INNER JOIN Movement AS Movement_Order ON Movement_Order.Id        = MovementLinkMovement_Order.MovementChildId
+                           LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                    ON MovementString_InvNumberPartner.MovementId = Movement_Order.Id
+                                                   AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+                                                   AND MovementString_InvNumberPartner.ValueData ILIKE '45515127'
+                   WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                     AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
+                  )
+        OR vbUserId <> 5
+          )
+      AND 1=0
    THEN
 
     vbMovementId_Sale:= (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId);

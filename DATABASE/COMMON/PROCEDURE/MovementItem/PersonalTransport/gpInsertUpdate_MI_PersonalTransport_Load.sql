@@ -93,7 +93,7 @@ BEGIN
 
      IF COALESCE (vbPersonalId,0) = 0
      THEN 
-          RAISE EXCEPTION 'Ошибка.Не найден сотруник <> должность <%> для <%> Сумма компенсации = <%>.', inPersonalName, inPositionName, zfConvert_FloatToString (inAmount);
+          RAISE EXCEPTION 'Ошибка.Не найден сотруник <%> должность <%> для Сумма компенсации = <%>.(%)+(%)', inPersonalName, inPositionName, zfConvert_FloatToString (inAmount), vbMemberId, vbPositionId;
      END IF;    
      
 
