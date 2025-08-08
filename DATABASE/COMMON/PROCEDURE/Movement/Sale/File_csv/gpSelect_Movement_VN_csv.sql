@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_VN_csv(Integer, tvarchar)
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_VN_csv (Integer, tvarchar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_VN_csv (Integer, TVarChar, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_VN_csv(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
-    IN inSession              TVarChar    -- сессия пользователя
+    IN inFileName           TVarChar  ,
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (RowData TBlob)
 AS
@@ -17,10 +19,6 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
      vbUserId := lpGetUserBySession (inSession);
 
-     vbFileName := (SELECT gpGet_Movement_VN_scv_FileName (inStartDate, inEndDate, 0, inSession)
-                          ||' '
-                          ||(SELECT zfConvert_FIO(ValueData, 2, TRUE) FROM Object WHERE Id = vbUserId) ::TVarChar
-                   );
 
 /*
 в шапке
@@ -52,7 +50,7 @@ BEGIN
                          INNER JOIN MovementString AS MovementString_FileName
                                                    ON MovementString_FileName.MovementId = Movement.Id
                                                   AND MovementString_FileName.DescId = zc_MovementString_FileName()
-                                                  AND MovementString_FileName.ValueData = vbFileName    
+                                                  AND MovementString_FileName.ValueData = inFileName    
                      WHERE Movement.DescId = zc_Movement_Sale()
                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                         AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -236,4 +234,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_VN_csv (inStartDate:= '08.08.2025', inEndDate:= '08.08.2025', inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
+-- SELECT * FROM gpSelect_Movement_VN_csv (inStartDate:= '08.08.2025', inEndDate:= '08.08.2025', inFileName:= 'VN_08.08.2025_08.08.2025 08.08.2025 17:39', inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()

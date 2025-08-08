@@ -1,12 +1,12 @@
 -- Function: gpGet_Movement_VN_scv_FileName(Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_VN_scv_FileName (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_VN_scv_FileName (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_VN_scv_FileName(
    OUT outFileName            TVarChar  ,
     IN inStartDate            TDateTime , --
     IN inEndDate              TDateTime , --
-    IN inMovementId           Integer   ,
     IN inSession              TVarChar
 )
   RETURNS TVarChar
@@ -26,8 +26,10 @@ BEGIN
          (SELECT   'VN_'|| zfConvert_DateToString (inStartDate)||'_'||zfConvert_DateToString(inEndDate)||' '
                  ||(zfConvert_DateToString (CURRENT_TIMESTAMP)
                  || ' ' || CASE WHEN EXTRACT (HOUR   FROM CURRENT_TIMESTAMP) < 10 THEN '0' ELSE '' END || EXTRACT (HOUR   FROM CURRENT_TIMESTAMP) :: TVarChar
-                 || ':' || CASE WHEN EXTRACT (MINUTE FROM CURRENT_TIMESTAMP) < 10 THEN '0' ELSE '' END || EXTRACT (MINUTE FROM CURRENT_TIMESTAMP) :: TVarChar
-                    ) ::TVarChar AS outFileName
+                 || '_' || CASE WHEN EXTRACT (MINUTE FROM CURRENT_TIMESTAMP) < 10 THEN '0' ELSE '' END || EXTRACT (MINUTE FROM CURRENT_TIMESTAMP) :: TVarChar
+                    ) ::TVarChar
+                 ||' '
+                 ||(SELECT zfConvert_FIO(ValueData, 1, TRUE) FROM Object WHERE Id = vbUserId) ::TVarChar AS outFileName
      
                , 'csv' AS outDefaultFileExt
           ) AS tmp
@@ -46,4 +48,4 @@ $BODY$
 
 
 -- тест
--- SELECT * FROM gpGet_Movement_VN_scv_FileName (inStartDate := '01.02.2025', inEndDate:= '03.02.2025', inMovementId:= 3376510, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
+-- SELECT * FROM gpGet_Movement_VN_scv_FileName (inStartDate := '01.02.2025', inEndDate:= '03.02.2025', inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()

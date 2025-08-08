@@ -1,11 +1,12 @@
 -- Function: gpInsert_Movement_Sale_FileName()
 
 DROP FUNCTION IF EXISTS gpInsert_Movement_Sale_FileName (TDateTime, TDateTime, Integer, TVarChar);
+--   gpInsert_Movement_FileName
+DROP FUNCTION IF EXISTS gpInsert_Movement_Sale_FileName (Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsert_Movement_FileName(
-    IN inStartDate          TDateTime , --
-    IN inEndDate            TDateTime , --
-    IN inMovementId         Integer,    -- Id документа
+CREATE OR REPLACE FUNCTION gpInsert_Movement_Sale_FileName(
+    IN inMovementId         Integer   , -- Id документа
+    IN inFileName           TVarChar  ,
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -20,7 +21,7 @@ BEGIN
       -- сохранили свойство <>
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_FileName()
                                            , inMovementId
-                                           , gpGet_Movement_VN_scv_FileName (inStartDate, inEndDate, inMovementId, inSession)
+                                           , inFileName
                                             ||' '
                                             ||(SELECT zfConvert_FIO(ValueData, 2, TRUE) FROM Object WHERE Id = vbUserId) ::TVarChar 
                                            );
