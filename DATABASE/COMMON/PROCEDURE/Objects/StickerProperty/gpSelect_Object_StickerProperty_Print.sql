@@ -105,9 +105,15 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- тест
-     IF COALESCE (inRetailId, 0) = 0
+     IF COALESCE (inRetailId, 0) = 0 OR COALESCE (inRetailId, 0) = 539062 -- 
      THEN
          inRetailId:= 0; -- 83955; -- Алан
+     END IF;
+
+     -- тест
+     IF COALESCE (inRetailId, 0) = 539062 -- 
+     THEN
+         inRetailId:= 83955; -- Алан
      END IF;
 
      -- проверка
