@@ -912,9 +912,9 @@ BEGIN
       -- Результат
       SELECT Object_Goods.ObjectCode         AS GoodsCode
            , (CASE WHEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) <> '' THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) ELSE Object_Goods.ValueData END
-           || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+           || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() AND vbUserId <> 5 THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
              ) :: TVarChar AS GoodsName
-           , (CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE Object_GoodsKind.ValueData END) :: TVarChar AS GoodsKindName
+           , (CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() AND vbUserId <> 5 THEN '' ELSE Object_GoodsKind.ValueData END) :: TVarChar AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner

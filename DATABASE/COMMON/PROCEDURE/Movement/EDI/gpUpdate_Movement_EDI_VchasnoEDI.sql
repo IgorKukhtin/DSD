@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_EDI_VchasnoEDI(
     IN inMovementId          Integer    , -- Ключ объекта <Документ>
     IN inDealId              TVarChar   , -- внутрішній ІД угоди замовлення у системі
     IN inId_doc              TVarChar   , -- ІД doc замовлення у системі ВЧАСНО
-    IN inSession             TVarChar        -- Пользователь
+    IN inSession             TVarChar     -- Пользователь
 )
 RETURNS VOID
 AS

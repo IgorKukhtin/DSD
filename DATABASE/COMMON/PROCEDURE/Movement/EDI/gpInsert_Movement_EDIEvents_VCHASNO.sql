@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_MI_EDI() - Криво для Vchasno - ДРУГОЙ НАБОР ПАРАМЕТРОВ
 
 -- DROP FUNCTION IF EXISTS gpInsert_Movement_EDIEvents (Integer, TVarChar, TVarChar, TVarChar, TVarChar); - пока не удалять, здесь параметры для Project
-DROP FUNCTION IF EXISTS gpInsert_Movement_EDIEvents (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Movement_EDIEvents (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_EDIEvents (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_EDIEvents(
     IN inMovementId          Integer   , -- Ключ объекта <Документ-EDI>
     IN inMovementId_send     Integer   , -- Ключ объекта <Документ-Отправка-EDI>
     IN inDocumentId          TVarChar  , --
     IN inVchasnoId           TVarChar  , --
+    IN inId_doc              TVarChar  , -- ІД doc Desadv у системі ВЧАСНО
     IN inEDIEvent            TVarChar  , -- Описание события
     IN inSession             TVarChar    -- Пользователь
 )
@@ -28,12 +30,19 @@ BEGIN
     END IF;
 
 
+   -- сохранили ІД doc Desadv
+   IF TRIM (COALESCE (inId_doc, '')) <> ''
+   THEN
+       PERFORM lpInsertUpdate_MovementString (zc_MovementString_DocId_vch(), inMovementId, inId_doc);
+   END IF;
+
+   -- сохранили DocumentId
    IF TRIM (COALESCE (inDocumentId, '')) <> ''
    THEN
        PERFORM lpInsertUpdate_MovementString (zc_MovementString_DocumentId_vch(), inMovementId, inDocumentId);
    END IF;
 
-
+   -- сохранили VchasnoId
    IF TRIM (COALESCE (inVchasnoId, '')) <> ''
    THEN
        PERFORM lpInsertUpdate_MovementString (zc_MovementString_VchasnoId(), inMovementId, inVchasnoId);
