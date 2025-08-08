@@ -227,16 +227,20 @@ BEGIN
     --        , LOWER ('http//integer-srv-r.alan.dp.ua/projectmobile/index.php') :: TVarChar AS WebService_three
       --      , LOWER ('http//integer-srv2-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_four
 
-            , CASE WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')
+            , CASE WHEN vbUserId =5 AND 1=0 THEN LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')
+                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')
                                             ELSE LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')    END :: TVarChar AS WebService
 
-            , CASE WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php') 
+            , CASE WHEN vbUserId =5 AND 1=0 THEN LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php') 
+                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php') 
                                             ELSE LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')   END :: TVarChar AS WebService_two
 
-            , CASE WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')
+            , CASE WHEN vbUserId =5 AND 1=0 THEN LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')
+                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')
                                             ELSE LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')  END :: TVarChar AS WebService_three
 
-            , CASE WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')
+            , CASE WHEN vbUserId =5 AND 1=0 THEN LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')
+                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')
                                             ELSE LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php') END :: TVarChar AS WebService_four
 
 /*
