@@ -1,7 +1,6 @@
 -- Function: gpSelect_Movement_VN_csv(Integer, tvarchar)
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_VN_csv (Integer, tvarchar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_VN_csv (Integer, TVarChar, tvarchar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_VN_csv (TDateTime, TDateTime, TVarChar, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_VN_csv(
     IN inStartDate          TDateTime , --

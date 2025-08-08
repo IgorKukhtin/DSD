@@ -421,6 +421,8 @@ type
     macInsertFileName_csv: TMultiAction;
     actExport_file_csv: TdsdStoredProcExportToFile;
     bbInsertFileName_csv: TdxBarButton;
+    macInsertFileName_csv_one: TMultiAction;
+    bbInsertFileName_csv_one: TdxBarButton;
   private
     { Private declarations }
   public

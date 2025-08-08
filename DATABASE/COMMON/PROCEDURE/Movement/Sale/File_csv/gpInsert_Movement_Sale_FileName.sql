@@ -1,6 +1,5 @@
 -- Function: gpInsert_Movement_Sale_FileName()
 
-DROP FUNCTION IF EXISTS gpInsert_Movement_Sale_FileName (TDateTime, TDateTime, Integer, TVarChar);
 --   gpInsert_Movement_FileName
 DROP FUNCTION IF EXISTS gpInsert_Movement_Sale_FileName (Integer, TVarChar, TVarChar);
 
@@ -17,13 +16,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
       vbUserId:= lpGetUserBySession (inSession);
 
-      gpGet_Movement_VNscv_FileName
       -- сохранили свойство <>
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_FileName()
                                            , inMovementId
-                                           , inFileName
-                                            ||' '
-                                            ||(SELECT zfConvert_FIO(ValueData, 2, TRUE) FROM Object WHERE Id = vbUserId) ::TVarChar 
+                                           , inFileName ::TVarChar 
                                            );
 
 END;
