@@ -25,7 +25,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isEdiComdoc Boolean,
                isEdiDelnot Boolean,
                VatPriceDate TDateTime,
-               SectionId Integer, SectionName TVarChar
+               SectionId Integer, SectionName TVarChar,
+               DocHeadeName TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -84,6 +85,7 @@ BEGIN
 
            , CAST (0 as Integer)    AS SectionId
            , CAST ('' as TVarChar)  AS SectionName
+           , CAST ('' as TVarChar)  AS DocHeadeName
            ;
    ELSE
        RETURN QUERY
@@ -133,6 +135,8 @@ BEGIN
 
            , Object_Section.Id                AS SectionId
            , Object_Section.ValueData         AS SectionName
+           
+           , ObjectString_DocHeadeName.ValueData ::TVarChar AS DocHeadeName
        FROM Object AS Object_Juridical
            LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary
                                  ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id
@@ -141,6 +145,10 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_GLNCode
                                   ON ObjectString_GLNCode.ObjectId = Object_Juridical.Id
                                  AND ObjectString_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+
+           LEFT JOIN ObjectString AS ObjectString_DocHeadeName
+                                  ON ObjectString_DocHeadeName.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_DocHeadeName.DescId = zc_ObjectString_Juridical_DocHeadeName()
 
            LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                    ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id

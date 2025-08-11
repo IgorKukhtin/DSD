@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                PriceListId_30201 Integer, PriceListName_30201 TVarChar,
                SectionId Integer, SectionName TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
+               DocHeadeName TVarChar,
                GUID TVarChar, isGUID Boolean,
                isBranchAll Boolean,
                isNotTare Boolean,
@@ -115,7 +116,8 @@ BEGIN
                        FROM ObjectString
                        WHERE ObjectString.ObjectId IN (SELECT DISTINCT tmpJuridical.Id FROM tmpJuridical)
                          AND ObjectString.DescId IN (zc_ObjectString_Juridical_GLNCode()
-                                                   , zc_ObjectString_Juridical_GUID()
+                                                   , zc_ObjectString_Juridical_GUID() 
+                                                   , zc_ObjectString_Juridical_DocHeadeName()
                                                     )
                        )
 
@@ -229,8 +231,8 @@ BEGIN
        --, ObjectDate_EndPromo.ValueData   AS EndPromo
        , NULL :: TDateTime                 AS EndPromo
 
-
-       , ObjectString_GUID.ValueData AS GUID
+       , ObjectString_DocHeadeName.ValueData ::TVarChar AS DocHeadeName
+       , ObjectString_GUID.ValueData                    AS GUID
        , CASE WHEN ObjectString_GUID.ValueData <> '' THEN TRUE ELSE FALSE END :: Boolean AS isGUID
        , COALESCE (ObjectBoolean_isBranchAll.ValueData, FALSE)                :: Boolean AS isBranchAll
        , COALESCE (ObjectBoolean_isNotTare.ValueData, FALSE)                  :: Boolean AS isNotTare
@@ -329,6 +331,9 @@ BEGIN
                                   ON ObjectString_GUID.ObjectId = Object_Juridical.Id
                                  AND ObjectString_GUID.DescId = zc_ObjectString_Juridical_GUID()
 
+        LEFT JOIN tmpObjectString AS ObjectString_DocHeadeName
+                                  ON ObjectString_DocHeadeName.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_DocHeadeName.DescId = zc_ObjectString_Juridical_DocHeadeName()
 
         /*LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                              ON ObjectDate_StartPromo.ObjectId = Object_Juridical.Id

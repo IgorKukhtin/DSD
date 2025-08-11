@@ -1103,7 +1103,14 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_MessagePersonalService_Comment', zc_object_MessagePersonalService(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MessagePersonalService_Comment');
 
+ CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_DocHeadeName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_DocHeadeName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Juridical_DocHeadeName', zc_object_MessagePersonalService(), 'Название в шапке накладной' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_DocHeadeName');
   
+
+
+
+
 
 
 
