@@ -1,6 +1,6 @@
 -- Function: gpComplete_Movement_Inventory()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_Inventory  (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Inventory (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Inventory(
     IN inMovementId        Integer               , -- ключ Документа
@@ -278,7 +278,7 @@ BEGIN
                                   );*/
 
 
-     -- !!!формируется свойство <ContainerId>!!!
+     -- !!!обнуляется свойство <ContainerId> - если нет данных HistoryCost!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), tmpMI.MovementItemId, 0)
      FROM (WITH tmpMI AS (SELECT MovementItem.Id AS MovementItemId, MIF_ContainerId.ValueData :: Integer AS ContainerId
                           FROM MovementItem
@@ -1597,6 +1597,11 @@ BEGIN
                                        LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                                      ON CLO_GoodsKind.ContainerId = Container.Id
                                                                     AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                       -- проверка GoodsKindId
+                                       LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_count ON CLO_GoodsKind_count.ContainerId = Container.ParentId
+                                                                                           AND CLO_GoodsKind_count.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                                                                          
+
                                        -- !!!ОШИБКА!!! могут дублироваться
                                        --LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId      = CLO_Goods.ObjectId
                                        --                                      AND (_tmpGoods_Complete_Inventory.GoodsKindId = CLO_GoodsKind.ObjectId
@@ -1612,6 +1617,8 @@ BEGIN
                                                                              AND _tmpGoods_Complete_Inventory_two.GoodsKindId_real = 0
                                                                              AND _tmpGoods_Complete_Inventory.GoodsId     IS NULL
                                   WHERE (_tmpGoods_Complete_Inventory.GoodsId > 0 OR _tmpGoods_Complete_Inventory_two.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
+                                    -- проверка GoodsKindId
+                                    AND COALESCE (CLO_GoodsKind_count.ObjectId, 0) = COALESCE (CLO_GoodsKind.ObjectId, 0)
                                  )
                , tmpContainer AS (SELECT tmpContainerList.Id        AS ContainerId
                                        , tmpContainerList.ObjectId  AS AccountId
@@ -2005,9 +2012,17 @@ end if;
                                         FROM _tmpItem
                                              INNER JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                                                    AND Container_Summ.DescId = zc_Container_Summ()
+                                             -- проверка GoodsKindId
+                                             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_count ON CLO_GoodsKind_count.ContainerId = _tmpItem.ContainerId_Goods
+                                                                                                 AND CLO_GoodsKind_count.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_summ ON CLO_GoodsKind_summ.ContainerId = Container_Summ.Id
+                                                                                                AND CLO_GoodsKind_summ.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                             --
                                              LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
                                         WHERE vbIsLastOnMonth_RK = TRUE
+                                          -- проверка GoodsKindId
+                                          AND COALESCE (CLO_GoodsKind_count.ObjectId, 0) = COALESCE (CLO_GoodsKind_summ.ObjectId, 0)
                                        )
                 -- нашли с/с если нет для ContainerId_Goods
               , tmpHistoryCost_find AS (SELECT Container_Summ.ContainerId_Goods
@@ -2074,8 +2089,15 @@ end if;
                                                         AND Container_Summ.DescId = zc_Container_Summ()
                    INNER JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                          AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                   -- проверка GoodsKindId
+                   LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_count ON CLO_GoodsKind_count.ContainerId = _tmpItem.ContainerId_Goods
+                                                                       AND CLO_GoodsKind_count.DescId      = zc_ContainerLinkObject_GoodsKind()
+                   LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_summ ON CLO_GoodsKind_summ.ContainerId = Container_Summ.Id
+                                                                      AND CLO_GoodsKind_summ.DescId      = zc_ContainerLinkObject_GoodsKind()
               WHERE vbPriceListId   <> 0 -- !!!
                 AND vbIsLastOnMonth = FALSE
+                -- проверка GoodsKindId
+                AND COALESCE (CLO_GoodsKind_count.ObjectId, 0) = COALESCE (CLO_GoodsKind_summ.ObjectId, 0)
 
              UNION ALL
               -- 1.1. это введенные ФАКТ остатки - их добавим
@@ -2157,6 +2179,12 @@ end if;
                                                         AND (vbUnitId NOT IN (8411)  -- Склад ГП ф.Киев
                                                           OR vbOperDate <> '31.12.2015'
                                                             )
+                   -- проверка GoodsKindId
+                   LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_count ON CLO_GoodsKind_count.ContainerId = _tmpItem.ContainerId_Goods
+                                                                       AND CLO_GoodsKind_count.DescId      = zc_ContainerLinkObject_GoodsKind()
+                   LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_summ ON CLO_GoodsKind_summ.ContainerId = Container_Summ.Id
+                                                                      AND CLO_GoodsKind_summ.DescId      = zc_ContainerLinkObject_GoodsKind()
+
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
 
@@ -2186,6 +2214,8 @@ end if;
                     )
                 -- без - Остаток теория
                 AND _tmpItem.isNotFact = FALSE
+                -- проверка GoodsKindId
+                AND COALESCE (CLO_GoodsKind_count.ObjectId, 0) = COALESCE (CLO_GoodsKind_summ.ObjectId, 0)
 
              /*UNION ALL
               -- 1.1. это введенные остатки
@@ -2253,6 +2283,12 @@ end if;
               FROM _tmpRemainsCount
                    INNER JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpRemainsCount.ContainerId_Goods
                                                          AND Container_Summ.DescId   = zc_Container_Summ()
+                   -- проверка GoodsKindId
+                   LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_count ON CLO_GoodsKind_count.ContainerId = _tmpRemainsCount.ContainerId_Goods
+                                                                       AND CLO_GoodsKind_count.DescId      = zc_ContainerLinkObject_GoodsKind()
+                   LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_summ ON CLO_GoodsKind_summ.ContainerId = Container_Summ.Id
+                                                                      AND CLO_GoodsKind_summ.DescId      = zc_ContainerLinkObject_GoodsKind()
+
                    LEFT JOIN _tmpRemainsSumm ON _tmpRemainsSumm.ContainerId = Container_Summ.Id
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
@@ -2269,6 +2305,8 @@ end if;
                    OR _tmpRemainsCount.OperCount_find <> 0
                    OR vbIsLastOnMonth = FALSE
                      )
+                 -- проверка GoodsKindId
+                 AND COALESCE (CLO_GoodsKind_count.ObjectId, 0) = COALESCE (CLO_GoodsKind_summ.ObjectId, 0)
 
 
              UNION ALL
@@ -2332,6 +2370,12 @@ end if;
               FROM _tmpRemainsCount
                    INNER JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpRemainsCount.ContainerId_Goods
                                                          AND Container_Summ.DescId = zc_Container_Summ()
+                   -- проверка GoodsKindId
+                   LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_count ON CLO_GoodsKind_count.ContainerId = _tmpRemainsCount.ContainerId_Goods
+                                                                       AND CLO_GoodsKind_count.DescId      = zc_ContainerLinkObject_GoodsKind()
+                   LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_summ ON CLO_GoodsKind_summ.ContainerId = Container_Summ.Id
+                                                                      AND CLO_GoodsKind_summ.DescId      = zc_ContainerLinkObject_GoodsKind()
+
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
                    LEFT JOIN _tmpRemainsSumm ON _tmpRemainsSumm.ContainerId = Container_Summ.Id
@@ -2343,6 +2387,8 @@ end if;
                     )
                 AND vbPriceListId   > 0    -- !!!
                 AND vbIsLastOnMonth = TRUE -- !!!
+                -- проверка GoodsKindId
+                AND COALESCE (CLO_GoodsKind_count.ObjectId, 0) = COALESCE (CLO_GoodsKind_summ.ObjectId, 0)
 
                /*AND (vbUnitId IN (301309 -- Склад ГП ф.Запорожье
                                , 309599 -- Склад возвратов ф.Запорожье
@@ -2886,12 +2932,21 @@ end if;
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
                                                         AND (vbOperDate >= '01.07.2015' OR vbPriceListId <> 0)
+                   -- проверка GoodsKindId
+                   LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_count ON CLO_GoodsKind_count.ContainerId = _tmpItem.ContainerId_Goods
+                                                                       AND CLO_GoodsKind_count.DescId      = zc_ContainerLinkObject_GoodsKind()
+                   LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_summ ON CLO_GoodsKind_summ.ContainerId = Container_Summ.Id
+                                                                      AND CLO_GoodsKind_summ.DescId      = zc_ContainerLinkObject_GoodsKind()
+
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
               WHERE View_Account.AccountDirectionId <> zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
                 AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                 AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                -- проверка GoodsKindId
+                AND COALESCE (CLO_GoodsKind_count.ObjectId, 0) = COALESCE (CLO_GoodsKind_summ.ObjectId, 0)
+
              /*UNION ALL
               -- это расчетные остатки (их надо вычесть) - !!!для филиала!!!
               SELECT _tmpRemainsCount.MovementItemId

@@ -230,6 +230,9 @@ end if;
                                            LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis ON CLO_JuridicalBasis.ContainerId = Container_Summ.Id
                                                                                               AND CLO_JuridicalBasis.DescId      = zc_ContainerLinkObject_JuridicalBasis()
 
+                                           -- проверка GoodsKindId
+                                           LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_count ON CLO_GoodsKind_count.ContainerId = Container_Summ.ParentId
+                                                                                               AND CLO_GoodsKind_count.DescId      = zc_ContainerLinkObject_GoodsKind()
                                       WHERE _tmpContainer_branch.ContainerId IS NULL
                                         AND Container_Summ.DescId = zc_Container_Summ()
                                         AND Container_Summ.ParentId > 0
@@ -242,6 +245,8 @@ end if;
                                         AND Container_Summ.ObjectId <> zc_Enum_Account_110122()
                                         AND Container_Summ.ObjectId <> zc_Enum_Account_110131()
                                         AND Container_Summ.ObjectId <> zc_Enum_Account_110132()
+                                        -- проверка GoodsKindId
+                                        AND COALESCE (CLO_GoodsKind_count.ObjectId, 0) = COALESCE (CLO_GoodsKind.ObjectId, 0)
                                      )
            , tmpContainerS_branch AS (SELECT Container_Summ.*
                                       FROM Container AS Container_Summ
@@ -2505,6 +2510,12 @@ RAISE INFO 'start _tmpChild CLOCK_TIMESTAMP  .<%>', CLOCK_TIMESTAMP();
      END IF; -- if inBranchId = 0 and INSERT INTO _tmpChild
 
 
+
+/*    RAISE EXCEPTION 'Ошибка.  <%>   <%>   <%>.'
+      , (select count(*) FROM _tmpChild where _tmpChild.MasterContainerId = 4999607)
+      , (select count(*) FROM _tmpChild where _tmpChild.MasterContainerId = 4999607 and GoodsKindId = 559324)
+      , (select _tmpChild.OperCount FROM _tmpChild where _tmpChild.MasterContainerId = 4999607 and GoodsKindId = 559324)
+      ;*/
 
     RAISE INFO 'CLOCK_TIMESTAMP - 0 .<%>', CLOCK_TIMESTAMP();
 
