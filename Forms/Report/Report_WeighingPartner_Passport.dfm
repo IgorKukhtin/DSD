@@ -5,7 +5,6 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -124
   ExplicitWidth = 1034
   ExplicitHeight = 505
   PixelsPerInch = 96
@@ -285,6 +284,15 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 59
+          end
+          object bbBranchCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
+            DataBinding.FieldName = 'BranchCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')'

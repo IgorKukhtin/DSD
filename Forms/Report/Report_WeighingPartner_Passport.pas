@@ -93,6 +93,7 @@ type
     outMessageText: TShowMessageAction;
     Amount_sh_inv: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
+    bbBranchCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

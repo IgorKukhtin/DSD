@@ -16,6 +16,7 @@ $BODY$
     DECLARE vbStatusId Integer;
     DECLARE vbStoreKeeperName TVarChar;
     DECLARE vbOperDate TDateTime;
+            vbBranchCode TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_wms_Movement_WeighingProduction());
@@ -32,13 +33,20 @@ BEGIN
           , Movement.OperDate
             -- кладовщик
           , CASE WHEN Object_User.Id = 5 THEN 'Морозенко А.А.' ELSE Object_User.ValueData END
-            INTO vbDescId, vbStatusId, vbOperDate, vbStoreKeeperName
+          , zfConvert_FloatToString (MovementFloat_BranchCode.ValueData) ::TVarChar AS BranchCode 
+
+            INTO vbDescId, vbStatusId, vbOperDate, vbStoreKeeperName, vbBranchCode
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                        ON MovementLinkObject_User.MovementId = Movement.Id
                                       AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-          LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+          LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId 
+          
+          LEFT JOIN MovementFloat AS MovementFloat_BranchCode 
+                                  ON MovementFloat_BranchCode.MovementId = Movement.Id
+                                 AND MovementFloat_BranchCode.DescId = zc_MovementFloat_BranchCode()
      WHERE Movement.Id = inMovementId;
+
 
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
@@ -200,7 +208,9 @@ BEGIN
                    , tmpBox.BoxName_6 ::TVarChar, tmpBox.BoxName_7 ::TVarChar, tmpBox.BoxName_8 ::TVarChar, tmpBox.BoxName_9 ::TVarChar, tmpBox.BoxName_10 ::TVarChar
 
                    , Object_PartionCell.Id                   AS PartionCellId
-                   , Object_PartionCell.ValueData ::TVarChar AS PartionCellName
+                   , Object_PartionCell.ValueData ::TVarChar AS PartionCellName   
+                   
+                   , vbBranchCode ::TVarChar AS BranchCode
 
               FROM MovementItem
                    LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = MovementItem.Id
@@ -266,3 +276,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_MI_WeighingProduction_PrintPassport(inMovementId := 15745229 , inId := 162901040 ,  inSession := '5'); --FETCH ALL "<unnamed portal 12>";
+--select * from gpSelect_MI_WeighingProduction_PrintPassport(inMovementId := 31803509 , inId := 330863209 ,  inSession := '9457'); FETCH ALL "<unnamed portal 9>";

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_WeighingPartner_Passport(
 )
 RETURNS TABLE (MovementId Integer, ItemName TVarChar, ItemName_inf TVarChar
              , InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
+             , BranchCode TVarChar
              , MovementItemId Integer, BarCode TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar, GoodsKindName TVarChar
@@ -98,6 +99,7 @@ BEGIN
                             , Movement.DescId
                             , MovementDesc.ItemName AS ItemName
                             , NULL       :: Integer AS UserId
+                            , MovementFloat_BranchCode.ValueData AS BranchCode
                         FROM Movement
                              INNER JOIN MovementFloat AS MovementFloat_BranchCode
                                                       ON MovementFloat_BranchCode.MovementId = Movement.Id
@@ -122,6 +124,7 @@ BEGIN
                             , Movement.DescId
                             , MovementDesc.ItemName AS ItemName
                             , MLO_User.ObjectId     AS UserId
+                            , MovementFloat_BranchCode.ValueData AS BranchCode
                         FROM Movement
                              -- Вид документа - Перемещение
                              INNER JOIN MovementFloat AS MovementFloat_MovementDesc
@@ -147,6 +150,9 @@ BEGIN
                                                           ON MLO_User.MovementId = Movement.Id
                                                          AND MLO_User.DescId     = zc_MovementLinkObject_User()
 
+                             LEFT JOIN MovementFloat AS MovementFloat_BranchCode
+                                                     ON MovementFloat_BranchCode.MovementId = Movement.Id
+                                                    AND MovementFloat_BranchCode.DescId     = zc_MovementFloat_BranchCode()
                        WHERE Movement.DescId IN (zc_Movement_WeighingProduction())
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -524,6 +530,7 @@ BEGIN
                , tmpData.InvNumber
                , tmpData.OperDate
                , Object_Status.ObjectCode AS StatusCode
+               , zfConvert_FloatToString (tmpData.BranchCode) ::TVarChar AS BranchCode
                , tmpData.Id AS MovementItemId
                , (tmpData.BarCode || zfCalc_SummBarCode(tmpData.BarCode) :: TVarChar) :: TVarChar AS BarCode
                , Object_Goods.Id                   AS GoodsId
