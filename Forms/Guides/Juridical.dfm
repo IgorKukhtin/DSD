@@ -578,6 +578,15 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 40
       end
+      object DocHeadeName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1096#1072#1087#1082#1077' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+        DataBinding.FieldName = 'DocHeadeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1096#1072#1087#1082#1077' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+        Options.Editing = False
+        Width = 80
+      end
       object PrintFormName_sale_ff: TcxGridDBColumn
         Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1087#1077#1095'. '#1073'/'#1085') '
         DataBinding.FieldName = 'PrintFormName_sale_ff'
@@ -586,7 +595,17 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1088#1086#1076#1072#1078#1072' ('#1055#1077#1095#1072#1090#1085#1072#1103' '#1092#1086#1088#1084#1072' '#1073'/'#1085') '
         Options.Editing = False
-        Width = 80
+        Width = 100
+      end
+      object DocHeadeName_sale_ff: TcxGridDBColumn
+        Caption = '*'#1053#1072#1079#1074'. '#1096#1072#1087#1082#1080' '#1055#1088#1086#1076#1072#1078#1072' ('#1087#1077#1095'. '#1073'/'#1085') '
+        DataBinding.FieldName = 'DocHeadeName_sale_ff'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1096#1072#1087#1082#1080' '#1055#1088#1086#1076#1072#1078#1072' ('#1055#1077#1095#1072#1090#1085#1072#1103' '#1092#1086#1088#1084#1072' '#1073'/'#1085') '
+        Options.Editing = False
+        Width = 100
       end
       object PrintFormName_sale_sf: TcxGridDBColumn
         Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1087#1077#1095'. '#1085#1072#1083') '
@@ -596,7 +615,17 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1088#1086#1076#1072#1078#1072' ('#1055#1077#1095#1072#1090#1085#1072#1103' '#1092#1086#1088#1084#1072' '#1085#1072#1083') '
         Options.Editing = False
-        Width = 80
+        Width = 100
+      end
+      object DocHeadeName_sale_sf: TcxGridDBColumn
+        Caption = '*'#1053#1072#1079#1074'. '#1096#1072#1087#1082#1080' '#1055#1088#1086#1076#1072#1078#1072' ('#1087#1077#1095'. '#1085#1072#1083') '
+        DataBinding.FieldName = 'DocHeadeName_sale_sf'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1096#1072#1087#1082#1080' '#1055#1088#1086#1076#1072#1078#1072' ('#1055#1077#1095#1072#1090#1085#1072#1103' '#1092#1086#1088#1084#1072' '#1085#1072#1083') '
+        Options.Editing = False
+        Width = 100
       end
       object PrintFormName_ttn: TcxGridDBColumn
         Caption = #1058#1058#1053' ('#1087#1077#1095'.) '
@@ -605,15 +634,6 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1058#1058#1053' ('#1055#1077#1095#1072#1090#1085#1072#1103' '#1092#1086#1088#1084#1072') '
-        Options.Editing = False
-        Width = 80
-      end
-      object DocHeadeName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1096#1072#1087#1082#1077' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
-        DataBinding.FieldName = 'DocHeadeName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1096#1072#1087#1082#1077' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
         Options.Editing = False
         Width = 80
       end

@@ -48,7 +48,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                isErased Boolean,
                PrintFormName_sale_ff  TVarChar,
                PrintFormName_sale_sf  TVarChar,
-               PrintFormName_ttn      TVarChar
+               PrintFormName_ttn      TVarChar,
+               DocHeadeName_sale_ff  TVarChar,
+               DocHeadeName_sale_sf  TVarChar,
+               DocHeadeName_ttn      TVarChar
               )
 AS
 $BODY$
@@ -274,6 +277,9 @@ BEGIN
        , COALESCE (tmpPrintForms_Sale.PrintFormName, tmpPrintForms_Sale_Default_sf.PrintFormName) ::TVarChar AS PrintFormName_sale_sf
        , COALESCE (tmpPrintForms_TransportGoods.PrintFormName, 'PrintMovement_TTN_03012025')      ::TVarChar AS PrintFormName_ttn
 
+       , COALESCE (tmpPrintForms_Sale.DocHeadeName, tmpPrintForms_Sale_Default_ff.DocHeadeName) ::TVarChar AS DocHeadeName_sale_ff
+       , COALESCE (tmpPrintForms_Sale.DocHeadeName, tmpPrintForms_Sale_Default_sf.DocHeadeName) ::TVarChar AS DocHeadeName_sale_sf
+       , COALESCE (tmpPrintForms_TransportGoods.DocHeadeName, '')      ::TVarChar AS DocHeadeName_ttn
    FROM tmpIsErased
         INNER JOIN Object AS Object_Juridical
                           ON Object_Juridical.isErased = tmpIsErased.isErased
