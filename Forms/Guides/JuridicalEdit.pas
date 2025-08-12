@@ -175,6 +175,9 @@ type
     cbVchasnoEdi: TcxCheckBox;
     cbIsEdiComdoc: TcxCheckBox;
     cbIsEdiDelnot: TcxCheckBox;
+    cxLabel26: TcxLabel;
+    edDocHeadeName: TcxTextEdit;
+    cbisEdiQuality: TcxCheckBox;
   private
     { Private declarations }
   public

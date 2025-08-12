@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
   cxCurrencyEdit, ExternalLoad, cxContainer, cxImage, Vcl.ExtCtrls, cxTextEdit,
-  cxLabel;
+  cxLabel, Vcl.Menus, Vcl.StdCtrls, cxButtons, dsdCommon;
 
 type
   TUnion_Goods_ReceiptServiceForm = class(TParentForm)
@@ -114,6 +114,13 @@ type
     isReceiptGoods: TcxGridDBColumn;
     isProdOptions: TcxGridDBColumn;
     ModelName_calc: TcxGridDBColumn;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
+    actFormClose: TdsdFormClose;
   private
     { Private declarations }
   public

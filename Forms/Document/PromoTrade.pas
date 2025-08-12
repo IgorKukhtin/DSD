@@ -269,6 +269,8 @@ type
     spSelectPrintOkupNew: TdsdStoredProc;
     actSelectPrintOkup_new: TdsdPrintAction;
     bbSelectPrintOkup_new: TdxBarButton;
+    actGridToExcel_okup: TdsdGridToExcel;
+    bbGridToExcel_okup: TdxBarButton;
   private
     { Private declarations }
   public

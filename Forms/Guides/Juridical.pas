@@ -141,6 +141,11 @@ type
     JuridicalAddress: TcxGridDBColumn;
     JuridicalAddress_inf: TcxGridDBColumn;
     IsEdiDelnot: TcxGridDBColumn;
+    PrintFormName_sale_ff: TcxGridDBColumn;
+    PrintFormName_sale_sf: TcxGridDBColumn;
+    PrintFormName_ttn: TcxGridDBColumn;
+    DocHeadeName: TcxGridDBColumn;
+    isEdiQuality: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -44,7 +44,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                isVchasnoEdi Boolean,
                isEdiComdoc Boolean,
                isEdiDelnot Boolean,
-               isErased Boolean
+               isEdiQuality Boolean,
+               isErased Boolean,
+               PrintFormName_sale_ff  TVarChar,
+               PrintFormName_sale_sf  TVarChar,
+               PrintFormName_ttn      TVarChar,
+               DocHeadeName_sale_ff  TVarChar,
+               DocHeadeName_sale_sf  TVarChar,
+               DocHeadeName_ttn      TVarChar
               )
 AS
 $BODY$
@@ -153,6 +160,23 @@ BEGIN
                         AND ObjectDate.DescId = zc_ObjectDate_Juridical_VatPrice()
                        )
 
+ , tmpPrintForms_Sale AS (SELECT *
+                          FROM PrintForms_View
+                          WHERE PrintForms_View.ReportType IN ('Sale' ) 
+                            AND CURRENT_DATE BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
+                         )
+ , tmpPrintForms_Sale_Default AS (SELECT * 
+                                  FROM PrintForms_View
+                                  WHERE PrintForms_View.JuridicalId = 0
+                                    AND PrintForms_View.ReportType = 'Sale'
+                                    AND CURRENT_DATE BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
+                                  )
+ , tmpPrintForms_TransportGoods AS (SELECT *
+                                    FROM PrintForms_View
+                                    WHERE PrintForms_View.ReportType IN ('TransportGoods' ) 
+                                      AND CURRENT_DATE BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
+                                    )
+
 
    SELECT
          Object_Juridical.Id             AS Id
@@ -245,9 +269,17 @@ BEGIN
        , COALESCE (ObjectBoolean_VchasnoEdi.ValueData, FALSE) :: Boolean   AS isVchasnoEdi
        , COALESCE (ObjectBoolean_isEdiComdoc.ValueData, FALSE) :: Boolean  AS isEdiComdoc
        , COALESCE (ObjectBoolean_isEdiDelnot.ValueData, FALSE) :: Boolean  AS isEdiDelnot
+       , COALESCE (ObjectBoolean_isEdiQuality.ValueData, FALSE):: Boolean  AS isEdiQuality
 
-       , Object_Juridical.isErased   AS isErased
+       , Object_Juridical.isErased   AS isErased 
+       
+       , COALESCE (tmpPrintForms_Sale.PrintFormName, tmpPrintForms_Sale_Default_ff.PrintFormName) ::TVarChar AS PrintFormName_sale_ff
+       , COALESCE (tmpPrintForms_Sale.PrintFormName, tmpPrintForms_Sale_Default_sf.PrintFormName) ::TVarChar AS PrintFormName_sale_sf
+       , COALESCE (tmpPrintForms_TransportGoods.PrintFormName, 'PrintMovement_TTN_03012025')      ::TVarChar AS PrintFormName_ttn
 
+       , COALESCE (tmpPrintForms_Sale.DocHeadeName, tmpPrintForms_Sale_Default_ff.DocHeadeName) ::TVarChar AS DocHeadeName_sale_ff
+       , COALESCE (tmpPrintForms_Sale.DocHeadeName, tmpPrintForms_Sale_Default_sf.DocHeadeName) ::TVarChar AS DocHeadeName_sale_sf
+       , COALESCE (tmpPrintForms_TransportGoods.DocHeadeName, '')      ::TVarChar AS DocHeadeName_ttn
    FROM tmpIsErased
         INNER JOIN Object AS Object_Juridical
                           ON Object_Juridical.isErased = tmpIsErased.isErased
@@ -307,6 +339,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiDelnot
                                 ON ObjectBoolean_isEdiDelnot.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isEdiDelnot.DescId = zc_ObjectBoolean_Juridical_isEdiDelnot()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiQuality
+                                ON ObjectBoolean_isEdiQuality.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_isEdiQuality.DescId = zc_ObjectBoolean_Juridical_isEdiQuality()
 
         LEFT JOIN tmpObjectDate AS ObjectDate_VatPrice
                              ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
@@ -404,6 +439,14 @@ BEGIN
                                                             ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
                                                            AND COALESCE (inShowDate, CURRENT_DATE) >= OH_JuridicalDetails.StartDate
                                                            AND COALESCE (inShowDate, CURRENT_DATE) <  OH_JuridicalDetails.EndDate
+        --fr3 - продажа для юр лица 
+        LEFT JOIN tmpPrintForms_Sale ON tmpPrintForms_Sale.JuridicalId = Object_Juridical.Id
+        --fr3 - продажа для б/нал по умолчанию
+        LEFT JOIN tmpPrintForms_Sale_Default AS tmpPrintForms_Sale_Default_ff ON tmpPrintForms_Sale_Default_ff.PaidKindId = zc_Enum_PaidKind_FirstForm()
+        --fr3 - продажа для нал по умолчанию
+        LEFT JOIN tmpPrintForms_Sale_Default AS tmpPrintForms_Sale_Default_sf ON tmpPrintForms_Sale_Default_sf.PaidKindId = zc_Enum_PaidKind_SecondForm()
+        --fr3 - ТТН
+        LEFT JOIN tmpPrintForms_TransportGoods ON tmpPrintForms_TransportGoods.JuridicalId = Object_Juridical.Id
 
    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                               , 8359 -- 04-Услуги

@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isVchasnoEdi Boolean,
                isEdiComdoc Boolean,
                isEdiDelnot Boolean,
+               isEdiQuality Boolean,
                VatPriceDate TDateTime,
                SectionId Integer, SectionName TVarChar,
                DocHeadeName TVarChar
@@ -80,6 +81,7 @@ BEGIN
            , CAST (FALSE AS Boolean)   AS isVchasnoEdi
            , CAST (FALSE AS Boolean)   AS isEdiComdoc
            , CAST (FALSE AS Boolean)   AS isEdiDelnot
+           , CAST (FALSE AS Boolean)   AS isEdiQuality
 
            , NULL         :: TDateTime AS VatPriceDate
 
@@ -131,6 +133,7 @@ BEGIN
            , COALESCE (ObjectBoolean_VchasnoEdi.ValueData, FALSE) :: Boolean   AS isVchasnoEdi
            , COALESCE (ObjectBoolean_isEdiComdoc.ValueData, FALSE) :: Boolean  AS isEdiComdoc
            , COALESCE (ObjectBoolean_isEdiDelnot.ValueData, FALSE) :: Boolean  AS isEdiDelnot
+           , COALESCE (ObjectBoolean_isEdiQuality.ValueData, FALSE):: Boolean  AS isEdiQuality
            , COALESCE (ObjectDate_VatPrice.ValueData, NULL)       :: TDateTime AS VatPriceDate
 
            , Object_Section.Id                AS SectionId
@@ -189,6 +192,10 @@ BEGIN
                                    ON ObjectBoolean_isEdiDelnot.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_isEdiDelnot.DescId = zc_ObjectBoolean_Juridical_isEdiDelnot()
 
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiQuality
+                                   ON ObjectBoolean_isEdiQuality.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_isEdiQuality.DescId = zc_ObjectBoolean_Juridical_isEdiQuality()
+                               
            LEFT JOIN ObjectDate AS ObjectDate_VatPrice
                                 ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
                                AND ObjectDate_VatPrice.DescId = zc_ObjectDate_Juridical_VatPrice()
@@ -250,7 +257,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 14.04.25         * isEdiDelnot
+ 11.08.25         * isEdiQuality, DocHeadeName
+ 14.04.25         * isEdiDelnot,isEdiQuality
  07.04.25         * isEdiInvoice
  14.03.25         * isVchasnoEdi
  02.11.22         * add Section

@@ -11,7 +11,8 @@ AS
            , CAST ('01.01.2200' AS TDateTime)           AS EndDate
            , CAST (0 AS INTEGER)                        AS JuridicalId
            , zc_Enum_PaidKind_FirstForm()               AS PaidKindId --б/н
-           , CAST ('PrintMovement_Sale1' AS TVarChar)   AS PrintFormName
+           , CAST ('PrintMovement_Sale1' AS TVarChar)   AS PrintFormName 
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       UNION
       SELECT
              zc_Movement_Sale()
@@ -21,6 +22,7 @@ AS
            , CAST (0 AS INTEGER)
            ,  zc_Enum_PaidKind_SecondForm()             AS PaidKindId --нал
            , CAST ('PrintMovement_Sale2' AS TVarChar)
+           , CAST ('Товарна накладна' AS TVarChar)                      AS DocHeadeName
       UNION
 -- признак isDiscountPrice = True - печатать цену со скидкой
       SELECT
@@ -31,6 +33,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale2DiscountPrice' AS TVarChar)
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
                            ON ObjectBoolean_isDiscountPrice.ObjectId = Object_Juridical.Id
@@ -47,6 +50,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale2PriceWithVAT' AS TVarChar)
+           , CAST ('Товарна накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
                            ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
@@ -65,6 +69,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale2PriceWithVAT' AS TVarChar)
+           , CAST ('Товарна накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
         LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
@@ -79,7 +84,8 @@ AS
            , CAST ('01.01.2200' AS TDateTime)           AS EndDate
            , CAST (0 AS INTEGER)                        AS JuridicalId
            , zc_Enum_PaidKind_FirstForm()               AS PaidKindId --б/н
-           , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName
+           , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName 
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
       SELECT
              zc_Movement_Sale()                         AS DescId
@@ -89,6 +95,7 @@ AS
            , CAST (0 AS INTEGER)                        AS JuridicalId
            , zc_Enum_PaidKind_SecondForm()              AS PaidKindId --н
            , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
 
       UNION
       SELECT
@@ -99,6 +106,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)                         -- ж/д
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Bill01074874' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('01074874','23193668','01074791','25774961','01074302','01074064',
@@ -114,6 +122,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)      AS JuridicalId
            , zc_Enum_PaidKind_FirstForm()               AS PaidKindId --б/н
            , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
                            ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
@@ -128,6 +137,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)      AS JuridicalId
            , zc_Enum_PaidKind_SecondForm()              AS PaidKindId --н
            , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
                            ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
@@ -144,6 +154,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)      AS JuridicalId
            , zc_Enum_PaidKind_FirstForm()               AS PaidKindId --б/н
            , CAST ('PrintMovement_Bill_WithVAT' AS TVarChar)   AS PrintFormName
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
                            ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
@@ -162,6 +173,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)      AS JuridicalId
            , zc_Enum_PaidKind_SecondForm()              AS PaidKindId --б/н
            , CAST ('PrintMovement_Bill_WithVAT' AS TVarChar)   AS PrintFormName
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
                            ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
@@ -186,6 +198,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)                         -- покупатели с отдельными формами
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale'||OH_JuridicalDetails.OKPO AS TVarChar)
+           , CAST ('Товарна накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('30487219','32049199')
@@ -201,6 +214,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale32294926' AS TVarChar)
+           , CAST ('Накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198', '32294897', '42751590', '41028986'
@@ -221,6 +235,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale32490244' AS TVarChar)
+           , CAST ('Накладна' AS TVarChar)                  AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32490244', '41744911', '39775097', '41135005', '30728887', '41609092'
@@ -238,6 +253,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale41750857' AS TVarChar)
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('41750857')
@@ -253,6 +269,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale35442481' AS TVarChar)
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('35442481', '34431547')
@@ -268,6 +285,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale32516492' AS TVarChar)
+           , CAST ('Товарна накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32516492', '39135315', '39622918')
@@ -283,6 +301,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale35275230' AS TVarChar)
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
            LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
            LEFT JOIN ObjectLink AS ObjectLink_Retail
@@ -304,6 +323,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale30982361' AS TVarChar)
+           , CAST ('Товарна накладна' AS TVarChar)    AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('30982361', '33184262')
@@ -319,6 +339,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale31929492' AS TVarChar)
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('31929492', '32334104', '19202597')
@@ -334,6 +355,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale37910513' AS TVarChar)
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('37910513','37910542')
@@ -348,7 +370,8 @@ AS
            , CAST ('01.01.2200' AS TDateTime)
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
-           , CAST ('PrintMovement_Sale01074874' AS TVarChar)
+           , CAST ('PrintMovement_Sale01074874' AS TVarChar) 
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('01074874','23193668'
@@ -366,7 +389,8 @@ AS
            , CAST ('01.01.2200' AS TDateTime)
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
-           , CAST ('PrintMovement_Sale43112236' AS TVarChar)
+           , CAST ('PrintMovement_Sale43112236' AS TVarChar) 
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
            JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
                    AND OH_JuridicalDetails.OKPO IN ('43112236')
@@ -382,6 +406,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale36387249' AS TVarChar)
+           , CAST ('Видаткова накладна' AS TVarChar)               AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('36387249', '36387233', '38916558', '40982829'
@@ -399,6 +424,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale22447463' AS TVarChar)
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('22447463', '37223357', '37223320')
@@ -413,7 +439,8 @@ AS
            , CAST ('01.01.2200' AS TDateTime)
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
-           , CAST ('PrintMovement_Sale36003603' AS TVarChar)
+           , CAST ('PrintMovement_Sale36003603' AS TVarChar) 
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('36003603')
@@ -428,7 +455,8 @@ AS
            , CAST ('01.01.2200' AS TDateTime)
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
-           , CAST ('PrintMovement_Sale39118745' AS TVarChar)
+           , CAST ('PrintMovement_Sale39118745' AS TVarChar) 
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('39118745','39117631', '39118572', '39143745' -- ? + Фінєст + ? + ? + ?
@@ -469,6 +497,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale2902403938' AS TVarChar)
+           , CAST ('Товарна накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('2902403938')
@@ -484,6 +513,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale32437180' AS TVarChar)
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32437180')
@@ -499,6 +529,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale43094673' AS TVarChar)
+           , CAST ('Видаткова накладна' AS TVarChar)                     AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('43094673')
@@ -515,6 +546,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale38017026' AS TVarChar)
+           , CAST ('Видаткова накладна' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('38017026')
@@ -531,6 +563,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
       -- налоговая c 01.12.2014
       SELECT
@@ -541,6 +574,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax1214' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --налоговая c 01.01.2015
       SELECT
@@ -550,7 +584,8 @@ AS
            , CAST ('31.03.2016' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_Tax0115' AS TVarChar)
+           , CAST ('PrintMovement_Tax0115' AS TVarChar) 
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --налоговая c 01.04.2016
       SELECT
@@ -561,6 +596,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax0416' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --налоговая c 01.03.2017
       SELECT
@@ -570,7 +606,8 @@ AS
            , CAST ('30.11.2018' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_Tax0317' AS TVarChar)
+           , CAST ('PrintMovement_Tax0317' AS TVarChar) 
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --налоговая c 01.12.2018
       SELECT
@@ -581,6 +618,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax1218' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --налоговая c 01.03.2021
       SELECT
@@ -591,6 +629,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax0321' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --налоговая c 16.03.2021
       SELECT
@@ -601,6 +640,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax160321' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
 
       UNION
 --налоговая c 17.02.2022
@@ -612,6 +652,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax170222' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --налоговая c 01.04.2023
       SELECT
@@ -622,6 +663,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax010423' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --налоговая c 01.08.2023
       SELECT
@@ -632,6 +674,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax010823' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --налоговая c 01.10.2024
       SELECT
@@ -642,6 +685,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax011024' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --коррект
       SELECT
@@ -651,7 +695,8 @@ AS
            , CAST ('30.11.2014' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_TaxCorrective' AS TVarChar)
+           , CAST ('PrintMovement_TaxCorrective' AS TVarChar) 
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --коррект  c 01.12.2014
       SELECT
@@ -662,6 +707,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective1214' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --коррект  c 01.01.2015
       SELECT
@@ -672,6 +718,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective0115' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
 
       UNION
 --коррект  c 01.04.2016
@@ -683,6 +730,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective0416' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --коррект  c 01.03.2017
       SELECT
@@ -693,6 +741,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective0317' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --коррект  c 01.12.2018
       SELECT
@@ -703,6 +752,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective1218' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --коррект  c 01.03.2021
       SELECT
@@ -713,6 +763,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective0321' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --коррект  c 16.03.2021
       SELECT
@@ -723,6 +774,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective160321' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --коррект  c 17.02.2022
       SELECT
@@ -733,6 +785,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective170222' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --коррект  c 01.04.2023
       SELECT
@@ -743,6 +796,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective010423' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --коррект  c 01.08.2023
       SELECT
@@ -753,6 +807,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective010823' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 --коррект  c 01.10.2024
       SELECT
@@ -763,7 +818,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective011024' AS TVarChar)
-
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
 /*
 -- Новая форма налоговой
       UNION
@@ -775,6 +830,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_SaleTax_2014' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
 */
 -- корректировка цены - стандарт
       UNION
@@ -786,6 +842,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_ReturnIn' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
 -- Ashan + РІАЛ ІСТЕЙТ Ф.К.А.У.
       SELECT
@@ -796,6 +853,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_PriceCorrective35442481' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('35442481', '34431547')
@@ -809,7 +867,8 @@ AS
            , CAST ('01.01.2200' AS TDateTime)
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
-           , CAST ('PrintMovement_PriceCorrective32049199' AS TVarChar)
+           , CAST ('PrintMovement_PriceCorrective32049199' AS TVarChar) 
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32049199')
@@ -826,7 +885,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_ReturnIn' AS TVarChar)
-
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       /*UNION
 -- Metro - ReturnIn
       SELECT
@@ -837,6 +896,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_ReturnIn32049199' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32049199')
@@ -852,6 +912,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_ReturnIn35442481' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('35442481')
@@ -867,6 +928,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_ReturnIn32516492' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32516492', '39135315')
@@ -883,6 +945,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_ReturnOut' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
 
 -- Начисления по Юридическому лицу
       UNION
@@ -894,6 +957,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_ProfitLossService' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
 
       UNION
 -- Транспортная Amstor
@@ -905,6 +969,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Transport32516492' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32516492', '39135315')
@@ -920,6 +985,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Transport32049199' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32049199')
@@ -935,6 +1001,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Transport36003603' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('36003603')
@@ -950,6 +1017,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Transport36387249' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('36387249', '36387233', '38916558')
@@ -965,7 +1033,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintObject_Sticker' AS TVarChar)
-
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
       -- печать качественного Метро
       SELECT
@@ -976,6 +1044,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Quality32049199' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32049199')
@@ -991,6 +1060,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Quality32294926' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198', '32294897')
@@ -1006,6 +1076,7 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TTN' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       UNION
       -- Печать ТТН с 07,10,2021
       SELECT
@@ -1016,6 +1087,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TTN_071021' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO NOT IN ('41201250', '42599711', '41200660', '42465240', '34465801', '45293717', '42668161', '41360805', '43233918', '33259493', '45041508'
@@ -1036,6 +1108,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TTN_03012025' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO NOT IN ('41201250', '42599711', '41200660', '42465240', '34465801', '45293717', '42668161', '41360805', '43233918', '33259493', '45041508'
@@ -1057,6 +1130,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TTN_43233918' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('41201250', '42599711', '41200660', '42465240', '34465801', '45293717', '42668161', '41360805', '43233918', '33259493'
@@ -1078,6 +1152,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TTN_43233918_03012025' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('41201250', '42599711', '41200660', '42465240', '34465801', '45293717', '42668161', '41360805', '43233918', '33259493'
@@ -1099,6 +1174,7 @@ AS
            , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TTN_03012025_Fora' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32294897' 

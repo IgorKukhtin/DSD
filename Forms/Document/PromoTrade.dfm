@@ -3,6 +3,7 @@ inherited PromoTradeForm: TPromoTradeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 702
   ClientWidth = 1164
+  ExplicitTop = -86
   ExplicitWidth = 1180
   ExplicitHeight = 741
   PixelsPerInch = 96
@@ -1073,9 +1074,6 @@ inherited PromoTradeForm: TPromoTradeForm
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1169,9 +1167,6 @@ inherited PromoTradeForm: TPromoTradeForm
     object tsOkupaemost: TcxTabSheet
       Caption = '&4. '#1054#1082#1091#1087#1072#1077#1084#1086#1089#1090#1100
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridOkup: TcxGrid
         Left = 0
         Top = 0
@@ -2320,7 +2315,17 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object InsertRecordTM: TInsertRecord [5]
+    object actGridToExcel_okup: TdsdGridToExcel [5]
+      Category = 'DSDLib'
+      TabSheet = tsOkupaemost
+      MoveParams = <>
+      Enabled = False
+      Grid = GridOkup
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+    end
+    object InsertRecordTM: TInsertRecord [6]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2331,7 +2336,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1103' '#1084#1072#1088#1082#1072'>'
       ImageIndex = 0
     end
-    object InsertRecordGGPP: TInsertRecord [6]
+    object InsertRecordGGPP: TInsertRecord [7]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2342,7 +2347,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072'-1>'
       ImageIndex = 0
     end
-    object InsertRecordGGP: TInsertRecord [7]
+    object InsertRecordGGP: TInsertRecord [8]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2353,7 +2358,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072'-2>'
       ImageIndex = 0
     end
-    object actUpdateOkupDS: TdsdUpdateDataSet [8]
+    object actUpdateOkupDS: TdsdUpdateDataSet [9]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2368,7 +2373,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = 'actUpdateCalcDS'
       DataSource = OkupaemostDS
     end
-    object InsertRecordGD: TInsertRecord [9]
+    object InsertRecordGD: TInsertRecord [10]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2379,7 +2384,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'>'
       ImageIndex = 0
     end
-    object actSetErasedMIMaster_all: TdsdExecStoredProc [10]
+    object actSetErasedMIMaster_all: TdsdExecStoredProc [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2394,7 +2399,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = 'actSetErasedMIMaster_all'
       Hint = 'actSetErasedMIMaster_all'
     end
-    object actChoiceTradeMark: TOpenChoiceForm [11]
+    object actChoiceTradeMark: TOpenChoiceForm [12]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2421,7 +2426,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actChoiceGoodsGroupProperty: TOpenChoiceForm [12]
+    object actChoiceGoodsGroupProperty: TOpenChoiceForm [13]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2462,7 +2467,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actChoiceGoodsGroupPropertyParent: TOpenChoiceForm [13]
+    object actChoiceGoodsGroupPropertyParent: TOpenChoiceForm [14]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2503,7 +2508,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actChoiceGoodsGroupDirection: TOpenChoiceForm [14]
+    object actChoiceGoodsGroupDirection: TOpenChoiceForm [15]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2530,7 +2535,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = True
     end
-    object actUpdate_Movement_isTaxPromo: TdsdExecStoredProc [15]
+    object actUpdate_Movement_isTaxPromo: TdsdExecStoredProc [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2546,7 +2551,7 @@ inherited PromoTradeForm: TPromoTradeForm
       ImageIndex = 27
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1084#1077#1085#1080#1090#1100' % '#1057#1082#1080#1076#1082#1080' <=> % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
     end
-    object actRefresh_Get: TdsdDataSetRefresh [16]
+    object actRefresh_Get: TdsdDataSetRefresh [17]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -2563,7 +2568,7 @@ inherited PromoTradeForm: TPromoTradeForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsertUpdateMISignNo: TdsdExecStoredProc [17]
+    object actInsertUpdateMISignNo: TdsdExecStoredProc [18]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2576,7 +2581,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
     end
-    object actUpdateMov1DS: TdsdUpdateDataSet [18]
+    object actUpdateMov1DS: TdsdUpdateDataSet [19]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2622,7 +2627,7 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spSelectOkupaemost
         end>
     end
-    object mactInsertUpdateMISignNo: TMultiAction [20]
+    object mactInsertUpdateMISignNo: TMultiAction [21]
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
@@ -2636,7 +2641,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
     end
-    object actUpdateDataSetMessage: TdsdUpdateDataSet [21]
+    object actUpdateDataSetMessage: TdsdUpdateDataSet [22]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2647,7 +2652,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       Caption = 'actUpdateDataSetMessage'
     end
-    object InsertRecord: TInsertRecord [23]
+    object InsertRecord: TInsertRecord [24]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2658,7 +2663,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
-    object actUpdateCalcDS: TdsdUpdateDataSet [24]
+    object actUpdateCalcDS: TdsdUpdateDataSet [25]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2818,7 +2823,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1058#1086#1074#1072#1088'>'
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [38]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [39]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
@@ -2848,7 +2853,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [39]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [40]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
@@ -2874,7 +2879,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [40]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [41]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
@@ -3733,6 +3738,10 @@ inherited PromoTradeForm: TPromoTradeForm
         end
         item
           Visible = True
+          ItemName = 'bbGridToExcel_okup'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -3862,6 +3871,10 @@ inherited PromoTradeForm: TPromoTradeForm
     end
     object bbSelectPrintOkup_new: TdxBarButton
       Action = actSelectPrintOkup_new
+      Category = 0
+    end
+    object bbGridToExcel_okup: TdxBarButton
+      Action = actGridToExcel_okup
       Category = 0
     end
   end
@@ -5043,8 +5056,8 @@ inherited PromoTradeForm: TPromoTradeForm
   object SignCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 1040
-    Top = 152
+    Left = 944
+    Top = 232
   end
   object SignDS: TDataSource
     DataSet = SignCDS

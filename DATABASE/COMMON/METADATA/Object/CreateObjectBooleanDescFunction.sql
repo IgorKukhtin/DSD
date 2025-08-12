@@ -152,6 +152,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_isEdiDelnot() RETURNS Inte
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_isEdiDelnot', 'ВН - Delnot, автоматическая отправка' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isEdiDelnot');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_isEdiQuality() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isEdiQuality'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_isEdiQuality', 'Вчасно Декларация' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isEdiQuality');
+
+
 
 
 
