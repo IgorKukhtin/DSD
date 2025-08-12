@@ -129,6 +129,8 @@ BEGIN
      THEN
           -- сохранили
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_List(), inId, inIsListInventory);
+          -- сохранили протокол
+          PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
      END IF;
 
      -- дописали св-во - vbIsRePack
@@ -136,12 +138,24 @@ BEGIN
      THEN
           -- сохранили
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isRePack(), inId, TRUE);
+          -- сохранили протокол
+          PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+
+     ELSEIF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inId AND MB.DescId = zc_MovementBoolean_isRePack() AND MB.ValueData = TRUE)
+     THEN
+          -- сохранили
+          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isRePack(), inId, FALSE);
+          -- сохранили протокол
+          PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+
      END IF;
 
      -- дописали свойство <Код Филиала>
      IF NOT EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_BranchCode())
      THEN
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_BranchCode(), inId, inBranchCode);
+          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_BranchCode(), inId, inBranchCode);
+          -- сохранили протокол
+          PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
      END IF;
 
 

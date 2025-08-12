@@ -1446,8 +1446,10 @@ BEGIN
 
 
      -- №1 - формируются Партии товара, ЕСЛИ надо ...
-     UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbMovementDescId = zc_Movement_IncomeAsset()
+     UPDATE _tmpItem SET PartionGoodsId = CASE WHEN (vbMovementDescId = zc_Movement_IncomeAsset()
                                                  OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                                                    )
+                                                 AND _tmpItem.isAsset = FALSE
                                                     THEN lpInsertFind_Object_PartionGoods (inMovementId    := inMovementId
                                                                                          , inGoodsId       := _tmpItem.GoodsId
                                                                                          , inUnitId        := _tmpItem.UnitId_Asset
@@ -1498,6 +1500,7 @@ BEGIN
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+        OR _tmpItem.isAsset                = TRUE
         -- OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
         OR vbMovementDescId = zc_Movement_IncomeAsset()
      ;
