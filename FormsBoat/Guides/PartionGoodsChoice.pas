@@ -22,7 +22,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, cxImageComboBox, cxContainer, dsdGuides, cxLabel,
-  cxTextEdit, cxMaskEdit, cxButtonEdit, Vcl.ExtCtrls, cxCurrencyEdit;
+  cxTextEdit, cxMaskEdit, cxButtonEdit, Vcl.ExtCtrls, cxCurrencyEdit,
+  Vcl.StdCtrls, cxButtons, dsdCommon;
 
 type
   TPartionGoodsChoiceForm = class(TAncestorEnum_boatForm)
@@ -55,6 +56,9 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
+    Panel_btn: TPanel;
+    btnChoiceGuides: TcxButton;
+    btnFormClose: TcxButton;
   private
     { Private declarations }
   public

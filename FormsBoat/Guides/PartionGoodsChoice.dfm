@@ -11,18 +11,18 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   inherited PageControl: TcxPageControl
     Top = 96
     Width = 853
-    Height = 303
+    Height = 262
     ExplicitTop = 96
     ExplicitWidth = 853
     ExplicitHeight = 303
-    ClientRectBottom = 303
+    ClientRectBottom = 262
     ClientRectRight = 853
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 853
       ExplicitHeight = 303
       inherited cxGrid: TcxGrid
         Width = 853
-        Height = 303
+        Height = 262
         ExplicitWidth = 853
         ExplicitHeight = 303
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -389,6 +389,33 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 283
+  end
+  object Panel_btn: TPanel [4]
+    Left = 0
+    Top = 358
+    Width = 853
+    Height = 41
+    Align = alBottom
+    TabOrder = 8
+    ExplicitTop = 364
+    object btnChoiceGuides: TcxButton
+      Left = 195
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 0
+    end
+    object btnFormClose: TcxButton
+      Left = 341
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67

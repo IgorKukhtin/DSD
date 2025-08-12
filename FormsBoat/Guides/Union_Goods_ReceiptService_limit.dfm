@@ -21,10 +21,11 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
     Left = 0
     Top = 59
     Width = 1145
-    Height = 447
+    Height = 406
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitHeight = 447
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -485,6 +486,58 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
       Style.IsFontAssigned = True
     end
   end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 465
+    Width = 1145
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    ExplicitTop = 332
+    ExplicitWidth = 897
+    object btnInsert: TcxButton
+      Left = 485
+      Top = 6
+      Width = 100
+      Height = 25
+      Action = macInsert
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 611
+      Top = 6
+      Width = 100
+      Height = 25
+      Action = macUpdate
+      TabOrder = 1
+    end
+    object btnChoiceGuides: TcxButton
+      Left = 148
+      Top = 6
+      Width = 90
+      Height = 25
+      Action = dsdChoiceGuides
+      TabOrder = 2
+    end
+    object btnSetErased: TcxButton
+      Left = 736
+      Top = 6
+      Width = 100
+      Height = 25
+      Action = macSetErased
+      TabOrder = 3
+    end
+    object btnFormClose: TcxButton
+      Left = 266
+      Top = 6
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+    end
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
@@ -859,9 +912,9 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
     end
     object dsdGridToExcel1: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1019,7 +1072,7 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
         item
           Action = actUpdate
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
     end
@@ -1033,7 +1086,7 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
         item
           Action = dsdSetErased
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 2
       ShortCut = 49220
@@ -1137,9 +1190,15 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
         item
           Action = actInsert
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 0
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc
