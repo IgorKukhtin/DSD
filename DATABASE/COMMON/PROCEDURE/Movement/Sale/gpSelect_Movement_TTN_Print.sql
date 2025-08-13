@@ -246,6 +246,31 @@ BEGIN
                                 END ) ) ) :: TFloat AS TotalWeightPackage 
                             , SUM (COALESCE (tmpMI.BoxWeight, 0)):: TFloat AS TotalWeightBox
 
+                            , SUM (CAST (tmpMI.AmountPartnerWeight / 1000
+                                       + COALESCE (tmpMI.BoxWeight, 0)/ 1000
+                                       + -- плюс Вес Упаковок (пакетов)
+                                         CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) > 0
+                                              THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
+                                                   CAST (tmpMI.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) ) AS NUMERIC (16, 0))
+                                                 * -- вес 1-ого пакета
+                                                   COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+                                              ELSE 0
+                                         END 
+                                        / 1000 
+                                    AS NUMERIC (16,3) )
+                                   ) AS TotalWeight_BruttoT
+
+                             , SUM (CAST (tmpMI.AmountPartnerWeight / 1000
+                                       + COALESCE (tmpMI.BoxWeight, 0)/ 1000
+                                       + -- плюс Вес Упаковок (пакетов)
+                                         CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) > 0
+                                              THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
+                                                   CAST (tmpMI.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) ) AS NUMERIC (16, 0))
+                                                 * -- вес 1-ого пакета
+                                                   COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+                                              ELSE 0
+                                         END 
+                                        / 1000  AS NUMERIC (16,3) ) ) * 1000 AS TotalWeight_BruttoKg  --округление для тонн переводим в кг (если нужно будет)                  
                      FROM (WITH
                            tmpMI AS (SELECT *
                                      FROM MovementItem 
@@ -303,7 +328,8 @@ BEGIN
                                        * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )
                                        ) AS AmountPartnerWeight
                                 
-                                , SUM (COALESCE (MIFloat_BoxCount.ValueData, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)):: TFloat AS BoxWeight
+                                , SUM (COALESCE (MIFloat_BoxCount.ValueData, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)):: TFloat AS BoxWeight   
+                                
                            FROM tmpMI AS MovementItem
                                  LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -329,10 +355,7 @@ BEGIN
 
                                  LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId     = MovementItem.ObjectId
                                                                        AND tmpObject_GoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
- 
-                           WHERE MovementItem.MovementId = inMovementId
-                             AND MovementItem.DescId     = zc_MI_Master()
-                             AND MovementItem.isErased   = FALSE
+
                            GROUP BY MovementItem.ObjectId
                                   , MILinkObject_GoodsKind.ObjectId
                            ) AS tmpMI
@@ -583,14 +606,22 @@ BEGIN
            , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn() THEN tmpTransportGoods.MemberName7 ELSE 'Комірник ' ||tmpTransportGoods.MemberName4 END AS MemberName7
            , tmpTransportGoods.TotalCountBox
            , tmpPackage.TotalWeightBox --tmpTransportGoods.TotalWeightBox
-           ,   COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0) AS TotalWeight_Brutto
-           , ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)    :: TFloat AS TotalWeight_BruttoKg
-           , ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000) :: TFloat AS TotalWeight_BruttoT
-           , TRUNC ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000) :: TFloat AS TotalWeight_BruttoT1
-           , TRUNC ( ( ROUND( (COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000, 3)
-                    - TRUNC ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000)
+           /*,   COALESCE (tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0) AS TotalWeight_Brutto
+           , ((COALESCE (tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)    :: TFloat AS TotalWeight_BruttoKg
+           , ((COALESCE (tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000) :: TFloat AS TotalWeight_BruttoT
+           , TRUNC ((COALESCE (tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000) :: TFloat AS TotalWeight_BruttoT1
+           , TRUNC (  ( ROUND( (COALESCE (tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000, 3)
+                    - TRUNC ((COALESCE (tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1000)
                      ) * 1000) :: TFloat AS TotalWeight_BruttoT2
-
+           */
+           , COALESCE (tmpPackage.TotalWeight_BruttoKg, 0)            AS TotalWeight_Brutto
+           , COALESCE (tmpPackage.TotalWeight_BruttoKg, 0)  :: TFloat AS TotalWeight_BruttoKg
+           , COALESCE (tmpPackage.TotalWeight_BruttoT, 0)   :: TFloat AS TotalWeight_BruttoT
+           , TRUNC (COALESCE (tmpPackage.TotalWeight_BruttoT, 0) ) :: TFloat AS TotalWeight_BruttoT1
+           , TRUNC (  ( COALESCE (tmpPackage.TotalWeight_BruttoT, 0)
+                    - TRUNC ( COALESCE (tmpPackage.TotalWeight_BruttoT, 0))
+                     ) * 1000) :: TFloat AS TotalWeight_BruttoT2
+           
            , CASE WHEN 1 =
              TRUNC ( ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0)) / 1000
                     - TRUNC ((COALESCE (/*tmpTransportGoods.TotalWeightBox*/ tmpPackage.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0)) / 1000)
@@ -1004,7 +1035,7 @@ BEGIN
                              COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
                         ELSE 0
                    END /1000
-                   ) AS TFloat) AS TotalWeight_BruttoT
+                   ) AS NUMERIC (16,3)) AS TotalWeight_BruttoT
 --------------------
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / 1
                  + COALESCE (tmpMI.Box_Weight, 0) / 1
