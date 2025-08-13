@@ -22,6 +22,7 @@ BEGIN
 /*
 в шапке
 ПН;Номер;Дата у пок;Общая сумма без ндс;НДС; сумма с ндс ;ЕДРПОУ АЛАН;  1или 2 - форма оплаты где 1-бн и 2 - нал
+окпо контрагента, потом окпо отправителя
 
 в строчной части будет
 Номер п/п;Товар;Код;Вид упаковки;Код вида;Количество;Цена без ндс;Сумма без ндс
@@ -76,6 +77,7 @@ BEGIN
                        AND MovementLinkObject.DescId IN (zc_MovementLinkObject_PaidKind()
                                                        , zc_MovementLinkObject_To()
                                                        , zc_MovementLinkObject_Contract()
+                                                       , zc_MovementLinkObject_From()
                                                         )
                      )
         , tmpContract_InvNumber AS (SELECT Object_Contract_InvNumber_Sale_View.*
@@ -90,13 +92,26 @@ BEGIN
                                                                 )
                                  )
 
+       , tmpJuridical AS (SELECT ObjectLink_Partner_Juridical.ObjectId AS PartnerId
+                               , Object_JuridicalTo.*
+                          FROM ObjectLink AS ObjectLink_Partner_Juridical
+                               LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
+                          WHERE ObjectLink_Partner_Juridical.ObjectId IN (SELECT DISTINCT tmpMLO.ObjectId FROM tmpMLO WHERE tmpMLO.DescId = zc_MovementLinkObject_To())
+                            AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                          )
+        --, tmpContract_InvNumber AS (SELECT * FROM Object_Contract_InvNumber_Sale_View)
+        , tmpJuridicalDetails AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpJuridical.Id FROM tmpJuridical))
+
+
         , tmpMov_rez AS (SELECT Movement.Id
                               , Movement.InvNumber
                               , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
                               , MovementFloat_TotalSummMVAT.ValueData AS TotalSummMVAT
                               , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) ) AS TotalSummVat
                               , MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT
-                              , 348483738 AS OKPO
+                              --, 348483738 AS OKPO
+                              , ObjectHistory_JuridicalDetails_to.OKPO    AS OKPO_to --
+                              , ObjectHistory_JuridicalDetails_from.OKPO  AS OKPO_from--
                               , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN 1 ELSE 2 END AS PaidKind
 
                               , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
@@ -142,7 +157,18 @@ BEGIN
                                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                   LEFT JOIN ObjectString AS ObjectString_Address
                                                          ON ObjectString_Address.ObjectId = MovementLinkObject_To.ObjectId
-                                                        AND ObjectString_Address.DescId   = zc_ObjectString_Partner_Address()
+                                                        AND ObjectString_Address.DescId   = zc_ObjectString_Partner_Address() 
+
+                                  LEFT JOIN tmpJuridical AS Object_Juridical_to ON Object_Juridical_to.PartnerId = MovementLinkObject_To.ObjectId
+                                  LEFT JOIN tmpJuridicalDetails AS ObjectHistory_JuridicalDetails_to ON ObjectHistory_JuridicalDetails_to.JuridicalId = Object_Juridical_to.Id   
+                                  
+                                  LEFT JOIN tmpMLO AS MovementLinkObject_From
+                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                  AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                       ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                  LEFT JOIN ObjectHistory_JuridicalDetails_View AS ObjectHistory_JuridicalDetails_from ON ObjectHistory_JuridicalDetails_from.JuridicalId = ObjectLink_Unit_Juridical.ChildObjectId
                             )
 
 
@@ -196,7 +222,8 @@ BEGIN
                            , Movement.TotalSummPVAT
                            , Movement.TotalSummVat
                            , Movement.TotalSummMVAT
-                           , Movement.OKPO
+                           , Movement.OKPO_to
+                           , Movement.OKPO_from
                            , Movement.PaidKind
                            --
                            , tmpMI.Ord
@@ -223,7 +250,8 @@ BEGIN
                          ||';'||CAST (tmpData.TotalSummMVAT AS NUMERIC (16,2)) ::TVarChar
                          ||';'||CAST (tmpData.TotalSummVat AS NUMERIC (16,2)) ::TVarChar
                          ||';'||CAST (tmpData.TotalSummPVAT AS NUMERIC (16,2)) ::TVarChar
-                         ||';'||tmpData.OKPO
+                         ||';'||tmpData.OKPO_to 
+                         ||';'||tmpData.OKPO_from
                          ||';'||tmpData.PaidKind
                          ||';'||tmpData.Address_to
                          ||';'||tmpData.InfoMoneyName
@@ -268,3 +296,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_VN_csv (inStartDate:= '08.08.2025', inEndDate:= '08.08.2025', inFileName:= 'VN_08.08.2025_08.08.2025 08.08.2025 17:39', inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
+--SELECT * FROM gpSelect_Movement_VN_csv (inStartDate:= '08.08.2025', inEndDate:= '08.08.2025', inFileName:= 'VN_08.08.2025_08.08.2025 08.08.2025 20_05 К. К. Климентьев', inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
