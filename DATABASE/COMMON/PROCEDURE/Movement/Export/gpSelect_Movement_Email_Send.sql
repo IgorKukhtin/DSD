@@ -935,6 +935,8 @@ BEGIN
                                  || ' TaxDate=""'
                      END
                   ||  ' Type="' || CASE WHEN MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN '1' ELSE '0' END ||'">' -- тип учета.(Бухгалтерский - 1, Управленческий - 0)
+                  ||  ' NumberContract="' || COALESCE (View_Contract.InvNumber, '') ||'">' -- тип учета.(Бухгалтерский - 1, Управленческий - 0)
+                  
         FROM Movement
              LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                       ON MovementString_InvNumberOrder.MovementId =  Movement.Id
