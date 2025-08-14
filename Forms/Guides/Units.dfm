@@ -362,6 +362,15 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 60
       end
+      object isnotBirthDay: TcxGridDBColumn
+        Caption = #1048#1089#1082#1083'. '#1080#1079' '#1089#1087'. '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074
+        DataBinding.FieldName = 'isnotBirthDay'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1089#1087#1080#1089#1082#1072' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074
+        Options.Editing = False
+        Width = 93
+      end
       object UnitCode_HistoryCost: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'. ('#1089'/'#1089' '#1074#1086#1079#1074#1088#1072#1090')'
         DataBinding.FieldName = 'UnitCode_HistoryCost'
@@ -571,6 +580,14 @@ object UnitForm: TUnitForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_notBirthDay'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -636,6 +653,10 @@ object UnitForm: TUnitForm
     end
     object bbUpdate_isIrna: TdxBarButton
       Action = macUpdate_isIrna
+      Category = 0
+    end
+    object bbUpdate_notBirthDay: TdxBarButton
+      Action = macUpdate_notBirthDay
       Category = 0
     end
   end
@@ -887,6 +908,32 @@ object UnitForm: TUnitForm
       Caption = 'actUpdate_isIrna'
       ImageIndex = 66
     end
+    object macUpdate_notBirthDay: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_notBirthDay
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1089#1087#1080#1089#1082#1072' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074'> '#1076#1072'/'#1085#1077#1090
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1089#1087#1080#1089#1082#1072' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074'> '#1076#1072'/'#1085#1077#1090
+      ImageIndex = 77
+    end
+    object actUpdate_notBirthDay: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_notBirthDay
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_notBirthDay
+        end>
+      Caption = 'actUpdate_notBirthDay'
+      ImageIndex = 77
+    end
   end
   object ClientDS: TDataSource
     DataSet = ClientDataSet
@@ -1017,5 +1064,31 @@ object UnitForm: TUnitForm
     PackSize = 1
     Left = 352
     Top = 224
+  end
+  object spUpdate_notBirthDay: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Unit_notBirthDay'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisnotBirthDay'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isnotBirthDay'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 152
   end
 end

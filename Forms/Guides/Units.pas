@@ -97,6 +97,11 @@ type
     CityName: TcxGridDBColumn;
     FounderName: TcxGridDBColumn;
     DepartmentName: TcxGridDBColumn;
+    spUpdate_notBirthDay: TdsdStoredProc;
+    actUpdate_notBirthDay: TdsdExecStoredProc;
+    macUpdate_notBirthDay: TMultiAction;
+    bbUpdate_notBirthDay: TdxBarButton;
+    isnotBirthDay: TcxGridDBColumn;
   private
     { Private declarations }
   public

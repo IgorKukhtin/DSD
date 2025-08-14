@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isPartionGP Boolean,
                isIrna Boolean,
                isAvance Boolean,
+               isnotBirthDay Boolean,
                isErased Boolean,
                Address TVarChar,
                Comment TVarChar,
@@ -190,6 +191,7 @@ BEGIN
 
            , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)       :: Boolean AS isIrna
            , COALESCE (ObjectBoolean_Avance.ValueData, FALSE)           :: Boolean AS isAvance
+           , COALESCE (ObjectBoolean_notBirthDay.ValueData, FALSE)      :: Boolean AS isnotBirthDay
            , Object_Unit_View.isErased
 
            , ObjectString_Unit_Address.ValueData   AS Address
@@ -302,6 +304,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Avance
                                     ON ObjectBoolean_Avance.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_Avance.DescId = zc_ObjectBoolean_Unit_Avance()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_notBirthDay
+                                    ON ObjectBoolean_notBirthDay.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_notBirthDay.DescId = zc_ObjectBoolean_Unit_notBirthDay()
 
             LEFT JOIN ObjectDate AS ObjectDate_PersonalService
                                  ON ObjectDate_PersonalService.ObjectId = Object_Unit_View.Id
@@ -416,6 +422,7 @@ BEGIN
            , FALSE AS isPartionGP
            , FALSE AS isIrna
            , CAST (FALSE AS Boolean) AS isAvance
+           , CAST (FALSE AS Boolean) AS isnotBirthDay
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
@@ -521,6 +528,7 @@ BEGIN
            , FALSE AS isPartionGP
            , FALSE AS isIrna
            , CAST (FALSE AS Boolean) AS isAvance
+           , CAST (FALSE AS Boolean) AS isnotBirthDay
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
@@ -540,6 +548,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.08.25         * isnotBirthDay
  11.07.23         * AddressEDIN
  28.06.23         *
  14.03.23         *
