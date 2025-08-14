@@ -2,7 +2,7 @@ object MemberForm: TMemberForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
-  ClientHeight = 458
+  ClientHeight = 654
   ClientWidth = 1056
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,12 +22,14 @@ object MemberForm: TMemberForm
     Left = 0
     Top = 96
     Width = 1056
-    Height = 362
+    Height = 478
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -56
+    ExplicitTop = 124
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -706,7 +708,7 @@ object MemberForm: TMemberForm
   end
   object edBankUpDate: TcxButtonEdit
     Left = 796
-    Top = 116
+    Top = 252
     Properties.Buttons = <
       item
         Default = True
@@ -856,6 +858,55 @@ object MemberForm: TMemberForm
       Style.IsFontAssigned = True
     end
   end
+  object Panel1: TPanel
+    Left = 0
+    Top = 574
+    Width = 1056
+    Height = 80
+    Align = alBottom
+    Caption = 'Panel1'
+    TabOrder = 8
+    Visible = False
+    ExplicitLeft = -165
+    ExplicitTop = 544
+    ExplicitWidth = 1221
+    object ExportXmlGrid: TcxGrid
+      Left = 599
+      Top = 1
+      Width = 456
+      Height = 78
+      Align = alRight
+      TabOrder = 0
+      Visible = False
+      ExplicitLeft = 764
+      object ExportXmlGridDBTableView: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = ExportDS
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsBehavior.IncSearch = True
+        OptionsData.CancelOnExit = False
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.CellAutoHeight = True
+        OptionsView.ColumnAutoWidth = True
+        OptionsView.GroupByBox = False
+        OptionsView.Header = False
+        object RowData: TcxGridDBColumn
+          DataBinding.FieldName = 'RowData'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 100
+        end
+      end
+      object ExportXmlGridLevel: TcxGridLevel
+        GridView = ExportXmlGridDBTableView
+      end
+    end
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 56
@@ -1003,6 +1054,14 @@ object MemberForm: TMemberForm
         item
           Visible = True
           ItemName = 'bbsLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -1194,6 +1253,17 @@ object MemberForm: TMemberForm
     object bbStartLoadPhone: TdxBarButton
       Action = macStartLoadPhone
       Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactExport_xls
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074
+      Category = 0
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074
+      Visible = ivAlways
+      ImageIndex = 53
     end
   end
   object ActionList: TActionList
@@ -1994,6 +2064,117 @@ object MemberForm: TMemberForm
         end>
       Caption = 'actGetImportSettingPhone'
     end
+    object actExport_Grid_xls: TExportGrid
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      Grid = ExportXmlGrid
+      Caption = 'actExport_Grid_xls'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      DefaultFileExt = 'XLS'
+    end
+    object actGet_Export_Email_xls: TdsdExecStoredProc
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_Email
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_Email
+        end>
+      Caption = 'actGet_Export_Email_xls'
+    end
+    object actGet_Export_FileName_xls: TdsdExecStoredProc
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName_xls
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName_xls
+        end>
+      Caption = 'actGet_Export_FileName_xls'
+    end
+    object actSMTPFile_xls: TdsdSMTPFileAction
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = ExportEmailCDS
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = ExportEmailCDS
+      Port.ComponentItem = 'Port'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = ExportEmailCDS
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = ExportEmailCDS
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.Component = ExportEmailCDS
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = ExportEmailCDS
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = ExportEmailCDS
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = ExportEmailCDS
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
+    end
+    object actSelect_Export_xls: TdsdExecStoredProc
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectBirthDay_xls
+      StoredProcList = <
+        item
+          StoredProc = spSelectBirthDay_xls
+        end>
+      Caption = 'actSelect_Export_xls'
+    end
+    object mactExport_xls: TMultiAction
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_Email_xls
+        end
+        item
+          Action = actGet_Export_FileName_xls
+        end
+        item
+          Action = actSelect_Export_xls
+        end
+        item
+          Action = actExport_Grid_xls
+        end
+        item
+          Action = actSMTPFile_xls
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1057#1087#1080#1089#1086#1082' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074
+      ImageIndex = 53
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Member'
@@ -2416,8 +2597,8 @@ object MemberForm: TMemberForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 232
-    Top = 379
+    Left = 448
+    Top = 251
   end
   object spUpdateBank: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Member_Banks'
@@ -2547,8 +2728,8 @@ object MemberForm: TMemberForm
         Value = Null
         MultiSelectSeparator = ','
       end>
-    Left = 360
-    Top = 336
+    Left = 344
+    Top = 344
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2765,8 +2946,8 @@ object MemberForm: TMemberForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 856
-    Top = 288
+    Left = 888
+    Top = 264
   end
   object GuidesBankSecond: TdsdGuides
     KeyField = 'Id'
@@ -2906,8 +3087,8 @@ object MemberForm: TMemberForm
       end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
-    Left = 144
-    Top = 280
+    Left = 208
+    Top = 224
   end
   object spGetImportSettingId_phone: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2940,5 +3121,102 @@ object MemberForm: TMemberForm
     PackSize = 1
     Left = 960
     Top = 264
+  end
+  object ExportDS: TDataSource
+    DataSet = ExportCDS
+    Left = 632
+    Top = 584
+  end
+  object ExportCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 568
+    Top = 592
+  end
+  object spSelectBirthDay_xls: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Member_BirthDay'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 88
+    Top = 360
+  end
+  object ExportEmailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 216
+    Top = 601
+  end
+  object ExportEmailDS: TDataSource
+    DataSet = ExportEmailCDS
+    Left = 160
+    Top = 594
+  end
+  object spGet_Export_Email: TdsdStoredProc
+    StoredProcName = 'gpGet_Member_Email_Send'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 168
+    Top = 384
+  end
+  object spGet_Export_FileName_xls: TdsdStoredProc
+    StoredProcName = 'gpGet_MemberBirthDay_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_Grid_xls
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_Grid_xls
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_Grid_xls
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFile_xls
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExportType'
+        Value = Null
+        Component = actExport_Grid_xls
+        ComponentItem = 'ExportType'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 416
   end
 end
