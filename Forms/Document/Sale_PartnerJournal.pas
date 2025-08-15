@@ -275,6 +275,18 @@ type
     macTaxByGrid_list: TMultiAction;
     macTaxByGrid: TMultiAction;
     bbTaxByGrid: TdxBarButton;
+    spSelectFileName_csv: TdsdStoredProc;
+    spGetFileName_csv: TdsdStoredProc;
+    spInsertFileName_csv: TdsdStoredProc;
+    actExport_file_csv: TdsdStoredProcExportToFile;
+    actGetFileName_csv: TdsdExecStoredProc;
+    actInsertFileName_csv: TdsdExecStoredProc;
+    macInsertFileName_csv_list: TMultiAction;
+    macInsertFileName_csv: TMultiAction;
+    macInsertFileName_csv_one: TMultiAction;
+    dxBarSubItem1: TdxBarSubItem;
+    bbInsertFileName_csv: TdxBarButton;
+    bbInsertFileName_csv_one: TdxBarButton;
   private
     { Private declarations }
   public

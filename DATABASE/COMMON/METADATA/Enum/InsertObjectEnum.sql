@@ -278,7 +278,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CreateOrder()  , inDescId:= zc_Object_ContactPersonKind(), inCode:= 1, inName:= 'Формирование заказов'          , inEnumName:= 'zc_Enum_ContactPersonKind_CreateOrder');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CheckDocument(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 2, inName:= 'Проверка документов'           , inEnumName:= 'zc_Enum_ContactPersonKind_CheckDocument');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_AktSverki()    , inDescId:= zc_Object_ContactPersonKind(), inCode:= 3, inName:= 'Акты сверки и выполенных работ', inEnumName:= 'zc_Enum_ContactPersonKind_AktSverki');
-
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_Member()       , inDescId:= zc_Object_ContactPersonKind(), inCode:= 4, inName:= 'Рассылка именинники'           , inEnumName:= 'zc_Enum_ContactPersonKind_Member');
      -- !!! Типы печати документа
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Movement(), inDescId:= zc_Object_PrintKind(), inCode:= 1, inName:= 'Накладная', inEnumName:= 'zc_Enum_PrintKind_Movement');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Account(), inDescId:= zc_Object_PrintKind(), inCode:= 2, inName:= 'Счет', inEnumName:= 'zc_Enum_PrintKind_Account');

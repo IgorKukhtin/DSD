@@ -8700,7 +8700,7 @@ inherited SaleJournalForm: TSaleJournalForm
       end>
     PackSize = 1
     Left = 136
-    Top = 248
+    Top = 280
   end
   object spSelectFileName_csv: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_VN_csv'
@@ -8736,7 +8736,7 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
+    Left = 208
     Top = 224
   end
 end
