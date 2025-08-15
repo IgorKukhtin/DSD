@@ -26,8 +26,8 @@ BEGIN
 
      -- Результат
      RETURN QUERY
- WITH
-        --данные из установок экспорта
+     WITH
+     /*   --данные из установок экспорта
           tmpExportJuridical AS (SELECT ObjectLink_EmailKind.ChildObjectId                  AS EmailKindId
                                       , STRING_AGG (ObjectString_ContactPersonMail.ValueData, ';') AS ContactPersonMail
                                  FROM Object AS Object_ExportJuridical
@@ -54,12 +54,64 @@ BEGIN
                               AND Object_ExportJuridical.isErased = FALSE
                             GROUP BY ObjectLink_EmailKind.ChildObjectId
                               )
-          -- ВСЕ параметры - откуда отправлять, для Одного Покупателя
-        , tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= (SELECT DISTINCT tmp.EmailKindId
-                                                                                     FROM tmpExportJuridical AS tmp
-                                                                                     )
-                                                                  , inSession    := inSession)
-                                                                   )
+                              */
+       tmpImportSettings AS (SELECT ObjectLink_ImportSettings_ContactPerson.ChildObjectId AS ContactPersonId
+                                  , ObjectLink_ImportSettings_Email.ChildObjectId         AS EmailId
+                             FROM ObjectLink AS ObjectLink_ImportSettings_ContactPerson
+                                  INNER JOIN Object AS Object_ImportSettings ON Object_ImportSettings.Id = ObjectLink_ImportSettings_ContactPerson.ObjectId AND Object_ImportSettings.isErased = FALSE
+                                  INNER JOIN ObjectLink AS ObjectLink_ImportSettings_Email
+                                                        ON ObjectLink_ImportSettings_Email.ObjectId = ObjectLink_ImportSettings_ContactPerson.ObjectId
+                                                       AND ObjectLink_ImportSettings_Email.DescId = zc_ObjectLink_ImportSettings_Email()
+                             WHERE ObjectLink_ImportSettings_ContactPerson.ChildObjectId > 0
+                               AND ObjectLink_ImportSettings_ContactPerson.DescId = zc_ObjectLink_ImportSettings_ContactPerson()
+                            )
+     , tmpContactPerson AS (SELECT ObjectLink_EmailKind.ChildObjectId AS EmailKindId
+                                 , STRING_AGG (ObjectString_Mail.ValueData, '; ')  AS ContactPersonMail 
+                            FROM Object AS Object_ContactPerson
+                            
+                                 INNER JOIN ObjectString AS ObjectString_Mail
+                                                        ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
+                                                       AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
+                                                       AND COALESCE (ObjectString_Mail.ValueData,'') <> ''
+                                                                                   
+                                 INNER JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
+                                                       ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
+                                                      AND ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
+                                                      AND ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId = zc_Enum_ContactPersonKind_Member()
+                                 
+                               /*  LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_Email
+                                                      ON ObjectLink_ContactPerson_Email.ObjectId = Object_ContactPerson.Id
+                                                     AND ObjectLink_ContactPerson_Email.DescId = zc_ObjectLink_ContactPerson_Email()
+                                 LEFT JOIN tmpImportSettings ON tmpImportSettings.ContactPersonId = Object_ContactPerson.Id
+                                                            AND ObjectLink_ContactPerson_Email.ChildObjectId IS NULL
+                                 LEFT JOIN Object AS Object_Email ON Object_Email.Id = COALESCE (ObjectLink_ContactPerson_Email.ChildObjectId, tmpImportSettings.EmailId)
+                     
+                                 LEFT JOIN ObjectLink AS ObjectLink_Email_EmailKind
+                                                      ON ObjectLink_Email_EmailKind.ObjectId = Object_Email.Id
+                                                     AND ObjectLink_Email_EmailKind.DescId = zc_ObjectLink_Email_EmailKind()
+                                */ 
+                                -- Если есть формат выгрузки
+                                 INNER JOIN ObjectLink AS ObjectLink_ExportJuridical_ExportKind
+                                                       ON  1=1
+                                                      AND ObjectLink_ExportJuridical_ExportKind.DescId = zc_ObjectLink_ExportJuridical_ExportKind()
+                                                      AND ObjectLink_ExportJuridical_ExportKind.ChildObjectId = zc_Enum_ExportKind_PersonalService()
+                                 -- Если есть откуда отправлять
+                                 INNER JOIN ObjectLink AS ObjectLink_EmailKind
+                                                       ON ObjectLink_EmailKind.ObjectId = ObjectLink_ExportJuridical_ExportKind.ObjectId
+                                                      AND ObjectLink_EmailKind.DescId = zc_ObjectLink_ExportJuridical_EmailKind()
+                                                      AND ObjectLink_EmailKind.ChildObjectId > 0
+                                 
+                     
+                            WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
+                              AND Object_ContactPerson.isErased = FALSE
+                            GROUP BY ObjectLink_EmailKind.ChildObjectId
+                            )
+       -- ВСЕ параметры - откуда отправлять
+     , tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= (SELECT DISTINCT tmp.EmailKindId
+                                                                                  FROM tmpContactPerson AS tmp
+                                                                                  )
+                                                               , inSession    := inSession)
+                    )
       /*                                                                       
  для отправки надо использовать данные из   zc_Enum_ExportKind_PersonalService
   а отправлять на адреса которые будут в zc_Enum_ContactPersonKind_Member
@@ -76,7 +128,7 @@ BEGIN
 
           , CASE WHEN vbUserId = 5    AND 1=1 THEN 'ashtu@ua.fm'
                  WHEN vbUserId = 9457 AND 1=1 THEN 'innafelon@gmail.com'
-                 ELSE tmpExportJuridical.ContactPersonMail
+                 ELSE tmpContactPerson.ContactPersonMail
             END :: TVarChar AS AddressTo
 
           , CASE WHEN vbUserId = 5    AND 1=0 THEN 'test-smtp.gmail.com' -- 'smtp.ua.fm' 
@@ -96,7 +148,7 @@ BEGIN
             END :: TVarChar                      AS Password
 
      FROM gpGet_MemberBirthDay_FileName (inSession) AS tmp
-          LEFT JOIN tmpExportJuridical ON 1= 1 
+          LEFT JOIN tmpContactPerson ON 1= 1 
           LEFT JOIN tmpEmail AS gpGet_Host      ON gpGet_Host.EmailToolsId      = zc_Enum_EmailTools_Host()
           LEFT JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
           LEFT JOIN tmpEmail AS gpGet_Mail      ON gpGet_Mail.EmailToolsId      = zc_Enum_EmailTools_Mail()
