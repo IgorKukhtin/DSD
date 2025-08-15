@@ -3544,7 +3544,7 @@ object OrderClientForm: TOrderClientForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object NPP_ch6: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087
+            Caption = #8470' '#1087'/'#1087' ('#1059#1079#1077#1083')'
             DataBinding.FieldName = 'NPP_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -3552,13 +3552,13 @@ object OrderClientForm: TOrderClientForm
             Width = 50
           end
           object ReceiptLevelName_child_ch6: TcxGridDBColumn
-            Caption = 'Level'
+            Caption = 'Level ('#1059#1079#1077#1083')'
             DataBinding.FieldName = 'ReceiptLevelName_child'
-            HeaderHint = 'Level ( ('#1059#1079#1083#1099'/'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'))'
+            HeaderHint = 'Level ('#1059#1079#1077#1083')'
             Options.Editing = False
           end
           object ObjectCode_child_ch6: TcxGridDBColumn
-            Caption = 'Interne Nr '
+            Caption = 'Interne Nr ('#1059#1079#1077#1083')'
             DataBinding.FieldName = 'ObjectCode_child'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -3570,12 +3570,12 @@ object OrderClientForm: TOrderClientForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076' ('#1059#1079#1083#1099'/'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077')'
+            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076' ('#1059#1079#1077#1083')'
             Options.Editing = False
             Width = 55
           end
           object Article_child_ch6: TcxGridDBColumn
-            Caption = 'Artikel Nr'
+            Caption = 'Artikel Nr ('#1059#1079#1077#1083')'
             DataBinding.FieldName = 'Article_child'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -3586,7 +3586,7 @@ object OrderClientForm: TOrderClientForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1040#1088#1090#1080#1082#1083' ('#1059#1079#1083#1099'/'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077')'
+            HeaderHint = #1040#1088#1090#1080#1082#1083' ('#1059#1079#1077#1083')'
             Options.Editing = False
             Width = 70
           end
@@ -3607,7 +3607,7 @@ object OrderClientForm: TOrderClientForm
             Width = 200
           end
           object GoodsGroupName_detail_ch6: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1082#1086#1084#1087#1083'.)'
             DataBinding.FieldName = 'GoodsGroupName_detail'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -5111,6 +5111,10 @@ object OrderClientForm: TOrderClientForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenForm_Invoice'
         end
         item
@@ -5148,6 +5152,10 @@ object OrderClientForm: TOrderClientForm
     end
     object bbSave_Confirmation: TdxBarButton
       Action = mactSave_Confirmation
+      Category = 0
+    end
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
   end
@@ -7198,6 +7206,84 @@ object OrderClientForm: TOrderClientForm
       Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088
       ImageIndex = 80
+    end
+    object actReport_Goods: TdsdOpenForm
+      Category = 'OpenForm'
+      TabSheet = cxTabSheetDetail
+      MoveParams = <>
+      Enabled = False
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'>'
+      ImageIndex = 40
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ObjectId_detail'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ObjectName_detail'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Article_detail'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ObjectCode_detail'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource

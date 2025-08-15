@@ -576,6 +576,8 @@ type
     edSearchArticle_det: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
   public
   end;
