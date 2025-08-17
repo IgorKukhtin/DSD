@@ -30,6 +30,8 @@ RETURNS TABLE ( Id                      Integer
                , ProdOptionsName_detail  TVarChar
                , Amount_detail           TFloat 
                , ForCount_detail         TFloat
+               , Amount_remains  TFloat
+               , Amount_send     TFloat
              )
 AS
 $BODY$
@@ -276,6 +278,38 @@ BEGIN
                        AND _tmpItem.DescId_mi = zc_MI_Child()
                      )
 
+   -- Итого остаток
+   , tmpRemains AS (SELECT Container.ObjectId     AS GoodsId
+                         , SUM (Container.Amount) AS Remains
+                    FROM Container
+                    WHERE Container.WhereObjectId = zc_Unit_Sklad() -- Всегда для этого Склада
+                      AND Container.DescId        = zc_Container_Count()
+                      AND Container.ObjectId IN (SELECT DISTINCT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.DescId_mi = zc_MI_Detail())
+                    GROUP BY Container.ObjectId
+                   )
+   -- все перемещения
+   , tmpSend AS (SELECT MI.ObjectId                  AS GoodsId
+                      , SUM (COALESCE (MI.Amount,0)) AS Amount
+                 FROM MovementItemFloat AS MIFloat_MovementId
+                      LEFT JOIN MovementItem AS MI
+                                             ON MI.Id = MIFloat_MovementId.MovementItemId
+                                            AND MI.DescId     = zc_MI_Master()
+                                            AND MI.isErased   = FALSE
+                      INNER JOIN Movement AS Movement_Send
+                                          ON Movement_Send.Id = MI.MovementId
+                                         AND Movement_Send.DescId = zc_Movement_Send()
+                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                    ON MovementLinkObject_From.MovementId = Movement_Send.Id
+                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                   AND MovementLinkObject_From.ObjectId = zc_Unit_Sklad()
+                 WHERE MIFloat_MovementId.ValueData :: Integer = inMovementId
+                   AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId() 
+                 GROUP BY MI.ObjectId
+                )
+
+
+
+
    SELECT _tmpItem.MovementItemId                  AS Id
           --узел пф
         , Object_Object_basis.Id                   AS GoodsId_basis
@@ -302,7 +336,11 @@ BEGIN
         , Object_ReceiptLevel.ValueData :: TVarChar AS ReceiptLevelName_detail
         , (CASE WHEN Object_MaterialOptions_opt.ValueData <> '' THEN Object_MaterialOptions_opt.ValueData || ' ' ELSE '' END || Object_ProdOptions.ValueData) :: TVarChar AS ProdOptionsName_detail
         , _tmpItem.Amount   ::TFloat AS Amount_detail
-        , _tmpItem.ForCount ::TFloat AS ForCount_detail
+        , _tmpItem.ForCount ::TFloat AS ForCount_detail 
+        
+        --
+        , tmpRemains.Remains ::TFloat AS Amount_remains
+        , tmpSend.Amount     ::TFloat AS Amount_send
         
   FROM tmpMI_Child
             LEFT JOIN _tmpItem ON _tmpItem.GoodsId = tmpMI_Child.KeyId 
@@ -336,7 +374,11 @@ BEGIN
                                  ON ObjectLink_ProdOptions_MaterialOptions.ObjectId = Object_ProdOptions.Id
                                 AND ObjectLink_ProdOptions_MaterialOptions.DescId   = zc_ObjectLink_ProdOptions_MaterialOptions()
             LEFT JOIN Object AS Object_MaterialOptions_opt ON Object_MaterialOptions_opt.Id = ObjectLink_ProdOptions_MaterialOptions.ChildObjectId
-  
+
+            -- Итого остаток
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = _tmpItem.ObjectId
+            -- Итого перемещение
+            LEFT JOIN tmpSend ON tmpSend.GoodsId = _tmpItem.ObjectId 
   ;
 
   /*

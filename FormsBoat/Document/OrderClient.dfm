@@ -3,7 +3,7 @@ object OrderClientForm: TOrderClientForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
   ClientHeight = 632
-  ClientWidth = 1390
+  ClientWidth = 1349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object OrderClientForm: TOrderClientForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1390
+    Width = 1349
     Height = 172
     Align = alTop
     BevelOuter = bvNone
@@ -654,14 +654,14 @@ object OrderClientForm: TOrderClientForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 198
-    Width = 1390
+    Width = 1349
     Height = 370
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 370
-    ClientRectRight = 1390
+    ClientRectRight = 1349
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -669,7 +669,7 @@ object OrderClientForm: TOrderClientForm
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 1390
+        Width = 1349
         Height = 161
         Align = alClient
         Caption = 'Panel1'
@@ -677,7 +677,7 @@ object OrderClientForm: TOrderClientForm
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
-          Width = 1388
+          Width = 1347
           Height = 159
           Align = alClient
           TabOrder = 0
@@ -1053,7 +1053,7 @@ object OrderClientForm: TOrderClientForm
       object cxSplitter_Bottom: TcxSplitter
         Left = 0
         Top = 161
-        Width = 1390
+        Width = 1349
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -1062,7 +1062,7 @@ object OrderClientForm: TOrderClientForm
       object Panel4: TPanel
         Left = 0
         Top = 169
-        Width = 1390
+        Width = 1349
         Height = 177
         Align = alBottom
         Caption = 'Panel4'
@@ -1367,7 +1367,7 @@ object OrderClientForm: TOrderClientForm
         object PanelProdOptItems: TPanel
           Left = 529
           Top = 1
-          Width = 860
+          Width = 819
           Height = 175
           Align = alClient
           BevelEdges = [beLeft]
@@ -1376,7 +1376,7 @@ object OrderClientForm: TOrderClientForm
           object cxGridProdOptItems: TcxGrid
             Left = 0
             Top = 17
-            Width = 860
+            Width = 819
             Height = 158
             Align = alClient
             TabOrder = 0
@@ -1767,7 +1767,7 @@ object OrderClientForm: TOrderClientForm
           object Panel3: TPanel
             Left = 0
             Top = 0
-            Width = 860
+            Width = 819
             Height = 17
             Align = alTop
             Caption = #1054#1087#1094#1080#1080
@@ -1791,7 +1791,7 @@ object OrderClientForm: TOrderClientForm
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
-        Width = 1390
+        Width = 1349
         Height = 346
         Align = alClient
         TabOrder = 0
@@ -2816,10 +2816,13 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet_Info: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
-        Width = 1390
+        Width = 1349
         Height = 346
         Align = alClient
         TabOrder = 0
@@ -2873,10 +2876,13 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
-        Width = 1390
+        Width = 1349
         Height = 346
         Align = alClient
         PopupMenu = PopupMenu
@@ -3449,13 +3455,10 @@ object OrderClientForm: TOrderClientForm
       object cxGrid_Detail: TcxGrid
         Left = 0
         Top = 33
-        Width = 1390
+        Width = 1349
         Height = 313
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 17
-        ExplicitTop = 72
-        ExplicitHeight = 346
         object cxGridDBTableView_Detail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -3492,6 +3495,21 @@ object OrderClientForm: TOrderClientForm
             item
               Format = ',0.########'
               Kind = skSum
+            end
+            item
+              Format = ',0.########'
+              Kind = skSum
+              Column = Amount_detail_ch6
+            end
+            item
+              Format = ',0.########'
+              Kind = skSum
+              Column = Amount_remains_ch6
+            end
+            item
+              Format = ',0.########'
+              Kind = skSum
+              Column = Amount_send_ch6
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -3529,6 +3547,21 @@ object OrderClientForm: TOrderClientForm
             item
               Format = ',0.########'
               Kind = skSum
+            end
+            item
+              Format = ',0.########'
+              Kind = skSum
+              Column = Amount_detail_ch6
+            end
+            item
+              Format = ',0.########'
+              Kind = skSum
+              Column = Amount_remains_ch6
+            end
+            item
+              Format = ',0.########'
+              Kind = skSum
+              Column = Amount_send_ch6
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -3776,6 +3809,28 @@ object OrderClientForm: TOrderClientForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_remains_ch6: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1085#1072' '#1075#1083'. '#1089#1082#1083#1072#1076#1077
+            DataBinding.FieldName = 'Amount_remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1075#1083#1072#1074#1085#1086#1084' '#1089#1082#1083#1072#1076#1077
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_send_ch6: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097'. '#1089' '#1075#1083'. '#1089#1082#1083#1072#1076#1072
+            DataBinding.FieldName = 'Amount_send'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1075#1083#1072#1074#1085#1086#1075#1086' '#1089#1082#1083#1072#1076#1072
             Options.Editing = False
             Width = 70
           end
@@ -4247,7 +4302,7 @@ object OrderClientForm: TOrderClientForm
       object Panel5: TPanel
         Left = 0
         Top = 0
-        Width = 1390
+        Width = 1349
         Height = 33
         Align = alTop
         TabOrder = 1
@@ -4438,7 +4493,7 @@ object OrderClientForm: TOrderClientForm
   object Panel_btn: TPanel
     Left = 0
     Top = 568
-    Width = 1390
+    Width = 1349
     Height = 64
     Align = alBottom
     TabOrder = 11
@@ -7256,6 +7311,7 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Name = 'PartionId'
+          Value = Null
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
