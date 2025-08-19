@@ -1664,7 +1664,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
-  exit;
+  //exit;
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
@@ -1672,12 +1672,12 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
-  exit;
-
+ // exit;
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderForm');
     //exit;
-
+    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderJournalForm');
    exit;
@@ -4487,14 +4487,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   exit;
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectDescForm');
 

@@ -953,6 +953,15 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Options.Editing = False
             Width = 80
           end
+          object FileName: TcxGridDBColumn
+            Caption = #1048#1084#1103' '#1092#1072#1081#1083#1072' scv'
+            DataBinding.FieldName = 'FileName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
         end
       end
     end
@@ -5201,6 +5210,97 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actExport_file_csv: TdsdStoredProcExportToFile
+      Category = 'Export_Csv'
+      MoveParams = <>
+      dsdStoredProcName = spSelectFileName_csv
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = Null
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'FileName'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      FileExt = '.csv'
+      FileExtParam.Value = '.csv'
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
+      Left = 1208
+      Top = 168
+    end
+    object actGetFileName_csv: TdsdExecStoredProc
+      Category = 'Export_Csv'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetFileName_csv
+      StoredProcList = <
+        item
+          StoredProc = spGetFileName_csv
+        end>
+      Caption = 'actGetFileName_csv'
+    end
+    object actInsertFileName_csv: TdsdExecStoredProc
+      Category = 'Export_Csv'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertFileName_csv
+      StoredProcList = <
+        item
+          StoredProc = spInsertFileName_csv
+        end>
+      Caption = 'actUpdate_TotalLines'
+    end
+    object macInsertFileName_csv_list: TMultiAction
+      Category = 'Export_Csv'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertFileName_csv
+        end>
+      View = cxGridDBTableView
+      Caption = 'macInsertFileName_csv_list'
+    end
+    object macInsertFileName_csv: TMultiAction
+      Category = 'Export_Csv'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFileName_csv
+        end
+        item
+          Action = macInsertFileName_csv_list
+        end
+        item
+          Action = actExport_file_csv
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1042#1089#1077' '#1053#1072#1082#1083#1072#1076#1085#1099#1077' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099'?'
+      InfoAfterExecute = #1053#1072#1082#1083#1072#1076#1085#1099#1077' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099' '#1074#1099#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1042#1089#1077' '#1053#1072#1082#1083#1072#1076#1085#1099#1077' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099
+      ImageIndex = 90
+    end
+    object macInsertFileName_csv_one: TMultiAction
+      Category = 'Export_Csv'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFileName_csv
+        end
+        item
+          Action = actInsertFileName_csv
+        end
+        item
+          Action = actExport_file_csv
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1054#1076#1085#1091' '#1053#1072#1082#1083#1072#1076#1085#1091#1102' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099'?'
+      InfoAfterExecute = #1053#1072#1082#1083#1072#1076#1085#1072#1103' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099' '#1074#1099#1075#1088#1091#1078#1077#1085#1072
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1054#1076#1085#1091' '#1053#1072#1082#1083#1072#1076#1085#1091#1102' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099
+      ImageIndex = 89
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -5800,6 +5900,18 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           Visible = True
           ItemName = 'bbExportFile_fromMail_All'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertFileName_csv'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertFileName_csv_one'
         end>
     end
     object bbsSend: TdxBarSubItem
@@ -5879,6 +5991,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     end
     object bbPrintBoxTotalPartner: TdxBarButton
       Action = actPrintBoxTotalPartner
+      Category = 0
+    end
+    object bbInsertFileName_csv: TdxBarButton
+      Action = macInsertFileName_csv
+      Category = 0
+    end
+    object bbInsertFileName_csv_one: TdxBarButton
+      Action = macInsertFileName_csv_one
       Category = 0
     end
   end
@@ -7933,7 +8053,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
+    Left = 584
     Top = 504
   end
   object spUpdatePrintAuto_False: TdsdStoredProc
@@ -8053,5 +8173,101 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     PackSize = 1
     Left = 591
     Top = 344
+  end
+  object spSelectFileName_csv: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_VN_csv'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42614d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42614d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 728
+    Top = 504
+  end
+  object spGetFileName_csv: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_VN_scv_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42614d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42614d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 776
+    Top = 504
+  end
+  object spInsertFileName_csv: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Sale_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 504
   end
 end

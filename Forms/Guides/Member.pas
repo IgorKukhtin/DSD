@@ -22,7 +22,8 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, cxTextEdit, cxMaskEdit, cxLabel,
-  dsdGuides, ExternalLoad, cxCalendar, Vcl.ExtCtrls, dsdCommon;
+  dsdGuides, ExternalLoad, cxCalendar, Vcl.ExtCtrls, dsdCommon,
+  dsdInternetAction;
 
 type
   TMemberForm = class(TParentForm)
@@ -196,6 +197,26 @@ type
     bbStartLoadPhone: TdxBarButton;
     RouteNumName: TcxGridDBColumn;
     Code1C: TcxGridDBColumn;
+    ExportDS: TDataSource;
+    ExportCDS: TClientDataSet;
+    spSelectBirthDay_xls: TdsdStoredProc;
+    ExportEmailCDS: TClientDataSet;
+    ExportEmailDS: TDataSource;
+    spGet_Export_Email: TdsdStoredProc;
+    Panel1: TPanel;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    actExport_Grid_xls: TExportGrid;
+    actGet_Export_Email_xls: TdsdExecStoredProc;
+    spGet_Export_FileName_xls: TdsdStoredProc;
+    actGet_Export_FileName_xls: TdsdExecStoredProc;
+    actSMTPFile_xls: TdsdSMTPFileAction;
+    actSelect_Export_xls: TdsdExecStoredProc;
+    mactExport_xls: TMultiAction;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public
