@@ -1592,7 +1592,15 @@ uses
   Sticker_Object in '..\..\Forms\Guides\Sticker_Object.pas' {Sticker_ObjectForm: TParentForm},
   HospitalDoc_1CJournal in '..\..\Forms\Document\HospitalDoc_1CJournal.pas' {HospitalDoc_1CJournalForm: TParentForm},
   Scale_Gofro in '..\..\Forms\Guides\Scale_Gofro.pas' {Scale_GofroForm: TParentForm},
-  Scale_MI_gofro in '..\..\Forms\Document\Scale_MI_gofro.pas' {Scale_MI_gofroForm: TParentForm};
+  Scale_MI_gofro in '..\..\Forms\Document\Scale_MI_gofro.pas' {Scale_MI_gofroForm: TParentForm},
+  StaffHours in '..\..\Forms\Guides\StaffHours.pas' {StaffHoursForm: TParentForm},
+  StaffHoursDayEdit in '..\..\Forms\Guides\StaffHoursDayEdit.pas' {StaffHoursDayEditForm: TParentForm},
+  StaffHoursEdit in '..\..\Forms\Guides\StaffHoursEdit.pas' {StaffHoursEditForm: TParentForm},
+  StaffHoursLengthEdit in '..\..\Forms\Guides\StaffHoursLengthEdit.pas' {StaffHoursLengthEditForm: TParentForm},
+  StaffPaidKind in '..\..\Forms\Guides\StaffPaidKind.pas' {StaffPaidKindForm: TParentForm},
+  StaffHoursDay in '..\..\Forms\Guides\StaffHoursDay.pas' {StaffHoursDayForm: TParentForm},
+  StaffHoursLength in '..\..\Forms\Guides\StaffHoursLength.pas' {StaffHoursLengthForm: TParentForm},
+  StaffPaidKindEdit in '..\..\Forms\Guides\StaffPaidKindEdit.pas' {StaffPaidKindEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
