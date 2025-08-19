@@ -2816,9 +2816,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet_Info: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2876,9 +2873,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -3456,7 +3450,7 @@ object OrderClientForm: TOrderClientForm
         Left = 0
         Top = 33
         Width = 1349
-        Height = 313
+        Height = 272
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView_Detail: TcxGridDBTableView
@@ -3499,7 +3493,6 @@ object OrderClientForm: TOrderClientForm
             item
               Format = ',0.########'
               Kind = skSum
-              Column = Amount_detail_ch6
             end
             item
               Format = ',0.########'
@@ -3551,7 +3544,6 @@ object OrderClientForm: TOrderClientForm
             item
               Format = ',0.########'
               Kind = skSum
-              Column = Amount_detail_ch6
             end
             item
               Format = ',0.########'
@@ -3576,23 +3568,26 @@ object OrderClientForm: TOrderClientForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object NPP_ch6: TcxGridDBColumn
+          object NPP_Uzel_ch6: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087' ('#1059#1079#1077#1083')'
-            DataBinding.FieldName = 'NPP_child'
+            DataBinding.FieldName = 'NPP_Uzel'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
           end
-          object ReceiptLevelName_child_ch6: TcxGridDBColumn
+          object ReceiptLevelName_Uzel_ch6: TcxGridDBColumn
             Caption = 'Level ('#1059#1079#1077#1083')'
-            DataBinding.FieldName = 'ReceiptLevelName_child'
+            DataBinding.FieldName = 'ReceiptLevelName_Uzel'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = 'Level ('#1059#1079#1077#1083')'
             Options.Editing = False
+            Width = 67
           end
-          object ObjectCode_child_ch6: TcxGridDBColumn
+          object ObjectCode_Uzel_ch6: TcxGridDBColumn
             Caption = 'Interne Nr ('#1059#1079#1077#1083')'
-            DataBinding.FieldName = 'ObjectCode_child'
+            DataBinding.FieldName = 'ObjectCode_Uzel'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -3607,9 +3602,9 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 55
           end
-          object Article_child_ch6: TcxGridDBColumn
+          object Article_Uzel_ch6: TcxGridDBColumn
             Caption = 'Artikel Nr ('#1059#1079#1077#1083')'
-            DataBinding.FieldName = 'Article_child'
+            DataBinding.FieldName = 'Article_Uzel'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -3623,9 +3618,9 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 70
           end
-          object ObjectName_child_ch6: TcxGridDBColumn
-            Caption = #1059#1079#1083#1099'/'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-            DataBinding.FieldName = 'ObjectName_child'
+          object ObjectName_Uzel_ch6: TcxGridDBColumn
+            Caption = #1059#1079#1077#1083
+            DataBinding.FieldName = 'ObjectName_Uzel'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -3639,9 +3634,9 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 200
           end
-          object GoodsGroupName_detail_ch6: TcxGridDBColumn
+          object GoodsGroupName_ch6: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1082#1086#1084#1087#1083'.)'
-            DataBinding.FieldName = 'GoodsGroupName_detail'
+            DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -3649,9 +3644,9 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 120
           end
-          object ObjectCode_detail_ch6: TcxGridDBColumn
+          object ObjectCode_ch6: TcxGridDBColumn
             Caption = 'Interne Nr'
-            DataBinding.FieldName = 'ObjectCode_detail'
+            DataBinding.FieldName = 'ObjectCode'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -3668,15 +3663,15 @@ object OrderClientForm: TOrderClientForm
           end
           object ReceiptLevelName_ch6: TcxGridDBColumn
             Caption = 'Level'
-            DataBinding.FieldName = 'ReceiptLevelName_detail'
+            DataBinding.FieldName = 'ReceiptLevelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 54
           end
-          object Article_detail_ch6: TcxGridDBColumn
+          object Articlel_ch6: TcxGridDBColumn
             Caption = 'Artikel Nr'
-            DataBinding.FieldName = 'Article_detail'
+            DataBinding.FieldName = 'Article'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -3689,9 +3684,9 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 70
           end
-          object ObjectName_detail_ch6: TcxGridDBColumn
-            Caption = #1059#1079#1083#1099'/'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080
-            DataBinding.FieldName = 'ObjectName_detail'
+          object ObjectName_ch6: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            DataBinding.FieldName = 'ObjectName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -3704,95 +3699,44 @@ object OrderClientForm: TOrderClientForm
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
-          object DescName_detail_ch6: TcxGridDBColumn
+          object DescName_ch6: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
-            DataBinding.FieldName = 'DescName_detail'
+            DataBinding.FieldName = 'DescName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object MeasureName_detail_ch6: TcxGridDBColumn
+          object MeasureName_ch6: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName_detail'
+            DataBinding.FieldName = 'MeasureName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
-          object GoodsCode_basis_ch6: TcxGridDBColumn
-            Caption = '***Interne Nr'
-            DataBinding.FieldName = 'GoodsCode_basis'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1059#1079#1077#1083' ('#1073#1072#1079#1086#1074#1099#1081')'
-            Options.Editing = False
-            Width = 80
-          end
-          object Article_basis_ch6: TcxGridDBColumn
-            Caption = '***Artikel Nr'
-            DataBinding.FieldName = 'Article_basis'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1059#1079#1077#1083' ('#1073#1072#1079#1086#1074#1099#1081')'
-            Options.Editing = False
-            Width = 80
-          end
-          object GoodsName_basis_ch6: TcxGridDBColumn
-            Caption = '***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-            DataBinding.FieldName = 'GoodsName_basis'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1059#1079#1077#1083' ('#1073#1072#1079#1086#1074#1099#1081')'
-            Options.Editing = False
-            Width = 80
-          end
-          object ProdOptionsName_detail_ch6: TcxGridDBColumn
+          object ProdOptionsName_ch6: TcxGridDBColumn
             Caption = #1054#1087#1094#1080#1103
-            DataBinding.FieldName = 'ProdOptionsName_detail'
+            DataBinding.FieldName = 'ProdOptionsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
-          object Amount_detail_ch6: TcxGridDBColumn
+          object Amount_ch6: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount_detail'
+            DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.########;-,0.########; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object ForCount_detail_ch6: TcxGridDBColumn
+          object ForCount_ch6: TcxGridDBColumn
             Caption = 'For Count'
-            DataBinding.FieldName = 'ForCount_detail'
+            DataBinding.FieldName = 'ForCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
@@ -4391,6 +4335,56 @@ object OrderClientForm: TOrderClientForm
           Width = 115
         end
       end
+      object Panel6: TPanel
+        Left = 0
+        Top = 305
+        Width = 1349
+        Height = 41
+        Align = alBottom
+        TabOrder = 2
+        object btnInsert: TcxButton
+          Left = 487
+          Top = 7
+          Width = 100
+          Height = 25
+          Action = actInsertRecordGoods_Detail
+          TabOrder = 0
+        end
+        object btnUpdate: TcxButton
+          Left = 615
+          Top = 6
+          Width = 100
+          Height = 25
+          Action = actGoodsChoiceFormDetail
+          TabOrder = 1
+        end
+        object btnSetErased: TcxButton
+          Left = 732
+          Top = 7
+          Width = 100
+          Height = 25
+          Action = actErasedDetail
+          Caption = #1059#1076#1072#1083#1080#1090#1100
+          TabOrder = 2
+        end
+        object cxLabel25: TcxLabel
+          Left = 17
+          Top = 10
+          Caption = #1059#1079#1077#1083':'
+        end
+        object edGoods: TcxButtonEdit
+          Left = 54
+          Top = 9
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          TabOrder = 4
+          Width = 273
+        end
+      end
     end
   end
   object cxLabel6: TcxLabel
@@ -4676,7 +4670,7 @@ object OrderClientForm: TOrderClientForm
       end>
     PackSize = 1
     Left = 88
-    Top = 295
+    Top = 335
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -5213,6 +5207,12 @@ object OrderClientForm: TOrderClientForm
       Action = actReport_Goods
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -5232,7 +5232,7 @@ object OrderClientForm: TOrderClientForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 9
-    Top = 352
+    Top = 328
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -5489,13 +5489,13 @@ object OrderClientForm: TOrderClientForm
       Caption = 'actUpdateMovement_Summ'
     end
     object spInsertUpdateMIDetail: TdsdUpdateDataSet
-      Category = 'DSDLib'
+      Category = 'Detail'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Detail
+      StoredProc = spInsertUpdate_Detail
       StoredProcList = <
         item
-          StoredProc = spUpdate_Detail
+          StoredProc = spInsertUpdate_Detail
         end
         item
           StoredProc = spSelectMI
@@ -5614,6 +5614,24 @@ object OrderClientForm: TOrderClientForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actErasedDetail: TdsdUpdateErased
+      Category = 'Detail'
+      TabSheet = cxTabSheetDetail
+      MoveParams = <>
+      AfterAction = actRefreshDetail
+      Enabled = False
+      StoredProc = spErasedDetail
+      StoredProcList = <
+        item
+          StoredProc = spErasedDetail
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
     object actPrintOrderConfirmation_save: TdsdPrintAction
       Category = 'PrintSave'
       MoveParams = <
@@ -5715,6 +5733,20 @@ object OrderClientForm: TOrderClientForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actRefreshDetail: TdsdDataSetRefresh
+      Category = 'Detail'
+      MoveParams = <>
+      StoredProc = spSelect_MI_Detail
+      StoredProcList = <
+        item
+          StoredProc = spSelect_MI_Detail
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 90
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actUpdateMovement_NPP: TdsdExecStoredProc
       Category = 'NPP'
@@ -5994,10 +6026,13 @@ object OrderClientForm: TOrderClientForm
       DataSource = MasterDS
     end
     object actGoodsChoiceFormDetail: TOpenChoiceForm
-      Category = 'DSDLib'
+      Category = 'Detail'
+      TabSheet = cxTabSheetDetail
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'GoodsForm'
+      AfterAction = actRefreshDetail
+      Enabled = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ImageIndex = 1
       FormName = 'TUnion_Goods_ReceiptServiceForm'
       FormNameParam.Value = 'TUnion_Goods_ReceiptServiceForm'
       FormNameParam.DataType = ftString
@@ -6007,14 +6042,14 @@ object OrderClientForm: TOrderClientForm
           Name = 'Key'
           Value = Null
           Component = DetailCDS
-          ComponentItem = 'ObjectId_detail'
+          ComponentItem = 'ObjectId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = DetailCDS
-          ComponentItem = 'ObjectName_detail'
+          ComponentItem = 'ObjectName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -6022,14 +6057,14 @@ object OrderClientForm: TOrderClientForm
           Name = 'Code'
           Value = Null
           Component = DetailCDS
-          ComponentItem = 'ObjectCode_detail'
+          ComponentItem = 'ObjectCode'
           MultiSelectSeparator = ','
         end
         item
           Name = 'Article'
           Value = Null
           Component = DetailCDS
-          ComponentItem = 'Article_detail'
+          ComponentItem = 'Article'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -6037,11 +6072,11 @@ object OrderClientForm: TOrderClientForm
           Name = 'GoodsGroupName'
           Value = Null
           Component = DetailCDS
-          ComponentItem = 'GoodsGroupName_detail'
+          ComponentItem = 'GoodsGroupName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actUnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
@@ -6060,6 +6095,21 @@ object OrderClientForm: TOrderClientForm
       ImageIndex = 76
       Status = mtUncomplete
       Guides = StatusGuides
+    end
+    object actInsertRecordGoods_Detail: TInsertRecord
+      Category = 'Detail'
+      TabSheet = cxTabSheetDetail
+      MoveParams = <>
+      AfterAction = actRefreshDetail
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView_Detail
+      Action = actGoodsChoiceFormDetail
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 0
     end
     object actCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
@@ -7296,7 +7346,7 @@ object OrderClientForm: TOrderClientForm
           Name = 'GoodsId'
           Value = Null
           Component = DetailCDS
-          ComponentItem = 'ObjectId_detail'
+          ComponentItem = 'ObjectId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -7304,7 +7354,7 @@ object OrderClientForm: TOrderClientForm
           Name = 'GoodsName'
           Value = Null
           Component = DetailCDS
-          ComponentItem = 'ObjectName_detail'
+          ComponentItem = 'ObjectName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -7326,7 +7376,7 @@ object OrderClientForm: TOrderClientForm
           Name = 'Article'
           Value = Null
           Component = DetailCDS
-          ComponentItem = 'Article_detail'
+          ComponentItem = 'Article'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -7335,11 +7385,22 @@ object OrderClientForm: TOrderClientForm
           Name = 'Code'
           Value = Null
           Component = DetailCDS
-          ComponentItem = 'ObjectCode_detail'
+          ComponentItem = 'ObjectCode'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actInsertUpdate_Detail: TdsdExecStoredProc
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Detail
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Detail
+        end>
+      Caption = 'actInsertUpdate_Detail'
     end
   end
   object MasterDS: TDataSource
@@ -8092,8 +8153,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 304
+    Left = 96
+    Top = 360
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -9229,8 +9290,8 @@ object OrderClientForm: TOrderClientForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 768
-    Top = 456
+    Left = 424
+    Top = 520
   end
   object DBViewAddOnInfo: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -9408,8 +9469,8 @@ object OrderClientForm: TOrderClientForm
   object InvoiceCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 456
-    Top = 327
+    Left = 408
+    Top = 295
   end
   object InvoiceDS: TDataSource
     DataSet = InvoiceCDS
@@ -9678,8 +9739,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 903
-    Top = 192
+    Left = 911
+    Top = 168
   end
   object spErasedChildDetail: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderClient_SetErased_Child'
@@ -10062,7 +10123,7 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 952
+    Left = 944
     Top = 472
   end
   object DocumentProduct: TDocument
@@ -10110,7 +10171,7 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 840
+    Left = 896
     Top = 512
   end
   object DetailCDS: TClientDataSet
@@ -10149,11 +10210,11 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 256
-    Top = 455
+    Left = 304
+    Top = 479
   end
-  object spUpdate_Detail: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_OrderClient_Detail'
+  object spInsertUpdate_Detail: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_OrderClient_Detail'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -10174,10 +10235,18 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId_uzel'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inObjectId'
         Value = Null
         Component = DetailCDS
-        ComponentItem = 'ObjectId_detail'
+        ComponentItem = 'ObjectId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -10185,38 +10254,139 @@ object OrderClientForm: TOrderClientForm
         Name = 'inAmount'
         Value = Null
         Component = DetailCDS
-        ComponentItem = 'Amount_detail'
+        ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 334
-    Top = 471
+    Left = 230
+    Top = 543
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle_child
     DataSet = DetailCDS
-    Column = Article_child_ch6
+    Column = Article_Uzel_ch6
     ColumnList = <
       item
-        Column = Article_child_ch6
+        Column = Article_Uzel_ch6
       end
       item
-        Column = ObjectName_child_ch6
+        Column = ObjectName_Uzel_ch6
         TextEdit = edSearchObjectName_child
       end
       item
-        Column = Article_detail_ch6
+        Column = Articlel_ch6
         TextEdit = edSearchArticle_det
       end
       item
-        Column = ObjectName_detail_ch6
+        Column = ObjectName_ch6
         TextEdit = edSearchObjectName_det
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 536
-    Top = 200
+    Left = 496
+    Top = 208
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TOrderClient_ChoiceByDetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderClient_ChoiceByDetailForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 159
+    Top = 522
+  end
+  object spErasedDetail: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_OrderClient_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 270
+    Top = 536
+  end
+  object DBViewAddOnDetail: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView_Detail
+    OnDblClickActionList = <
+      item
+        Action = actInsertUpdate_Detail
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <
+      item
+        Column = ObjectName_ch6
+      end
+      item
+        Column = Amount_ch6
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 368
+    Top = 536
   end
 end

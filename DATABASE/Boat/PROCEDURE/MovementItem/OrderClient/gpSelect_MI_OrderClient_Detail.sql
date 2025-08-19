@@ -8,38 +8,32 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderClient_detail(
     IN inSession          TVarChar       -- УЕУУЙС РПМШЪПЧБФЕМС
 )
 RETURNS TABLE ( Id                      Integer
-               , GoodsId_basis          Integer
-               , GoodsCode_basis        Integer
-               , GoodsName_basis        TVarChar
-               , Article_basis          TVarChar
-               , ObjectId_child         Integer
-               , ObjectCode_child       Integer
-               , ObjectName_child       TVarChar
-               , Article_child          TVarChar
-               , ReceiptLevelName_child TVarChar
-               , ProdOptionsName_child  TVarChar
-               , NPP_child              Integer
-               , ObjectId_detail        Integer
-               , ObjectCode_detail      Integer
-               , ObjectName_detail      TVarChar
-               , Article_detail         TVarChar 
-               , DescName_detail        TVarChar
-               , GoodsGroupName_detail  TVarChar
-               , MeasureName_detail     TVarChar
-               , ReceiptLevelName_detail TVarChar
-               , ProdOptionsName_detail  TVarChar
-               , Amount_detail           TFloat 
-               , ForCount_detail         TFloat
-               , Amount_remains  TFloat
-               , Amount_send     TFloat
+               , ObjectId_Uzel         Integer
+               , ObjectCode_Uzel       Integer
+               , ObjectName_Uzel       TVarChar
+               , Article_Uzel          TVarChar
+               , ReceiptLevelName_Uzel TVarChar
+               , ProdOptionsName_Uzel  TVarChar
+               , NPP_Uzel              Integer
+               , ObjectId              Integer
+               , ObjectCode            Integer
+               , ObjectName            TVarChar
+               , Article               TVarChar 
+               , DescName              TVarChar
+               , GoodsGroupName        TVarChar
+               , MeasureName           TVarChar
+               , ReceiptLevelName      TVarChar
+               , ProdOptionsName       TVarChar
+               , Amount                TFloat 
+               , ForCount              TFloat
+               , Amount_remains        TFloat
+               , Amount_send           TFloat
+               , isErased              Boolean
              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbReceiptProdModelId Integer;
-
-   DECLARE Cursor1 refcursor;
-   DECLARE Cursor2 refcursor;
 BEGIN
  /*
  1) № пп узла 
@@ -116,7 +110,7 @@ BEGIN
           
                        , MovementItem.isErased
           
-                  FROM (SELECT FALSE AS isErased ) AS tmpIsErased
+                  FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                        INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                               AND MovementItem.DescId     IN (zc_MI_Child(), zc_MI_Detail())
                                               AND MovementItem.isErased   = tmpIsErased.isErased
@@ -190,36 +184,19 @@ BEGIN
                             _tmpItem.MovementItemId                  AS MovementItemId
                           , _tmpItem.ObjectId                        AS KeyId
 
-                          , Object_Object.Id                         AS ObjectId
-                          , Object_Object.ObjectCode                 AS ObjectCode
-                          , ObjectString_Article_Object.ValueData    AS Article_Object
+                          , _tmpItem.ObjectId                        AS ObjectId
                           , Object_Object.ValueData                  AS ObjectName
+
                           , CASE WHEN _tmpItem_child.GoodsId > 0 THEN 'Узел'
                                  WHEN ObjectDesc_Object.Id = zc_Object_ProdOptions() THEN 'Опция'
                                  ELSE ObjectDesc_Object.ItemName
                             END AS DescName
 
-                          , Object_ReceiptGoods.Id                   AS ReceiptGoodsId
-                          , Object_ReceiptGoods.ObjectCode           AS ReceiptGoodsCode
-                          , Object_ReceiptGoods.ValueData            AS ReceiptGoodsName
-
-                            -- Количество шаблон сборки
-                          , zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount) AS Amount_basis
-                            -- Количество резерв
-                          , CASE WHEN 1=1 THEN 0 WHEN ObjectDesc_Object.Id = zc_Object_Goods()          THEN zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount)  ELSE 0 END :: NUMERIC (16, 8) AS Amount_unit
-                            -- работы/услуги
-                          , CASE WHEN ObjectDesc_Object.Id = zc_Object_ReceiptService() THEN zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount)  ELSE 0 END :: NUMERIC (16, 8) AS Value_service
-                            -- Количество заказ поставщику
-                          , zfCalc_Value_ForCount (_tmpItem.AmountPartner, _tmpItem.ForCount) AS Amount_partner
-                          , _tmpItem.ForCount                        AS ForCount
-                          , _tmpItem.isErased
-                          , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-                          , Object_GoodsGroup.ValueData           AS GoodsGroupName
-                          , Object_Measure.ValueData              AS MeasureName
+                          , _tmpItem.Amount
+                          , _tmpItem.ForCount
 
                           , (CASE WHEN Object_MaterialOptions_opt.ValueData <> '' THEN Object_MaterialOptions_opt.ValueData || ' ' ELSE '' END || Object_ProdOptions.ValueData) :: TVarChar AS ProdOptionsName
-               
-                          , _tmpReceiptLevel.ReceiptLevelName :: TVarChar AS ReceiptLevelName
+
                
                           , ROW_NUMBER() OVER (ORDER BY CASE WHEN _tmpReceiptLevel.ReceiptLevelName <> '' THEN 0 ELSE 1 END
                                                       , _tmpReceiptLevel.ReceiptLevelName
@@ -231,44 +208,15 @@ BEGIN
                           LEFT JOIN (SELECT DISTINCT _tmpItem.GoodsId FROM _tmpItem WHERE _tmpItem.GoodsId <> _tmpItem.ObjectId) AS _tmpItem_child ON _tmpItem_child.GoodsId = _tmpItem.ObjectId
 
                           LEFT JOIN Object AS Object_Object ON Object_Object.Id = _tmpItem.ObjectId
-                          LEFT JOIN ObjectString AS ObjectString_Article_object
-                                                 ON ObjectString_Article_object.ObjectId = Object_Object.Id
-                                                AND ObjectString_Article_object.DescId   = zc_ObjectString_Article()
                           LEFT JOIN ObjectDesc AS ObjectDesc_Object ON ObjectDesc_Object.Id = Object_Object.DescId
 
-                          LEFT JOIN Object AS Object_Object_basis ON Object_Object_basis.Id = _tmpItem.ObjectId_basis
-                          LEFT JOIN ObjectString AS ObjectString_Article_basis
-                                                 ON ObjectString_Article_basis.ObjectId = Object_Object_basis.Id
-                                                AND ObjectString_Article_basis.DescId   = zc_ObjectString_Article()
-
                           LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = _tmpItem.ReceiptGoodsId
-
-                          LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
-                                                 ON ObjectString_GoodsGroupFull.ObjectId = _tmpItem.ObjectId
-                                                AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
-                          LEFT JOIN ObjectLink AS ObjectLink_GoodsTag
-                                               ON ObjectLink_GoodsTag.ObjectId = _tmpItem.ObjectId
-                                              AND ObjectLink_GoodsTag.DescId   = zc_ObjectLink_Goods_GoodsTag()
-                          LEFT JOIN ObjectLink AS ObjectLink_GoodsType
-                                               ON ObjectLink_GoodsType.ObjectId = _tmpItem.ObjectId
-                                              AND ObjectLink_GoodsType.DescId   = zc_ObjectLink_Goods_GoodsType()
-                          LEFT JOIN ObjectLink AS ObjectLink_Measure
-                                               ON ObjectLink_Measure.ObjectId = _tmpItem.ObjectId
-                                              AND ObjectLink_Measure.DescId   = zc_ObjectLink_Goods_Measure()
-                          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
-                                               ON ObjectLink_GoodsGroup.ObjectId = _tmpItem.ObjectId
-                                              AND ObjectLink_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
 
                           LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = _tmpItem.ProdOptionsId
                           LEFT JOIN ObjectLink AS ObjectLink_ProdOptions_MaterialOptions
                                                ON ObjectLink_ProdOptions_MaterialOptions.ObjectId = Object_ProdOptions.Id
                                               AND ObjectLink_ProdOptions_MaterialOptions.DescId   = zc_ObjectLink_ProdOptions_MaterialOptions()
                           LEFT JOIN Object AS Object_MaterialOptions_opt ON Object_MaterialOptions_opt.Id = ObjectLink_ProdOptions_MaterialOptions.ChildObjectId
-
-                          LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = ObjectLink_GoodsGroup.ChildObjectId
-                          LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = ObjectLink_Measure.ChildObjectId
-                          LEFT JOIN Object AS Object_GoodsTag    ON Object_GoodsTag.Id    = ObjectLink_GoodsTag.ChildObjectId
-                          LEFT JOIN Object AS Object_GoodsType   ON Object_GoodsType.Id   = ObjectLink_GoodsType.ChildObjectId
 
                           LEFT JOIN _tmpReceiptLevel ON _tmpReceiptLevel.GoodsId = CASE WHEN _tmpItem.ObjectId_basis > 0 THEN _tmpItem.ObjectId_basis ELSE _tmpItem.ObjectId END
 
@@ -284,7 +232,7 @@ BEGIN
                     FROM Container
                     WHERE Container.WhereObjectId = zc_Unit_Sklad() -- Всегда для этого Склада
                       AND Container.DescId        = zc_Container_Count()
-                      AND Container.ObjectId IN (SELECT DISTINCT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.DescId_mi = zc_MI_Detail())
+                      AND Container.ObjectId IN (SELECT DISTINCT _tmpItem.ObjectId FROM _tmpItem)
                     GROUP BY Container.ObjectId
                    )
    -- все перемещения
@@ -311,47 +259,52 @@ BEGIN
 
 
    SELECT _tmpItem.MovementItemId                  AS Id
-          --узел пф
-        , Object_Object_basis.Id                   AS GoodsId_basis
-        , Object_Object_basis.ObjectCode           AS GoodsCode_basis
-        , Object_Object_basis.ValueData            AS GoodsName_basis
-        , ObjectString_Article_basis.ValueData     AS Article_basis
-          --узел/ комплектующие
-        , tmpMI_Child.ObjectId                   AS ObjectId_child
-        , tmpMI_Child.ObjectCode                 AS ObjectCode_child
-        , tmpMI_Child.ObjectName                 AS ObjectName_child
-        , tmpMI_Child.Article_Object             AS Article_child
-        , tmpMI_Child.ReceiptLevelName :: TVarChar AS ReceiptLevelName_child
-        , tmpMI_Child.ProdOptionsName  :: TVarChar AS ProdOptionsName_child
-        , tmpMI_Child.NPP                          AS NPP_child
+         --узел /узел пф
+        , Object_Uzel.Id                         AS ObjectId_Uzel
+        , Object_Uzel.ObjectCode                 AS ObjectCode_Uzel
+        , Object_Uzel.ValueData                  AS ObjectName_Uzel
+        , ObjectString_Article_uzel.ValueData    AS Article_Uzel
+        , _tmpReceiptLevel.ReceiptLevelName :: TVarChar AS ReceiptLevelName_Uzel
+        , tmpMI_Child.ProdOptionsName  :: TVarChar AS ProdOptionsName_Uzel
+        , tmpMI_Child.NPP                          AS NPP_Uzel
         
           -- комплектующие
-        , Object_Detail.Id                        AS ObjectId_detail
-        , Object_Detail.ObjectCode                AS ObjectCode_detail
-        , Object_Detail.ValueData                 AS ObjectName_detail
-        , ObjectString_Article_Detail.ValueData   AS Article_detail
-        , ObjectDesc_Detail.ItemName              AS DescName_detail
-        , Object_GoodsGroup.ValueData    AS GoodsGroupName_detail
-        , Object_Measure.ValueData       AS MeasureName_detail
-        , Object_ReceiptLevel.ValueData :: TVarChar AS ReceiptLevelName_detail
-        , (CASE WHEN Object_MaterialOptions_opt.ValueData <> '' THEN Object_MaterialOptions_opt.ValueData || ' ' ELSE '' END || Object_ProdOptions.ValueData) :: TVarChar AS ProdOptionsName_detail
-        , _tmpItem.Amount   ::TFloat AS Amount_detail
-        , _tmpItem.ForCount ::TFloat AS ForCount_detail 
+        , Object_Object.Id                        AS ObjectId
+        , Object_Object.ObjectCode                AS ObjectCode
+        , Object_Object.ValueData                 AS ObjectName
+        , ObjectString_Article_Detail.ValueData   AS Article
+        , ObjectDesc_Detail.ItemName              AS DescName
+        , Object_GoodsGroup.ValueData    AS GoodsGroupName
+        , Object_Measure.ValueData       AS MeasureName
+        , Object_ReceiptLevel.ValueData :: TVarChar AS ReceiptLevelName
+        , (CASE WHEN Object_MaterialOptions_opt.ValueData <> '' THEN Object_MaterialOptions_opt.ValueData || ' ' ELSE '' END || Object_ProdOptions.ValueData) :: TVarChar AS ProdOptionsName
+        , CASE WHEN Object_Uzel.Id IS NULL THEN tmpMI_Child.Amount ELSE _tmpItem.Amount END     ::TFloat AS Amount
+        , CASE WHEN Object_Uzel.Id IS NULL THEN tmpMI_Child.ForCount ELSE _tmpItem.ForCount END ::TFloat AS ForCount
         
         --
         , tmpRemains.Remains ::TFloat AS Amount_remains
-        , tmpSend.Amount     ::TFloat AS Amount_send
+        , tmpSend.Amount     ::TFloat AS Amount_send   
+        
+        , _tmpItem.isErased  ::Boolean AS isErased
         
   FROM tmpMI_Child
             LEFT JOIN _tmpItem ON _tmpItem.GoodsId = tmpMI_Child.KeyId 
                               AND _tmpItem.DescId_mi = zc_MI_Detail()
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = _tmpItem.PartionId
             
-            LEFT JOIN Object AS Object_Detail ON Object_Detail.Id = _tmpItem.ObjectId
+            LEFT JOIN Object AS Object_Uzel ON Object_Uzel.Id = CASE WHEN _tmpItem.ObjectId_basis > 0 THEN  _tmpItem.ObjectId_basis ELSE _tmpItem.GoodsId END
+            LEFT JOIN _tmpReceiptLevel ON _tmpReceiptLevel.GoodsId = Object_Uzel.Id
+
+            LEFT JOIN ObjectString AS ObjectString_Article_uzel
+                                   ON ObjectString_Article_uzel.ObjectId = Object_Uzel.Id
+                                  AND ObjectString_Article_uzel.DescId   = zc_ObjectString_Article()
+
+            
+            LEFT JOIN Object AS Object_Object ON Object_Object.Id = CASE WHEN Object_Uzel.Id IS NULL THEN tmpMI_Child.ObjectId ELSE _tmpItem.ObjectId END  --есди чайлд комплактующее то показываем его с комплектующими 
             LEFT JOIN ObjectString AS ObjectString_Article_Detail
-                                   ON ObjectString_Article_Detail.ObjectId = Object_Detail.Id
+                                   ON ObjectString_Article_Detail.ObjectId = Object_Object.Id
                                   AND ObjectString_Article_Detail.DescId   = zc_ObjectString_Article()
-            LEFT JOIN ObjectDesc AS ObjectDesc_Detail ON ObjectDesc_Detail.Id = Object_Detail.DescId
+            LEFT JOIN ObjectDesc AS ObjectDesc_Detail ON ObjectDesc_Detail.Id = Object_Object.DescId
 
             LEFT JOIN ObjectLink AS ObjectLink_Measure
                                  ON ObjectLink_Measure.ObjectId = _tmpItem.ObjectId
@@ -359,16 +312,14 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (Object_PartionGoods.MeasureId, ObjectLink_Measure.ChildObjectId)
 
             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
-                                 ON ObjectLink_GoodsGroup.ObjectId = _tmpItem.ObjectId
+                                 ON ObjectLink_GoodsGroup.ObjectId = Object_Object.Id
                                 AND ObjectLink_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = COALESCE (Object_PartionGoods.GoodsGroupId, ObjectLink_GoodsGroup.ChildObjectId)
 
-            LEFT JOIN Object AS Object_Object_basis ON Object_Object_basis.Id = _tmpItem.ObjectId_basis
-            LEFT JOIN ObjectString AS ObjectString_Article_basis
-                                   ON ObjectString_Article_basis.ObjectId = Object_Object_basis.Id
-                                  AND ObjectString_Article_basis.DescId   = zc_ObjectString_Article()
+            LEFT JOIN Object AS Object_Object_basis ON Object_Object_basis.Id = _tmpItem.GoodsId --_tmpItem.ObjectId_basis
 
             LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = _tmpItem.ReceiptLevelId
+
             LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = _tmpItem.ProdOptionsId
             LEFT JOIN ObjectLink AS ObjectLink_ProdOptions_MaterialOptions
                                  ON ObjectLink_ProdOptions_MaterialOptions.ObjectId = Object_ProdOptions.Id
@@ -376,9 +327,9 @@ BEGIN
             LEFT JOIN Object AS Object_MaterialOptions_opt ON Object_MaterialOptions_opt.Id = ObjectLink_ProdOptions_MaterialOptions.ChildObjectId
 
             -- Итого остаток
-            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = _tmpItem.ObjectId
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_Object.Id
             -- Итого перемещение
-            LEFT JOIN tmpSend ON tmpSend.GoodsId = _tmpItem.ObjectId 
+            LEFT JOIN tmpSend ON tmpSend.GoodsId = Object_Object.Id 
   ;
 
   /*
@@ -412,4 +363,5 @@ $BODY$
 
 -- тест
 -- SELECT * from gpSelect_MI_OrderClient_detail (inMovementId:= 5489, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
-
+  
+select * from gpSelect_MI_OrderClient_detail(inMovementId := 5490 , inIsErased := 'False' ,  inSession := '5');

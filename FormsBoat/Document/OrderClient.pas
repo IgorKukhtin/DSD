@@ -520,7 +520,7 @@ type
     cxTabSheetDetail: TcxTabSheet;
     cxGrid_Detail: TcxGrid;
     cxGridDBTableView_Detail: TcxGridDBTableView;
-    NPP_ch6: TcxGridDBColumn;
+    NPP_Uzel_ch6: TcxGridDBColumn;
     ReceiptLevelName_ch6: TcxGridDBColumn;
     cxGridDBTableView2: TcxGridDBTableView;
     cxGridDBColumn40: TcxGridDBColumn;
@@ -562,9 +562,9 @@ type
     DetailDS: TDataSource;
     actGoodsChoiceFormDetail: TOpenChoiceForm;
     spSelect_MI_Detail: TdsdStoredProc;
-    spUpdate_Detail: TdsdStoredProc;
+    spInsertUpdate_Detail: TdsdStoredProc;
     spInsertUpdateMIDetail: TdsdUpdateDataSet;
-    ReceiptLevelName_child_ch6: TcxGridDBColumn;
+    ReceiptLevelName_Uzel_ch6: TcxGridDBColumn;
     Panel5: TPanel;
     edSearchArticle_child: TcxTextEdit;
     lbSearchArticle: TcxLabel;
@@ -578,6 +578,20 @@ type
     actChoiceGuides: TdsdChoiceGuides;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    Panel6: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnSetErased: TcxButton;
+    actInsertRecordGoods_Detail: TInsertRecord;
+    cxLabel25: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
+    spErasedDetail: TdsdStoredProc;
+    actErasedDetail: TdsdUpdateErased;
+    actRefreshDetail: TdsdDataSetRefresh;
+    DBViewAddOnDetail: TdsdDBViewAddOn;
+    actInsertUpdate_Detail: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
   private
   public
   end;

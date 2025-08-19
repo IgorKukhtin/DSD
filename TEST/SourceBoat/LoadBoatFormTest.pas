@@ -461,6 +461,10 @@ end;
 
  procedure TLoadFormTest.LoadOrderClientFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClient_ChoiceByDetailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderClient_ChoiceByDetailForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientDialogForm');
 

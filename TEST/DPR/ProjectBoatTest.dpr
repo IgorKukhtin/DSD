@@ -236,7 +236,6 @@ uses
   Report_Goods_RemainsCurrentDialog in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrentDialog.pas' {Report_Goods_RemainsCurrentDialogForm: TParentForm},
   Report_Goods_RemainsCurrent in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrent.pas' {Report_Goods_RemainsCurrentForm: TParentForm},
   BankAccountJournalByInvoice in '..\..\FormsBoat\Document\BankAccountJournalByInvoice.pas' {BankAccountJournalByInvoiceForm: TParentForm},
-  OrderClient in '..\..\FormsBoat\Document\OrderClient.pas' {OrderClientForm: TParentForm},
   Medoc_J1201012 in '..\..\SOURCE\MeDOC\Medoc_J1201012.pas',
   Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas',
   MovementProtocol in '..\..\FormsBoat\System\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
@@ -400,7 +399,9 @@ uses
   ProdOptions_Translate in '..\..\FormsBoat\Guides\ProdOptions_Translate.pas' {ProdOptions_TranslateForm: TParentForm},
   dsdCommon in '..\..\SOURCE\COMPONENT\dsdCommon.pas',
   invoice_comdoc_vchasno in '..\..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
-  invoice_delnote_base in '..\..\SOURCE\EDI\invoice_delnote_base.pas';
+  invoice_delnote_base in '..\..\SOURCE\EDI\invoice_delnote_base.pas',
+  OrderClient in '..\..\FormsBoat\Document\OrderClient.pas' {OrderClientForm: TParentForm},
+  OrderClient_ChoiceByDetail in '..\..\FormsBoat\Document\OrderClient_ChoiceByDetail.pas' {OrderClient_ChoiceByDetailForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
