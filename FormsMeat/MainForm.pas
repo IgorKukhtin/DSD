@@ -1563,6 +1563,14 @@ type
     miReport_GoodsMI_ProductionSeparateTotal: TMenuItem;
     actHospitalDoc_1C: TdsdOpenForm;
     miHospitalDoc_1C: TMenuItem;
+    actStaffHoursDay: TdsdOpenForm;
+    actStaffHoursLength: TdsdOpenForm;
+    actStaffPaidKind: TdsdOpenForm;
+    actStaffHours: TdsdOpenForm;
+    miStaffHours: TMenuItem;
+    miStaffHoursDay: TMenuItem;
+    miStaffHoursLength: TMenuItem;
+    N132: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
