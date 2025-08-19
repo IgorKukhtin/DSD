@@ -2785,7 +2785,7 @@ begin
      then
      begin Key := 0;
            Key2:= VK_SPACE;
-           ParamsMI.ParamByName('isTotal_1001').AsBoolean:= cbTotal_1001_add.Checked;
+           ParamsMI.ParamByName('isTotal_1001').AsBoolean:= FALSE; //cbTotal_1001_add.Checked;
            if (GetParams_Goods (FALSE, '', TRUE)) and (SettingMain.isSticker = TRUE) and (cbAuto_1001.Checked = FALSE)
            then begin
                       cbTotal_1001_add.Checked:= FALSE;
@@ -2799,7 +2799,7 @@ begin
          then
          begin Key := 0;
                cbAuto_1001.Checked:= TRUE;
-               ParamsMI.ParamByName('isTotal_1001').AsBoolean:= cbTotal_1001_add.Checked;
+               ParamsMI.ParamByName('isTotal_1001').AsBoolean:= FALSE; //cbTotal_1001_add.Checked;
                GetParams_Goods (FALSE, '', FALSE);
                cbTotal_1001_add.Checked:= FALSE;
          end;
@@ -2808,7 +2808,7 @@ begin
          and ((ActiveControl <> EditPartionGoods) or (trim(EditPartionGoods.Text) = '') or (Pos(' ', EditPartionGoods.Text) > 0))
      then begin
                 Key:= 0;
-                ParamsMI.ParamByName('isTotal_1001').AsBoolean:= cbTotal_1001_add.Checked;
+                ParamsMI.ParamByName('isTotal_1001').AsBoolean:= FALSE; //cbTotal_1001_add.Checked;
                 GetParams_Goods (FALSE, '', FALSE); end;//isRetail=FALSE
                 cbTotal_1001_add.Checked:= FALSE;
      //
@@ -2883,6 +2883,12 @@ begin
      if (SettingMain.isSticker = TRUE)
      then
      begin
+          DMMainScaleForm.gpUpdate_Scale_MI_StickerTotal(-1 * ParamsMovement.ParamByName('MovementId').AsInteger, TRUE);
+          //ParamsMI.ParamByName('GoodsCode_1001').AsInteger:= 46;
+          //ParamsMI.ParamByName('GoodsKindCode_1001').AsInteger:= 3;
+          cbAuto_1001.Checked:= TRUE;
+          //GuideGoodsStickerForm.cb_70_70.Checked:= TRUE;
+          //
           cbTotal_1001_add.Checked:= true;
           ParamsMI.ParamByName('isTotal_1001').AsBoolean:= TRUE;
           GetParams_Goods (FALSE, '', FALSE);
@@ -2902,6 +2908,12 @@ begin
      if (SettingMain.isSticker = TRUE)
      then
      begin
+          DMMainScaleForm.gpUpdate_Scale_MI_StickerTotal(-1 * ParamsMovement.ParamByName('MovementId').AsInteger, TRUE);
+          ParamsMI.ParamByName('GoodsCode_1001').AsInteger:= 46;
+          ParamsMI.ParamByName('GoodsKindCode_1001').AsInteger:= 3;
+          cbAuto_1001.Checked:= TRUE;
+          //GuideGoodsStickerForm.cb_70_70.Checked:= TRUE;
+          //
           cbTotal_1001_add.Checked:= true;
           ParamsMI.ParamByName('isTotal_1001').AsBoolean:= TRUE;
           GetParams_Goods (FALSE, '', FALSE);
