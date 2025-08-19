@@ -1116,7 +1116,21 @@ INSERT INTO ObjectDesc (Code, ItemName)
 
  
 
+  CREATE OR REPLACE FUNCTION zc_Object_StaffPaidKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_StaffPaidKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_StaffPaidKind', 'Вид оплаты - Штатное расписание' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_StaffPaidKind');
 
+  CREATE OR REPLACE FUNCTION zc_Object_StaffHoursDay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_StaffHoursDay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_StaffHoursDay', 'График работы - Штатное расписание' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_StaffHoursDay');
+
+  CREATE OR REPLACE FUNCTION zc_Object_StaffHours() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_StaffHours'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_StaffHours', 'Часы работы - Штатное расписание' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_StaffHours');
+
+  CREATE OR REPLACE FUNCTION zc_Object_StaffHoursLength() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_StaffHoursLength'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_StaffHoursLength', 'Продолжительность смены - Штатное расписание' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_StaffHoursLength');
 
 
 

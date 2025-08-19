@@ -5828,6 +5828,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsPartnerDate'
+        Value = Null
+        Component = edIsPartnerDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFileName'
         Value = Null
         Component = FormParams

@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_VN_csv(Integer, tvarchar)
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_VN_csv (TDateTime, TDateTime, TVarChar, tvarchar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_VN_csv (TDateTime, TDateTime, Boolean, TVarChar, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_VN_csv(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
+    IN inIsPartnerDate      Boolean   ,
     IN inFileName           TVarChar  ,
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -45,15 +47,35 @@ BEGIN
      -- первая строчка CSV  - Шапка / строки
      INSERT INTO _Result(RowData)
      WITH
-     tmpMovement AS (SELECT Movement.*
+     tmpMovement AS (/*SELECT Movement.*
                      FROM Movement
-                         INNER JOIN MovementString AS MovementString_FileName
-                                                   ON MovementString_FileName.MovementId = Movement.Id
-                                                  AND MovementString_FileName.DescId = zc_MovementString_FileName()
-                                                  AND MovementString_FileName.ValueData = inFileName
                      WHERE Movement.DescId = zc_Movement_Sale()
                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                        AND Movement.StatusId <> zc_Enum_Status_Erased()  
+                      */
+                          SELECT Movement.*
+                          FROM Movement
+                               INNER JOIN MovementString AS MovementString_FileName
+                                                         ON MovementString_FileName.MovementId = Movement.Id
+                                                        AND MovementString_FileName.DescId = zc_MovementString_FileName()
+                                                        AND MovementString_FileName.ValueData = inFileName
+                          WHERE inIsPartnerDate = FALSE
+                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                            AND Movement.DescId = zc_Movement_Sale()
+                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                         UNION ALL
+                          SELECT Movement.*
+                          FROM MovementDate AS MovementDate_OperDatePartner
+                               JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_Sale()
+                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                               INNER JOIN MovementString AS MovementString_FileName
+                                                         ON MovementString_FileName.MovementId = Movement.Id
+                                                        AND MovementString_FileName.DescId = zc_MovementString_FileName()
+                                                        AND MovementString_FileName.ValueData = inFileName
+                          WHERE inIsPartnerDate = TRUE
+                            AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()                        
+                        
                      --LIMIT 3
                      )
         , tmpMovementDate AS (SELECT MovementDate.*

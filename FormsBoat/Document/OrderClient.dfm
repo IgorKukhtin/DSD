@@ -658,7 +658,7 @@ object OrderClientForm: TOrderClientForm
     Height = 370
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetDetail
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 370
     ClientRectRight = 1349
@@ -4351,8 +4351,8 @@ object OrderClientForm: TOrderClientForm
           TabOrder = 0
         end
         object btnUpdate: TcxButton
-          Left = 615
-          Top = 6
+          Left = 611
+          Top = 7
           Width = 100
           Height = 25
           Action = actGoodsChoiceFormDetail
@@ -5619,7 +5619,6 @@ object OrderClientForm: TOrderClientForm
       TabSheet = cxTabSheetDetail
       MoveParams = <>
       AfterAction = actRefreshDetail
-      Enabled = False
       StoredProc = spErasedDetail
       StoredProcList = <
         item
@@ -5784,6 +5783,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -5804,6 +5804,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -5867,6 +5868,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedChildDetail
       StoredProcList = <
         item
@@ -5987,6 +5989,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -5996,6 +5999,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -6012,6 +6016,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -6030,7 +6035,6 @@ object OrderClientForm: TOrderClientForm
       TabSheet = cxTabSheetDetail
       MoveParams = <>
       AfterAction = actRefreshDetail
-      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ImageIndex = 1
       FormName = 'TUnion_Goods_ReceiptServiceForm'
@@ -6101,7 +6105,6 @@ object OrderClientForm: TOrderClientForm
       TabSheet = cxTabSheetDetail
       MoveParams = <>
       AfterAction = actRefreshDetail
-      Enabled = False
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       View = cxGridDBTableView_Detail
@@ -6151,6 +6154,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 57
@@ -6221,6 +6225,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 34
@@ -6279,6 +6284,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertMaskMIMaster
       StoredProcList = <
@@ -6445,6 +6451,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       View = cxGridDBTableView
@@ -6674,6 +6681,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1054#1087#1094#1080#1080
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1054#1087#1094#1080#1080
       ImageIndex = 34
@@ -6992,6 +7000,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       ImageIndex = 34
@@ -7316,7 +7325,6 @@ object OrderClientForm: TOrderClientForm
       Category = 'OpenForm'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
-      Enabled = False
       Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'>'
       Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'>'
       ImageIndex = 40

@@ -8727,6 +8727,14 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsPartnerDate'
+        Value = Null
+        Component = edIsPartnerDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFileName'
         Value = Null
         Component = FormParams
@@ -8736,7 +8744,7 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 208
-    Top = 224
+    Left = 224
+    Top = 232
   end
 end

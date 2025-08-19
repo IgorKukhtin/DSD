@@ -1108,14 +1108,28 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Juridical_DocHeadeName', zc_object_MessagePersonalService(), 'Название в шапке накладной' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_DocHeadeName');
   
 
+ CREATE OR REPLACE FUNCTION zc_ObjectString_StaffHoursLength_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffHoursLength_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_StaffHoursLength_Comment', zc_object_StaffHoursLength(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffHoursLength_Comment');
+ 
+  CREATE OR REPLACE FUNCTION zc_ObjectString_StaffPaidKind_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffPaidKind_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_StaffPaidKind_Comment', zc_object_StaffPaidKind(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffPaidKind_Comment');
+ 
+  CREATE OR REPLACE FUNCTION zc_ObjectString_StaffHoursDay_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffHoursDay_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_StaffHoursDay_Comment', zc_object_StaffHoursDay(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffHoursDay_Comment');
+ 
+  CREATE OR REPLACE FUNCTION zc_ObjectString_StaffHours_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffHours_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_StaffHours_Comment', zc_object_StaffHours(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffHours_Comment');
+ 
 
 
 
-
-
-
-
-
+                          
+                          
+                          
 
 ---!!! Аптека
 
