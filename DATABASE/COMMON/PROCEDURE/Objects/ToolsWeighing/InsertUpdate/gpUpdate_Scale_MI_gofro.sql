@@ -210,11 +210,13 @@ BEGIN
 
      IF 1=1 -- EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_UnComplete())
      THEN
+         -- создаются временные таблицы - для формирование данных для проводок
+         PERFORM lpComplete_Movement_Sale_CreateTemp();
          -- !!! проведение!!!
-         PERFORM gpComplete_Movement_Sale (inMovementId     := inMovementId
+         PERFORM lpComplete_Movement_Sale (inMovementId     := inMovementId
+                                         , inUserId         := vbUserId
                                          , inIsLastComplete := FALSE
                                          , inIsRecalcPrice  := FALSE
-                                         , inSession        := inSession
                                           );
      END IF;
 
