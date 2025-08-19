@@ -6,8 +6,8 @@ CREATE OR REPLACE FUNCTION gpGet_Scale_MI_StickerTotal(
     IN inMovementItemId  Integer      ,
     IN inSession         TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (AmountTotal     TFloat
-             , WeightTare_add  TFloat
+RETURNS TABLE (AmountTotal        TFloat
+             , WeightTare_add     TFloat
               )
 AS
 $BODY$
@@ -29,7 +29,19 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.inMovementItemId = <%>', inMovementItemId;
    END IF;
    
-   
+
+   IF COALESCE (inMovementItemId, 0) <= 0
+   THEN
+       inMovementItemId:= (SELECT MAX (MovementItem.Id) FROM MovementItem WHERE MovementItem.MovementId = -1 * inMovementItemId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE);
+
+       -- Проверка
+       IF COALESCE (inMovementItemId, 0) = 0
+       THEN
+           RAISE EXCEPTION 'Ошибка.Итоговое взвешивание не найдено.';
+       END IF;
+
+   END IF;
+
    --
    SELECT MovementItem.MovementId
         , MovementItem.ObjectId
@@ -106,6 +118,7 @@ BEGIN
             + vbWeightTare_add
              ) :: TFloat
             , vbWeightTare_add
+
        FROM MovementItem
             INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id

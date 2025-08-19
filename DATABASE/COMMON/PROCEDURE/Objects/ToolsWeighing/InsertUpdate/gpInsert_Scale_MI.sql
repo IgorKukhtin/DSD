@@ -1059,7 +1059,7 @@ BEGIN
                                                                                            ELSE inCount
                                                                                       END
                                                            , inHeadCount           := inHeadCount
-                                                           , inBoxCount            := CASE WHEN inIsBarCode = TRUE THEN 1 WHEN vbUserId = 5 AND vbBoxId > 0 THEN 1 ELSE 0 END -- inBoxCount
+                                                           , inBoxCount            := CASE WHEN inIsBarCode = TRUE THEN 1 WHEN vbUserId IN (5, 602817) AND vbBoxId > 0 THEN 1 ELSE 0 END -- inBoxCount
                                                            , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
                                                            , inLevelNumber         := 0
                                                            , inPrice               := CASE -- для isSticker = TRUE
@@ -1150,7 +1150,7 @@ BEGIN
                                                                                       END
 
                                                            , inBoxId               := CASE WHEN inIsBarCode = TRUE AND vbBoxId > 0 THEN vbBoxId
-                                                                                           WHEN vbUserId = 5 AND vbBoxId > 0 THEN vbBoxId
+                                                                                           WHEN vbUserId IN (5, 602817) AND vbBoxId > 0 THEN vbBoxId
                                                                                            WHEN inIsBarCode = TRUE THEN CASE WHEN inBoxCode > 0 THEN (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBoxCode AND Object.DescId = zc_Object_Box() AND inBoxCode > 0 ORDER BY 1 LIMIT 1) ELSE 0 END
                                                                                            ELSE 0
                                                                                       END

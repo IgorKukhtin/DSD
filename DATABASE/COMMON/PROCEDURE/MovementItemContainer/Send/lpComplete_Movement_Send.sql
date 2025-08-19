@@ -2725,8 +2725,10 @@ END IF;
                                                                                                               END
                                                                                 , inIsPartionSumm          := _tmpItem.isPartionSumm
                                                                                 , inPartionGoodsId         := _tmpItem.PartionGoodsId_To
-                                                                                , inAssetId                := -- !!!криво найдем - временно!!!
-                                                                                                              CASE WHEN _tmpItem.ObjectDescId = zc_Object_Asset()
+                                                                                , inAssetId                := CASE WHEN _tmpItem.ObjectDescId = zc_Object_Asset()
+                                                                                                                        THEN _tmpItem.AssetId
+                                                                                                                   -- !!!криво найдем - временно!!!
+                                                                                                                   /*WHEN _tmpItem.ObjectDescId = zc_Object_Asset()
                                                                                                                         THEN (SELECT CLO_AssetTo.ObjectId
                                                                                                                               FROM Container
                                                                                                                                    INNER JOIN ContainerLinkObject AS CLO_PartionGoods
@@ -2740,7 +2742,7 @@ END IF;
                                                                                                                                 AND Container.DescId   = zc_Container_Count()
                                                                                                                               ORDER BY Container.Amount DESC, COALESCE (CLO_AssetTo.ObjectId, 0) DESC
                                                                                                                               LIMIT 1
-                                                                                                                             )
+                                                                                                                             )*/
                                                                                                                    ELSE _tmpItem.AssetId
                                                                                                               END
                                                                                  )
@@ -2777,8 +2779,11 @@ END IF;
                                                                                 , inPartionGoodsId         := -- Добавилась партия по ячейкам
                                                                                                               COALESCE (_tmpItem_PartionCell_to.PartionGoodsId_To, _tmpItem.PartionGoodsId_To)
 
-                                                                                , inAssetId                := -- !!!криво найдем - временно!!!
+                                                                                , inAssetId                := 
                                                                                                               CASE WHEN _tmpItem.ObjectDescId = zc_Object_Asset()
+                                                                                                                        THEN _tmpItem.AssetId
+                                                                                                                   -- !!!криво найдем - временно!!!
+                                                                                                                   /*WHEN _tmpItem.ObjectDescId = zc_Object_Asset()
                                                                                                                         THEN (SELECT CLO_AssetTo.ObjectId
                                                                                                                               FROM Container
                                                                                                                                    INNER JOIN ContainerLinkObject AS CLO_PartionGoods
@@ -2792,7 +2797,7 @@ END IF;
                                                                                                                                 AND Container.DescId   = zc_Container_Count()
                                                                                                                               ORDER BY Container.Amount DESC, COALESCE (CLO_AssetTo.ObjectId, 0) DESC
                                                                                                                               LIMIT 1
-                                                                                                                             )
+                                                                                                                             )*/
                                                                                                                    ELSE _tmpItem.AssetId
                                                                                                               END
                                                                                  )
@@ -3242,4 +3247,4 @@ WHERE tmpProtocol.Ord = 1
 
 -- select * from MovementItemContainer where MovementItemId =312833261 and DescId = 1
 -- SELECT * FROM Movement where Id = 30202848
--- SELECT gpComplete_All_Sybase (30202848, false, '')
+-- SELECT gpComplete_All_Sybase (31906804 , false, '')

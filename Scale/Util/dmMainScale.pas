@@ -532,12 +532,14 @@ end;
 function TDMMainScaleForm.gpGet_Scale_Scale_MI_StickerTotal(var execParamsMI:TParams): Double;
 begin
     Result:=0;
-    if execParamsMI.ParamByName('MovementItemId').AsInteger<>0 then
+    //if execParamsMI.ParamByName('MovementItemId').AsInteger<>0 then
     with spSelect do begin
        StoredProcName:='gpGet_Scale_MI_StickerTotal';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inMovementItemId', ftInteger, ptInputOutput, execParamsMI.ParamByName('MovementItemId').AsInteger);
+       if execParamsMI.ParamByName('MovementItemId').AsInteger > 0
+       then Params.AddParam('inMovementItemId', ftInteger, ptInputOutput, execParamsMI.ParamByName('MovementItemId').AsInteger)
+       else Params.AddParam('inMovementItemId', ftInteger, ptInputOutput, -1 * ParamsMovement.ParamByName('MovementId').AsInteger);
        //try
          Execute;
          Result:=DataSet.FieldByName('AmountTotal').asFloat;
@@ -827,13 +829,18 @@ begin
     Result:=false;
     with spSelect do begin
        StoredProcName:='gpUpdate_Scale_MI_StickerTotal';
-       OutputType:=otResult;
+       OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inMovementItemId', ftInteger, ptInput, MovementItemId);
        Params.AddParam('inValue', ftBoolean, ptInput, isStickerTotal);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //try
          Execute;
+         //
+         ParamsMI.ParamByName('GoodsCode_1001').AsInteger:= DataSet.FieldByName('GoodsCode_1001').asInteger;
+         ParamsMI.ParamByName('GoodsKindCode_1001').AsInteger:= DataSet.FieldByName('GoodsKindCode_1001').asInteger;
+         //
+
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpInsertUpdate_Scale_Movement');

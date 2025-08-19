@@ -383,7 +383,9 @@ begin
     //actPrint.WithOutPreview:= TRUE;
     //«десь кол-во печать Ётикеток
     actPrint.CopiesCount:=ParamsMI.ParamByName('RealWeight').AsInteger;
-    actPrint.Execute;
+    //
+    if ParamsMI.ParamByName('isTotal_1001').AsBoolean = FALSE
+    then actPrint.Execute;
 
     finally
            frxDBDHeaderForm.UserName:= 'frxDBDHeader';
@@ -572,9 +574,20 @@ begin
 
             fEnterId:= false;
 
+            fModeSave:= isModeSave;
+            fCloseOK:=false;
+
             if cb_70_70.Checked = TRUE
             then if ParamsMI.ParamByName('isPreviewPrint_1001').AsBoolean = true
-                 then pShowReport
+                 then begin
+                          //spSelectPrint.ParamByName('inWeight').Value:= DMMainScaleForm.gpGet_Scale_Scale_MI_StickerTotal(ParamsMI);
+                          ParamsMI.ParamByName('RealWeight_Get').AsFloat:=DMMainScaleForm.gpGet_Scale_Scale_MI_StickerTotal(ParamsMI);
+                          // ѕоказали вес с весов - получили его перед открытием
+                          PanelGoodsWieghtValue.Caption:=FloatToStr(ParamsMI.ParamByName('RealWeight_Get').AsFloat);
+                          //
+                          fStickerPropertyId:=0;
+                          pShowReport;
+                      end
                  else
             else cb_70_70.Checked:= TRUE;
 
@@ -929,11 +942,13 @@ begin
           end;
 
           //ѕ≈„ј“№
-          pSelectPrint;
+          if ParamsMI.ParamByName('isTotal_1001').AsBoolean = FALSE
+          then pSelectPrint;
 
           //сохранение MovementItem
           //Result:=true;
-          Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
+          if ParamsMI.ParamByName('isTotal_1001').AsBoolean = FALSE
+          then Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
 
           // после сохранени€ - еще ѕ≈„ј“№ »“ќ√ќ¬ќ…
           try
@@ -942,6 +957,8 @@ begin
             if (cb_70_70.Checked = TRUE) and (ParamsMI.ParamByName('isTotal_1001').AsBoolean = TRUE)
             then begin
                     spSelectPrint.ParamByName('inWeight').Value:= DMMainScaleForm.gpGet_Scale_Scale_MI_StickerTotal(ParamsMI);
+                    //ѕ≈„ј“№
+                    pSelectPrint;
 
                     actPrint_total.ReportNameParam.Value:=CDS.FieldByName('StickerFileName_70_70').asString;
                     actPrint_total.Printer:=System.Copy(rgPriceList.Items[rgPriceList.ItemIndex], 5, Length(rgPriceList.Items[rgPriceList.ItemIndex]) - 4);
@@ -1150,6 +1167,8 @@ end;
 procedure TGuideGoodsStickerForm.EditGoodsKindCodeExit(Sender: TObject);
 var GoodsKindId_check:Integer;
 begin
+      if not Assigned(ActiveControl) then exit;
+      //
       if (fStartWrite=true)or(ActiveControl=EditGoodsCode)or(ActiveControl=EditGoodsName)
        or(ActiveControl=cxDBGrid)or(ActiveControl=rgGoodsKind)or(ActiveControl.Name='')
       then exit;
