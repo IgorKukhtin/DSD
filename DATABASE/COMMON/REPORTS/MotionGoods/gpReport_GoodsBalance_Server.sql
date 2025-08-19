@@ -704,14 +704,14 @@ BEGIN
                                                              ON CLO_PartionGoods.ContainerId = _tmpContainer.ContainerId_begin
                                                             AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                               INNER JOIN ObjectDate AS ObjectDate_PartionGoods_Value ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
-                                                                                    AND ObjectDate_PartionGoods_Value.ValueData > inStartDate - INTERVAL '100 DAY'  -- zc_DateStart()
+                                                                                    AND ObjectDate_PartionGoods_Value.ValueData > inStartDate - INTERVAL '300 DAY'  -- zc_DateStart()
                                                                                     AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
                               LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Unit
                                                    ON ObjectLink_PartionGoods_Unit.ObjectId = CLO_PartionGoods.ObjectId
                                                   AND ObjectLink_PartionGoods_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
                          WHERE _tmpContainer.ContainerDescId = zc_Container_Count()
                            AND ObjectLink_PartionGoods_Unit.ObjectId IS NULL -- т.е. вообще нет этого св-ва
-                           AND inStartDate >= DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '4 MONTH'
+                           AND inStartDate >= DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '14 MONTH'
                          GROUP BY _tmpContainer.LocationId
                                 , _tmpContainer.ContainerId_begin
                                 , _tmpContainer.GoodsId
