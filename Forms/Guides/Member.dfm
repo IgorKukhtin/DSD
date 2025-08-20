@@ -28,8 +28,6 @@ object MemberForm: TMemberForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -56
-    ExplicitTop = 124
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -725,7 +723,7 @@ object MemberForm: TMemberForm
     Width = 1056
     Height = 70
     Align = alTop
-    TabOrder = 7
+    TabOrder = 6
     object cxLabel13: TcxLabel
       Left = 193
       Top = 9
@@ -867,9 +865,6 @@ object MemberForm: TMemberForm
     Caption = 'Panel1'
     TabOrder = 8
     Visible = False
-    ExplicitLeft = -165
-    ExplicitTop = 544
-    ExplicitWidth = 1221
     object ExportXmlGrid: TcxGrid
       Left = 599
       Top = 1
@@ -878,7 +873,6 @@ object MemberForm: TMemberForm
       Align = alRight
       TabOrder = 0
       Visible = False
-      ExplicitLeft = 764
       object ExportXmlGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ExportDS
@@ -906,6 +900,16 @@ object MemberForm: TMemberForm
         GridView = ExportXmlGridDBTableView
       end
     end
+  end
+  object cbIsNext: TcxCheckBox
+    Left = 737
+    Top = 169
+    Hint = #1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074' '#1089#1083#1077#1076#1091#1102#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
+    Caption = #1080#1084#1077#1085#1080#1085#1080#1082#1080' '#1089#1083#1077#1076'. '#1084#1077#1089#1103#1094#1072
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 9
+    Width = 150
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1062,6 +1066,10 @@ object MemberForm: TMemberForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem3'
         end
         item
           Visible = True
@@ -1264,6 +1272,13 @@ object MemberForm: TMemberForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074
       Visible = ivAlways
       ImageIndex = 53
+    end
+    object dxBarControlContainerItem3: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbIsNext
     end
   end
   object ActionList: TActionList
@@ -3141,7 +3156,15 @@ object MemberForm: TMemberForm
       item
         DataSet = ExportCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsNext'
+        Value = Null
+        Component = cbIsNext
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 88
     Top = 360

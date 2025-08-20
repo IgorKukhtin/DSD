@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_Member_BirthDay(tvarchar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Member_BirthDay (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Member_BirthDay (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Member_BirthDay(
+    IN inIsNext             Boolean ,
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MemberName      TVarChar
@@ -30,10 +32,14 @@ BEGIN
 5. Колонка "Місяць народження" - название месяца
 6. "Ювіляр" - да/нет, если "тек год" - "год рождения" делится на 5 без остатка
 
+
+1.условие - ті фіз.особи, у кого в колонці "Уволен" не стоїть відмітка про звільнення
+2.условие - zc_ObjectBoolean_Unit_notBirthDay не равно TRUE
+3.выгружается только текущий "Месяц рождения" или следующий - задается в параметрах "inIsNext"
 */
 
      -- Таблица для результата
-     --CREATE TEMP TABLE _Result (RowData TBlob) ON COMMIT DROP;
+     --CREATE. TEMP TABLE _Result (RowData TBlob) ON COMMIT DROP;
 
      RETURN QUERY
      WITH
@@ -45,7 +51,12 @@ BEGIN
                           , lfSelect.isDateOut
                           , lfSelect.Ord
                      FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
-                     WHERE lfSelect.Ord = 1
+                          LEFT JOIN ObjectBoolean AS ObjectBoolean_notBirthDay
+                                                  ON ObjectBoolean_notBirthDay.ObjectId = lfSelect.UnitId
+                                                 AND ObjectBoolean_notBirthDay.DescId = zc_ObjectBoolean_Unit_notBirthDay()
+                     WHERE lfSelect.Ord = 1 
+                       AND COALESCE (lfSelect.isDateOut, FALSE) = FALSE
+                       AND COALESCE (ObjectBoolean_notBirthDay.ValueData, FALSE) = FALSE
                     )
 
    , tmpMember AS (SELECT Object_Member.ValueData    AS MemberName
@@ -57,7 +68,7 @@ BEGIN
                         , zfCalc_MonthNameUkr (ObjectDate_Birthday.ValueData) :: TVarChar AS Birthday_Month
                         , CASE WHEN (EXTRACT (YEAR FROM Current_Date) ::Integer - EXTRACT (YEAR FROM ObjectDate_Birthday.ValueData)::Integer) % 5 <> 0 THEN '' ELSE 'Ювіляр' END :: TVarChar AS Anniversary
                    FROM Object AS Object_Member
-                        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Member.Id AND tmpPersonal.Ord = 1
+                        INNER JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Member.Id
                         LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpPersonal.UnitId
                         LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
 
@@ -66,7 +77,10 @@ BEGIN
                                             AND ObjectDate_Birthday.DescId = zc_ObjectDate_Member_Birthday()
                    WHERE Object_Member.DescId = zc_Object_Member()
                      AND Object_Member.isErased = FALSE
-                     AND ObjectDate_Birthday.ValueData IS NOT NULL
+                     AND ObjectDate_Birthday.ValueData IS NOT NULL 
+                     AND ( (EXTRACT (Month FROM ObjectDate_Birthday.ValueData) = EXTRACT (Month FROM Current_Date) AND inIsNext = FALSE)
+                        OR (EXTRACT (Month FROM ObjectDate_Birthday.ValueData) = EXTRACT (Month FROM Current_Date)+1 AND inIsNext = TRUE)
+                          )
                    )
 
       --Результат
