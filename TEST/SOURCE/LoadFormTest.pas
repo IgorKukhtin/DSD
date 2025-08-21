@@ -222,6 +222,7 @@ type
     procedure LoadSheetWorkTimeCloseFormTest;
     procedure LoadSmsSettingsFormTest;
     procedure LoadStaffListFormTest;
+    procedure LoadStaffListMovementFormTest;
     procedure LoadStickerFormTest;
     procedure LoadStorageLineFormTest;
     procedure LoadStorage_ObjectFormTest;
@@ -4664,6 +4665,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffHoursLengthEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffHoursLengthEditForm');
   end;
+
+ procedure TLoadFormTest.LoadStaffListMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListMovementForm');
+end;
 
  procedure TLoadFormTest.LoadMessagePersonalServiceLastFormTest;
 begin

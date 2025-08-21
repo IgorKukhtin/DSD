@@ -29,7 +29,7 @@ uses
 
 type
   TStaffListJournalForm = class(TAncestorJournalForm)
-    TotalCountTare: TcxGridDBColumn;
+    DepartmentName: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -45,11 +45,9 @@ type
     actPrintSaleOrderTax: TdsdPrintAction;
     spGetImportSettingId: TdsdStoredProc;
     spDelete_Movement: TdsdStoredProc;
-    InvNumber_Transport_Full: TcxGridDBColumn;
-    OperDate_Transport: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     bbInsertUpdate_MI_byTransport: TdxBarButton;
-    ManagerName: TcxGridDBColumn;
-    SecurityName: TcxGridDBColumn;
+    PersonalHeadName: TcxGridDBColumn;
   private
     { Private declarations }
   public

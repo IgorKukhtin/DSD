@@ -1,5 +1,5 @@
 inherited StaffListJournalForm: TStaffListJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1080#1079#1084#1077#1085#1077#1085#1080#1103')>'
   ClientHeight = 535
   ClientWidth = 876
   AddOnFormData.RefreshAction = actRefreshStart
@@ -31,9 +31,8 @@ inherited StaffListJournalForm: TStaffListJournalForm
           DataController.Filter.TranslateLike = True
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.####'
               Kind = skSum
-              Column = TotalCountTare
+              Column = DepartmentName
             end
             item
               Format = ',0.####'
@@ -80,11 +79,6 @@ inherited StaffListJournalForm: TStaffListJournalForm
               Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalCountTare
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -149,44 +143,44 @@ inherited StaffListJournalForm: TStaffListJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 97
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 137
           end
-          object OperDate_Transport: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1055#1051')'
-            DataBinding.FieldName = 'OperDate_Transport'
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' ('#1087#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090')'
-            Options.Editing = False
-            Width = 93
-          end
-          object InvNumber_Transport_Full: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1055#1051
-            DataBinding.FieldName = 'InvNumber_Transport_Full'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082'. '#1087#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             Options.Editing = False
             Width = 123
           end
-          object TotalCountTare: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
-            DataBinding.FieldName = 'TotalCountTare'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object DepartmentName: TcxGridDBColumn
+            Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103
+            DataBinding.FieldName = 'DepartmentName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Options.Editing = False
+            Width = 96
+          end
+          object PersonalHeadName: TcxGridDBColumn
+            Caption = #1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'PersonalHeadName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 116
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -196,48 +190,37 @@ inherited StaffListJournalForm: TStaffListJournalForm
             Options.Editing = False
             Width = 160
           end
-          object ManagerName: TcxGridDBColumn
-            Caption = #1047#1072#1084'. '#1085#1072#1095'.'#1091#1095'.'
-            DataBinding.FieldName = 'ManagerName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1084#1077#1089#1090#1080#1090#1077#1083#1100' '#1085#1072#1095#1072#1083#1100#1085#1080#1082#1072' '#1091#1095#1072#1089#1090#1082#1072
-            Width = 70
-          end
-          object SecurityName: TcxGridDBColumn
-            Caption = #1054#1090#1076'. '#1041#1077#1079#1086#1087'.'
-            DataBinding.FieldName = 'SecurityName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1076#1077#1083' '#1073#1077#1079#1086#1087#1072#1089#1085#1086#1089#1090#1080
-            Width = 70
-          end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 115
+            Options.Editing = False
+            Width = 95
           end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 138
           end
           object UpdateDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+            Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'. / '#1087#1088#1086#1074#1077#1076'.'
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 115
+            HeaderHint = #1044#1072#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' / '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 95
           end
           object UpdateName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'. / '#1087#1088#1086#1074#1077#1076'.'
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 138
           end
         end
@@ -298,12 +281,12 @@ inherited StaffListJournalForm: TStaffListJournalForm
       RefreshOnTabSetChanges = False
     end
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TOrderReturnTareForm'
-      FormNameParam.Value = 'TOrderReturnTareForm'
+      FormName = 'TStaffListMovementForm'
+      FormNameParam.Value = 'TStaffListMovementForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TOrderReturnTareForm'
-      FormNameParam.Value = 'TOrderReturnTareForm'
+      FormName = 'TStaffListMovementForm'
+      FormNameParam.Value = 'TStaffListMovementForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -513,7 +496,7 @@ inherited StaffListJournalForm: TStaffListJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderReturnTare'
+    StoredProcName = 'gpSelect_Movement_StaffList'
     Params = <
       item
         Name = 'instartdate'
@@ -675,7 +658,7 @@ inherited StaffListJournalForm: TStaffListJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_OrderReturnTare'
+    StoredProcName = 'gpComplete_Movement_StaffList'
     Params = <
       item
         Name = 'inmovementid'
@@ -689,7 +672,7 @@ inherited StaffListJournalForm: TStaffListJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_OrderReturnTare'
+    StoredProcName = 'gpUnComplete_Movement_StaffList'
     Params = <
       item
         Name = 'inmovementid'
@@ -703,7 +686,7 @@ inherited StaffListJournalForm: TStaffListJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_OrderReturnTare'
+    StoredProcName = 'gpSetErased_Movement_StaffList'
     Params = <
       item
         Name = 'inmovementid'
@@ -733,7 +716,7 @@ inherited StaffListJournalForm: TStaffListJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_OrderReturnTare'
+    StoredProcName = 'gpReComplete_Movement_StaffList'
     Left = 176
     Top = 432
   end
@@ -860,7 +843,7 @@ inherited StaffListJournalForm: TStaffListJournalForm
     Top = 216
   end
   object spDelete_Movement: TdsdStoredProc
-    StoredProcName = 'gpDelete_Movement_OrderReturnTare'
+    StoredProcName = 'gpDelete_Movement_StaffList'
     DataSets = <>
     OutputType = otResult
     Params = <

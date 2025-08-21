@@ -23,16 +23,15 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
-  TOrderReturnTareForm = class(TAncestorDocumentForm)
+  TStaffListMovementForm = class(TAncestorDocumentForm)
     cxLabel3: TcxLabel;
-    edTransport: TcxButtonEdit;
-    GuidesTransport: TdsdGuides;
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    PartnerName: TcxGridDBColumn;
+    edUnit: TcxButtonEdit;
+    PositionLevelName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    StaffPaidKindName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     actPartnerChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
@@ -43,7 +42,7 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     actGoodsChoiceForm: TOpenChoiceForm;
-    GoodsGroupNameFull: TcxGridDBColumn;
+    StaffHoursName: TcxGridDBColumn;
     cxLabel22: TcxLabel;
     ceComment: TcxTextEdit;
     bbPrintNoGroup: TdxBarButton;
@@ -58,20 +57,22 @@ type
     cxLabel4: TcxLabel;
     edUpdateDate: TcxDateEdit;
     cxLabel5: TcxLabel;
-    PartnerCode: TcxGridDBColumn;
+    StaffHoursDayName: TcxGridDBColumn;
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
-    spInsertUpdate_MI_byTransport: TdsdStoredProc;
     HeaderExit: THeaderExit;
-    actInsertUpdate_MI_byTransport: TdsdExecStoredProc;
-    actReport_OrderReturnTare_SaleByTransport: TdsdOpenForm;
     bb: TdxBarButton;
-    cxLabel6: TcxLabel;
-    edManager: TcxButtonEdit;
-    edSecurity: TcxButtonEdit;
-    cxLabel9: TcxLabel;
-    GuidesManager: TdsdGuides;
-    GuidesSecurity: TdsdGuides;
+    GuidesUnit: TdsdGuides;
+    cxLabel24: TcxLabel;
+    edDepartment: TcxButtonEdit;
+    cxLabel14: TcxLabel;
+    cePersonalHead: TcxButtonEdit;
+    GuidesPersonalHead: TdsdGuides;
+    StaffHoursLengthName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    AmountReport: TcxGridDBColumn;
+    StaffCount_1: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -83,6 +84,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderReturnTareForm);
+  RegisterClass(TStaffListMovementForm);
 
 end.

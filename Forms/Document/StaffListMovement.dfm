@@ -1,27 +1,27 @@
-inherited OrderReturnTareForm: TOrderReturnTareForm
+inherited StaffListMovementForm: TStaffListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 564
-  ClientWidth = 890
-  ExplicitWidth = 906
+  ClientWidth = 1153
+  ExplicitWidth = 1169
   ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 890
+    Width = 1153
     Height = 438
     ExplicitTop = 126
-    ExplicitWidth = 854
+    ExplicitWidth = 1153
     ExplicitHeight = 438
     ClientRectBottom = 438
-    ClientRectRight = 890
+    ClientRectRight = 1153
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 854
+      ExplicitWidth = 1153
       ExplicitHeight = 414
       inherited cxGrid: TcxGrid
-        Width = 890
+        Width = 1153
         Height = 414
-        ExplicitWidth = 854
+        ExplicitWidth = 1153
         ExplicitHeight = 414
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -61,6 +61,11 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_1
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -102,11 +107,16 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = GoodsName
+              Column = PositionName
             end
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_1
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -119,25 +129,9 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object GoodsGroupNameFull: TcxGridDBColumn [0]
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
-            DataBinding.FieldName = 'GoodsGroupNameFull'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 201
-          end
-          object GoodsCode: TcxGridDBColumn [1]
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object GoodsName: TcxGridDBColumn [2]
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
+          object PositionName: TcxGridDBColumn [0]
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -146,33 +140,23 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 222
           end
-          object Amount: TcxGridDBColumn [3]
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object PartnerCode: TcxGridDBColumn [4]
-            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-            DataBinding.FieldName = 'PartnerCode'
-            Visible = False
+          object PositionLevelName: TcxGridDBColumn [1]
+            Caption = #1056#1072#1079#1088#1103#1076
+            DataBinding.FieldName = 'PositionLevelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 113
+            Width = 90
           end
-          object PartnerName: TcxGridDBColumn [5]
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-            DataBinding.FieldName = 'PartnerName'
+          object StaffPaidKindName: TcxGridDBColumn [2]
+            Caption = #1042#1080#1076' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'StaffPaidKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -183,7 +167,181 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 309
+            Options.Editing = False
+            Width = 127
+          end
+          object StaffHoursDayName: TcxGridDBColumn [3]
+            Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099
+            DataBinding.FieldName = 'StaffHoursDayName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
+          object StaffHoursName: TcxGridDBColumn [4]
+            Caption = #1063#1072#1089#1099' '#1088#1072#1073#1086#1090#1099
+            DataBinding.FieldName = 'StaffHoursName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object StaffHoursLengthName: TcxGridDBColumn [5]
+            Caption = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100' '#1089#1084#1077#1085#1099', '#1095#1072#1089#1099' '#9
+            DataBinding.FieldName = 'StaffHoursLengthName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 135
+          end
+          object PersonalName: TcxGridDBColumn [6]
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1087#1086' '#1087#1077#1088#1089#1086#1085#1072#1083#1091
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
+          end
+          object Amount: TcxGridDBColumn [7]
+            Caption = #1064#1056' '#1076#1083#1103' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100
+            Width = 70
+          end
+          object AmountReport: TcxGridDBColumn [8]
+            Caption = #1064#1056' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+            DataBinding.FieldName = 'AmountReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object StaffCount_1: TcxGridDBColumn [9]
+            Caption = '1.'#1087#1085'.'
+            DataBinding.FieldName = 'StaffCount_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1087#1085'.'
+            Width = 70
+          end
+          object StaffCount_2: TcxGridDBColumn [10]
+            Caption = '2.'#1087#1085'.'
+            DataBinding.FieldName = 'StaffCount_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1074#1090'.'
+            Width = 70
+          end
+          object StaffCount_3: TcxGridDBColumn [11]
+            Caption = '3.'#1087#1085'.'
+            DataBinding.FieldName = 'StaffCount_3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1089#1088'.'
+            Width = 70
+          end
+          object StaffCount_4: TcxGridDBColumn [12]
+            Caption = '4.'#1087#1085'.'
+            DataBinding.FieldName = 'StaffCount_4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1095#1090'.'
+            Width = 70
+          end
+          object StaffCount_5: TcxGridDBColumn [13]
+            Caption = '5.'#1087#1085'.'
+            DataBinding.FieldName = 'StaffCount_57'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1087#1090'.'
+            Width = 70
+          end
+          object StaffCount_6: TcxGridDBColumn [14]
+            Caption = '6.'#1087#1085'.'
+            DataBinding.FieldName = 'StaffCount_67'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1089#1073'.'
+            Width = 70
+          end
+          object StaffCount_7: TcxGridDBColumn [15]
+            Caption = '7.'#1087#1085'.'
+            DataBinding.FieldName = 'StaffCount_7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1074#1089'.'
+            Width = 70
+          end
+          object StaffCount_Invent: TcxGridDBColumn [16]
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+            DataBinding.FieldName = 'StaffCount_Invent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1048#1085#1072#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+            Width = 70
+          end
+          object Staff_Price: TcxGridDBColumn [17]
+            Caption = #1058#1072#1088#1080#1092#1080#1082#1072#1094#1080#1103
+            DataBinding.FieldName = 'Staff_Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Staff_Summ_MK: TcxGridDBColumn [18]
+            Caption = #1052#1050
+            DataBinding.FieldName = 'Staff_Summ_MK'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Staff_Summ_real: TcxGridDBColumn [19]
+            Caption = #1057#1076#1077#1083#1100#1085#1072#1103' '#1086#1087#1083#1072#1090#1072
+            DataBinding.FieldName = 'Staff_Summ_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Staff_Summ_add: TcxGridDBColumn [20]
+            Caption = #1055#1088#1077#1084#1080#1072#1083#1100#1085#1080#1081' '#1092#1086#1085#1076
+            DataBinding.FieldName = 'Staff_Summ_add'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Comment: TcxGridDBColumn [21]
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
@@ -194,10 +352,10 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 890
+    Width = 1153
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 854
+    ExplicitWidth = 1153
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -233,12 +391,12 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       Width = 165
     end
     object cxLabel3: TcxLabel
-      Left = 179
+      Left = 348
       Top = 5
-      Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' / '#1053#1072#1095#1080#1089#1083'. '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
-    object edTransport: TcxButtonEdit
-      Left = 179
+    object edUnit: TcxButtonEdit
+      Left = 348
       Top = 23
       Properties.Buttons = <
         item
@@ -246,42 +404,42 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 302
+      Width = 209
     end
     object cxLabel22: TcxLabel
-      Left = 179
+      Left = 570
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 179
+      Left = 570
       Top = 63
       TabOrder = 9
-      Width = 302
+      Width = 243
     end
     object cxLabel8: TcxLabel
-      Left = 647
-      Top = 4
+      Left = 186
+      Top = 45
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 647
-      Top = 23
+      Left = 186
+      Top = 63
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 114
+      Width = 148
     end
     object cxLabel7: TcxLabel
-      Left = 647
+      Left = 831
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 647
+      Left = 830
       Top = 63
       Properties.Buttons = <
         item
@@ -291,12 +449,46 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 114
+      Width = 187
+    end
+    object cxLabel24: TcxLabel
+      Left = 348
+      Top = 45
+      Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103
+    end
+    object edDepartment: TcxButtonEdit
+      Left = 348
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Width = 209
+    end
+    object cxLabel14: TcxLabel
+      Left = 570
+      Top = 5
+      Caption = #1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+    end
+    object cePersonalHead: TcxButtonEdit
+      Left = 570
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 243
     end
   end
   object edUpdateName: TcxButtonEdit [2]
-    Left = 770
-    Top = 63
+    Left = 830
+    Top = 23
     Properties.Buttons = <
       item
         Default = True
@@ -305,15 +497,15 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 115
+    Width = 187
   end
   object cxLabel4: TcxLabel [3]
-    Left = 770
-    Top = 45
+    Left = 830
+    Top = 5
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
   end
   object edUpdateDate: TcxDateEdit [4]
-    Left = 770
+    Left = 186
     Top = 23
     EditValue = 42132d
     Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -321,46 +513,12 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     Properties.Kind = ckDateTime
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 115
+    Width = 148
   end
   object cxLabel5: TcxLabel [5]
-    Left = 770
-    Top = 4
-    Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
-  end
-  object cxLabel6: TcxLabel [6]
-    Left = 490
+    Left = 186
     Top = 5
-    Caption = #1047#1072#1084'. '#1085#1072#1095#1072#1083#1100#1085#1080#1082#1072' '#1091#1095#1072#1089#1090#1082#1072
-  end
-  object edManager: TcxButtonEdit [7]
-    Left = 490
-    Top = 23
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 11
-    Width = 148
-  end
-  object edSecurity: TcxButtonEdit [8]
-    Left = 490
-    Top = 63
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 12
-    Width = 148
-  end
-  object cxLabel9: TcxLabel [9]
-    Left = 490
-    Top = 45
-    Caption = #1054#1090#1076'. '#1041#1077#1079#1086#1087#1072#1089#1085#1086#1089#1090#1080
+    Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'./'#1087#1088#1086#1074#1077#1076'.)'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -387,10 +545,9 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       ImageIndex = 0
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
-      StoredProc = spInsertUpdate_MI_byTransport
+      StoredProc = nil
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate_MI_byTransport
         end
         item
           StoredProc = spInsertUpdateMovement
@@ -512,54 +669,6 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         end>
       isShowModal = True
     end
-    object actInsertUpdate_MI_byTransport: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_MI_byTransport
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate_MI_byTransport
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = 'actInsertUpdate_MI_byTransport'
-    end
-    object actReport_OrderReturnTare_SaleByTransport: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1057#1087#1080#1089#1086#1082' '#1053#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
-      Hint = #1057#1087#1080#1089#1086#1082' '#1053#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
-      ImageIndex = 26
-      FormName = 'TReport_OrderReturnTare_SaleByTransportForm'
-      FormNameParam.Value = 'TReport_OrderReturnTare_SaleByTransportForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inMovementId'
-          Value = Null
-          Component = GuidesTransport
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInvNumber'
-          Value = Null
-          Component = GuidesTransport
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = edOperDate
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
   end
   inherited MasterDS: TDataSource
     Left = 24
@@ -570,7 +679,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     Top = 448
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_OrderReturnTare'
+    StoredProcName = 'gpSelect_MovementItem_StaffList'
     Params = <
       item
         Name = 'inMovementId'
@@ -644,10 +753,6 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         end
         item
           Visible = True
-          ItemName = 'bb'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -661,14 +766,6 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         item
           Visible = True
           ItemName = 'bbMovementItemProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -717,8 +814,11 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       Category = 0
     end
     object bb: TdxBarButton
-      Action = actReport_OrderReturnTare_SaleByTransport
+      Caption = #1057#1087#1080#1089#1086#1082' '#1053#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
       Category = 0
+      Hint = #1057#1087#1080#1089#1086#1082' '#1053#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
+      Visible = ivAlways
+      ImageIndex = 26
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -797,11 +897,11 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_OrderReturnTare'
-    Left = 128
-    Top = 32
+    Left = 80
+    Top = 64
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_OrderReturnTare'
+    StoredProcName = 'gpGet_Movement_StaffList'
     Params = <
       item
         Name = 'inMovementId'
@@ -850,16 +950,16 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MovementId_Transport'
+        Name = 'UnitId'
         Value = ''
-        Component = GuidesTransport
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_Transport_Full'
+        Name = 'UnitName'
         Value = ''
-        Component = GuidesTransport
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -900,32 +1000,24 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ManagerId'
+        Name = 'PersonalHeadId'
         Value = Null
-        Component = GuidesManager
+        Component = GuidesPersonalHead
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ManagerName'
+        Name = 'PersonalHeadName'
         Value = Null
-        Component = GuidesManager
+        Component = GuidesPersonalHead
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SecurityId'
+        Name = 'DepartmentName'
         Value = Null
-        Component = GuidesSecurity
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SecurityName'
-        Value = Null
-        Component = GuidesSecurity
-        ComponentItem = 'TextValue'
+        Component = edDepartment
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -933,7 +1025,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_OrderReturnTare'
+    StoredProcName = 'gpInsertUpdate_Movement_StaffList'
     Params = <
       item
         Name = 'ioId'
@@ -962,15 +1054,13 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       item
         Name = 'inMovementId_Transport'
         Value = ''
-        Component = GuidesTransport
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inManagerId'
         Value = Null
-        Component = GuidesManager
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -978,8 +1068,6 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       item
         Name = 'inSecurityId'
         Value = Null
-        Component = GuidesSecurity
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -997,7 +1085,6 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
-        Guides = GuidesTransport
       end
       item
       end>
@@ -1016,10 +1103,8 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         Control = ceComment
       end
       item
-        Control = edManager
       end
       item
-        Control = edSecurity
       end
       item
       end
@@ -1062,7 +1147,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     Top = 384
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_OrderReturnTare'
+    StoredProcName = 'gpInsertUpdate_MovementItem_StaffList'
     Params = <
       item
         Name = 'ioId'
@@ -1177,7 +1262,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     Top = 246
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderReturnTare_Print'
+    StoredProcName = 'gpSelect_Movement_StaffList_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1200,80 +1285,10 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     Left = 367
     Top = 376
   end
-  object GuidesTransport: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edTransport
-    FormNameParam.Value = 'TTransportJournalChoiceForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TTransportJournalChoiceForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesTransport
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Full'
-        Value = ''
-        Component = GuidesTransport
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 296
-    Top = 16
-  end
-  object spInsertUpdate_MI_byTransport: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_OrderReturnTare_byTransport'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Transport'
-        Value = ''
-        Component = GuidesTransport
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInvNumber'
-        Value = Null
-        Component = edInvNumber
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = Null
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 242
-    Top = 384
-  end
   object HeaderExit: THeaderExit
     ExitList = <
       item
-        Control = edTransport
+        Control = edUnit
       end
       item
       end
@@ -1283,23 +1298,22 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       end
       item
       end>
-    Action = actInsertUpdate_MI_byTransport
     Left = 640
     Top = 184
   end
-  object GuidesManager: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edManager
-    FormNameParam.Value = 'TMember_ChoiceForm'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ChoiceForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesManager
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1307,41 +1321,43 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesManager
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 520
+    Left = 432
   end
-  object GuidesSecurity: TdsdGuides
+  object GuidesPersonalHead: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edSecurity
-    FormNameParam.Value = 'TMember_ChoiceForm'
+    LookupControl = cePersonalHead
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ChoiceForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesSecurity
+        Component = GuidesPersonalHead
         ComponentItem = 'Key'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesSecurity
+        Component = GuidesPersonalHead
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 536
-    Top = 56
+    Left = 655
+    Top = 7
   end
 end
