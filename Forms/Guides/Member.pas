@@ -217,6 +217,8 @@ type
     mactExport_xls: TMultiAction;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
+    cbIsNext: TcxCheckBox;
+    dxBarControlContainerItem3: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

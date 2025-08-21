@@ -65,10 +65,8 @@ BEGIN
                              WHERE ObjectLink_ImportSettings_ContactPerson.ChildObjectId > 0
                                AND ObjectLink_ImportSettings_ContactPerson.DescId = zc_ObjectLink_ImportSettings_ContactPerson()
                             )
-     , tmpContactPerson AS (SELECT ObjectLink_EmailKind.ChildObjectId AS EmailKindId
-                                 , STRING_AGG (ObjectString_Mail.ValueData, '; ')  AS ContactPersonMail 
+     , tmpContactPerson AS (SELECT STRING_AGG (ObjectString_Mail.ValueData, '; ')  AS ContactPersonMail 
                             FROM Object AS Object_ContactPerson
-                            
                                  INNER JOIN ObjectString AS ObjectString_Mail
                                                         ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
                                                        AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
@@ -79,40 +77,23 @@ BEGIN
                                                       AND ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
                                                       AND ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId = zc_Enum_ContactPersonKind_Member()
                                  
-                               /*  LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_Email
-                                                      ON ObjectLink_ContactPerson_Email.ObjectId = Object_ContactPerson.Id
-                                                     AND ObjectLink_ContactPerson_Email.DescId = zc_ObjectLink_ContactPerson_Email()
-                                 LEFT JOIN tmpImportSettings ON tmpImportSettings.ContactPersonId = Object_ContactPerson.Id
-                                                            AND ObjectLink_ContactPerson_Email.ChildObjectId IS NULL
-                                 LEFT JOIN Object AS Object_Email ON Object_Email.Id = COALESCE (ObjectLink_ContactPerson_Email.ChildObjectId, tmpImportSettings.EmailId)
-                     
-                                 LEFT JOIN ObjectLink AS ObjectLink_Email_EmailKind
-                                                      ON ObjectLink_Email_EmailKind.ObjectId = Object_Email.Id
-                                                     AND ObjectLink_Email_EmailKind.DescId = zc_ObjectLink_Email_EmailKind()
-                                */ 
-                                -- Если есть формат выгрузки
-                                 INNER JOIN ObjectLink AS ObjectLink_ExportJuridical_ExportKind
-                                                       ON  1=1
-                                                      AND ObjectLink_ExportJuridical_ExportKind.DescId = zc_ObjectLink_ExportJuridical_ExportKind()
-                                                      AND ObjectLink_ExportJuridical_ExportKind.ChildObjectId = zc_Enum_ExportKind_PersonalService()
-                                 -- Если есть откуда отправлять
-                                 INNER JOIN ObjectLink AS ObjectLink_EmailKind
-                                                       ON ObjectLink_EmailKind.ObjectId = ObjectLink_ExportJuridical_ExportKind.ObjectId
-                                                      AND ObjectLink_EmailKind.DescId = zc_ObjectLink_ExportJuridical_EmailKind()
-                                                      AND ObjectLink_EmailKind.ChildObjectId > 0
-                                 
-                     
                             WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
                               AND Object_ContactPerson.isErased = FALSE
-                            GROUP BY ObjectLink_EmailKind.ChildObjectId
                             )
        -- ВСЕ параметры - откуда отправлять
-     , tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= (SELECT DISTINCT tmp.EmailKindId
-                                                                                  FROM tmpContactPerson AS tmp
+     , tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= (SELECT DISTINCT ObjectLink_EmailKind.ChildObjectId AS EmailKindId
+                                                                                  FROM ObjectLink AS ObjectLink_ExportJuridical_ExportKind           -- формат выгрузки
+                                                                                       -- откуда отправлять
+                                                                                       INNER JOIN ObjectLink AS ObjectLink_EmailKind
+                                                                                                             ON ObjectLink_EmailKind.ObjectId = ObjectLink_ExportJuridical_ExportKind.ObjectId
+                                                                                                            AND ObjectLink_EmailKind.DescId = zc_ObjectLink_ExportJuridical_EmailKind()
+                                                                                                            AND ObjectLink_EmailKind.ChildObjectId > 0   
+                                                                                  WHERE ObjectLink_ExportJuridical_ExportKind.DescId = zc_ObjectLink_ExportJuridical_ExportKind()
+                                                                                    AND ObjectLink_ExportJuridical_ExportKind.ChildObjectId = zc_Enum_ExportKind_PersonalService()
                                                                                   )
                                                                , inSession    := inSession)
                     )
-      /*                                                                       
+  /*                                                                       
  для отправки надо использовать данные из   zc_Enum_ExportKind_PersonalService
   а отправлять на адреса которые будут в zc_Enum_ContactPersonKind_Member
 можешь для теста кроме этих адресов добавить еще себе, я потом уберу                                                                      
@@ -169,4 +150,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Member_Email_Send ( inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
+--SELECT * FROM gpGet_Member_Email_Send ( inSession:= '9457') --  zfCalc_UserAdmin()  --zc_Enum_ExportKind_Mida35273055()

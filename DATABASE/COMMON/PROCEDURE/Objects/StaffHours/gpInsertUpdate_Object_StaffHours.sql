@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Object_PairDay()
+-- Function: gpInsertUpdate_Object_StaffHours()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PairDay(Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StaffHours(Integer, Integer, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PairDay(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StaffHours(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
     IN inCode                Integer   ,    -- Код объекта
     IN inName                TVarChar  ,    -- Название объекта
@@ -15,17 +15,17 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_PairDay());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_StaffHours());
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его каи последний+1
-   inCode:=lfGet_ObjectCode (inCode, zc_Object_PairDay());
+   inCode:=lfGet_ObjectCode (inCode, zc_Object_StaffHours());
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_PairDay(), inCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_StaffHours(), inCode, inName);
 
    -- сохранили <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_PairDay_Comment(), ioId, inComment);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_StaffHours_Comment(), ioId, inComment);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -41,4 +41,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_PairDay()
+-- SELECT * FROM gpInsertUpdate_Object_StaffHours()
