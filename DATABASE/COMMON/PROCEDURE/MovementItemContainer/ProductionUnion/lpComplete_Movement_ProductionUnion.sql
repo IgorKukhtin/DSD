@@ -107,7 +107,7 @@ BEGIN
           , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
           , CASE WHEN ObjectLink_UnitFrom_Branch.ChildObjectId = ObjectLink_UnitTo_Branch.ChildObjectId
                   AND ObjectLink_UnitFrom_Branch.ChildObjectId > 0
-                  AND ObjectLink_UnitFrom_Branch.ChildObjectId <> zc_Branch_Basis()
+                  AND ObjectLink_UnitFrom_Branch.ChildObjectId NOT IN (zc_Branch_Basis(), zc_Branch_Irna())
                       THEN TRUE
                  ELSE FALSE
             END AS isBranch
@@ -2636,9 +2636,16 @@ END IF;
      END IF;
 /*
     RAISE EXCEPTION 'Ошибка.<%>  %  '
-                                   , (select sum (_tmpItemSumm_pr.OperSumm) from _tmpItemSumm_pr where _tmpItemSumm_pr.MovementItemId = 289222842)
-                                   , (select sum (_tmpItemSummChild.OperSumm) from _tmpItemSummChild where _tmpItemSummChild.MovementItemId_Parent = 289222842)
-                                   ;
+                                   , (select min ((ContainerId_From)) 
+                                      from _tmpItemSummChild
+                                           LEFT JOIN ObjectLink AS ObjectLink_Account_AccountDirection
+                                                                ON ObjectLink_Account_AccountDirection.ObjectId = _tmpItemSummChild.AccountId_From
+                                                               AND ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
+                                      where ObjectLink_Account_AccountDirection.ChildObjectId = 9028
+                                      --and _tmpItemSummChild.ContainerId_From = 5301820
+)
+                                -- , (select lfGet_Object_ValueData (9089))
+                                   , (select min ( lfGet_Object_ValueData (_tmpItemSumm_pr.AccountDirectionId_From)) from _tmpItemSumm_pr)
 */
      -- для теста - Master - Summ
      -- RETURN QUERY SELECT _tmpItemSumm_pr.AccountId_To, _tmpItemSumm_pr.MovementItemId, _tmpItemSumm_pr.MIContainerId_To, _tmpItemSumm_pr.InfoMoneyId_Detail_To, _tmpItemSumm_pr.OperSumm FROM _tmpItemSumm_pr;
