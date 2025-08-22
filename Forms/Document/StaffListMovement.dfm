@@ -1052,22 +1052,10 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId_Transport'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inManagerId'
+        Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSecurityId'
-        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1166,18 +1154,58 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inPositionId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'PositionId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartnerId'
+        Name = 'inPositionLevelId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PartnerId'
+        ComponentItem = 'PositionLevelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffPaidKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffPaidKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffHoursDayId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffHoursDayId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffHoursId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffHoursId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPStaffHoursLengthId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PStaffHoursLengthId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1187,6 +1215,131 @@ inherited StaffListMovementForm: TStaffListMovementForm
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountReport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountReport'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_3'
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_4'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_5'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_6'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_7'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_Invent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_Invent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaff_Price'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Staff_Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaff_Summ_MK'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Staff_Summ_MK'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaff_Summ_real'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Staff_Summ_real'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaff_Summ_add'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Staff_Summ_add'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
