@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member_BirthDay(
     IN inIsNext             Boolean ,
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MemberName      TVarChar
+RETURNS TABLE (Ord             TVarChar
+             , MemberName      TVarChar
              , UnitName        TVarChar
              , PositionName    TVarChar
              , Day             TVarChar
@@ -84,17 +85,35 @@ BEGIN
                    )
 
       --Результат
-     SELECT tmpMember.MemberName     ::TVarChar
-          , tmpMember.UnitName       ::TVarChar
-          , tmpMember.PositionName   ::TVarChar
-          , tmpMember.Birthday_Day   ::TVarChar
-          , tmpMember.Birthday_Month ::TVarChar
-          , tmpMember.Anniversary    ::TVarChar
-          FROM tmpMember  
-          --LIMIT 2
-          ORDER BY tmpMember.Birthday_Day
-                 , tmpMember.MemberName
-       ;
+     SELECT tmp.Ord            ::TVarChar
+          , tmp.MemberName     ::TVarChar
+          , tmp.UnitName       ::TVarChar
+          , tmp.PositionName   ::TVarChar
+          , tmp.Birthday_Day   ::TVarChar
+          , tmp.Birthday_Month ::TVarChar
+          , tmp.Anniversary    ::TVarChar
+     FROM (
+           SELECT 1           ::Integer  AS ord_calc
+                 , '№ п.п.'    ::TVarChar AS Ord
+                 , 'ПІБ'       ::TVarChar AS MemberName
+                 , 'Підрозділ' ::TVarChar AS UnitName
+                 , 'Посада'    ::TVarChar AS PositionName
+                 , 'День'      ::TVarChar AS Birthday_Day
+                 , 'Місяць'    ::TVarChar AS Birthday_Month
+                 , 'Ювіляр'    ::TVarChar AS Anniversary
+          UNION 
+           SELECT ROW_NUMBER () OVER (ORDER By tmpMember.Birthday_Day, tmpMember.MemberName) + 1  ::Integer AS ord_calc
+                , ROW_NUMBER () OVER (ORDER By tmpMember.Birthday_Day, tmpMember.MemberName) ::TVarChar AS Ord
+                , tmpMember.MemberName     ::TVarChar
+                , tmpMember.UnitName       ::TVarChar
+                , tmpMember.PositionName   ::TVarChar
+                , tmpMember.Birthday_Day   ::TVarChar
+                , tmpMember.Birthday_Month ::TVarChar
+                , tmpMember.Anniversary    ::TVarChar
+            FROM tmpMember  
+            ) AS tmp
+     ORDER BY tmp.ord_calc
+    ;
 
 
 END;
