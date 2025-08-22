@@ -75,13 +75,20 @@ BEGIN
                  WHEN vbUserId = 10105228  -- Трубін О.С.
                       THEN 8425 -- Склад ГП ф.Харьков
 
+                 WHEN vbUserId = 9957690 -- Свідзінська І.І.
+                      THEN 346093 -- Склад ГП ф.Одеса
+
                  ELSE lfSelect.UnitId
             END AS UnitId
+
           , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
                       THEN 8379 -- филиал Киев
 
                  WHEN vbUserId = 10105228  -- Трубін О.С.
                       THEN 8381 -- филиал Харьков
+
+                 WHEN vbUserId = 9957690 -- Свідзінська І.І.
+                      THEN 8374 -- филиал Одесса
 
                  WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
                       THEN zc_Branch_Basis()
@@ -97,6 +104,9 @@ BEGIN
 
                  WHEN vbUserId = 10105228  -- Трубін О.С.
                       THEN 8381 -- филиал Харьков
+
+                 WHEN vbUserId = 9957690 -- Свідзінська І.І.
+                      THEN 8374 -- филиал Одесса
 
                  WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
                       THEN zc_Branch_Basis()
@@ -228,20 +238,20 @@ BEGIN
       --      , LOWER ('http//integer-srv2-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_four
 
             , CASE WHEN vbUserId =5 AND 1=0 THEN LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')
-                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')
-                                            ELSE LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')    END :: TVarChar AS WebService
+                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')
+                                            ELSE LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')    END :: TVarChar AS WebService
 
             , CASE WHEN vbUserId =5 AND 1=0 THEN LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php') 
-                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php') 
-                                            ELSE LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')   END :: TVarChar AS WebService_two
+                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php') 
+                                            ELSE LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')   END :: TVarChar AS WebService_two
 
             , CASE WHEN vbUserId =5 AND 1=0 THEN LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')
-                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')
-                                            ELSE LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')  END :: TVarChar AS WebService_three
+                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')
+                                            ELSE LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')  END :: TVarChar AS WebService_three
 
             , CASE WHEN vbUserId =5 AND 1=0 THEN LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')
-                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')
-                                            ELSE LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php') END :: TVarChar AS WebService_four
+                   WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')
+                                            ELSE LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php') END :: TVarChar AS WebService_four
 
 /*
             , LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')    :: TVarChar AS WebService

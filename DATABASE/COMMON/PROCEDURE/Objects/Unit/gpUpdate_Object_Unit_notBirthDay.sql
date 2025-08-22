@@ -12,7 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Unit());
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Object_Unit_notBirthDay());
 
    IF inId = 0
    THEN
