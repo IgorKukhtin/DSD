@@ -29,8 +29,9 @@ $BODY$
    DECLARE vbNormPack TFloat;
    DECLARE vbisNotPack Boolean;
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_isOrder());
 
-   vbUserId:= lpGetUserBySession (inSession);
    
    -- проверка уникальности
    IF EXISTS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
