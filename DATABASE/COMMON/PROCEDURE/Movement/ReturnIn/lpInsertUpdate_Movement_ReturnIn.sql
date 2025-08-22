@@ -63,6 +63,7 @@ BEGIN
      IF vbBranchId > 0 AND inToId > 0 AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inToId AND OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId = vbBranchId)
      AND vbBranchId <> 8377   -- филиал Кр.Рог
      AND vbBranchId <> 301310 -- филиал Запорожье
+     AND inUserId <> 9957690 -- Свідзінська І.І.
      THEN
          RAISE EXCEPTION 'Ошибка.Для <%> нет прав выбрать подразделение <%>.%Можно выбрать %>'
                  , lfGet_Object_ValueData_sh (inUserId)
