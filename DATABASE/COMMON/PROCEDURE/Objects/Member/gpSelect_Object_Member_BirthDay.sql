@@ -92,8 +92,8 @@ BEGIN
           , tmpMember.Anniversary    ::TVarChar
           FROM tmpMember  
           --LIMIT 2
-          ORDER BY tmpMember.Month_ord
-                  ,tmpMember.Birthday_Day
+          ORDER BY tmpMember.Birthday_Day
+                 , tmpMember.MemberName
        ;
 
 
@@ -108,4 +108,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Member_BirthDay (inSession:= zfCalc_UserAdmin()) 
+-- SELECT * FROM gpSelect_Object_Member_BirthDay (inIsNext := true, inSession:= zfCalc_UserAdmin())  

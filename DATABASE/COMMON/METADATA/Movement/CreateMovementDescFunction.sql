@@ -620,12 +620,16 @@ CREATE OR REPLACE FUNCTION zc_Movement_HospitalDoc_1C() RETURNS Integer AS $BODY
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_HospitalDoc_1C', 'Больничные листы из 1С' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_HospitalDoc_1C');
 
- 
+CREATE OR REPLACE FUNCTION zc_Movement_StaffList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_StaffList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_StaffList', 'Штатное расписание(изменения)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_StaffList');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОР
  ИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 20.08.25         * zc_Movement_StaffList
  21.07.25         * zc_Movement_HospitalDoc_1C
  18.09.24         * zc_Movement_PromoTradeSign
  27.08.24         * zc_Movement_PromoTrade
