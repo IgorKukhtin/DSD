@@ -681,7 +681,7 @@ BEGIN
 
                   --Заказ ящики
                   , CAST (CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) > 0
-                                    THEN CAST ((tmpResult1.Amount) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) AS NUMERIC (16, 4))
+                                    THEN CAST ((tmpResult1.Amount_Order) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) AS NUMERIC (16, 4))
                                ELSE 0
                           END AS NUMERIC(16,1)) :: TFloat AS AmountBox_order
              FROM ( SELECT tmpResult.GoodsId
