@@ -343,6 +343,8 @@ BEGIN
 
   END IF; -- по этим док-там !!!нет закрытия периода!!!
 
+  --расчет и сохранение кол-ва строк документа
+  PERFORM lpUpdateMovement_TotalLines(inMovementId, inUserId);
 
   -- сохранили протокол
   IF inUserId <> 5 OR 1=1

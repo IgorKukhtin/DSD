@@ -46,6 +46,15 @@ type
     clCode: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    actInsert: TdsdInsertUpdateAction;
+    bbInsert: TdxBarButton;
+    actUpdate: TdsdInsertUpdateAction;
+    bbUpdate: TdxBarButton;
+    spErasedUnErased: TdsdStoredProc;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
   private
     { Private declarations }
   public

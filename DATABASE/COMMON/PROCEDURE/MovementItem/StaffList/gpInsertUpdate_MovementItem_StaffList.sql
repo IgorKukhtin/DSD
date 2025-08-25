@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_StaffList(
     IN inStaffPaidKindId       Integer   , -- 
     IN inStaffHoursDayId       Integer   , -- 
     IN inStaffHoursId          Integer   , -- 
-    IN inPStaffHoursLengthId   Integer   , -- 
+    IN inStaffHoursLengthId    Integer   , -- 
     IN inPersonalId            Integer   , -- 
     IN inAmount                TFloat    , --
     IN inAmountReport          TFloat    , --
@@ -44,7 +44,7 @@ BEGIN
                                                   , inStaffPaidKindId     := inStaffPaidKindId    
                                                   , inStaffHoursDayId     := inStaffHoursDayId    
                                                   , inStaffHoursId        := inStaffHoursId       
-                                                  , inPStaffHoursLengthId := inPStaffHoursLengthId
+                                                  , inStaffHoursLengthId  := inStaffHoursLengthId
                                                   , inPersonalId          := inPersonalId         
                                                   , inAmount              := inAmount             
                                                   , inAmountReport        := inAmountReport       

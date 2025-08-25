@@ -5630,12 +5630,16 @@
 				<Form>StaffPaidKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\StaffListMovement.pas">
+				<Form>StaffListMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\StaffListJournal.pas">
 				<Form>StaffListJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\StaffListMovement.pas">
-				<Form>StaffListMovementForm</Form>
+			<DCCReference Include="..\..\Forms\Kind\ClientKindEdit.pas">
+				<Form>ClientKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

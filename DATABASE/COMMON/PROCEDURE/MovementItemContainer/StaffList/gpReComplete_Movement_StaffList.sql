@@ -1,0 +1,39 @@
+-- Function: gpReComplete_Movement_StaffList(integer, boolean, tvarchar)
+
+DROP FUNCTION IF EXISTS gpReComplete_Movement_StaffList (Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpReComplete_Movement_StaffList(
+    IN inMovementId        Integer               , -- ключ Документа
+    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+)
+RETURNS VOID
+AS
+$BODY$
+  DECLARE vbUserId Integer;
+BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_StaffList());
+
+     IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_UnComplete_StaffList())
+     THEN
+         -- Распроводим Документ
+         PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                      , inUserId     := vbUserId);
+     END IF;
+
+     -- Проводим Документ
+     PERFORM lpComplete_Movement_StaffList (inMovementId     := inMovementId
+                                               , inUserId         := vbUserId);
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.08.25         *
+*/
+
+-- тест
+-- 

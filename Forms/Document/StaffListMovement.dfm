@@ -7,28 +7,27 @@ inherited StaffListMovementForm: TStaffListMovementForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 142
     Width = 1153
-    Height = 438
-    ExplicitTop = 126
+    Height = 422
+    ExplicitTop = 142
     ExplicitWidth = 1153
-    ExplicitHeight = 438
-    ClientRectBottom = 438
+    ExplicitHeight = 422
+    ClientRectBottom = 422
     ClientRectRight = 1153
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1153
-      ExplicitHeight = 414
+      ExplicitHeight = 398
       inherited cxGrid: TcxGrid
         Width = 1153
-        Height = 414
+        Height = 398
         ExplicitWidth = 1153
-        ExplicitHeight = 414
+        ExplicitHeight = 398
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.####'
@@ -61,18 +60,9 @@ inherited StaffListMovementForm: TStaffListMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = StaffCount_1
+              Column = WageFund
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -116,7 +106,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = StaffCount_1
+              Column = WageFund
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -135,75 +125,50 @@ inherited StaffListMovementForm: TStaffListMovementForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsChoiceForm
+                Action = actPositionChoice
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 222
           end
           object PositionLevelName: TcxGridDBColumn [1]
             Caption = #1056#1072#1079#1088#1103#1076
             DataBinding.FieldName = 'PositionLevelName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object StaffPaidKindName: TcxGridDBColumn [2]
-            Caption = #1042#1080#1076' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'StaffPaidKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actPartnerChoice
+                Action = actPositionLevelChoice
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 127
+            Width = 90
           end
-          object StaffHoursDayName: TcxGridDBColumn [3]
+          object StaffHoursDayName: TcxGridDBColumn [2]
             Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099
             DataBinding.FieldName = 'StaffHoursDayName'
-            Visible = False
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actStaffHoursDayChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 113
+            Width = 79
           end
-          object StaffHoursName: TcxGridDBColumn [4]
-            Caption = #1063#1072#1089#1099' '#1088#1072#1073#1086#1090#1099
-            DataBinding.FieldName = 'StaffHoursName'
+          object AmountReport: TcxGridDBColumn [3]
+            Caption = #1064#1056' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+            DataBinding.FieldName = 'AmountReport'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 83
           end
-          object StaffHoursLengthName: TcxGridDBColumn [5]
-            Caption = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100' '#1089#1084#1077#1085#1099', '#1095#1072#1089#1099' '#9
-            DataBinding.FieldName = 'StaffHoursLengthName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 135
-          end
-          object PersonalName: TcxGridDBColumn [6]
-            Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1087#1086' '#1087#1077#1088#1089#1086#1085#1072#1083#1091
-            DataBinding.FieldName = 'PersonalName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 112
-          end
-          object Amount: TcxGridDBColumn [7]
+          object Amount: TcxGridDBColumn [4]
             Caption = #1064#1056' '#1076#1083#1103' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -214,111 +179,194 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100
             Width = 70
           end
-          object AmountReport: TcxGridDBColumn [8]
-            Caption = #1064#1056' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
-            DataBinding.FieldName = 'AmountReport'
+          object StaffHoursName: TcxGridDBColumn [5]
+            Caption = #1063#1072#1089#1099' '#1088#1072#1073#1086#1090#1099
+            DataBinding.FieldName = 'StaffHoursName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actStaffHoursChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 83
           end
-          object StaffCount_1: TcxGridDBColumn [9]
+          object StaffHoursLengthName: TcxGridDBColumn [6]
+            Caption = #1055#1088#1086#1076'. '#1089#1084#1077#1085#1099', '#1095#1072#1089#1099' '#9
+            DataBinding.FieldName = 'StaffHoursLengthName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actStaffHoursLengthChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100' '#1089#1084#1077#1085#1099', '#1095#1072#1089#1099' '#9
+            Width = 59
+          end
+          object StaffCount_1: TcxGridDBColumn [7]
             Caption = '1.'#1087#1085'.'
             DataBinding.FieldName = 'StaffCount_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1087#1085'.'
-            Width = 70
+            Width = 38
           end
-          object StaffCount_2: TcxGridDBColumn [10]
+          object StaffCount_2: TcxGridDBColumn [8]
             Caption = '2.'#1087#1085'.'
             DataBinding.FieldName = 'StaffCount_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1074#1090'.'
-            Width = 70
+            Width = 38
           end
-          object StaffCount_3: TcxGridDBColumn [11]
+          object StaffCount_3: TcxGridDBColumn [9]
             Caption = '3.'#1087#1085'.'
             DataBinding.FieldName = 'StaffCount_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1089#1088'.'
-            Width = 70
+            Width = 38
           end
-          object StaffCount_4: TcxGridDBColumn [12]
+          object StaffCount_4: TcxGridDBColumn [10]
             Caption = '4.'#1087#1085'.'
             DataBinding.FieldName = 'StaffCount_4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1095#1090'.'
-            Width = 70
+            Width = 38
           end
-          object StaffCount_5: TcxGridDBColumn [13]
+          object StaffCount_5: TcxGridDBColumn [11]
             Caption = '5.'#1087#1085'.'
-            DataBinding.FieldName = 'StaffCount_57'
+            DataBinding.FieldName = 'StaffCount_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1087#1090'.'
-            Width = 70
+            Width = 38
           end
-          object StaffCount_6: TcxGridDBColumn [14]
+          object StaffCount_6: TcxGridDBColumn [12]
             Caption = '6.'#1087#1085'.'
-            DataBinding.FieldName = 'StaffCount_67'
+            DataBinding.FieldName = 'StaffCount_6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1089#1073'.'
-            Width = 70
+            Width = 38
           end
-          object StaffCount_7: TcxGridDBColumn [15]
+          object StaffCount_7: TcxGridDBColumn [13]
             Caption = '7.'#1087#1085'.'
             DataBinding.FieldName = 'StaffCount_7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1074#1089'.'
-            Width = 70
+            Width = 38
           end
-          object StaffCount_Invent: TcxGridDBColumn [16]
-            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+          object StaffCount_Invent: TcxGridDBColumn [14]
+            Caption = #1048#1085#1074#1077#1085#1090'.'
             DataBinding.FieldName = 'StaffCount_Invent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1048#1085#1072#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+            Width = 54
+          end
+          object TotalStaffCount: TcxGridDBColumn [15]
+            Caption = #1042#1089#1100#1086#1075#1086' '#1079#1084#1110#1085' '#1079#1072' '#1084#1110#1089#1103#1094#1100' '#1076#1083#1103' '#1087#1086#1089#1072#1076#1080
+            DataBinding.FieldName = 'TotalStaffCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1089#1100#1086#1075#1086' '#1079#1084#1110#1085' '#1079#1072' '#1084#1110#1089#1103#1094#1100' '#1076#1083#1103' '#1087#1086#1089#1072#1076#1080
+            Options.Editing = False
             Width = 70
           end
-          object Staff_Price: TcxGridDBColumn [17]
+          object TotalStaffHoursLength: TcxGridDBColumn [16]
+            Caption = #1060#1056#1063' ('#1092#1086#1085#1076' '#1088#1086#1073#1086#1095#1086#1075#1086' '#1095#1072#1089#1091')'
+            DataBinding.FieldName = 'TotalStaffHoursLength'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1056#1063' ('#1092#1086#1085#1076' '#1088#1086#1073#1086#1095#1086#1075#1086' '#1095#1072#1089#1091') '#1076#1083#1103' '#1087#1086#1089#1072#1076#1080' '
+            Options.Editing = False
+            Width = 70
+          end
+          object NormCount: TcxGridDBColumn [17]
+            Caption = #1053#1086#1088#1084#1072' '#1079#1084#1110#1085' '#1076#1083#1103' 1-'#1108#1111' '#1096#1090'.'#1086#1076
+            DataBinding.FieldName = 'NormCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1088#1084#1072' '#1079#1084#1110#1085' '#1076#1083#1103' 1-'#1108#1111' '#1096#1090'.'#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object NormHours: TcxGridDBColumn [18]
+            Caption = #1053#1086#1088#1084#1072' '#1095#1072#1089#1091' '#1076#1083#1103' 1-'#1108#1111' '#1096#1090'.'#1086#1076
+            DataBinding.FieldName = 'NormHours'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1088#1084#1072' '#1095#1072#1089#1091' '#1076#1083#1103' 1-'#1108#1111' '#1096#1090'.'#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object StaffPaidKindName: TcxGridDBColumn [19]
+            Caption = #1042#1080#1076' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'StaffPaidKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actStaffPaidKindChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object Staff_Price: TcxGridDBColumn [20]
             Caption = #1058#1072#1088#1080#1092#1080#1082#1072#1094#1080#1103
             DataBinding.FieldName = 'Staff_Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 64
           end
-          object Staff_Summ_MK: TcxGridDBColumn [18]
+          object Staff_Summ_MK: TcxGridDBColumn [21]
             Caption = #1052#1050
             DataBinding.FieldName = 'Staff_Summ_MK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 65
           end
-          object Staff_Summ_real: TcxGridDBColumn [19]
+          object Staff_Summ_real: TcxGridDBColumn [22]
             Caption = #1057#1076#1077#1083#1100#1085#1072#1103' '#1086#1087#1083#1072#1090#1072
             DataBinding.FieldName = 'Staff_Summ_real'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -327,7 +375,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Staff_Summ_add: TcxGridDBColumn [20]
+          object Staff_Summ_add: TcxGridDBColumn [23]
             Caption = #1055#1088#1077#1084#1080#1072#1083#1100#1085#1080#1081' '#1092#1086#1085#1076
             DataBinding.FieldName = 'Staff_Summ_add'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -336,16 +384,53 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Comment: TcxGridDBColumn [21]
+          object WageFund: TcxGridDBColumn [24]
+            Caption = #1060#1054#1055' '#1079#1072' '#1084#1110#1089#1103#1094#1100
+            DataBinding.FieldName = 'WageFund'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1054#1055' '#1079#1072' '#1084#1110#1089#1103#1094#1100
+            Options.Editing = False
+            Width = 70
+          end
+          object WageFund_byOne: TcxGridDBColumn [25]
+            Caption = #1047#1055' '#1076#1083#1103' 1-'#1108#1111' '#1096#1090'.'#1086#1076' '#1076#1086' '#1086#1087#1086#1076#1072#1090#1082#1091#1072#1085#1085#1103
+            DataBinding.FieldName = 'WageFund_byOne'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1055' '#1076#1083#1103' 1-'#1108#1111' '#1096#1090'.'#1086#1076' '#1076#1086' '#1086#1087#1086#1076#1072#1090#1082#1091#1072#1085#1085#1103
+            Options.Editing = False
+            Width = 77
+          end
+          object PersonalName: TcxGridDBColumn [26]
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1087#1086' '#1087#1077#1088#1089#1086#1085#1072#1083#1091
+            DataBinding.FieldName = 'PersonalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPersonalChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          inherited colIsErased: TcxGridDBColumn
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
           end
         end
       end
@@ -353,10 +438,10 @@ inherited StaffListMovementForm: TStaffListMovementForm
   end
   inherited DataPanel: TPanel
     Width = 1153
-    Height = 100
+    Height = 116
     TabOrder = 3
     ExplicitWidth = 1153
-    ExplicitHeight = 100
+    ExplicitHeight = 116
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -485,6 +570,82 @@ inherited StaffListMovementForm: TStaffListMovementForm
       TabOrder = 17
       Width = 243
     end
+    object edCount_1: TcxCurrencyEdit
+      Left = 28
+      Top = 91
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 3
+      Properties.DisplayFormat = ',0.###'
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 28
+    end
+    object cxLabel6: TcxLabel
+      Left = 8
+      Top = 92
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+      Caption = #1055#1053
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cxLabel11: TcxLabel
+      Left = 116
+      Top = 92
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+      Caption = #1057#1056
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edCount_3: TcxCurrencyEdit
+      Left = 136
+      Top = 91
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 3
+      Properties.DisplayFormat = ',0.###'
+      Properties.ReadOnly = True
+      TabOrder = 21
+      Width = 28
+    end
+    object cxLabel12: TcxLabel
+      Left = 170
+      Top = 92
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+      Caption = #1063#1058
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edCount_4: TcxCurrencyEdit
+      Left = 190
+      Top = 91
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 3
+      Properties.DisplayFormat = ',0.###'
+      Properties.ReadOnly = True
+      TabOrder = 23
+      Width = 28
+    end
+    object cxLabel17: TcxLabel
+      Left = 332
+      Top = 92
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+      Caption = #1042#1057
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edCount_7: TcxCurrencyEdit
+      Left = 355
+      Top = 91
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 3
+      Properties.DisplayFormat = ',0.###'
+      Properties.ReadOnly = True
+      TabOrder = 25
+      Width = 28
+    end
   end
   object edUpdateName: TcxButtonEdit [2]
     Left = 830
@@ -520,6 +681,63 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Top = 5
     Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'./'#1087#1088#1086#1074#1077#1076'.)'
   end
+  object edCount_2: TcxCurrencyEdit [6]
+    Left = 82
+    Top = 91
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 28
+  end
+  object cxLabel9: TcxLabel [7]
+    Left = 62
+    Top = 92
+    Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+    Caption = #1042#1058
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object cxLabel13: TcxLabel [8]
+    Left = 224
+    Top = 92
+    Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+    Caption = #1055#1058
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edCount_5: TcxCurrencyEdit [9]
+    Left = 244
+    Top = 91
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 28
+  end
+  object cxLabel16: TcxLabel [10]
+    Left = 278
+    Top = 92
+    Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+    Caption = #1057#1041
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edCount_6: TcxCurrencyEdit [11]
+    Left = 298
+    Top = 91
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 28
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
     Top = 448
@@ -539,7 +757,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
-      Action = actGoodsChoiceForm
+      Action = actPositionChoice
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 0
@@ -595,13 +813,13 @@ inherited StaffListMovementForm: TStaffListMovementForm
         item
         end>
     end
-    object actPartnerChoice: TOpenChoiceForm [14]
+    object actPositionLevelChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'GoodsKindForm'
-      FormName = 'TPartner_ObjectForm'
-      FormNameParam.Value = 'TPartner_ObjectForm'
+      Caption = 'PositionLevelorm'
+      FormName = 'TPositionLevelForm'
+      FormNameParam.Value = 'TPositionLevelForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -609,39 +827,26 @@ inherited StaffListMovementForm: TStaffListMovementForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartnerId'
+          ComponentItem = 'PositionLevelId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartnerName'
+          ComponentItem = 'PositionLevelName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
-    object actRefreshPrice: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actGoodsChoiceForm: TOpenChoiceForm
+    object actStaffPaidKindChoiceForm: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'GoodsForm'
-      FormName = 'TGoods_ObjectForm'
-      FormNameParam.Value = 'TGoods_ObjectForm'
+      Caption = 'StaffPaidKindForm'
+      FormName = 'TStaffPaidKindForm'
+      FormNameParam.Value = 'TStaffPaidKindForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -649,22 +854,150 @@ inherited StaffListMovementForm: TStaffListMovementForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsId'
+          ComponentItem = 'StaffPaidKindId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsName'
+          ComponentItem = 'StaffPaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actStaffHoursDayChoiceForm: TOpenChoiceForm [16]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StaffHoursDayForm'
+      FormName = 'TStaffHoursDayForm'
+      FormNameParam.Value = 'TStaffHoursDayForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StaffHoursDayId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsCode'
+          Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Code'
+          ComponentItem = 'StaffHoursDayName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actStaffHoursChoiceForm: TOpenChoiceForm [17]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StaffHoursForm'
+      FormName = 'TStaffHoursForm'
+      FormNameParam.Value = 'TStaffHoursForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StaffHoursId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StaffHoursName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actStaffHoursLengthChoiceForm: TOpenChoiceForm [18]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StaffHoursLengthForm'
+      FormName = 'TStaffHoursLengthForm'
+      FormNameParam.Value = 'TStaffHoursLengthForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StaffHoursLengthId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StaffHoursLengthName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actPersonalChoiceForm: TOpenChoiceForm [19]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PersonalForm'
+      FormName = 'TPersonalForm'
+      FormNameParam.Value = 'TPersonalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actPositionChoice: TOpenChoiceForm [20]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PositionForm'
+      FormName = 'TPositionForm'
+      FormNameParam.Value = 'TPositionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -896,9 +1229,9 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_OrderReturnTare'
-    Left = 80
-    Top = 64
+    StoredProcName = 'gpUpdate_Status_StaffList'
+    Left = 128
+    Top = 16
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_StaffList'
@@ -952,15 +1285,11 @@ inherited StaffListMovementForm: TStaffListMovementForm
       item
         Name = 'UnitId'
         Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1020,6 +1349,55 @@ inherited StaffListMovementForm: TStaffListMovementForm
         Component = edDepartment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Count_1'
+        Value = Null
+        Component = edCount_1
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Count_2'
+        Value = Null
+        Component = edCount_2
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Count_3'
+        Value = Null
+        Component = edCount_3
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Count_4'
+        Value = Null
+        Component = edCount_4
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Count_5'
+        Value = Null
+        Component = edCount_5
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Count_6'
+        Value = Null
+        Component = edCount_6
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Count_7'
+        Value = Null
+        Component = edCount_7
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1052,22 +1430,10 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId_Transport'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inManagerId'
+        Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSecurityId'
-        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1088,8 +1454,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
       end
       item
       end>
-    Left = 160
-    Top = 192
+    Left = 128
+    Top = 240
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -1103,10 +1469,13 @@ inherited StaffListMovementForm: TStaffListMovementForm
         Control = ceComment
       end
       item
+        Control = edUnit
       end
       item
+        Control = cePersonalHead
       end
       item
+        Control = edDepartment
       end
       item
       end
@@ -1166,18 +1535,58 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inPositionId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'PositionId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartnerId'
+        Name = 'inPositionLevelId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PartnerId'
+        ComponentItem = 'PositionLevelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffPaidKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffPaidKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffHoursDayId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffHoursDayId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffHoursId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffHoursId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffHoursLengthId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffHoursLengthId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1187,6 +1596,132 @@ inherited StaffListMovementForm: TStaffListMovementForm
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountReport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountReport'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_4'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_5'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_6'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_7'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaffCount_Invent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StaffCount_Invent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaff_Price'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Staff_Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaff_Summ_MK'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Staff_Summ_MK'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaff_Summ_real'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Staff_Summ_real'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaff_Summ_add'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Staff_Summ_add'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1236,13 +1771,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 420
-    Top = 188
+    Left = 332
+    Top = 260
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefreshPrice
     ComponentList = <
       item
       end>
@@ -1252,8 +1786,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 508
-    Top = 193
+    Left = 436
+    Top = 265
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -1298,36 +1832,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
       end
       item
       end>
-    Left = 640
-    Top = 184
-  end
-  object GuidesUnit: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 432
+    Left = 624
+    Top = 264
   end
   object GuidesPersonalHead: TdsdGuides
     KeyField = 'Id'
@@ -1359,5 +1865,60 @@ inherited StaffListMovementForm: TStaffListMovementForm
       end>
     Left = 655
     Top = 7
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DepartmentName'
+        Value = Null
+        Component = edDepartment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalHeadId'
+        Value = Null
+        Component = GuidesPersonalHead
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalHeadName'
+        Value = Null
+        Component = GuidesPersonalHead
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 424
+    Top = 24
   end
 end

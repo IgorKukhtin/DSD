@@ -20,7 +20,7 @@ BEGIN
      SELECT 
             '' ::TVarChar AS outFileNamePrefix
 
-          , ('Список_Именинников_'
+          , ('Список_іменинників_'
            ||(zfConvert_DateToString (CURRENT_TIMESTAMP)
            || ' ' || CASE WHEN EXTRACT (HOUR   FROM CURRENT_TIMESTAMP) < 10 THEN '0' ELSE '' END || EXTRACT (HOUR   FROM CURRENT_TIMESTAMP) :: TVarChar
            || '_' || CASE WHEN EXTRACT (MINUTE FROM CURRENT_TIMESTAMP) < 10 THEN '0' ELSE '' END || EXTRACT (MINUTE FROM CURRENT_TIMESTAMP) :: TVarChar

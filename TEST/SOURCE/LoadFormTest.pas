@@ -3829,17 +3829,17 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_PersonalForm');
    // exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
-   /// exit;
+   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
   }
@@ -5025,6 +5025,10 @@ procedure TLoadFormTest.LoadClientKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TClientKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClientKindEditForm');
+
 end;
 
 procedure TLoadFormTest.LoadRateFuelKindFormTest;

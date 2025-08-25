@@ -1601,8 +1601,9 @@ uses
   StaffHoursDay in '..\..\Forms\Guides\StaffHoursDay.pas' {StaffHoursDayForm: TParentForm},
   StaffHoursLength in '..\..\Forms\Guides\StaffHoursLength.pas' {StaffHoursLengthForm: TParentForm},
   StaffPaidKindEdit in '..\..\Forms\Guides\StaffPaidKindEdit.pas' {StaffPaidKindEditForm: TParentForm},
+  StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm},
   StaffListJournal in '..\..\Forms\Document\StaffListJournal.pas' {StaffListJournalForm: TParentForm},
-  StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm};
+  ClientKindEdit in '..\..\Forms\Kind\ClientKindEdit.pas' {ClientKindEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
