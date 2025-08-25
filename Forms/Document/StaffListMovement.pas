@@ -33,15 +33,13 @@ type
     PositionName: TcxGridDBColumn;
     StaffPaidKindName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    actPartnerChoice: TOpenChoiceForm;
+    actPositionChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
-    actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    actGoodsChoiceForm: TOpenChoiceForm;
     StaffHoursName: TcxGridDBColumn;
     cxLabel22: TcxLabel;
     ceComment: TcxTextEdit;
@@ -62,7 +60,6 @@ type
     bbInsertRecord: TdxBarButton;
     HeaderExit: THeaderExit;
     bb: TdxBarButton;
-    GuidesUnit: TdsdGuides;
     cxLabel24: TcxLabel;
     edDepartment: TcxButtonEdit;
     cxLabel14: TcxLabel;
@@ -73,6 +70,33 @@ type
     Comment: TcxGridDBColumn;
     AmountReport: TcxGridDBColumn;
     StaffCount_1: TcxGridDBColumn;
+    edCount_1: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    edCount_2: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    cxLabel11: TcxLabel;
+    edCount_3: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    edCount_4: TcxCurrencyEdit;
+    cxLabel13: TcxLabel;
+    edCount_5: TcxCurrencyEdit;
+    cxLabel16: TcxLabel;
+    edCount_6: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edCount_7: TcxCurrencyEdit;
+    TotalStaffCount: TcxGridDBColumn;
+    TotalStaffHoursLength: TcxGridDBColumn;
+    NormCount: TcxGridDBColumn;
+    NormHours: TcxGridDBColumn;
+    WageFund: TcxGridDBColumn;
+    WageFund_byOne: TcxGridDBColumn;
+    actPositionLevelChoice: TOpenChoiceForm;
+    actStaffPaidKindChoiceForm: TOpenChoiceForm;
+    actStaffHoursDayChoiceForm: TOpenChoiceForm;
+    actStaffHoursChoiceForm: TOpenChoiceForm;
+    actStaffHoursLengthChoiceForm: TOpenChoiceForm;
+    actPersonalChoiceForm: TOpenChoiceForm;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public

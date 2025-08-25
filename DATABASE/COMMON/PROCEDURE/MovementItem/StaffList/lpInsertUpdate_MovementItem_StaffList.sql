@@ -1,15 +1,20 @@
 -- Function: lpInsertUpdate_MovementItem_StaffList()
-
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, Integer);
+  
+  функция lpinsertupdate_movementitem_stafflist(ioid := integer, inmovementid := integer, inpositionid := integer, inpositionlevelid := integer, instaffpaidkindid := integer, instaffhoursdayid := integer, instaffhoursid := integer, inpstaffhourslengthid := integer, inpersonalid := integer
+  , inamount := tfloat, inamountreport := tfloat, instaffcount_1 := tfloat, instaffcount_2 := tfloat, instaffcount_3 := tfloat, instaffcount_4 := tfloat, instaffcount_5 := tfloat, instaffcount_6 := tfloat, instaffcount_7 := tfloat, instaffcount_invent := tfloat, instaff_price := tfloat
+  , instaff_summ_mk := tfloat, instaff_summ_real := tfloat, instaff_summ_add := tfloat, incomment := tvarchar, inuserid := integer) не существует
+  
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_StaffList(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId            Integer   , --
     IN inPositionId            Integer   , --
     IN inPositionLevelId       Integer   , -- 
     IN inStaffPaidKindId       Integer   , -- 
     IN inStaffHoursDayId       Integer   , -- 
     IN inStaffHoursId          Integer   , -- 
-    IN inPStaffHoursLengthId   Integer   , -- 
+    IN inStaffHoursLengthId    Integer   , -- 
     IN inPersonalId            Integer   , -- 
     IN inAmount                TFloat    , --
     IN inAmountReport          TFloat    , --

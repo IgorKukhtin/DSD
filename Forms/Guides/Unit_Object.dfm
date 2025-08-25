@@ -296,6 +296,36 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           ComponentItem = 'RouteSortingName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DepartmentId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DepartmentId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DepartmentName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DepartmentName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalHeadId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalHeadId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalHeadName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalHeadName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
     object actProtocol: TdsdOpenForm
