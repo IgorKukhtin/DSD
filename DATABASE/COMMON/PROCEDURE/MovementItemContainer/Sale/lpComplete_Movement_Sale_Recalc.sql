@@ -35,7 +35,8 @@ BEGIN
 
      -- Временно захардкодил - !!!только для этого склада!!!
      IF inUnitId = zc_Unit_RK() -- Склад Реализации
-         OR inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
+         -- Филиалы
+         -- OR inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
          OR (inUnitId IN (8444 -- Склад ОХЛАЖДЕНКА
                         , 8445 -- Склад МИНУСОВКА
                         , 133049 -- Склад реализации мясо
@@ -43,6 +44,14 @@ BEGIN
              AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Sale())
             )
          OR (inUnitId = 8458 -- Склад База ГП
+             AND EXISTS (SELECT 1
+                         FROM MovementLinkObject AS MLO
+                         WHERE MLO.MovementId = inMovementId
+                           AND MLO.DescId     = zc_MovementLinkObject_To()
+                           AND MLO.ObjectId   = zc_Unit_RK()
+                        )
+            )
+         OR (inUnitId = 2790412 -- ЦЕХ Тушенка
              AND EXISTS (SELECT 1
                          FROM MovementLinkObject AS MLO
                          WHERE MLO.MovementId = inMovementId
@@ -86,7 +95,8 @@ BEGIN
 
      -- Временно захардкодил - !!!только для этого склада!!!
      ELSEIF inUnitId = 8459 -- Склад Реализации
-         OR inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
+         -- Филиалы
+         -- OR inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
          OR (inUnitId IN (8444 -- Склад ОХЛАЖДЕНКА
                         , 8445 -- Склад МИНУСОВКА
                         , 133049 -- Склад реализации мясо
@@ -95,6 +105,14 @@ BEGIN
              AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Sale())
             )
          OR (inUnitId = 8458 -- Склад База ГП
+             AND EXISTS (SELECT 1
+                         FROM MovementLinkObject AS MLO
+                         WHERE MLO.MovementId = inMovementId
+                           AND MLO.DescId     = zc_MovementLinkObject_To()
+                           AND MLO.ObjectId   = zc_Unit_RK()
+                        )
+            )
+         OR (inUnitId = 2790412 -- ЦЕХ Тушенка
              AND EXISTS (SELECT 1
                          FROM MovementLinkObject AS MLO
                          WHERE MLO.MovementId = inMovementId
@@ -129,6 +147,9 @@ BEGIN
                                 --AND inUnitId = 8459
                                 --AND vbOperDate < '01.02.2023'
 
+                                -- !!!без ЦЕХ Тушенка
+                                AND inUnitId <> 2790412
+
                                 GROUP BY MIContainer.ObjectId_Analyzer
                                        , MIContainer.ObjectIntId_Analyzer
                                )
@@ -140,10 +161,11 @@ BEGIN
                                                               AND RemainsOLAPTable.GoodsKindId = _tmpItem.GoodsKindId
                                                               AND RemainsOLAPTable.UnitId      = inUnitId
                                                               AND RemainsOLAPTable.OperDate    = DATE_TRUNC ('MONTH', vbOperDate)
-
                               --!!!Розподільчий комплекс!!!
                               --WHERE inUnitId = 8459
                               WHERE vbOperDate >= '01.01.2023'
+                                -- !!!без ЦЕХ Тушенка
+                                AND inUnitId <> 2790412
                              )
        , tmpGoods AS (SELECT DISTINCT _tmpItem.GoodsId FROM _tmpItem)
        , tmpContainer_all_1 AS (SELECT _tmpItem.GoodsId
@@ -165,6 +187,8 @@ BEGIN
                                 -- без Товар в пути
                                 WHERE CLO_Account.ObjectId IS NULL
                                   AND vbOperDate >= '01.01.2023'
+                                -- !!!без ЦЕХ Тушенка
+                                AND inUnitId <> 2790412
                                 --!!!Розподільчий комплекс!!!
                                 --AND inUnitId = 8459
                                )
@@ -335,6 +359,8 @@ END IF;
           -- безе пересортицы в lpComplete_Movement_Send_Recalc_sub
           AND ObjectLink_GoodsByGoodsKind_GoodsSubSend.ChildObjectId     IS NULL
           AND ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ChildObjectId IS NULL
+          -- !!!без ЦЕХ Тушенка
+          AND inUnitId <> 2790412
 
         GROUP BY _tmpItem.GoodsId
                , _tmpItem.GoodsKindId
@@ -344,6 +370,31 @@ END IF;
                , ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId
                , COALESCE (_tmpRemains.Amount, 0)
       --HAVING SUM (_tmpItem.OperCount) - COALESCE (_tmpRemains.Amount, 0) > 0
+
+       UNION ALL
+        SELECT 0                      AS MovementItemId_to
+             , 0                      AS MovementItemId_from
+             , _tmpItem.GoodsId       AS GoodsId_to
+             , _tmpItem.GoodsKindId   AS GoodsKindId_to
+             , _tmpItem.GoodsId       AS GoodsId_from
+               -- ПР вес
+             , _tmpItem.GoodsKindId   AS GoodsKindId_from
+               --
+             , 0                      AS ReceipId_to
+             , 0                      AS ReceipId_gp_to
+             , _tmpItem.OperCount     AS Amount_to
+               -- для сохранения этого параметра
+             , 0                      AS Amount_Remains
+
+        FROM (SELECT _tmpItem.GoodsId, _tmpItem.GoodsKindId, SUM (_tmpItem.OperCount) AS OperCount
+              FROM _tmpItem
+              -- ПР вес
+              WHERE _tmpItem.GoodsKindId = 11936026
+                -- !!!ЦЕХ Тушенка
+                AND inUnitId = 2790412
+              GROUP BY _tmpItem.GoodsId, _tmpItem.GoodsKindId
+             ) AS _tmpItem
+
                 ;
 
      -- !!! для филиалов - только одна схема, только для zc_ObjectLink_GoodsByGoodsKind_ReceiptGP !!!
