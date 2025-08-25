@@ -3,7 +3,7 @@ object ClientKindForm: TClientKindForm
   Top = 0
   Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
   ClientHeight = 265
-  ClientWidth = 465
+  ClientWidth = 490
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,10 +20,11 @@ object ClientKindForm: TClientKindForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 465
+    Width = 490
     Height = 239
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 465
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -123,6 +124,31 @@ object ClientKindForm: TClientKindForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -164,6 +190,22 @@ object ClientKindForm: TClientKindForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbInsert: TdxBarButton
+      Action = actInsert
+      Category = 0
+    end
+    object bbUpdate: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
+    object bbSetErased: TdxBarButton
+      Action = actSetErased
+      Category = 0
+    end
+    object bbSetUnErased: TdxBarButton
+      Action = actSetUnErased
       Category = 0
     end
   end
@@ -236,6 +278,84 @@ object ClientKindForm: TClientKindForm
         end>
       isShowModal = False
     end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TClientKindEditForm'
+      FormNameParam.Value = 'TClientKindEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TClientKindEditForm'
+      FormNameParam.Value = 'TClientKindEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
+    object actSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ClientKind'
@@ -277,5 +397,22 @@ object ClientKindForm: TClientKindForm
     PropertiesCellList = <>
     Left = 120
     Top = 200
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 128
   end
 end

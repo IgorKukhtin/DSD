@@ -5025,6 +5025,10 @@ procedure TLoadFormTest.LoadClientKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TClientKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClientKindEditForm');
+
 end;
 
 procedure TLoadFormTest.LoadRateFuelKindFormTest;
