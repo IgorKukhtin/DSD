@@ -35,7 +35,12 @@ $BODY$
    DECLARE vbBankId_const_2  Integer;
 
    DECLARE vbKoeff_ro TFloat;
+
+   DECLARE vbOperDate_Begin1 TDateTime;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpGetUserBySession (inSession);
 
@@ -89,12 +94,12 @@ END IF;
                                                               AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                                                               AND MLO_PersonalServiceList.ObjectId   = vbPersonalServiceListId_avance
                                  INNER JOIN MovementDate AS MovementDate_ServiceDate
-                                                               ON MovementDate_ServiceDate.MovementId = Movement.Id
-                                                              AND MovementDate_ServiceDate.DescId     = zc_MIDate_ServiceDate()
-                                                              AND MovementDate_ServiceDate.ValueData  = (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MIDate_ServiceDate())
+                                                         ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                                        AND MovementDate_ServiceDate.DescId     = zc_MovementDate_ServiceDate()
+                                                        AND MovementDate_ServiceDate.ValueData  = (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_ServiceDate())
                             WHERE Movement.DescId   = zc_Movement_PersonalService()
                               AND (Movement.StatusId = zc_Enum_Status_Complete()
-                                OR vbUserId = 5
+                                --OR vbUserId = 5
                                   )
                             LIMIT 1
                            );
@@ -289,7 +294,7 @@ END IF;
 
 
      -- определяем <Месяц начислений>
-     vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate());
+     vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_ServiceDate());
      vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
 
      -- определяем Период - 1 месяц
@@ -303,7 +308,7 @@ END IF;
                                            DATE_TRUNC ('MONTH', MovementDate.ValueData) AS ServiceDate
                                     FROM Movement
                                          INNER JOIN MovementDate ON MovementDate.MovementId = Movement.Id
-                                                                AND MovementDate.DescId     = zc_MIDate_ServiceDate()
+                                                                AND MovementDate.DescId     = zc_MovementDate_ServiceDate()
                                     WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                                       AND Movement.DescId   = zc_Movement_PersonalService()
@@ -867,6 +872,11 @@ END IF;
        , tmpSummCard_avance AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
                                      , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)) AS SummCard
                                 FROM Movement
+                                     INNER JOIN MovementDate AS MovementDate_ServiceDate
+                                                             ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                                            AND MovementDate_ServiceDate.DescId     = zc_MovementDate_ServiceDate()
+                                                            AND MovementDate_ServiceDate.ValueData  = vbServiceDate
+
                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                             AND MovementItem.DescId     = zc_MI_Master()
                                                             AND MovementItem.isErased   = FALSE
@@ -957,6 +967,13 @@ END IF;
                                         - COALESCE (tmpSummCard_avance.SummCard, 0)
                             AS Sum_max_3
 
+                            -- есть ограничение max - для 1
+                          , CASE WHEN vbSummMax_1 > 0 THEN TRUE ELSE FALSE END AS isSum_max_1
+                            -- есть ограничение max - для 2
+                          , CASE WHEN vbSummMax_2 > 0 THEN TRUE ELSE FALSE END AS isSum_max_2
+                            -- есть ограничение max - для 3
+                          , CASE WHEN vbSummMax_3 > 0 THEN TRUE ELSE FALSE END AS isSum_max_3
+
                      FROM tmpListPersonal
                           LEFT JOIN tmpSummCard_otp    ON tmpSummCard_otp.MemberId    = tmpListPersonal.MemberId
                           LEFT JOIN tmpSummCard_avance ON tmpSummCard_avance.MemberId = tmpListPersonal.MemberId
@@ -1028,6 +1045,13 @@ END IF;
                           , vbSummMax_2 AS Sum_max_2
                             -- ограничение - для 3
                           , vbSummMax_3 AS Sum_max_3
+
+                            -- есть ограничение max - для 1
+                          , CASE WHEN vbSummMax_1 > 0 THEN TRUE ELSE FALSE END AS isSum_max_1
+                            -- есть ограничение max - для 2
+                          , CASE WHEN vbSummMax_2 > 0 THEN TRUE ELSE FALSE END AS isSum_max_2
+                            -- есть ограничение max - для 3
+                          , CASE WHEN vbSummMax_3 > 0 THEN TRUE ELSE FALSE END AS isSum_max_3
 
                      FROM MovementItem
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
@@ -1112,7 +1136,7 @@ END IF;
                                       THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
 
                                  -- есть только Мин
-                                 WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                 WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 AND tmpData.isSum_max_3 = FALSE
                                       THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
                                  ELSE 0
                             END AS SummCard_3
@@ -1125,7 +1149,7 @@ END IF;
                           , SUM (CASE WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
                                       THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
 
-                                      WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                      WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 AND tmpData.isSum_max_3 = FALSE
                                       THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
                                       ELSE 0
                                  END) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_3_sum
@@ -1143,7 +1167,7 @@ END IF;
                                  THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 > tmpData.Sum_max_2 THEN tmpData.Sum_max_2 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 END
 
                                  -- есть только Мин
-                                 WHEN tmpData.BankId_2 > 0 AND tmpData.Sum_min_2 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1
+                                 WHEN tmpData.BankId_2 > 0 AND tmpData.Sum_min_2 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1 AND tmpData.isSum_max_2 = FALSE
                                  THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1
                                  ELSE 0
                             END AS SummCard_2
@@ -1170,7 +1194,7 @@ END IF;
                                       END
 
                                  -- есть только Мин
-                                 WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData_check.SummCardSecondRecalc_check, 1)
+                                 WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData_check.SummCardSecondRecalc_check, 1) AND tmpData.isSum_max_1 = FALSE
                                  THEN ROUND (tmpData.SummCardSecondRecalc, 1)
                                  ELSE 0
                             END AS SummCard_1
@@ -1581,6 +1605,51 @@ from _tmpMI where _tmpMI.MemberId = 239655)
 
 -- !!!тест
 -- PERFORM gpComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
+
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+        SELECT vbUserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , (SELECT COUNT (*) FROM tmp_pg)                                                    AS Value1
+             , (SELECT COUNT (*) FROM tmp_pg WHERE position( 'autovacuum: VACUUM' in query) = 1) AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - vbOperDate_Begin1) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , NULL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpUpdate_MI_PersonalService_CardSecond_num'
+               -- ProtocolData
+             , inMovementId :: TVarChar
+    || ', ' || CASE WHEN inIsLimit_4000 = TRUE THEN 'TRUE' ELSE 'FALSE' END
+    || ', ' || inSession
+              ;
+
+
 
 IF vbUserId = 5 and 1=0
 THEN

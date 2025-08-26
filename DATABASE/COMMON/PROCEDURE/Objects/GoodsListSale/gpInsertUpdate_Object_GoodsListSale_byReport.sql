@@ -99,7 +99,7 @@ BEGIN
 
    -- Проводки
    INSERT INTO _tmpMIContainer (ContainerId, GoodsId, GoodsKindId, PartnerId, Amount)
-        -- Продажи для 1 - 12 месяцев
+        -- 1.1. Продажи для 1 - 12 месяцев
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
@@ -121,7 +121,29 @@ BEGIN
         --HAVING SUM (-1 * MIContainer.Amount ) <> 0
 
       UNION
-        -- Продажи для 2 - 3 месяца
+        -- 1.2. TransferDebtOut для 1 - 12 месяцев
+        SELECT MIContainer.ContainerIntId_analyzer             AS ContainerId
+             , MovementItem.ObjectId                           AS GoodsId
+             , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
+             , MIContainer.ObjectExtId_analyzer                AS PartnerId
+             , SUM (MovementItem.Amount )                      AS Amount
+        FROM MovementItemContainer AS MIContainer
+            INNER JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                                -- Тушенка
+                                AND _tmpGoods.Value = 1
+
+        WHERE MIContainer.OperDate BETWEEN vbStartDate1 AND vbEndDate
+          AND MIContainer.MovementDescId = zc_Movement_TransferDebtOut()
+          AND MIContainer.DescId = zc_MIContainer_Summ()
+          AND MIContainer.ContainerIntId_analyzer > 0
+        GROUP BY MIContainer.ContainerIntId_analyzer
+               , MovementItem.ObjectId
+               , MIContainer.ObjectExtId_analyzer
+               , MIContainer.ObjectIntId_Analyzer
+
+      UNION
+        -- 2.1. Продажи для 2 - 3 месяца
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
@@ -140,9 +162,31 @@ BEGIN
                , MIContainer.ObjectExtId_analyzer
                , MIContainer.ObjectIntId_Analyzer
         --HAVING SUM (-1 * MIContainer.Amount ) <> 0
-      UNION
 
-        -- Продажи для 3 - 6 месяцев - ВСЕ Остальные, кто не 1 и не 2
+      UNION
+        -- 2.2. TransferDebtOut для 2 - 3 месяца
+        SELECT MIContainer.ContainerIntId_analyzer             AS ContainerId
+             , MovementItem.ObjectId                           AS GoodsId
+             , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
+             , MIContainer.ObjectExtId_analyzer                AS PartnerId
+             , SUM (MovementItem.Amount )                      AS Amount
+        FROM MovementItemContainer AS MIContainer
+            INNER JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                                -- Мясное сырье
+                                AND _tmpGoods.Value = 2
+
+        WHERE MIContainer.OperDate BETWEEN vbStartDate2 AND vbEndDate
+          AND MIContainer.MovementDescId = zc_Movement_TransferDebtOut()
+          AND MIContainer.DescId = zc_MIContainer_Summ()
+          AND MIContainer.ContainerIntId_analyzer > 0
+        GROUP BY MIContainer.ContainerIntId_analyzer
+               , MovementItem.ObjectId
+               , MIContainer.ObjectExtId_analyzer
+               , MIContainer.ObjectIntId_Analyzer
+
+      UNION
+        -- 3.1. Продажи для 3 - 6 месяцев - ВСЕ Остальные, кто не 1 и не 2
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
@@ -159,6 +203,28 @@ BEGIN
                , MIContainer.ObjectExtId_analyzer
                , MIContainer.ObjectIntId_Analyzer
         --HAVING SUM (-1 * MIContainer.Amount ) <> 0
+
+      UNION
+        -- 3.2. TransferDebtOut для 3 - 6 месяцев - ВСЕ Остальные, кто не 1 и не 2
+        SELECT MIContainer.ContainerIntId_analyzer             AS ContainerId
+             , MovementItem.ObjectId                           AS GoodsId
+             , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
+             , MIContainer.ObjectExtId_analyzer                AS PartnerId
+             , SUM (MovementItem.Amount )                      AS Amount
+        FROM MovementItemContainer AS MIContainer
+            INNER JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                                AND _tmpGoods.Value = 0
+
+        WHERE MIContainer.OperDate BETWEEN vbStartDate3 AND vbEndDate
+          AND MIContainer.MovementDescId = zc_Movement_TransferDebtOut()
+          AND MIContainer.DescId = zc_MIContainer_Summ()
+          AND MIContainer.ContainerIntId_analyzer > 0
+        GROUP BY MIContainer.ContainerIntId_analyzer
+               , MovementItem.ObjectId
+               , MIContainer.ObjectExtId_analyzer
+               , MIContainer.ObjectIntId_Analyzer
+
        ;
 
      --!!!!!!!!!!!!!!!!!!!!!

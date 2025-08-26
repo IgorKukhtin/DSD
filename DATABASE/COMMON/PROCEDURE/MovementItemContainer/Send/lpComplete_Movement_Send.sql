@@ -1457,6 +1457,7 @@ end if;
                                                    );
      -- для сырья
      ELSEIF vbMovementDescId = zc_Movement_Send() AND 1=1 -- inUserId <> zfCalc_UserAdmin() :: Integer
+        AND NOT EXISTS (SELECT 1 FROM _tmpItem WHERE  _tmpItem.UnitId_From = 2790412 AND _tmpItem.UnitId_To = zc_Unit_RK()) -- ЦЕХ Тушенка -> Розподільчий комплекс
      THEN
          -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Перемещения" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
          PERFORM lpComplete_Movement_Send_Recalc_sub (inMovementId := inMovementId

@@ -381,7 +381,7 @@ BEGIN
      END IF; -- if ... Временно захардкодил - !!!только для этого склада!!!
 
      -- Админу только отладка
-     if inUserId = 5 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
+     if inUserId = 5 AND 1=0 THEN RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
 
 END;
 $BODY$

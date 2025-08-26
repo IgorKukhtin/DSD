@@ -51,7 +51,39 @@ BEGIN
                                                   AND Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
                                                 GROUP BY Movement_Order.Id
                                                )
+                 , tmpMovement_Vchasno_find AS (SELECT DISTINCT Movement.ParentId AS MovementId_sale
+                                                FROM Movement
+                                                WHERE Movement.DescId   = zc_Movement_EDI_Send()
+                                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                                  AND Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
+                                               )
+                 -- уже отправлен Desadv
+               , tmpMovement_Vchasno_Desadv AS (SELECT DISTINCT Movement.ParentId AS MovementId_sale
+                                                FROM Movement
+                                                     INNER JOIN tmpMovement_Vchasno_find ON tmpMovement_Vchasno_find.MovementId_sale = Movement.ParentId
+                                                     --  EDI - Уведомление об отгрузке
+                                                     INNER JOIN MovementBoolean AS MovementBoolean_EdiDesadv
+                                                                                ON MovementBoolean_EdiDesadv.MovementId = Movement.Id
+                                                                               AND MovementBoolean_EdiDesadv.DescId     = zc_MovementBoolean_EdiDesadv()
+                                                                               AND MovementBoolean_EdiDesadv.ValueData  = TRUE
 
+                                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                                  ON MovementLinkObject_To.MovementId = Movement.ParentId
+                                                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                     LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                          ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                                         AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                                     -- схема Vchasno - EDI
+                                                     INNER JOIN ObjectBoolean AS ObjectBoolean_Juridical_VchasnoEdi
+                                                                              ON ObjectBoolean_Juridical_VchasnoEdi.ObjectId  = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                             AND ObjectBoolean_Juridical_VchasnoEdi.DescId    = zc_ObjectBoolean_Juridical_VchasnoEdi()
+                                                                             AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
+
+                                                WHERE Movement.DescId   = zc_Movement_EDI_Send()
+                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                  AND Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
+                                               )
+           -- Результат
            SELECT
                  -- Документ продажа - отправка в EDI
                  Movement.ParentId                              AS Id
@@ -148,6 +180,9 @@ BEGIN
                , MovementString_Comment.ValueData               AS Comment
 
            FROM Movement
+                 -- уже отправлен Desadv
+                LEFT JOIN tmpMovement_Vchasno_Desadv ON tmpMovement_Vchasno_Desadv.MovementId_sale = Movement.ParentId
+
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
                 LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -245,6 +280,10 @@ BEGIN
              AND Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
              -- Без схемы Vchasno - EDI
              -- AND COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE) = TRUE
+             --
+             -- уже отправлен Desadv
+             AND tmpMovement_Vchasno_Desadv.MovementId_sale IS NULL
+
              --
              AND COALESCE (Movement_Parent.StatusId, 0) <> zc_Enum_Status_UnComplete()
              --
