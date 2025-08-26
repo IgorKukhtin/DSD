@@ -187,7 +187,7 @@ BEGIN
                                AND MovementItem.isErased   = FALSE
                                  
                             ) AS tmpMI ON tmpMI.PositionId = tmpMI_mask.ObjectId
-                                      AND tmpMI.PositionLevelId = tmpMI_mask.PositionLevelId
+                                      AND COALESCE (tmpMI.PositionLevelId,0) = COALESCE (tmpMI_mask.PositionLevelId,0)
            ) AS tmp;
 
 END;
