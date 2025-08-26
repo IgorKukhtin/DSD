@@ -1,10 +1,12 @@
 -- Function: gpGet_Movement_StaffList (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_StaffList (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_StaffList (Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_StaffList(
     IN inMovementId        Integer   , -- ключ Документа
-    IN inOperDate          TDateTime , --  
+    IN inOperDate          TDateTime , --
+    IN inMask              Boolean  , -- добавить по маске  
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -24,7 +26,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Count_4         TFloat     --кол. ЧТ
              , Count_5         TFloat     --кол. ПТ
              , Count_6         TFloat     --кол. СБ
-             , Count_7         TFloat     --кол. ВС
+             , Count_7         TFloat     --кол. ВС 
+
+             , isMask Boolean --вернуть false
               )
 AS
 $BODY$
@@ -37,7 +41,13 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      
 
-
+     -- создаем док по маске
+     IF COALESCE (inMask, False) = True
+     THEN
+     inMovementId := gpInsert_Movement_StaffList_Mask (ioId        := inMovementId
+                                                     , inOperDate  := inOperDate
+                                                     , inSession   := inSession); 
+     END IF;
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -87,6 +97,8 @@ BEGIN
             , tmpDay.Count_5      ::TFloat
             , tmpDay.Count_6      ::TFloat
             , tmpDay.Count_7      ::TFloat
+            
+            , CAST (FALSE AS Boolean) AS isMask
        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
             LEFT JOIN tmpDay ON 1=1
@@ -143,6 +155,8 @@ BEGIN
             , tmpDay.Count_5      ::TFloat
             , tmpDay.Count_6      ::TFloat
             , tmpDay.Count_7      ::TFloat
+            
+            , CAST (FALSE AS Boolean) AS isMask
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

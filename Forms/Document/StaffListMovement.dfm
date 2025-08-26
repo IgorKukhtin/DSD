@@ -1,5 +1,5 @@
 inherited StaffListMovementForm: TStaffListMovementForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1080#1079#1084#1077#1085#1077#1085#1080#1103')>'
   ClientHeight = 564
   ClientWidth = 1153
   ExplicitWidth = 1169
@@ -165,6 +165,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
           object AmountReport: TcxGridDBColumn [3]
             Caption = #1064#1056' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
             DataBinding.FieldName = 'AmountReport'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
@@ -173,7 +175,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100
@@ -440,6 +442,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Width = 1153
     Height = 116
     TabOrder = 3
+    ExplicitTop = -4
     ExplicitWidth = 1153
     ExplicitHeight = 116
     inherited edInvNumber: TcxTextEdit
@@ -1023,6 +1026,14 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -1050,6 +1061,10 @@ inherited StaffListMovementForm: TStaffListMovementForm
         item
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
         end
         item
           BeginGroup = True
@@ -1201,10 +1216,9 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameSend'
-        Value = 'PrintMovement_Sale1'
-        DataType = ftString
-        ParamType = ptInput
+        Name = 'inMask'
+        Value = False
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -1245,18 +1259,34 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber'
-        Value = ''
-        Component = edInvNumber
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inOperDate'
         Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = ''
+        Component = edInvNumber
         MultiSelectSeparator = ','
       end
       item
@@ -1285,11 +1315,15 @@ inherited StaffListMovementForm: TStaffListMovementForm
       item
         Name = 'UnitId'
         Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1397,6 +1431,14 @@ inherited StaffListMovementForm: TStaffListMovementForm
         Value = Null
         Component = edCount_7
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1918,7 +1960,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 424
-    Top = 24
+    Left = 440
+    Top = 48
   end
 end

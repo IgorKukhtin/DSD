@@ -680,7 +680,7 @@ BEGIN
                   , ((COALESCE (tmpResult1.Amount_Order,0) + COALESCE (tmpResult1.AmountSecond_Order,0)) * vbDiffTax / 100) AS AmountTax
 
                   --Заказ ящики
-                  , CAST (CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) > 0
+                  , CAST (CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) > 1   ---было >0
                                     THEN CAST ((tmpResult1.Amount_Order) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) AS NUMERIC (16, 4))
                                ELSE 0
                           END AS NUMERIC(16,1)) :: TFloat AS AmountBox_order

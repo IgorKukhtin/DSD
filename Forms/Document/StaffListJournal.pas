@@ -38,7 +38,7 @@ type
     ExecuteDialog: TExecuteDialog;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;
-    JuridicalBasisGuides: TdsdGuides;
+    GuidesJuridicalBasis: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     actPrintSaleOrder: TdsdPrintAction;
@@ -48,6 +48,11 @@ type
     UnitName: TcxGridDBColumn;
     bbInsertUpdate_MI_byTransport: TdxBarButton;
     PersonalHeadName: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    macInsertMask: TMultiAction;
+    bbmacInsertMask: TdxBarButton;
   private
     { Private declarations }
   public

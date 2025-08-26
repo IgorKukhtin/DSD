@@ -1,26 +1,26 @@
 inherited StaffListJournalForm: TStaffListJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1080#1079#1084#1077#1085#1077#1085#1080#1103')>'
   ClientHeight = 535
-  ClientWidth = 876
+  ClientWidth = 1064
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 892
+  ExplicitWidth = 1080
   ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 876
+    Width = 1064
     Height = 478
     TabOrder = 3
     ExplicitWidth = 876
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 876
+    ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 876
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 876
+        Width = 1064
         Height = 478
         ExplicitWidth = 876
         ExplicitHeight = 478
@@ -228,22 +228,51 @@ inherited StaffListJournalForm: TStaffListJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 876
+    Width = 1064
     ExplicitWidth = 876
     inherited deStart: TcxDateEdit
+      Left = 101
       EditValue = 42370d
+      ExplicitLeft = 101
+      ExplicitWidth = 79
+      Width = 79
     end
     inherited deEnd: TcxDateEdit
+      Left = 299
       EditValue = 42370d
+      ExplicitLeft = 299
+      ExplicitWidth = 80
+      Width = 80
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 188
+      ExplicitLeft = 188
+    end
+    object cxLabel8: TcxLabel
+      Left = 401
+      Top = 6
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
+    object edUnit: TcxButtonEdit
+      Left = 489
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 210
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 640
+    Left = 832
     Top = 6
     Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 718
+    Left = 910
     Top = 5
     Properties.Buttons = <
       item
@@ -283,6 +312,62 @@ inherited StaffListJournalForm: TStaffListJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TStaffListMovementForm'
       FormNameParam.Value = 'TStaffListMovementForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      FormName = 'TStaffListMovementForm'
+      FormNameParam.Value = 'TStaffListMovementForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TStaffListMovementForm'
@@ -307,6 +392,12 @@ inherited StaffListJournalForm: TStaffListJournalForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
     end
@@ -487,6 +578,19 @@ inherited StaffListJournalForm: TStaffListJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object macInsertMask: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMask
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -517,7 +621,15 @@ inherited StaffListJournalForm: TStaffListJournalForm
       item
         Name = 'inJuridicalBasisId'
         Value = 'False'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -550,6 +662,14 @@ inherited StaffListJournalForm: TStaffListJournalForm
         item
           Visible = True
           ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmacInsertMask'
         end
         item
           BeginGroup = True
@@ -633,6 +753,10 @@ inherited StaffListJournalForm: TStaffListJournalForm
       Visible = ivAlways
       ImageIndex = 50
     end
+    object bbmacInsertMask: TdxBarButton
+      Action = macInsertMask
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -652,7 +776,10 @@ inherited StaffListJournalForm: TStaffListJournalForm
         Component = PeriodChoice
       end
       item
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
+      end
+      item
+        Component = GuidesUnit
       end>
     Left = 408
     Top = 344
@@ -756,7 +883,7 @@ inherited StaffListJournalForm: TStaffListJournalForm
     Left = 599
     Top = 232
   end
-  object JuridicalBasisGuides: TdsdGuides
+  object GuidesJuridicalBasis: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalBasis
     Key = '0'
@@ -769,7 +896,7 @@ inherited StaffListJournalForm: TStaffListJournalForm
       item
         Name = 'Key'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -777,7 +904,7 @@ inherited StaffListJournalForm: TStaffListJournalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -794,14 +921,14 @@ inherited StaffListJournalForm: TStaffListJournalForm
       item
         Name = 'JuridicalBasisId'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -864,5 +991,57 @@ inherited StaffListJournalForm: TStaffListJournalForm
     PackSize = 1
     Left = 392
     Top = 432
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DepartmentName'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalHeadId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalHeadName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 528
+    Top = 8
   end
 end
