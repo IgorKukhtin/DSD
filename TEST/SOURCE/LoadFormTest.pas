@@ -4672,6 +4672,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TStaffListJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListMovementForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListJournalChoiceForm');
 end;
 
  procedure TLoadFormTest.LoadMessagePersonalServiceLastFormTest;

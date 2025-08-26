@@ -442,7 +442,6 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Width = 1153
     Height = 116
     TabOrder = 3
-    ExplicitTop = -4
     ExplicitWidth = 1153
     ExplicitHeight = 116
     inherited edInvNumber: TcxTextEdit
@@ -1005,6 +1004,86 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end>
       isShowModal = True
     end
+    object actOpenStaffListJournalChoice: TOpenChoiceForm
+      Category = 'Income'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'OpenChoiceFormIncome'
+      FormName = 'TStaffListJournalChoiceForm'
+      FormNameParam.Value = 'TStaffListJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'Id_mask'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actInsertMIMaster_byMovement: TdsdExecStoredProc
+      Category = 'Income'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_byMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_byMovement
+        end>
+      Caption = 'actInsertMIMaster_byMovement'
+    end
+    object macInsertMI_byMovement: TMultiAction
+      Category = 'Income'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenStaffListJournalChoice
+        end
+        item
+          Action = actInsertMIMaster_byMovement
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 27
+    end
   end
   inherited MasterDS: TDataSource
     Left = 24
@@ -1101,6 +1180,10 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMI_byMovement'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1161,12 +1244,16 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Action = InsertRecord
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbdd: TdxBarButton
       Caption = #1057#1087#1080#1089#1086#1082' '#1053#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
       Category = 0
       Hint = #1057#1087#1080#1089#1086#1082' '#1053#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
       Visible = ivAlways
       ImageIndex = 26
+    end
+    object bbInsertMI_byMovement: TdxBarButton
+      Action = macInsertMI_byMovement
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1962,5 +2049,30 @@ inherited StaffListMovementForm: TStaffListMovementForm
       end>
     Left = 440
     Top = 48
+  end
+  object spInsert_MI_byMovement: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_StaffList_byMovement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_mask'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'Id_mask'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 282
+    Top = 328
   end
 end

@@ -1603,7 +1603,8 @@ uses
   StaffPaidKindEdit in '..\..\Forms\Guides\StaffPaidKindEdit.pas' {StaffPaidKindEditForm: TParentForm},
   StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm},
   StaffListJournal in '..\..\Forms\Document\StaffListJournal.pas' {StaffListJournalForm: TParentForm},
-  ClientKindEdit in '..\..\Forms\Kind\ClientKindEdit.pas' {ClientKindEditForm: TParentForm};
+  ClientKindEdit in '..\..\Forms\Kind\ClientKindEdit.pas' {ClientKindEditForm: TParentForm},
+  StaffListJournalChoice in '..\..\Forms\Document\StaffListJournalChoice.pas' {StaffListJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

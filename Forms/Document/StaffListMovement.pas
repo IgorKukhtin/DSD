@@ -59,7 +59,7 @@ type
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
     HeaderExit: THeaderExit;
-    bb: TdxBarButton;
+    bbdd: TdxBarButton;
     cxLabel24: TcxLabel;
     edDepartment: TcxButtonEdit;
     cxLabel14: TcxLabel;
@@ -97,6 +97,11 @@ type
     actStaffHoursLengthChoiceForm: TOpenChoiceForm;
     actPersonalChoiceForm: TOpenChoiceForm;
     GuidesUnit: TdsdGuides;
+    spInsert_MI_byMovement: TdsdStoredProc;
+    actOpenStaffListJournalChoice: TOpenChoiceForm;
+    actInsertMIMaster_byMovement: TdsdExecStoredProc;
+    macInsertMI_byMovement: TMultiAction;
+    bbInsertMI_byMovement: TdxBarButton;
   private
     { Private declarations }
   public
