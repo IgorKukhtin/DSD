@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member_BirthDay(
     IN inIsNext             Boolean ,
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Ord             TVarChar
+RETURNS TABLE (Ord             Integer
              , MemberName      TVarChar
              , UnitName        TVarChar
              , PositionName    TVarChar
@@ -85,7 +85,7 @@ BEGIN
                    )
 
       --Результат
-     SELECT tmp.Ord            ::TVarChar
+     SELECT tmp.Ord            ::Integer
           , tmp.MemberName     ::TVarChar
           , tmp.UnitName       ::TVarChar
           , tmp.PositionName   ::TVarChar
@@ -93,7 +93,7 @@ BEGIN
           , tmp.Birthday_Month ::TVarChar
           , tmp.Anniversary    ::TVarChar
      FROM (
-           SELECT 1           ::Integer  AS ord_calc
+           /*SELECT 1           ::Integer  AS ord_calc
                  , '№ п.п.'    ::TVarChar AS Ord
                  , 'ПІБ'       ::TVarChar AS MemberName
                  , 'Підрозділ' ::TVarChar AS UnitName
@@ -101,9 +101,9 @@ BEGIN
                  , 'День'      ::TVarChar AS Birthday_Day
                  , 'Місяць'    ::TVarChar AS Birthday_Month
                  , 'Ювіляр'    ::TVarChar AS Anniversary
-          UNION 
+          UNION */
            SELECT ROW_NUMBER () OVER (ORDER By tmpMember.Birthday_Day, tmpMember.MemberName) + 1  ::Integer AS ord_calc
-                , ROW_NUMBER () OVER (ORDER By tmpMember.Birthday_Day, tmpMember.MemberName) ::TVarChar AS Ord
+                , ROW_NUMBER () OVER (ORDER By tmpMember.Birthday_Day, tmpMember.MemberName) ::Integer AS Ord
                 , tmpMember.MemberName     ::TVarChar
                 , tmpMember.UnitName       ::TVarChar
                 , tmpMember.PositionName   ::TVarChar
@@ -112,7 +112,7 @@ BEGIN
                 , tmpMember.Anniversary    ::TVarChar
             FROM tmpMember  
             ) AS tmp
-     ORDER BY tmp.ord_calc
+     ORDER BY tmp.ord
     ;
 
 
