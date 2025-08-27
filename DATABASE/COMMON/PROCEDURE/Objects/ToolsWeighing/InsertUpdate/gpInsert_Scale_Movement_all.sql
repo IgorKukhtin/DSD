@@ -931,8 +931,8 @@ BEGIN
      THEN
          vbMovementId_begin:= 0;
          vbMovementId_find := 0;
-         inOperDate:= '07.05.2024';
-         inOperDatePartner:= '08.05.2024';
+         --inOperDate:= '07.05.2024';
+         --inOperDatePartner:= '08.05.2024';
      END IF;
 
 
