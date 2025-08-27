@@ -631,9 +631,7 @@ BEGIN
       
                   , tmpResult1.Amount_Weighing_ret
                   , tmpResult1.Amount_Weighing_Sh_ret
-                  , tmpResult1.Amount_Weighing_Weight_ret  
-
-                  , tmpResult1.AmountBox_Weighing_scan
+                  , tmpResult1.Amount_Weighing_Weight_ret
                   
                   , tmpResult1.PartionGoods
       
@@ -679,6 +677,8 @@ BEGIN
                     -- кол-во заказа по % откл.
                   , ((COALESCE (tmpResult1.Amount_Order,0) + COALESCE (tmpResult1.AmountSecond_Order,0)) * vbDiffTax / 100) AS AmountTax
 
+                  --
+                  , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) > 1 THEN tmpResult1.AmountBox_Weighing_scan ELSE 0 END  AS AmountBox_Weighing_scan
                   --Заказ ящики
                   , CAST (CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) > 1   ---было >0
                                     THEN CAST ((tmpResult1.Amount_Order) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) AS NUMERIC (16, 4))
