@@ -99,6 +99,9 @@ begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
 
+  // zc_Enum_Process_Auto_PrimeCost
+  gc_User := TUser.Create('444873');
+
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TUtilPrintForm, UtilPrintForm);
   MainForm.Show;

@@ -13,13 +13,12 @@ object MainForm: TMainForm
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object DBGrid: TDBGrid
-    Left = 0
+    Left = 300
     Top = 0
-    Width = 442
+    Width = 142
     Height = 664
     Align = alClient
     DataSource = DataSource
@@ -901,7 +900,7 @@ object MainForm: TMainForm
     object cbSaleIntNal: TCheckBox
       Tag = 20
       Left = 6
-      Top = 226
+      Top = 133
       Width = 235
       Height = 17
       Caption = '3.1.'#1055#1088#1086#1076'.'#1087#1086#1082'. - '#1053#1040#1051
@@ -933,7 +932,7 @@ object MainForm: TMainForm
     object cbReturnInIntNal: TCheckBox
       Tag = 20
       Left = -3
-      Top = 243
+      Top = 150
       Width = 228
       Height = 17
       Caption = '3.2.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'. - '#1053#1040#1051
@@ -949,7 +948,7 @@ object MainForm: TMainForm
     object cbProductionUnion: TCheckBox
       Tag = 20
       Left = -3
-      Top = 266
+      Top = 173
       Width = 235
       Height = 17
       Caption = '4.1. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
@@ -965,7 +964,7 @@ object MainForm: TMainForm
     object cbProductionSeparate: TCheckBox
       Tag = 20
       Left = -3
-      Top = 282
+      Top = 189
       Width = 235
       Height = 17
       Caption = '4.2. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -981,7 +980,7 @@ object MainForm: TMainForm
     object cbLoss: TCheckBox
       Tag = 20
       Left = 6
-      Top = 289
+      Top = 196
       Width = 155
       Height = 17
       Caption = '5.2. '#1057#1087#1080#1089#1072#1085#1080#1077
@@ -996,8 +995,8 @@ object MainForm: TMainForm
     end
     object cbInventory: TCheckBox
       Tag = 20
-      Left = -3
-      Top = 305
+      Left = -4
+      Top = 212
       Width = 235
       Height = 17
       Caption = '6. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -1013,7 +1012,7 @@ object MainForm: TMainForm
     object cbOrderExternal: TCheckBox
       Tag = 20
       Left = 6
-      Top = 391
+      Top = 417
       Width = 120
       Height = 17
       Caption = '7.1. '#1047#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087'.'
@@ -1344,7 +1343,7 @@ object MainForm: TMainForm
     object cbPartner_Sale: TCheckBox
       Tag = 20
       Left = 25
-      Top = 251
+      Top = 158
       Width = 212
       Height = 17
       Caption = '!!!'#1085#1086#1074#1099#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'/'#1076#1086#1075#1086#1074#1086#1088#1072' '#1053#1040#1051'!!!'
@@ -1359,8 +1358,8 @@ object MainForm: TMainForm
     end
     object cbOrderInternal: TCheckBox
       Tag = 20
-      Left = -3
-      Top = 402
+      Left = -4
+      Top = 427
       Width = 120
       Height = 17
       Caption = '7.2. '#1047#1072#1103#1074#1082#1080' '#1087#1088'-'#1074#1086
@@ -1392,7 +1391,7 @@ object MainForm: TMainForm
     object cbCash: TCheckBox
       Tag = 20
       Left = 1
-      Top = 415
+      Top = 440
       Width = 166
       Height = 17
       Caption = '8. '#1050#1072#1089#1089#1072' Int - '#1053#1040#1051
@@ -1407,8 +1406,8 @@ object MainForm: TMainForm
     end
     object cbLossGuide: TCheckBox
       Tag = 20
-      Left = 108
-      Top = 297
+      Left = 105
+      Top = 205
       Width = 108
       Height = 24
       Caption = '5.1. !!!'#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1089#1087#1080#1089#1072#1085#1080#1103'!!!'
@@ -1424,8 +1423,8 @@ object MainForm: TMainForm
     end
     object cbWeighingPartner: TCheckBox
       Tag = 20
-      Left = 123
-      Top = 391
+      Left = 122
+      Top = 445
       Width = 120
       Height = 17
       Caption = '9.1. '#1042#1079#1074#1077#1096'.'#1087#1086#1082#1091#1087'.'
@@ -1441,7 +1440,7 @@ object MainForm: TMainForm
     object cbWeighingProduction: TCheckBox
       Tag = 20
       Left = 123
-      Top = 398
+      Top = 423
       Width = 120
       Height = 17
       Caption = '9.2. '#1042#1079#1074#1077#1096'.'#1087#1088'-'#1074#1086
@@ -1607,7 +1606,7 @@ object MainForm: TMainForm
     end
     object cbHistoryCost_0: TCheckBox
       Left = 5
-      Top = 320
+      Top = 318
       Width = 150
       Height = 17
       Caption = 'HistoryCost-0'
@@ -1662,6 +1661,54 @@ object MainForm: TMainForm
       Height = 21
       TabOrder = 58
       Text = '0'
+    end
+    object cbExportBirthDay_xls: TCheckBox
+      Left = 6
+      Top = 235
+      Width = 97
+      Height = 30
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1048#1084#1077#1085#1080#1085#1085#1080#1082#1080
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 59
+      WordWrap = True
+    end
+    object cbLoadVchasno_ComDoc: TCheckBox
+      Left = 6
+      Top = 269
+      Width = 131
+      Height = 30
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1095#1072#1089#1085#1086' - ComDoc'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 60
+      WordWrap = True
+    end
+    object bbExportBirthDay_xls: TButton
+      Left = 98
+      Top = 238
+      Width = 37
+      Height = 25
+      Caption = 'OK'
+      TabOrder = 61
+      OnClick = bbExportBirthDay_xlsClick
+    end
+    object bbLoadVchasno_ComDoc: TButton
+      Left = 98
+      Top = 289
+      Width = 37
+      Height = 25
+      Caption = 'OK'
+      TabOrder = 62
+      OnClick = bbLoadVchasno_ComDocClick
     end
   end
   object CompleteDocumentPanel: TPanel
@@ -2670,6 +2717,7 @@ object MainForm: TMainForm
         'LogMemo')
       ParentFont = False
       TabOrder = 1
+      ExplicitTop = 33
     end
     object LogMemo2: TMemo
       Left = 1
@@ -2687,6 +2735,89 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 2
       Visible = False
+    end
+  end
+  object ExportXmlGrid: TcxGrid
+    Left = 0
+    Top = 0
+    Width = 300
+    Height = 664
+    Align = alLeft
+    TabOrder = 6
+    Visible = False
+    object ExportXmlGridDBTableView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = ExportDS
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.IncSearch = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsView.GroupByBox = False
+      object Ord: TcxGridDBColumn
+        Caption = #8470' '#1087'.'#1087'.'
+        DataBinding.FieldName = 'Ord'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object MemberName: TcxGridDBColumn
+        Caption = #1055#1030#1041
+        DataBinding.FieldName = 'MemberName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 250
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 150
+      end
+      object PositionName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1072#1076#1072
+        DataBinding.FieldName = 'PositionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 200
+      end
+      object Day: TcxGridDBColumn
+        Caption = #1044#1077#1085#1100
+        DataBinding.FieldName = 'Day'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object Month: TcxGridDBColumn
+        Caption = #1052#1110#1089#1103#1094#1100
+        DataBinding.FieldName = 'Month'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object Anniversary: TcxGridDBColumn
+        Caption = '***'
+        DataBinding.FieldName = 'Anniversary'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object isUnload: TcxGridDBColumn
+        DataBinding.FieldName = 'isUnload'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        Width = 55
+      end
+    end
+    object ExportXmlGridLevel: TcxGridLevel
+      GridView = ExportXmlGridDBTableView
     end
   end
   object DataSource: TDataSource
@@ -3209,8 +3340,8 @@ object MainForm: TMainForm
     Top = 48
   end
   object ActionList: TActionList
-    Left = 192
-    Top = 352
+    Left = 200
+    Top = 64
     object actSendTelegramBot: TdsdSendTelegramBotAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -3236,6 +3367,153 @@ object MainForm: TMainForm
       Message.Value = ''
       Message.DataType = ftString
       Message.MultiSelectSeparator = ','
+    end
+    object actExport_Grid_xls: TExportGrid
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      Grid = ExportXmlGrid
+      Caption = 'actExport_Grid_xls'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      DefaultFileExt = 'XLS'
+    end
+    object actGet_Export_Email_xls: TdsdExecStoredProc
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_Email
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_Email
+        end>
+      Caption = 'actGet_Export_Email_xls'
+    end
+    object actGet_Export_FileName_xls: TdsdExecStoredProc
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName_xls
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName_xls
+        end>
+      Caption = 'actGet_Export_FileName_xls'
+    end
+    object actSMTPFile_xls: TdsdSMTPFileAction
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = ExportEmailCDS
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = ExportEmailCDS
+      Port.ComponentItem = 'Port'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = ExportEmailCDS
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = ExportEmailCDS
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.Component = ExportEmailCDS
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = ExportEmailCDS
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = ExportEmailCDS
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = ExportEmailCDS
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
+    end
+    object actSelect_Export_xls: TdsdExecStoredProc
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectBirthDay_xls
+      StoredProcList = <
+        item
+          StoredProc = spSelectBirthDay_xls
+        end>
+      Caption = 'actSelect_Export_xls'
+    end
+    object mactExport_xls: TMultiAction
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_Email_xls
+        end
+        item
+          Action = actGet_Export_FileName_xls
+        end
+        item
+          Action = actSelect_Export_xls
+        end
+        item
+          Action = actExport_Grid_xls
+        end
+        item
+          Action = actSMTPFile_xls
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074
+      Hint = #1057#1087#1080#1089#1086#1082' '#1080#1084#1077#1085#1080#1085#1085#1080#1082#1086#1074' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
+      ImageIndex = 53
+    end
+    object actVchasnoEDIComDocLoad: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 45658d
+      DateFrom.Component = FormParams
+      DateFrom.ComponentItem = 'DateFrom'
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 45658d
+      DateTo.Component = FormParams
+      DateTo.ComponentItem = 'DateTo'
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediComDoc
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = False
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      spHeader = spHeaderComDoc
+      spList = spListComDoc
     end
   end
   object toSqlQuery_three: TZQuery
@@ -3268,5 +3546,332 @@ object MainForm: TMainForm
       'select * from Object order by 1 desc')
     Left = 152
     Top = 272
+  end
+  object ExportEmailDS: TDataSource
+    DataSet = ExportEmailCDS
+    Left = 536
+    Top = 178
+  end
+  object ExportEmailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 568
+    Top = 185
+  end
+  object spGet_Export_FileName_xls: TdsdStoredProc
+    StoredProcName = 'gpGet_MemberBirthDay_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_Grid_xls
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_Grid_xls
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_Grid_xls
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFile_xls
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExportType'
+        Value = Null
+        Component = actExport_Grid_xls
+        ComponentItem = 'ExportType'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 544
+    Top = 112
+  end
+  object spGet_Export_Email: TdsdStoredProc
+    StoredProcName = 'gpGet_Member_Email_Send'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 576
+    Top = 80
+  end
+  object spSelectBirthDay_xls: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Member_BirthDay'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inIsNext'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 640
+    Top = 56
+  end
+  object ExportCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 624
+    Top = 160
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'DateFrom'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateTo'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 456
+    Top = 200
+  end
+  object ExportDS: TDataSource
+    DataSet = ExportCDS
+    Left = 512
+    Top = 232
+  end
+  object spHeaderComDoc: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_EDIComdoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOrderInvNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderOperDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerInvNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerOperDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberTax'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDateTax'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberSaleLink'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDateSaleLink'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOKPO'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLNPlace'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComDocDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDealId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVchasnoId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentId_vch'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsPropertyId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
+    Top = 280
+  end
+  object spListComDoc: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_EDIComDoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsPropertyId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLNCode'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPartner'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPricePartner'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummPartner'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 248
+  end
+  object EDI: TEDI
+    ConnectionParams.Host.Value = Null
+    ConnectionParams.Host.Component = FormParams
+    ConnectionParams.Host.ComponentItem = 'Host'
+    ConnectionParams.Host.DataType = ftString
+    ConnectionParams.Host.MultiSelectSeparator = ','
+    ConnectionParams.User.Value = Null
+    ConnectionParams.User.Component = FormParams
+    ConnectionParams.User.ComponentItem = 'UserName'
+    ConnectionParams.User.DataType = ftString
+    ConnectionParams.User.MultiSelectSeparator = ','
+    ConnectionParams.Password.Value = Null
+    ConnectionParams.Password.Component = FormParams
+    ConnectionParams.Password.ComponentItem = 'Password'
+    ConnectionParams.Password.DataType = ftString
+    ConnectionParams.Password.MultiSelectSeparator = ','
+    Left = 656
+    Top = 304
   end
 end

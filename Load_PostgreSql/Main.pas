@@ -21,7 +21,11 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   Vcl.ActnList, dsdAction, IdTCPConnection, IdTCPClient
-  , IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders, IdCTypes, dsdCommon;
+  , IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders, IdCTypes, dsdCommon,
+  Datasnap.DBClient, cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter,
+  cxData, cxDataStorage, cxDBData, dsdInternetAction, cxGridLevel,
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
+  cxGridCustomView, cxGrid, EDI;
 
 type
   TCustomIdHTTP = class(TIdHTTP)
@@ -269,6 +273,39 @@ type
     toZConnection_master: TZConnection;
     toSqlQuery_master: TZQuery;
     cb_bi_Table_Remains: TCheckBox;
+    cbExportBirthDay_xls: TCheckBox;
+    cbLoadVchasno_ComDoc: TCheckBox;
+    ExportEmailDS: TDataSource;
+    ExportEmailCDS: TClientDataSet;
+    spGet_Export_FileName_xls: TdsdStoredProc;
+    spGet_Export_Email: TdsdStoredProc;
+    spSelectBirthDay_xls: TdsdStoredProc;
+    ExportCDS: TClientDataSet;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    Ord: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    actExport_Grid_xls: TExportGrid;
+    actGet_Export_Email_xls: TdsdExecStoredProc;
+    actGet_Export_FileName_xls: TdsdExecStoredProc;
+    actSMTPFile_xls: TdsdSMTPFileAction;
+    actSelect_Export_xls: TdsdExecStoredProc;
+    mactExport_xls: TMultiAction;
+    bbExportBirthDay_xls: TButton;
+    FormParams: TdsdFormParams;
+    ExportDS: TDataSource;
+    MemberName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    Day: TcxGridDBColumn;
+    Month: TcxGridDBColumn;
+    Anniversary: TcxGridDBColumn;
+    isUnload: TcxGridDBColumn;
+    bbLoadVchasno_ComDoc: TButton;
+    spHeaderComDoc: TdsdStoredProc;
+    spListComDoc: TdsdStoredProc;
+    actVchasnoEDIComDocLoad: TdsdVchasnoEDIAction;
+    EDI: TEDI;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -279,7 +316,6 @@ type
     procedure cbUnCompleteClick(Sender: TObject);
     procedure cbCompleteIncomeBNClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
     procedure PanelErrDblClick(Sender: TObject);
     procedure OKDocumentButtonClick(Sender: TObject);
@@ -289,6 +325,8 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure bbPrintForm_calcClick(Sender: TObject);
+    procedure bbExportBirthDay_xlsClick(Sender: TObject);
+    procedure bbLoadVchasno_ComDocClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -415,6 +453,9 @@ type
 
     function fBeginPack_oneDay : Boolean;
     function fBeginPartion_Period : Boolean;
+
+    procedure pExportBirthDay_xls;
+    procedure pLoadVchasno_ComDoc;
 
     // Print
     function PrintForm_Sale_PageCount_calc (MovementId:Integer):Integer;
@@ -2060,7 +2101,14 @@ begin
      EndDateCompleteEdit.Text:=EndDateEdit.Text;
      //
      //TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
-     fOpenSqToQuery ('select * from Object where Id = zc_Enum_Process_Auto_PrimeCost()');
+     if  (ParamStr(1) = 'auto_LoadVchasno')
+       or(ParamStr(2) = 'auto_LoadVchasno')
+       or(ParamStr(3) = 'auto_LoadVchasno')
+     then //Авто-Загрузка EDI
+          fOpenSqToQuery ('select * from Object where Id = 1329039')
+     else fOpenSqToQuery ('select * from Object where Id = zc_Enum_Process_Auto_PrimeCost()');
+     //
+     if Assigned(gc_User) then gc_User.Free;
      gc_User := TUser.Create(IntToStr(toSqlQuery.FieldByName('Id').AsInteger));
      //gc_User.Login := toSqlQuery.FieldByName('ValueData').AsString;
 
@@ -2096,10 +2144,19 @@ begin
                                   or(ParamStr(3) = 'auto_bi_Remains')
                                    ;
      //
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.FormShow(Sender: TObject);
-begin
+     // start Export BirthDay xls
+     cbExportBirthDay_xls.Checked:= (ParamStr(1) = 'auto_BirthDay')
+                                  or(ParamStr(2) = 'auto_BirthDay')
+                                  or(ParamStr(3) = 'auto_BirthDay')
+                                   ;
+     if cbExportBirthDay_xls.Checked then pExportBirthDay_xls;
+     //
+     //start Vchasno ComDoc
+     cbLoadVchasno_ComDoc.Checked:= (ParamStr(1) = 'auto_LoadVchasno')
+                                  or(ParamStr(2) = 'auto_LoadVchasno')
+                                  or(ParamStr(3) = 'auto_LoadVchasno')
+                                   ;
+     if cbLoadVchasno_ComDoc.Checked then pLoadVchasno_ComDoc;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StartProcess;
@@ -2641,6 +2698,93 @@ begin
      pCompleteDocument_Pack;
      //
      fStop:=true;
+end;
+//
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pExportBirthDay_xls;
+begin
+     myLogMemo_add('start Export - BirthDay - xls');
+     //
+     DBGrid.Visible:= false;
+     ExportXmlGrid.Visible:= true;
+     ExportXmlGrid.Align:= alClient;
+     actSelect_Export_xls.Execute;
+     //
+     if (ExportCDS.FieldByName('isUnload').AsBoolean = true) or not (cbExportBirthDay_xls.Checked) then
+     begin
+         mactExport_xls.Execute;
+         //
+         myLogMemo_add('!!! end Export - BirthDay - xls !!!');
+     end
+     else
+         myLogMemo_add('not Export - BirthDay - xls');
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadVchasno_ComDoc;
+var Second, MSec: word;
+    Hour_calc, Minute_calc: word;
+begin
+     //
+     DBGrid.Visible:= false;
+     LogPanel.Align:= alClient;
+
+     //расчет начальные дата + время
+     DecodeTime(NOW, Hour_calc, Minute_calc, Second, MSec);
+     //
+     if Hour_calc < 14 then
+     begin
+          FormParams.ParamByName('DateFrom').Value:= Date-1;
+          FormParams.ParamByName('DateTo').Value:= Date;
+     end
+     else
+     begin
+          FormParams.ParamByName('DateFrom').Value:= Date;
+          FormParams.ParamByName('DateTo').Value:= Date;
+     end;
+     //
+     myLogMemo_add('start Load - Vchasno - ComDoc : StartDate = '+ DateToStr(FormParams.ParamByName('DateFrom').Value) + ' - EndDate = ' + DateToStr(FormParams.ParamByName('DateTo').Value));
+     //
+     if cbLoadVchasno_ComDoc.Checked then
+     try
+         actVchasnoEDIComDocLoad.Execute;
+         myLogMemo_add('!!! end Load - Vchasno - ComDoc !!!');
+     except
+         myLogMemo_add('??? ERROR Load - Vchasno - ComDoc ???');
+     end
+     else
+         myLogMemo_add('not Load - Vchasno - ComDoc');
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.bbExportBirthDay_xlsClick(Sender: TObject);
+begin
+     // autoBirthDay
+     if cbExportBirthDay_xls.Checked
+     then
+         pExportBirthDay_xls
+     else
+     begin
+       if MessageDlg('Действительно ExportBirthDay_xls?',mtConfirmation,[mbYes,mbNo],0)=mrYes
+       then begin
+                //cbExportBirthDay_xls.Checked:= true;
+                pExportBirthDay_xls;
+            end;
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.bbLoadVchasno_ComDocClick(Sender: TObject);
+begin
+     // autoBirthDay
+     if cbLoadVchasno_ComDoc.Checked
+     then
+         pLoadVchasno_ComDoc
+     else
+     begin
+       if MessageDlg('Действительно LoadVchasno - ComDoc?',mtConfirmation,[mbYes,mbNo],0)=mrYes
+       then begin
+                //cbLoadVchasno_ComDoc.Checked:= true;
+                pLoadVchasno_ComDoc;
+            end;
+     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fBeginPartion_Period : Boolean;
