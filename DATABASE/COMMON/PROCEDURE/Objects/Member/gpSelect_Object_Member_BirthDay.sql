@@ -14,6 +14,7 @@ RETURNS TABLE (Ord             Integer
              , Day             TVarChar
              , Month           TVarChar
              , Anniversary     TVarChar
+             , isUnload        Boolean
                )
 AS
 
@@ -26,8 +27,8 @@ BEGIN
 
 /*
 
-1. Колонка "ПІБ" береться із довідника "Физические лица" - поле "ФИО" 
-2. Колонка "Підрозділ" 
+1. Колонка "ПІБ" береться із довідника "Физические лица" - поле "ФИО"
+2. Колонка "Підрозділ"
 3. Колонка "Посада" береться із довідника "Физические лица" - поле "Должность"
 4. Колонка "Дата народження" - только дата
 5. Колонка "Місяць народження" - название месяца
@@ -55,14 +56,14 @@ BEGIN
                           LEFT JOIN ObjectBoolean AS ObjectBoolean_notBirthDay
                                                   ON ObjectBoolean_notBirthDay.ObjectId = lfSelect.UnitId
                                                  AND ObjectBoolean_notBirthDay.DescId = zc_ObjectBoolean_Unit_notBirthDay()
-                     WHERE lfSelect.Ord = 1 
+                     WHERE lfSelect.Ord = 1
                        AND COALESCE (lfSelect.isDateOut, FALSE) = FALSE
                        AND COALESCE (ObjectBoolean_notBirthDay.ValueData, FALSE) = FALSE
                     )
 
    , tmpMember AS (SELECT Object_Member.ValueData    AS MemberName
                         , Object_Unit.ValueData      AS UnitName
-                        , Object_Position.ValueData  AS PositionName 
+                        , Object_Position.ValueData  AS PositionName
                         , COALESCE(ObjectDate_Birthday.ValueData, Null)   ::TDateTime  AS Birthday_Date
                         , CASE WHEN EXTRACT (DAY FROM ObjectDate_Birthday.ValueData) < 10 THEN '0' ELSE '' END || EXTRACT (DAY FROM ObjectDate_Birthday.ValueData)     :: TVarChar AS Birthday_Day
                         , CASE WHEN EXTRACT (Month FROM ObjectDate_Birthday.ValueData) < 10 THEN '0' ELSE '' END || EXTRACT (Month FROM ObjectDate_Birthday.ValueData) :: TVarChar AS Month_ord
@@ -78,7 +79,7 @@ BEGIN
                                             AND ObjectDate_Birthday.DescId = zc_ObjectDate_Member_Birthday()
                    WHERE Object_Member.DescId = zc_Object_Member()
                      AND Object_Member.isErased = FALSE
-                     AND ObjectDate_Birthday.ValueData IS NOT NULL 
+                     AND ObjectDate_Birthday.ValueData IS NOT NULL
                      AND ( (EXTRACT (Month FROM ObjectDate_Birthday.ValueData) = EXTRACT (Month FROM Current_Date) AND inIsNext = FALSE)
                         OR (EXTRACT (Month FROM ObjectDate_Birthday.ValueData) = EXTRACT (Month FROM Current_Date)+1 AND inIsNext = TRUE)
                           )
@@ -92,6 +93,28 @@ BEGIN
           , tmp.Birthday_Day   ::TVarChar
           , tmp.Birthday_Month ::TVarChar
           , tmp.Anniversary    ::TVarChar
+            -- отправка автоматом
+          , CASE -- WHEN 1=1 THEN TRUE
+
+                 -- за 3 дня
+                 WHEN DATE_TRUNC ('MONTH', CURRENT_DATE) <> DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '3 DAY')
+                  AND DATE_TRUNC ('MONTH', CURRENT_DATE) =  DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '2 DAY')
+                  AND DATE_TRUNC ('MONTH', CURRENT_DATE) =  DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '1 DAY')
+                  AND EXTRACT (DOW FROM CURRENT_DATE + INTERVAL '3 DAY') = 1
+                      THEN TRUE
+                 -- за 2 дня
+                 WHEN DATE_TRUNC ('MONTH', CURRENT_DATE) <> DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '2 DAY')
+                  AND DATE_TRUNC ('MONTH', CURRENT_DATE) =  DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '1 DAY')
+                  AND EXTRACT (DOW FROM CURRENT_DATE + INTERVAL '3 DAY') <> 1
+                      THEN TRUE
+
+                 /*WHEN EXTRACT (DAY FROM CURRENT_DATE) = 30
+                      THEN TRUE
+                 WHEN EXTRACT (MONTH FROM CURRENT_DATE) = 2 AND EXTRACT (DAY FROM CURRENT_DATE) = 28
+                      THEN TRUE*/
+
+                 ELSE FALSE
+            END :: Boolean AS isUnload
      FROM (
            /*SELECT 1           ::Integer  AS ord_calc
                  , '№ п.п.'    ::TVarChar AS Ord
@@ -110,7 +133,7 @@ BEGIN
                 , tmpMember.Birthday_Day   ::TVarChar
                 , tmpMember.Birthday_Month ::TVarChar
                 , tmpMember.Anniversary    ::TVarChar
-            FROM tmpMember  
+            FROM tmpMember
             ) AS tmp
      ORDER BY tmp.ord
     ;
@@ -127,4 +150,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Member_BirthDay (inIsNext := true, inSession:= zfCalc_UserAdmin())  
+-- SELECT * FROM gpSelect_Object_Member_BirthDay (inIsNext := true, inSession:= zfCalc_UserAdmin())
