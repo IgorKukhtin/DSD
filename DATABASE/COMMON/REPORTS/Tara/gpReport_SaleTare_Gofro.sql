@@ -33,6 +33,12 @@ BEGIN
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+     
+     IF COALESCE (inGoodsGroupId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Группа товаров не установлена.';
+    END IF;
+
 
     -- Результат
     RETURN QUERY
