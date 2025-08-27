@@ -1,9 +1,9 @@
--- Function: gpReport_GoodsBalance()
+-- Function: gpReport_GoodsBalance_srv_r()
 
---DROP FUNCTION IF EXISTS gpReport_GoodsBalance (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsBalance (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsBalance_srv_r (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsBalance_srv_r (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsBalance (
+CREATE OR REPLACE FUNCTION gpReport_GoodsBalance_srv_r (
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inAccountGroupId     Integer,    --
@@ -1837,5 +1837,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsBalance (inStartDate:= '01.09.2018', inEndDate:= '01.09.2018', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
---  select * from gpReport_GoodsBalance(inStartDate := ('03.03.2024')::TDateTime , inEndDate := ('23.03.2024')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8448 , inGoodsGroupId := 0 , inGoodsId := 2339 , inIsInfoMoney := 'False' , inIsAllMO := 'False' , inIsAllAuto := 'False' , inIsOperDate_Partion:= TRUE, inIsPartionCell := TRUE,  inSession := '5');
+-- SELECT * FROM gpReport_GoodsBalance_srv_r (inStartDate:= '01.09.2018', inEndDate:= '01.09.2018', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
+-- SELECT * FROM gpReport_GoodsBalance_srv_r (inStartDate:= '25.08.2025', inEndDate:= '25.08.2025', inAccountGroupId:= 9015, inUnitGroupId:= 0, inLocationId:= 8459, inGoodsGroupId:= 1832, inGoodsId:= 0, inIsInfoMoney:= False, inIsAllMO:= False, inIsAllAuto:= False, inIsOperDate_Partion:= False, inisPartionCell:= False,  inSession:= '5');
