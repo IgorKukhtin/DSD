@@ -1,9 +1,11 @@
-inherited StaffListJournalForm: TStaffListJournalForm
+inherited StaffListJournalChoiceForm: TStaffListJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1080#1079#1084#1077#1085#1077#1085#1080#1103')>'
   ClientHeight = 535
   ClientWidth = 1064
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1080
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -13,7 +15,7 @@ inherited StaffListJournalForm: TStaffListJournalForm
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1064
-    ExplicitHeight = 478
+    ExplicitHeight = 504
     ClientRectBottom = 478
     ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
@@ -482,6 +484,38 @@ inherited StaffListJournalForm: TStaffListJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 7
+    end
     object actPrintSaleOrder: TdsdPrintAction
       Category = 'Print'
       MoveParams = <
@@ -657,40 +691,6 @@ inherited StaffListJournalForm: TStaffListJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbmacInsertMask'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -708,6 +708,10 @@ inherited StaffListJournalForm: TStaffListJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -757,8 +761,16 @@ inherited StaffListJournalForm: TStaffListJournalForm
       Action = macInsertMask
       Category = 0
     end
+    object bbChoiceGuides: TdxBarButton
+      Action = actChoiceGuides
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actChoiceGuides
+      end>
     Left = 320
     Top = 224
   end
@@ -843,6 +855,35 @@ inherited StaffListJournalForm: TStaffListJournalForm
       item
         Name = 'ImportSettingId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 400

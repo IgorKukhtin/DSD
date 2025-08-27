@@ -1,4 +1,4 @@
- unit StaffListJournal;
+ unit StaffListJournalChoice;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   ExternalLoad, dsdCommon;
 
 type
-  TStaffListJournalForm = class(TAncestorJournalForm)
+  TStaffListJournalChoiceForm = class(TAncestorJournalForm)
     DepartmentName: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -53,6 +53,8 @@ type
     GuidesUnit: TdsdGuides;
     macInsertMask: TMultiAction;
     bbmacInsertMask: TdxBarButton;
+    actChoiceGuides: TdsdChoiceGuides;
+    bbChoiceGuides: TdxBarButton;
   private
     { Private declarations }
   public
@@ -63,5 +65,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TStaffListJournalForm);
+  RegisterClass(TStaffListJournalChoiceForm);
 end.

@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_StaffList()
-
 DROP FUNCTION IF EXISTS gpSelect_Movement_StaffList (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_StaffList (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_StaffList(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inJuridicalBasisId  Integer   , -- гл. юр.лицо
+    IN inUnitId            Integer   , -- подразделение
     IN inIsErased          Boolean   ,
     IN inSession           TVarChar    -- сесси€ пользовател€
 )
@@ -105,6 +107,7 @@ BEGIN
                                          ON MovementLinkObject_Update.MovementId = Movement.Id
                                         AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
+       WHERE MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0
 
        ;
   

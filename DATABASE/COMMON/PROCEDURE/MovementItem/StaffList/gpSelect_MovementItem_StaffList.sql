@@ -1,9 +1,11 @@
 -- Function: gpSelect_MovementItem_StaffList (Integer, Boolean, Boolean, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_StaffList (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_StaffList (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_StaffList(
     IN inMovementId  Integer      , -- ключ Документа
+    IN inShowAll     Boolean      , -- 
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -53,6 +55,7 @@ $BODY$
    DECLARE vbOperDate  TDateTime;
            vbStartDate TDateTime;
            vbEndDate   TDateTime;
+           vbUnitId    Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_StaffList());
@@ -60,8 +63,13 @@ BEGIN
 
      SELECT DATE_TRUNC ('MONTH', Movement.OperDate) 
           , DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
-    INTO vbStartDate, vbEndDate
+          , MovementLinkObject_Unit.ObjectId AS UnitId
+    INTO vbStartDate, vbEndDate, vbUnitId
      FROM Movement
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
      WHERE Movement.Id = inMovementId;
 
      RETURN QUERY
@@ -80,6 +88,18 @@ BEGIN
                        FROM tmpDate
                             LEFT JOIN zfCalc_DayOfWeekName (tmpDate.OperDate) AS tmpWeekDay ON 1=1
                        )
+          , tmpStaffList_object AS (SELECT tmp.PositionId 
+                                          , tmp.PositionName               
+                                          , tmp.PositionLevelId
+                                          , tmp.PositionLevelName
+                                          , tmp.HoursPlan
+                                          , tmp.HoursDay
+                                          , tmp.PersonalCount         
+                                    FROM gpSelect_Object_StaffList(inUnitId := vbUnitId , inisShowAll := 'False' ,  inSession := inSession) AS tmp
+                                    WHERE inShowAll = TRUE
+                                      AND COALESCE (vbUnitId,0) <> 0
+                                    )
+
           , tmpMI AS (SELECT MovementItem.*
                       FROM MovementItem
                       WHERE MovementItem.MovementId = inMovementId
@@ -104,6 +124,7 @@ BEGIN
                               AND MovementItemString.DescId = zc_MIString_Comment()
                            )
           , tmpData AS (SELECT MovementItem.*
+                             , MILinkObject_PositionLevel.ObjectId                        AS PositionLevelId
                              , COALESCE (MIFloat_AmountReport.ValueData, 0)      ::TFloat AS AmountReport
                              , COALESCE (MIFloat_StaffCount_1.ValueData, 0)      ::TFloat AS StaffCount_1
                              , COALESCE (MIFloat_StaffCount_2.ValueData, 0)      ::TFloat AS StaffCount_2
@@ -167,13 +188,64 @@ BEGIN
                              LEFT JOIN tmpMIFloat AS MIFloat_Staff_Summ_add
                                                   ON MIFloat_Staff_Summ_add.MovementItemId = MovementItem.Id
                                                  AND MIFloat_Staff_Summ_add.DescId = zc_MIFloat_Staff_Summ_add()
+
+                             LEFT JOIN tmpMILinkObject AS MILinkObject_PositionLevel
+                                                       ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+                             LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = MILinkObject_PositionLevel.ObjectId
                              LEFT JOIN tmpDay ON 1=1 
                         )
 
        --
 
              
-       -- Результат
+       -- Результат 
+       SELECT 0                  AS Id
+            , tmp.PositionId
+            , tmp.PositionName
+            , tmp.PositionLevelId
+            , tmp.PositionLevelName
+            , 0    ::Integer     AS StaffPaidKindId
+            , ''   ::TVarChar    AS StaffPaidKindName
+            , 0    ::Integer     AS StaffHoursDayId
+            , ''   ::TVarChar    AS StaffHoursDayName
+            , 0    ::Integer     AS StaffHoursId
+            , ''   ::TVarChar    AS StaffHoursName
+            , 0    ::Integer     AS StaffHoursLengthId
+            , ''   ::TVarChar    AS StaffHoursLengthName
+            , 0    ::Integer     AS PersonalId
+            , ''   ::TVarChar    AS PersonalName
+
+            , tmp.PersonalCount ::TFloat AS Amount
+            , tmp.PersonalCount ::TFloat AS AmountReport
+            , 0    ::TFloat      AS StaffCount_1
+            , 0    ::TFloat      AS StaffCount_2
+            , 0    ::TFloat      AS StaffCount_3
+            , 0    ::TFloat      AS StaffCount_4
+            , 0    ::TFloat      AS StaffCount_5
+            , 0    ::TFloat      AS StaffCount_6
+            , 0    ::TFloat      AS StaffCount_7
+            , 0    ::TFloat      AS StaffCount_Invent
+            , 0    ::TFloat      AS Staff_Price
+            , 0    ::TFloat      AS Staff_Summ_MK
+            , 0    ::TFloat      AS Staff_Summ_real
+            , 0    ::TFloat      AS Staff_Summ_add
+
+            , ''   ::TVarChar    AS Comment
+            , FALSE ::Boolean    AS isErased                                                
+            
+            , 0    ::TFloat      AS TotalStaffCount
+            , 0    ::TFloat      AS TotalStaffHoursLength
+            , 0    ::TFloat      AS NormCount
+            , 0    ::TFloat      AS NormHours 
+            , 0    ::TFloat      AS WageFund
+            , 0    ::TFloat      AS WageFund_byOne
+       FROM tmpStaffList_object AS tmp
+            LEFT JOIN tmpData ON tmpData.ObjectId = tmp.PositionId
+                             AND tmpData.PositionLevelId = tmp.PositionLevelId
+       WHERE tmpData.ObjectId IS NULL
+
+     UNION
        SELECT MovementItem.Id                               AS Id
             , Object_Position.Id                            AS PositionId
             , Object_Position.ValueData                     AS PositionName
@@ -237,10 +309,11 @@ BEGIN
                                   ON MIString_Comment.MovementItemId = MovementItem.Id
                                  AND MIString_Comment.DescId = zc_MIString_Comment()
 
-            LEFT JOIN tmpMILinkObject AS MILinkObject_PositionLevel
-                                      ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
+            /*LEFT JOIN tmpMILinkObject AS MILinkObject_PositionLevel
+                                      ON MILinkObject_PositionLevel.MovementItemId = cId
                                      AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
-            LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = MILinkObject_PositionLevel.ObjectId
+            */
+            LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = MovementItem.PositionLevelId
 
             LEFT JOIN tmpMILinkObject AS MILinkObject_StaffPaidKind
                                       ON MILinkObject_StaffPaidKind.MovementItemId = MovementItem.Id
@@ -280,4 +353,4 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpSelect_MovementItem_StaffList (inMovementId:= 14521952, inIsErased:= TRUE, inSession:= '9457')
---SELECT * FROM gpSelect_MovementItem_StaffList (inMovementId:= 14521952, inIsErased:= FALSE, inSession:= '9457')
+--SELECT * FROM gpSelect_MovementItem_StaffList (inMovementId:= 14521952, inShowAll:= true, inIsErased:= FALSE, inSession:= '9457')

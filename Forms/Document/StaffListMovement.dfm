@@ -1,5 +1,5 @@
 inherited StaffListMovementForm: TStaffListMovementForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1080#1079#1084#1077#1085#1077#1085#1080#1103')>'
   ClientHeight = 564
   ClientWidth = 1153
   ExplicitWidth = 1169
@@ -165,6 +165,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
           object AmountReport: TcxGridDBColumn [3]
             Caption = #1064#1056' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
             DataBinding.FieldName = 'AmountReport'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
@@ -173,7 +175,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100
@@ -1002,6 +1004,86 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end>
       isShowModal = True
     end
+    object actOpenStaffListJournalChoice: TOpenChoiceForm
+      Category = 'Income'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'OpenChoiceFormIncome'
+      FormName = 'TStaffListJournalChoiceForm'
+      FormNameParam.Value = 'TStaffListJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'Id_mask'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actInsertMIMaster_byMovement: TdsdExecStoredProc
+      Category = 'Income'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_byMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_byMovement
+        end>
+      Caption = 'actInsertMIMaster_byMovement'
+    end
+    object macInsertMI_byMovement: TMultiAction
+      Category = 'Income'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenStaffListJournalChoice
+        end
+        item
+          Action = actInsertMIMaster_byMovement
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 27
+    end
   end
   inherited MasterDS: TDataSource
     Left = 24
@@ -1019,6 +1101,14 @@ inherited StaffListMovementForm: TStaffListMovementForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1052,6 +1142,10 @@ inherited StaffListMovementForm: TStaffListMovementForm
           ItemName = 'bbShowErased'
         end
         item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -1083,6 +1177,10 @@ inherited StaffListMovementForm: TStaffListMovementForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMI_byMovement'
         end
         item
           Visible = True
@@ -1146,12 +1244,16 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Action = InsertRecord
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbdd: TdxBarButton
       Caption = #1057#1087#1080#1089#1086#1082' '#1053#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
       Category = 0
       Hint = #1057#1087#1080#1089#1086#1082' '#1053#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
       Visible = ivAlways
       ImageIndex = 26
+    end
+    object bbInsertMI_byMovement: TdxBarButton
+      Action = macInsertMI_byMovement
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1201,10 +1303,9 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameSend'
-        Value = 'PrintMovement_Sale1'
-        DataType = ftString
-        ParamType = ptInput
+        Name = 'inMask'
+        Value = False
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -1245,18 +1346,34 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber'
-        Value = ''
-        Component = edInvNumber
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inOperDate'
         Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = ''
+        Component = edInvNumber
         MultiSelectSeparator = ','
       end
       item
@@ -1285,11 +1402,15 @@ inherited StaffListMovementForm: TStaffListMovementForm
       item
         Name = 'UnitId'
         Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1397,6 +1518,14 @@ inherited StaffListMovementForm: TStaffListMovementForm
         Value = Null
         Component = edCount_7
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1918,7 +2047,32 @@ inherited StaffListMovementForm: TStaffListMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 424
-    Top = 24
+    Left = 440
+    Top = 48
+  end
+  object spInsert_MI_byMovement: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_StaffList_byMovement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_mask'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'Id_mask'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 282
+    Top = 328
   end
 end
