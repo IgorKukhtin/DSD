@@ -123,6 +123,17 @@ type
     actUpdateVchasnoEdiDelnotTrue: TdsdExecStoredProc;
     spUpdateVchasnoEdiComdoc: TdsdStoredProc;
     spUpdateVchasnoEdiDelnot: TdsdStoredProc;
+    spGetReportNameQuality_export: TdsdStoredProc;
+    spSelectPrint_Quality: TdsdStoredProc;
+    DataCondraCDS: TClientDataSet;
+    spSelectData_Condra: TdsdStoredProc;
+    acGet_Quality_ReportName: TdsdExecStoredProc;
+    actPrintQuality_saveFile: TdsdPrintAction;
+    actSelectData_Condra: TdsdExecStoredProc;
+    actVchasno_SendCondra: TdsdVchasnoEDIAction;
+    mactVchasnoEDICONDRA: TMultiAction;
+    actUpdateEdiCONDRATrue: TdsdExecStoredProc;
+    spUpdateEdiCondra: TdsdStoredProc;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -573,7 +584,7 @@ begin
               if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactDesadv.Execute;
               // EDIN
               if (FieldByName('isEdiInvoice').AsBoolean = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactInvoice.Execute;
-              // Ошибку по EDIN нет
+              // Ошибки по EDIN нет
               FormParams.ParamByName('Err_str_toEDI').Value := '';
 
               // Vchasno-Ordspr
@@ -611,6 +622,27 @@ begin
                             AddToLog_Vchasno(true, '', true);
                        end;
                        MyDelay_two(3000);
+                       //
+                       //еще отправка Декларация
+                       if (FieldByName('isEdiQuality').AsBoolean  = true) and (FormParams.ParamByName('Err_str_toEDI').Value = '')
+                        //and (1=0)
+                       then begin
+                            //Документ продажа
+                            FormParams.ParamByName('MovementId_sale').Value := FieldByName('Id').AsInteger;
+                            //
+                            if mactVchasnoEDICONDRA.Execute
+                            then actUpdateEdiCONDRATrue.Execute
+                            else begin
+                                  // Ошибку записать в базе
+                                  FormParams.ParamByName('Err_str_toEDI').Value := 'Ошибка при отправке Декларация';
+                                  // Ошибку показать в логе
+                                  AddToLog_Vchasno(true, 'Ошибка при отправке CONDRA Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
+                                  AddToLog_Vchasno(true, actVchasno_SendCondra.ErrorText.Value, true);
+                                  AddToLog_Vchasno(true, '', true);
+                             end;
+                            //
+                            MyDelay_two(3000);
+                       end;
               end;
 
               // Vchasno - Delnot
