@@ -1666,10 +1666,10 @@
   object GuidesAsset: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAsset
-    FormNameParam.Value = 'TAssetForm'
+    FormNameParam.Value = 'TAssetToPlaceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TAssetForm'
+    FormName = 'TAssetToPlaceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
