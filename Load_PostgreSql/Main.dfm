@@ -2717,7 +2717,6 @@ object MainForm: TMainForm
         'LogMemo')
       ParentFont = False
       TabOrder = 1
-      ExplicitTop = 33
     end
     object LogMemo2: TMemo
       Left = 1

@@ -2733,7 +2733,7 @@ begin
      //
      if Hour_calc < 14 then
      begin
-          FormParams.ParamByName('DateFrom').Value:= Date-1;
+          FormParams.ParamByName('DateFrom').Value:= StrToDate(DateToStr(Date-1));
           FormParams.ParamByName('DateTo').Value:= Date;
      end
      else
@@ -2748,8 +2748,12 @@ begin
      try
          actVchasnoEDIComDocLoad.Execute;
          myLogMemo_add('!!! end Load - Vchasno - ComDoc !!!');
-     except
-         myLogMemo_add('??? ERROR Load - Vchasno - ComDoc ???');
+
+     except on E:Exception do
+     begin
+          myLogMemo_add('??? ERROR Load - Vchasno - ComDoc ???');
+          myLogMemo_add(E.Message);
+     end
      end
      else
          myLogMemo_add('not Load - Vchasno - ComDoc');
