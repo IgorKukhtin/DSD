@@ -155,7 +155,11 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-       WHERE Object_InfoMoney.ObjectCode IN (20301, 20302, 20303, 20304, 20305, 20306)
+       WHERE Object_InfoMoney.ObjectCode IN (-- Общефирменные: Мебель + Комп. и оргтехника + Быт. техника + ...
+                                             20301, 20302, 20303, 20304, 20305, 20306
+                                             -- Инвестиции: Производственное оборудование + Торговое оборудование
+                                           , 70102, 70103, 70202, 70203
+                                            )
 
       UNION All
        SELECT 0    :: Integer AS Id
