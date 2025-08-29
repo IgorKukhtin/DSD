@@ -10,12 +10,12 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_StaffList(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , --
     IN inPositionId            Integer   , --
-    IN inPositionLevelId       Integer   , -- 
+    IN inPositionLevelId       Integer   , --
+    IN inPersonalId            Integer   , -- 
     IN inStaffPaidKindId       Integer   , -- 
     IN inStaffHoursDayId       Integer   , -- 
     IN inStaffHoursId          Integer   , -- 
     IN inStaffHoursLengthId    Integer   , -- 
-    IN inPersonalId            Integer   , -- 
     IN inAmount                TFloat    , --
     IN inAmountReport          TFloat    , --
     IN inStaffCount_1          TFloat    , --

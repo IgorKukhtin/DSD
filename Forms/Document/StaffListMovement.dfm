@@ -144,6 +144,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
@@ -1680,6 +1681,14 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStaffPaidKindId'
         Value = Null
         Component = MasterCDS
@@ -1688,34 +1697,29 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStaffHoursDayId'
+        Name = 'inStaffHoursDayName'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'StaffHoursDayId'
+        ComponentItem = 'StaffHoursDayName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStaffHoursId'
+        Name = 'inStaffHoursName'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'StaffHoursId'
+        ComponentItem = 'StaffHoursName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStaffHoursLengthId'
+        Name = 'inStaffHoursLengthName'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'StaffHoursLengthId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersonalId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PersonalId'
+        ComponentItem = 'StaffHoursLengthName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
