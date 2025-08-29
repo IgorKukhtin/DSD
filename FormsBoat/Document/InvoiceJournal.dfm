@@ -1018,6 +1018,11 @@
           Format = ',0.####'
           Kind = skSum
           Column = Summа_VAT_ch4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountRemains
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -1076,6 +1081,11 @@
           Format = ',0.####'
           Kind = skSum
           Column = Summа_VAT_ch4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountRemains
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1194,6 +1204,18 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object AmountRemains: TcxGridDBColumn
+        Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1077#1082'.'
+        DataBinding.FieldName = 'AmountRemains'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1090#1077#1082#1091#1097#1080#1081' '#1085#1072' '#1075#1083'. '#1089#1082#1083#1072#1076#1077
         Options.Editing = False
         Width = 70
       end

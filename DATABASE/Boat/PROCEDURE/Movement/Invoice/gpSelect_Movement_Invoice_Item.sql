@@ -15,7 +15,8 @@ RETURNS TABLE (MovementId Integer
              , GoodsCode  Integer
              , GoodsName  TVarChar
              , Article    TVarChar
-             , Amount     TFloat
+             , Amount     TFloat 
+             , AmountRemains TFloat
              , OperPrice  TFloat
              , SummMVAT   TFloat 
              , SummPVAT   TFloat
@@ -57,6 +58,24 @@ BEGIN
                       WHERE MovementLinkObject_Object.ObjectId = inClientId
                         OR COALESCE (inClientId, 0) = 0
                       )
+     , tmpMI AS (SELECT MovementItem.*
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementItem.DescId = zc_MI_Master()
+                                   AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
+                 )  
+                
+       --текущие остатки
+     , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
+                           , Sum(Container.Amount)::TFloat AS Remains
+                      FROM Container
+                      WHERE Container.WhereObjectId = 35139 -- Склад Основной
+                        AND Container.DescId        = zc_Container_Count()
+                        AND Container.ObjectId IN (SELECT DISTINCT tmpMI.ObjectId FROM tmpMI)
+                        AND Container.Amount <> 0
+                      GROUP BY Container.ObjectId
+                      HAVING Sum(Container.Amount) <> 0
+                     )
 
        -- Результат
        SELECT Movement.Id                     AS MovementId
@@ -65,7 +84,9 @@ BEGIN
             , Object_Goods.ObjectCode         AS GoodsCode
             , Object_Goods.ValueData          AS GoodsName
             , ObjectString_Article.ValueData  AS Article
-            , MovementItem.Amount         ::TFloat AS Amount 
+            , MovementItem.Amount         ::TFloat AS Amount
+            --остатки на гл. складе
+            , CASE WHEN Movement.StatusId = zc_Enum_Status_UnComplete() THEN COALESCE (tmpRemains.Remains,0) - COALESCE (MovementItem.Amount,0) ELSE tmpRemains.Remains END  ::TFloat AS AmountRemains 
             --цена без НДС
             , MIFloat_OperPrice.ValueData ::TFloat AS OperPrice  
              --Сумма без ндс
@@ -94,9 +115,7 @@ BEGIN
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
 
-            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                   AND MovementItem.DescId = zc_MI_Master()
-                                   AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
+            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 
             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
@@ -120,6 +139,7 @@ BEGIN
                                    ON ObjectString_Article.ObjectId = MovementItem.ObjectId
                                   AND ObjectString_Article.DescId   = zc_ObjectString_Article()
 
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_Goods.Id
 -- where vbUserId <> 5 -- or Movement.Id = 6187
 -- or Movement.Id <> 6163
           ;

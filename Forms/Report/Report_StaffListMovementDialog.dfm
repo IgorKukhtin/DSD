@@ -46,7 +46,7 @@ object Report_StaffListMovementDialogForm: TReport_StaffListMovementDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 2
-    Width = 305
+    Width = 288
   end
   object cxLabel3: TcxLabel
     Left = 11
@@ -94,7 +94,7 @@ object Report_StaffListMovementDialogForm: TReport_StaffListMovementDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 256
+    Width = 286
   end
   object PeriodChoice: TPeriodChoice
     Left = 140

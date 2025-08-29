@@ -32,12 +32,22 @@ object GoodsForm: TGoodsForm
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountRemains
+        end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = Name
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountRemains
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -504,6 +514,15 @@ object GoodsForm: TGoodsForm
         HeaderHint = 'P'#1077#1082#1086#1084#1077#1085#1076#1086#1074'. '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
         Options.Editing = False
         Width = 80
+      end
+      object AmountRemains: TcxGridDBColumn
+        Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1077#1082'.'
+        DataBinding.FieldName = 'AmountRemains'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1090#1077#1082#1091#1097#1080#1081' '#1085#1072' '#1075#1083'. '#1089#1082#1083#1072#1076#1077
+        Width = 70
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

@@ -92,6 +92,7 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
             Caption = #1060#1072#1082#1090' '#1064#1056
             DataBinding.FieldName = 'AmountFact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -99,6 +100,8 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
           object Amount_diff: TcxGridDBColumn
             Caption = #1044#1077#1083#1100#1090#1072
             DataBinding.FieldName = 'Amount_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -108,6 +111,7 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
             Caption = '% '#1082#1086#1084#1083#1077#1082#1090#1072#1094#1080#1080
             DataBinding.FieldName = 'Persent_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
