@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, DescName TVarChar
              , AssetGroupId Integer, AssetGroupCode Integer, AssetGroupName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
+             , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
              , PeriodUse TFloat
@@ -41,6 +42,11 @@ BEGIN
          , Object_Maker.Id             AS MakerId
          , Object_Maker.ObjectCode     AS MakerCode
          , Object_Maker.ValueData      AS MakerName
+
+         , Object_Car.Id               AS CarId
+         , Object_Car.ObjectCode       AS CarCode
+         , Object_Car.ValueData        AS CarName
+         , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
          
          , COALESCE (ObjectDate_Release.ValueData,CAST (CURRENT_DATE as TDateTime)) AS Release
          
@@ -99,6 +105,20 @@ BEGIN
                                AND ObjectFloat_PeriodUse.DescId = zc_ObjectFloat_Asset_PeriodUse()
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Asset.DescId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Asset_Car
+                               ON ObjectLink_Asset_Car.ObjectId = Object_Asset.Id
+                              AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
+          LEFT JOIN Object AS Object_Car ON Object_Car.Id = ObjectLink_Asset_Car.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel
+                               ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                              AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+          LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                               ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                              AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+          LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+
      WHERE Object_Asset.DescId = zc_Object_Asset() 
 
       UNION All
@@ -122,6 +142,11 @@ BEGIN
             , 0    :: Integer  AS MakerId
             , NULL :: Integer  AS MakerCode
             , ''   :: TVarChar AS MakerName
+
+            , 0    :: Integer  AS CarId
+            , NULL :: Integer  AS CarCode
+            , ''   :: TVarChar AS CarName
+            , ''   :: TVarChar AS CarModelName
          
             , CAST (CURRENT_DATE AS TDateTime) AS Release
          
@@ -181,6 +206,11 @@ BEGIN
             , 0    :: Integer  AS MakerId
             , NULL :: Integer  AS MakerCode
             , ''   :: TVarChar AS MakerName
+
+            , 0    :: Integer  AS CarId
+            , NULL :: Integer  AS CarCode
+            , ''   :: TVarChar AS CarName
+            , ''   :: TVarChar AS CarModelName
          
             , CAST (CURRENT_DATE AS TDateTime) AS Release
          
@@ -202,8 +232,9 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.08.25         * add car
  25.11.16         *
 */
 
 -- ÚÂÒÚ
---SELECT * FROM gpSelect_Object_AssetToPlace (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_AssetToPlace (zfCalc_UserAdmin())

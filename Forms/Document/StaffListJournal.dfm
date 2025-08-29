@@ -239,7 +239,7 @@ inherited StaffListJournalForm: TStaffListJournalForm
     end
     inherited deEnd: TcxDateEdit
       Left = 299
-      EditValue = 42370d
+      EditValue = 45658d
       ExplicitLeft = 299
       ExplicitWidth = 80
       Width = 80
@@ -591,6 +591,81 @@ inherited StaffListJournalForm: TStaffListJournalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    object ExecuteDialogData: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'actDataDialog'
+      ImageIndex = 10
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftDateTime
+      FormNameParam.ParamType = ptInputOutput
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inOperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 45658d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actCopyFromGrid: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCopyrFromGrid
+      StoredProcList = <
+        item
+          StoredProc = spCopyrFromGrid
+        end>
+      Caption = 'actCopyFromGrid'
+    end
+    object mactCopyFromGrid_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCopyFromGrid
+        end>
+      View = cxGridDBTableView
+      Caption = 
+        #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072'> '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086 +
+        #1074#1072#1103'>'
+      ImageIndex = 10
+    end
+    object macCopyFromGrid: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogData
+        end
+        item
+          Action = mactCopyFromGrid_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1085#1072' '#1044#1072#1090#1091'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1085#1072' '#1044#1072#1090#1091
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1085#1072' '#1044#1072#1090#1091
+      ImageIndex = 10
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -711,15 +786,19 @@ inherited StaffListJournalForm: TStaffListJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbCopyFromGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -755,6 +834,11 @@ inherited StaffListJournalForm: TStaffListJournalForm
     end
     object bbmacInsertMask: TdxBarButton
       Action = macInsertMask
+      Category = 0
+    end
+    object bbCopyFromGrid: TdxBarButton
+      Action = macCopyFromGrid
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1074#1099#1073#1088#1072#1085#1085#1099#1093
       Category = 0
     end
   end
@@ -1049,5 +1133,31 @@ inherited StaffListJournalForm: TStaffListJournalForm
       end>
     Left = 528
     Top = 8
+  end
+  object spCopyrFromGrid: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_StaffList_Mask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42705d
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 585
+    Top = 362
   end
 end

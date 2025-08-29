@@ -4143,7 +4143,7 @@ end;
 
 procedure TLoadFormTest.LoadAssetFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAsset_ObjectForm');
   exit;
@@ -4155,7 +4155,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetEditForm');
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetTypeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetTypeEditForm'));
@@ -4181,9 +4181,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAssetGoodsPlaceForm');
 
   //
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetToPlaceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetToPlaceForm');
   //
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGoods_ObjectForm');
   }
@@ -4675,6 +4677,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListJournalChoiceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMovementDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMovementDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListRankingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListRankingForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListRankingDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListRankingDialogForm');
 end;
 
  procedure TLoadFormTest.LoadMessagePersonalServiceLastFormTest;
