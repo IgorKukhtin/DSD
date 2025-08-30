@@ -10,7 +10,8 @@ RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar 
              , Article        TVarChar
              , PartnerId Integer, PartnerName TVarChar
-             , Amount         TFloat
+             , Amount         TFloat 
+             , AmountRemains  TFloat
              , OperPrice      TFloat
              , SummMVAT       TFloat
              , SummPVAT       TFloat     
@@ -37,6 +38,7 @@ BEGIN
            , CAST (0 AS Integer)    AS PartnerId
            , CAST ('' AS TVarChar)  AS PartnerName
            , CAST (1 AS TFloat)     AS Amount
+           , CAST (0 AS TFloat)     AS AmountRemains
            , CAST (0 AS TFloat)     AS OperPrice  
            , CAST (0 AS TFloat)     AS SummMVAT
            , CAST (0 AS TFloat)     AS SummPVAT
@@ -48,7 +50,26 @@ BEGIN
            , CAST (0 AS Integer)    AS t3
            ;
    ELSE
-         RETURN QUERY
+         RETURN QUERY 
+         WITH 
+         tmpMI AS (SELECT MovementItem.* 
+                   FROM MovementItem
+                   WHERE MovementItem.Id = inId
+                     AND MovementItem.DescId = zc_MI_Master()
+                   )
+
+         --текущие остатки
+       , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
+                             , Sum(Container.Amount)::TFloat AS Remains
+                         FROM Container
+                         WHERE Container.WhereObjectId = 35139 -- Склад Основной
+                           AND Container.DescId        = zc_Container_Count()
+                           AND Container.ObjectId IN (SELECT DISTINCT tmpMI.ObjectId FROM tmpMI)
+                           AND Container.Amount <> 0
+                         GROUP BY Container.ObjectId
+                                --, Container.WhereObjectId
+                         HAVING Sum(Container.Amount) <> 0
+                        )
            -- Результат
            SELECT
                  MovementItem.Id                AS Id
@@ -59,6 +80,10 @@ BEGIN
                , Object_Partner.Id              AS PartnerId
                , Object_Partner.ValueData       AS PartnerName
                , MovementItem.Amount                       ::TFloat AS Amount
+
+               --остатки на гл. складе
+               , tmpRemains.Remains                        ::TFloat AS AmountRemains
+
                , COALESCE (MIFloat_OperPrice.ValueData, 0) ::TFloat AS OperPrice 
                , COALESCE (MIFloat_SummMVAT.ValueData,0)   ::TFloat AS SummMVAT   --Сумма без ндс
                , COALESCE (MIFloat_SummPVAT.ValueData,0)   ::TFloat AS SummPVAT   -- Сумма с НДС
@@ -73,7 +98,7 @@ BEGIN
                , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPVAT_calc(), MovementItem.Id, COALESCE (MIFloat_SummPVAT.ValueData, 0))   ::integer
                , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Amount_calc(), MovementItem.Id, MovementItem.Amount)                          ::integer
 
-           FROM MovementItem
+           FROM tmpMI AS MovementItem
                 LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                             ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                            AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
@@ -99,8 +124,8 @@ BEGIN
                                      ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id
                                     AND ObjectLink_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner()
                 LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Goods_Partner.ChildObjectId
-           WHERE MovementItem.Id = inId
-             AND MovementItem.DescId = zc_MI_Master()
+
+                LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_Goods.Id
            ;
    END IF;
    
