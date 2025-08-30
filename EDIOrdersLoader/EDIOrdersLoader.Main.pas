@@ -838,7 +838,6 @@ try
            AddToLog_Vchasno(false, '**** Ошибка *** VCHASNO - LoadData - from *** : ' + E.Message, true);
         end;
   end;
-
   //
   // !!! Только Отправка !!!
   try fEdi_SendData_to;
