@@ -26,7 +26,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , isArc Boolean
                --
              , Feet TFloat, Metres TFloat
-             , AmountMin TFloat, AmountRefer TFloat
+             , AmountMin TFloat, AmountRefer TFloat  
+             
+             , AmountRemains TFloat
 
              , EKPrice TFloat, EKPriceWVAT TFloat
              , EmpfPrice TFloat, EmpfPriceWVAT TFloat
@@ -65,6 +67,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , Comment_pl TVarChar
              , myCount_pl Integer
              , Len_1 Integer, Len_2 Integer, Len_3 Integer, Len_4 Integer, Len_5 Integer, Len_6 Integer, Len_7 Integer, Len_8 Integer, Len_9 Integer, Len_10 Integer
+             
              , isErased Boolean
               )
 AS
@@ -267,6 +270,20 @@ BEGIN
                         --AND inIsLimit_100 = TRUE
                         --AND 1=0
                        )
+           --текущие остатки
+         , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
+                               --, Container.WhereObjectId       AS UnitId
+                               , Sum(Container.Amount)::TFloat AS Remains
+                          FROM Container
+                          WHERE Container.WhereObjectId = 35139 -- Склад Основной
+                            AND Container.DescId        = zc_Container_Count()
+                            AND Container.ObjectId IN (SELECT DISTINCT tmpGoods.Id FROM tmpGoods)
+                            AND Container.Amount <> 0
+                          GROUP BY Container.ObjectId
+                                 --, Container.WhereObjectId
+                          HAVING Sum(Container.Amount) <> 0
+                         )
+
        -- Результат
        SELECT Object_Goods.Id                     AS Id
             , Object_Goods.ObjectCode             AS Code
@@ -328,6 +345,9 @@ BEGIN
 
             , ObjectFloat_Min.ValueData          AS AmountMin
             , ObjectFloat_Refer.ValueData        AS AmountRefer
+            
+            --остатки на гл. складе
+            , tmpRemains.Remains ::TFloat        AS AmountRemains
 
               -- Цена вх. без НДС
             , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
@@ -653,6 +673,7 @@ BEGIN
             -- это
             LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
 
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_Goods.Id
         --WHERE ObjectString_Article.ValueData ILIKE 'AGL%'
 
         ORDER BY Object_Goods.Id  desc
@@ -667,6 +688,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.08.25         * add Remains
  01.12.23         * UnitName_child_receipt
  18.05.22         * add inIsLimit_100
  10.04.22         *

@@ -53,6 +53,12 @@ type
     GuidesUnit: TdsdGuides;
     macInsertMask: TMultiAction;
     bbmacInsertMask: TdxBarButton;
+    ExecuteDialogData: TExecuteDialog;
+    actCopyFromGrid: TdsdExecStoredProc;
+    mactCopyFromGrid_list: TMultiAction;
+    macCopyFromGrid: TMultiAction;
+    spCopyrFromGrid: TdsdStoredProc;
+    bbCopyFromGrid: TdxBarButton;
   private
     { Private declarations }
   public

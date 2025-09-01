@@ -1604,7 +1604,11 @@ uses
   StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm},
   StaffListJournal in '..\..\Forms\Document\StaffListJournal.pas' {StaffListJournalForm: TParentForm},
   ClientKindEdit in '..\..\Forms\Kind\ClientKindEdit.pas' {ClientKindEditForm: TParentForm},
-  StaffListJournalChoice in '..\..\Forms\Document\StaffListJournalChoice.pas' {StaffListJournalChoiceForm: TParentForm};
+  StaffListJournalChoice in '..\..\Forms\Document\StaffListJournalChoice.pas' {StaffListJournalChoiceForm: TParentForm},
+  Report_StaffListMovementDialog in '..\..\Forms\Report\Report_StaffListMovementDialog.pas' {Report_StaffListMovementDialogForm: TParentForm},
+  Report_StaffListMovement in '..\..\Forms\Report\Report_StaffListMovement.pas' {Report_StaffListMovementForm: TParentForm},
+  Report_StaffListRankingDialog in '..\..\Forms\Report\Report_StaffListRankingDialog.pas' {Report_StaffListRankingDialogForm: TParentForm},
+  Report_StaffListRanking in '..\..\Forms\Report\Report_StaffListRanking.pas' {Report_StaffListRankingForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -61,6 +61,8 @@ type
     ceSummà_VAT: TcxCurrencyEdit;
     spUpdate_before: TdsdStoredProc;
     actUpdate_summ_before: TdsdDataSetRefresh;
+    cxLabel7: TcxLabel;
+    ceRemains: TcxCurrencyEdit;
   private
     { Private declarations }
   public

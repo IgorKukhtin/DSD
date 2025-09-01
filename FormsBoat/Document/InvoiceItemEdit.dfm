@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1057#1095#1077#1090#1072'>'
-  ClientHeight = 269
-  ClientWidth = 529
+  ClientHeight = 323
+  ClientWidth = 421
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,8 +22,8 @@
     Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
   end
   object cxButtonOK: TcxButton
-    Left = 196
-    Top = 225
+    Left = 195
+    Top = 283
     Width = 90
     Height = 25
     Action = actInsertUpdate
@@ -32,8 +32,8 @@
     TabOrder = 2
   end
   object cxButtonCancel: TcxButton
-    Left = 313
-    Top = 225
+    Left = 312
+    Top = 283
     Width = 90
     Height = 25
     Action = actFormClose
@@ -75,7 +75,7 @@
     Style.TextColor = clBlack
     Style.IsFontAssigned = True
     TabOrder = 0
-    Width = 62
+    Width = 89
   end
   object cxLabel14: TcxLabel
     Left = 8
@@ -102,13 +102,13 @@
     Width = 103
   end
   object cxLabel5: TcxLabel
-    Left = 78
+    Left = 112
     Top = 117
     Hint = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
     Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
   end
   object ceOperPrice: TcxCurrencyEdit
-    Left = 78
+    Left = 112
     Top = 137
     Hint = #1042#1093'. '#1094#1077#1085#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
     ParentShowHint = False
@@ -121,18 +121,18 @@
   end
   object ceComment: TcxTextEdit
     Left = 8
-    Top = 188
+    Top = 245
     TabOrder = 12
     Width = 401
   end
   object cxLabel16: TcxLabel
     Left = 8
-    Top = 165
+    Top = 225
     Caption = #1054#1087#1080#1089#1072#1085#1080#1077
   end
   object btnGoodsChoiceForm: TcxButton
     Left = 8
-    Top = 225
+    Top = 283
     Width = 150
     Height = 25
     Hint = #1042#1099#1073#1086#1088' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -142,30 +142,30 @@
     TabOrder = 14
   end
   object cxLabel2: TcxLabel
-    Left = 166
-    Top = 117
+    Left = 8
+    Top = 171
     Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
   end
   object cxLabel4: TcxLabel
-    Left = 329
-    Top = 117
+    Left = 196
+    Top = 171
     Hint = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
     Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
   end
   object ceSummPVAT: TcxCurrencyEdit
-    Left = 329
-    Top = 137
+    Left = 196
+    Top = 191
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.EditFormat = ',0.####'
     ShowHint = True
     TabOrder = 17
-    Width = 80
+    Width = 84
   end
   object ceSummMVAT: TcxCurrencyEdit
-    Left = 166
-    Top = 137
+    Left = 8
+    Top = 191
     ParentFont = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -178,17 +178,17 @@
     Style.TextColor = clBlack
     Style.IsFontAssigned = True
     TabOrder = 18
-    Width = 80
+    Width = 89
   end
   object cxLabel6: TcxLabel
-    Left = 255
-    Top = 117
+    Left = 112
+    Top = 171
     Hint = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
     Caption = #1053#1044#1057
   end
   object ceSummа_VAT: TcxCurrencyEdit
-    Left = 255
-    Top = 137
+    Left = 112
+    Top = 191
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -196,12 +196,35 @@
     Properties.ReadOnly = True
     ShowHint = True
     TabOrder = 20
-    Width = 64
+    Width = 69
+  end
+  object cxLabel7: TcxLabel
+    Left = 279
+    Top = 117
+    Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1077#1082#1091#1097#1080#1081
+  end
+  object ceRemains: TcxCurrencyEdit
+    Left = 279
+    Top = 137
+    ParentFont = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
+    Properties.ReadOnly = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.TextColor = clBlack
+    Style.IsFontAssigned = True
+    TabOrder = 22
+    Width = 95
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 196
-    Top = 204
+    Left = 195
+    Top = 262
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -381,8 +404,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 436
-    Top = 97
+    Left = 324
+    Top = 65
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -521,6 +544,13 @@
         ComponentItem = 'SummPVAT_calc'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRemains'
+        Value = Null
+        Component = ceRemains
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 264
@@ -538,12 +568,12 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 352
-    Top = 160
+    Left = 351
+    Top = 218
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 208
-    Top = 143
+    Left = 207
+    Top = 201
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -593,6 +623,14 @@
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRemains'
+        Value = Null
+        Component = ceRemains
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 169
     Top = 63
@@ -612,8 +650,8 @@
         Control = ceSummPVAT
       end>
     Action = actUpdate_summ_before
-    Left = 436
-    Top = 12
+    Left = 380
+    Top = 4
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -622,8 +660,8 @@
     IdParam.MultiSelectSeparator = ','
     GuidesList = <>
     ActionItemList = <>
-    Left = 352
-    Top = 112
+    Left = 130
+    Top = 214
   end
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
@@ -644,8 +682,8 @@
       item
         Control = cxButtonOK
       end>
-    Left = 52
-    Top = 197
+    Left = 51
+    Top = 255
   end
   object spUpdate_before: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Invoice_SummCalc'

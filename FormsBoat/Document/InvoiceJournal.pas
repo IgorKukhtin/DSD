@@ -181,6 +181,7 @@ type
     btnInsertAction: TcxButton;
     cxButton2: TcxButton;
     btnSetErasedItem: TcxButton;
+    AmountRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public

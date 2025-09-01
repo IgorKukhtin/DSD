@@ -1573,6 +1573,11 @@ type
     N132: TMenuItem;
     actStaffListJournal: TdsdOpenForm;
     N268: TMenuItem;
+    actReport_StaffListMovement: TdsdOpenForm;
+    miReporttaffListmenu: TMenuItem;
+    N269: TMenuItem;
+    actReport_StaffListRanking: TdsdOpenForm;
+    miReport_StaffListRanking: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
