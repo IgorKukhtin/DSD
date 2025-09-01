@@ -33,6 +33,69 @@ BEGIN
            SELECT 0 :: TFloat AS TotalSumm, 0 :: TFloat AS TotalSummPartner;
 
     ELSE
+        -- Проверка
+        IF EXISTS (SELECT 1
+                   FROM MovementItemLinkObject AS MILO_PartionCell
+                   WHERE MILO_PartionCell.MovementItemId = inMovementItemId
+                     AND MILO_PartionCell.ObjectId       > 0
+                     AND MILO_PartionCell.ObjectId       NOT IN (zc_PartionCell_Err()) -- ,zc_PartionCell_RK()
+                     AND MILO_PartionCell.DescId         IN (zc_MILinkObject_PartionCell_1()
+                                                           , zc_MILinkObject_PartionCell_2()
+                                                           , zc_MILinkObject_PartionCell_3()
+                                                           , zc_MILinkObject_PartionCell_4()
+                                                           , zc_MILinkObject_PartionCell_5()
+                                                           , zc_MILinkObject_PartionCell_6()
+                                                           , zc_MILinkObject_PartionCell_7()
+                                                           , zc_MILinkObject_PartionCell_8()
+                                                           , zc_MILinkObject_PartionCell_9()
+                                                           , zc_MILinkObject_PartionCell_10()
+                                                           , zc_MILinkObject_PartionCell_11()
+                                                           , zc_MILinkObject_PartionCell_12()
+                                                           , zc_MILinkObject_PartionCell_13()
+                                                           , zc_MILinkObject_PartionCell_14()
+                                                           , zc_MILinkObject_PartionCell_15()
+                                                           , zc_MILinkObject_PartionCell_16()
+                                                           , zc_MILinkObject_PartionCell_17()
+                                                           , zc_MILinkObject_PartionCell_18()
+                                                           , zc_MILinkObject_PartionCell_19()
+                                                           , zc_MILinkObject_PartionCell_20()
+                                                           , zc_MILinkObject_PartionCell_21()
+                                                           , zc_MILinkObject_PartionCell_22()
+                                                            ))
+        THEN
+            RAISE EXCEPTION 'Ошибка.Нет прав удалять.Установлена ячейка хранения <%>.'
+                          , (SELECT lfGet_Object_ValueData_sh (MILO_PartionCell.ObjectId)
+                             FROM MovementItemLinkObject AS MILO_PartionCell
+                             WHERE MILO_PartionCell.MovementItemId = inMovementItemId
+                               AND MILO_PartionCell.ObjectId       > 0
+                               AND MILO_PartionCell.ObjectId       NOT IN (zc_PartionCell_Err()) -- ,zc_PartionCell_RK()
+                               AND MILO_PartionCell.DescId         IN (zc_MILinkObject_PartionCell_1()
+                                                                     , zc_MILinkObject_PartionCell_2()
+                                                                     , zc_MILinkObject_PartionCell_3()
+                                                                     , zc_MILinkObject_PartionCell_4()
+                                                                     , zc_MILinkObject_PartionCell_5()
+                                                                     , zc_MILinkObject_PartionCell_6()
+                                                                     , zc_MILinkObject_PartionCell_7()
+                                                                     , zc_MILinkObject_PartionCell_8()
+                                                                     , zc_MILinkObject_PartionCell_9()
+                                                                     , zc_MILinkObject_PartionCell_10()
+                                                                     , zc_MILinkObject_PartionCell_11()
+                                                                     , zc_MILinkObject_PartionCell_12()
+                                                                     , zc_MILinkObject_PartionCell_13()
+                                                                     , zc_MILinkObject_PartionCell_14()
+                                                                     , zc_MILinkObject_PartionCell_15()
+                                                                     , zc_MILinkObject_PartionCell_16()
+                                                                     , zc_MILinkObject_PartionCell_17()
+                                                                     , zc_MILinkObject_PartionCell_18()
+                                                                     , zc_MILinkObject_PartionCell_19()
+                                                                     , zc_MILinkObject_PartionCell_20()
+                                                                     , zc_MILinkObject_PartionCell_21()
+                                                                     , zc_MILinkObject_PartionCell_22()
+                                                                      )
+                             LIMIT 1
+                            );
+        END IF;
+
         -- устанавливаем новое значение
         IF inIsErased = TRUE
         THEN PERFORM lpSetErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
