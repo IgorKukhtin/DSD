@@ -20,10 +20,14 @@ AS
 
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
      vbUserId := lpGetUserBySession (inSession);
+     
+     --
+     vbOperDate:=  CURRENT_DATE + INTERVAL '0 DAY';
 
 /*
 
@@ -97,20 +101,20 @@ BEGIN
           , CASE -- WHEN 1=1 THEN TRUE
 
                  -- за 3 дня
-                 WHEN DATE_TRUNC ('MONTH', CURRENT_DATE) <> DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '3 DAY')
-                  AND DATE_TRUNC ('MONTH', CURRENT_DATE) =  DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '2 DAY')
-                  AND DATE_TRUNC ('MONTH', CURRENT_DATE) =  DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '1 DAY')
-                  AND EXTRACT (DOW FROM CURRENT_DATE + INTERVAL '3 DAY') = 1
+                 WHEN DATE_TRUNC ('MONTH', vbOperDate) <> DATE_TRUNC ('MONTH', vbOperDate + INTERVAL '3 DAY')
+                  AND DATE_TRUNC ('MONTH', vbOperDate) =  DATE_TRUNC ('MONTH', vbOperDate + INTERVAL '2 DAY')
+                  AND DATE_TRUNC ('MONTH', vbOperDate) =  DATE_TRUNC ('MONTH', vbOperDate + INTERVAL '1 DAY')
+                  AND EXTRACT (DOW FROM vbOperDate + INTERVAL '3 DAY') = 1
                       THEN TRUE
                  -- за 2 дня
-                 WHEN DATE_TRUNC ('MONTH', CURRENT_DATE) <> DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '2 DAY')
-                  AND DATE_TRUNC ('MONTH', CURRENT_DATE) =  DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '1 DAY')
-                  AND EXTRACT (DOW FROM CURRENT_DATE + INTERVAL '3 DAY') <> 1
+                 WHEN DATE_TRUNC ('MONTH', vbOperDate) <> DATE_TRUNC ('MONTH', vbOperDate + INTERVAL '2 DAY')
+                  AND DATE_TRUNC ('MONTH', vbOperDate) =  DATE_TRUNC ('MONTH', vbOperDate + INTERVAL '1 DAY')
+                  AND EXTRACT (DOW FROM vbOperDate + INTERVAL '2 DAY') <> 1
                       THEN TRUE
 
-                 /*WHEN EXTRACT (DAY FROM CURRENT_DATE) = 30
+                 /*WHEN EXTRACT (DAY FROM vbOperDate) = 30
                       THEN TRUE
-                 WHEN EXTRACT (MONTH FROM CURRENT_DATE) = 2 AND EXTRACT (DAY FROM CURRENT_DATE) = 28
+                 WHEN EXTRACT (MONTH FROM vbOperDate) = 2 AND EXTRACT (DAY FROM vbOperDate) = 28
                       THEN TRUE*/
 
                  ELSE FALSE
@@ -150,4 +154,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Member_BirthDay (inIsNext := true, inSession:= zfCalc_UserAdmin())
+-- SELECT isUnload, * FROM gpSelect_Object_Member_BirthDay (inIsNext := true, inSession:= zfCalc_UserAdmin())
