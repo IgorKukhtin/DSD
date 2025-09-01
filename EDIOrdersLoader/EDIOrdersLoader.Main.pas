@@ -134,6 +134,10 @@ type
     mactVchasnoEDICONDRA: TMultiAction;
     actUpdateEdiCONDRATrue: TdsdExecStoredProc;
     spUpdateEdiCondra: TdsdStoredProc;
+    actGet_Email_report: TdsdExecStoredProc;
+    spGet_Email_report: TdsdStoredProc;
+    actSMTPFile_Email_report: TdsdSMTPFileAction;
+    spUpdateEdiSent_Email_report: TdsdStoredProc;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -166,6 +170,17 @@ type
     function fEdi_LoadDataVchasno_from : Boolean;
     function fEdi_SendData_to : Boolean;
     function fSale_SendEmail : Boolean;
+
+    procedure pSendReport_VchasnoEDI_err (MovementId_send_Edi: Integer;
+                                          InvNumberPartner_order: String;
+                                          OperDate_order : TDateTime;
+                                          InvNumber_Parent: String;
+                                          OperDatePartner_Parent : TDateTime;
+                                          FromName,ToName,RetailName: String;
+                                          lProcessName : String;
+                                          lFileName_save : String;
+                                          Error_txt : String
+                                         );
   public
     { Public declarations }
     procedure MyDelay_two(mySec:Integer);
@@ -331,6 +346,17 @@ begin
   ProccessingEmail := False;
   Hour_onDel := -1;
   Hour_onSendEmail:= -1;
+  //
+  // параметры для отправки по почте ошибки EDI_Send_Email_report
+  actGet_Email_report.Execute;
+  FormParams.ParamByName('Subject_Email_report').Value:=ExportEmailCDS.FieldByName('Subject').AsString;
+  FormParams.ParamByName('Body_Email_report').Value:=ExportEmailCDS.FieldByName('Body').AsString;
+  FormParams.ParamByName('AddressFrom_Email_report').Value:=ExportEmailCDS.FieldByName('AddressFrom').AsString;
+  FormParams.ParamByName('Host_Email_report').Value:=ExportEmailCDS.FieldByName('Host').AsString;
+  FormParams.ParamByName('Port_Email_report').Value:=ExportEmailCDS.FieldByName('Port').AsString;
+  FormParams.ParamByName('UserName_Email_report').Value:=ExportEmailCDS.FieldByName('UserName').AsString;
+  FormParams.ParamByName('Password_Email_report').Value:=ExportEmailCDS.FieldByName('Password').AsString;
+  FormParams.ParamByName('AddressTo_Email_report').Value:=ExportEmailCDS.FieldByName('AddressTo').AsString;
   //
   actVchasnoEDIOrdeLoad.ShowErrorMessages.Value:= FALSE;
   actVchasnoEDIOrdrsp.ShowErrorMessages.Value:= FALSE;
@@ -536,9 +562,45 @@ begin
   end;
 end;
 
-
+//-------------------------------------------------------------------------------------------
+// Ошибку отправить по почте + файл - вложение
+procedure TMainForm.pSendReport_VchasnoEDI_err (MovementId_send_Edi: Integer;
+                                                InvNumberPartner_order: String;
+                                                OperDate_order : TDateTime;
+                                                InvNumber_Parent: String;
+                                                OperDatePartner_Parent : TDateTime;
+                                                FromName,ToName,RetailName: String;
+                                                lProcessName : String;
+                                                lFileName_save : String;
+                                                Error_txt : String
+                                               );
+begin
+  FormParams.ParamByName('Subject_Email_report').Value:='Ошибка Вчасно <'+lProcessName+'> <'+RetailName+'>'
+                                                      + ' Заявка № <'+InvNumberPartner_order+'> от <'+DateToStr(OperDate_order)+'>'
+                                                      + ' Продажа № <'+InvNumber_Parent+'> от <'+DateToStr(OperDatePartner_Parent)+'> '
+                                                      + ' ('+FromName+' -> '+ToName
+                                                       ;
+  FormParams.ParamByName('Body_Email_report').Value:=Error_txt;
+  //
+  actSMTPFile_Email_report.FileName:=lFileName_save;
+  try actSMTPFile_Email_report.Execute;
+      //
+      FormParams.ParamByName('MovementId_Email_report').Value:=MovementId_send_Edi;
+      spUpdateEdiSent_Email_report.Execute;
+  except ON E: Exception DO
+  Begin
+     AddToLog_Vchasno(true, 'Ошибка при ошибка по почте :  ' + FormParams.ParamByName('Subject_Email_report').Value, true);
+     AddToLog_Vchasno(true, '', true);
+     AddToLog_Vchasno(true, lFileName_save, true);
+     AddToLog_Vchasno(true, 'Error:', true);
+     AddToLog_Vchasno(true, E.Message, true);
+     AddToLog_Vchasno(true, '', true);
+  End;
+  end;
+end;
+//-------------------------------------------------------------------------------------------
 function TMainForm.fEdi_SendData_to : Boolean;
-var Err_str: String;
+var Err_str, lFileName_save: String;
     i : Integer;
 begin
      if cbSend.Checked = FALSE then
@@ -591,6 +653,13 @@ begin
               if (FieldByName('isEdiOrdspr').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
                //and (1=0)
               then begin
+                       lFileName_save:= 'VchasnoEDI_ORDRSP_'
+                                        +FieldByName('InvNumber_Parent').AsString
+                                        +' '
+                                        +FormatDateTime('yyyy-mm-dd',FieldByName('OperDate_Parent').AsDateTime)
+                                        +'.xml'
+                                        ;
+                       //
                        actExecPrintStoredProc.Execute;
                        if actVchasnoEDIOrdrsp.Execute
                        then actUpdateEdiOrdsprTrue.Execute
@@ -601,7 +670,22 @@ begin
                             AddToLog_Vchasno(true, 'Ошибка при отправке Ordspr Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
                             AddToLog_Vchasno(true, actVchasnoEDIOrdrsp.ErrorText.Value, true);
                             AddToLog_Vchasno(true, '', true);
-                            ;
+                            //
+                            // Ошибку отправить по почте + файл - вложение
+                            if FieldByName('isOperDate_Sent').AsBoolean = TRUE
+                            then
+                                pSendReport_VchasnoEDI_err (FieldByName('MovementId').AsInteger
+                                                           ,FieldByName('InvNumberPartner_order').AsString
+                                                           ,FieldByName('OperDate_order').AsDateTime
+                                                           ,FieldByName('InvNumber_Parent').AsString
+                                                           ,FieldByName('OperDatePartner_Parent').AsDateTime
+                                                           ,FieldByName('FromName').AsString
+                                                           ,FieldByName('ToName').AsString
+                                                           ,FieldByName('RetailName').AsString
+                                                           ,'Ordspr'
+                                                           ,lFileName_save
+                                                           ,actVchasnoEDIOrdrsp.ErrorText.Value
+                                                            );
                        end;
                        MyDelay_two(3000);
               end;
@@ -610,6 +694,13 @@ begin
               if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = true)
                //and (1=0)
               then begin
+                       lFileName_save:= 'VchasnoEDI_DESADV_'
+                                        +FieldByName('InvNumber_Parent').AsString
+                                        +' '
+                                        +FormatDateTime('yyyy-mm-dd',FieldByName('OperDate_Parent').AsDateTime)
+                                        +'.xml'
+                                        ;
+                       //
                        actExecPrintStoredProc.Execute;
                        if actVchasnoEDIDesadv.Execute
                        then actUpdateEdiDesadvTrue.Execute
@@ -620,6 +711,22 @@ begin
                             AddToLog_Vchasno(true, 'Ошибка при отправке Desadv Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
                             AddToLog_Vchasno(true, actVchasnoEDIDesadv.ErrorText.Value, true);
                             AddToLog_Vchasno(true, '', true);
+                            //
+                            // Ошибку отправить по почте + файл - вложение
+                            if FieldByName('isOperDate_Sent').AsBoolean = TRUE
+                            then
+                                pSendReport_VchasnoEDI_err (FieldByName('MovementId').AsInteger
+                                                           ,FieldByName('InvNumberPartner_order').AsString
+                                                           ,FieldByName('OperDate_order').AsDateTime
+                                                           ,FieldByName('InvNumber_Parent').AsString
+                                                           ,FieldByName('OperDatePartner_Parent').AsDateTime
+                                                           ,FieldByName('FromName').AsString
+                                                           ,FieldByName('ToName').AsString
+                                                           ,FieldByName('RetailName').AsString
+                                                           ,'Desadv'
+                                                           ,lFileName_save
+                                                           ,actVchasnoEDIOrdrsp.ErrorText.Value
+                                                            );
                        end;
                        MyDelay_two(3000);
                        //

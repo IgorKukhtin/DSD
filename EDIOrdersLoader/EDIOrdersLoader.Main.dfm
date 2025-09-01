@@ -10501,6 +10501,59 @@ object MainForm: TMainForm
         Name = 'MovementId_sale'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Subject_Email_report'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Body_Email_report'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddressFrom_Email_report'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Host_Email_report'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Port_Email_report'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName_Email_report'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password_Email_report'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddressTo_Email_report'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Email_report'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 84
     Top = 140
@@ -10575,6 +10628,17 @@ object MainForm: TMainForm
   object ActionList: TActionList
     Left = 84
     Top = 68
+    object actGet_Email_report: TdsdExecStoredProc
+      Category = 'Email_report'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Email_report
+      StoredProcList = <
+        item
+          StoredProc = spGet_Email_report
+        end>
+      Caption = 'actGet_Email_report'
+    end
     object actSetDefaults: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -10595,6 +10659,50 @@ object MainForm: TMainForm
       Caption = #1054#1089#1090#1072#1085#1086#1074#1082#1072
       OnExecute = actStopEDIExecute
       OnUpdate = actStopEDIUpdate
+    end
+    object actSMTPFile_Email_report: TdsdSMTPFileAction
+      Category = 'Email_report'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = FormParams
+      Host.ComponentItem = 'Host_Email_report'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = FormParams
+      Port.ComponentItem = 'Port_Email_report'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = FormParams
+      UserName.ComponentItem = 'UserName_Email_report'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = FormParams
+      Password.ComponentItem = 'Password_Email_report'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.Component = FormParams
+      Body.ComponentItem = 'Body_Email_report'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = FormParams
+      Subject.ComponentItem = 'Subject_Email_report'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = FormParams
+      FromAddress.ComponentItem = 'AddressFrom_Email_report'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = FormParams
+      ToAddress.ComponentItem = 'AddressTo_Email_report'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
     end
     object EDIActionOrdersLoad: TEDIAction
       Category = 'EDI Load'
@@ -12391,5 +12499,34 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 72
     Top = 280
+  end
+  object spGet_Email_report: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_EDI_Send_Email_report'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 80
+    Top = 466
+  end
+  object spUpdateEdiSent_Email_report: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_EDI_Send_Email_report'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_Email_report'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 464
   end
 end

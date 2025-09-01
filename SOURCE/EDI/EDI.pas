@@ -32,6 +32,7 @@ type
   // Ну не совсем все, конечно, но много
   TEDI = class(TdsdComponent)
   private
+    lFileName_save:String;
     FIdFTP: TIdFTP;
     FConnectionParams: TConnectionParams;
     FInsertEDIEvents: TdsdStoredProc;
@@ -204,7 +205,6 @@ type
     FspHeader: TdsdStoredProc;
     FspList: TdsdStoredProc;
 
-
   protected
     function LocalExecute: Boolean; override;
     function GetVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
@@ -368,7 +368,8 @@ uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Vcl.Forms, System.IOUtils, System.RegularExpressions, ZLib, Math,
   IdHTTP, IdSSLOpenSSL, IdURI, IdCTypes, IdSSLOpenSSLHeaders,
   IdMultipartFormData, Xml.XMLDoc, Soap.EncdDecd, EUSignCP, EUSignCPOwnUI,
-  DOCUMENTINVOICE_DRN_XML;
+  DOCUMENTINVOICE_DRN_XML
+ ,CommonData;
 
 procedure Register;
 begin
@@ -5300,8 +5301,18 @@ begin
       Next;
     end;
   end;
-
-  ORDRSP.OwnerDocument.SaveToFile('test_ORDRSP_VchasnoEDI.xml');
+  //
+  lFileName_save:= 'VchasnoEDI_ORDRSP_'
+                   +HeaderDataSet.FieldByName('InvNumber').asString
+                   +' '
+                   +FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime)
+                   +'.xml'
+                   ;
+  ORDRSP.OwnerDocument.SaveToFile(lFileName_save);
+  //test
+  if AnsiUpperCase(gc_ProgramName) = AnsiUpperCase('Project.exe')
+  then ORDRSP.OwnerDocument.SaveToFile('test_ORDRSP_VchasnoEDI.xml');
+  //
   ORDRSP.OwnerDocument.SaveToStream(Stream);
 end;
 
@@ -5389,8 +5400,19 @@ begin
       Next;
     end;
   end;
-
-  DESADV.OwnerDocument.SaveToFile('test_DESADV_VchasnoEDI.xml');
+  //
+  lFileName_save:= 'VchasnoEDI_DESADV_'
+                   +HeaderDataSet.FieldByName('InvNumber').asString
+                   +' '
+                   +FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime)
+                   +'.xml'
+                   ;
+  //
+  DESADV.OwnerDocument.SaveToFile(lFileName_save);
+  //test
+  if AnsiUpperCase(gc_ProgramName) = AnsiUpperCase('Project.exe')
+  then DESADV.OwnerDocument.SaveToFile('test_DESADV_VchasnoEDI.xml');
+  //
   DESADV.OwnerDocument.SaveToStream(Stream);
 end;
 
@@ -6270,6 +6292,9 @@ begin
 
     try
       S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
+      //
+      if FileExists(EDI.lFileName_save) then DeleteFile(EDI.lFileName_save);
+
     except on E:EIdHTTPProtocolException  do
                 ShowMessages(e.ErrorMessage);
     end;
@@ -6966,6 +6991,7 @@ begin
        //Stream.LoadFromFile('c:\Work\1_Log\ORDERSPS\ORDRSP_original.xml');
        Result := POSTVchasnoEDI(0, Stream);
      finally
+       EDI.lFileName_save:='';
        Stream.Free;
      end;
      //
@@ -6990,6 +7016,7 @@ begin
        //Stream.LoadFromFile('c:\Work\1_Log\ORDERSPS\DESADV_original.xml');
        Result := POSTVchasnoEDI(0, Stream);
      finally
+       EDI.lFileName_save:='';
        Stream.Free;
      end;
      //

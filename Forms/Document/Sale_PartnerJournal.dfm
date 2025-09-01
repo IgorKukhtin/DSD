@@ -3596,6 +3596,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ActionList = <
         item
           Action = macTaxByGrid_list
+        end
+        item
+          Action = actRefresh
         end>
       QuestionBeforeExecute = 
         #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1083#1103' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085 +
@@ -4513,32 +4516,28 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       item
         Name = 'outInvNumberPartner_Master'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'InvNumberPartner_Master'
         DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindId'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
         Value = Null
-        Component = actShowMessage
-        ComponentItem = 'MessageText'
         DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
