@@ -953,12 +953,12 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       Left = 96
-      EditValue = 42370d
+      EditValue = 45658d
       ExplicitLeft = 96
     end
     inherited deEnd: TcxDateEdit
       Left = 301
-      EditValue = 42370d
+      EditValue = 45658d
       ExplicitLeft = 301
     end
     inherited cxLabel1: TcxLabel
@@ -1792,10 +1792,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Category = 'Tax'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spTax
+      StoredProc = spTax_grid
       StoredProcList = <
         item
-          StoredProc = spTax
+          StoredProc = spTax_grid
         end>
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -3596,9 +3596,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ActionList = <
         item
           Action = macTaxByGrid_list
-        end
-        item
-          Action = actRefresh
         end>
       QuestionBeforeExecute = 
         #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1083#1103' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085 +
@@ -4516,28 +4513,32 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       item
         Name = 'outInvNumberPartner_Master'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumberPartner_Master'
         DataType = ftString
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindId'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindId'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
         Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -5905,5 +5906,53 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     PackSize = 1
     Left = 256
     Top = 568
+  end
+  object spTax_grid: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentTaxKindId_inf'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 344
   end
 end

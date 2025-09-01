@@ -287,6 +287,7 @@ type
     dxBarSubItem1: TdxBarSubItem;
     bbInsertFileName_csv: TdxBarButton;
     bbInsertFileName_csv_one: TdxBarButton;
+    spTax_grid: TdsdStoredProc;
   private
     { Private declarations }
   public

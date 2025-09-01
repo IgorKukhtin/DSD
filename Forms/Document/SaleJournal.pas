@@ -423,6 +423,7 @@ type
     bbInsertFileName_csv: TdxBarButton;
     macInsertFileName_csv_one: TMultiAction;
     bbInsertFileName_csv_one: TdxBarButton;
+    spTax_grid: TdsdStoredProc;
   private
     { Private declarations }
   public
