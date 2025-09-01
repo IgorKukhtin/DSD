@@ -185,7 +185,7 @@ INSERT INTO MovementDateDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MovementDate_Sent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Sent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDateDesc (Code, ItemName)
-  SELECT 'zc_MovementDate_Sent', 'Дата изменения признака Отправлено' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Sent');
+  SELECT 'zc_MovementDate_Sent', 'Дата/время изменения признака Отправлено' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Sent');
 
 CREATE OR REPLACE FUNCTION zc_MovementDate_Deferred() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Deferred'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDateDesc (Code, ItemName)

@@ -20,8 +20,21 @@ RETURNS TABLE (-- Документ продажа - отправка в EDI
                -- Вчасно - Декларация, автоматическая отправка
              , isEdiQuality Boolean
                --
-             , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime, OperDatePartner TDateTime, InsertDate_WeighingPartner TDateTime
-             , InvNumber_Parent TVarChar, OperDate_Parent TDateTime
+               -- Документ для отправки в EDI
+             , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime
+               -- Дата/Время когда отправили в EDI
+             , OperDatePartner TDateTime
+               -- Дата/Время когда отправили Ошибку
+             , OperDate_Sent TDateTime
+               -- если ошибка - будет ли отправка - ждем 12 часов
+             , isOperDate_Sent Boolean
+               --
+             , InsertDate_WeighingPartner TDateTime
+
+               -- Док заявка
+             , InvNumber_order TVarChar, InvNumberPartner_order TVarChar, OperDate_order TDateTime
+               -- Док продажа
+             , InvNumber_Parent TVarChar, OperDate_Parent TDateTime, OperDatePartner_Parent TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, RetailName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , JuridicalName_To TVarChar
@@ -165,11 +178,26 @@ BEGIN
                , Movement.InvNumber                             AS InvNumber
                , Movement.OperDate                              AS OperDate
                , MovementDate_Update.ValueData                  AS UpdateDate
+                 -- Дата/Время когда отправили в EDI
                , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
+                 -- Дата/Время когда отправили Ошибку
+               , MovementDate_OperDate_Sent.ValueData           AS OperDate_Sent
+                 -- если ошибка - будет ли отправка - ждем 12 часов
+               , CASE WHEN COALESCE (MovementDate_OperDate_Sent.ValueData, zc_DateStart()) + INTERVAL '12 HOUR' < CURRENT_TIMESTAMP
+                      THEN TRUE
+                      ELSE FALSE
+                 END :: Boolean AS isOperDate_Sent
+                 --
                , tmpMovement_WeighingPartner.InsertDate :: TDateTime AS InsertDate_WeighingPartner
+
+               , Movement_order.InvNumber                       AS InvNumber_order
+               , MS_InvNumberPartner_order.ValueData            AS InvNumberPartner_order
+               , Movement_order.OperDate                        AS OperDate_order
 
                , Movement_Parent.InvNumber                      AS InvNumber_Parent
                , Movement_Parent.OperDate                       AS OperDate_Parent
+               , MovementDate_OperDatePartner_parent.ValueData  AS OperDatePartner_Parent
+               
                , Object_From.Id                    		AS FromId
                , Object_From.ValueData             		AS FromName
                , Object_To.Id                      		AS ToId
@@ -189,12 +217,17 @@ BEGIN
 
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+                -- Дата/Время когда отправили в EDI
                 LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                        ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                       AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
                 LEFT JOIN MovementDate AS MovementDate_Update
                                        ON MovementDate_Update.MovementId = Movement.Id
                                       AND MovementDate_Update.DescId     = zc_MovementDate_Update()
+                -- Дата/Время когда отправили Ошибку
+                LEFT JOIN MovementDate AS MovementDate_OperDate_Sent
+                                       ON MovementDate_OperDate_Sent.MovementId = Movement.Id
+                                      AND MovementDate_OperDate_Sent.DescId     = zc_MovementDate_Sent()
                 LEFT JOIN MovementString AS MovementString_Comment
                                          ON MovementString_Comment.MovementId = Movement.Id
                                         AND MovementString_Comment.DescId     = zc_MovementString_Comment()
@@ -220,8 +253,13 @@ BEGIN
                                           ON MovementBoolean_EdiComdoc.MovementId = Movement.Id
                                          AND MovementBoolean_EdiComdoc.DescId     = zc_MovementBoolean_EdiComdoc()
 
+                -- продажа
                 LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
+                LEFT JOIN MovementDate AS MovementDate_OperDatePartner_parent
+                                       ON MovementDate_OperDatePartner_parent.MovementId = Movement_Parent.Id
+                                      AND MovementDate_OperDatePartner_parent.DescId     = zc_MovementDate_OperDatePartner()
 
+                -- заявка покупателя
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                ON MovementLinkMovement_Order.MovementId = Movement.ParentId
                                               AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
@@ -274,6 +312,12 @@ BEGIN
                                      ON ObjectLink_Juridical_Retail.ObjectId = Object_JuridicalTo.Id
                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
                 LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+                -- заявка покупателя
+                LEFT JOIN Movement AS Movement_order ON Movement_order.Id = MovementLinkMovement_Order.MovementChildId
+                LEFT JOIN MovementString AS MS_InvNumberPartner_order
+                                         ON MS_InvNumberPartner_order.MovementId =  Movement_order.Id
+                                        AND MS_InvNumberPartner_order.DescId     = zc_MovementString_InvNumberPartner()
 
                 -- док.EDI
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_EDI
