@@ -27,7 +27,7 @@ THEN RETURN; END IF;
      -- !!!выход!!!
      IF vbStatusId <> zc_Enum_Status_Complete() AND inSession <> '' THEN RETURN; END IF;
      -- !!!выход!!!
-     IF vbStatusId_next = zc_Enum_Status_UnComplete() THEN RETURN; END IF;
+     IF vbStatusId_next = zc_Enum_Status_UnComplete() AND inSession <> '' THEN RETURN; END IF;
      
 
 
